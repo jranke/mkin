@@ -112,14 +112,14 @@ The next task is to define the model to be fitted to the data. In order to
 facilitate this task, a convenience function \Robject{mkinmod} is available.
 
 <<model_definition, echo=TRUE>>=
-SFO <- mkinmod(spec = list(parent = list(type = "SFO", to = NA, sink = TRUE)))
-SFORB <- mkinmod(spec = list(parent = list(type = "SFORB", to = NA, sink = TRUE)))
-SFO_SFO <- mkinmod(spec = list(
+SFO <- mkinmod(parent = list(type = "SFO"))
+SFORB <- mkinmod(parent = list(type = "SFORB"))
+SFO_SFO <- mkinmod(
   parent = list(type = "SFO", to = "m1", sink = TRUE),
-  m1 = list(type = "SFO", to = NA, sink = TRUE)))
-SFORB_SFO <- mkinmod(spec = list(
+  m1 = list(type = "SFO"))
+SFORB_SFO <- mkinmod(
   parent = list(type = "SFORB", to = "m1", sink = TRUE),
-  m1 = list(type = "SFO", to = NA, sink = TRUE)))
+  m1 = list(type = "SFO"))
 @
 
 \subsection{Fitting the model}
@@ -138,14 +138,6 @@ SFORB.fit <- mkinfit(SFORB, FOCUS_2006_C)
 summary(SFORB.fit)
 SFO_SFO.fit <- mkinfit(SFO_SFO, FOCUS_2006_D)
 summary(SFO_SFO.fit)
-SFO_SFO.fit.2 <- mkinfit(SFO_SFO, FOCUS_2006_D, 
-  fixed_initials = c(FALSE, FALSE), fixed_parms = c(FALSE, TRUE, FALSE))
-summary(SFO_SFO.fit.2)
-SFO_SFO.fit.3 <- mkinfit(SFO_SFO, FOCUS_2006_D, 
-  fixed_initials = c(FALSE, FALSE), fixed_parms = c(FALSE, TRUE, FALSE), lower = -0.0000001)
-summary(SFO_SFO.fit.3)
-SFORB_SFO.fit <- mkinfit(SFORB_SFO, FOCUS_2006_D)
-summary(SFORB_SFO.fit)
 @
 
 \bibliographystyle{plainnat}

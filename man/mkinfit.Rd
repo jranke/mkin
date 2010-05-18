@@ -10,7 +10,7 @@
   values.
 }
 \usage{
-mkinfit(mkinmod, observed, parms.ini = rep(0.1, length(mkinmod$parms)), state.ini = c(100, rep(0, length(mkinmod$diffs) - 1)), fixed_parms = rep(FALSE, length(mkinmod$parms)), fixed_initials = c(FALSE, rep(TRUE, length(mkinmod$diffs) - 1)), plot = NULL, err = NULL, weight = "none", scaleVar = FALSE, ...)
+mkinfit(mkinmod, observed, parms.ini = rep(0.1, length(mkinmod$parms)), state.ini = c(100, rep(0, length(mkinmod$diffs) - 1)), fixed_parms = NULL, fixed_initials = names(mkinmod$diffs)[-1], plot = FALSE, quiet = FALSE, err = NULL, weight = "none", scaleVar = FALSE, ...)
 }
 \arguments{
   \item{mkinmod}{
@@ -29,56 +29,59 @@ mkinfit(mkinmod, observed, parms.ini = rep(0.1, length(mkinmod$parms)), state.in
   \item{parms.ini}{
     A named vector if initial values for the parameters, including both parameters to
     be optimised and potentially also fixed parameters as indicated by \code{fixed_parms}.
-}
+  }
   \item{state.ini}{
     A named vector of initial values for the state variables of the model. In case the 
     observed variables are represented by more than one model variable, the names will
     differ from the names of the observed variables (see \code{map} component of 
     \code{\link{mkinmod}}). The default is to set the initial value of the first model
     variable to 100 and all others to 0.
-}
+  }
   \item{fixed_parms}{
-    A vector of booleans specifying which parameters are not to be optimised. The default
-    is to include all model parameters in the optimisation.
-}
+    The names of parameters that should not be optimised but rather kept at the values
+    specified in \code{parms.ini}.
+  }
   \item{fixed_initials}{
-    A vector of booleans specifying which initial values to include in the optimisation.
-    The default is to optimise the initial value of the first model variable and to
-    keep all other initial values fixed.
-}
+    The names of model variables for which the initial state at time 0 should be excluded
+    from the optimisation. Defaults to all state variables except for the first one.
+  }
   \item{plot}{
     Should the observed values and the numerical solutions be plotted at each stage
     of the optimisation?
-}
+  }
+  \item{quiet}{
+    Suppress printing out the current model cost after each improvement?
+  }
   \item{err }{either \code{NULL}, or the name of the column with the
     \emph{error} estimates, used to weigh the residuals (see details of
     \code{\link{modCost}}); if \code{NULL}, then the residuals are not weighed.
-}
+  }
   \item{weight}{only if \code{err}=\code{NULL}: how to weigh the
     residuals, one of "none", "std", "mean", see details of \code{\link{modCost}}.
-}
+  }
   \item{scaleVar}{
     Will be passed to \code{\link{modCost}}. Default is not to scale Variables according
     to the number of observations.
-}
+  }
   \item{\dots}{
     Further arguments that will be passed to \code{\link{modFit}}. 
-}
+  }
 }
 \value{
-    A list of class \code{\link{modFit}}. Thus, at present, a summary can be obtained
-    by \code{\link{summary.modFit}}. 
+    A list with "mkinfit" and "modFit" in the class attribute. Thus, at
+    present, a summary can be obtained by \code{\link{summary.modFit}}. 
 }
 \author{
   Johannes Ranke <jranke@{harlan.com,uni-bremen.de}>
 }
 \examples{
 # One parent compound, one metabolite, both single first order.
-SFO_SFO <- mkinmod(spec = list(
+SFO_SFO <- mkinmod(
   parent = list(type = "SFO", to = "m1", sink = TRUE),
-  m1 = list(type = "SFO", to = NA, sink = TRUE)))
+  m1 = list(type = "SFO"))
 # Fit the model to the FOCUS example dataset D using defaults
 fit <- mkinfit(SFO_SFO, FOCUS_2006_D)
+str(fit)
 summary(fit)
 }
 \keyword{ models }
