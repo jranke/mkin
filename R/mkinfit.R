@@ -1,6 +1,7 @@
 mkinfit <- function(mkinmod, observed,
   parms.ini = rep(0.1, length(mkinmod$parms)),
   state.ini = c(100, rep(0, length(mkinmod$diffs) - 1)), 
+  lower = 0, upper = Inf,
   fixed_parms = NULL,
   fixed_initials = names(mkinmod$diffs)[-1],
   plot = FALSE, quiet = FALSE,
@@ -58,11 +59,7 @@ mkinfit <- function(mkinmod, observed,
 
     odeparms <- c(P[(length(state.ini.optim) + 1):length(P)], parms.fixed)
 
-    # Get more timepoints if plotting is desired
-    if(plot) {
-      outtimes = unique(sort(c(observed$time, 
-        seq(min(observed$time), max(observed$time), length.out=100))))
-    } else outtimes = unique(observed$time)
+    outtimes = unique(observed$time)
 
     # Solve the ode
     out <- ode(
@@ -70,7 +67,7 @@ mkinfit <- function(mkinmod, observed,
       times = outtimes,
       func = mkindiff, 
       parms = odeparms)
-     
+
   
     # Output transformation for models with unobserved compartments like SFORB
     out_transformed <- data.frame(time = out[,"time"])
@@ -81,7 +78,7 @@ mkinfit <- function(mkinmod, observed,
         out_transformed[var] <- rowSums(out[, mkinmod$map[[var]]])
       }
     }    
-    assign("out_predicted", subset(out_transformed, time %in% observed$time), inherits=TRUE)
+    assign("out_predicted", out_transformed, inherits=TRUE)
 
     mC <- modCost(out_transformed, observed, y = "value",
       err = err, weight = weight, scaleVar = scaleVar)
@@ -90,8 +87,23 @@ mkinfit <- function(mkinmod, observed,
     if (mC$model < cost.old) {
       if(!quiet) cat("Model cost at call ", calls, ": ", mC$model, "\n")
 
-      # Plot the data and the current model output if requested
+      # Plot the data and current model output if requested
       if(plot) {
+        outtimes_plot = seq(min(observed$time), max(observed$time), length.out=100)
+        out_plot <- ode(
+          y = odeini,
+          times = outtimes_plot,
+          func = mkindiff, 
+          parms = odeparms)
+        out_transformed_plot <- data.frame(time = out_plot[,"time"])
+        for (var in names(mkinmod$map)) {
+          if(length(mkinmod$map[[var]]) == 1) {
+            out_transformed_plot[var] <- out_plot[, var]
+          } else {
+            out_transformed_plot[var] <- rowSums(out_plot[, mkinmod$map[[var]]])
+          }
+        }    
+
         plot(0, type="n", 
           xlim = range(observed$time), ylim = range(observed$value, na.rm=TRUE),
           xlab = "Time", ylab = "Observed")
@@ -101,7 +113,7 @@ mkinfit <- function(mkinmod, observed,
           points(subset(observed, name == obs_var, c(time, value)), 
             pch = pch_obs[obs_var], col = col_obs[obs_var])
         }
-        matlines(out_transformed$time, out_transformed[-1])
+        matlines(out_transformed_plot$time, out_transformed_plot[-1])
         legend("topright", inset=c(0.05, 0.05), legend=obs_vars, 
           col=col_obs, pch=pch_obs, lty=1:length(pch_obs))
       }
@@ -110,7 +122,7 @@ mkinfit <- function(mkinmod, observed,
     }
     return(mC)
   }
-  fit <- modFit(cost, c(state.ini.optim, parms.optim), ...)
+  fit <- modFit(cost, c(state.ini.optim, parms.optim), lower = lower, upper = upper, ...)
 
   # We need the function for plotting
   fit$mkindiff <- mkindiff
@@ -125,8 +137,8 @@ mkinfit <- function(mkinmod, observed,
   # Collect initial parameter values in two dataframes
   fit$start <- data.frame(initial = c(state.ini.optim, parms.optim))
   fit$start$type = c(rep("state", length(state.ini.optim)), rep("deparm", length(parms.optim)))
-  if (exists("lower")) fit$start$lower <- lower
-  if (exists("upper")) fit$start$upper <- upper
+  fit$start$lower <- lower
+  fit$start$upper <- upper
 
   fit$fixed <- data.frame(
     value = c(state.ini.fixed, parms.fixed))

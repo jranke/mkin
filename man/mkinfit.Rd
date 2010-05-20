@@ -10,7 +10,7 @@
   values.
 }
 \usage{
-mkinfit(mkinmod, observed, parms.ini = rep(0.1, length(mkinmod$parms)), state.ini = c(100, rep(0, length(mkinmod$diffs) - 1)), fixed_parms = NULL, fixed_initials = names(mkinmod$diffs)[-1], plot = FALSE, quiet = FALSE, err = NULL, weight = "none", scaleVar = FALSE, ...)
+mkinfit(mkinmod, observed, parms.ini = rep(0.1, length(mkinmod$parms)), state.ini = c(100, rep(0, length(mkinmod$diffs) - 1)), lower = 0, upper = Inf, fixed_parms = NULL, fixed_initials = names(mkinmod$diffs)[-1], plot = FALSE, quiet = FALSE, err = NULL, weight = "none", scaleVar = FALSE, ...)
 }
 \arguments{
   \item{mkinmod}{
@@ -36,6 +36,15 @@ mkinfit(mkinmod, observed, parms.ini = rep(0.1, length(mkinmod$parms)), state.in
     differ from the names of the observed variables (see \code{map} component of 
     \code{\link{mkinmod}}). The default is to set the initial value of the first model
     variable to 100 and all others to 0.
+  }
+  \item{lower}{
+    Lower bounds for the parameters, passed to \code{\link{modFit}}. Defaults to 0 because
+    negative values to not make sense for the models currently created by \code{\link{mkinmod}}.
+  }
+  \item{upper}{
+    Upper bounds for the parameters, passed to \code{\link{modFit}}. Defaults to \code{Inf}. Setting
+    non-infinite upper bounds has a strong impact on performance, and using a method like "L-BFGS-B" (by 
+    specifying an additional \code{method} argument) is recommended.
   }
   \item{fixed_parms}{
     The names of parameters that should not be optimised but rather kept at the values
