@@ -10,7 +10,12 @@
   values.
 }
 \usage{
-mkinfit(mkinmod, observed, parms.ini = rep(0.1, length(mkinmod$parms)), state.ini = c(100, rep(0, length(mkinmod$diffs) - 1)), lower = 0, upper = Inf, fixed_parms = NULL, fixed_initials = names(mkinmod$diffs)[-1], plot = FALSE, quiet = FALSE, err = NULL, weight = "none", scaleVar = FALSE, ...)
+mkinfit(mkinmod, observed, 
+  parms.ini = rep(0.1, length(mkinmod$parms)), 
+  state.ini = c(100, rep(0, length(mkinmod$diffs) - 1)), 
+  lower = 0, upper = Inf, 
+  fixed_parms = NULL, fixed_initials = names(mkinmod$diffs)[-1], 
+  plot = FALSE, quiet = FALSE, err = NULL, weight = "none", scaleVar = FALSE, ...)
 }
 \arguments{
   \item{mkinmod}{

@@ -188,9 +188,9 @@ mkinfit <- function(mkinmod, observed,
         # FOCUS kinetics (2006), p. 60 f
         k_out_names = grep(paste("k", obs_var, "free", sep="_"), names(parms.all), value=TRUE)
         k_out_names = setdiff(k_out_names, paste("k", obs_var, "free", "bound", sep="_"))
-        k_1output = sum(parms.all[[k_out_names]])
-        k_12 = parms.all[[paste("k", obs_var, "free", "bound", sep="_")]]
-        k_21 = parms.all[[paste("k", obs_var, "bound", "free", sep="_")]]
+        k_1output = sum(parms.all[k_out_names])
+        k_12 = parms.all[paste("k", obs_var, "free", "bound", sep="_")]
+        k_21 = parms.all[paste("k", obs_var, "bound", "free", sep="_")]
 
         sqrt_exp = sqrt(1/4 * (k_12 + k_21 + k_1output)^2 + k_12 * k_21 - (k_12 + k_1output) * k_21)
         b1 = 0.5 * (k_12 + k_21 + k_1output) + sqrt_exp
