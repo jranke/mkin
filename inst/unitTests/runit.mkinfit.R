@@ -31,5 +31,5 @@ test.mkinmod.schaefer07_complex_example <- function()
     s$distimes["A2", "DT50"])
   r$means <- (r$KinGUI + r$ModelMaker)/2
   r$mkin.deviation <- abs(round(100 * ((r$mkin - r$means)/r$means), digits=1))
-  checkTrue(r$mkin.deviation < 10)
+  checkIdentical(r$mkin.deviation < 10, rep(TRUE, length(r$mkin.deviation)))
 }

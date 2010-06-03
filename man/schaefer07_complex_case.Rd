@@ -1,5 +1,6 @@
 \name{schaefer07_complex_case}
 \alias{schaefer07_complex_case}
+\alias{schaefer07_complex_results}
 \encoding{latin1}
 \docType{data}
 \title{
@@ -8,10 +9,11 @@
 \description{
   This dataset was used for a comparison of KinGUI and ModelMaker to check the
   software quality of KinGUI in the original publication (Schäfer et al., 2007).
+  The results from the fitting are also included.
 }
 \usage{data(schaefer07_complex_case)}
 \format{
-  A data frame with 8 observations on the following 6 variables.
+  The data set is a data frame with 8 observations on the following 6 variables.
   \describe{
     \item{\code{time}}{a numeric vector}
     \item{\code{parent}}{a numeric vector}
@@ -20,6 +22,7 @@
     \item{\code{C1}}{a numeric vector}
     \item{\code{A2}}{a numeric vector}
   }
+  The results are a data frame with 14 results for different parameter values
 }
 \source{
   Schäfer D, Mikolasch M, Rainbird P and Harvey B (2007). KinGUI: a new kinetic
