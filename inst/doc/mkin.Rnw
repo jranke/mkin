@@ -1,3 +1,4 @@
+% $Id: mkin.Rnw 66 2010-09-03 08:50:26Z jranke $
 %%\VignetteIndexEntry{Routines for fitting kinetic models with one or more state variables to chemical degradation data}
 %%VignetteDepends{FME}
 %%\usepackage{Sweave}
@@ -78,7 +79,7 @@ barrier for \RR{} newcomers.
 \subsection{Data format}
 
 The following listing shows example dataset C from the FOCUS kinetics
-report as distributed with the \Rpackage{kinfit} package
+report as distributed with the \Rpackage{mkin} package
 
 <<FOCUS_2006_C_data, echo=TRUE, eval=TRUE>>=
 library("mkin")
@@ -101,8 +102,9 @@ as shown in the following listing
 
 <<data_format, echo=TRUE>>=
 example_data <- data.frame(
+  name = rep("parent", 9),
   time = c(0, 1, 3, 7, 14, 28, 63, 91, 119),
-  parent = c(85.1, 57.9, 29.9, 14.6, 9.7, 6.6, 4, 3.9, 0.6)
+  value = c(85.1, 57.9, 29.9, 14.6, 9.7, 6.6, 4, 3.9, 0.6)
 )
 @
 
@@ -122,12 +124,23 @@ SFORB_SFO <- mkinmod(
   m1 = list(type = "SFO"))
 @
 
+The model definitions given above define sets of linear first-order ordinary
+differential equations. In these cases, a coefficient matrix is also returned.
+
+Other models that include time on the right-hand side of the differential 
+equation are the first-order multi-compartment (FOMC) model and the
+Hockey-Stick (HS) model. At present, only the FOMC model can only be used, and
+only for the parent compound.
+
 \subsection{Fitting the model}
 
 Then the model parameters should be fitted to the data. The function
 \Robject{mkinfit} internally creates a cost function using \Robject{modCost}
 from the \Rpackage{FME} package and the produces a fit using \Robject{modFit}
-from the same package.
+from the same package. In cases of linear first-order differential 
+equations, the solution used for calculating the cost function is based
+on the fundamental system of the coefficient matrix, as proposed by 
+\citet{bates88}.
 
 <<model_fitting, echo=TRUE>>=
 # Do not show significance stars as they interfere with vignette generation
@@ -136,8 +149,10 @@ SFO.fit <- mkinfit(SFO, FOCUS_2006_C)
 summary(SFO.fit)
 SFORB.fit <- mkinfit(SFORB, FOCUS_2006_C)
 summary(SFORB.fit)
-SFO_SFO.fit <- mkinfit(SFO_SFO, FOCUS_2006_D)
-summary(SFO_SFO.fit)
+SFO_SFO.fit <- mkinfit(SFO_SFO, FOCUS_2006_D, plot=TRUE)
+summary(SFO_SFO.fit, data=FALSE)
+SFORB_SFO.fit <- mkinfit(SFORB_SFO, FOCUS_2006_D, plot=TRUE)
+summary(SFORB_SFO.fit, data=FALSE)
 @
 
 \bibliographystyle{plainnat}

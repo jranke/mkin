@@ -10,7 +10,8 @@
 }
 \usage{
   mkinplot(fit, xlab = "Time", ylab = "Observed", 
-    xlim = range(fit$data$time), ylim = range(fit$data$observed, na.rm=TRUE), ...)
+    xlim = range(fit$data$time), ylim = range(fit$data$observed, na.rm=TRUE), 
+    legend = TRUE, ...)
 }
 \arguments{
   \item{fit}{
@@ -27,6 +28,9 @@
   }
   \item{ylim}{
     plot range in y direction.
+  }
+  \item{legend}{
+    legend specifying if a legend should be included in the plot.
   }
   \item{\dots}{
    further arguments passed to \code{\link{plot}}.

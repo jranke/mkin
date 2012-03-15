@@ -11,7 +11,7 @@
 Datasets A to F from the FOCUS Kinetics report from 2006
 }
 \description{
-Data taken from an FOCUS (2006), p. 258.
+Data taken from FOCUS (2006), p. 258.
 }
 \usage{FOCUS_2006_datasets}
 \format{

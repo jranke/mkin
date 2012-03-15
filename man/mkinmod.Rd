@@ -15,13 +15,16 @@ mkinmod(...)
   \item{...}{
     For each observed variable, a list has to be specified as an argument, containing
     at least a component \code{type}, specifying the type of kinetics to use
-    for the variable. Currently, only single first order kinetics "SFO" or
-    single first order with reversible binding "SFORB" are implemented, as well as
-    "FOMC" for the first compartment which is assumed to be the source compartment.
-    Optional components of each argument are \code{to}, a vector of names of
-    variables to which a transfer is to be assumed in the model, and
-    \code{sink}, a logical specifying if transformation to unspecified
-    compounds (sink) is to be assumed in the model (defaults to \code{TRUE})
+    for the variable. Currently, single first order kinetics "SFO" or
+    single first order with reversible binding "SFORB" are implemented for all
+    variables, while 
+    "FOMC", "DFOP" and "HS" can additionally be chosen for the first
+    variable which is assumed to be the source compartment.  Optional components
+    of each argument are \code{to}, a
+    vector of names of variables to which a transfer is to be assumed in the
+    model, and \code{sink}, a logical specifying if transformation to
+    unspecified compounds (sink) is to be assumed in the model (defaults to
+    \code{TRUE})
   }
 }
 \value{
@@ -31,6 +34,7 @@ mkinmod(...)
     \item{parms}{ A vector of parameter names occurring in the differential equations. }
     \item{map}{ A list containing named character vectors for each observed variable, specifying
       the modelling variables by which it is represented. }
+    \item{coefmat}{ The coefficient matrix, if the system of differential equations can be represented by one. }
 }
 \author{
   Johannes Ranke <jranke@{harlan.com,uni-bremen.de}>

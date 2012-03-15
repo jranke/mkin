@@ -15,7 +15,10 @@ mkinfit(mkinmod, observed,
   state.ini = c(100, rep(0, length(mkinmod$diffs) - 1)), 
   lower = 0, upper = Inf, 
   fixed_parms = NULL, fixed_initials = names(mkinmod$diffs)[-1], 
-  plot = FALSE, quiet = FALSE, err = NULL, weight = "none", scaleVar = FALSE, ...)
+  eigen = FALSE,
+  plot = FALSE, quiet = FALSE, err = NULL, weight = "none", 
+  scaleVar = FALSE, 
+  atol = 1e-6, ...)
 }
 \arguments{
   \item{mkinmod}{
@@ -32,8 +35,11 @@ mkinfit(mkinmod, observed,
     \code{\link{modFit}}.
   }
   \item{parms.ini}{
-    A named vector if initial values for the parameters, including both parameters to
+    A named vector if initial values for the parameters, including parameters to
     be optimised and potentially also fixed parameters as indicated by \code{fixed_parms}.
+    The default is to set the initial values to 0.1. The setting of the initial values for 
+    the parameters has a strong impart on performance and it lies in the responsibilty of the 
+    user to set sensible initial values.   
   }
   \item{state.ini}{
     A named vector of initial values for the state variables of the model. In case the 
@@ -47,9 +53,10 @@ mkinfit(mkinmod, observed,
     negative values to not make sense for the models currently created by \code{\link{mkinmod}}.
   }
   \item{upper}{
-    Upper bounds for the parameters, passed to \code{\link{modFit}}. Defaults to \code{Inf}. Setting
-    non-infinite upper bounds has a strong impact on performance, and using a method like "L-BFGS-B" (by 
-    specifying an additional \code{method} argument) is recommended.
+    Upper bounds for the parameters, passed to \code{\link{modFit}}. Defaults to \code{Inf} 
+    except for formation fraction parameters. Setting non-infinite upper bounds has a strong 
+    impact on performance, and using a method like "L-BFGS-B" (by specifying an additional 
+    \code{method} argument) is recommended.
   }
   \item{fixed_parms}{
     The names of parameters that should not be optimised but rather kept at the values
@@ -58,6 +65,12 @@ mkinfit(mkinmod, observed,
   \item{fixed_initials}{
     The names of model variables for which the initial state at time 0 should be excluded
     from the optimisation. Defaults to all state variables except for the first one.
+  }
+  \item{eigen}{
+    Should the solution of the system of differential equations be based on the 
+    spectral decomposition of the coefficient matrix in cases that this is
+    possible? Be aware that the results may differ from the results returned using
+    the ode solver.
   }
   \item{plot}{
     Should the observed values and the numerical solutions be plotted at each stage
@@ -77,13 +90,17 @@ mkinfit(mkinmod, observed,
     Will be passed to \code{\link{modCost}}. Default is not to scale Variables according
     to the number of observations.
   }
+  \item{atol}{
+    Absolute error tolerance, passed to \code{\link{ode}}. Default is 1e-6 as in 
+    \code{\link{lsoda}}.
+  }
   \item{\dots}{
     Further arguments that will be passed to \code{\link{modFit}}. 
   }
 }
 \value{
-    A list with "mkinfit" and "modFit" in the class attribute. Thus, at
-    present, a summary can be obtained by \code{\link{summary.modFit}}. 
+    A list with "mkinfit" and "modFit" in the class attribute. 
+    A summary can be obtained by \code{\link{summary.mkinfit}}. 
 }
 \author{
   Johannes Ranke <jranke@{harlan.com,uni-bremen.de}>

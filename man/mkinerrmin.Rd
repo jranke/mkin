@@ -42,5 +42,4 @@ mkinerrmin(errdata, n.parms, alpha = 0.05)
   EC Document Reference Sanco/10058/2005 version 2.0, 434 pp,
   \url{http://focus.jrc.ec.europa.eu/dk} 
 }
-\author{ Johannes Ranke }
 \keyword{ manip }
