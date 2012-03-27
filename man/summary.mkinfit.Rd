@@ -11,7 +11,7 @@
   and residual values.
 }
 \usage{
-\method{summary}{mkinfit}(object, data = TRUE, distimes = TRUE, ff = TRUE, cov = FALSE, ...)
+\method{summary}{mkinfit}(object, data = TRUE, distimes = TRUE, ff = TRUE, ...)
 \method{print}{summary.mkinfit}(x, digits = max(3, getOption("digits") - 3), tval = TRUE, ...)
 }
 
@@ -31,9 +31,6 @@
   \item{ff}{
   logical, indicating whether formation fractions should be included.
 }
-  \item{cov}{
-  logical, indicating whether parameter covariances should be calculated.
-Passed to \code{\link{summary.modFit}}.  }
   \item{digits}{
   Number of digits to use for printing
 }

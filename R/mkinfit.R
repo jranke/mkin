@@ -1,7 +1,7 @@
 # $Id: mkinfit.R 120 2011-09-02 14:25:35Z jranke $
 
-# Copyright (C) 2010-2011 Johannes Ranke
-# Contact: mkin-devel@lists.berlios.de
+# Copyright (C) 2010-2012 Johannes Ranke
+# Contact: jranke@uni-bremen.de
 # The summary function is an adapted and extended version of summary.modFit
 # from the FME package, v 1.1 by Soetart and Petzoldt, which was in turn
 # inspired by summary.nls.lm
@@ -22,9 +22,8 @@
 # this program. If not, see <http://www.gnu.org/licenses/>
 
 mkinfit <- function(mkinmod, observed,
-  parms.ini = rep(0.1, length(mkinmod$parms)),
+  parms.ini = "auto",
   state.ini = c(100, rep(0, length(mkinmod$diffs) - 1)), 
-  lower = 0, upper = Inf,
   fixed_parms = NULL,
   fixed_initials = names(mkinmod$diffs)[-1],
   eigen = FALSE,
@@ -34,14 +33,24 @@ mkinfit <- function(mkinmod, observed,
   ...)
 {
   mod_vars <- names(mkinmod$diffs)
-  # Subset dataframe with mapped (modelled) variables
+  # Subset dataframe of observed variables with mapped (modelled) variables
   observed <- subset(observed, name %in% names(mkinmod$map))
   # Get names of observed variables
   obs_vars = unique(as.character(observed$name))
 
-  # Name the parameters if they are not named yet
-  if(is.null(names(parms.ini))) names(parms.ini) <- mkinmod$parms
-
+  # Define initial values for parameters where not specified by the user
+  if (parms.ini[[1]] == "auto") parms.ini = vector()
+  defaultpar.names <- setdiff(mkinmod$parms, names(parms.ini))
+  for (parmname in defaultpar.names) {
+    # Default values for the FOMC model
+    if (parmname == "alpha") parms.ini[parmname] = 1
+    if (parmname == "beta") parms.ini[parmname] = 10
+    # Default values for log of rate constants, depending on the parameterisation
+    if (substr(parmname, 1, 2) == "k_") parms.ini[parmname] = -2.3
+    # Default values for ilr of formation fractions
+    if (substr(parmname, 1, 2) == "f_") parms.ini[parmname] = 0.1
+  }
+   
   # Name the inital parameter values if they are not named yet
   if(is.null(names(state.ini))) names(state.ini) <- mod_vars
 
@@ -58,14 +67,6 @@ mkinfit <- function(mkinmod, observed,
       names(state.ini.optim) <- paste(names(state.ini.optim), "0", sep="_")
   }
 
-  # Set upper limit for formation fractions to one if formation fractions are
-  # directly defined and if no user input for upper limit is given
-  if (all(upper==Inf) & any(grepl("f_", names(parms.ini)))==TRUE){
-    upper=c( rep(Inf,length(parms.optim)))
-    upper[grep("f_", names(parms.optim))]=1
-    upper=c(rep(Inf, length(state.ini.optim)), upper)
-  }
-
   # Decide if the solution of the model can be based on a simple analytical
   # formula, the spectral decomposition of the matrix (fundamental system)
   # or a numeric ode solver from the deSolve package
@@ -80,12 +81,25 @@ mkinfit <- function(mkinmod, observed,
   # if necessary
   if(solution == "deSolve") {
     mkindiff <- function(t, state, parms) {
+      transparms <- vector()
+      transparms <- c(transparms, exp(parms[grep("^k_", names(parms))]))
+      for (box in mod_vars) {
+        path_indices <- grep(paste("^f", box, sep = "_"), names(parms))
+        n_paths <- length(path_indices)
+        if (n_paths > 0) {
+          f <- invilr(parms[grep(paste("^f", box, sep="_"), names(parms))])
+          transparms <- c(transparms, f[1:n_paths])
+        }
+      }
+      otherparms <- parms[setdiff(names(parms), names(transparms))]
+      parms <- c(transparms, otherparms)
+
       time <- t
       diffs <- vector()
       for (box in mod_vars)
       {
         diffname <- paste("d", box, sep="_")      
-        diffs[diffname] <- with(as.list(c(time,state, parms)),
+        diffs[diffname] <- with(as.list(c(time, state, parms)),
           eval(parse(text=mkinmod$diffs[[box]])))
       }
       return(list(c(diffs)))
@@ -251,7 +265,7 @@ mkinfit <- function(mkinmod, observed,
     }
     return(mC)
   }
-  fit <- modFit(cost, c(state.ini.optim, parms.optim), lower = lower, upper = upper, ...)
+  fit <- modFit(cost, c(state.ini.optim, parms.optim), ...)
 
   # We need to return some more data for summary and plotting
   fit$solution <- solution
@@ -323,7 +337,7 @@ mkinfit <- function(mkinmod, observed,
       DT90 = log(10)/k_tot
       for (k_name in k_names)
       {
-        fit$ff[[sub("k_", "", k_name)]] = parms.all[[k_name]] / k_tot
+        fit$ff[[sub("^k_", "", k_name)]] = parms.all[[k_name]] / k_tot
       }
     }
     if (type == "FOMC") {
@@ -395,7 +409,7 @@ mkinfit <- function(mkinmod, observed,
       if (abs(DT90.o - max_DT) < 0.01) DT90 = NA else DT90 = DT90.o
       for (k_out_name in k_out_names)
       {
-        fit$ff[[sub("k_", "", k_out_name)]] = parms.all[[k_out_name]] / k_1output
+        fit$ff[[sub("^k_", "", k_out_name)]] = parms.all[[k_out_name]] / k_1output
       }
       # Return the eigenvalues for comparison with DFOP rate constants
       fit$SFORB[[paste(obs_var, "b1", sep="_")]] = b1
@@ -416,8 +430,11 @@ mkinfit <- function(mkinmod, observed,
   return(fit)
 }
 
-summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, ff = TRUE, cov = FALSE,...) {
+summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, ff = TRUE, ...) {
   param  <- object$par
+  if (object$logk) {
+    names(param) <- sub("^k_", "log k_", names(param))
+  }
   pnames <- names(param)
   p      <- length(param)
   covar  <- try(solve(0.5*object$hessian), silent = TRUE)   # unscaled covariance
@@ -441,32 +458,25 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, ff = TRUE, cov
     warning(message)
   } else message <- "ok"
 
-  param <- cbind(param, se, tval, pt(tval, rdf, lower.tail = FALSE))
-  dimnames(param) <- list(pnames, c("Estimate", "Std. Error",
-                                    "t value", "Pr(>t)"))
-  if(cov)
-    ans <- list(residuals = object$residuals,
-                residualVariance = resvar,
-                sigma = sqrt(resvar),
-                modVariance = modVariance,
-                df = c(p, rdf), cov.unscaled = covar,
-                cov.scaled = covar * resvar,
-                info = object$info, niter = object$iterations,
-                stopmess = message,
-                par = param)
-  else
-    ans <- list(residuals = object$residuals,
-                residualVariance = resvar,
-                sigma = sqrt(resvar),
-                modVariance = modVariance,
-                df = c(p, rdf),
-                info = object$info, niter = object$iterations,
-                stopmess = message,
-                par = param)
+  param <- cbind(param, se)
+  dimnames(param) <- list(pnames, c("Estimate", "Std. Error"))
+
+  ans <- list(residuals = object$residuals,
+          residualVariance = resvar,
+          sigma = sqrt(resvar),
+          modVariance = modVariance,
+          df = c(p, rdf), cov.unscaled = covar,
+          cov.scaled = covar * resvar,
+          info = object$info, niter = object$iterations,
+          stopmess = message,
+          par = param)
 
   ans$diffs <- object$diffs
   if(data) ans$data <- object$data
   ans$start <- object$start
+  if (object$logk) {
+    names(ans$start) <- sub("^k_", "log k_", names(ans$start))
+  }
   ans$fixed <- object$fixed
   ans$errmin <- object$errmin 
   if(distimes) ans$distimes <- object$distimes
