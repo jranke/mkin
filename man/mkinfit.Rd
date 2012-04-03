@@ -34,11 +34,9 @@ mkinfit(mkinmod, observed,
     \code{\link{modFit}}.
   }
   \item{parms.ini}{
-    A named vector if initial values for the parameters, including parameters to
+    A named vector of initial values for the parameters, including parameters to
     be optimised and potentially also fixed parameters as indicated by \code{fixed_parms}.
-    The default is to set the initial values to 0.1. The setting of the initial values for 
-    the parameters has a strong impart on performance and it lies in the responsibilty of the 
-    user to set sensible initial values.   
+    If set to "auto", initial values for rate constants are set to default values.
   }
   \item{state.ini}{
     A named vector of initial values for the state variables of the model. In case the 

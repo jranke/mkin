@@ -32,9 +32,12 @@ mkinfit <- function(mkinmod, observed,
   atol = 1e-6,
   ...)
 {
+  # Get the names of the state variables in the model
   mod_vars <- names(mkinmod$diffs)
-  # Subset dataframe of observed variables with mapped (modelled) variables
+
+  # Subset observed data with names of observed data in the model
   observed <- subset(observed, name %in% names(mkinmod$map))
+
   # Get names of observed variables
   obs_vars = unique(as.character(observed$name))
 
@@ -42,26 +45,33 @@ mkinfit <- function(mkinmod, observed,
   if (parms.ini[[1]] == "auto") parms.ini = vector()
   defaultpar.names <- setdiff(mkinmod$parms, names(parms.ini))
   for (parmname in defaultpar.names) {
-    # Default values for the FOMC model
+    # Default values for rate constants, depending on the parameterisation
+    if (substr(parmname, 1, 2) == "k_") parms.ini[parmname] = 0.1 
+    # Default values for formation fractions
+    if (substr(parmname, 1, 2) == "f_") parms.ini[parmname] = 0.1
+    # Default values for the FOMC, DFOP and HS models
     if (parmname == "alpha") parms.ini[parmname] = 1
     if (parmname == "beta") parms.ini[parmname] = 10
-    # Default values for log of rate constants, depending on the parameterisation
-    if (substr(parmname, 1, 2) == "k_") parms.ini[parmname] = -2.3
-    # Default values for ilr of formation fractions
-    if (substr(parmname, 1, 2) == "f_") parms.ini[parmname] = 0.1
+    if (parmname == "k1") parms.ini[parmname] = 0.1
+    if (parmname == "k2") parms.ini[parmname] = 0.01
+    if (parmname == "tb") parms.ini[parmname] = 5
+    if (parmname == "g") parms.ini[parmname] = 0.5
   }
+  parms.ini <- transform_odeparms(parms.ini, mod_vars)
    
-  # Name the inital parameter values if they are not named yet
+  # Name the inital state variable values if they are not named yet
   if(is.null(names(state.ini))) names(state.ini) <- mod_vars
 
-  # Parameters to be optimised
+  # Parameters to be optimised:
+  # Kinetic parameters in parms.ini whose names are not in fixed_parms
   parms.fixed <- parms.ini[fixed_parms]
-  optim_parms <- setdiff(names(parms.ini), fixed_parms)
-  parms.optim <- parms.ini[optim_parms]
+  parms.optim <- parms.ini[setdiff(names(parms.ini), fixed_parms)]
 
+  # Inital state variables in state.ini whose names are not in fixed_initials
   state.ini.fixed <- state.ini[fixed_initials]
-  optim_initials <- setdiff(names(state.ini), fixed_initials)
-  state.ini.optim <- state.ini[optim_initials]
+  state.ini.optim <- state.ini[setdiff(names(state.ini), fixed_initials)]
+
+  # Preserve names of state variables before renaming initial state variable parameters
   state.ini.optim.boxnames <- names(state.ini.optim)
   if(length(state.ini.optim) > 0) {
       names(state.ini.optim) <- paste(names(state.ini.optim), "0", sep="_")
@@ -77,42 +87,17 @@ mkinfit <- function(mkinmod, observed,
     else solution = "deSolve"
   }
 
-  # Create a function calculating the differentials specified by the model
-  # if necessary
-  if(solution == "deSolve") {
-    mkindiff <- function(t, state, parms) {
-      transparms <- vector()
-      transparms <- c(transparms, exp(parms[grep("^k_", names(parms))]))
-      for (box in mod_vars) {
-        path_indices <- grep(paste("^f", box, sep = "_"), names(parms))
-        n_paths <- length(path_indices)
-        if (n_paths > 0) {
-          f <- invilr(parms[grep(paste("^f", box, sep="_"), names(parms))])
-          transparms <- c(transparms, f[1:n_paths])
-        }
-      }
-      otherparms <- parms[setdiff(names(parms), names(transparms))]
-      parms <- c(transparms, otherparms)
-
-      time <- t
-      diffs <- vector()
-      for (box in mod_vars)
-      {
-        diffname <- paste("d", box, sep="_")      
-        diffs[diffname] <- with(as.list(c(time, state, parms)),
-          eval(parse(text=mkinmod$diffs[[box]])))
-      }
-      return(list(c(diffs)))
-    } 
-  }
-
-  cost.old <- 1e100
-  calls <- 0
+  cost.old <- 1e100 # The first model cost should be smaller than this value
+  calls <- 0 # Counter for number of model solutions
   out_predicted <- NA
   # Define the model cost function
   cost <- function(P)
   {
-    assign("calls", calls+1, inherits=TRUE)
+    assign("calls", calls+1, inherits=TRUE) # Increase the model solution counter
+
+    # Time points at which observed data are available
+    outtimes = unique(observed$time)
+
     if(length(state.ini.optim) > 0) {
       odeini <- c(P[1:length(state.ini.optim)], state.ini.fixed)
       names(odeini) <- c(state.ini.optim.boxnames, names(state.ini.fixed))
@@ -120,76 +105,14 @@ mkinfit <- function(mkinmod, observed,
 
     odeparms <- c(P[(length(state.ini.optim) + 1):length(P)], parms.fixed)
 
-    outtimes = unique(observed$time)
-    evalparse <- function(string)
-    {
-      eval(parse(text=string), as.list(c(odeparms, odeini)))
-    }
+    transparms <- transform_odeparms(odeparms, mod_vars)
 
-    # Solve the system
-    if (solution == "analytical") {
-      parent.type = names(mkinmod$map[[1]])[1]  
-      parent.name = names(mkinmod$diffs)[[1]]
-      o <- switch(parent.type,
-        SFO = SFO.solution(outtimes, 
-            evalparse(parent.name),
-            evalparse(paste("k", parent.name, "sink", sep="_"))),
-        FOMC = FOMC.solution(outtimes,
-            evalparse(parent.name),
-            evalparse("alpha"), evalparse("beta")),
-        DFOP = DFOP.solution(outtimes,
-            evalparse(parent.name),
-            evalparse("k1"), evalparse("k2"),
-            evalparse("g")),
-        HS = HS.solution(outtimes,
-            evalparse(parent.name),
-            evalparse("k1"), evalparse("k2"),
-            evalparse("tb")),
-        SFORB = SFORB.solution(outtimes,
-            evalparse(parent.name),
-            evalparse(paste("k", parent.name, "bound", sep="_")),
-            evalparse(paste("k", sub("free", "bound", parent.name), "free", sep="_")),
-            evalparse(paste("k", parent.name, "sink", sep="_")))
-      )
-      out <- cbind(outtimes, o)
-      dimnames(out) <- list(outtimes, c("time", sub("_free", "", parent.name)))
-    }
-    if (solution == "eigen") {
-      coefmat.num <- matrix(sapply(as.vector(mkinmod$coefmat), evalparse), 
-        nrow = length(mod_vars))
-      e <- eigen(coefmat.num)
-      c <- solve(e$vectors, odeini)
-      f.out <- function(t) {
-        e$vectors %*% diag(exp(e$values * t), nrow=length(mod_vars)) %*% c
-      }
-      o <- matrix(mapply(f.out, outtimes), 
-        nrow = length(mod_vars), ncol = length(outtimes))
-      dimnames(o) <- list(mod_vars, outtimes)
-      out <- cbind(time = outtimes, t(o))
-    } 
-    if (solution == "deSolve")  
-    {
-      out <- ode(
-        y = odeini,
-        times = outtimes,
-        func = mkindiff, 
-        parms = odeparms,
-        atol = atol
-      )
-    }
-  
-    # Output transformation for models with unobserved compartments like SFORB
-    out_transformed <- data.frame(time = out[,"time"])
-    for (var in names(mkinmod$map)) {
-      if((length(mkinmod$map[[var]]) == 1) || solution == "analytical") {
-        out_transformed[var] <- out[, var]
-      } else {
-        out_transformed[var] <- rowSums(out[, mkinmod$map[[var]]])
-      }
-    }    
-    assign("out_predicted", out_transformed, inherits=TRUE)
+    # Solve the system with current transformed parameter values
+    out <- predict(mkinmod, transparms, odeini, outtimes, solution_type = solution)
 
-    mC <- modCost(out_transformed, observed, y = "value",
+    assign("out_predicted", out, inherits=TRUE)
+
+    mC <- modCost(out, observed, y = "value",
       err = err, weight = weight, scaleVar = scaleVar)
 
     # Report and/or plot if the model is improved
@@ -199,53 +122,9 @@ mkinfit <- function(mkinmod, observed,
       # Plot the data and current model output if requested
       if(plot) {
         outtimes_plot = seq(min(observed$time), max(observed$time), length.out=100)
-        if (solution == "analytical") {
-          o_plot <- switch(parent.type,
-            SFO = SFO.solution(outtimes_plot, 
-                evalparse(parent.name),
-                evalparse(paste("k", parent.name, "sink", sep="_"))),
-            FOMC = FOMC.solution(outtimes_plot,
-                evalparse(parent.name),
-                evalparse("alpha"), evalparse("beta")),
-            DFOP = DFOP.solution(outtimes_plot,
-                evalparse(parent.name),
-                evalparse("k1"), evalparse("k2"),
-                evalparse("g")),
-            HS = HS.solution(outtimes_plot,
-                evalparse(parent.name),
-                evalparse("k1"), evalparse("k2"),
-                evalparse("tb")),
-            SFORB = SFORB.solution(outtimes_plot,
-                evalparse(parent.name),
-                evalparse(paste("k", parent.name, "bound", sep="_")),
-                evalparse(paste("k", sub("free", "bound", parent.name), "free", sep="_")),
-                evalparse(paste("k", parent.name, "sink", sep="_")))
-          )
-          out_plot <- cbind(outtimes_plot, o_plot)
-          dimnames(out_plot) <- list(outtimes_plot, c("time", sub("_free", "", parent.name)))
-        }
-        if(solution == "eigen") {
-          o_plot <- matrix(mapply(f.out, outtimes_plot), 
-            nrow = length(mod_vars), ncol = length(outtimes_plot))
-          dimnames(o_plot) <- list(mod_vars, outtimes_plot)
-          out_plot <- cbind(time = outtimes_plot, t(o_plot))
-        } 
-        if (solution == "deSolve") {
-          out_plot <- ode(
-            y = odeini,
-            times = outtimes_plot,
-            func = mkindiff, 
-            parms = odeparms)
-        }
-        out_transformed_plot <- data.frame(time = out_plot[,"time"])
-        for (var in obs_vars) {
-          if((length(mkinmod$map[[var]]) == 1) || solution == "analytical") {
-            out_transformed_plot[var] <- out_plot[, var]
-          } else {
-            out_transformed_plot[var] <- rowSums(out_plot[, mkinmod$map[[var]]])
-          }
-        }    
-        out_transformed_plot <<- out_transformed_plot
+
+        out_plot <- predict(mkinmod, transparms, odeini, outtimes_plot, 
+          solution_type = solution)
 
         plot(0, type="n", 
           xlim = range(observed$time), ylim = range(observed$value, na.rm=TRUE),
@@ -256,7 +135,7 @@ mkinfit <- function(mkinmod, observed,
           points(subset(observed, name == obs_var, c(time, value)), 
             pch = pch_obs[obs_var], col = col_obs[obs_var])
         }
-        matlines(out_transformed_plot$time, out_transformed_plot[-1])
+        matlines(out_plot$time, out_plot[-1])
         legend("topright", inset=c(0.05, 0.05), legend=obs_vars, 
           col=col_obs, pch=pch_obs, lty=1:length(pch_obs))
       }
@@ -272,12 +151,6 @@ mkinfit <- function(mkinmod, observed,
   if (solution == "eigen") {
     fit$coefmat <- mkinmod$coefmat
   } 
-  if (solution == "deSolve") {
-    fit$mkindiff <- mkindiff
-  }
-  if (plot == TRUE) {
-    fit$out_transformed_plot = out_transformed_plot
-  }
 
   # We also need various other information for summary and plotting
   fit$map <- mkinmod$map
@@ -289,8 +162,6 @@ mkinfit <- function(mkinmod, observed,
   # Collect initial parameter values in two dataframes
   fit$start <- data.frame(initial = c(state.ini.optim, parms.optim))
   fit$start$type = c(rep("state", length(state.ini.optim)), rep("deparm", length(parms.optim)))
-  fit$start$lower <- lower
-  fit$start$upper <- upper
 
   fit$fixed <- data.frame(
     value = c(state.ini.fixed, parms.fixed))
@@ -322,11 +193,10 @@ mkinfit <- function(mkinmod, observed,
   }
   fit$errmin <- errmin
 
-  # Calculate dissipation times DT50 and DT90 and formation fractions
-  parms.all = c(fit$par, parms.fixed)
+  # Calculate dissipation times DT50 and DT90 from parameters
+  parms.all = transform_odeparms(c(fit$par, parms.fixed), mod_vars)
   fit$distimes <- data.frame(DT50 = rep(NA, length(obs_vars)), DT90 = rep(NA, length(obs_vars)), 
     row.names = obs_vars)
-  fit$ff <- vector()
   fit$SFORB <- vector()
   for (obs_var in obs_vars) {
     type = names(mkinmod$map[[obs_var]])[1]  
@@ -373,16 +243,6 @@ mkinfit <- function(mkinmod, observed,
       }
       DT50 <- DTx(50)
       DT90 <- DTx(90)
-    }
-    # Back-calculation of formation fractions in case of nonlinear parent kinetics
-    if (type %in% c("FOMC", "DFOP", "HS")) {
-      ff_names = names(mkinmod$ff)
-      for (ff_name in ff_names)
-      {
-        fit$ff[[paste(obs_var, ff_name, sep="_")]] = 
-          eval(parse(text = mkinmod$ff[ff_name]), as.list(parms.all))
-      }
-      fit$ff[[paste(obs_var, "sink", sep="_")]] = 1 - sum(fit$ff)
     }
     if (type == "SFORB") {
       # FOCUS kinetics (2006), p. 60 f
@@ -474,9 +334,10 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, ff = TRUE, ...
   ans$diffs <- object$diffs
   if(data) ans$data <- object$data
   ans$start <- object$start
-  if (object$logk) {
-    names(ans$start) <- sub("^k_", "log k_", names(ans$start))
-  }
+
+  # Fix names of parameters to show that they were transformed
+  names(ans$start) <- sub("^k_", "log k_", names(ans$start))
+
   ans$fixed <- object$fixed
   ans$errmin <- object$errmin 
   if(distimes) ans$distimes <- object$distimes
