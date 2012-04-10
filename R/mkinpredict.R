@@ -1,4 +1,4 @@
-predict.mkinmod <- function(mkinmod, odeparms, odeini, outtimes, solution_type = "deSolve", map_output = TRUE, atol = 1e-6) {
+mkinpredict <- function(mkinmod, odeparms, odeini, outtimes, solution_type = "deSolve", map_output = TRUE, atol = 1e-6, ...) {
 
   # Get the names of the state variables in the model
   mod_vars <- names(mkinmod$diffs)
@@ -69,14 +69,15 @@ predict.mkinmod <- function(mkinmod, odeparms, odeini, outtimes, solution_type =
       times = outtimes,
       func = mkindiff, 
       parms = odeparms,
-      atol = atol
+      atol = atol,
+      ...
     )
   }
   if (map_output) {
     # Output transformation for models with unobserved compartments like SFORB
     out_mapped <- data.frame(time = out[,"time"])
     for (var in names(mkinmod$map)) {
-      if((length(mkinmod$map[[var]]) == 1) || solution == "analytical") {
+      if((length(mkinmod$map[[var]]) == 1) || solution_type == "analytical") {
         out_mapped[var] <- out[, var]
       } else {
         out_mapped[var] <- rowSums(out[, mkinmod$map[[var]]])

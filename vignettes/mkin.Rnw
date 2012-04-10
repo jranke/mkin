@@ -28,9 +28,11 @@ options(SweaveHooks = list(
 Routines for fitting kinetic models with one or more state variables to chemical degradation data}
 \author{\textbf{Johannes Ranke} \\
 %EndAName
-Product Safety \\
-Harlan Laboratories Ltd. \\
-Zelgliweg 1, CH--4452 Itingen, Switzerland}
+Eurofins Regulatory AG\\
+Weidenweg 15, CH--4310 Rheinfelden, Switzerland\\{1cm}
+and\\
+University of Bremen\\
+}
 \maketitle
 
 \begin{abstract}
@@ -143,16 +145,16 @@ on the fundamental system of the coefficient matrix, as proposed by
 \citet{bates88}.
 
 <<model_fitting, echo=TRUE>>=
-# Do not show significance stars as they interfere with vignette generation
-options(show.signif.stars = FALSE)
 SFO.fit <- mkinfit(SFO, FOCUS_2006_C)
 summary(SFO.fit)
 SFORB.fit <- mkinfit(SFORB, FOCUS_2006_C)
 summary(SFORB.fit)
 SFO_SFO.fit <- mkinfit(SFO_SFO, FOCUS_2006_D, plot=TRUE)
 summary(SFO_SFO.fit, data=FALSE)
-SFORB_SFO.fit <- mkinfit(SFORB_SFO, FOCUS_2006_D, plot=TRUE)
-summary(SFORB_SFO.fit, data=FALSE)
+#SFORB_SFO.fit <- mkinfit(SFORB_SFO, FOCUS_2006_D, 
+#  parms.ini = c(f_parent_to_m1 = 0.5, k_m1 = 0.2), 
+#  plot=TRUE)
+#summary(SFORB_SFO.fit, data=FALSE)
 @
 
 \bibliographystyle{plainnat}

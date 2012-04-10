@@ -17,22 +17,16 @@
     vectors with all elements being greater than zero.
   }
 }
-\details{
-}
 \value{
   The result of the forward or backward transformation. The returned components always 
   sum to 1 for the case of the inverse log-ratio transformation.
 }
 \references{
-%% ~put references to the literature/web site here ~
+  Peter Filzmoser, Karel Hron (2008) Outlier Detection for Compositional Data Using Robust Methods. Math Geosci 40 233-248
 }
 \author{
   René Lehmann and Johannes Ranke
 }
-\note{
-%%  ~~further notes~~
-}
-
 \seealso{
   Other implementations are in R packages \code{compositions} and \code{robCompositions}.
 }

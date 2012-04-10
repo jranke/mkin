@@ -1,46 +1,72 @@
-transform_odeparms <- function(odeparms, mod_vars) {
-  # Transform rate constants and formation fractions
-  transparms <- odeparms
-  # Exponential transformation for rate constants
-  index_k <- grep("^k_", names(odeparms))
+transform_odeparms <- function(parms, mod_vars) {
+  # Set up container for transformed parameters
+  transparms <- parms
+
+  # Log transformation for rate constants
+  index_k <- grep("^k_", names(transparms))
   if (length(index_k) > 0) {
-    transparms[index_k] <- exp(odeparms[index_k])
+    transparms[index_k] <- log(parms[index_k])
   }
 
-  # Go through state variables and apply inverse isotropic logratio transformation
+  # Go through state variables and apply isotropic logratio transformation
   for (box in mod_vars) {
-    indices_f <- grep(paste("^f", box, sep = "_"), names(odeparms))
-    f_names <- grep(paste("^f", box, sep = "_"), names(odeparms), value = TRUE)
+    indices_f <- grep(paste("^f", box, sep = "_"), names(parms))
+    f_names <- grep(paste("^f", box, sep = "_"), names(parms), value = TRUE)
     n_paths <- length(indices_f)
     if (n_paths > 0) {
-      f <- invilr(odeparms[indices_f])[1:n_paths] # We do not need the last component
-      names(f) <- f_names
-      transparms[indices_f] <- f
+      f <- parms[indices_f]
+      trans_f <- ilr(c(f, 1 - sum(f)))
+      names(trans_f) <- f_names
+      transparms[indices_f] <- trans_f
     }
   }
+
+  # Transform parameters also for FOMC, DFOP and HS models
+  for (pname in c("alpha", "beta", "k1", "k2", "tb")) {
+    if (!is.na(parms[pname])) {
+      transparms[pname] <- log(parms[pname])
+    } 
+  }
+  if (!is.na(parms["g"])) {
+    g <- parms["g"]
+    transparms["g"] <- ilr(c(g, 1- g))
+  }
+
   return(transparms)
 }
 
 backtransform_odeparms <- function(transparms, mod_vars) {
-  # Transform rate constants and formation fractions
-  odeparms <- transparms
-  # Log transformation for rate constants
-  index_k <- grep("^k_", names(transparms))
+  # Set up container for backtransformed parameters
+  parms <- transparms
+
+  # Exponential transformation for rate constants
+  index_k <- grep("^k_", names(parms))
   if (length(index_k) > 0) {
-    odeparms[index_k] <- log(transparms[index_k])
+    parms[index_k] <- exp(transparms[index_k])
   }
 
-  # Go through state variables and apply isotropic logratio transformation
+  # Go through state variables and apply inverse isotropic logratio transformation
   for (box in mod_vars) {
     indices_f <- grep(paste("^f", box, sep = "_"), names(transparms))
     f_names <- grep(paste("^f", box, sep = "_"), names(transparms), value = TRUE)
     n_paths <- length(indices_f)
     if (n_paths > 0) {
-      trans_f <- transparms[indices_f]
-      f <- ilr(c(trans_f, 1 - sum(trans_f)))
+      f <- invilr(transparms[indices_f])[1:n_paths] # We do not need the last component
       names(f) <- f_names
-      odeparms[indices_f] <- f
+      parms[indices_f] <- f
     }
   }
-  return(odeparms)
+
+  # Transform parameters also for DFOP and HS models
+  for (pname in c("alpha", "beta", "k1", "k2", "tb")) {
+    if (!is.na(transparms[pname])) {
+      parms[pname] <- exp(transparms[pname])
+    } 
+  }
+  if (!is.na(transparms["g"])) {
+    g <- transparms["g"]
+    parms["g"] <- invilr(g)[1]
+  }
+
+  return(parms)
 }

@@ -11,8 +11,8 @@
   and residual values.
 }
 \usage{
-\method{summary}{mkinfit}(object, data = TRUE, distimes = TRUE, ff = TRUE, ...)
-\method{print}{summary.mkinfit}(x, digits = max(3, getOption("digits") - 3), tval = TRUE, ...)
+\method{summary}{mkinfit}(object, data = TRUE, distimes = TRUE, ...)
+\method{print}{summary.mkinfit}(x, digits = max(3, getOption("digits") - 3), ...)
 }
 
 \arguments{
@@ -28,15 +28,8 @@
   \item{distimes}{
   logical, indicating whether DT50 and DT90 values should be included.
 }
-  \item{ff}{
-  logical, indicating whether formation fractions should be included.
-}
   \item{digits}{
   Number of digits to use for printing
-}
-  \item{tval}{
-  Should the test statistic of the t-test for parameter significance be
-  printed? Defaults to \code{TRUE}. Saves vertical space if set to \code{FALSE}.
 }
   \item{\dots}{
   optional arguments passed to methods like \code{print}.

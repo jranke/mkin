@@ -57,15 +57,17 @@ mkinfit <- function(mkinmod, observed,
     if (parmname == "tb") parms.ini[parmname] = 5
     if (parmname == "g") parms.ini[parmname] = 0.5
   }
-  parms.ini <- transform_odeparms(parms.ini, mod_vars)
-   
+
   # Name the inital state variable values if they are not named yet
   if(is.null(names(state.ini))) names(state.ini) <- mod_vars
 
+  # Transform initial parameter values for fitting
+  transparms.ini <- transform_odeparms(parms.ini, mod_vars)
+
   # Parameters to be optimised:
   # Kinetic parameters in parms.ini whose names are not in fixed_parms
-  parms.fixed <- parms.ini[fixed_parms]
-  parms.optim <- parms.ini[setdiff(names(parms.ini), fixed_parms)]
+  parms.fixed <- transparms.ini[fixed_parms]
+  parms.optim <- transparms.ini[setdiff(names(transparms.ini), fixed_parms)]
 
   # Inital state variables in state.ini whose names are not in fixed_initials
   state.ini.fixed <- state.ini[fixed_initials]
@@ -83,8 +85,11 @@ mkinfit <- function(mkinmod, observed,
   if (length(mkinmod$map) == 1) {
     solution = "analytical"
   } else {
-    if (is.matrix(mkinmod$coefmat) & eigen) solution = "eigen"
-    else solution = "deSolve"
+    if (is.matrix(mkinmod$coefmat) && eigen) {
+      solution = "eigen"
+    } else {
+      solution = "deSolve"
+    }
   }
 
   cost.old <- 1e100 # The first model cost should be smaller than this value
@@ -105,10 +110,10 @@ mkinfit <- function(mkinmod, observed,
 
     odeparms <- c(P[(length(state.ini.optim) + 1):length(P)], parms.fixed)
 
-    transparms <- transform_odeparms(odeparms, mod_vars)
+    parms <- backtransform_odeparms(odeparms, mod_vars)
 
     # Solve the system with current transformed parameter values
-    out <- predict(mkinmod, transparms, odeini, outtimes, solution_type = solution)
+    out <- mkinpredict(mkinmod, parms, odeini, outtimes, solution_type = solution, ...)
 
     assign("out_predicted", out, inherits=TRUE)
 
@@ -123,8 +128,8 @@ mkinfit <- function(mkinmod, observed,
       if(plot) {
         outtimes_plot = seq(min(observed$time), max(observed$time), length.out=100)
 
-        out_plot <- predict(mkinmod, transparms, odeini, outtimes_plot, 
-          solution_type = solution)
+        out_plot <- mkinpredict(mkinmod, parms, odeini, outtimes_plot, 
+          solution_type = solution, ...)
 
         plot(0, type="n", 
           xlim = range(observed$time), ylim = range(observed$value, na.rm=TRUE),
@@ -160,8 +165,10 @@ mkinfit <- function(mkinmod, observed,
   fit$predicted <- out_predicted
 
   # Collect initial parameter values in two dataframes
-  fit$start <- data.frame(initial = c(state.ini.optim, parms.optim))
+  fit$start <- data.frame(initial = c(state.ini.optim, 
+		  backtransform_odeparms(parms.optim, mod_vars)))
   fit$start$type = c(rep("state", length(state.ini.optim)), rep("deparm", length(parms.optim)))
+  fit$start$transformed = c(state.ini.optim, parms.optim)
 
   fit$fixed <- data.frame(
     value = c(state.ini.fixed, parms.fixed))
@@ -194,7 +201,7 @@ mkinfit <- function(mkinmod, observed,
   fit$errmin <- errmin
 
   # Calculate dissipation times DT50 and DT90 from parameters
-  parms.all = transform_odeparms(c(fit$par, parms.fixed), mod_vars)
+  parms.all = backtransform_odeparms(c(fit$par, parms.fixed), mod_vars)
   fit$distimes <- data.frame(DT50 = rep(NA, length(obs_vars)), DT90 = rep(NA, length(obs_vars)), 
     row.names = obs_vars)
   fit$SFORB <- vector()
@@ -285,16 +292,14 @@ mkinfit <- function(mkinmod, observed,
   data$variable <- ordered(data$variable, levels = obs_vars)
   fit$data <- data[order(data$variable, data$time), ]
   fit$atol <- atol
+  fit$parms.all <- parms.all
 
   class(fit) <- c("mkinfit", "modFit") 
   return(fit)
 }
 
-summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, ff = TRUE, ...) {
+summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, ...) {
   param  <- object$par
-  if (object$logk) {
-    names(param) <- sub("^k_", "log k_", names(param))
-  }
   pnames <- names(param)
   p      <- length(param)
   covar  <- try(solve(0.5*object$hessian), silent = TRUE)   # unscaled covariance
@@ -304,19 +309,13 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, ff = TRUE, ...
     covar <- matrix(data = NA, nrow = p, ncol = p)
   } else message <- "ok"
 
-  rownames(covar) <- colnames(covar) <-pnames
+  rownames(covar) <- colnames(covar) <- pnames
   rdf    <- object$df.residual
   resvar <- object$ssr / rdf
   se     <- sqrt(diag(covar) * resvar)
   names(se) <- pnames
   tval      <- param / se
   modVariance <- object$ssr / length(object$residuals)
-
-  if (!all(object$start$lower >=0)) {
-    message <- "Note that the one-sided t-test may not be appropriate if
-      parameter values below zero are possible."
-    warning(message)
-  } else message <- "ok"
 
   param <- cbind(param, se)
   dimnames(param) <- list(pnames, c("Estimate", "Std. Error"))
@@ -335,20 +334,17 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, ff = TRUE, ...
   if(data) ans$data <- object$data
   ans$start <- object$start
 
-  # Fix names of parameters to show that they were transformed
-  names(ans$start) <- sub("^k_", "log k_", names(ans$start))
-
   ans$fixed <- object$fixed
   ans$errmin <- object$errmin 
+  ans$parms.all <- object$parms.all
   if(distimes) ans$distimes <- object$distimes
-  if(ff) ans$ff <- object$ff
   if(length(object$SFORB) != 0) ans$SFORB <- object$SFORB
   class(ans) <- c("summary.mkinfit", "summary.modFit") 
   return(ans)  
 }
 
 # Expanded from print.summary.modFit
-print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), tval = TRUE, ...) {
+print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), ...) {
   cat("\nEquations:\n")
   print(noquote(as.character(x[["diffs"]])))
   df  <- x$df
@@ -361,12 +357,11 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), t
   if(length(x$fixed$value) == 0) cat("None\n")
   else print(x$fixed)
   
-  cat("\nOptimised parameters:\n")
-  if (tval) printCoefmat(x$par, digits = digits, ...)
-  else {
-    printCoefmat(x$par[,c(1,2,4)], cs.in = c(1,2), tst.ind = integer(0), 
-      P.values = TRUE, has.Pvalue = TRUE, digits = digits, ...)
-  }
+  cat("\nOptimised, transformed parameters:\n")
+  printCoefmat(x$par, digits = digits, ...)
+
+  cat("\nBacktransformed parameters:\n")
+  print(as.data.frame(list(Estimate = x$parms.all)))
 
   cat("\nResidual standard error:",
       format(signif(x$sigma, digits)), "on", rdf, "degrees of freedom\n")
@@ -379,12 +374,6 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), t
   if(printdistimes){
     cat("\nEstimated disappearance times:\n")
     print(x$distimes, digits=digits,...)
-  }    
-
-  printff <- !is.null(x$ff)
-  if(printff){
-    cat("\nEstimated formation fractions:\n")
-    print(data.frame(ff = x$ff), digits=digits,...)
   }    
 
   printSFORB <- !is.null(x$SFORB)
