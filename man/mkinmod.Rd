@@ -19,12 +19,10 @@ mkinmod(...)
     single first order with reversible binding "SFORB" are implemented for all
     variables, while 
     "FOMC", "DFOP" and "HS" can additionally be chosen for the first
-    variable which is assumed to be the source compartment.  Optional components
-    of each argument are \code{to}, a
-    vector of names of variables to which a transfer is to be assumed in the
-    model, and \code{sink}, a logical specifying if transformation to
-    unspecified compounds (sink) is to be assumed in the model (defaults to
-    \code{TRUE})
+    variable which is assumed to be the source compartment.
+    Additionally, each component of the list can include a character vector \code{to},
+    specifying names of variables to which a transfer is to be assumed in the
+    model.
   }
 }
 \value{
@@ -37,17 +35,16 @@ mkinmod(...)
     \item{coefmat}{ The coefficient matrix, if the system of differential equations can be represented by one. }
 }
 \author{
-  Johannes Ranke <jranke@{harlan.com,uni-bremen.de}>
+  Johannes Ranke
 }
 \examples{
-# There are different ways to specify the SFO model
-SFO.1 <- mkinmod(parent = list(type = "SFO", to = NULL, sink = TRUE))
-SFO.2 <- mkinmod(parent = list(type = "SFO"))
-all.equal(SFO.1, SFO.2)
+# Specify the SFO model
+SFO <- mkinmod(parent = list(type = "SFO"))
 
 # One parent compound, one metabolite, both single first order.
 SFO_SFO <- mkinmod(
-  parent = list(type = "SFO", to = "m1", sink = TRUE),
+  parent = list(type = "SFO", to = "m1"),
   m1 = list(type = "SFO"))
+
 }
 \keyword{ models }
