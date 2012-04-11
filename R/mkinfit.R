@@ -1,4 +1,4 @@
-# $Id: mkinfit.R 120 2011-09-02 14:25:35Z jranke $
+# $Id$
 
 # Copyright (C) 2010-2012 Johannes Ranke
 # Contact: jranke@uni-bremen.de

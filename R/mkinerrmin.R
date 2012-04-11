@@ -1,4 +1,4 @@
-# $Id: mkinerrmin.R 59 2010-07-28 12:29:15Z jranke $
+# $Id$
 
 # Copyright (C) 2010 Johannes Ranke
 # Contact: mkin-devel@lists.berlios.de

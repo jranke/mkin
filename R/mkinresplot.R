@@ -1,4 +1,4 @@
-# $Id:  $
+# $Id$
 
 # Copyright (C) 2008-2011 Katrin Lindenberger and Johannes Ranke
 # Contact: mkin-devel@lists.berlios.de

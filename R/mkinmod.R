@@ -1,4 +1,4 @@
-# $Id: mkinmod.R 71 2010-09-12 01:13:36Z jranke $
+# $Id$
 
 # Copyright (C) 2010-2012 Johannes Ranke
 # Contact: jranke@uni-bremen.de
