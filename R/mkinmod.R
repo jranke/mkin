@@ -145,11 +145,18 @@ mkinmod <- function(...)
     m <- matrix(nrow=n, ncol=n, dimnames=list(boxes, boxes))
     for (from in boxes) {
       for (to in boxes) {
-        if (from == to) {
+        if (from == to) { # diagonal elements
           k.candidate = paste("k", from, sep="_")
           m[from,to] = ifelse(k.candidate %in% model$parms,
               paste("-", k.candidate), "0")
-        } else {
+          if(grepl("_free", from)) { # add transfer to bound compartment for SFORB
+            m[from,to] = paste(m[from,to], "-", paste("k", from, "bound", sep="_"))
+          }
+          if(grepl("_bound", from)) { # add backtransfer to free compartment for SFORB
+            m[from,to] = paste("- k", from, "free", sep="_")
+          }
+          m[from,to] = m[from,to]
+        } else {          # off-diagonal elements
           f.candidate = paste("f", from, "to", to, sep="_")
           k.candidate = paste("k", from, to, sep="_")
           k.candidate = sub("free.*bound", "free_bound", k.candidate)
