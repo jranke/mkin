@@ -9,7 +9,7 @@
   kinetic model type and reaction or transfer to other observed compartments.
 }
 \usage{
-mkinmod(...)
+mkinmod(..., use_of_ff = "min")
 }
 \arguments{
   \item{...}{
@@ -23,6 +23,15 @@ mkinmod(...)
     Additionally, each component of the list can include a character vector \code{to},
     specifying names of variables to which a transfer is to be assumed in the
     model.
+    If the argument \code{use_of_ff} is set to "min" (default) and the model for 
+    the compartment is "SFO" or "SFORB", an additional component of the list
+    can be "sink=FALSE" effectively fixing the flux to sink to zero.
+  }
+  \item{use_of_ff}{
+    Specification of the use of formation fractions in the model equations and, if 
+    applicable, the coefficient matrix. If "min", a minimum use of formation 
+    fractions is made in order to avoid fitting the product of formation fractions 
+    and rate constants. If "max", formation fractions are always used.
   }
 }
 \value{
@@ -32,6 +41,7 @@ mkinmod(...)
     \item{parms}{ A vector of parameter names occurring in the differential equations. }
     \item{map}{ A list containing named character vectors for each observed variable, specifying
       the modelling variables by which it is represented. }
+    \item{use_of_ff}{ The content of \code{use_of_ff} is passed on in this list component. }
     \item{coefmat}{ The coefficient matrix, if the system of differential equations can be represented by one. }
 }
 \author{
