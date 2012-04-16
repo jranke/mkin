@@ -35,6 +35,9 @@ mkinfit <- function(mkinmod, observed,
   # Get the names of the state variables in the model
   mod_vars <- names(mkinmod$diffs)
 
+  # See which variant of the model specification was used
+  use_of_ff <- mkinmod$use_of_ff
+
   # Subset observed data with names of observed data in the model
   observed <- subset(observed, name %in% names(mkinmod$map))
 
@@ -47,6 +50,9 @@ mkinfit <- function(mkinmod, observed,
   for (parmname in defaultpar.names) {
     # Default values for rate constants, depending on the parameterisation
     if (substr(parmname, 1, 2) == "k_") parms.ini[parmname] = 0.1 
+    # Default values for rate constants for reversible binding
+    if (grepl("free_bound$", parmname)) parms.ini[parmname] = 0.1 
+    if (grepl("bound_free$", parmname)) parms.ini[parmname] = 0.02
     # Default values for formation fractions
     if (substr(parmname, 1, 2) == "f_") parms.ini[parmname] = 0.1
     # Default values for the FOMC, DFOP and HS models
