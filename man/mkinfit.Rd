@@ -14,10 +14,10 @@ mkinfit(mkinmod, observed,
   parms.ini = "auto",
   state.ini = c(100, rep(0, length(mkinmod$diffs) - 1)), 
   fixed_parms = NULL, fixed_initials = names(mkinmod$diffs)[-1], 
-  eigen = FALSE,
+  solution_type = "auto",
   plot = FALSE, quiet = FALSE, err = NULL, weight = "none", 
   scaleVar = FALSE, 
-  atol = 1e-6, ...)
+  atol = 1e-6, n.outtimes, ...)
 }
 \arguments{
   \item{mkinmod}{
@@ -53,11 +53,16 @@ mkinfit(mkinmod, observed,
     The names of model variables for which the initial state at time 0 should be excluded
     from the optimisation. Defaults to all state variables except for the first one.
   }
-  \item{eigen}{
-    Should the solution of the system of differential equations be based on the 
+  \item{solution_type}{
+    If set to "eigen", the solution of the system of differential equations is based on the 
     spectral decomposition of the coefficient matrix in cases that this is
-    possible? Be aware that the results may differ from the results returned using
-    the ode solver.
+    possible. If set to "deSolve", a numerical ode solver from package
+    \code{\link{deSolve}} is used. If set to "analytical", an analytical solution
+    of the model is used. This is only implemented for simple degradation experiments
+    with only one state variable, i.e. with no metabolites. The default is "auto", 
+    which uses "analytical" if possible, otherwise "eigen" if the model can be expressed
+    using eigenvalues and eigenvectors, and finally "deSolve" for the remaining
+    models (time dependence of degradation rates and metabolites).
   }
   \item{plot}{
     Should the observed values and the numerical solutions be plotted at each stage
@@ -80,6 +85,12 @@ mkinfit(mkinmod, observed,
   \item{atol}{
     Absolute error tolerance, passed to \code{\link{ode}}. Default is 1e-6 as in 
     \code{\link{lsoda}}.
+  }
+  \item{n.outtimes}{
+    The length of the dataseries that is produced by the model prediction
+    function \code{\link{mkinpredict}}. This impacts the accuracy of
+    the numerical solver if that is used (see \code{solution} argument. 
+    The default value is 100.
   }
   \item{\dots}{
     Further arguments that will be passed to \code{\link{modFit}}. 

@@ -26,17 +26,14 @@ mkinfit <- function(mkinmod, observed,
   state.ini = c(100, rep(0, length(mkinmod$diffs) - 1)), 
   fixed_parms = NULL,
   fixed_initials = names(mkinmod$diffs)[-1],
-  eigen = FALSE,
+  solution_type = "auto",
   plot = FALSE, quiet = FALSE,
   err = NULL, weight = "none", scaleVar = FALSE,
-  atol = 1e-6,
+  atol = 1e-6, n.outtimes = 100,
   ...)
 {
   # Get the names of the state variables in the model
   mod_vars <- names(mkinmod$diffs)
-
-  # See which variant of the model specification was used
-  use_of_ff <- mkinmod$use_of_ff
 
   # Subset observed data with names of observed data in the model
   observed <- subset(observed, name %in% names(mkinmod$map))
@@ -44,7 +41,7 @@ mkinfit <- function(mkinmod, observed,
   # Get names of observed variables
   obs_vars = unique(as.character(observed$name))
 
-  # Define initial values for parameters where not specified by the user
+  # Define starting values for parameters where not specified by the user
   if (parms.ini[[1]] == "auto") parms.ini = vector()
   defaultpar.names <- setdiff(mkinmod$parms, names(parms.ini))
   for (parmname in defaultpar.names) {
@@ -54,7 +51,7 @@ mkinfit <- function(mkinmod, observed,
     if (grepl("free_bound$", parmname)) parms.ini[parmname] = 0.1 
     if (grepl("bound_free$", parmname)) parms.ini[parmname] = 0.02
     # Default values for formation fractions
-    if (substr(parmname, 1, 2) == "f_") parms.ini[parmname] = 0.1
+    if (substr(parmname, 1, 2) == "f_") parms.ini[parmname] = 0.2
     # Default values for the FOMC, DFOP and HS models
     if (parmname == "alpha") parms.ini[parmname] = 1
     if (parmname == "beta") parms.ini[parmname] = 10
@@ -88,13 +85,21 @@ mkinfit <- function(mkinmod, observed,
   # Decide if the solution of the model can be based on a simple analytical
   # formula, the spectral decomposition of the matrix (fundamental system)
   # or a numeric ode solver from the deSolve package
-  if (length(mkinmod$map) == 1) {
-    solution = "analytical"
-  } else {
-    if (is.matrix(mkinmod$coefmat) && eigen) {
-      solution = "eigen"
+  if (!solution_type %in% c("auto", "analytical", "eigen", "deSolve"))
+      stop("solution_type must be auto, analytical, eigen or de Solve")
+  if (solution_type == "analytical" && length(mkinmod$map) > 1)
+      stop("Analytical solution not implemented for models with metabolites.")
+  if (solution_type == "eigen" && !is.matrix(mkinmod$coefmat))
+      stop("Eigenvalue based solution not possible, coefficient matrix not present.")
+  if (solution_type == "auto") {
+    if (length(mkinmod$map) == 1) {
+      solution_type = "analytical"
     } else {
-      solution = "deSolve"
+      if (is.matrix(mkinmod$coefmat)) {
+	solution_type = "eigen"
+      } else {
+	solution_type = "deSolve"
+      }
     }
   }
 
@@ -107,7 +112,9 @@ mkinfit <- function(mkinmod, observed,
     assign("calls", calls+1, inherits=TRUE) # Increase the model solution counter
 
     # Time points at which observed data are available
-    outtimes = unique(observed$time)
+    # Make sure we include time 0, so initial values for state variables are for time 0
+    outtimes = sort(unique(c(observed$time,
+		      seq(min(observed$time), max(observed$time), length.out=n.outtimes))))
 
     if(length(state.ini.optim) > 0) {
       odeini <- c(P[1:length(state.ini.optim)], state.ini.fixed)
@@ -119,7 +126,7 @@ mkinfit <- function(mkinmod, observed,
     parms <- backtransform_odeparms(odeparms, mod_vars)
 
     # Solve the system with current transformed parameter values
-    out <- mkinpredict(mkinmod, parms, odeini, outtimes, solution_type = solution, ...)
+    out <- mkinpredict(mkinmod, parms, odeini, outtimes, solution_type = solution_type, ...)
 
     assign("out_predicted", out, inherits=TRUE)
 
@@ -135,7 +142,7 @@ mkinfit <- function(mkinmod, observed,
         outtimes_plot = seq(min(observed$time), max(observed$time), length.out=100)
 
         out_plot <- mkinpredict(mkinmod, parms, odeini, outtimes_plot, 
-          solution_type = solution, ...)
+          solution_type = solution_type, ...)
 
         plot(0, type="n", 
           xlim = range(observed$time), ylim = range(observed$value, na.rm=TRUE),
@@ -158,8 +165,8 @@ mkinfit <- function(mkinmod, observed,
   fit <- modFit(cost, c(state.ini.optim, parms.optim), ...)
 
   # We need to return some more data for summary and plotting
-  fit$solution <- solution
-  if (solution == "eigen") {
+  fit$solution_type <- solution_type
+  if (solution_type == "eigen") {
     fit$coefmat <- mkinmod$coefmat
   } 
 
