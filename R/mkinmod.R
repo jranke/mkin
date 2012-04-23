@@ -92,7 +92,7 @@ mkinmod <- function(..., use_of_ff = "min")
           parms <- c(parms, k_compound_sink)
           decline_term <- paste(k_compound_sink, "*", box_1)
         } else { # otherwise no decline term needed here
-          decline_term = "" 
+          decline_term = "0" 
         }
       } else {
         k_compound <- paste("k", box_1, sep="_")
@@ -128,6 +128,10 @@ mkinmod <- function(..., use_of_ff = "min")
         reversible_binding_term_2 <- paste("+", k_free_bound, "*", box_1, "-",
           k_bound_free, "*", box_2)
       } else { # Use formation fractions also for the free compartment
+	stop("The maximum use of formation fractions is not supported for SFORB models")
+        # The problems were: Calculation of dissipation times did not work in this case
+        # and the coefficient matrix is not generated correctly by the code present 
+        # in this file in this case
         f_free_bound <- paste("f", varname, "free", "bound", sep="_")
         k_bound_free <- paste("k", varname, "bound", "free", sep="_")
         parms <- c(parms, f_free_bound, k_bound_free)

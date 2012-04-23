@@ -40,5 +40,12 @@ invilr<-function(x) {
   for (i in 1:D) {
     z[i] <- exp(y[i])/sum(exp(y))
   }
+
+  # Work around a numerical problem with NaN values returned by the above
+  # Only works if there is only one NaN value: replace it with 1
+  # if the sum of the other components is < 1e-10
+  if (sum(is.na(z)) == 1 && sum(z[!is.na(z)]) < 1e-10) 
+    z = ifelse(is.na(z), 1, z)
+
   return(z)
 }

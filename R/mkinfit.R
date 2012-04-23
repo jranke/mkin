@@ -111,6 +111,9 @@ mkinfit <- function(mkinmod, observed,
   {
     assign("calls", calls+1, inherits=TRUE) # Increase the model solution counter
 
+    # Trace parameter values if quiet is off
+    if(!quiet) cat(P, "\n")
+
     # Time points at which observed data are available
     # Make sure we include time 0, so initial values for state variables are for time 0
     outtimes = sort(unique(c(observed$time,
@@ -305,7 +308,8 @@ mkinfit <- function(mkinmod, observed,
   data$variable <- ordered(data$variable, levels = obs_vars)
   fit$data <- data[order(data$variable, data$time), ]
   fit$atol <- atol
-  fit$parms.all <- parms.all
+  fit$parms.all <- parms.all # Return all backtransformed parameters for summary
+  fit$odeparms.final <- parms.all[mkinmod$parms] # Return ode parameters for further fitting
 
   class(fit) <- c("mkinfit", "modFit") 
   return(fit)
