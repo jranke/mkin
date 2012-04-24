@@ -1,3 +1,23 @@
+# $Id$
+
+# Copyright (C) 2010-2012 Johannes Ranke
+# Contact: jranke@uni-bremen.de
+
+# This file is part of the R package mkin
+
+# mkin is free software: you can redistribute it and/or modify it under the
+# terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
+
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
+
+# You should have received a copy of the GNU General Public License along with
+# this program. If not, see <http://www.gnu.org/licenses/>
+
 mkinpredict <- function(mkinmod, odeparms, odeini, outtimes, solution_type = "deSolve", map_output = TRUE, atol = 1e-6, ...) {
 
   # Get the names of the state variables in the model
@@ -35,7 +55,7 @@ mkinpredict <- function(mkinmod, odeparms, odeini, outtimes, solution_type = "de
           evalparse(parent.name),
           evalparse(paste("k", parent.name, "bound", sep="_")),
           evalparse(paste("k", sub("free", "bound", parent.name), "free", sep="_")),
-          evalparse(paste("k", parent.name, sep="_")))
+          evalparse(paste("k", parent.name, "sink", sep="_")))
     )
     out <- cbind(outtimes, o)
     dimnames(out) <- list(outtimes, c("time", sub("_free", "", parent.name)))

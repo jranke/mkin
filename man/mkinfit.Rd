@@ -17,7 +17,8 @@ mkinfit(mkinmod, observed,
   solution_type = "auto",
   plot = FALSE, quiet = FALSE, err = NULL, weight = "none", 
   scaleVar = FALSE, 
-  atol = 1e-6, n.outtimes, ...)
+  atol = 1e-6, n.outtimes, 
+  trace_parms, ...)
 }
 \arguments{
   \item{mkinmod}{
@@ -92,6 +93,9 @@ mkinfit(mkinmod, observed,
     the numerical solver if that is used (see \code{solution} argument. 
     The default value is 100.
   }
+  \item{trace_parms}{
+    Should a trace of the parameter values be listed?
+  }
   \item{\dots}{
     Further arguments that will be passed to \code{\link{modFit}}. 
   }
@@ -101,7 +105,7 @@ mkinfit(mkinmod, observed,
     A summary can be obtained by \code{\link{summary.mkinfit}}. 
 }
 \author{
-  Johannes Ranke <jranke@{harlan.com,uni-bremen.de}>
+  Johannes Ranke <jranke@uni-bremen.de>
 }
 \examples{
 # One parent compound, one metabolite, both single first order.

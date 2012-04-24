@@ -30,6 +30,7 @@ mkinfit <- function(mkinmod, observed,
   plot = FALSE, quiet = FALSE,
   err = NULL, weight = "none", scaleVar = FALSE,
   atol = 1e-6, n.outtimes = 100,
+  trace_parms = FALSE,
   ...)
 {
   # Get the names of the state variables in the model
@@ -112,7 +113,7 @@ mkinfit <- function(mkinmod, observed,
     assign("calls", calls+1, inherits=TRUE) # Increase the model solution counter
 
     # Trace parameter values if quiet is off
-    if(!quiet) cat(P, "\n")
+    if(trace_parms) cat(P, "\n")
 
     # Time points at which observed data are available
     # Make sure we include time 0, so initial values for state variables are for time 0
@@ -216,10 +217,12 @@ mkinfit <- function(mkinmod, observed,
   }
   fit$errmin <- errmin
 
-  # Calculate dissipation times DT50 and DT90 from parameters
+  # Calculate dissipation times DT50 and DT90 and, if necessary, formation fractions
+  # from optimised parameters
   parms.all = backtransform_odeparms(c(fit$par, parms.fixed), mod_vars)
   fit$distimes <- data.frame(DT50 = rep(NA, length(obs_vars)), DT90 = rep(NA, length(obs_vars)), 
     row.names = obs_vars)
+  fit$ff <- vector()
   fit$SFORB <- vector()
   for (obs_var in obs_vars) {
     type = names(mkinmod$map[[obs_var]])[1]  
@@ -230,7 +233,7 @@ mkinfit <- function(mkinmod, observed,
       DT90 = log(10)/k_tot
       for (k_name in k_names)
       {
-        fit$ff[[sub("^k_", "", k_name)]] = parms.all[[k_name]] / k_tot
+        fit$ff[[sub("k_", "", k_name)]] = parms.all[[k_name]] / k_tot
       }
     }
     if (type == "FOMC") {
@@ -290,10 +293,12 @@ mkinfit <- function(mkinmod, observed,
       f_90 <- function(t) (SFORB_fraction(t) - 0.1)^2
       DT90.o <- optimize(f_90, c(0.01, max_DT))$minimum
       if (abs(DT90.o - max_DT) < 0.01) DT90 = NA else DT90 = DT90.o
+
       for (k_out_name in k_out_names)
       {
-        fit$ff[[sub("^k_", "", k_out_name)]] = parms.all[[k_out_name]] / k_1output
+        fit$ff[[sub("k_", "", k_out_name)]] = parms.all[[k_out_name]] / k_1output
       }
+
       # Return the eigenvalues for comparison with DFOP rate constants
       fit$SFORB[[paste(obs_var, "b1", sep="_")]] = b1
       fit$SFORB[[paste(obs_var, "b2", sep="_")]] = b2
@@ -310,6 +315,7 @@ mkinfit <- function(mkinmod, observed,
   fit$atol <- atol
   fit$parms.all <- parms.all # Return all backtransformed parameters for summary
   fit$odeparms.final <- parms.all[mkinmod$parms] # Return ode parameters for further fitting
+  fit$date <- date()
 
   class(fit) <- c("mkinfit", "modFit") 
   return(fit)
@@ -337,7 +343,12 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, ...) {
   param <- cbind(param, se)
   dimnames(param) <- list(pnames, c("Estimate", "Std. Error"))
 
-  ans <- list(residuals = object$residuals,
+  ans <- list(
+          version = as.character(packageVersion("mkin")),
+          Rversion = paste(R.version$major, R.version$minor, sep="."),
+	  date.fit = object$date,
+	  date.summary = date(),
+          residuals = object$residuals,
           residualVariance = resvar,
           sigma = sqrt(resvar),
           modVariance = modVariance,
@@ -354,6 +365,7 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, ...) {
   ans$fixed <- object$fixed
   ans$errmin <- object$errmin 
   ans$parms.all <- object$parms.all
+  ans$ff <- object$ff
   if(distimes) ans$distimes <- object$distimes
   if(length(object$SFORB) != 0) ans$SFORB <- object$SFORB
   class(ans) <- c("summary.mkinfit", "summary.modFit") 
@@ -362,6 +374,11 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, ...) {
 
 # Expanded from print.summary.modFit
 print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), ...) {
+  cat("mkin version:   ", x$version, "\n")
+  cat("R version:      ", x$Rversion, "\n")
+  cat("Date of fit:    ", x$date.fit, "\n")
+  cat("Date of summary:", x$date.summary, "\n")
+
   cat("\nEquations:\n")
   print(noquote(as.character(x[["diffs"]])))
   df  <- x$df
@@ -391,6 +408,12 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
   if(printdistimes){
     cat("\nEstimated disappearance times:\n")
     print(x$distimes, digits=digits,...)
+  }    
+
+  printff <- !is.null(x$ff)
+  if(printff){
+    cat("\nEstimated formation fractions:\n")
+    print(data.frame(ff = x$ff), digits=digits,...)
   }    
 
   printSFORB <- !is.null(x$SFORB)
