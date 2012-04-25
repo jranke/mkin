@@ -57,8 +57,8 @@ mkinpredict <- function(mkinmod, odeparms, odeini, outtimes, solution_type = "de
           evalparse(paste("k", sub("free", "bound", parent.name), "free", sep="_")),
           evalparse(paste("k", parent.name, "sink", sep="_")))
     )
-    out <- cbind(outtimes, o)
-    dimnames(out) <- list(outtimes, c("time", sub("_free", "", parent.name)))
+    out <- data.frame(outtimes, o)
+    names(out) <- c("time", sub("_free", "", parent.name))
   }
   if (solution_type == "eigen") {
     coefmat.num <- matrix(sapply(as.vector(mkinmod$coefmat), evalparse), 
@@ -70,8 +70,8 @@ mkinpredict <- function(mkinmod, odeparms, odeini, outtimes, solution_type = "de
     }
     o <- matrix(mapply(f.out, outtimes), 
       nrow = length(mod_vars), ncol = length(outtimes))
-    dimnames(o) <- list(mod_vars, outtimes)
-    out <- cbind(time = outtimes, t(o))
+    out <- data.frame(outtimes, t(o))
+    names(out) <- c("time", mod_vars)
   } 
   if (solution_type == "deSolve") {
     mkindiff <- function(t, state, parms) {

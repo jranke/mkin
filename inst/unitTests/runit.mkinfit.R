@@ -257,4 +257,5 @@ test.mkinfit.schaefer07_complex_example <- function()
   r$mkin.deviation <- abs(round(100 * ((r$mkin - r$means)/r$means), digits=1))
   checkIdentical(r$mkin.deviation < 10, rep(TRUE, length(r$mkin.deviation)))
 } # }}}
+
 # vim: set foldmethod=marker ts=2 sw=2 expandtab:
