@@ -170,13 +170,11 @@ mkinfit <- function(mkinmod, observed,
 
   # We need to return some more data for summary and plotting
   fit$solution_type <- solution_type
-  if (solution_type == "eigen") {
-    fit$coefmat <- mkinmod$coefmat
-  } 
 
-  # We also need various other information for summary and plotting
-  fit$map <- mkinmod$map
-  fit$diffs <- mkinmod$diffs
+  # We also need the model for summary and plotting
+  fit$mkinmod <- mkinmod
+
+  # We need data and predictions for summary and plotting
   fit$observed <- mkin_long_to_wide(observed)
   predicted_long <- mkin_wide_to_long(out_predicted, time = "time")
   fit$predicted <- out_predicted
@@ -348,6 +346,7 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, ...) {
           Rversion = paste(R.version$major, R.version$minor, sep="."),
 	  date.fit = object$date,
 	  date.summary = date(),
+	  use_of_ff = object$mkinmod$use_of_ff,
           residuals = object$residuals,
           residualVariance = resvar,
           sigma = sqrt(resvar),
@@ -358,7 +357,7 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, ...) {
           stopmess = message,
           par = param)
 
-  ans$diffs <- object$diffs
+  ans$diffs <- object$mkinmod$diffs
   if(data) ans$data <- object$data
   ans$start <- object$start
 
@@ -411,7 +410,7 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
   }    
 
   printff <- !is.null(x$ff)
-  if(printff){
+  if(printff & x$use_of_ff == "min"){
     cat("\nEstimated formation fractions:\n")
     print(data.frame(ff = x$ff), digits=digits,...)
   }    

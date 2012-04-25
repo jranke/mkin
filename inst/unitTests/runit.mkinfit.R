@@ -222,6 +222,43 @@ test.FOCUS_2006_SFORB <- function()
   checkIdentical(dev.B.SFORB.2 < 1, rep(TRUE, length(dev.B.SFORB.2)))
 } # }}}
 
+# Test SFO_SFO model with FOCUS_2006_D against Schaefer 2007 paper, tolerance = 1% # {{{
+test.FOCUS_2006_D_SFO_SFO <- function()
+{
+  SFO_SFO.1 <- mkinmod(parent = list(type = "SFO", to = "m1"),
+         m1 = list(type = "SFO"), use_of_ff = "min")
+  SFO_SFO.2 <- mkinmod(parent = list(type = "SFO", to = "m1"),
+         m1 = list(type = "SFO"), use_of_ff = "max")
+
+  fit.1.e <- mkinfit(SFO_SFO.1, FOCUS_2006_D)
+  fit.1.d <- mkinfit(SFO_SFO.1, solution_type = "deSolve", FOCUS_2006_D)
+  #fit.2.e <- mkinfit(SFO_SFO.2, FOCUS_2006_D, plot=TRUE)
+  SFO <- mkinmod(parent = list(type = "SFO"))
+  f.SFO <- mkinfit(SFO, FOCUS_2006_D)
+  #fit.2.e <- mkinfit(SFO_SFO.2, parms.ini = f.SFO$odeparms.final, FOCUS_2006_D)
+  fit.2.d <- mkinfit(SFO_SFO.2, solution_type = "deSolve", FOCUS_2006_D)
+  # Eigenvalue based solution with maximum use of formation fractions only 
+  # works correctly with initial parameters very close to final parameters!
+  fit.2.e <- mkinfit(SFO_SFO.2, parms.ini = fit.2.d$odeparms.final, FOCUS_2006_D)
+
+  FOCUS_2006_D_results_schaefer07_means <- c(
+    parent_0 = 99.65, DT50_parent = 7.04, DT50_m1 = 131.34)
+
+  r.1.e <- c(fit.1.e$parms.all[[1]], fit.1.e$distimes[[1]])
+  r.1.d <- c(fit.1.d$parms.all[[1]], fit.1.d$distimes[[1]])
+  r.2.e <- c(fit.2.e$parms.all[[1]], fit.2.e$distimes[[1]])
+  r.2.d <- c(fit.2.d$parms.all[[1]], fit.2.d$distimes[[1]])
+
+  dev.1.e <- 100 * (r.1.e - FOCUS_2006_D_results_schaefer07_means)/r.1.e 
+  checkIdentical(as.numeric(abs(dev.1.e)) < 1, rep(TRUE, 3))
+  dev.1.d <- 100 * (r.1.d - FOCUS_2006_D_results_schaefer07_means)/r.1.d 
+  checkIdentical(as.numeric(abs(dev.1.d)) < 1, rep(TRUE, 3))
+  dev.2.e <- 100 * (r.2.e - FOCUS_2006_D_results_schaefer07_means)/r.2.e 
+  checkIdentical(as.numeric(abs(dev.2.e)) < 1, rep(TRUE, 3))
+  dev.2.d <- 100 * (r.2.d - FOCUS_2006_D_results_schaefer07_means)/r.2.d 
+  checkIdentical(as.numeric(abs(dev.2.d)) < 1, rep(TRUE, 3))
+} # }}}
+
 # Test eigenvalue based fit to Schaefer 2007 data against solution from conference paper {{{
 test.mkinfit.schaefer07_complex_example <- function()
 {
@@ -256,6 +293,44 @@ test.mkinfit.schaefer07_complex_example <- function()
   r$means <- (r$KinGUI + r$ModelMaker)/2
   r$mkin.deviation <- abs(round(100 * ((r$mkin - r$means)/r$means), digits=1))
   checkIdentical(r$mkin.deviation < 10, rep(TRUE, length(r$mkin.deviation)))
+} # }}}
+
+# Test deSolve based fit to Schaefer 2007 data against solution from conference paper {{{
+test.mkinfit.schaefer07_complex_example <- function()
+{
+  schaefer07_complex_model <- mkinmod(
+    parent = list(type = "SFO", to = c("A1", "B1", "C1"), sink = FALSE),
+    A1 = list(type = "SFO", to = "A2"),
+    B1 = list(type = "SFO"),
+    C1 = list(type = "SFO"),
+    A2 = list(type = "SFO"))
+  
+  # Works fine with n.outtimes = 1000 but takes too much time
+  #   fit <- mkinfit(schaefer07_complex_model, 
+  #     mkin_wide_to_long(schaefer07_complex_case, time = "time"), 
+  #     n.outtimes = 1000, solution_type = "deSolve")
+  #   s <- summary(fit)
+  #   r <- schaefer07_complex_results
+  #   attach(as.list(fit$parms.all))
+  #   k_parent <- sum(k_parent_A1, k_parent_B1, k_parent_C1)
+  #   r$mkin <- c(
+  #     k_parent,
+  #     s$distimes["parent", "DT50"],
+  #     s$ff["parent_A1"],
+  #     sum(k_A1_sink, k_A1_A2),
+  #     s$distimes["A1", "DT50"],
+  #     s$ff["parent_B1"],
+  #     k_B1_sink,
+  #     s$distimes["B1", "DT50"],
+  #     s$ff["parent_C1"],
+  #     k_C1_sink,
+  #     s$distimes["C1", "DT50"],
+  #     s$ff["A1_A2"],
+  #     k_A2_sink,
+  #     s$distimes["A2", "DT50"])
+  #   r$means <- (r$KinGUI + r$ModelMaker)/2
+  #   r$mkin.deviation <- abs(round(100 * ((r$mkin - r$means)/r$means), digits=1))
+  #   checkIdentical(r$mkin.deviation < 10, rep(TRUE, length(r$mkin.deviation)))
 } # }}}
 
 # vim: set foldmethod=marker ts=2 sw=2 expandtab:
