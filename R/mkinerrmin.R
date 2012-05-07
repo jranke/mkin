@@ -1,7 +1,7 @@
 # $Id$
 
-# Copyright (C) 2010 Johannes Ranke
-# Contact: mkin-devel@lists.berlios.de
+# Copyright (C) 2010-2012 Johannes Ranke
+# Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
 
@@ -18,17 +18,63 @@
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
 
-mkinerrmin <- function(errdata, n.parms, alpha = 0.05)
+mkinerrmin <- function(fit, alpha = 0.05)
 {
-  means.mean <- mean(errdata$value_mean, na.rm=TRUE)
-
-	df = length(errdata$value_mean) - n.parms
+  parms.optim <- fit$parms.all
+  kinerrmin <- function(errdata, n.parms) {
+    means.mean <- mean(errdata$value_mean, na.rm=TRUE)
+    df = length(errdata$value_mean) - n.parms
   
-	f <- function(err)
-	{
-		(sum((errdata$value_mean - errdata$value_pred)^2/((err * means.mean)^2)) - 
-		 qchisq(1 - alpha,df))^2
-	}
-	err.min <- optimize(f, c(0.01,0.9))$minimum
-	return(list(err.min = err.min, n.optim = n.parms, df = df))
+    f <- function(err)
+    {
+      (sum((errdata$value_mean - errdata$value_pred)^2/((err * means.mean)^2)) - 
+       qchisq(1 - alpha,df))^2
+    }
+    err.min <- optimize(f, c(0.01,0.9))$minimum
+    return(list(err.min = err.min, n.optim = n.parms, df = df))
+  }
+
+  means <- aggregate(value ~ time + name, data = fit$observed, mean, na.rm=TRUE)
+  errdata <- merge(means, fit$predicted, by = c("time", "name"), 
+    suffixes = c("_mean", "_pred"))
+  errdata <- errdata[order(errdata$time, errdata$name), ]
+  n.optim.overall <- length(parms.optim)
+
+  errmin.overall <- kinerrmin(errdata, n.optim.overall)
+  errmin <- data.frame(err.min = errmin.overall$err.min,
+    n.optim = errmin.overall$n.optim, df = errmin.overall$df)
+  rownames(errmin) <- "All data"
+
+  for (obs_var in fit$obs_vars)
+  {
+    errdata.var <- subset(errdata, name == obs_var)
+
+    # Check if initial value is optimised
+    n.initials.optim <- length(grep(paste(obs_var, ".*", "_0", sep=""), names(parms.optim)))
+
+    # Rate constants are attributed to the source variable
+    n.k.optim <- length(grep(paste("^k", obs_var, sep="_"), names(parms.optim)))
+
+    # Formation fractions are attributed to the target variable
+    n.ff.optim <- length(grep(paste("^f", ".*", obs_var, "$", sep=""), names(parms.optim)))
+
+    n.optim <- n.k.optim + n.initials.optim + n.ff.optim
+
+    # FOMC, DFOP and HS parameters are only counted if we are looking at the
+    # first variable in the model which is always the source variable
+    if (obs_var == fit$obs_vars[[1]]) {
+      if ("alpha" %in% names(parms.optim)) n.optim <- n.optim + 1
+      if ("beta" %in% names(parms.optim)) n.optim <- n.optim + 1
+      if ("k1" %in% names(parms.optim)) n.optim <- n.optim + 1
+      if ("k2" %in% names(parms.optim)) n.optim <- n.optim + 1
+      if ("g" %in% names(parms.optim)) n.optim <- n.optim + 1
+      if ("tb" %in% names(parms.optim)) n.optim <- n.optim + 1
+    }
+
+    # Calculate and add a line to the results
+    errmin.tmp <- kinerrmin(errdata.var, n.optim)
+    errmin[obs_var, c("err.min", "n.optim", "df")] <- errmin.tmp
+  }
+
+	return(errmin)
 }

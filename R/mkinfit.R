@@ -175,9 +175,9 @@ mkinfit <- function(mkinmod, observed,
   fit$mkinmod <- mkinmod
 
   # We need data and predictions for summary and plotting
-  fit$observed <- mkin_long_to_wide(observed)
-  predicted_long <- mkin_wide_to_long(out_predicted, time = "time")
-  fit$predicted <- out_predicted
+  fit$observed <- observed
+  fit$obs_vars <- obs_vars
+  fit$predicted <- mkin_wide_to_long(out_predicted, time = "time")
 
   # Collect initial parameter values in two dataframes
   fit$start <- data.frame(initial = c(state.ini.optim, 
@@ -189,35 +189,11 @@ mkinfit <- function(mkinmod, observed,
     value = c(state.ini.fixed, parms.fixed))
   fit$fixed$type = c(rep("state", length(state.ini.fixed)), rep("deparm", length(parms.fixed)))
 
-  # Calculate chi2 error levels according to FOCUS (2006)
-  means <- aggregate(value ~ time + name, data = observed, mean, na.rm=TRUE)
-  errdata <- merge(means, predicted_long, by = c("time", "name"), suffixes = c("_mean", "_pred"))
-  errdata <- errdata[order(errdata$time, errdata$name), ]
-  errmin.overall <- mkinerrmin(errdata, length(parms.optim) + length(state.ini.optim))
-  
-  errmin <- data.frame(err.min = errmin.overall$err.min, 
-    n.optim = errmin.overall$n.optim, df = errmin.overall$df)
-  rownames(errmin) <- "All data"
-  for (obs_var in obs_vars)
-  {
-    errdata.var <- subset(errdata, name == obs_var)
-    n.k.optim <- length(grep(paste("k", obs_var, sep="_"), names(parms.optim)))
-    n.initials.optim <- length(grep(paste(obs_var, ".*", "_0", sep=""), names(state.ini.optim)))
-    n.optim <- n.k.optim + n.initials.optim
-    if ("alpha" %in% names(parms.optim)) n.optim <- n.optim + 1
-    if ("beta" %in% names(parms.optim)) n.optim <- n.optim + 1
-    if ("k1" %in% names(parms.optim)) n.optim <- n.optim + 1
-    if ("k2" %in% names(parms.optim)) n.optim <- n.optim + 1
-    if ("g" %in% names(parms.optim)) n.optim <- n.optim + 1
-    if ("tb" %in% names(parms.optim)) n.optim <- n.optim + 1
-    errmin.tmp <- mkinerrmin(errdata.var, n.optim)
-    errmin[obs_var, c("err.min", "n.optim", "df")] <- errmin.tmp
-  }
-  fit$errmin <- errmin
 
-  # Calculate dissipation times DT50 and DT90 and, if necessary, formation fractions
-  # from optimised parameters
   parms.all = backtransform_odeparms(c(fit$par, parms.fixed), mod_vars)
+
+  # Calculate dissipation times DT50 and DT90 and, if necessary, formation
+  # fractions and SFORB eigenvalues from optimised parameters
   fit$distimes <- data.frame(DT50 = rep(NA, length(obs_vars)), DT90 = rep(NA, length(obs_vars)), 
     row.names = obs_vars)
   fit$ff <- vector()
@@ -305,7 +281,7 @@ mkinfit <- function(mkinmod, observed,
   }
 
   # Collect observed, predicted and residuals
-  data <- merge(observed, predicted_long, by = c("time", "name"))
+  data <- merge(fit$observed, fit$predicted, by = c("time", "name"))
   names(data) <- c("time", "variable", "observed", "predicted")
   data$residual <- data$observed - data$predicted
   data$variable <- ordered(data$variable, levels = obs_vars)
@@ -362,9 +338,12 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, ...) {
   ans$start <- object$start
 
   ans$fixed <- object$fixed
-  ans$errmin <- object$errmin 
+
+  ans$errmin <- mkinerrmin(object, alpha = 0.05)
+
   ans$parms.all <- object$parms.all
-  ans$ff <- object$ff
+  if (!is.null(object$ff))
+    ans$ff <- object$ff
   if(distimes) ans$distimes <- object$distimes
   if(length(object$SFORB) != 0) ans$SFORB <- object$SFORB
   class(ans) <- c("summary.mkinfit", "summary.modFit") 

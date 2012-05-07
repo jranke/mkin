@@ -60,7 +60,7 @@ mkinpredict(mkinmod, odeparms, odeini, outtimes, solution_type = "deSolve", map_
   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 1:20, solution_type = "analytical")[20,]
   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20, atol = 1e-20)[20,]
   # The integration method does not make a lot of difference
-  mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20, atol = 1e-20, method = "bdf")[20,]
+  mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20, atol = 1e-20, method = "ode45")[20,]
   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20, atol = 1e-20, method = "rk4")[20,]
   # The number of output times does make a lot of difference
   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), seq(0, 20, by = 0.1))[201,]
