@@ -193,8 +193,12 @@ mkinmod <- function(..., use_of_ff = "min")
 
           } else {          # off-diagonal elements
             k.candidate = paste("k", from, to, sep="_")
-            k.candidate = sub("free.*bound", "free_bound", k.candidate)
-            k.candidate = sub("bound.*free", "bound_free", k.candidate)
+	    if (sub("_free$", "", from) == sub("_bound$", "", to)) {
+              k.candidate = paste("k", sub("_free$", "_free_bound", from), sep="_")
+	    }
+	    if (sub("_bound$", "", from) == sub("_free$", "", to)) {
+              k.candidate = paste("k", sub("_bound$", "_bound_free", from), sep="_")
+	    }
             k.effective = intersect(model$parms, k.candidate)
             m[to, from] = ifelse(length(k.effective) > 0,
                 k.effective, "0")
@@ -218,8 +222,7 @@ mkinmod <- function(..., use_of_ff = "min")
           } else {          # off-diagonal elements
             f.candidate = paste("f", from, "to", to, sep="_")
             k.candidate = paste("k", from, to, sep="_")
-            k.candidate = sub("free.*bound", "free_bound", k.candidate)
-            k.candidate = sub("bound.*free", "bound_free", k.candidate)
+	    # SFORB with maximum use of formation fractions not implemented, see above
             m[to, from] = ifelse(f.candidate %in% model$parms,
               paste(f.candidate, " * k_", from, sep=""), 
               ifelse(k.candidate %in% model$parms, k.candidate, "0"))
