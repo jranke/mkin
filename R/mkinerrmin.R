@@ -76,5 +76,5 @@ mkinerrmin <- function(fit, alpha = 0.05)
     errmin[obs_var, c("err.min", "n.optim", "df")] <- errmin.tmp
   }
 
-	return(errmin)
+  return(errmin)
 }
