@@ -228,21 +228,25 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, ...) {
   param <- cbind(param, se)
   dimnames(param) <- list(pnames, c("Estimate", "Std. Error"))
 
+  bparam <- as.matrix(object$parms.all)
+  dimnames(bparam) <- list(pnames, c("Estimate"))
+
   ans <- list(
-          version = as.character(packageVersion("mkin")),
-          Rversion = paste(R.version$major, R.version$minor, sep="."),
+    version = as.character(packageVersion("mkin")),
+    Rversion = paste(R.version$major, R.version$minor, sep="."),
 	  date.fit = object$date,
 	  date.summary = date(),
 	  use_of_ff = object$mkinmod$use_of_ff,
-          residuals = object$residuals,
-          residualVariance = resvar,
-          sigma = sqrt(resvar),
-          modVariance = modVariance,
-          df = c(p, rdf), cov.unscaled = covar,
-          cov.scaled = covar * resvar,
-          info = object$info, niter = object$iterations,
-          stopmess = message,
-          par = param)
+    residuals = object$residuals,
+    residualVariance = resvar,
+    sigma = sqrt(resvar),
+    modVariance = modVariance,
+    df = c(p, rdf), cov.unscaled = covar,
+    cov.scaled = covar * resvar,
+    info = object$info, niter = object$iterations,
+    stopmess = message,
+    par = param,
+    bpar = bparam)
 
   ans$diffs <- object$mkinmod$diffs
   if(data) ans$data <- object$data
@@ -285,7 +289,7 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
   printCoefmat(x$par, digits = digits, ...)
 
   cat("\nBacktransformed parameters:\n")
-  print(as.data.frame(list(Estimate = x$parms.all)))
+  printCoefmat(x$bpar, digits = digits, ...)
 
   cat("\nResidual standard error:",
       format(signif(x$sigma, digits)), "on", rdf, "degrees of freedom\n")

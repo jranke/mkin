@@ -38,7 +38,7 @@ ilr(c(10, 1, 0.1))
 ilr(c(3, 3, 3))
 # Almost equal entries give small numbers
 ilr(c(0.3, 0.4, 0.3))
-# Only the ration between the numbers counts, not their sum
+# Only the ratio between the numbers counts, not their sum
 invilr(ilr(c(0.7, 0.29, 0.01)))
 invilr(ilr(2.1 * c(0.7, 0.29, 0.01)))
 # Inverse transformation of larger numbers gives unequal elements
