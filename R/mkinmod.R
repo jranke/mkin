@@ -1,6 +1,6 @@
 # $Id$
 
-# Copyright (C) 2010-2012 Johannes Ranke#{{{
+# Copyright (C) 2010-2012 Johannes Ranke {{{
 # Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
@@ -16,7 +16,7 @@
 # details.
 
 # You should have received a copy of the GNU General Public License along with
-# this program. If not, see <http://www.gnu.org/licenses/>#}}}
+# this program. If not, see <http://www.gnu.org/licenses/> }}}
 
 mkinmod <- function(..., use_of_ff = "min")
 {
@@ -47,11 +47,11 @@ mkinmod <- function(..., use_of_ff = "min")
     } else message <- "ok"
   } else mat = TRUE#}}}
 
-  # Establish list of differential equations as well as map from observed#{{{
+  # Establish list of differential equations as well as map from observed {{{
   # compartments to differential equations
   for (varname in obs_vars)
   {
-    # Check the type component of the compartment specification#{{{
+    # Check the type component of the compartment specification {{{
     if(is.null(spec[[varname]]$type)) stop(
       "Every part of the model specification must be a list containing a type component")
     if(!spec[[varname]]$type %in% c("SFO", "FOMC", "DFOP", "HS", "SFORB")) stop(
@@ -59,8 +59,8 @@ mkinmod <- function(..., use_of_ff = "min")
     if(spec[[varname]]$type %in% c("FOMC", "DFOP", "HS") & match(varname, obs_vars) != 1) {
         stop(paste("Types FOMC, DFOP and HS are only implemented for the first compartment,", 
                    "which is assumed to be the source compartment"))
-    }#}}}
-    # New (sub)compartments (boxes) needed for the model type#{{{
+    } #}}}
+    # New (sub)compartments (boxes) needed for the model type {{{
     new_boxes <- switch(spec[[varname]]$type,
       SFO = varname,
       FOMC = varname,
@@ -69,22 +69,23 @@ mkinmod <- function(..., use_of_ff = "min")
       SFORB = paste(varname, c("free", "bound"), sep="_")
     )
     map[[varname]] <- new_boxes
-    names(map[[varname]]) <- rep(spec[[varname]]$type, length(new_boxes))#}}}
-    # Start a new differential equation for each new box#{{{
+    names(map[[varname]]) <- rep(spec[[varname]]$type, length(new_boxes)) #}}}
+    # Start a new differential equation for each new box {{{
     new_diffs <- paste("d_", new_boxes, " =", sep="")
     names(new_diffs) <- new_boxes
-    diffs <- c(diffs, new_diffs)#}}}
-  }#}}}
+    diffs <- c(diffs, new_diffs) #}}}
+  } #}}}
 
-  # Create content of differential equations and build parameter list#{{{
+  # Create content of differential equations and build parameter list {{{
   for (varname in obs_vars)
   {
     # Get the name of the box(es) we are working on for the decline term(s)
     box_1 = map[[varname]][[1]] # This is the only box unless type is SFORB
     if(spec[[varname]]$type %in% c("SFO", "SFORB")) { # {{{ Add SFO or SFORB decline term
       if (use_of_ff == "min") { # Minimum use of formation fractions
-        # Turn on sink if this is not explicitly excluded by the user by specifying sink=FALSE
-        if(is.null(spec[[varname]]$sink)) spec[[varname]]$sink <- TRUE
+	# Turn on sink if this is not explicitly excluded by the user by
+	# specifying sink=FALSE
+	if(is.null(spec[[varname]]$sink)) spec[[varname]]$sink <- TRUE
 
         if(spec[[varname]]$sink) {
           # If sink is required, add first-order sink term
@@ -170,7 +171,7 @@ mkinmod <- function(..., use_of_ff = "min")
         }
       }
     } #}}}
-  }#}}}
+  } #}}}
 
   model <- list(diffs = diffs, parms = parms, map = map, use_of_ff = use_of_ff)
 

@@ -24,15 +24,15 @@ mkinplot <- function(fit, xlab = "Time", ylab = "Observed", xlim = range(fit$dat
   plot(0, type="n", 
     xlim = xlim, ylim = ylim,
     xlab = xlab, ylab = ylab, ...)
-  col_obs <- pch_obs <- 1:length(fit$mkinmod$map)
-  names(col_obs) <- names(pch_obs) <- names(fit$mkinmod$map)
+  col_obs <- pch_obs <- lty_obs <- 1:length(fit$mkinmod$map)
+  names(col_obs) <- names(pch_obs) <- names(lty_obs) <- names(fit$mkinmod$map)
   for (obs_var in names(fit$mkinmod$map)) {
     points(subset(fit$data, variable == obs_var, c(time, observed)), 
-    pch = pch_obs[obs_var], col = col_obs[obs_var])
+      pch = pch_obs[obs_var], col = col_obs[obs_var])
   }
   matlines(out$time, out[-1])
   if (legend == TRUE) {
     legend("topright", inset=c(0.05, 0.05), legend=names(fit$mkinmod$map),
-      col=col_obs, pch=pch_obs, lty=1:length(pch_obs))
+      col=col_obs, pch=pch_obs, lty=lty_obs)
   }
 }
