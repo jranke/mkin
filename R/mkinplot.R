@@ -18,7 +18,7 @@ mkinplot <- function(fit, xlab = "Time", ylab = "Observed", xlim = range(fit$dat
   odeparms <- parms.all[odenames]
 
   out <- mkinpredict(fit$mkinmod, odeparms, odeini, outtimes, 
-          solution_type = solution_type, ...)
+          solution_type = solution_type, atol = fit$atol, rtol = fit$rtol, ...)
 
   # Plot the data and model output
   plot(0, type="n", 

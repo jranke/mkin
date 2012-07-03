@@ -17,7 +17,7 @@ mkinfit(mkinmod, observed,
   solution_type = "auto",
   plot = FALSE, quiet = FALSE, err = NULL, weight = "none", 
   scaleVar = FALSE, 
-  atol = 1e-6, n.outtimes, 
+  atol = 1e-8, rtol = 1e-10, n.outtimes = 100, 
   trace_parms, ...)
 }
 \arguments{
@@ -84,8 +84,12 @@ mkinfit(mkinmod, observed,
     to the number of observations.
   }
   \item{atol}{
-    Absolute error tolerance, passed to \code{\link{ode}}. Default is 1e-6 as in 
-    \code{\link{lsoda}}.
+    Absolute error tolerance, passed to \code{\link{ode}}. Default is 1e-8,
+    lower than in \code{\link{lsoda}}.
+  }
+  \item{rtol}{
+    Absolute error tolerance, passed to \code{\link{ode}}. Default is 1e-10,
+    much lower than in \code{\link{lsoda}}.
   }
   \item{n.outtimes}{
     The length of the dataseries that is produced by the model prediction

@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
 
-mkinpredict <- function(mkinmod, odeparms, odeini, outtimes, solution_type = "deSolve", map_output = TRUE, atol = 1e-6, ...) {
+mkinpredict <- function(mkinmod, odeparms, odeini, outtimes, solution_type = "deSolve", map_output = TRUE, atol = 1e-8, rtol = 1e-10, ...) {
 
   # Get the names of the state variables in the model
   mod_vars <- names(mkinmod$diffs)
@@ -92,6 +92,7 @@ mkinpredict <- function(mkinmod, odeparms, odeini, outtimes, solution_type = "de
       func = mkindiff, 
       parms = odeparms,
       atol = atol,
+      rtol = rtol,
       ...
     )
   }
