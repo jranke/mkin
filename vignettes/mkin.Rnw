@@ -60,10 +60,10 @@ metabolites.
 
 Many approaches are possible regarding the evaluation of chemical degradation
 data.  The \Rpackage{kinfit} package \citep{pkg:kinfit} in \RR{}
-\citep{rcore2010} implements the approach recommended in the kinetics report
+\citep{rcore2012} implements the approach recommended in the kinetics report
 provided by the FOrum for Co-ordination of pesticide fate models and their
-USe \citep{FOCUS2006} for simple data series for one parent compound in one
-compartment.
+USe \citep{FOCUS2006, FOCUSkinetics2011} for simple data series for one parent
+compound in one compartment.
 
 The \Rpackage{mkin} package \citep{pkg:mkin} extends this approach to data series
 with metabolites and more than one compartment and includes the possibility 
@@ -131,14 +131,14 @@ differential equations. In these cases, a coefficient matrix is also returned.
 
 Other models that include time on the right-hand side of the differential 
 equation are the first-order multi-compartment (FOMC) model and the
-Hockey-Stick (HS) model. At present, only the FOMC model can only be used, and
-only for the parent compound.
+Hockey-Stick (HS) model. At present, these models can only be used only for the
+parent compound.
 
 \subsection{Fitting the model}
 
 Then the model parameters should be fitted to the data. The function
 \Robject{mkinfit} internally creates a cost function using \Robject{modCost}
-from the \Rpackage{FME} package and the produces a fit using \Robject{modFit}
+from the \Rpackage{FME} package and then produces a fit using \Robject{modFit}
 from the same package. In cases of linear first-order differential 
 equations, the solution used for calculating the cost function is based
 on the fundamental system of the coefficient matrix, as proposed by 
