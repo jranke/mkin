@@ -317,7 +317,7 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
     print(x$SFORB, digits=digits,...)
   }    
 
-  printcor <- !is.null(x$cov.unscaled)
+  printcor <- is.numeric(x$cov.unscaled)
   if (printcor){
     Corr <- cov2cor(x$cov.unscaled)
     rownames(Corr) <- colnames(Corr) <- rownames(x$par)
