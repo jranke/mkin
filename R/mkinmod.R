@@ -25,15 +25,16 @@ mkinmod <- function(..., use_of_ff = "min")
   if (!use_of_ff %in% c("min", "max"))
     stop("The use of formation fractions 'use_of_ff' can only be 'min' or 'max'")
 
-  # The returned model will be a list of character vectors, containing#{{{
+  # The returned model will be a list of character vectors, containing {{{
   # differential equations, parameter names and a mapping from model variables
   # to observed variables. If possible, a matrix representation of the 
   # differential equations is included
   parms <- vector()
   diffs <- vector()
-  map <- list()#}}}
+  map <- list()
+  # }}}
 
-  # Give a warning when a model with time dependent degradation uses formation#{{{
+  # Give a warning when a model with time dependent degradation uses formation {{{
   # fractions
   if(spec[[1]]$type %in% c("FOMC", "DFOP", "HS")) {
     mat = FALSE 
@@ -41,11 +42,13 @@ mkinmod <- function(..., use_of_ff = "min")
       message <- paste(
         "Only constant formation fractions over time are implemented.",
         "Depending on the reason for the time dependence of degradation",
-        "this may be unrealistic",
+        "this may be unrealistic. You may want to consider using the",
+	"SFORB model",
         sep="\n")
       warning(message)
     } else message <- "ok"
-  } else mat = TRUE#}}}
+  } else mat = TRUE
+  #}}}
 
   # Establish list of differential equations as well as map from observed {{{
   # compartments to differential equations
