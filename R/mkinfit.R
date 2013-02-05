@@ -36,11 +36,11 @@ mkinfit <- function(mkinmod, observed,
   # Get the names of the state variables in the model
   mod_vars <- names(mkinmod$diffs)
 
-  # Subset observed data with names of observed data in the model
-  observed <- subset(observed, name %in% names(mkinmod$map))
+  # Get the names of observed variables
+  obs_vars = names(mkinmod$map)
 
-  # Get names of observed variables
-  obs_vars = unique(as.character(observed$name))
+  # Subset observed data with names of observed data in the model
+  observed <- subset(observed, name %in% obs_vars)
 
   # Define starting values for parameters where not specified by the user
   if (parms.ini[[1]] == "auto") parms.ini = vector()
@@ -152,12 +152,13 @@ mkinfit <- function(mkinmod, observed,
           xlim = range(observed$time), ylim = range(observed$value, na.rm=TRUE),
           xlab = "Time", ylab = "Observed")
         col_obs <- pch_obs <- 1:length(obs_vars)
-        names(col_obs) <- names(pch_obs) <- obs_vars
+        lty_obs <- rep(1, length(obs_vars))
+        names(col_obs) <- names(pch_obs) <- names(lty_obs) <- obs_vars
         for (obs_var in obs_vars) {
           points(subset(observed, name == obs_var, c(time, value)), 
             pch = pch_obs[obs_var], col = col_obs[obs_var])
         }
-        matlines(out_plot$time, out_plot[-1])
+        matlines(out_plot$time, out_plot[-1], co = col_obs, lty = lty_obs)
         legend("topright", inset=c(0.05, 0.05), legend=obs_vars, 
           col=col_obs, pch=pch_obs, lty=1:length(pch_obs))
       }
