@@ -9,7 +9,7 @@
 }
 \usage{
   mkinresplot(object, obs_vars = vector(), 
-    xlab = "Time [days]", ylab = "Residual [\% of applied radioactivity]", 
+    xlab = "Time", ylab = "Residual", 
     maxabs = "auto", legend = TRUE, lpos = "topright", ...)
 }
 \arguments{

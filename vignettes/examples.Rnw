@@ -1,0 +1,289 @@
+% $Id: examples.Rnw 66 2010-09-03 08:50:26Z jranke $
+%%\VignetteIndexEntry{Examples for kinetic evaluations using mkin}
+%%VignetteDepends{FME}
+%%\usepackage{Sweave}
+\documentclass[12pt,a4paper]{article}
+\usepackage{a4wide}
+%%\usepackage[lists,heads]{endfloat}
+\input{header}
+\hypersetup{  
+  pdftitle = {Examples for kinetic evaluations using mkin},
+  pdfsubject = {Manuscript},
+  pdfauthor = {Johannes Ranke},
+  colorlinks = {true},
+  linkcolor = {blue},
+  citecolor = {blue},
+  urlcolor = {red},
+  hyperindex = {true},
+  linktocpage = {true},
+}
+\SweaveOpts{engine=R, eps=FALSE, keep.source = TRUE}
+<<setup, echo = FALSE, results = hide>>=
+options(prompt = "R> ")
+options(SweaveHooks = list(
+  cex = function() par(cex.lab = 1.3, cex.axis = 1.3)))
+@
+\begin{document}
+\title{Examples for kinetic evaluations using mkin}
+\author{\textbf{Johannes Ranke} \\[0.5cm]
+%EndAName
+Eurofins Regulatory AG\\
+Weidenweg 15, CH--4310 Rheinfelden, Switzerland\\[0.5cm]
+and\\[0.5cm]
+University of Bremen\\
+}
+\maketitle
+
+%\begin{abstract}
+%\end{abstract}
+
+
+\thispagestyle{empty} \setcounter{page}{0}
+
+\clearpage
+
+\tableofcontents
+
+\textbf{Key words}: Kinetics, FOCUS, nonlinear optimisation
+
+\section{Kinetic evaluations for parent compounds}
+\label{intro}
+
+These examples are also evaluated in a parallel vignette of the
+\Rpackage{kinfit} package \citep{pkg:kinfit}. The datasets are from Appendix 3,
+of the FOCUS kinetics report \citep{FOCUS2006, FOCUSkinetics2011}.
+
+\subsection{Laboratory Data L1}
+
+The following code defines example dataset L1 from the FOCUS kinetics
+report, p. 284
+
+<<FOCUS_2006_L1_data, echo=TRUE, eval=TRUE>>=
+library("mkin")
+FOCUS_2006_L1 = data.frame(
+  t = rep(c(0, 1, 2, 3, 5, 7, 14, 21, 30), each = 2),
+  parent = c(88.3, 91.4, 85.6, 84.5, 78.9, 77.6, 
+             72.0, 71.9, 50.3, 59.4, 47.0, 45.1,
+             27.7, 27.3, 10.0, 10.4, 2.9, 4.0))
+FOCUS_2006_L1_mkin <- mkin_wide_to_long(FOCUS_2006_L1)
+@
+
+The next step is to set up the models used for the kinetic analysis. Note that
+the model definitions contain the names of the observed variables in the data.
+In this case, there is only one variable called \Robject{parent}.
+
+<<Simple_models, echo=TRUE>>=
+SFO <- mkinmod(parent = list(type = "SFO"))
+FOMC <- mkinmod(parent = list(type = "FOMC"))
+DFOP <- mkinmod(parent = list(type = "DFOP"))
+@
+
+The three models cover the first assumption of simple first order (SFO),
+the case of declining rate constant over time (FOMC) and the case of two
+different phases of the kinetics (DFOP). For a more detailed discussion
+of the models, please see the FOCUS kinetics report.
+
+The following two lines fit the model and produce the summary report
+of the model fit. This covers the numerical analysis given in the 
+FOCUS report.
+
+<<L1_SFO, echo=TRUE>>=
+m.L1.SFO <- mkinfit(SFO, FOCUS_2006_L1_mkin, quiet=TRUE)
+summary(m.L1.SFO)
+@
+
+A plot of the fit is obtained with the plot function for mkinfit objects.
+
+<<L1_SFO_plot, fig=TRUE, echo=TRUE>>=
+plot(m.L1.SFO)
+@
+
+The residual plot can be easily obtained by
+
+<<L1_SFO_residuals, fig=TRUE, echo=TRUE>>=
+mkinresplot(m.L1.SFO, ylab = "Observed", xlab = "Time")
+@
+
+For comparison, the FOMC model is fitted as well, and the $\chi^2$ error level
+is checked.
+
+<<L1_FOMC, echo=TRUE>>=
+m.L1.FOMC <- mkinfit(FOMC, FOCUS_2006_L1_mkin, quiet=TRUE)
+s.m.L1.FOMC <- summary(m.L1.FOMC)
+s.m.L1.FOMC$errmin
+@
+
+Due to the higher number of parameters, and the lower number of degrees of freedom
+of the fit, the $\chi^2$ error level is actually higher for the FOMC model (3.6\%) than 
+for the SFO model (3.4\%).
+
+\subsection{Laboratory Data L2}
+
+The following code defines example dataset L2 from the FOCUS kinetics
+report, p. 287
+
+<<FOCUS_2006_L2_data, echo=TRUE, eval=TRUE>>=
+library("mkin")
+FOCUS_2006_L2 = data.frame(
+  t = rep(c(0, 1, 3, 7, 14, 28), each = 2),
+  parent = c(96.1, 91.8, 41.4, 38.7,
+             19.3, 22.3, 4.6, 4.6,
+             2.6, 1.2, 0.3, 0.6))
+FOCUS_2006_L2_mkin <- mkin_wide_to_long(FOCUS_2006_L2)
+@
+
+Again, the SFO model is fitted and a summary is obtained.
+
+<<L2_SFO, echo=TRUE>>=
+m.L2.SFO <- mkinfit(SFO, FOCUS_2006_L2_mkin, quiet=TRUE)
+summary(m.L2.SFO)
+@
+
+The $\chi^2$ error level of 14\% suggests that the model does not fit very well.
+This is also obvious from the plots of the fit and the residuals.
+
+<<L2_SFO_plot, fig=TRUE, echo=TRUE>>=
+plot(m.L2.SFO)
+@
+
+In the FOCUS kinetics report, it is stated that there is no apparent systematic
+error observed from the residual plot up to the measured DT90 (approximately at
+day 5), and there is an underestimation beyond that point.
+
+<<L2_SFO_residuals, fig=TRUE, echo=TRUE>>=
+mkinresplot(m.L2.SFO, ylab = "Observed", xlab = "Time")
+@
+
+We may add that it is difficult to judge the random nature of the residuals just 
+from the three samplings at days 0, 1 and 3. Also, it is not clear why a
+consistent underestimation after the approximate DT90 should be irrelevant.
+
+For comparison, the FOMC model is fitted as well, and the $\chi^2$ error level
+is checked.
+
+<<L2_FOMC, echo=TRUE, fig=TRUE>>=
+m.L2.FOMC <- mkinfit(FOMC, FOCUS_2006_L2_mkin, quiet=TRUE)
+plot(m.L2.FOMC)
+s.m.L2.FOMC <- summary(m.L2.FOMC)
+s.m.L2.FOMC$errmin
+@
+
+The error level at which the $\chi^2$ test passes is much lower in this case.
+Therefore, the FOMC model provides a better description of the data, as less
+experimental error has to be assumed in order to explain the data.
+
+Fitting the four parameter DFOP model does not further reduce the 
+$\chi^2$ error level. 
+
+<<L2_DFOP, echo=TRUE, fig=TRUE>>=
+m.L2.DFOP <- mkinfit(DFOP, FOCUS_2006_L2_mkin, quiet=TRUE)
+plot(m.L2.DFOP)
+@
+
+Here, the default starting parameters for the DFOP model obviously do not lead
+to a reasonable solution. Therefore the fit is repeated with different starting
+parameters.
+
+<<L2_DFOP_2, echo=TRUE, fig=TRUE>>=
+m.L2.DFOP <- mkinfit(DFOP, FOCUS_2006_L2_mkin, 
+  parms.ini = c(k1 = 1, k2 = 0.01, g = 0.8),
+  quiet=TRUE)
+plot(m.L2.DFOP)
+summary(m.L2.DFOP)
+s.m.L2.DFOP <- summary(m.L2.DFOP)
+s.m.L2.DFOP$errmin
+@
+
+Therefore, the FOMC model is clearly the best-fit model based on the 
+$\chi^2$ error level criterion.
+
+\subsection{Laboratory Data L3}
+
+The following code defines example dataset L3 from the FOCUS kinetics
+report, p. 290
+
+<<FOCUS_2006_L3_data, echo=TRUE, eval=TRUE>>=
+library("mkin")
+FOCUS_2006_L3 = data.frame(
+  t = c(0, 3, 7, 14, 30, 60, 91, 120),
+  parent = c(97.8, 60, 51, 43, 35, 22, 15, 12))
+FOCUS_2006_L3_mkin <- mkin_wide_to_long(FOCUS_2006_L3)
+@
+
+SFO model, summary and plot:
+
+<<L3_SFO, echo=TRUE, fig=TRUE>>=
+m.L3.SFO <- mkinfit(SFO, FOCUS_2006_L3_mkin, quiet=TRUE)
+summary(m.L3.SFO)
+plot(m.L3.SFO)
+@
+
+The $\chi^2$ error level of 22\% as well as the plot suggest that the model
+does not fit very well. 
+
+The FOMC model performs better:
+
+<<L3_FOMC, echo=TRUE, fig=TRUE>>=
+m.L3.FOMC <- mkinfit(FOMC, FOCUS_2006_L3_mkin, quiet=TRUE)
+plot(m.L3.FOMC)
+s.m.L3.FOMC <- summary(m.L3.FOMC)
+s.m.L3.FOMC$errmin
+endpoints(m.L3.FOMC)
+@
+
+The error level at which the $\chi^2$ test passes is 7\% in this case.
+
+Fitting the four parameter DFOP model further reduces the $\chi^2$ error level
+considerably:
+
+<<L3_DFOP, echo=TRUE, fig=TRUE>>=
+m.L3.DFOP <- mkinfit(DFOP, FOCUS_2006_L3_mkin, quiet=TRUE)
+plot(m.L3.DFOP)
+s.m.L3.DFOP <- summary(m.L3.DFOP)
+s.m.L3.DFOP$errmin
+@
+
+Therefore, the DFOP model is the best-fit model based on the $\chi^2$ error
+level criterion for laboratory data L3.
+
+\subsection{Laboratory Data L4}
+
+The following code defines example dataset L4 from the FOCUS kinetics
+report, p. 293
+
+<<FOCUS_2006_L4_data, echo=TRUE, eval=TRUE>>=
+library("mkin")
+FOCUS_2006_L4 = data.frame(
+  t = c(0, 3, 7, 14, 30, 60, 91, 120),
+  parent = c(96.6, 96.3, 94.3, 88.8, 74.9, 59.9, 53.5, 49.0))
+FOCUS_2006_L4_mkin <- mkin_wide_to_long(FOCUS_2006_L4)
+@
+
+SFO model, summary and plot:
+
+<<L4_SFO, echo=TRUE, fig=TRUE>>=
+m.L4.SFO <- mkinfit(SFO, FOCUS_2006_L4_mkin, quiet=TRUE)
+summary(m.L4.SFO)
+plot(m.L4.SFO)
+@
+
+The $\chi^2$ error level of 3.3\% as well as the plot suggest that the model
+fits very well. 
+
+The FOMC model for comparison
+
+<<L4_FOMC, echo=TRUE, fig=TRUE>>=
+m.L4.FOMC <- mkinfit(FOMC, FOCUS_2006_L4_mkin, quiet=TRUE)
+plot(m.L4.FOMC)
+s.m.L4.FOMC <- summary(m.L4.FOMC)
+s.m.L4.FOMC$errmin
+@
+
+The error level at which the $\chi^2$ test passes is slightly lower for the FOMC 
+model. However, the difference appears negligible.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}
+% vim: set foldmethod=syntax:

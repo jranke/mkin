@@ -19,7 +19,7 @@
 # this program. If not, see <http://www.gnu.org/licenses/>
 
 mkinresplot <- function (object, obs_vars = vector(), 
-  xlab = "Time [days]", ylab = "Residual [% of applied radioactivity]",
+  xlab = "Time", ylab = "Residual",
 	maxabs = "auto", legend= TRUE, lpos = "topright", ...) 
 {
 	obs_vars_all <- as.character(unique(object$data$variable))

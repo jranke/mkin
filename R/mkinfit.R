@@ -158,7 +158,7 @@ mkinfit <- function(mkinmod, observed,
           points(subset(observed, name == obs_var, c(time, value)), 
             pch = pch_obs[obs_var], col = col_obs[obs_var])
         }
-        matlines(out_plot$time, out_plot[-1], co = col_obs, lty = lty_obs)
+        matlines(out_plot$time, out_plot[-1], col = col_obs, lty = lty_obs)
         legend("topright", inset=c(0.05, 0.05), legend=obs_vars, 
           col=col_obs, pch=pch_obs, lty=1:length(pch_obs))
       }

@@ -1,8 +1,8 @@
 plot.mkinfit <- function(x, fit = x,
   xlab = "Time", ylab = "Observed",
-  xlim = range(fit$data$time), ylim = range(fit$data$observed, na.rm = TRUE), 
+  xlim = range(fit$data$time), ylim = c(0, max(fit$data$observed, na.rm = TRUE)),
   col_obs = 1:length(fit$mkinmod$map),
-  pch_obs = col_obs, lty_obs = rep(1, length(fit$mkinmod$map)),
+  pch_obs = col_obs, lty_obs = 1,
   add = FALSE, legend = !add, ...)
 {
   solution_type = fit$solution_type

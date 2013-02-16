@@ -13,8 +13,9 @@ mkin_long_to_wide(long_data, time = "time", outtime = "time")
 }
 \arguments{
   \item{long_data}{
-  The dataframe must contain one variable with the time values specified by the 
-  \code{time} argument and one column of observed values named "value".
+  The dataframe must contain one variable called "time" with the time values specified by the 
+  \code{time} argument, one column called "name" with the grouping of the observed values, and 
+  finally one column of observed values called "value".
 }
   \item{time}{
   The name of the time variable in the long input data.

@@ -26,7 +26,7 @@ mkinfit(mkinmod, observed,
   }
   \item{observed}{
     The observed data. It has to be in the long format as described in
-    \code{\link{modFit}}, i.e. the first column must contain the name of the
+    \code{\link{modFit}}, i.e. the first column called "name" must contain the name of the
     observed variable for each data point. The second column must contain the
     times of observation, named "time".  The third column must be named "value"
     and contain the observed values. Optionally, a further column can contain
