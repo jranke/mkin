@@ -17,6 +17,7 @@
 
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
+utils::globalVariables(c("variable", "residual"))
 
 mkinresplot <- function (object, obs_vars = vector(), 
   xlab = "Time", ylab = "Residual",

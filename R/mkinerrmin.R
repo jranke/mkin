@@ -1,6 +1,6 @@
 # $Id$
 
-# Copyright (C) 2010-2012 Johannes Ranke
+# Copyright (C) 2010-2013 Johannes Ranke
 # Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
@@ -17,7 +17,7 @@
 
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
-
+utils::globalVariables(c("name"))
 mkinerrmin <- function(fit, alpha = 0.05)
 {
   parms.optim <- fit$parms.all

@@ -1,6 +1,6 @@
 # $Id$
 
-# Copyright (C) 2010-2012 Johannes Ranke
+# Copyright (C) 2010-2013 Johannes Ranke
 # Contact: jranke@uni-bremen.de
 # The summary function is an adapted and extended version of summary.modFit
 # from the FME package, v 1.1 by Soetart and Petzoldt, which was in turn
@@ -20,6 +20,7 @@
 
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
+utils::globalVariables(c("name", "value"))
 
 mkinfit <- function(mkinmod, observed,
   parms.ini = "auto",

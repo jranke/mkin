@@ -1,6 +1,6 @@
 # $Id$
 
-# Copyright (C) 2010 Johannes Ranke
+# Copyright (C) 2010-2013 Johannes Ranke
 # Contact: mkin-devel@lists.berlios.de
 
 # This file is part of the R package mkin
@@ -17,7 +17,7 @@
 
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
-
+utils::globalVariables(c("name", "value"))
 mkin_wide_to_long <- function(wide_data, time = "t")
 {
   colnames <- names(wide_data)
