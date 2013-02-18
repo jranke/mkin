@@ -22,6 +22,12 @@ mkinmod <- function(..., use_of_ff = "min")
 {
   spec <- list(...)
   obs_vars <- names(spec)
+
+  # Check if any of the names of the observed variables contains any other
+  for (obs_var in obs_vars) {
+    if (length(grep(obs_var, obs_vars)) > 1) stop("Sorry, variable names can not contain each other")
+  }
+
   if (!use_of_ff %in% c("min", "max"))
     stop("The use of formation fractions 'use_of_ff' can only be 'min' or 'max'")
 
@@ -43,7 +49,7 @@ mkinmod <- function(..., use_of_ff = "min")
         "Only constant formation fractions over time are implemented.",
         "Depending on the reason for the time dependence of degradation",
         "this may be unrealistic. You may want to consider using the",
-	"SFORB model",
+        "SFORB model",
         sep="\n")
       warning(message)
     } else message <- "ok"
@@ -84,12 +90,11 @@ mkinmod <- function(..., use_of_ff = "min")
   {
     # Get the name of the box(es) we are working on for the decline term(s)
     box_1 = map[[varname]][[1]] # This is the only box unless type is SFORB
+    # Turn on sink if this is not explicitly excluded by the user by
+    # specifying sink=FALSE
+    if(is.null(spec[[varname]]$sink)) spec[[varname]]$sink <- TRUE
     if(spec[[varname]]$type %in% c("SFO", "SFORB")) { # {{{ Add SFO or SFORB decline term
       if (use_of_ff == "min") { # Minimum use of formation fractions
-	# Turn on sink if this is not explicitly excluded by the user by
-	# specifying sink=FALSE
-	if(is.null(spec[[varname]]$sink)) spec[[varname]]$sink <- TRUE
-
         if(spec[[varname]]$sink) {
           # If sink is required, add first-order sink term
           k_compound_sink <- paste("k", box_1, "sink", sep="_")
@@ -103,7 +108,7 @@ mkinmod <- function(..., use_of_ff = "min")
         parms <- c(parms, k_compound)
         decline_term <- paste(k_compound, "*", box_1)
       }
-    }#}}}
+    } #}}}
     if(spec[[varname]]$type == "FOMC") { # {{{ Add FOMC decline term
       # From p. 53 of the FOCUS kinetics report
       decline_term <- paste("(alpha/beta) * ((time/beta) + 1)^-1 *", box_1)
@@ -132,7 +137,7 @@ mkinmod <- function(..., use_of_ff = "min")
         reversible_binding_term_2 <- paste("+", k_free_bound, "*", box_1, "-",
           k_bound_free, "*", box_2)
       } else { # Use formation fractions also for the free compartment
-	stop("The maximum use of formation fractions is not supported for SFORB models")
+        stop("The maximum use of formation fractions is not supported for SFORB models")
         # The problems were: Calculation of dissipation times did not work in this case
         # and the coefficient matrix is not generated correctly by the code present 
         # in this file in this case
@@ -167,6 +172,9 @@ mkinmod <- function(..., use_of_ff = "min")
           diffs[[target_box]] <- paste(diffs[[target_box]], "+", 
             k_from_to, "*", origin_box)
         } else {
+          if (!spec[[varname]]$sink) {
+            stop("Turning off the sink when using formation fractions is not supported")
+          }
           fraction_to_target = paste("f", origin_box, "to", target, sep="_")
           parms <- c(parms, fraction_to_target)
           diffs[[target_box]] <- paste(diffs[[target_box]], "+", 
@@ -240,4 +248,4 @@ mkinmod <- function(..., use_of_ff = "min")
   class(model) <- "mkinmod"
   return(model)
 }
-# vim: set foldmethod=marker:
+# vim: set foldmethod=marker ts=2 sw=2 expandtab:
