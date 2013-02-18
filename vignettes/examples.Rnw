@@ -108,8 +108,7 @@ is checked.
 
 <<L1_FOMC, echo=TRUE>>=
 m.L1.FOMC <- mkinfit(FOMC, FOCUS_2006_L1_mkin, quiet=TRUE)
-s.m.L1.FOMC <- summary(m.L1.FOMC)
-s.m.L1.FOMC$errmin
+summary(m.L1.FOMC)
 @
 
 Due to the higher number of parameters, and the lower number of degrees of freedom
@@ -196,7 +195,6 @@ m.L2.DFOP <- mkinfit(DFOP, FOCUS_2006_L2_mkin,
   parms.ini = c(k1 = 1, k2 = 0.01, g = 0.8),
   quiet=TRUE)
 plot(m.L2.DFOP)
-summary(m.L2.DFOP)
 s.m.L2.DFOP <- summary(m.L2.DFOP)
 s.m.L2.DFOP$errmin
 @
@@ -219,7 +217,7 @@ FOCUS_2006_L3_mkin <- mkin_wide_to_long(FOCUS_2006_L3)
 SFO model, summary and plot:
 
 <<L3_SFO, echo=TRUE, fig=TRUE>>=
-m.L3.SFO <- mkinfit(SFO, FOCUS_2006_L3_mkin, quiet=TRUE)
+m.L3.SFO <- mkinfit(SFO, FOCUS_2006_L3_mkin, quiet = TRUE)
 summary(m.L3.SFO)
 plot(m.L3.SFO)
 @
@@ -230,7 +228,7 @@ does not fit very well.
 The FOMC model performs better:
 
 <<L3_FOMC, echo=TRUE, fig=TRUE>>=
-m.L3.FOMC <- mkinfit(FOMC, FOCUS_2006_L3_mkin, quiet=TRUE)
+m.L3.FOMC <- mkinfit(FOMC, FOCUS_2006_L3_mkin, quiet = TRUE)
 plot(m.L3.FOMC)
 s.m.L3.FOMC <- summary(m.L3.FOMC)
 s.m.L3.FOMC$errmin
@@ -243,7 +241,7 @@ Fitting the four parameter DFOP model further reduces the $\chi^2$ error level
 considerably:
 
 <<L3_DFOP, echo=TRUE, fig=TRUE>>=
-m.L3.DFOP <- mkinfit(DFOP, FOCUS_2006_L3_mkin, quiet=TRUE)
+m.L3.DFOP <- mkinfit(DFOP, FOCUS_2006_L3_mkin, quiet = TRUE)
 plot(m.L3.DFOP)
 s.m.L3.DFOP <- summary(m.L3.DFOP)
 s.m.L3.DFOP$errmin
@@ -267,7 +265,7 @@ FOCUS_2006_L4_mkin <- mkin_wide_to_long(FOCUS_2006_L4)
 SFO model, summary and plot:
 
 <<L4_SFO, echo=TRUE, fig=TRUE>>=
-m.L4.SFO <- mkinfit(SFO, FOCUS_2006_L4_mkin, quiet=TRUE)
+m.L4.SFO <- mkinfit(SFO, FOCUS_2006_L4_mkin, quiet = TRUE)
 summary(m.L4.SFO)
 plot(m.L4.SFO)
 @
@@ -278,7 +276,7 @@ fits very well.
 The FOMC model for comparison
 
 <<L4_FOMC, echo=TRUE, fig=TRUE>>=
-m.L4.FOMC <- mkinfit(FOMC, FOCUS_2006_L4_mkin, quiet=TRUE)
+m.L4.FOMC <- mkinfit(FOMC, FOCUS_2006_L4_mkin, quiet = TRUE)
 plot(m.L4.FOMC)
 s.m.L4.FOMC <- summary(m.L4.FOMC)
 s.m.L4.FOMC$errmin
@@ -286,9 +284,6 @@ s.m.L4.FOMC$errmin
 
 The error level at which the $\chi^2$ test passes is slightly lower for the FOMC 
 model. However, the difference appears negligible.
-
-\bibliographystyle{plainnat}
-\bibliography{references}
 
 \section{Kinetic evaluations for parent and metabolites}
 
@@ -300,15 +295,16 @@ report, p.350
 <<FOCUS_2006_Z_data, echo=TRUE, eval=TRUE>>=
 LOD = 0.5
 FOCUS_2006_Z = data.frame(
-  t = c(0, 0.04, 0.125, 0.29, 0.54, 1, 2, 3, 4, 7, 10, 14, 21, 42, 61, 96, 124),
-  Z0 = c(100, 81.7, 70.4, 51.1, 41.2, 6.6, 4.6, 3.9, 4.6, 4.3, 6.8, 2.9, 3.5,
-             5.3, 4.4, 1.2, 0.7),
-  Z1 = c(0, 18.3, 29.6, 46.3, 55.1, 65.7, 39.1, 36, 15.3, 5.6, 1.1, 1.6, 0.6,
-         0.5 * LOD, NA, NA, NA),
-  Z2 = c(0, NA, 0.5 * LOD, 2.6, 3.8, 15.3, 37.2, 31.7, 35.6, 14.5, 0.8, 2.1,
-         1.9, 0.5 * LOD, NA, NA, NA),
-  Z3 = c(0, NA, NA, NA, NA, 0.5 * LOD, 9.2, 13.1, 22.3, 28.4, 32.5, 25.2, 17.2,
-         4.8, 4.5, 2.8, 4.4))
+  t = c(0, 0.04, 0.125, 0.29, 0.54, 1, 2, 3, 4, 7, 10, 14, 21, 
+        42, 61, 96, 124),
+  Z0 = c(100, 81.7, 70.4, 51.1, 41.2, 6.6, 4.6, 3.9, 4.6, 4.3, 6.8, 
+         2.9, 3.5, 5.3, 4.4, 1.2, 0.7),
+  Z1 = c(0, 18.3, 29.6, 46.3, 55.1, 65.7, 39.1, 36, 15.3, 5.6, 1.1, 
+         1.6, 0.6, 0.5 * LOD, NA, NA, NA),
+  Z2 = c(0, NA, 0.5 * LOD, 2.6, 3.8, 15.3, 37.2, 31.7, 35.6, 14.5, 
+         0.8, 2.1, 1.9, 0.5 * LOD, NA, NA, NA),
+  Z3 = c(0, NA, NA, NA, NA, 0.5 * LOD, 9.2, 13.1, 22.3, 28.4, 32.5, 
+         25.2, 17.2, 4.8, 4.5, 2.8, 4.4))
 
 FOCUS_2006_Z_mkin <- mkin_wide_to_long(FOCUS_2006_Z)
 @
@@ -320,10 +316,9 @@ with formation and decline of metabolite Z1 and the pathway from parent
 directly to sink included (default in mkin).
 
 <<FOCUS_2006_Z_fits_1, echo=TRUE, fig=TRUE>>=
-debug(mkinmod)
 Z.2a <- mkinmod(Z0 = list(type = "SFO", to = "Z1"),
                 Z1 = list(type = "SFO"))
-m.Z.2a <- mkinfit(Z.2a, FOCUS_2006_Z_mkin)
+m.Z.2a <- mkinfit(Z.2a, FOCUS_2006_Z_mkin, quiet = TRUE)
 summary(m.Z.2a, data = FALSE)
 plot(m.Z.2a)
 @
@@ -340,7 +335,7 @@ A similar result can be obtained when formation fractions are used in the model 
 Z.2a.ff <- mkinmod(Z0 = list(type = "SFO", to = "Z1"),
                 Z1 = list(type = "SFO"), use_of_ff = "max")
 
-m.Z.2a.ff <- mkinfit(Z.2a.ff, FOCUS_2006_Z_mkin)
+m.Z.2a.ff <- mkinfit(Z.2a.ff, FOCUS_2006_Z_mkin, quiet = TRUE)
 summary(m.Z.2a.ff, data = FALSE)
 plot(m.Z.2a.ff)
 @
@@ -355,9 +350,11 @@ are used.
 
 <<FOCUS_2006_Z_fits_3, echo=TRUE, fig=TRUE>>=
 Z.3 <- mkinmod(Z0 = list(type = "SFO", to = "Z1", sink = FALSE),
-                Z1 = list(type = "SFO"))
-m.Z.3 <- mkinfit(Z.3, FOCUS_2006_Z_mkin, parms.ini = c(k_Z0_Z1 = 0.5))
-m.Z.3 <- mkinfit(Z.3, FOCUS_2006_Z_mkin, solution_type = "deSolve")
+               Z1 = list(type = "SFO"))
+m.Z.3 <- mkinfit(Z.3, FOCUS_2006_Z_mkin, parms.ini = c(k_Z0_Z1 = 0.5), 
+                quiet = TRUE)
+m.Z.3 <- mkinfit(Z.3, FOCUS_2006_Z_mkin, solution_type = "deSolve", 
+                 quiet = TRUE)
 summary(m.Z.3, data = FALSE)
 plot(m.Z.3)
 @
@@ -374,7 +371,8 @@ solution can be chosen, at the cost of a bit more computing time.
 Z.4a <- mkinmod(Z0 = list(type = "SFO", to = "Z1", sink = FALSE),
                 Z1 = list(type = "SFO", to = "Z2"),
                 Z2 = list(type = "SFO"))
-m.Z.4a <- mkinfit(Z.4a, FOCUS_2006_Z_mkin, parms.ini = c(k_Z0_Z1 = 0.5))
+m.Z.4a <- mkinfit(Z.4a, FOCUS_2006_Z_mkin, parms.ini = c(k_Z0_Z1 = 0.5),
+                  quiet = TRUE)
 summary(m.Z.4a, data = FALSE)
 plot(m.Z.4a)
 @
@@ -391,7 +389,7 @@ Z.5 <- mkinmod(Z0 = list(type = "SFO", to = "Z1", sink = FALSE),
                 Z1 = list(type = "SFO", to = "Z2", sink = FALSE),
                 Z2 = list(type = "SFO"))
 m.Z.5 <- mkinfit(Z.5, FOCUS_2006_Z_mkin, 
-                  parms.ini = c(k_Z0_Z1 = 0.5, k_Z1_Z2 = 0.2))
+                  parms.ini = c(k_Z0_Z1 = 0.5, k_Z1_Z2 = 0.2), quiet = TRUE)
 summary(m.Z.5, data = FALSE)
 plot(m.Z.5)
 @
@@ -404,7 +402,8 @@ Z.FOCUS <- mkinmod(Z0 = list(type = "SFO", to = "Z1", sink = FALSE),
                 Z2 = list(type = "SFO", to = "Z3"),
                 Z3 = list(type = "SFO"))
 m.Z.FOCUS <- mkinfit(Z.FOCUS, FOCUS_2006_Z_mkin, 
-                  parms.ini = c(k_Z0_Z1 = 0.5, k_Z1_Z2 = 0.2, k_Z2_Z3 = 0.3))
+                  parms.ini = c(k_Z0_Z1 = 0.5, k_Z1_Z2 = 0.2, k_Z2_Z3 = 0.3),
+                  quiet = TRUE)
 summary(m.Z.FOCUS, data = FALSE)
 plot(m.Z.FOCUS)
 @
@@ -420,16 +419,14 @@ mkinresplot(m.Z.FOCUS, "Z2", lpos = "bottomright")
 mkinresplot(m.Z.FOCUS, "Z3", lpos = "bottomright")
 @
 
-
 As the FOCUS report states, there is a certain tailing of the time course of metabolite 
 Z3. Also, the time course of the parent compound is not fitted very well using the 
 SFO model, as residues at a certain low level remain.
 
 Therefore, an additional model is offered here, using the single first-order 
-reversible binding (SFORB) model for metabolite Z3. However, the $\chi^2$ error 
-level is higher for metabolite Z3 using this model, the covariance matrix is
-not returned, and graphically the fit is not significantly improved. Therefore,
-this appears to be a case of overparamterisation.
+reversible binding (SFORB) model for metabolite Z3. As expected, the $\chi^2$
+error level is lower for metabolite Z3 using this model and the graphical 
+fit for Z3 is improved. However, the covariance matrix is not returned.
 
 <<FOCUS_2006_Z_fits_7, echo=TRUE, fig=TRUE>>=
 Z.mkin.1 <- mkinmod(Z0 = list(type = "SFO", to = "Z1", sink = FALSE),
@@ -437,18 +434,20 @@ Z.mkin.1 <- mkinmod(Z0 = list(type = "SFO", to = "Z1", sink = FALSE),
                 Z2 = list(type = "SFO", to = "Z3"),
                 Z3 = list(type = "SFORB"))
 m.Z.mkin.1 <- mkinfit(Z.mkin.1, FOCUS_2006_Z_mkin, 
-                  parms.ini = c(k_Z0_Z1 = 0.5, k_Z1_Z2 = 0.3, k_Z2_Z3 = 0.2))
+                  parms.ini = c(k_Z0_Z1 = 0.5, k_Z1_Z2 = 0.3, k_Z2_Z3 = 0.2), 
+                  quiet = TRUE)
 summary(m.Z.mkin.1, data = FALSE)
 plot(m.Z.mkin.1)
 @
 
-On the other hand, the model fit for the parent compound can be improved by
-using the SFORB model.
+Therefore, a further stepwise model building is performed starting from the
+stage of parent and one metabolite, starting from the assumption that the model
+fit for the parent compound can be improved by using the SFORB model.
 
 <<FOCUS_2006_Z_fits_8, echo=TRUE, fig=TRUE>>=
 Z.mkin.2 <- mkinmod(Z0 = list(type = "SFORB", to = "Z1", sink = FALSE),
                 Z1 = list(type = "SFO"))
-m.Z.mkin.2 <- mkinfit(Z.mkin.2, FOCUS_2006_Z_mkin)
+m.Z.mkin.2 <- mkinfit(Z.mkin.2, FOCUS_2006_Z_mkin, quiet = TRUE)
 summary(m.Z.mkin.2, data = FALSE)
 plot(m.Z.mkin.2)
 @
@@ -460,7 +459,7 @@ Then, metabolite Z2 is added.
 Z.mkin.3 <- mkinmod(Z0 = list(type = "SFORB", to = "Z1", sink = FALSE),
                 Z1 = list(type = "SFO", to = "Z2"),
                 Z2 = list(type = "SFO"))
-m.Z.mkin.3 <- mkinfit(Z.mkin.3, FOCUS_2006_Z_mkin)
+m.Z.mkin.3 <- mkinfit(Z.mkin.3, FOCUS_2006_Z_mkin, quiet = TRUE)
 summary(m.Z.mkin.3, data = FALSE)
 plot(m.Z.mkin.3)
 @
@@ -474,18 +473,33 @@ Z.mkin.4 <- mkinmod(Z0 = list(type = "SFORB", to = "Z1", sink = FALSE),
                 Z2 = list(type = "SFO", to = "Z3"),
                 Z3 = list(type = "SFO"))
 m.Z.mkin.4 <- mkinfit(Z.mkin.4, FOCUS_2006_Z_mkin, 
-  parms.ini = c(k_Z1_Z2 = 0.05))
+  parms.ini = c(k_Z1_Z2 = 0.05), quiet = TRUE)
 summary(m.Z.mkin.4, data = FALSE)
 plot(m.Z.mkin.4)
 @
 
-The error level of the fit, but especially of metabolite Z3, can 
-be improved if the SFORB model is chosen for this metabolite, as this 
-model is capable of representing the tailing of the metabolite 
-decline phase.
+The error level of the fit, but especially of metabolite Z3, can be improved if
+the SFORB model is chosen for this metabolite, as this model is capable of
+representing the tailing of the metabolite decline phase.
 
-Using the SFORB additionally for Z1 or Z2 did not further improve
-the result.
+Using the SFORB additionally for Z1 or Z2 did not further improve the result.
+Therefore, the model \texttt{Z.mkin.5} is proposed as the best-fit model
+for the dataset from Appendix 7 of the FOCUS report.
+
+<<FOCUS_2006_Z_fits_11, echo=TRUE, fig=TRUE>>=
+Z.mkin.5 <- mkinmod(Z0 = list(type = "SFORB", to = "Z1", sink = FALSE),
+                Z1 = list(type = "SFO", to = "Z2", sink = FALSE),
+                Z2 = list(type = "SFO", to = "Z3"),
+                Z3 = list(type = "SFORB"))
+m.Z.mkin.5 <- mkinfit(Z.mkin.5, FOCUS_2006_Z_mkin, 
+  parms.ini = c(k_Z1_Z2 = 0.2), quiet = TRUE)
+summary(m.Z.mkin.5, data = FALSE)
+plot(m.Z.mkin.5)
+@
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
 
 \end{document}
 % vim: set foldmethod=syntax:

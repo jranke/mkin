@@ -30,9 +30,8 @@ plot.mkinfit <- function(x, fit = x,
   add = FALSE, legend = !add, ...)
 {
   solution_type = fit$solution_type
-  fixed <- fit$fixed$value
-  names(fixed) <- rownames(fit$fixed)
-  parms.all <- c(fit$parms.all, fixed)
+  parms.all <- c(fit$bparms.optim, fit$bparms.fixed)
+
   ininames <- c(
     rownames(subset(fit$start, type == "state")),
     rownames(subset(fit$fixed, type == "state")))

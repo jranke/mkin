@@ -20,7 +20,7 @@
 utils::globalVariables(c("name"))
 mkinerrmin <- function(fit, alpha = 0.05)
 {
-  parms.optim <- fit$parms.all
+  parms.optim <- fit$par
   kinerrmin <- function(errdata, n.parms) {
     means.mean <- mean(errdata$value_mean, na.rm=TRUE)
     df = length(errdata$value_mean) - n.parms

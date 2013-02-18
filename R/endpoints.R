@@ -3,7 +3,7 @@ endpoints <- function(fit, pseudoDT50 = FALSE) {
   # fractions and SFORB eigenvalues from optimised parameters
   ep <- list()
   obs_vars <- fit$obs_vars
-  parms.all <- fit$parms.all
+  parms.all <- fit$bparms.ode
   ep$distimes <- data.frame(DT50 = rep(NA, length(obs_vars)), 
 			    DT90 = rep(NA, length(obs_vars)), 
     row.names = obs_vars)

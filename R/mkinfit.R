@@ -191,7 +191,9 @@ mkinfit <- function(mkinmod, observed,
     value = c(state.ini.fixed, parms.fixed))
   fit$fixed$type = c(rep("state", length(state.ini.fixed)), rep("deparm", length(parms.fixed)))
 
-  parms.all = backtransform_odeparms(c(fit$par, parms.fixed), mod_vars)
+  bparms.optim = backtransform_odeparms(fit$par, mod_vars)
+  bparms.fixed = backtransform_odeparms(c(state.ini.fixed, parms.fixed), mod_vars)
+  bparms.all = c(bparms.optim, bparms.fixed)
 
   # Collect observed, predicted and residuals
   data <- merge(fit$observed, fit$predicted, by = c("time", "name"))
@@ -201,8 +203,10 @@ mkinfit <- function(mkinmod, observed,
   fit$data <- data[order(data$variable, data$time), ]
   fit$atol <- atol
   fit$rtol <- rtol
-  fit$parms.all <- parms.all # Return all backtransformed parameters for summary
-  fit$odeparms.final <- parms.all[mkinmod$parms] # Return ode parameters for further fitting
+  # Return all backtransformed parameters for summary
+  fit$bparms.optim <- bparms.optim 
+  fit$bparms.fixed <- bparms.fixed
+  fit$bparms.ode <- bparms.all[mkinmod$parms] # Return ode parameters for further fitting
   fit$date <- date()
 
   class(fit) <- c("mkinfit", "modFit") 
@@ -231,7 +235,7 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, ...) {
   param <- cbind(param, se)
   dimnames(param) <- list(pnames, c("Estimate", "Std. Error"))
 
-  bparam <- as.matrix(object$parms.all)
+  bparam <- as.matrix(object$bparms.optim)
   dimnames(bparam) <- list(pnames, c("Estimate"))
 
   ans <- list(
@@ -259,9 +263,9 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, ...) {
 
   ans$errmin <- mkinerrmin(object, alpha = 0.05)
 
-  ans$parms.all <- object$parms.all
+  ans$bparms.ode <- object$bparms.ode
   ep <- endpoints(object)
-  if (!is.null(ep$ff))
+  if (length(ep$ff) != 0)
     ans$ff <- ep$ff
   if(distimes) ans$distimes <- ep$distimes
   if(length(ep$SFORB) != 0) ans$SFORB <- ep$SFORB
@@ -305,19 +309,19 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
   if(printdistimes){
     cat("\nEstimated disappearance times:\n")
     print(x$distimes, digits=digits,...)
-  }    
+  }
 
   printff <- !is.null(x$ff)
   if(printff & x$use_of_ff == "min"){
     cat("\nEstimated formation fractions:\n")
     print(data.frame(ff = x$ff), digits=digits,...)
-  }    
+  }
 
   printSFORB <- !is.null(x$SFORB)
   if(printSFORB){
     cat("\nEstimated Eigenvalues of SFORB model(s):\n")
     print(x$SFORB, digits=digits,...)
-  }    
+  }
 
   printcor <- is.numeric(x$cov.unscaled)
   if (printcor){

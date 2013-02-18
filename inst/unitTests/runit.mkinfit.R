@@ -30,11 +30,11 @@ test.FOCUS_2006_SFO <- function()
   median.A.SFO <- as.numeric(lapply(subset(FOCUS_2006_SFO_ref_A_to_F, dataset == "A", 
                    c(M0, k, DT50, DT90)), "median"))
 
-  fit.A.SFO.1.r <- as.numeric(c(fit.A.SFO.1$parms.all, endpoints(fit.A.SFO.1)$distimes))
+  fit.A.SFO.1.r <- as.numeric(c(fit.A.SFO.1$bparms.optim, endpoints(fit.A.SFO.1)$distimes))
   dev.A.SFO.1 <- abs(round(100 * ((median.A.SFO - fit.A.SFO.1.r)/median.A.SFO), digits=1))
   checkIdentical(dev.A.SFO.1 < 1, rep(TRUE, length(dev.A.SFO.1)))
 
-  fit.A.SFO.2.r <- as.numeric(c(fit.A.SFO.2$parms.all, endpoints(fit.A.SFO.2)$distimes))
+  fit.A.SFO.2.r <- as.numeric(c(fit.A.SFO.2$bparms.optim, endpoints(fit.A.SFO.2)$distimes))
   dev.A.SFO.2 <- abs(round(100 * ((median.A.SFO - fit.A.SFO.2.r)/median.A.SFO), digits=1))
   checkIdentical(dev.A.SFO.2 < 1, rep(TRUE, length(dev.A.SFO.2)))
 
@@ -44,11 +44,11 @@ test.FOCUS_2006_SFO <- function()
   median.C.SFO <- as.numeric(lapply(subset(FOCUS_2006_SFO_ref_A_to_F, dataset == "C", 
                    c(M0, k, DT50, DT90)), "median"))
 
-  fit.C.SFO.1.r <- as.numeric(c(fit.C.SFO.1$parms.all, endpoints(fit.C.SFO.1)$distimes))
+  fit.C.SFO.1.r <- as.numeric(c(fit.C.SFO.1$bparms.optim, endpoints(fit.C.SFO.1)$distimes))
   dev.C.SFO.1 <- abs(round(100 * ((median.C.SFO - fit.C.SFO.1.r)/median.C.SFO), digits=1))
   checkIdentical(dev.C.SFO.1 < 1, rep(TRUE, length(dev.C.SFO.1)))
 
-  fit.C.SFO.2.r <- as.numeric(c(fit.C.SFO.2$parms.all, endpoints(fit.C.SFO.2)$distimes))
+  fit.C.SFO.2.r <- as.numeric(c(fit.C.SFO.2$bparms.optim, endpoints(fit.C.SFO.2)$distimes))
   dev.C.SFO.2 <- abs(round(100 * ((median.C.SFO - fit.C.SFO.2.r)/median.C.SFO), digits=1))
   checkIdentical(dev.C.SFO.2 < 1, rep(TRUE, length(dev.C.SFO.2)))
 } # }}}
@@ -66,7 +66,7 @@ test.FOCUS_2006_FOMC <- function()
   median.A.FOMC <- as.numeric(lapply(subset(FOCUS_2006_FOMC_ref_A_to_F, dataset == "A", 
                    c(M0, alpha, beta, DT50, DT90)), "median"))
 
-  fit.A.FOMC.r <- as.numeric(c(fit.A.FOMC$parms.all, endpoints(fit.A.FOMC)$distimes))
+  fit.A.FOMC.r <- as.numeric(c(fit.A.FOMC$bparms.optim, endpoints(fit.A.FOMC)$distimes))
   dev.A.FOMC <- abs(round(100 * ((median.A.FOMC - fit.A.FOMC.r)/median.A.FOMC), digits=1))
   dev.A.FOMC <- dev.A.FOMC[c(1, 4, 5)]
   checkIdentical(dev.A.FOMC < 1, rep(TRUE, length(dev.A.FOMC)))
@@ -77,7 +77,7 @@ test.FOCUS_2006_FOMC <- function()
   median.B.FOMC <- as.numeric(lapply(subset(FOCUS_2006_FOMC_ref_A_to_F, dataset == "B", 
                    c(M0, alpha, beta, DT50, DT90)), "median"))
 
-  fit.B.FOMC.r <- as.numeric(c(fit.B.FOMC$parms.all, endpoints(fit.B.FOMC)$distimes))
+  fit.B.FOMC.r <- as.numeric(c(fit.B.FOMC$bparms.optim, endpoints(fit.B.FOMC)$distimes))
   dev.B.FOMC <- abs(round(100 * ((median.B.FOMC - fit.B.FOMC.r)/median.B.FOMC), digits=1))
   dev.B.FOMC <- dev.B.FOMC[c(1, 4, 5)]
   checkIdentical(dev.B.FOMC < 1, rep(TRUE, length(dev.B.FOMC)))
@@ -88,7 +88,7 @@ test.FOCUS_2006_FOMC <- function()
   median.C.FOMC <- as.numeric(lapply(subset(FOCUS_2006_FOMC_ref_A_to_F, dataset == "C", 
                    c(M0, alpha, beta, DT50, DT90)), "median"))
 
-  fit.C.FOMC.r <- as.numeric(c(fit.C.FOMC$parms.all, endpoints(fit.C.FOMC)$distimes))
+  fit.C.FOMC.r <- as.numeric(c(fit.C.FOMC$bparms.optim, endpoints(fit.C.FOMC)$distimes))
   dev.C.FOMC <- abs(round(100 * ((median.C.FOMC - fit.C.FOMC.r)/median.C.FOMC), digits=1))
   dev.C.FOMC <- dev.C.FOMC[c(1, 4, 5)]
   checkIdentical(dev.C.FOMC < 1, rep(TRUE, length(dev.C.FOMC)))
@@ -106,7 +106,7 @@ test.FOCUS_2006_DFOP <- function()
   median.A.DFOP <- as.numeric(lapply(subset(FOCUS_2006_DFOP_ref_A_to_B, dataset == "A", 
                    c(M0, k1, k2, f, DT50, DT90)), "median"))
 
-  fit.A.DFOP.r <- as.numeric(c(fit.A.DFOP$parms.all, endpoints(fit.A.DFOP)$distimes))
+  fit.A.DFOP.r <- as.numeric(c(fit.A.DFOP$bparms.optim, endpoints(fit.A.DFOP)$distimes))
   dev.A.DFOP <- abs(round(100 * ((median.A.DFOP - fit.A.DFOP.r)/median.A.DFOP), digits=1))
   # about 6.7% deviation for parameter f, the others are < 0.1%
   checkIdentical(dev.A.DFOP < c(1, 1, 1, 10, 1, 1), rep(TRUE, length(dev.A.DFOP)))
@@ -117,7 +117,7 @@ test.FOCUS_2006_DFOP <- function()
   median.B.DFOP <- as.numeric(lapply(subset(FOCUS_2006_DFOP_ref_A_to_B, dataset == "B", 
                    c(M0, k1, k2, f, DT50, DT90)), "median"))
 
-  fit.B.DFOP.r <- as.numeric(c(fit.B.DFOP$parms.all, endpoints(fit.B.DFOP)$distimes))
+  fit.B.DFOP.r <- as.numeric(c(fit.B.DFOP$bparms.optim, endpoints(fit.B.DFOP)$distimes))
   dev.B.DFOP <- abs(round(100 * ((median.B.DFOP - fit.B.DFOP.r)/median.B.DFOP), digits=1))
   # about 0.6% deviation for parameter f, the others are <= 0.1%
   checkIdentical(dev.B.DFOP < 1, rep(TRUE, length(dev.B.DFOP)))
@@ -135,7 +135,7 @@ test.FOCUS_2006_HS <- function()
   median.A.HS <- as.numeric(lapply(subset(FOCUS_2006_HS_ref_A_to_F, dataset == "A", 
                    c(M0, k1, k2, tb, DT50, DT90)), "median"))
 
-  fit.A.HS.r <- as.numeric(c(fit.A.HS$parms.all, endpoints(fit.A.HS)$distimes))
+  fit.A.HS.r <- as.numeric(c(fit.A.HS$bparms.optim, endpoints(fit.A.HS)$distimes))
   dev.A.HS <- abs(round(100 * ((median.A.HS - fit.A.HS.r)/median.A.HS), digits=1))
   # about 6.7% deviation for parameter f, the others are < 0.1%
   checkIdentical(dev.A.HS < 1, rep(TRUE, length(dev.A.HS)))
@@ -146,7 +146,7 @@ test.FOCUS_2006_HS <- function()
   median.B.HS <- as.numeric(lapply(subset(FOCUS_2006_HS_ref_A_to_F, dataset == "B", 
                    c(M0, k1, k2, tb, DT50, DT90)), "median"))
 
-  fit.B.HS.r <- as.numeric(c(fit.B.HS$parms.all, endpoints(fit.B.HS)$distimes))
+  fit.B.HS.r <- as.numeric(c(fit.B.HS$bparms.optim, endpoints(fit.B.HS)$distimes))
   dev.B.HS <- abs(round(100 * ((median.B.HS - fit.B.HS.r)/median.B.HS), digits=1))
   # < 10% deviation for M0, k1, DT50 and DT90, others are problematic
   dev.B.HS <- dev.B.HS[c(1, 2, 5, 6)]
@@ -158,7 +158,7 @@ test.FOCUS_2006_HS <- function()
   median.C.HS <- as.numeric(lapply(subset(FOCUS_2006_HS_ref_A_to_F, dataset == "C", 
                    c(M0, k1, k2, tb, DT50, DT90)), "median"))
 
-  fit.A.HS.r <- as.numeric(c(fit.A.HS$parms.all, endpoints(fit.A.HS)$distimes))
+  fit.A.HS.r <- as.numeric(c(fit.A.HS$bparms.optim, endpoints(fit.A.HS)$distimes))
   dev.A.HS <- abs(round(100 * ((median.A.HS - fit.A.HS.r)/median.A.HS), digits=1))
   # deviation <= 0.1%
   checkIdentical(dev.A.HS < 1, rep(TRUE, length(dev.A.HS)))
@@ -177,7 +177,7 @@ test.FOCUS_2006_SFORB <- function()
                    c(M0, k1, k2, DT50, DT90)), "median"))
 
   fit.A.SFORB.1.r <- as.numeric(c(
-                      parent_0 = fit.A.SFORB.1$parms.all[[1]], 
+                      parent_0 = fit.A.SFORB.1$bparms.optim[[1]], 
                       k1 = endpoints(fit.A.SFORB.1)$SFORB[[1]],
                       k2 = endpoints(fit.A.SFORB.1)$SFORB[[2]],
                       endpoints(fit.A.SFORB.1)$distimes))
@@ -188,7 +188,7 @@ test.FOCUS_2006_SFORB <- function()
   checkIdentical(dev.A.SFORB.1 < 1, rep(TRUE, length(dev.A.SFORB.1)))
 
   fit.A.SFORB.2.r <- as.numeric(c(
-                      parent_0 = fit.A.SFORB.2$parms.all[[1]], 
+                      parent_0 = fit.A.SFORB.2$bparms.optim[[1]], 
                       k1 = endpoints(fit.A.SFORB.2)$SFORB[[1]],
                       k2 = endpoints(fit.A.SFORB.2)$SFORB[[2]],
                       endpoints(fit.A.SFORB.2)$distimes))
@@ -206,7 +206,7 @@ test.FOCUS_2006_SFORB <- function()
                    c(M0, k1, k2, DT50, DT90)), "median"))
 
   fit.B.SFORB.1.r <- as.numeric(c(
-                      parent_0 = fit.B.SFORB.1$parms.all[[1]], 
+                      parent_0 = fit.B.SFORB.1$bparms.optim[[1]], 
                       k1 = endpoints(fit.B.SFORB.1)$SFORB[[1]],
                       k2 = endpoints(fit.B.SFORB.1)$SFORB[[2]],
                       endpoints(fit.B.SFORB.1)$distimes))
@@ -214,7 +214,7 @@ test.FOCUS_2006_SFORB <- function()
   checkIdentical(dev.B.SFORB.1 < 1, rep(TRUE, length(dev.B.SFORB.1)))
 
   fit.B.SFORB.2.r <- as.numeric(c(
-                      parent_0 = fit.B.SFORB.2$parms.all[[1]], 
+                      parent_0 = fit.B.SFORB.2$bparms.optim[[1]], 
                       k1 = endpoints(fit.B.SFORB.2)$SFORB[[1]],
                       k2 = endpoints(fit.B.SFORB.2)$SFORB[[2]],
                       endpoints(fit.B.SFORB.2)$distimes))
@@ -239,15 +239,15 @@ test.FOCUS_2006_D_SFO_SFO <- function()
   fit.2.d <- mkinfit(SFO_SFO.2, solution_type = "deSolve", FOCUS_2006_D)
   # Eigenvalue based solution with maximum use of formation fractions only 
   # works correctly with initial parameters very close to final parameters!
-  fit.2.e <- mkinfit(SFO_SFO.2, parms.ini = fit.2.d$odeparms.final, FOCUS_2006_D)
+  fit.2.e <- mkinfit(SFO_SFO.2, parms.ini = fit.2.d$bparms.ode, FOCUS_2006_D)
 
   FOCUS_2006_D_results_schaefer07_means <- c(
     parent_0 = 99.65, DT50_parent = 7.04, DT50_m1 = 131.34)
 
-  r.1.e <- c(fit.1.e$parms.all[[1]], endpoints(fit.1.e)$distimes[[1]])
-  r.1.d <- c(fit.1.d$parms.all[[1]], endpoints(fit.1.d)$distimes[[1]])
-  r.2.e <- c(fit.2.e$parms.all[[1]], endpoints(fit.2.e)$distimes[[1]])
-  r.2.d <- c(fit.2.d$parms.all[[1]], endpoints(fit.2.d)$distimes[[1]])
+  r.1.e <- c(fit.1.e$bparms.optim[[1]], endpoints(fit.1.e)$distimes[[1]])
+  r.1.d <- c(fit.1.d$bparms.optim[[1]], endpoints(fit.1.d)$distimes[[1]])
+  r.2.e <- c(fit.2.e$bparms.optim[[1]], endpoints(fit.2.e)$distimes[[1]])
+  r.2.d <- c(fit.2.d$bparms.optim[[1]], endpoints(fit.2.d)$distimes[[1]])
 
   dev.1.e <- 100 * (r.1.e - FOCUS_2006_D_results_schaefer07_means)/r.1.e 
   checkIdentical(as.numeric(abs(dev.1.e)) < 1, rep(TRUE, 3))
@@ -273,7 +273,7 @@ test.mkinfit.schaefer07_complex_example <- function()
     mkin_wide_to_long(schaefer07_complex_case, time = "time"))
   s <- summary(fit)
   r <- schaefer07_complex_results
-  attach(as.list(fit$parms.all))
+  attach(as.list(fit$bparms.optim))
   k_parent <- sum(k_parent_A1, k_parent_B1, k_parent_C1)
   r$mkin <- c(
     k_parent,
