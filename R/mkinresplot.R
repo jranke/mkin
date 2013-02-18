@@ -46,9 +46,8 @@ mkinresplot <- function (object, obs_vars = vector(),
 	}
 
   abline(h = 0, lty = 2)
-  title(paste("Residuals of mkin fit"), font.main = 1)
 
- 	if (legend == TRUE) {
+  if (legend == TRUE) {
     legend(lpos, inset = c(0.05, 0.05), legend = vars, 
     col = col_obs, pch = pch_obs)
   }

@@ -69,7 +69,7 @@ FOCUS_2006_L1_mkin <- mkin_wide_to_long(FOCUS_2006_L1)
 
 The next step is to set up the models used for the kinetic analysis. Note that
 the model definitions contain the names of the observed variables in the data.
-In this case, there is only one variable called \Robject{parent}.
+In this case, there is only one variable called \texttt{parent}.
 
 <<Simple_models, echo=TRUE>>=
 SFO <- mkinmod(parent = list(type = "SFO"))
@@ -116,6 +116,15 @@ Due to the higher number of parameters, and the lower number of degrees of freed
 of the fit, the $\chi^2$ error level is actually higher for the FOMC model (3.6\%) than 
 for the SFO model (3.4\%).
 
+The $\chi^2$ error levels reported in Appendix 3 and Appendix 7 to the FOCUS kinetics
+report are rounded to integer percentages and partly deviate by one percentage point
+from the results calculated by \texttt{mkin}. The reason for this is not known. However,
+\texttt{mkin} gives the same $\chi^2$ error levels as the \Rpackage{kinfit} package.
+Furthermore, the calculation routines of the kinfit package have been extensively
+compared to the results obtained by the KinGUI software, as documented in the
+kinfit package vignette. KinGUI is a widely used standard package in this field.
+Therefore, the reason for the difference was not investigated further.
+
 \subsection{Laboratory Data L2}
 
 The following code defines example dataset L2 from the FOCUS kinetics
@@ -140,21 +149,21 @@ summary(m.L2.SFO)
 The $\chi^2$ error level of 14\% suggests that the model does not fit very well.
 This is also obvious from the plots of the fit and the residuals.
 
-<<L2_SFO_plot, fig=TRUE, echo=TRUE>>=
+<<L2_SFO_plot, fig=TRUE, echo=TRUE, height=8>>=
+par(mfrow = c(2, 1))
 plot(m.L2.SFO)
+mkinresplot(m.L2.SFO)
 @
 
 In the FOCUS kinetics report, it is stated that there is no apparent systematic
 error observed from the residual plot up to the measured DT90 (approximately at
 day 5), and there is an underestimation beyond that point.
 
-<<L2_SFO_residuals, fig=TRUE, echo=TRUE>>=
-mkinresplot(m.L2.SFO, ylab = "Observed", xlab = "Time")
-@
-
 We may add that it is difficult to judge the random nature of the residuals just 
-from the three samplings at days 0, 1 and 3. Also, it is not clear why a
-consistent underestimation after the approximate DT90 should be irrelevant.
+from the three samplings at days 0, 1 and 3. Also, it is not clear \textit{a
+priori} why a consistent underestimation after the approximate DT90 should be
+irrelevant. However, this can be rationalised by the fact that the FOCUS fate
+models generally only implement SFO kinetics.
 
 For comparison, the FOMC model is fitted as well, and the $\chi^2$ error level
 is checked.
@@ -192,13 +201,13 @@ s.m.L2.DFOP <- summary(m.L2.DFOP)
 s.m.L2.DFOP$errmin
 @
 
-Therefore, the FOMC model is clearly the best-fit model based on the 
+Therefore, the FOMC model is clearly the best-fit model for dataset L1 based on the 
 $\chi^2$ error level criterion.
 
 \subsection{Laboratory Data L3}
 
-The following code defines example dataset L3 from the FOCUS kinetics
-report, p. 290
+The following code defines example dataset L3 from the FOCUS kinetics report,
+p. 290.
 
 <<FOCUS_2006_L3_data, echo=TRUE, eval=TRUE>>=
 FOCUS_2006_L3 = data.frame(
@@ -347,11 +356,10 @@ are used.
 <<FOCUS_2006_Z_fits_3, echo=TRUE, fig=TRUE>>=
 Z.3 <- mkinmod(Z0 = list(type = "SFO", to = "Z1", sink = FALSE),
                 Z1 = list(type = "SFO"))
-m.Z.3 <- mkinfit(Z.3, FOCUS_2006_Z_mkin)
 m.Z.3 <- mkinfit(Z.3, FOCUS_2006_Z_mkin, parms.ini = c(k_Z0_Z1 = 0.5))
 m.Z.3 <- mkinfit(Z.3, FOCUS_2006_Z_mkin, solution_type = "deSolve")
-summary(m.Z.2b, data = FALSE)
-plot(m.Z.2b)
+summary(m.Z.3, data = FALSE)
+plot(m.Z.3)
 @
 
 The first attempt to fit the model fails, as the default solution type chosen
@@ -378,7 +386,7 @@ assumed that there is additional empirical evidence that Z1 quickly and exclusiv
 hydrolyses to Z2. Again, in order to avoid a singular system when using default starting
 parameters, the starting parameter for the pathway without sink term has to be adapted.
 
-<<FOCUS_2006_Z_fits_4, echo=TRUE, fig=TRUE>>=
+<<FOCUS_2006_Z_fits_5, echo=TRUE, fig=TRUE>>=
 Z.5 <- mkinmod(Z0 = list(type = "SFO", to = "Z1", sink = FALSE),
                 Z1 = list(type = "SFO", to = "Z2", sink = FALSE),
                 Z2 = list(type = "SFO"))
@@ -390,7 +398,7 @@ plot(m.Z.5)
 
 Finally, metabolite Z3 is added to the model.
 
-<<FOCUS_2006_Z_fits_5, echo=TRUE, fig=TRUE>>=
+<<FOCUS_2006_Z_fits_6, echo=TRUE, fig=TRUE>>=
 Z.FOCUS <- mkinmod(Z0 = list(type = "SFO", to = "Z1", sink = FALSE),
                 Z1 = list(type = "SFO", to = "Z2", sink = FALSE),
                 Z2 = list(type = "SFO", to = "Z3"),
@@ -400,6 +408,18 @@ m.Z.FOCUS <- mkinfit(Z.FOCUS, FOCUS_2006_Z_mkin,
 summary(m.Z.FOCUS, data = FALSE)
 plot(m.Z.FOCUS)
 @
+
+This is the fit corresponding to the final result chosen in Appendix 7 of the 
+FOCUS report. The residual plots can be obtained by
+
+<<FOCUS_2006_Z_residuals_6, echo=TRUE, fig=TRUE>>=
+par(mfrow = c(2, 2))
+mkinresplot(m.Z.FOCUS, "Z0", lpos = "bottomright")
+mkinresplot(m.Z.FOCUS, "Z1", lpos = "bottomright")
+mkinresplot(m.Z.FOCUS, "Z2", lpos = "bottomright")
+mkinresplot(m.Z.FOCUS, "Z3", lpos = "bottomright")
+@
+
 
 As the FOCUS report states, there is a certain tailing of the time course of metabolite 
 Z3. Also, the time course of the parent compound is not fitted very well using the 
@@ -411,7 +431,7 @@ level is higher for metabolite Z3 using this model, the covariance matrix is
 not returned, and graphically the fit is not significantly improved. Therefore,
 this appears to be a case of overparamterisation.
 
-<<FOCUS_2006_Z_fits_6, echo=TRUE, fig=TRUE>>=
+<<FOCUS_2006_Z_fits_7, echo=TRUE, fig=TRUE>>=
 Z.mkin.1 <- mkinmod(Z0 = list(type = "SFO", to = "Z1", sink = FALSE),
                 Z1 = list(type = "SFO", to = "Z2", sink = FALSE),
                 Z2 = list(type = "SFO", to = "Z3"),
@@ -425,7 +445,7 @@ plot(m.Z.mkin.1)
 On the other hand, the model fit for the parent compound can be improved by
 using the SFORB model.
 
-<<FOCUS_2006_Z_fits_6, echo=TRUE, fig=TRUE>>=
+<<FOCUS_2006_Z_fits_8, echo=TRUE, fig=TRUE>>=
 Z.mkin.2 <- mkinmod(Z0 = list(type = "SFORB", to = "Z1", sink = FALSE),
                 Z1 = list(type = "SFO"))
 m.Z.mkin.2 <- mkinfit(Z.mkin.2, FOCUS_2006_Z_mkin)
@@ -436,7 +456,7 @@ plot(m.Z.mkin.2)
 The sink is for Z1 is turned off again, for the same reasons as in the original analysis.
 Then, metabolite Z2 is added.
 
-<<FOCUS_2006_Z_fits_6, echo=TRUE, fig=TRUE>>=
+<<FOCUS_2006_Z_fits_9, echo=TRUE, fig=TRUE>>=
 Z.mkin.3 <- mkinmod(Z0 = list(type = "SFORB", to = "Z1", sink = FALSE),
                 Z1 = list(type = "SFO", to = "Z2"),
                 Z2 = list(type = "SFO"))
@@ -448,7 +468,7 @@ plot(m.Z.mkin.3)
 Finally, Z3 is added as well. This model appears overparameterised (no
 covariance matrix returned) if the sink for Z1 is left in the model.
 
-<<FOCUS_2006_Z_fits_6, echo=TRUE, fig=TRUE>>=
+<<FOCUS_2006_Z_fits_10, echo=TRUE, fig=TRUE>>=
 Z.mkin.4 <- mkinmod(Z0 = list(type = "SFORB", to = "Z1", sink = FALSE),
                 Z1 = list(type = "SFO", to = "Z2", sink = FALSE),
                 Z2 = list(type = "SFO", to = "Z3"),
@@ -459,16 +479,13 @@ summary(m.Z.mkin.4, data = FALSE)
 plot(m.Z.mkin.4)
 @
 
-<<FOCUS_2006_Z_fits_6, echo=TRUE, fig=TRUE>>=
-Z.mkin.5 <- mkinmod(Z0 = list(type = "SFORB", to = "Z1", sink = FALSE),
-                Z1 = list(type = "SFO", to = "Z2", sink = FALSE),
-                Z2 = list(type = "SFO", to = "Z3"),
-                Z3 = list(type = "SFORB"))
-m.Z.mkin.5 <- mkinfit(Z.mkin.5, FOCUS_2006_Z_mkin) 
-summary(m.Z.mkin.5, data = FALSE)
-plot(m.Z.mkin.5)
-@
+The error level of the fit, but especially of metabolite Z3, can 
+be improved if the SFORB model is chosen for this metabolite, as this 
+model is capable of representing the tailing of the metabolite 
+decline phase.
 
+Using the SFORB additionally for Z1 or Z2 did not further improve
+the result.
 
 \end{document}
 % vim: set foldmethod=syntax:
