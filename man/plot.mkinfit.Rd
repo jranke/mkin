@@ -11,7 +11,8 @@
 \usage{
 \method{plot}{mkinfit}(x, fit = x, xlab = "Time", ylab = "Observed", 
   xlim = range(fit$data$time), ylim = c(0, max(fit$data$observed, na.rm = TRUE)),
-  col_obs = 1:length(fit$mkinmod$map), pch_obs = col_obs, lty_obs = 1, 
+  col_obs = 1:length(fit$mkinmod$map), pch_obs = col_obs, 
+  lty_obs = rep(1, length(fit$mkinmod$map)),
   add = FALSE, legend = !add, ...)
 }
 \arguments{
