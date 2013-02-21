@@ -17,7 +17,8 @@
 
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
-utils::globalVariables(c("name"))
+if(getRversion() >= '2.15.1') utils::globalVariables(c("name"))
+
 mkinerrmin <- function(fit, alpha = 0.05)
 {
   parms.optim <- fit$par
