@@ -6,7 +6,7 @@
 \description{
   Solves the differential equations with the optimised and fixed parameters
   from a previous successful call to \code{\link{mkinfit}} and plots 
-  the observed data together with the numerical solution of the fitted model.
+  the observed data together with the solution of the fitted model.
 }
 \usage{
 \method{plot}{mkinfit}(x, fit = x, xlab = "Time", ylab = "Observed", 

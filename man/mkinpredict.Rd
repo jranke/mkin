@@ -67,7 +67,7 @@
   # The integration method does not make a lot of difference
   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20, atol = 1e-20, method = "ode45")[20,]
   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20, atol = 1e-20, method = "rk4")[20,]
-  # The number of output times does make a lot of difference
+  # The number of output times used to make a lot of difference until the default for atol was adjusted
   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), seq(0, 20, by = 0.1))[201,]
   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), seq(0, 20, by = 0.01))[2001,]
 }
