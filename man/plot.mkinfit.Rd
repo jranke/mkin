@@ -13,7 +13,7 @@
   xlim = range(fit$data$time), ylim = c(0, max(fit$data$observed, na.rm = TRUE)),
   col_obs = 1:length(fit$mkinmod$map), pch_obs = col_obs, 
   lty_obs = rep(1, length(fit$mkinmod$map)),
-  add = FALSE, legend = !add, ...)
+  add = FALSE, legend = !add, lpos = "topright", inset = c(0.05, 0.05), ...)
 }
 \arguments{
   \item{x}{
@@ -48,6 +48,12 @@
 }
   \item{legend}{
     should a legend be added to the plot?
+}
+  \item{lpos}{
+    position of the legend. Passed to \code{\link{legend}} as the first argument.
+}
+  \item{inset}{
+    Passed to \code{\link{legend}} if applicable.
 }
   \item{\dots}{
    further arguments passed to \code{\link{plot}}.

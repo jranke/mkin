@@ -28,7 +28,8 @@ plot.mkinfit <- function(x, fit = x,
   col_obs = 1:length(fit$mkinmod$map),
   pch_obs = col_obs, 
   lty_obs = rep(1, length(fit$mkinmod$map)),
-  add = FALSE, legend = !add, ...)
+  add = FALSE, legend = !add, 
+  lpos = "topright", inset = c(0.05, 0.05), ...)
 {
   solution_type = fit$solution_type
   parms.all <- c(fit$bparms.optim, fit$bparms.fixed)
@@ -63,7 +64,7 @@ plot.mkinfit <- function(x, fit = x,
   }
   matlines(out$time, out[-1], col = col_obs, lty = lty_obs)
   if (legend == TRUE) {
-    legend("topright", inset=c(0.05, 0.05), legend=names(fit$mkinmod$map),
+    legend(lpos, inset= inset, legend=names(fit$mkinmod$map),
       col=col_obs, pch=pch_obs, lty=lty_obs)
   }
 }
