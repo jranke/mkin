@@ -213,30 +213,42 @@ mkinfit <- function(mkinmod, observed,
   return(fit)
 }
 
-summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, ...) {
+summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, ...) {
   param  <- object$par
   pnames <- names(param)
   p      <- length(param)
+  mod_vars <- names(object$mkinmod$diffs)
   covar  <- try(solve(0.5*object$hessian), silent = TRUE)   # unscaled covariance
-  if (!is.numeric(covar)) {
-    message <- "Cannot estimate covariance; system is singular"
-    warning(message)
-    covar <- matrix(data = NA, nrow = p, ncol = p)
-  } else message <- "ok"
-
-  rownames(covar) <- colnames(covar) <- pnames
   rdf    <- object$df.residual
   resvar <- object$ssr / rdf
-  se     <- sqrt(diag(covar) * resvar)
+  if (!is.numeric(covar)) {
+    covar <- NULL
+    se <- lci <- uci <- rep(NA, p)
+  } else {
+    rownames(covar) <- colnames(covar) <- pnames
+    se     <- sqrt(diag(covar) * resvar)
+    lci    <- param + qt(alpha/2, rdf) * se
+    uci    <- param + qt(1-alpha/2, rdf) * se
+
+  }
+
   names(se) <- pnames
-  tval      <- param / se
   modVariance <- object$ssr / length(object$residuals)
 
-  param <- cbind(param, se)
-  dimnames(param) <- list(pnames, c("Estimate", "Std. Error"))
+  param <- cbind(param, se, lci, uci)
+  dimnames(param) <- list(pnames, c("Estimate", "Std. Error", "Lower", "Upper"))
 
-  bparam <- as.matrix(object$bparms.optim)
-  dimnames(bparam) <- list(pnames, c("Estimate"))
+  blci <- buci <- numeric()
+  # Only use lower end of CI for one parameter at a time
+  for (pname in pnames) {
+    par.lower <- par.upper <- object$par
+    par.lower[pname] <- param[pname, "Lower"]
+    par.upper[pname] <- param[pname, "Upper"]
+    blci[pname] <- backtransform_odeparms(par.lower, mod_vars)[pname]
+    buci[pname] <- backtransform_odeparms(par.upper, mod_vars)[pname]
+  }
+  bparam <- cbind(object$bparms.optim, blci, buci)
+  dimnames(bparam) <- list(pnames, c("Estimate", "Lower", "Upper"))
 
   ans <- list(
     version = as.character(packageVersion("mkin")),
@@ -248,9 +260,11 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, ...) {
     residualVariance = resvar,
     sigma = sqrt(resvar),
     modVariance = modVariance,
-    df = c(p, rdf), cov.unscaled = covar,
+    df = c(p, rdf), 
+    cov.unscaled = covar,
     cov.scaled = covar * resvar,
-    info = object$info, niter = object$iterations,
+    info = object$info, 
+    niter = object$iterations,
     stopmess = message,
     par = param,
     bpar = bparam)
@@ -293,10 +307,10 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
   else print(x$fixed)
   
   cat("\nOptimised, transformed parameters:\n")
-  printCoefmat(x$par, digits = digits, ...)
+  print(signif(x$par, digits = digits))
 
   cat("\nBacktransformed parameters:\n")
-  printCoefmat(x$bpar, digits = digits, ...)
+  print(signif(x$bpar, digits = digits))
 
   cat("\nResidual standard error:",
       format(signif(x$sigma, digits)), "on", rdf, "degrees of freedom\n")
@@ -323,12 +337,13 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
     print(x$SFORB, digits=digits,...)
   }
 
-  printcor <- is.numeric(x$cov.unscaled)
-  if (printcor){
+  cat("\nParameter correlation:\n")
+  if (!is.null(x$cov.unscaled)){
     Corr <- cov2cor(x$cov.unscaled)
     rownames(Corr) <- colnames(Corr) <- rownames(x$par)
-    cat("\nParameter correlation:\n")
     print(Corr, digits = digits, ...)
+  } else {
+    cat("Could not estimate covariance matrix; singular system:\n")
   }
 
   printdata <- !is.null(x$data)
