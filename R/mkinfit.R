@@ -349,7 +349,7 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
   printdata <- !is.null(x$data)
   if (printdata){
     cat("\nData:\n")
-    print(format(x$data, digits = digits, scientific = FALSE,...), row.names = FALSE)
+    print(format(x$data, digits = digits, ...), row.names = FALSE)
   }
 
   invisible(x)
