@@ -255,6 +255,7 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
     Rversion = paste(R.version$major, R.version$minor, sep="."),
 	  date.fit = object$date,
 	  date.summary = date(),
+	  solution_type = object$solution_type,
 	  use_of_ff = object$mkinmod$use_of_ff,
     residuals = object$residuals,
     residualVariance = resvar,
@@ -298,6 +299,9 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
   print(noquote(as.character(x[["diffs"]])))
   df  <- x$df
   rdf <- df[2]
+
+  cat("\nMethod used for solution of differential equation system:\n")
+  cat(x$solution_type, "\n")
 
   cat("\nStarting values for optimised parameters:\n")
   print(x$start)
