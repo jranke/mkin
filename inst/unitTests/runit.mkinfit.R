@@ -295,42 +295,19 @@ test.mkinfit.schaefer07_complex_example <- function()
   checkIdentical(r$mkin.deviation < 10, rep(TRUE, length(r$mkin.deviation)))
 } # }}}
 
-# Test deSolve based fit to Schaefer 2007 data against solution from conference paper {{{
-test.mkinfit.schaefer07_complex_example <- function()
+# Test deSolve based fit to Schaefer 2007 using FOMC for parent (eigenvalue based solution not possible)
+# and skipping B1 because of its high scatter {{{
+test.mkinfit.schaefer07_complex_example_2 <- function()
 {
-  schaefer07_complex_model <- mkinmod(
-    parent = list(type = "SFO", to = c("A1", "B1", "C1"), sink = FALSE),
+  schaefer07_complex_model_2 <- mkinmod(
+    parent = list(type = "FOMC", to = c("A1", "C1")),
     A1 = list(type = "SFO", to = "A2"),
-    B1 = list(type = "SFO"),
     C1 = list(type = "SFO"),
     A2 = list(type = "SFO"))
   
-  # Works fine with n.outtimes = 1000 but takes too much time
-  #   fit <- mkinfit(schaefer07_complex_model, 
-  #     mkin_wide_to_long(schaefer07_complex_case, time = "time"), 
-  #     n.outtimes = 1000, solution_type = "deSolve")
-  #   s <- summary(fit)
-  #   r <- schaefer07_complex_results
-  #   attach(as.list(fit$parms.all))
-  #   k_parent <- sum(k_parent_A1, k_parent_B1, k_parent_C1)
-  #   r$mkin <- c(
-  #     k_parent,
-  #     s$distimes["parent", "DT50"],
-  #     s$ff["parent_A1"],
-  #     sum(k_A1_sink, k_A1_A2),
-  #     s$distimes["A1", "DT50"],
-  #     s$ff["parent_B1"],
-  #     k_B1_sink,
-  #     s$distimes["B1", "DT50"],
-  #     s$ff["parent_C1"],
-  #     k_C1_sink,
-  #     s$distimes["C1", "DT50"],
-  #     s$ff["A1_A2"],
-  #     k_A2_sink,
-  #     s$distimes["A2", "DT50"])
-  #   r$means <- (r$KinGUI + r$ModelMaker)/2
-  #   r$mkin.deviation <- abs(round(100 * ((r$mkin - r$means)/r$means), digits=1))
-  #   checkIdentical(r$mkin.deviation < 10, rep(TRUE, length(r$mkin.deviation)))
+   fit <- mkinfit(schaefer07_complex_model_2, 
+     mkin_wide_to_long(schaefer07_complex_case, time = "time"))
+   checkTrue(fit$ssr < 122)
 } # }}}
 
 # vim: set foldmethod=marker ts=2 sw=2 expandtab:

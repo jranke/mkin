@@ -11,6 +11,20 @@ endpoints <- function(fit, pseudoDT50 = FALSE) {
   ep$SFORB <- vector()
   for (obs_var in obs_vars) {
     type = names(fit$mkinmod$map[[obs_var]])[1]  
+
+    # Get formation fractions if directly fitted, and calculate remaining fraction to sink
+    f_names = grep(paste("f", obs_var, sep = "_"), names(parms.all), value=TRUE)
+    f_values = parms.all[f_names]
+    f_to_sink = 1 - sum(f_values)
+    names(f_to_sink) = ifelse(type == "SFORB", 
+                            paste(obs_var, "free", "sink", sep = "_"), 
+                            paste(obs_var, "sink", sep = "_"))
+    for (f_name in f_names) {
+      ep$ff[[sub("f_", "", sub("_to_", "_", f_name))]] = f_values[[f_name]]
+    }
+    ep$ff = append(ep$ff, f_to_sink)
+
+    # Get the rest
     if (type == "SFO") {
       k_names = grep(paste("k", obs_var, sep="_"), names(parms.all), value=TRUE)
       k_tot = sum(parms.all[k_names])

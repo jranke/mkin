@@ -15,6 +15,8 @@ mkinfit(mkinmod, observed,
   state.ini = c(100, rep(0, length(mkinmod$diffs) - 1)), 
   fixed_parms = NULL, fixed_initials = names(mkinmod$diffs)[-1], 
   solution_type = "auto",
+  method.modFit = "Marq",
+  control.modFit = list(),
   plot = FALSE, quiet = FALSE, err = NULL, weight = "none", 
   scaleVar = FALSE, 
   atol = 1e-8, rtol = 1e-10, n.outtimes = 100, 
@@ -38,6 +40,13 @@ mkinfit(mkinmod, observed,
     A named vector of initial values for the parameters, including parameters to
     be optimised and potentially also fixed parameters as indicated by \code{fixed_parms}.
     If set to "auto", initial values for rate constants are set to default values.
+    Using parameter names that are not in the model gives an error.
+
+    It is possible to only specify a subset of the parameters that the model
+    needs. You can use the parameter lists "bparms.ode" from a previously
+    fitted model, which contains the differential equation parameters from this
+    model. This works nicely if the models are nested. An example is given
+    below.
   }
   \item{state.ini}{
     A named vector of initial values for the state variables of the model. In case the 
@@ -64,6 +73,15 @@ mkinfit(mkinmod, observed,
     which uses "analytical" if possible, otherwise "eigen" if the model can be expressed
     using eigenvalues and eigenvectors, and finally "deSolve" for the remaining
     models (time dependence of degradation rates and metabolites).
+  }
+  \item{method.modFit}{
+    The optimisation method passed to \code{\link{modFit}}. The default "Marq" is the Levenberg Marquardt
+    algorithm \code{\link{nls.lm}} from the package \code{minpack.lm}. Often other methods need
+    more iterations to find the same result. When using "Pseudo", "upper" and "lower" need to be 
+    specified for the transformed parameters.
+  }
+  \item{control.modFit}{
+    Additional arguments passed to the optimisation method used by \code{\link{modFit}}. 
   }
   \item{plot}{
     Should the observed values and the numerical solutions be plotted at each stage
@@ -120,6 +138,30 @@ SFO_SFO <- mkinmod(
 fit <- mkinfit(SFO_SFO, FOCUS_2006_D)
 str(fit)
 summary(fit)
+
+# Use stepwise fitting, using optimised parameters from parent only fit, FOMC
+\dontrun{
+FOMC <- mkinmod(parent = list(type = "FOMC"))
+FOMC_SFO <- mkinmod(
+  parent = list(type = "FOMC", to = "m1", sink = TRUE),
+  m1 = list(type = "SFO"))
+# Fit the model to the FOCUS example dataset D using defaults
+fit.FOMC_SFO <- mkinfit(FOMC_SFO, FOCUS_2006_D)
+# Use starting parameters from parent only FOMC fit (not really needed in this case)
+fit.FOMC = mkinfit(FOMC, FOCUS_2006_D)
+fit.FOMC_SFO <- mkinfit(FOMC_SFO, FOCUS_2006_D, parms.ini = fit.FOMC$bparms.ode, plot=TRUE)
+}
+
+# Use stepwise fitting, using optimised parameters from parent only fit, SFORB
+SFORB <- mkinmod(parent = list(type = "SFORB"))
+SFORB_SFO <- mkinmod(
+  parent = list(type = "SFORB", to = "m1", sink = TRUE),
+  m1 = list(type = "SFO"))
+# Fit the model to the FOCUS example dataset D using defaults
+fit.SFORB_SFO <- mkinfit(SFORB_SFO, FOCUS_2006_D)
+# Use starting parameters from parent only SFORB fit (not really needed in this case)
+fit.SFORB = mkinfit(SFORB, FOCUS_2006_D)
+fit.SFORB_SFO <- mkinfit(SFORB_SFO, FOCUS_2006_D, parms.ini = fit.SFORB$bparms.ode, plot=TRUE)
 }
 \keyword{ models }
 \keyword{ optimize }

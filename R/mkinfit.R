@@ -28,6 +28,8 @@ mkinfit <- function(mkinmod, observed,
   fixed_parms = NULL,
   fixed_initials = names(mkinmod$diffs)[-1],
   solution_type = "auto",
+  method.modFit = "Marq",
+  control.modFit = list(),
   plot = FALSE, quiet = FALSE,
   err = NULL, weight = "none", scaleVar = FALSE,
   atol = 1e-8, rtol = 1e-10, n.outtimes = 100,
@@ -45,6 +47,13 @@ mkinfit <- function(mkinmod, observed,
 
   # Define starting values for parameters where not specified by the user
   if (parms.ini[[1]] == "auto") parms.ini = vector()
+
+  # Prevent inital parameter specifications that are not in the model
+  wrongpar.names <- setdiff(names(parms.ini), mkinmod$parms)
+  if (length(wrongpar.names) > 0) {
+    stop("Initial parameter(s) ", paste(wrongpar.names, collapse = ", "), " not used in the model")
+  }
+
   defaultpar.names <- setdiff(mkinmod$parms, names(parms.ini))
   for (parmname in defaultpar.names) {
     # Default values for rate constants, depending on the parameterisation
@@ -168,7 +177,7 @@ mkinfit <- function(mkinmod, observed,
     }
     return(mC)
   }
-  fit <- modFit(cost, c(state.ini.optim, parms.optim), ...)
+  fit <- modFit(cost, c(state.ini.optim, parms.optim), method = method.modFit, control = control.modFit, ...)
 
   # We need to return some more data for summary and plotting
   fit$solution_type <- solution_type
@@ -203,6 +212,7 @@ mkinfit <- function(mkinmod, observed,
   fit$data <- data[order(data$variable, data$time), ]
   fit$atol <- atol
   fit$rtol <- rtol
+
   # Return all backtransformed parameters for summary
   fit$bparms.optim <- bparms.optim 
   fit$bparms.fixed <- bparms.fixed
@@ -239,7 +249,7 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
   dimnames(param) <- list(pnames, c("Estimate", "Std. Error", "Lower", "Upper"))
 
   blci <- buci <- numeric()
-  # Only use lower end of CI for one parameter at a time
+  # Only transform boundaries of CI for one parameter at a time
   for (pname in pnames) {
     par.lower <- par.upper <- object$par
     par.lower[pname] <- param[pname, "Lower"]
