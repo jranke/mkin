@@ -108,6 +108,9 @@ mkinfit <- function(mkinmod, observed,
     } else {
       if (is.matrix(mkinmod$coefmat)) {
 	solution_type = "eigen"
+        if (max(observed$value, na.rm = TRUE) < 0.1) {
+	  stop("The combination of small observed values (all < 0.1) and solution_type = eigen is error-prone")
+	}
       } else {
 	solution_type = "deSolve"
       }
