@@ -1,0 +1,17 @@
+require(gWidgetsWWW)
+localServerStart("simple.R")
+
+localServerStart("gdf-test.R")
+localServerStart("gdf-test-john.R")
+
+localServerStart("Examples/ex-actions.R", package="gWidgetsWWW")
+localServerStart("Examples/ex-add-widget-dynamically.R", package="gWidgetsWWW")
+localServerStart("Examples/ex-clt.R", package="gWidgetsWWW")
+localServerStart("Examples/ex-form.R", package="gWidgetsWWW")
+localServerStart("Examples/ex-gcombobox.R", package="gWidgetsWWW")
+localServerStart("Examples/ex-gtable.R", package="gWidgetsWWW")
+localServerStart("Examples/ex-index.R", package="gWidgetsWWW")
+localServerStart("Examples/ex-layouts.R", package="gWidgetsWWW")
+localServerStart("Examples/ex-simple-gui.R", package="gWidgetsWWW")
+localServerStart("Examples/ex-widgets.R", package="gWidgetsWWW")
+localServerStart("Examples/ex-windows.R", package="gWidgetsWWW")
