@@ -1,2 +1,2 @@
 require(gWidgetsWWW2)
-load_app("simple2.R")
+load_app("simple3.R")
