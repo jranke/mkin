@@ -1,2 +1,0 @@
-require(gWidgetsWWW2)
-load_app("simple2.R")

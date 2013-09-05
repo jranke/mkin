@@ -1,68 +1,57 @@
-# Work in progress - simple GUI for mkin
-w <- gwindow('Simple R GUI for kinetic evaluations', visible=FALSE) 
-# Project definition {{{
-pr <- gexpandgroup("Project", cont=w)
+# Simple gWidgetsWWW2 GUI for mkin
+# Set the GUI title and create the parent frame {{{1
+GUI_title <- "Simple Browser based GUI for kinetic evaluations using mkin"
+w <- gwindow(GUI_title)
+sb <- gstatusbar("Powered by gWidgetsWWW2 and Rook", cont = w)
+g <- gframe(GUI_title, cont = w, use.scrollwindow = TRUE, horizontal = FALSE)
 
-n.observed <- 1
-max.n.observed <- 9
-observed.names = c("parent", paste("M", 1:(max.n.observed - 1), sep=""))
+# Set default values for project data objects {{{1
+project_file <- "mkin_project_1.RData"
+# Observed variables {{{2
+n.observed <- 2
+observed.names = c("parent", paste("M", 1:(n.observed - 1), sep=""))
+observed.df = data.frame(Index = 1:n.observed, 
+                         Name = observed.names,
+                         Chemical = "NA",
+                         stringsAsFactors = FALSE)
 
-prg <- ggroup(horizontal=FALSE, cont = pr)
-prl <- glayout(cont = prg)
-prl[1,1] <- glabel("Number of observed variables", cont=prl)
-prl[1,2] <- (n.observed.gw = gcombobox(
-  1:max.n.observed, 
-  handler = function(h, ...) {
-    n.observed <<- svalue(n.observed.gw)
-    filter.expression <- paste("^[1-", n.observed, "]$", sep="")
-    observed.gw$filter("Index", filter.expression)
-  },
-  cont=prl))
+# Project definition and file management {{{1
+upload_file_handler <- function(h, ...)  # {{{2
+{
+  tmpfile <- normalizePath(svalue(h$obj), winslash = "/")
+  try(load(tmpfile))
+  project_file <<- pr.gf$filename
+  svalue(wf.ge) <- project_file
+  observed.gdf[,] <- observed.df
+}
+save_to_file_handler <- function(h, ...) # {{{2
+{
+   observed.df <- observed.gdf[,]
+   save(observed.df, file = project_file)
+   galert(paste("Saved project contents to", project_file), parent = w)
+}
 
-observed.gw <- gdf(
-  items = data.frame(Index = 1:max.n.observed, 
-    Name = observed.names, stringsAsFactors=FALSE),
-  name = "Names of observed variables",
-  width = 500, height=250, cont=prg)
+# Add widgets for project definition to an expandable group {{{1
+prg <- gexpandgroup("Project definition", cont = g)
 
-addSpace(prg, 15)
-prf <- gfile("Project file in binary R format (preferably use .RData as extension)", 
-  container = prg)
-addSpring(prg)
-addSpace(prg, 15)
-pr.ok <- gbutton("save", 
-  handler=function(h,...) {
-      galert(svalue(prf), parent=w)
-    }, container=prg)
+pr.vg <- ggroup(cont = prg, horizontal = FALSE)
+pr.hg <- ggroup(cont = pr.vg, horizontal = TRUE)
+pr.gf <- gfile(text = "Select project file", cont = pr.hg,
+               handler = upload_file_handler)
+pr.vg2 <- ggroup(cont = pr.hg, horizontal = FALSE)
+pr.hg2 <- ggroup(cont = pr.vg2, horizontal = TRUE)
+glabel("Current project file name is", cont = pr.hg2)
+change_project_file_handler = function(h, ...) {
+  project_file <<- as.character(svalue(h$obj))
+}
+wf.ge <- gedit(project_file, cont = pr.hg2, 
+               handler = change_project_file_handler)
 
-gbutton("ok", handler = function(h, ...) {
-  observed <- observed.gw[1:n.observed,2]
-  save(observed, file="observed.RData")
-  visible(pr) <- FALSE
-  },
-  cont=prg
-)
+gbutton("Save current project contents to this file", cont = pr.vg2,
+        handler = save_to_file_handler)
 
-visible(pr) <- TRUE
-# }}}
+observed.gdf <- gdf(observed.df, name = "Names of observed variables", 
+                    width = 500, height = 250, cont = pr.vg)
+observed.gdf$set_column_width(1, 40)
 
-# Dataset definition
-ds <- gexpandgroup("Datasets", cont=w)
-s <- gdf(data.frame( Author = c("Meier"), Year = "3", Title = "4"),
-  name = "Studies",
-cont=ds)
-
-size(s) <- c(800,200)
-visible(ds) <- TRUE
-
-# Model definition
-ms <- gexpandgroup("Models", cont=w)
-visible(ms) <- FALSE
-
-# Evaluation window
-mw <- gframe("Evaluations", cont=w)
-
-# Status bar
-gstatusbar("Powered by gWidgetsWWW", cont = w)
-visible(w) <- TRUE 
-# vim: set foldmethod=marker:
+# vim: set foldmethod=marker ts=2 sw=2 expandtab:
