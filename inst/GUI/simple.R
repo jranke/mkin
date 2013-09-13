@@ -24,7 +24,7 @@ studies.df <- data.frame(Index = as.integer(1),
 
 # Datasets {{{2
 ds <- list()
-# FOCUS 2006 A {{{3
+# FOCUS 2006 datasets {{{3
 for (i in 1:6) {
   ds.letter = LETTERS[i]
   ds.name = paste0("FOCUS_2006_", ds.letter)
