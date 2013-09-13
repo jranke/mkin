@@ -25,19 +25,23 @@ studies.df <- data.frame(Index = as.integer(1),
 # Datasets {{{2
 ds <- list()
 # FOCUS 2006 A {{{3
-ds[[1]] <- list(
-  study_nr = 1,
-  dataset_nr = 1,
-  title = "FOCUS example dataset A",
-  sampling_times = unique(FOCUS_2006_A$time),
-  time_unit = "NA",
-  observed = "1",
-  unit = "% AR",
-  replicates = 1,
-  data = FOCUS_2006_A
-)
-ds[[1]]$data$override = "NA"
-ds[[1]]$data$weight = 1
+for (i in 1:6) {
+  ds.letter = LETTERS[i]
+  ds.name = paste0("FOCUS_2006_", ds.letter)
+  ds[[i]] <- list(
+    study_nr = i,
+    dataset_nr = 1,
+    title = paste("FOCUS example dataset", ds.letter),
+    sampling_times = unique(get(ds.name)$time),
+    time_unit = "NA",
+    observed = length(levels(get(ds.name)$name)),
+    unit = "% AR",
+    replicates = 1,
+    data = get(ds.name)
+  )
+  ds[[i]]$data$override = "NA"
+  ds[[i]]$data$weight = 1
+}
 
 # Set the initial dataset number
 ds.cur = 1
@@ -85,21 +89,30 @@ observed.gdf <- gdf(observed.df, name = "Names of observed variables",
 observed.gdf$set_column_width(1, 40)
 
 # Expandable group for studies {{{1
-stg <- gexpandgroup("Studies", cont = g)
+stg <- gexpandgroup("Studies", cont = g, horizontal = FALSE)
+studies_handler <- function(h, ...) {
+  delete(ds.e.1, ds.study.gc)
+  ds.study.gc <<- gcombobox(paste("Study", studies.gdf[,1]), cont = ds.e.1)
+}
 studies.gdf <- gdf(studies.df, name = "Studies in the project", 
-                    width = 500, height = 250, cont = stg)
+                   handler = function(h, ...) galert("x", parent = w),
+                   width = 500, height = 200, cont = stg)
 studies.gdf$set_column_width(1, 40)
 studies.gdf$set_column_width(2, 200)
+gbutton("Update dataset editor", handler = studies_handler, cont = stg)
 
 # Expandable group for datasets {{{1
-dsg <- gexpandgroup("Datasets", cont = g)
+dsg <- gexpandgroup("Datasets", cont = g, horizontal = FALSE)
 # The following will be generated from the dataset object list later
 ds.df <- data.frame(Index = 1:3,
                    Study = as.integer(1),
                    Title = paste("FOCUS dataset", c("A", "B", "C")), 
                    icon = asIcon(c("editor", "editor", "editor")),
                    stringsAsFactors = FALSE)
-ds.gtable <- gtable(ds.df, width = "auto", cont = dsg)
+# ds.handler <- function(h, ...) {
+# }
+# ds.gtable <- gtable(ds.df, handler = ds.handler, width = 500, cont = dsg)
+ds.gtable <- gtable(ds.df, width = 500, cont = dsg)
 ds.gtable$set_column_width(1, 40)
 ds.gtable$set_column_width(2, 40)
 ds.gtable$set_column_width(3, 200)
@@ -107,12 +120,14 @@ ds.gtable$set_column_width(3, 200)
 # Dataset editor {{{2
 update_dataset_handler <- function(h, ...) {
 }
-ds.editor <- gframe(paste("Dataset", ds.cur), cont = g)
+ds.editor <- gframe(paste("Dataset", ds.cur), horizontal = FALSE, cont = dsg)
 ds.e.head <- ggroup(cont = ds.editor, horizontal = FALSE)
 ds.e.1 <- ggroup(cont = ds.e.head, horizontal = TRUE)
-glabel(paste0("Study ", ds[[ds.cur]]$study_nr, ": "), cont = ds.e.1) 
+glabel("Title: ", cont = ds.e.1) 
 ds.title.ge <- gedit(ds[[ds.cur]]$title, cont = ds.e.1, 
                      handler = update_dataset_handler)
+glabel(" from ", cont = ds.e.1) 
+ds.study.gc <- gcombobox(paste("Study", studies.gdf[,1]), cont = ds.e.1) 
 
 ds.e.2 <- glayout(cont = ds.e.head)
 ds.e.2[1, 1] <- glabel("Sampling times: ", cont = ds.e.2) 
@@ -129,5 +144,10 @@ ds.e.2[3, 2] <- gedit(ds[[ds.cur]]$replicates, width = 2, cont = ds.e.2)
 ds.e.2[3, 3:4] <- gbutton("Generate empty grid", cont = ds.e.2, 
                           handler = update_dataset_handler)
 visible(ds.e.2) <- TRUE
+de.e.gdf <- gdf(ds[[ds.cur]]$data, name = "Kinetic data", 
+                 width = 700, height = 700, cont = ds.editor)
+de.e.gdf$set_column_width(2, 50)
+de.e.gdf$set_column_width(3, 50)
+de.e.gdf$set_column_width(4, 50)
 # 1}}}
 # vim: set foldmethod=marker ts=2 sw=2 expandtab:
