@@ -1,6 +1,6 @@
 # Simple gWidgetsWWW2 GUI for mkin
 # Set the GUI title and create the parent frame {{{1
-require(mkin)
+require("mkin")
 GUI_title <- "Simple Browser based GUI for kinetic evaluations using mkin"
 w <- gwindow(GUI_title)
 sb <- gstatusbar("Powered by gWidgetsWWW2 and Rook", cont = w)
