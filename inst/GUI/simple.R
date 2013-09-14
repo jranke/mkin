@@ -19,7 +19,6 @@ observed.df = data.frame(Index = 1:n.observed,
 studies.df <- data.frame(Index = as.integer(1), 
                          Author = "FOCUS kinetics workgroup",
                          Year = "2006", Title = "FOCUS Kinetics",
-                         Datasets = as.integer(3), 
                          stringsAsFactors = FALSE)
 
 # Datasets {{{2
@@ -29,8 +28,8 @@ for (i in 1:6) {
   ds.letter = LETTERS[i]
   ds.name = paste0("FOCUS_2006_", ds.letter)
   ds[[i]] <- list(
-    study_nr = i,
-    dataset_nr = 1,
+    study_nr = 1,
+    dataset_nr = i,
     title = paste("FOCUS example dataset", ds.letter),
     sampling_times = unique(get(ds.name)$time),
     time_unit = "NA",
@@ -43,12 +42,18 @@ for (i in 1:6) {
   ds[[i]]$data$weight = 1
 }
 # Dataframe with datasets for selecting them with the gtable widget {{{2
-ds.df <- data.frame(
-  Index = 1:length(ds),
-  Study = as.integer(1),
-  Title = paste("FOCUS example dataset", c("A", "B", "C", "D", "E", "F")), 
-  icon = asIcon(rep("editor", 6)),
-  stringsAsFactors = FALSE)
+ds.df <- data.frame()
+update_ds.df <- function() {
+  ds.n <- length(ds)
+  ds.df <<- data.frame(Index = 1:ds.n, Study = character(ds.n), Title = character(ds.n), 
+                       icon = asIcon(rep("editor", ds.n)), stringsAsFactors = FALSE)
+  for (i in 1:ds.n)
+  {
+    ds.df[i, "Study"] <<- ds[[i]]$study_nr
+    ds.df[i, "Title"] <<- ds[[i]]$title
+  }
+}
+update_ds.df()
 
 # Set the initial dataset number
 ds.cur = 1
@@ -61,17 +66,18 @@ upload_file_handler <- function(h, ...)  # {{{2
   svalue(wf.ge) <- project_file
   observed.gdf[,] <- observed.df
   studies.gdf[,] <- studies.df 
+#  ds <- ds
 }
 save_to_file_handler <- function(h, ...) # {{{2
 {
-   observed.df <- observed.gdf[,]
-   studies.df <- studies.gdf[,]
-   save(observed.df, studies.df, file = project_file)
+   observed.df <- data.frame(observed.gdf[,], stringsAsFactors = FALSE)
+   studies.df <- data.frame(studies.gdf[,], stringsAsFactors = FALSE)
+   save(observed.df, studies.df, ds, file = project_file)
    galert(paste("Saved project contents to", project_file), parent = w)
 }
 
-# Add widgets for project data management to an expandable group {{{1
-prg <- gexpandgroup("Project definition", cont = g)
+# Add widgets for project file management to an expandable group {{{1
+prg <- gexpandgroup("Project file management", cont = g)
 
 pr.vg <- ggroup(cont = prg, horizontal = FALSE)
 pr.hg <- ggroup(cont = pr.vg, horizontal = TRUE)
@@ -96,46 +102,53 @@ observed.gdf <- gdf(observed.df, name = "Names of observed variables",
 observed.gdf$set_column_width(1, 40)
 
 # Expandable group for studies {{{1
-stg <- gexpandgroup("Studies", cont = g, horizontal = FALSE)
-studies_handler <- function(h, ...) {
-  delete(ds.e.1, ds.study.gc)
-  ds.study.gc <<- gcombobox(paste("Study", studies.gdf[,1]), cont = ds.e.1)
-}
+stg <- gexpandgroup("Studies", cont = g)
 studies.gdf <- gdf(studies.df, name = "Studies in the project", 
-                   handler = function(h, ...) galert("x", parent = w),
                    width = 500, height = 200, cont = stg)
 studies.gdf$set_column_width(1, 40)
 studies.gdf$set_column_width(2, 200)
-gbutton("Update dataset editor", handler = studies_handler, cont = stg)
 
 # Expandable group for datasets {{{1
 dsg <- gexpandgroup("Datasets", cont = g, horizontal = FALSE)
 ds.handler <- function(h, ...) {
   ds.cur <<- svalue(h$obj, index = FALSE)
-  delete(dsg, ds.editor)
-  show_ds_editor(ds.cur)
+  delete(ds.editor, ds.e.head)
+  delete(ds.editor, ds.e.data)
+  show_ds_editor()
 }
-ds.gtable <- gtable(ds.df, handler = ds.handler, width = 500, cont = dsg)
-ds.gtable$set_column_width(1, 40)
-ds.gtable$set_column_width(2, 40)
-ds.gtable$set_column_width(3, 200)
+ds.gtable <- gtable(ds.df, handler = ds.handler, cont = dsg)
+size(ds.gtable) <- list(columnWidths = c(40, 40, 200, 40))
 
 # Dataset editor {{{2
 update_dataset_handler <- function(h, ...) {
   galert("test", parent = w)
 }
 
-show_ds_editor <- function(ds.cur) {
-  ds.editor <<- gframe(paste("Dataset", ds.cur), horizontal = FALSE, cont = dsg)
-  ds.e.head <- ggroup(cont = ds.editor, horizontal = FALSE)
+new_dataset_handler <- function(h, ...) {
+  galert("test", parent = w)
+}
+
+ds.editor <- gframe("Dataset 1", horizontal = FALSE, cont = dsg)
+ds.e.head <- ggroup(cont = ds.editor, horizontal = FALSE)
+ds.e.data <- ggroup(cont = ds.editor, horizontal = FALSE)
+
+show_ds_editor <- function() {
+  svalue(ds.editor) <- paste("Dataset", ds.cur)
+  ds.e.head <<- ggroup(cont = ds.editor, horizontal = FALSE)
   ds.e.1 <- ggroup(cont = ds.e.head, horizontal = TRUE)
   glabel("Title: ", cont = ds.e.1) 
   ds.title.ge <- gedit(ds[[ds.cur]]$title, cont = ds.e.1, 
-                       handler = update_dataset_handler)
+    handler = function(h, ...) { 
+      ds[[ds.cur]]$title <<- svalue(h$obj)
+      update_ds.df()
+      ds.gtable[,] <- ds.df
+    })
   glabel(" from ", cont = ds.e.1) 
   ds.study.gc <- gcombobox(paste("Study", studies.gdf[,1]), cont = ds.e.1) 
   ds.e.save <- gbutton("Save changes", cont = ds.e.1, 
                             handler = update_dataset_handler)
+  ds.e.new <- gbutton("New dataset", cont = ds.e.1, 
+                            handler = new_dataset_handler)
 
   ds.e.2 <- glayout(cont = ds.e.head)
   ds.e.2[1, 1] <- glabel("Sampling times: ", cont = ds.e.2) 
@@ -152,12 +165,13 @@ show_ds_editor <- function(ds.cur) {
   ds.e.2[3, 3:4] <- gbutton("Generate empty grid", cont = ds.e.2, 
                             handler = update_dataset_handler)
   visible(ds.e.2) <- TRUE
-  de.e.gdf <- gdf(ds[[ds.cur]]$data, name = "Kinetic data", 
-                   width = 700, height = 700, cont = ds.editor)
-  de.e.gdf$set_column_width(2, 50)
-  de.e.gdf$set_column_width(3, 50)
-  de.e.gdf$set_column_width(4, 50)
+  ds.e.data <<- ggroup(cont = ds.editor, horizontal = FALSE)
+  ds.e.gdf <- gdf(ds[[ds.cur]]$data, name = "Kinetic data", 
+                   width = 700, height = 700, cont = ds.e.data)
+  ds.e.gdf$set_column_width(2, 50)
+  ds.e.gdf$set_column_width(3, 50)
+  ds.e.gdf$set_column_width(4, 50)
 }
-show_ds_editor(ds.cur)
+show_ds_editor()
 # 1}}}
 # vim: set foldmethod=marker ts=2 sw=2 expandtab:
