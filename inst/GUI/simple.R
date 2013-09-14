@@ -42,6 +42,13 @@ for (i in 1:6) {
   ds[[i]]$data$override = "NA"
   ds[[i]]$data$weight = 1
 }
+# Dataframe with datasets for selecting them with the gtable widget {{{2
+ds.df <- data.frame(
+  Index = 1:length(ds),
+  Study = as.integer(1),
+  Title = paste("FOCUS example dataset", c("A", "B", "C", "D", "E", "F")), 
+  icon = asIcon(rep("editor", 6)),
+  stringsAsFactors = FALSE)
 
 # Set the initial dataset number
 ds.cur = 1
@@ -103,51 +110,54 @@ gbutton("Update dataset editor", handler = studies_handler, cont = stg)
 
 # Expandable group for datasets {{{1
 dsg <- gexpandgroup("Datasets", cont = g, horizontal = FALSE)
-# The following will be generated from the dataset object list later
-ds.df <- data.frame(Index = 1:3,
-                   Study = as.integer(1),
-                   Title = paste("FOCUS dataset", c("A", "B", "C")), 
-                   icon = asIcon(c("editor", "editor", "editor")),
-                   stringsAsFactors = FALSE)
-# ds.handler <- function(h, ...) {
-# }
-# ds.gtable <- gtable(ds.df, handler = ds.handler, width = 500, cont = dsg)
-ds.gtable <- gtable(ds.df, width = 500, cont = dsg)
+ds.handler <- function(h, ...) {
+  ds.cur <<- svalue(h$obj, index = FALSE)
+  delete(dsg, ds.editor)
+  show_ds_editor(ds.cur)
+}
+ds.gtable <- gtable(ds.df, handler = ds.handler, width = 500, cont = dsg)
 ds.gtable$set_column_width(1, 40)
 ds.gtable$set_column_width(2, 40)
 ds.gtable$set_column_width(3, 200)
 
 # Dataset editor {{{2
 update_dataset_handler <- function(h, ...) {
+  galert("test", parent = w)
 }
-ds.editor <- gframe(paste("Dataset", ds.cur), horizontal = FALSE, cont = dsg)
-ds.e.head <- ggroup(cont = ds.editor, horizontal = FALSE)
-ds.e.1 <- ggroup(cont = ds.e.head, horizontal = TRUE)
-glabel("Title: ", cont = ds.e.1) 
-ds.title.ge <- gedit(ds[[ds.cur]]$title, cont = ds.e.1, 
-                     handler = update_dataset_handler)
-glabel(" from ", cont = ds.e.1) 
-ds.study.gc <- gcombobox(paste("Study", studies.gdf[,1]), cont = ds.e.1) 
 
-ds.e.2 <- glayout(cont = ds.e.head)
-ds.e.2[1, 1] <- glabel("Sampling times: ", cont = ds.e.2) 
-ds.e.2[1, 2] <- gedit(paste(ds[[ds.cur]]$sampling_times, collapse = ", "), 
-                      cont = ds.e.2)
-ds.e.2[1, 3] <- glabel("Unit: ", cont = ds.e.2)
-ds.e.2[1, 4] <- gedit(ds[[ds.cur]]$time_unit, width = 8, cont = ds.e.2)
-ds.e.2[2, 1] <- glabel("Observed variables: ", cont = ds.e.2) 
-ds.e.2[2, 2] <- gedit(ds[[ds.cur]]$observed, cont = ds.e.2) 
-ds.e.2[2, 3] <- glabel("Unit: ", cont = ds.e.2)
-ds.e.2[2, 4] <- gedit(ds[[ds.cur]]$unit, width = 8, cont = ds.e.2)
-ds.e.2[3, 1] <- glabel("Replicates: ", cont = ds.e.2) 
-ds.e.2[3, 2] <- gedit(ds[[ds.cur]]$replicates, width = 2, cont = ds.e.2)
-ds.e.2[3, 3:4] <- gbutton("Generate empty grid", cont = ds.e.2, 
-                          handler = update_dataset_handler)
-visible(ds.e.2) <- TRUE
-de.e.gdf <- gdf(ds[[ds.cur]]$data, name = "Kinetic data", 
-                 width = 700, height = 700, cont = ds.editor)
-de.e.gdf$set_column_width(2, 50)
-de.e.gdf$set_column_width(3, 50)
-de.e.gdf$set_column_width(4, 50)
+show_ds_editor <- function(ds.cur) {
+  ds.editor <<- gframe(paste("Dataset", ds.cur), horizontal = FALSE, cont = dsg)
+  ds.e.head <- ggroup(cont = ds.editor, horizontal = FALSE)
+  ds.e.1 <- ggroup(cont = ds.e.head, horizontal = TRUE)
+  glabel("Title: ", cont = ds.e.1) 
+  ds.title.ge <- gedit(ds[[ds.cur]]$title, cont = ds.e.1, 
+                       handler = update_dataset_handler)
+  glabel(" from ", cont = ds.e.1) 
+  ds.study.gc <- gcombobox(paste("Study", studies.gdf[,1]), cont = ds.e.1) 
+  ds.e.save <- gbutton("Save changes", cont = ds.e.1, 
+                            handler = update_dataset_handler)
+
+  ds.e.2 <- glayout(cont = ds.e.head)
+  ds.e.2[1, 1] <- glabel("Sampling times: ", cont = ds.e.2) 
+  ds.e.2[1, 2] <- gedit(paste(ds[[ds.cur]]$sampling_times, collapse = ", "), 
+                        cont = ds.e.2)
+  ds.e.2[1, 3] <- glabel("Unit: ", cont = ds.e.2)
+  ds.e.2[1, 4] <- gedit(ds[[ds.cur]]$time_unit, width = 8, cont = ds.e.2)
+  ds.e.2[2, 1] <- glabel("Observed variables: ", cont = ds.e.2) 
+  ds.e.2[2, 2] <- gedit(ds[[ds.cur]]$observed, cont = ds.e.2) 
+  ds.e.2[2, 3] <- glabel("Unit: ", cont = ds.e.2)
+  ds.e.2[2, 4] <- gedit(ds[[ds.cur]]$unit, width = 8, cont = ds.e.2)
+  ds.e.2[3, 1] <- glabel("Replicates: ", cont = ds.e.2) 
+  ds.e.2[3, 2] <- gedit(ds[[ds.cur]]$replicates, width = 2, cont = ds.e.2)
+  ds.e.2[3, 3:4] <- gbutton("Generate empty grid", cont = ds.e.2, 
+                            handler = update_dataset_handler)
+  visible(ds.e.2) <- TRUE
+  de.e.gdf <- gdf(ds[[ds.cur]]$data, name = "Kinetic data", 
+                   width = 700, height = 700, cont = ds.editor)
+  de.e.gdf$set_column_width(2, 50)
+  de.e.gdf$set_column_width(3, 50)
+  de.e.gdf$set_column_width(4, 50)
+}
+show_ds_editor(ds.cur)
 # 1}}}
 # vim: set foldmethod=marker ts=2 sw=2 expandtab:
