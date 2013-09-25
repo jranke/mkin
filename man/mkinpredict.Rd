@@ -9,8 +9,8 @@
   initial values for the state variables.
 }
 \usage{
-  mkinpredict(mkinmod, odeparms, odeini, outtimes, solution_type = "deSolve", map_output = TRUE, 
-	      atol = 1e-08, rtol = 1e-10, ...)
+  mkinpredict(mkinmod, odeparms, odeini, outtimes, solution_type = "deSolve",
+	      map_output = TRUE, atol = 1e-08, rtol = 1e-10, ...)
 }
 \arguments{
   \item{mkinmod}{
@@ -59,16 +59,27 @@
 }
 \examples{
   SFO <- mkinmod(degradinol = list(type = "SFO"))
-  mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20, solution_type = "analytical")
-  mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20, solution_type = "eigen")
+  mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20, 
+	      solution_type = "analytical")
+  mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20, 
+	      solution_type = "eigen")
 
-  mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 1:20, solution_type = "analytical")[20,]
-  mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20, atol = 1e-20)[20,]
+  mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 1:20, 
+	      solution_type = "analytical")[20,]
+  mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20, 
+	      atol = 1e-20)[20,]
+
   # The integration method does not make a lot of difference
-  mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20, atol = 1e-20, method = "ode45")[20,]
-  mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20, atol = 1e-20, method = "rk4")[20,]
-  # The number of output times used to make a lot of difference until the default for atol was adjusted
-  mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), seq(0, 20, by = 0.1))[201,]
-  mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), seq(0, 20, by = 0.01))[2001,]
+  mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20, atol = 1e-20, 
+	      method = "ode45")[20,]
+  mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20, atol = 1e-20, 
+	      method = "rk4")[20,]
+
+  # The number of output times used to make a lot of difference until the
+  # default for atol was adjusted
+  mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 
+	      seq(0, 20, by = 0.1))[201,]
+  mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 
+	      seq(0, 20, by = 0.01))[2001,]
 }
 \keyword{ manip }
