@@ -18,7 +18,8 @@ observed.df = data.frame(Index = 1:n.observed,
 # Studies {{{2
 studies.df <- data.frame(Index = as.integer(1), 
                          Author = "FOCUS kinetics workgroup",
-                         Year = "2006", Title = "FOCUS Kinetics",
+                         Year = "2006", 
+                         Title = "FOCUS Kinetics",
                          stringsAsFactors = FALSE)
 
 # Datasets {{{2
@@ -26,10 +27,10 @@ ds <- list()
 # FOCUS 2006 datasets {{{3
 for (i in 1:6) {
   ds.letter = LETTERS[i]
+  ds.index <- as.character(i)
   ds.name = paste0("FOCUS_2006_", ds.letter)
-  ds[[i]] <- list(
+  ds[[ds.index]] <- list(
     study_nr = 1,
-    dataset_nr = i,
     title = paste("FOCUS example dataset", ds.letter),
     sampling_times = unique(get(ds.name)$time),
     time_unit = "NA",
@@ -38,25 +39,29 @@ for (i in 1:6) {
     replicates = 1,
     data = get(ds.name)
   )
-  ds[[i]]$data$override = "NA"
-  ds[[i]]$data$weight = 1
+  ds[[ds.index]]$data$override = "NA"
+  ds[[ds.index]]$data$weight = 1
 }
-# Dataframe with datasets for selecting them with the gtable widget {{{2
-ds.df <- data.frame()
-update_ds.df <- function() {
+# Dataframe with datasets for selection with the gtable widget {{{2
+update_ds.df <- function() { # {{{3
   ds.n <- length(ds)
-  ds.df <<- data.frame(Index = 1:ds.n, Study = character(ds.n), Title = character(ds.n), 
-                       icon = asIcon(rep("editor", ds.n)), stringsAsFactors = FALSE)
+  ds.df <<- data.frame(Index = 1:ds.n, 
+                       Study = character(ds.n), 
+                       Title = character(ds.n),
+                       icon = asIcon(rep("editor", ds.n)),
+                       stringsAsFactors = FALSE)
   for (i in 1:ds.n)
   {
-    ds.df[i, "Study"] <<- ds[[i]]$study_nr
-    ds.df[i, "Title"] <<- ds[[i]]$title
+    ds.index <- names(ds)[[i]]
+    ds.df[i, "Study"] <<- ds[[ds.index]]$study_nr
+    ds.df[i, "Title"] <<- ds[[ds.index]]$title
   }
 }
+ds.df <- data.frame()
 update_ds.df()
 
-# Set the initial dataset number
-ds.cur = 1
+# Set the initial dataset number globally
+ds.cur = "1"
 # Project data management {{{1
 upload_file_handler <- function(h, ...)  # {{{2
 {
@@ -110,13 +115,15 @@ studies.gdf$set_column_width(2, 200)
 
 # Expandable group for datasets {{{1
 dsg <- gexpandgroup("Datasets", cont = g, horizontal = FALSE)
-ds.handler <- function(h, ...) {
-  ds.cur <<- svalue(h$obj, index = FALSE)
+# Renew dataset editor when a different dataset is selected
+ds.switcher <- function(h, ...) {
+  ds.cur <<- as.character(svalue(h$obj))
   delete(ds.editor, ds.e.head)
   delete(ds.editor, ds.e.data)
   show_ds_editor()
 }
-ds.gtable <- gtable(ds.df, handler = ds.handler, cont = dsg)
+ds.gtable <- gtable(ds.df, cont = dsg)
+addHandlerClicked(ds.gtable, ds.switcher)
 size(ds.gtable) <- list(columnWidths = c(40, 40, 200, 40))
 
 # Dataset editor {{{2
