@@ -172,7 +172,7 @@ new_dataset_handler <- function(h, ...) {
 empty_grid_handler <- function(h, ...) {
   new.data = data.frame(
     name = rep(observed.df[1, "Name"], 
-               each = ds[[ds.cur]]$replicates * ds[[ds.cur]]$sampling_times)
+               each = ds[[ds.cur]]$replicates * ds[[ds.cur]]$sampling_times),
     time = c(0, 1),
     value = NA,
     override = "NA",
