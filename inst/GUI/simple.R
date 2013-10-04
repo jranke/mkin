@@ -9,10 +9,8 @@ g <- gframe(GUI_title, cont = w, use.scrollwindow = TRUE, horizontal = FALSE)
 # Set default values for project data objects {{{1
 project_file <- "mkin_project_1.RData"
 # Observed variables {{{2
-observed.names = c("parent", "m1")
-observed.df = data.frame(Index = 1:2, 
-                         Name = observed.names,
-                         Chemical = "NA",
+observed.df = data.frame(Name = c("parent", "m1"),
+                         "Chemical Name" = "NA",
                          stringsAsFactors = FALSE)
 # Studies {{{2
 studies.df <- data.frame(Index = as.integer(1), 
@@ -33,7 +31,7 @@ for (i in 1:5) {
     title = paste("FOCUS example dataset", ds.letter),
     sampling_times = unique(get(ds.name)$time),
     time_unit = "NA",
-    observed = length(levels(get(ds.name)$name)),
+    observed = as.character(unique(get(ds.name)$name)),
     unit = "% AR",
     replicates = 1,
     data = get(ds.name)
@@ -106,7 +104,6 @@ gbutton("Save current project contents to this file", cont = pr.vg2,
 ovg <- gexpandgroup("Observed variables", cont = g)
 observed.gdf <- gdf(observed.df, name = "Names of observed variables", 
                     width = 500, height = 250, cont = ovg)
-observed.gdf$set_column_width(1, 40)
 
 # Expandable group for studies {{{1
 stg <- gexpandgroup("Studies", cont = g)
@@ -171,7 +168,7 @@ new_dataset_handler <- function(h, ...) {
 
 empty_grid_handler <- function(h, ...) {
   new.data = data.frame(
-    name = rep(observed.df[1, "Name"], 
+    name = rep("parent",
                each = ds[[ds.cur]]$replicates * ds[[ds.cur]]$sampling_times),
     time = c(0, 1),
     value = NA,
@@ -198,21 +195,26 @@ ds.e.delete <- gbutton("Delete dataset", cont = ds.e.1,
 ds.e.new <- gbutton("New dataset", cont = ds.e.1, 
                     handler = new_dataset_handler)
 
-ds.e.2 <- glayout(cont = ds.e.head)
-ds.e.2[1, 1] <- glabel("Sampling times: ", cont = ds.e.2) 
-ds.e.2[1, 2] <- gedit(paste(ds[[ds.cur]]$sampling_times, collapse = ", "),
-                        cont = ds.e.2)
-ds.e.2[1, 3] <- glabel("Unit: ", cont = ds.e.2)
-ds.e.2[1, 4] <- gedit(ds[[ds.cur]]$time_unit, width = 8, cont = ds.e.2)
-ds.e.2[2, 1] <- glabel("Observed variables: ", cont = ds.e.2) 
-ds.e.2[2, 2] <- gedit(ds[[ds.cur]]$observed, cont = ds.e.2) 
-ds.e.2[2, 3] <- glabel("Unit: ", cont = ds.e.2)
-ds.e.2[2, 4] <- gedit(ds[[ds.cur]]$unit, width = 8, cont = ds.e.2)
-ds.e.2[3, 1] <- glabel("Replicates: ", cont = ds.e.2) 
-ds.e.2[3, 2] <- gedit(ds[[ds.cur]]$replicates, width = 2, cont = ds.e.2)
-ds.e.2[3, 3:4] <- gbutton("Generate empty grid", cont = ds.e.2, 
-                          handler = save_dataset_changes_handler)
-visible(ds.e.2) <- TRUE
+ds.e.forms <- ggroup(cont= ds.editor, horizontal = TRUE)
+
+ds.e.2a <- gvbox(cont = ds.e.forms)
+ds.e.2a.gfl <- gformlayout(cont = ds.e.2a)
+ds.e.st  <- gedit(paste(ds[[ds.cur]]$sampling_times, collapse = ", "),
+                  width = 50,
+                  label = "Sampling times", 
+                  cont = ds.e.2a.gfl)
+ds.e.stu <- gedit(ds[[ds.cur]]$time_unit, 
+                  width = 20,
+                  label = "Unit", cont = ds.e.2a.gfl)
+
+ds.e.2b <- gvbox(cont = ds.e.forms)
+ds.e.2b.gfl <- gformlayout(cont = ds.e.2b)
+ds.e.obs <- gedit(paste(ds[[ds.cur]]$observed, collapse = ", "),
+                  width = 50,
+                  label = "Observed", cont = ds.e.2b.gfl)
+ds.e.2.obu <- gedit(ds[[ds.cur]]$unit,
+                  width = 20, label = "Unit", 
+                  cont = ds.e.2b.gfl)
 
 ds.e.data <- ggroup(cont = ds.editor, horizontal = FALSE)
 ds.e.gdf <- gdf(ds[[ds.cur]]$data, name = "Kinetic data", 
@@ -250,7 +252,8 @@ update_ds_editor <- function() {
   ds.e.2[1, 3] <- glabel("Unit: ", cont = ds.e.2)
   ds.e.2[1, 4] <- gedit(ds[[ds.cur]]$time_unit, width = 8, cont = ds.e.2)
   ds.e.2[2, 1] <- glabel("Observed variables: ", cont = ds.e.2) 
-  ds.e.2[2, 2] <- gedit(ds[[ds.cur]]$observed, cont = ds.e.2) 
+  ds.e.2[2, 2] <- gedit(paste(ds[[ds.cur]]$observed, collapse = ", "), 
+                        cont = ds.e.2) 
   ds.e.2[2, 3] <- glabel("Unit: ", cont = ds.e.2)
   ds.e.2[2, 4] <- gedit(ds[[ds.cur]]$unit, width = 8, cont = ds.e.2)
   ds.e.2[3, 1] <- glabel("Replicates: ", cont = ds.e.2) 
