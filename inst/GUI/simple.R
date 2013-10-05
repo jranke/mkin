@@ -107,11 +107,16 @@ observed.gdf <- gdf(observed.df, name = "Names of observed variables",
 
 # Expandable group for studies {{{1
 stg <- gexpandgroup("Studies", cont = g)
+update_study_selector <- function(h, ...) {
+  delete(ds.e.1, ds.study.gc)
+  ds.study.gc <<- gcombobox(paste("Study", studies.gdf[,1]), cont = ds.e.1) 
+  svalue(ds.study.gc, index = TRUE) <- ds[[ds.cur]]$study_nr
+}
 studies.gdf <- gdf(studies.df, name = "Studies in the project",
                    width = 500, height = 200, cont = stg)
 studies.gdf$set_column_width(1, 40)
 studies.gdf$set_column_width(2, 200)
-#addHandlerChanged(studies.gdf, update_study_selector)
+addHandlerChanged(studies.gdf, update_study_selector)
 
 # Expandable group for datasets {{{1
 dsg <- gexpandgroup("Dataset selector", cont = g, horizontal = FALSE)
@@ -127,10 +132,11 @@ size(ds.gtable) <- list(columnWidths = c(40, 40, 200))
  
 # Dataset editor {{{2
 # Handler functions {{{3
-save_dataset_changes_handler <- function(h, ...) {
-  ds[[ds.cur]]$title <<- svalue(ds.title.ge)
-  ds[[ds.cur]]$study_nr <<- as.numeric(gsub("Study ", "", svalue(ds.study.gc)))
-  ds[[ds.cur]]$data <<- ds.e.gdf[,]
+copy_dataset_handler <- function(h, ...) {
+  ds.old <- ds.cur
+  ds.cur <<- as.character(1 + length(ds))
+  svalue(ds.editor) <- paste("Dataset", ds.cur)
+  ds[[ds.cur]] <<- ds[[ds.old]]
   update_ds.df()
   ds.gtable[,] <- ds.df
 }
@@ -179,24 +185,31 @@ empty_grid_handler <- function(h, ...) {
   ds.e.gdf[,] <- new.data
 }
 
+save_ds_changes_handler <- function(h, ...) {
+  ds[[ds.cur]]$title <<- svalue(ds.title.ge)
+  ds[[ds.cur]]$study_nr <<- as.numeric(gsub("Study ", "", svalue(ds.study.gc)))
+  ds[[ds.cur]]$data <<- ds.e.gdf[,]
+  update_ds.df()
+  ds.gtable[,] <- ds.df
+}
+ 
+
 # Widget setup {{{3
 ds.editor <- gframe("Dataset 1", horizontal = FALSE, cont = dsg)
-# Head {{{4
-ds.e.head <- ggroup(cont = ds.editor, horizontal = FALSE)
-ds.e.1 <- ggroup(cont = ds.e.head, horizontal = TRUE)
+# Line 1 {{{4
+ds.e.1 <- ggroup(cont = ds.editor, horizontal = TRUE)
 glabel("Title: ", cont = ds.e.1) 
 ds.title.ge <- gedit(ds[[ds.cur]]$title, cont = ds.e.1) 
 glabel(" from ", cont = ds.e.1) 
 ds.study.gc <- gcombobox(paste("Study", studies.gdf[,1]), cont = ds.e.1) 
-ds.e.2 <- ggroup(cont = ds.e.head, horizontal = TRUE)
 
-ds.e.save <- gbutton("Save changes", cont = ds.e.2, 
-                     handler = save_dataset_changes_handler)
-ds.e.delete <- gbutton("Delete dataset", cont = ds.e.2, 
-                       handler = delete_dataset_handler)
-ds.e.new <- gbutton("New dataset", cont = ds.e.2, 
-                    handler = new_dataset_handler)
+# Line 2 {{{4
+ds.e.2 <- ggroup(cont = ds.editor, horizontal = TRUE)
+gbutton("Copy dataset", cont = ds.e.2, handler = copy_dataset_handler)
+gbutton("Delete dataset", cont = ds.e.2, handler = delete_dataset_handler)
+gbutton("New dataset", cont = ds.e.2, handler = new_dataset_handler)
 
+# Line 3 with forms {{{4
 ds.e.forms <- ggroup(cont= ds.editor, horizontal = TRUE)
 
 ds.e.3a <- gvbox(cont = ds.e.forms)
@@ -223,24 +236,18 @@ ds.e.obu <- gedit(ds[[ds.cur]]$unit,
 gbutton("Generate empty grid for kinetic data", cont = ds.e.3b, 
         handler = empty_grid_handler)
 
-ds.e.data <- ggroup(cont = ds.editor, horizontal = FALSE)
+# Save button {{{4
+gbutton("Save changes", cont = ds.editor, handler = save_ds_changes_handler)
+
+# Kinetic Data {{{4
 ds.e.gdf <- gdf(ds[[ds.cur]]$data, name = "Kinetic data", 
-                width = 700, height = 700, cont = ds.e.data)
+                width = 700, height = 700, cont = ds.editor)
 ds.e.gdf$set_column_width(2, 70)
-ds.e.gdf$set_column_width(3, 70)
-ds.e.gdf$set_column_width(4, 50)
 
-#update_study_selector <- function(h, ...) {
-#  delete(ds.e.1, ds.study.gc)
-#  ds.study.gc <<- gcombobox(paste("Study", studies.gdf[,1]), cont = ds.e.1) 
-#  svalue(ds.study.gc, index = TRUE) <- ds[[ds.cur]]$study_nr
-#}
-
+# Update the editor {{{3
 update_ds_editor <- function() {
   svalue(ds.editor) <- paste("Dataset", ds.cur)
   svalue(ds.title.ge) <- ds[[ds.cur]]$title
-  delete(ds.e.1, ds.study.gc)
-  ds.study.gc <<- gcombobox(paste("Study", studies.gdf[,1]), cont = ds.e.1) 
   svalue(ds.study.gc, index = TRUE) <- ds[[ds.cur]]$study_nr
 
   svalue(ds.e.st) <- paste(ds[[ds.cur]]$sampling_times, collapse = ", ")
