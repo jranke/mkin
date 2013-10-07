@@ -17,6 +17,7 @@ studies.df <- data.frame(Index = as.integer(1),
 
 # Datasets {{{2
 ds <- list()
+observed.all <- vector()
 # FOCUS 2006 datasets {{{3
 for (i in 1:5) {
   ds.letter = LETTERS[i]
@@ -40,21 +41,41 @@ for (i in 1:5) {
 update_ds.df <- function() { # {{{3
   ds.n <- length(ds)
   ds.df <<- data.frame(Index = 1:ds.n, 
-                       Study = character(ds.n), 
                        Title = character(ds.n),
+                       Study = character(ds.n), 
                        stringsAsFactors = FALSE)
   for (i in 1:ds.n)
   {
     ds.index <- names(ds)[[i]]
-    ds.df[i, "Study"] <<- ds[[ds.index]]$study_nr
     ds.df[i, "Title"] <<- ds[[ds.index]]$title
+    ds.df[i, "Study"] <<- ds[[ds.index]]$study_nr
+    observed = as.character(unique(ds[[ds.index]]$data$name))
+    observed.all <<- union(observed, observed.all)
   }
 }
 ds.df <- data.frame()
 update_ds.df()
 
-# Set the initial dataset number globally
+# Set the initial dataset number
 ds.cur = "1"
+# Models {{{2
+m <- list()
+m[["SFO"]] <- mkinmod(parent = list(type = "SFO"))
+m[["FOMC"]] <- mkinmod(parent = list(type = "FOMC"))
+m[["DFOP"]] <- mkinmod(parent = list(type = "DFOP"))
+# Dataframe with models for selection with the gtable widget {{{2
+update_m.df <- function() { # {{{3
+  m.n <- length(m)
+  m.df <<- data.frame(Index = 1:m.n, 
+                      Name = names(m),
+                      stringsAsFactors = FALSE)
+}
+m.df <- data.frame()
+update_m.df()
+
+# Set the initial model number
+m.cur = "1"
+
 # Project data management {{{1
 upload_file_handler <- function(h, ...)  # {{{2
 {
@@ -108,19 +129,35 @@ studies.gdf$set_column_width(1, 40)
 studies.gdf$set_column_width(2, 200)
 addHandlerChanged(studies.gdf, update_study_selector)
 
-# Expandable group for datasets {{{1
-dsg <- gexpandgroup("Dataset selector", cont = g, horizontal = FALSE)
+# Datasets and models {{{1
+dsm <- gframe("Datasets and models - double click to edit", cont = g,
+              horizontal = TRUE)
  
 # Dataset table with handler {{{2
 ds.switcher <- function(h, ...) {
   ds.cur <<- as.character(svalue(h$obj))
   update_ds_editor()
+  visible(dse) <- TRUE
 }
-ds.gtable <- gtable(ds.df, cont = dsg)
-addHandlerClicked(ds.gtable, ds.switcher)
-size(ds.gtable) <- list(columnWidths = c(40, 40, 200))
+ds.gtable <- gtable(ds.df, multiple = TRUE, cont = dsm)
+addHandlerDoubleClick(ds.gtable, ds.switcher)
+size(ds.gtable) <- list(columnWidths = c(40, 200, 40))
+
+# Model table with handler {{{2
+m.switcher <- function(h, ...) {
+  m.cur <<- as.character(svalue(h$obj))
+  update_m_editor()
+  visible(dse) <- FALSE
+  visible(me) <- TRUE
+}
+m.gtable <- gtable(m.df, multiple = TRUE, cont = dsm)
+addHandlerDoubleClick(m.gtable, m.switcher)
+size(m.gtable) <- list(columnWidths = c(40, 200))
  
-# Dataset editor {{{2
+# Expandable group for the dataset editor {{{1
+dse <- gexpandgroup("Dataset editor", cont = g, horizontal = FALSE)
+visible(dse) <- FALSE
+
 # Handler functions {{{3
 copy_dataset_handler <- function(h, ...) {
   ds.old <- ds.cur
@@ -196,7 +233,7 @@ save_ds_changes_handler <- function(h, ...) {
  
 
 # Widget setup {{{3
-ds.editor <- gframe("Dataset 1", horizontal = FALSE, cont = dsg)
+ds.editor <- gframe("Dataset 1", horizontal = FALSE, cont = dse)
 # Line 1 {{{4
 ds.e.1 <- ggroup(cont = ds.editor, horizontal = TRUE)
 glabel("Title: ", cont = ds.e.1) 
@@ -245,7 +282,7 @@ ds.e.gdf <- gdf(ds[[ds.cur]]$data, name = "Kinetic data",
                 width = 700, height = 700, cont = ds.editor)
 ds.e.gdf$set_column_width(2, 70)
 
-# Update the editor {{{3
+# Update the dataset editor {{{3
 update_ds_editor <- function() {
   svalue(ds.editor) <- paste("Dataset", ds.cur)
   svalue(ds.title.ge) <- ds[[ds.cur]]$title
@@ -259,6 +296,21 @@ update_ds_editor <- function() {
 
   ds.e.gdf[,] <- ds[[ds.cur]]$data
 }
+
+# Expandable group for the model editor {{{1
+me <- gexpandgroup("Model editor", cont = g, horizontal = FALSE)
+visible(me) <- FALSE
+
+m.e.rows <- list()
+m.e.obs <- list()
+m.e.rows[[1]] <- ggroup(cont = me, horizontal = TRUE)
+m.e.obs[[1]] <- gcombobox(observed.all, cont = m.e.rows[[1]])
+
+# Update the model editor {{{3
+update_m_editor <- function() {
+
+}
+
 # 3}}}
 # 2}}}
 # 1}}}
