@@ -8,10 +8,6 @@ g <- gframe(GUI_title, cont = w, use.scrollwindow = TRUE, horizontal = FALSE)
 
 # Set default values for project data objects {{{1
 project_file <- "mkin_project_1.RData"
-# Observed variables {{{2
-observed.df = data.frame(Name = c("parent", "m1"),
-                         "Chemical Name" = "NA",
-                         stringsAsFactors = FALSE)
 # Studies {{{2
 studies.df <- data.frame(Index = as.integer(1), 
                          Author = "FOCUS kinetics workgroup",
@@ -36,6 +32,7 @@ for (i in 1:5) {
     replicates = 1,
     data = get(ds.name)
   )
+  ds[[ds.index]]$data$name <- as.character(ds[[ds.index]]$data$name)
   ds[[ds.index]]$data$override = "NA"
   ds[[ds.index]]$data$weight = 1
 }
@@ -65,7 +62,6 @@ upload_file_handler <- function(h, ...)  # {{{2
   try(load(tmpfile))
   project_file <<- pr.gf$filename
   svalue(wf.ge) <- project_file
-  observed.gdf[,] <- observed.df
   studies.gdf[,] <- studies.df 
   ds.cur <<- "1"
   ds <<- ds
@@ -75,9 +71,8 @@ upload_file_handler <- function(h, ...)  # {{{2
 }
 save_to_file_handler <- function(h, ...) # {{{2
 {
-   observed.df <- data.frame(observed.gdf[,], stringsAsFactors = FALSE)
    studies.df <- data.frame(studies.gdf[,], stringsAsFactors = FALSE)
-   save(observed.df, studies.df, ds, file = project_file)
+   save(studies.df, ds, file = project_file)
    galert(paste("Saved project contents to", project_file), parent = w)
 }
 
@@ -99,11 +94,6 @@ wf.ge <- gedit(project_file, cont = pr.hg2,
 
 gbutton("Save current project contents to this file", cont = pr.vg2,
         handler = save_to_file_handler)
-
-# Expandable group for observed variables {{{1
-ovg <- gexpandgroup("Observed variables", cont = g)
-observed.gdf <- gdf(observed.df, name = "Names of observed variables", 
-                    width = 500, height = 250, cont = ovg)
 
 # Expandable group for studies {{{1
 stg <- gexpandgroup("Studies", cont = g)
@@ -157,15 +147,16 @@ new_dataset_handler <- function(h, ...) {
                         title = "",
                         sampling_times = c(0, 1),
                         time_unit = "NA",
-                        observed = 1,
+                        observed = "parent",
                         unit = "NA",
                         replicates = 1,
                         data = data.frame(
-                                          name = observed.df[1, "Name"],
+                                          name = "parent",
                                           time = c(0, 1),
                                           value = c(100, NA),
                                           override = "NA",
-                                          weight = 1
+                                          weight = 1,
+                                          stringsAsFactors = FALSE
                                           )
                         )
   update_ds.df()
@@ -174,11 +165,13 @@ new_dataset_handler <- function(h, ...) {
 }
 
 empty_grid_handler <- function(h, ...) {
+  obs <- strsplit(svalue(ds.e.obs), ", ")[[1]]
+  sampling_times <- strsplit(svalue(ds.e.st), ", ")[[1]]
+  replicates <- as.numeric(svalue(ds.e.rep))
   new.data = data.frame(
-    name = rep("parent",
-               each = ds[[ds.cur]]$replicates * ds[[ds.cur]]$sampling_times),
-    time = c(0, 1),
-    value = NA,
+    name = rep(obs, each = replicates * length(sampling_times)),
+    time = rep(sampling_times, each = replicates, times = length(obs)),
+    value = "NA",
     override = "NA",
     weight = 1
   )
@@ -188,9 +181,17 @@ empty_grid_handler <- function(h, ...) {
 save_ds_changes_handler <- function(h, ...) {
   ds[[ds.cur]]$title <<- svalue(ds.title.ge)
   ds[[ds.cur]]$study_nr <<- as.numeric(gsub("Study ", "", svalue(ds.study.gc)))
-  ds[[ds.cur]]$data <<- ds.e.gdf[,]
   update_ds.df()
   ds.gtable[,] <- ds.df
+  tmpd <- ds.e.gdf[,]
+  ds[[ds.cur]]$data <<- tmpd
+  ds[[ds.cur]]$sampling_times <<- sort(unique(tmpd$time))
+  ds[[ds.cur]]$time_unit <<- svalue(ds.e.stu)
+  ds[[ds.cur]]$observed <<- unique(tmpd$name)
+  ds[[ds.cur]]$unit <<- svalue(ds.e.obu)
+  ds[[ds.cur]]$replicates <<- max(aggregate(tmpd$time, 
+                                            list(tmpd$time, tmpd$name), length)$x)
+  update_ds_editor()
 }
  
 
