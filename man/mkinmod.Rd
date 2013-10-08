@@ -9,7 +9,7 @@
   kinetic model type and reaction or transfer to other observed compartments.
 }
 \usage{
-mkinmod(..., use_of_ff = "min")
+mkinmod(..., use_of_ff = "min", speclist = NULL)
 }
 \arguments{
   \item{...}{
@@ -33,6 +33,10 @@ mkinmod(..., use_of_ff = "min")
     fractions is made in order to avoid fitting the product of formation fractions 
     and rate constants. If "max", formation fractions are always used.
   }
+  \item{speclist}{
+    The specification of the observed variables and their submodel types and 
+    pathways can be given as a single list using this argument. Default is NULL.
+  }
 }
 \value{
   A list of class \code{mkinmod} for use with \code{\link{mkinfit}}, containing 
@@ -55,6 +59,5 @@ SFO <- mkinmod(parent = list(type = "SFO"))
 SFO_SFO <- mkinmod(
   parent = list(type = "SFO", to = "m1"),
   m1 = list(type = "SFO"))
-
 }
 \keyword{ models }

@@ -60,20 +60,31 @@ update_ds.df()
 ds.cur = "1"
 # Models {{{2
 m <- list()
-m[["SFO"]] <- mkinmod(parent = list(type = "SFO"))
-m[["FOMC"]] <- mkinmod(parent = list(type = "FOMC"))
-m[["DFOP"]] <- mkinmod(parent = list(type = "DFOP"))
+m[["1"]] <- mkinmod(parent = list(type = "SFO"))
+m[["1"]]$name = "SFO"
+m[["2"]] <- mkinmod(parent = list(type = "FOMC"))
+m[["2"]]$name = "FOMC"
+m[["3"]] <- mkinmod(parent = list(type = "DFOP"))
+m[["3"]]$name = "DFOP"
+m[["4"]] <- mkinmod(parent = list(type = "SFO", to = "m1"),
+                          m1 = list(type = "SFO"),
+                          use_of_ff = "max")
+m[["4"]]$name = "SFO_SFO"
 # Dataframe with models for selection with the gtable widget {{{2
 update_m.df <- function() { # {{{3
   m.n <- length(m)
   m.df <<- data.frame(Index = 1:m.n, 
-                      Name = names(m),
+                      Name = character(m.n),
                       stringsAsFactors = FALSE)
+  for (i in 1:m.n) {
+    m.index <- names(m)[[i]]
+    m.df[i, "Name"] <<- m[[m.index]]$name
+  }
 }
 m.df <- data.frame()
 update_m.df()
 
-# Set the initial model number
+# Set initial model number, and specification
 m.cur = "1"
 
 # Project data management {{{1
@@ -89,11 +100,16 @@ upload_file_handler <- function(h, ...)  # {{{2
   update_ds.df()
   ds.gtable[,] <- ds.df
   update_ds_editor()
+  m.cur <<- "1"
+  m <<- m
+  update_m.df()
+  m.gtable[,] <- m.df
+  update_m_editor()
 }
 save_to_file_handler <- function(h, ...) # {{{2
 {
    studies.df <- data.frame(studies.gdf[,], stringsAsFactors = FALSE)
-   save(studies.df, ds, file = project_file)
+   save(studies.df, ds, m, file = project_file)
    galert(paste("Saved project contents to", project_file), parent = w)
 }
 
@@ -301,14 +317,117 @@ update_ds_editor <- function() {
 me <- gexpandgroup("Model editor", cont = g, horizontal = FALSE)
 visible(me) <- FALSE
 
-m.e.rows <- list()
-m.e.obs <- list()
-m.e.rows[[1]] <- ggroup(cont = me, horizontal = TRUE)
-m.e.obs[[1]] <- gcombobox(observed.all, cont = m.e.rows[[1]])
+# Handler functions {{{3
+copy_model_handler <- function(h, ...) {
+  m.old <- m.cur
+  m.cur <<- as.character(1 + length(m))
+  svalue(m.editor) <- paste("Model", m.cur)
+  m[[m.cur]] <<- m[[m.old]]
+  update_m.df()
+  m.gtable[,] <- m.df
+}
+ 
+delete_model_handler <- function(h, ...) {
+  m[[m.cur]] <<- NULL
+  names(m) <<- as.character(1:length(m))
+  m.cur <<- "1"
+  update_m.df()
+  m.gtable[,] <- m.df
+  update_m_editor()
+}
+
+add_observed_handler <- function(h, ...) {
+  obs.i <- length(m.e.rows) + 1
+  m.e.rows[[obs.i]] <<- ggroup(cont = m.editor, horizontal = TRUE)
+  m.e.obs[[obs.i]] <<- gcombobox(observed.all, selected = obs.i, 
+                                cont = m.e.rows[[obs.i]])
+  m.e.type[[obs.i]] <<- gcombobox(c("SFO", "FOMC", "DFOP", "HS", "SFORB"),
+                                 cont = m.e.rows[[obs.i]])
+  svalue(m.e.type[[obs.i]]) <- "SFO"
+  glabel("to", cont = m.e.rows[[obs.i]]) 
+  m.e.to[[obs.i]] <<- gedit("", cont = m.e.rows[[obs.i]])
+  m.e.sink[[obs.i]] <<- gcheckbox("Path to sink", 
+                                  checked = TRUE, cont = m.e.rows[[obs.i]]) 
+  gbutton("Remove compound", handler = remove_compound_handler, 
+          action = obs.i, cont = m.e.rows[[obs.i]])
+}
+
+remove_compound_handler <- function(h, ...) {
+  m[[m.cur]]$spec[[h$action]] <<- NULL
+  update_m_editor()
+}
+
+save_m_changes_handler <- function(h, ...) {
+  spec <- list()
+  for (obs.i in 1:length(m.e.rows)) {
+    spec[[obs.i]] <- list(type = svalue(m.e.type[[obs.i]]),
+                          to = svalue(m.e.to[[obs.i]]),
+                          sink = svalue(m.e.sink[[obs.i]]))
+    if(spec[[obs.i]]$to == "") spec[[obs.i]]$to = NULL
+    names(spec)[[obs.i]] <- svalue(m.e.obs[[obs.i]])
+  }
+  m[[m.cur]] <<- mkinmod(use_of_ff = svalue(m.ff.gc), 
+                         speclist = spec)
+  m[[m.cur]]$name <<- svalue(m.name.ge) 
+  update_m.df()
+  m.gtable[,] <- m.df
+}
+ 
+# Widget setup {{{3
+m.editor <- gframe("Model 1", horizontal = FALSE, cont = me)
+m.e.0 <- ggroup(cont = m.editor, horizontal = TRUE)
+glabel("Model name: ", cont = m.e.0) 
+m.name.ge <- gedit(m[[m.cur]]$name, cont = m.e.0) 
+glabel("Use of formation fractions: ", cont = m.e.0) 
+m.ff.gc <- gcombobox(c("min", "max"), cont = m.e.0)
+svalue(m.ff.gc) <- m[[m.cur]]$use_of_ff
+
+# Model handling buttons {{{4
+m.e.b <- ggroup(cont = m.editor, horizontal = TRUE)
+gbutton("Copy model", cont = m.e.b, handler = copy_model_handler)
+gbutton("Delete model", cont = m.e.b, handler = delete_model_handler)
+gbutton("Add transformation product", cont = m.e.b, 
+        handler = add_observed_handler)
+gbutton("Save changes", cont = m.e.b, handler = save_m_changes_handler)
+
+
+m.observed <- names(m[[m.cur]]$spec)
+m.e.rows <- m.e.obs <- m.e.type <- m.e.to <- m.e.sink <- list()
+obs.to <- ""
+
+show_m_spec <- function() {
+  for (obs.i in 1:length(m.observed)) {
+    m.e.rows[[obs.i]] <<- ggroup(cont = m.editor, horizontal = TRUE)
+    m.e.obs[[obs.i]] <<- gcombobox(observed.all, selected = obs.i, 
+                                  cont = m.e.rows[[obs.i]])
+    m.e.type[[obs.i]] <<- gcombobox(c("SFO", "FOMC", "DFOP", "HS", "SFORB"),
+                                   cont = m.e.rows[[obs.i]])
+    svalue(m.e.type[[obs.i]]) <<- m[[m.cur]]$spec[[obs.i]]$type
+    glabel("to", cont = m.e.rows[[obs.i]]) 
+    obs.to <<- ifelse(is.null(m[[m.cur]]$spec[[obs.i]]$to), "",
+                 m[[m.cur]]$spec[[obs.i]]$to)
+    m.e.to[[obs.i]] <<- gedit(obs.to, cont = m.e.rows[[obs.i]])
+    m.e.sink[[obs.i]] <<- gcheckbox("Path to sink", checked = m[[m.cur]]$spec[[obs.i]]$sink,
+              cont = m.e.rows[[obs.i]]) 
+    if (obs.i > 1) {
+      gbutton("Remove compound", handler = remove_compound_handler, 
+              action = obs.i, cont = m.e.rows[[obs.i]])
+    }
+  }
+}
+show_m_spec()
 
 # Update the model editor {{{3
 update_m_editor <- function() {
-
+  svalue(m.editor) <- paste("Model", m.cur)
+  svalue(m.name.ge) <- m[[m.cur]]$name
+  svalue(m.ff.gc) <- m[[m.cur]]$use_of_ff
+  for (oldrow.i in 1:length(m.e.rows)) {
+    delete(m.editor, m.e.rows[[oldrow.i]])
+  }
+  m.observed <<- names(m[[m.cur]]$spec)
+  m.e.rows <<- m.e.obs <<- m.e.type <<- m.e.to <<- m.e.sink <<- list()
+  show_m_spec()
 }
 
 # 3}}}

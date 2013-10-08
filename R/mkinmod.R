@@ -18,9 +18,10 @@
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/> }}}
 
-mkinmod <- function(..., use_of_ff = "min")
+mkinmod <- function(..., use_of_ff = "min", speclist = NULL)
 {
-  spec <- list(...)
+  if (is.null(speclist)) spec <- list(...)
+  else spec <- speclist
   obs_vars <- names(spec)
 
   # Check if any of the names of the observed variables contains any other
@@ -185,7 +186,7 @@ mkinmod <- function(..., use_of_ff = "min")
     } #}}}
   } #}}}
 
-  model <- list(diffs = diffs, parms = parms, map = map, use_of_ff = use_of_ff)
+  model <- list(diffs = diffs, parms = parms, map = map, spec = spec, use_of_ff = use_of_ff)
 
   # Create coefficient matrix if appropriate#{{{
   if (mat) {
