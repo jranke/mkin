@@ -432,5 +432,22 @@ update_m_editor <- function() {
 
 # 3}}}
 # 2}}}
+# Fit the models to the data {{{1
+mf <- gnotebook(cont = g)
+fits <- s <- s.gt <- list()
+override <- function(d) {
+  data.frame(name = d$name, time = d$time, 
+             value = ifelse(d$override == "NA", d$value, d$override),
+             weight = d$weight)
+}
+fits[[1]] <- mkinfit(m[[1]], override(ds[[1]]$data), err = "weight")
+fits[[1]]$name <- "SFO fit to FOCUS dataset A"
+s[[1]] <- summary(fits[[1]])
+for (i in 1:length(fits)) {
+  fits[[i]] <- gframe(fits[[1]]$name, cont = mf, label = i)
+  s.tmp <- capture.output(print(s[[i]]))
+  s.gt[[i]] <- gtext(s.tmp, width = 600, cont = fits[[i]],
+                     use.codemirror = TRUE)
+}
 # 1}}}
 # vim: set foldmethod=marker ts=2 sw=2 expandtab:

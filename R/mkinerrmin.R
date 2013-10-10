@@ -39,6 +39,7 @@ mkinerrmin <- function(fit, alpha = 0.05)
   errdata <- merge(means, fit$predicted, by = c("time", "name"), 
     suffixes = c("_mean", "_pred"))
   errdata <- errdata[order(errdata$time, errdata$name), ]
+  errdata <- subset(errdata, !(time == 0 & value_mean == 0))
   n.optim.overall <- length(parms.optim)
 
   errmin.overall <- kinerrmin(errdata, n.optim.overall)

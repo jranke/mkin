@@ -90,18 +90,18 @@ mkinfit <- function(mkinmod, observed,
   # Preserve names of state variables before renaming initial state variable parameters
   state.ini.optim.boxnames <- names(state.ini.optim)
   if(length(state.ini.optim) > 0) {
-      names(state.ini.optim) <- paste(names(state.ini.optim), "0", sep="_")
+    names(state.ini.optim) <- paste(names(state.ini.optim), "0", sep="_")
   }
 
   # Decide if the solution of the model can be based on a simple analytical
   # formula, the spectral decomposition of the matrix (fundamental system)
   # or a numeric ode solver from the deSolve package
   if (!solution_type %in% c("auto", "analytical", "eigen", "deSolve"))
-      stop("solution_type must be auto, analytical, eigen or de Solve")
+     stop("solution_type must be auto, analytical, eigen or de Solve")
   if (solution_type == "analytical" && length(mkinmod$map) > 1)
-      stop("Analytical solution not implemented for models with metabolites.")
+     stop("Analytical solution not implemented for models with metabolites.")
   if (solution_type == "eigen" && !is.matrix(mkinmod$coefmat))
-      stop("Eigenvalue based solution not possible, coefficient matrix not present.")
+     stop("Eigenvalue based solution not possible, coefficient matrix not present.")
   if (solution_type == "auto") {
     if (length(mkinmod$map) == 1) {
       solution_type = "analytical"
@@ -109,10 +109,10 @@ mkinfit <- function(mkinmod, observed,
       if (is.matrix(mkinmod$coefmat)) {
 	solution_type = "eigen"
         if (max(observed$value, na.rm = TRUE) < 0.1) {
-	  stop("The combination of small observed values (all < 0.1) and solution_type = eigen is error-prone")
-	}
+          stop("The combination of small observed values (all < 0.1) and solution_type = eigen is error-prone")
+        }
       } else {
-	solution_type = "deSolve"
+        solution_type = "deSolve"
       }
     }
   }
@@ -130,8 +130,9 @@ mkinfit <- function(mkinmod, observed,
 
     # Time points at which observed data are available
     # Make sure we include time 0, so initial values for state variables are for time 0
-    outtimes = sort(unique(c(observed$time,
-		      seq(min(observed$time), max(observed$time), length.out=n.outtimes))))
+    outtimes = sort(unique(c(observed$time, seq(min(observed$time),
+                                                max(observed$time),
+                                                length.out = n.outtimes))))
 
     if(length(state.ini.optim) > 0) {
       odeini <- c(P[1:length(state.ini.optim)], state.ini.fixed)
@@ -143,7 +144,9 @@ mkinfit <- function(mkinmod, observed,
     parms <- backtransform_odeparms(odeparms, mod_vars)
 
     # Solve the system with current transformed parameter values
-    out <- mkinpredict(mkinmod, parms, odeini, outtimes, solution_type = solution_type, atol = atol, rtol = rtol, ...)
+    out <- mkinpredict(mkinmod, parms, odeini, outtimes, 
+                       solution_type = solution_type, 
+                       atol = atol, rtol = rtol, ...)
 
     assign("out_predicted", out, inherits=TRUE)
 
@@ -169,7 +172,7 @@ mkinfit <- function(mkinmod, observed,
         names(col_obs) <- names(pch_obs) <- names(lty_obs) <- obs_vars
         for (obs_var in obs_vars) {
           points(subset(observed, name == obs_var, c(time, value)), 
-            pch = pch_obs[obs_var], col = col_obs[obs_var])
+                 pch = pch_obs[obs_var], col = col_obs[obs_var])
         }
         matlines(out_plot$time, out_plot[-1], col = col_obs, lty = lty_obs)
         legend("topright", inset=c(0.05, 0.05), legend=obs_vars, 
@@ -180,7 +183,8 @@ mkinfit <- function(mkinmod, observed,
     }
     return(mC)
   }
-  fit <- modFit(cost, c(state.ini.optim, parms.optim), method = method.modFit, control = control.modFit, ...)
+  fit <- modFit(cost, c(state.ini.optim, parms.optim), 
+                method = method.modFit, control = control.modFit, ...)
 
   # We need to return some more data for summary and plotting
   fit$solution_type <- solution_type
@@ -196,25 +200,33 @@ mkinfit <- function(mkinmod, observed,
   # Collect initial parameter values in two dataframes
   fit$start <- data.frame(initial = c(state.ini.optim, 
 		  backtransform_odeparms(parms.optim, mod_vars)))
-  fit$start$type = c(rep("state", length(state.ini.optim)), rep("deparm", length(parms.optim)))
+  fit$start$type = c(rep("state", length(state.ini.optim)), 
+                     rep("deparm", length(parms.optim)))
   fit$start$transformed = c(state.ini.optim, parms.optim)
 
   fit$fixed <- data.frame(
     value = c(state.ini.fixed, parms.fixed))
-  fit$fixed$type = c(rep("state", length(state.ini.fixed)), rep("deparm", length(parms.fixed)))
+  fit$fixed$type = c(rep("state", length(state.ini.fixed)), 
+                     rep("deparm", length(parms.fixed)))
 
   bparms.optim = backtransform_odeparms(fit$par, mod_vars)
-  bparms.fixed = backtransform_odeparms(c(state.ini.fixed, parms.fixed), mod_vars)
+  bparms.fixed = backtransform_odeparms(c(state.ini.fixed, parms.fixed), 
+                                        mod_vars)
   bparms.all = c(bparms.optim, bparms.fixed)
 
   # Collect observed, predicted and residuals
   data <- merge(fit$observed, fit$predicted, by = c("time", "name"))
-  names(data) <- c("time", "variable", "observed", "predicted")
+  if (is.null(err)) {
+    names(data) <- c("time", "variable", "observed", "predicted")
+  } else {
+    names(data) <- c("time", "variable", "observed", "err", "predicted")
+  }
   data$residual <- data$observed - data$predicted
   data$variable <- ordered(data$variable, levels = obs_vars)
   fit$data <- data[order(data$variable, data$time), ]
   fit$atol <- atol
   fit$rtol <- rtol
+  fit$weight <- ifelse(is.null(err), weight, "manual")
 
   # Return all backtransformed parameters for summary
   fit$bparms.optim <- bparms.optim 
@@ -270,6 +282,7 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
 	  date.summary = date(),
 	  solution_type = object$solution_type,
 	  use_of_ff = object$mkinmod$use_of_ff,
+    weight = object$weight,
     residuals = object$residuals,
     residualVariance = resvar,
     sigma = sqrt(resvar),
@@ -315,6 +328,9 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
 
   cat("\nMethod used for solution of differential equation system:\n")
   cat(x$solution_type, "\n")
+
+  cat("\nWeighting method:\n")
+  cat(x$weight, "\n")
 
   cat("\nStarting values for optimised parameters:\n")
   print(x$start)
@@ -371,3 +387,4 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
 
   invisible(x)
 }
+# vim: set ts=2 sw=2 expandtab:
