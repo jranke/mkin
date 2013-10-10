@@ -20,7 +20,9 @@ mkinfit(mkinmod, observed,
   plot = FALSE, quiet = FALSE, err = NULL, weight = "none", 
   scaleVar = FALSE, 
   atol = 1e-8, rtol = 1e-10, n.outtimes = 100, 
-  trace_parms, ...)
+  reweight.method = NULL,
+  reweight.tol = 1e-8, reweight.max.iter = 10,
+  trace_parms = FALSE, ...)
 }
 \arguments{
   \item{mkinmod}{
@@ -94,7 +96,7 @@ mkinfit(mkinmod, observed,
     \emph{error} estimates, used to weigh the residuals (see details of
     \code{\link{modCost}}); if \code{NULL}, then the residuals are not weighed.
   }
-  \item{weight}{only if \code{err}=\code{NULL}: how to weigh the
+  \item{weight}{only if \code{err}=\code{NULL}: how to weight the
     residuals, one of "none", "std", "mean", see details of \code{\link{modCost}}.
   }
   \item{scaleVar}{
@@ -115,6 +117,23 @@ mkinfit(mkinmod, observed,
     the numerical solver if that is used (see \code{solution} argument. 
     The default value is 100.
   }
+  \item{reweight.method}{
+    The method used for iteratively reweighting residuals, also known
+    as iteratively reweighted least squares (IRLS). Default is NULL,
+    the other method implemented is called "obs", meaning that each
+    observed variable is assumed to have its own variance, this is 
+    estimated from the fit and used for weighting the residuals
+    in each iteration until convergence of this estimate up to 
+    \code{reweight.tol} or up to the maximum number of iterations
+    specified by \code{reweight.maxiter}.
+  }
+  \item{reweight.tol}{
+    Tolerance for convergence criterion for the variance components
+    in IRLS fits.
+  }
+  \item{reweight.max.iter}{
+    Maximum iterations in IRLS fits.
+  }
   \item{trace_parms}{
     Should a trace of the parameter values be listed?
   }
@@ -123,8 +142,14 @@ mkinfit(mkinmod, observed,
   }
 }
 \value{
-    A list with "mkinfit" and "modFit" in the class attribute. 
-    A summary can be obtained by \code{\link{summary.mkinfit}}. 
+  A list with "mkinfit" and "modFit" in the class attribute. 
+  A summary can be obtained by \code{\link{summary.mkinfit}}. 
+}
+\note{
+  The implementation of iteratively reweighted least squares is inspired by the
+  work of the KinGUII team at Bayer Crop Science (Walter Schmitt and Zhenglei
+  Gao). A similar implemention can also be found in CAKE 2.0, which is the
+  other GUI derivative of mkin, sponsored by Syngenta.
 }
 \author{
   Johannes Ranke <jranke@uni-bremen.de>
@@ -136,7 +161,6 @@ SFO_SFO <- mkinmod(
   m1 = list(type = "SFO"))
 # Fit the model to the FOCUS example dataset D using defaults
 fit <- mkinfit(SFO_SFO, FOCUS_2006_D)
-str(fit)
 summary(fit)
 
 # Use stepwise fitting, using optimised parameters from parent only fit, FOMC
@@ -147,9 +171,10 @@ FOMC_SFO <- mkinmod(
   m1 = list(type = "SFO"))
 # Fit the model to the FOCUS example dataset D using defaults
 fit.FOMC_SFO <- mkinfit(FOMC_SFO, FOCUS_2006_D)
-# Use starting parameters from parent only FOMC fit (not really needed in this case)
-fit.FOMC = mkinfit(FOMC, FOCUS_2006_D)
-fit.FOMC_SFO <- mkinfit(FOMC_SFO, FOCUS_2006_D, parms.ini = fit.FOMC$bparms.ode, plot=TRUE)
+# Use starting parameters from parent only FOMC fit
+fit.FOMC = mkinfit(FOMC, FOCUS_2006_D, plot=TRUE)
+fit.FOMC_SFO <- mkinfit(FOMC_SFO, FOCUS_2006_D, 
+  parms.ini = fit.FOMC$bparms.ode, plot=TRUE)
 }
 
 # Use stepwise fitting, using optimised parameters from parent only fit, SFORB
@@ -162,6 +187,29 @@ fit.SFORB_SFO <- mkinfit(SFORB_SFO, FOCUS_2006_D)
 # Use starting parameters from parent only SFORB fit (not really needed in this case)
 fit.SFORB = mkinfit(SFORB, FOCUS_2006_D)
 fit.SFORB_SFO <- mkinfit(SFORB_SFO, FOCUS_2006_D, parms.ini = fit.SFORB$bparms.ode, plot=TRUE)
+
+# Weighted fits, including IRLS
+SFO_SFO.ff <- mkinmod(parent = list(type = "SFO", to = "m1"),
+                      m1 = list(type = "SFO"), use_of_ff = "max")
+f.noweight <- mkinfit(SFO_SFO.ff, FOCUS_2006_D)
+summary(f.noweight)
+f.irls <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, reweight.method = "obs")
+summary(f.irls)
+f.w.mean <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, weight = "mean")
+summary(f.w.mean)
+f.w.mean.irls <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, weight = "mean",
+                         reweight.method = "obs")
+summary(f.w.mean.irls)
+
+# Manual weighting
+dw <- FOCUS_2006_D
+errors <- c(parent = 2, m1 = 1)
+dw$err.man <- errors[FOCUS_2006_D$name]
+f.w.man <- mkinfit(SFO_SFO.ff, dw, err = "err.man")
+summary(f.w.man)
+f.w.man.irls <- mkinfit(SFO_SFO.ff, dw, err = "err.man",
+                       reweight.method = "obs")
+summary(f.w.man.irls)
 }
 \keyword{ models }
 \keyword{ optimize }

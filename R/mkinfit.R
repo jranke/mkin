@@ -33,6 +33,8 @@ mkinfit <- function(mkinmod, observed,
   plot = FALSE, quiet = FALSE,
   err = NULL, weight = "none", scaleVar = FALSE,
   atol = 1e-8, rtol = 1e-10, n.outtimes = 100,
+  reweight.method = NULL,
+  reweight.tol = 1e-8, reweight.max.iter = 10,
   trace_parms = FALSE,
   ...)
 {
@@ -125,7 +127,7 @@ mkinfit <- function(mkinmod, observed,
   {
     assign("calls", calls+1, inherits=TRUE) # Increase the model solution counter
 
-    # Trace parameter values if quiet is off
+    # Trace parameter values if requested
     if(trace_parms) cat(P, "\n")
 
     # Time points at which observed data are available
@@ -183,8 +185,43 @@ mkinfit <- function(mkinmod, observed,
     }
     return(mC)
   }
+
   fit <- modFit(cost, c(state.ini.optim, parms.optim), 
                 method = method.modFit, control = control.modFit, ...)
+
+  # Reiterate the fit until convergence of the variance components (IRLS)
+  # if requested by the user
+  weight.ini = weight
+  if (!is.null(err)) weight.ini = "manual"
+
+  if (!is.null(reweight.method)) {
+    if (reweight.method != "obs") stop("Only reweighting method 'obs' is implemented")
+    if(!quiet) {
+      cat("IRLS based on variance estimates for each observed variable\n")
+    }
+    if (!quiet) {
+      cat("Initial variance estimates are:\n")
+      print(signif(fit$var_ms_unweighted, 8))
+    }
+    reweight.diff = 1
+    n.iter <- 0
+    if (!is.null(err)) observed$err.ini <- observed[[err]]
+    err = "err.irls"
+    while (reweight.diff > reweight.tol & n.iter < reweight.max.iter) {
+      n.iter <- n.iter + 1
+      sigma.old <- sqrt(fit$var_ms_unweighted)
+      observed[err] <- sqrt(fit$var_ms_unweighted)[observed$name]
+      fit <- modFit(cost, fit$par, method = method.modFit,
+                    control = control.modFit, ...)
+      reweight.diff = sum((sqrt(fit$var_ms_unweighted) - sigma.old)^2)
+      if (!quiet) {
+        cat("Iteration", n.iter, "yields variance estimates:\n")
+        print(signif(fit$var_ms_unweighted, 8))
+        cat("Sum of squared differences to last variance estimates:",
+            signif(reweight.diff, 2), "\n")
+      }
+    }
+  }
 
   # We need to return some more data for summary and plotting
   fit$solution_type <- solution_type
@@ -214,19 +251,23 @@ mkinfit <- function(mkinmod, observed,
                                         mod_vars)
   bparms.all = c(bparms.optim, bparms.fixed)
 
-  # Collect observed, predicted and residuals
+  # Collect observed, predicted, residuals and weighting
   data <- merge(fit$observed, fit$predicted, by = c("time", "name"))
-  if (is.null(err)) {
-    names(data) <- c("time", "variable", "observed", "predicted")
-  } else {
-    names(data) <- c("time", "variable", "observed", "err", "predicted")
-  }
-  data$residual <- data$observed - data$predicted
-  data$variable <- ordered(data$variable, levels = obs_vars)
-  fit$data <- data[order(data$variable, data$time), ]
+  data$name <- ordered(data$name, levels = obs_vars)
+  data <- data[order(data$name, data$time), ]
+
+  fit$data <- data.frame(time = data$time,
+                         variable = data$name,
+                         observed = data$value.x,
+                         predicted = data$value.y)
+  fit$data$residual <- fit$data$observed - fit$data$predicted
+  if (!is.null(data$err.ini)) fit$data$err.ini <- data$err.ini
+  if (!is.null(err)) fit$data[[err]] <- data[[err]]
+
   fit$atol <- atol
   fit$rtol <- rtol
-  fit$weight <- ifelse(is.null(err), weight, "manual")
+  fit$weight.ini <- weight.ini
+  fit$reweight.method <- reweight.method
 
   # Return all backtransformed parameters for summary
   fit$bparms.optim <- bparms.optim 
@@ -282,7 +323,8 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
 	  date.summary = date(),
 	  solution_type = object$solution_type,
 	  use_of_ff = object$mkinmod$use_of_ff,
-    weight = object$weight,
+    weight.ini = object$weight.ini,
+    reweight.method = object$reweight.method,
     residuals = object$residuals,
     residualVariance = resvar,
     sigma = sqrt(resvar),
@@ -329,8 +371,10 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
   cat("\nMethod used for solution of differential equation system:\n")
   cat(x$solution_type, "\n")
 
-  cat("\nWeighting method:\n")
-  cat(x$weight, "\n")
+  cat("\nWeighting:", x$weight.ini)
+  if(!is.null(x$reweight.method)) cat(" then iterative reweighting method",
+                                      x$reweight.method)
+  cat("\n")
 
   cat("\nStarting values for optimised parameters:\n")
   print(x$start)

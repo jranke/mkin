@@ -17,13 +17,13 @@
 
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
-if(getRversion() >= '2.15.1') utils::globalVariables(c("name"))
+if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "value_mean"))
 
 mkinerrmin <- function(fit, alpha = 0.05)
 {
   parms.optim <- fit$par
   kinerrmin <- function(errdata, n.parms) {
-    means.mean <- mean(errdata$value_mean, na.rm=TRUE)
+    means.mean <- mean(errdata$value_mean, na.rm = TRUE)
     df = length(errdata$value_mean) - n.parms
   
     f <- function(err)
