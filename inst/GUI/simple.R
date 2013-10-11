@@ -27,14 +27,14 @@ for (i in 1:5) {
     study_nr = 1,
     title = paste("FOCUS example dataset", ds.letter),
     sampling_times = unique(get(ds.name)$time),
-    time_unit = "NA",
+    time_unit = "",
     observed = as.character(unique(get(ds.name)$name)),
     unit = "% AR",
     replicates = 1,
     data = get(ds.name)
   )
   ds[[ds.index]]$data$name <- as.character(ds[[ds.index]]$data$name)
-  ds[[ds.index]]$data$override = "NA"
+  ds[[ds.index]]$data$override = as.numeric(NA)
   ds[[ds.index]]$data$weight = 1
 }
 # Dataframe with datasets for selection with the gtable widget {{{2
@@ -154,6 +154,7 @@ ds.switcher <- function(h, ...) {
   ds.cur <<- as.character(svalue(h$obj))
   update_ds_editor()
   visible(dse) <- TRUE
+  visible(me) <- FALSE
 }
 ds.gtable <- gtable(ds.df, multiple = TRUE, cont = dsm)
 addHandlerDoubleClick(ds.gtable, ds.switcher)
@@ -169,6 +170,15 @@ m.switcher <- function(h, ...) {
 m.gtable <- gtable(m.df, multiple = TRUE, cont = dsm)
 addHandlerDoubleClick(m.gtable, m.switcher)
 size(m.gtable) <- list(columnWidths = c(40, 200))
+
+# Section for selecting datasets and model
+dsmsel <- gvbox(cont = dsm)
+ds_plot_handler <- function(h, ...) {
+  #galert("test", parent = w)
+  # TBD 
+}
+dsplot <- gbutton("Plot selected datasets", cont = dsmsel, 
+                  handler = ds_plot_handler)
  
 # Expandable group for the dataset editor {{{1
 dse <- gexpandgroup("Dataset editor", cont = g, horizontal = FALSE)
@@ -224,8 +234,8 @@ empty_grid_handler <- function(h, ...) {
   new.data = data.frame(
     name = rep(obs, each = replicates * length(sampling_times)),
     time = rep(sampling_times, each = replicates, times = length(obs)),
-    value = "NA",
-    override = "NA",
+    value = NA,
+    override = NA,
     weight = 1
   )
   ds.e.gdf[,] <- new.data
@@ -297,6 +307,8 @@ gbutton("Save changes", cont = ds.editor, handler = save_ds_changes_handler)
 ds.e.gdf <- gdf(ds[[ds.cur]]$data, name = "Kinetic data", 
                 width = 700, height = 700, cont = ds.editor)
 ds.e.gdf$set_column_width(2, 70)
+enter_next_value_handler <- function(h, ...) galert("next value", parent = w)
+addHandlerChanged(ds.e.gdf, enter_next_value_handler)
 
 # Update the dataset editor {{{3
 update_ds_editor <- function() {
@@ -433,21 +445,21 @@ update_m_editor <- function() {
 # 3}}}
 # 2}}}
 # Fit the models to the data {{{1
-mf <- gnotebook(cont = g)
-fits <- s <- s.gt <- list()
-override <- function(d) {
-  data.frame(name = d$name, time = d$time, 
-             value = ifelse(d$override == "NA", d$value, d$override),
-             weight = d$weight)
-}
-fits[[1]] <- mkinfit(m[[1]], override(ds[[1]]$data), err = "weight")
-fits[[1]]$name <- "SFO fit to FOCUS dataset A"
-s[[1]] <- summary(fits[[1]])
-for (i in 1:length(fits)) {
-  fits[[i]] <- gframe(fits[[1]]$name, cont = mf, label = i)
-  s.tmp <- capture.output(print(s[[i]]))
-  s.gt[[i]] <- gtext(s.tmp, width = 600, cont = fits[[i]],
-                     use.codemirror = TRUE)
-}
+#mf <- gnotebook(cont = g)
+#fits <- s <- s.gt <- list()
+#override <- function(d) {
+#  data.frame(name = d$name, time = d$time, 
+#             value = ifelse(d$override == "NA", d$value, d$override),
+#             weight = d$weight)
+#}
+#fits[[1]] <- mkinfit(m[[1]], override(ds[[1]]$data), err = "weight")
+#fits[[1]]$name <- "SFO fit to FOCUS dataset A"
+#s[[1]] <- summary(fits[[1]])
+#for (i in 1:length(fits)) {
+#  fits[[i]] <- gframe(fits[[1]]$name, cont = mf, label = i)
+#  s.tmp <- capture.output(print(s[[i]]))
+#  s.gt[[i]] <- gtext(s.tmp, width = 600, cont = fits[[i]],
+#                     use.codemirror = TRUE)
+#}
 # 1}}}
 # vim: set foldmethod=marker ts=2 sw=2 expandtab:
