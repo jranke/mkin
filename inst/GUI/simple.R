@@ -1,6 +1,7 @@
 # Simple gWidgetsWWW2 GUI for mkin
 # Set the GUI title and create the parent frame {{{1
-require("mkin")
+require(mkin)
+require(canvas)
 GUI_title <- "Simple Browser based GUI for kinetic evaluations using mkin"
 w <- gwindow(GUI_title)
 sb <- gstatusbar("Powered by gWidgetsWWW2 and Rook", cont = w)
@@ -174,8 +175,25 @@ size(m.gtable) <- list(columnWidths = c(40, 200))
 # Section for selecting datasets and model
 dsmsel <- gvbox(cont = dsm)
 ds_plot_handler <- function(h, ...) {
-  #galert("test", parent = w)
-  # TBD 
+  ds.sel <- svalue(ds.gtable)
+  n.ds.sel <- length(ds.sel)
+  for (i in 1:n.ds.sel) {
+    prows[[i]] <- ggroup(cont = pfv)
+    d <- ds[[ds.sel[[i]]]]
+
+    f <- tempfile()
+    canvas(f, width = 500, height = 350)
+      plot(0, type = "n",
+           xlim = c(0, max(d$data$time, na.rm = TRUE)),
+           ylim = c(0, max(d$data$value, na.rm = TRUE)),
+           main = d$title)
+      for (obs_var in d$observed) {
+        points(subset(d$data, name == obs_var, c(time, value))) 
+      }
+    dev.off()
+    plots[[i]] <- gcanvas(f, cont = prows[[i]], width = 500, 350)
+  }
+
 }
 dsplot <- gbutton("Plot selected datasets", cont = dsmsel, 
                   handler = ds_plot_handler)
@@ -444,7 +462,12 @@ update_m_editor <- function() {
 
 # 3}}}
 # 2}}}
-# Fit the models to the data {{{1
+# Plots and fitting {{{1
+pf <- gframe("Plots and fitting", cont = g)
+pfv <- gvbox(cont = pf)
+prows <- plots <- list()
+
+# Show the fits {{{1
 #mf <- gnotebook(cont = g)
 #fits <- s <- s.gt <- list()
 #override <- function(d) {
