@@ -1,25 +1,43 @@
+# $Id$ {{{1
+
 # Simple gWidgetsWWW2 GUI for mkin
+
+# Copyright (C) 2013 Johannes Ranke
+# Contact: jranke@uni-bremen.de, johannesranke@eurofins.com
+
+# This file is part of the R package mkin
+
+# mkin is free software: you can redistribute it and/or modify it under the
+# terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
+
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
+
+# You should have received a copy of the GNU General Public License along with
+# this program. If not, see <http://www.gnu.org/licenses/>
+require(mkin); require(canvas) # {{{1
 # Set the GUI title and create the parent frame {{{1
-require(mkin)
-require(canvas)
 GUI_title <- "Simple Browser based GUI for kinetic evaluations using mkin"
 w <- gwindow(GUI_title)
 sb <- gstatusbar("Powered by gWidgetsWWW2 and Rook", cont = w)
 g <- gframe(GUI_title, cont = w, use.scrollwindow = TRUE, horizontal = FALSE)
-
-# Set default values for project data objects {{{1
-project_file <- "mkin_project_1.RData"
-# Studies {{{2
+# Set default values for project data {{{1
+# Initial project file name {{{2
+project_file <- "mkin_FOCUS_2006.RData"
+# Initial studies {{{2
 studies.df <- data.frame(Index = as.integer(1), 
                          Author = "FOCUS kinetics workgroup",
                          Year = "2006", 
                          Title = "FOCUS Kinetics",
                          stringsAsFactors = FALSE)
 
-# Datasets {{{2
+# Initial datasets {{{2
 ds <- list()
 observed.all <- vector()
-# FOCUS 2006 datasets {{{3
 for (i in 1:5) {
   ds.letter = LETTERS[i]
   ds.index <- as.character(i)
@@ -38,8 +56,31 @@ for (i in 1:5) {
   ds[[ds.index]]$data$override = as.numeric(NA)
   ds[[ds.index]]$data$weight = 1
 }
-# Dataframe with datasets for selection with the gtable widget {{{2
-update_ds.df <- function() { # {{{3
+# Initial models {{{2
+m <- list()
+m[["1"]] <- mkinmod(parent = list(type = "SFO"))
+m[["1"]]$name = "SFO"
+m[["2"]] <- mkinmod(parent = list(type = "FOMC"))
+m[["2"]]$name = "FOMC"
+m[["3"]] <- mkinmod(parent = list(type = "DFOP"))
+m[["3"]]$name = "DFOP"
+m[["4"]] <- mkinmod(parent = list(type = "SFO", to = "m1"),
+                          m1 = list(type = "SFO"),
+                          use_of_ff = "max")
+m[["4"]]$name = "SFO_SFO"
+# Initial fits {{{2
+f <- list()
+override <- function(d) {
+  data.frame(name = d$name, time = d$time, 
+             value = ifelse(is.na(d$override), d$value, d$override),
+             weight = d$weight)
+}
+f[["1"]] <- mkinfit(m[["1"]], override(ds[["1"]]$data), err = "weight")
+f[["1"]]$dataset_title = ds[["1"]]$title
+f[["1"]]$model_name = m[["1"]]$name
+# Data frames with datasets, models and fits to be continuosly updated {{{1
+# Dataframe with datasets for selection {{{2
+update_ds.df <- function() {
   ds.n <- length(ds)
   ds.df <<- data.frame(Index = 1:ds.n, 
                        Title = character(ds.n),
@@ -56,23 +97,9 @@ update_ds.df <- function() { # {{{3
 }
 ds.df <- data.frame()
 update_ds.df()
-
-# Set the initial dataset number
 ds.cur = "1"
-# Models {{{2
-m <- list()
-m[["1"]] <- mkinmod(parent = list(type = "SFO"))
-m[["1"]]$name = "SFO"
-m[["2"]] <- mkinmod(parent = list(type = "FOMC"))
-m[["2"]]$name = "FOMC"
-m[["3"]] <- mkinmod(parent = list(type = "DFOP"))
-m[["3"]]$name = "DFOP"
-m[["4"]] <- mkinmod(parent = list(type = "SFO", to = "m1"),
-                          m1 = list(type = "SFO"),
-                          use_of_ff = "max")
-m[["4"]]$name = "SFO_SFO"
-# Dataframe with models for selection with the gtable widget {{{2
-update_m.df <- function() { # {{{3
+# Dataframe with models for selection {{{2
+update_m.df <- function() {
   m.n <- length(m)
   m.df <<- data.frame(Index = 1:m.n, 
                       Name = character(m.n),
@@ -84,12 +111,27 @@ update_m.df <- function() { # {{{3
 }
 m.df <- data.frame()
 update_m.df()
-
-# Set initial model number, and specification
 m.cur = "1"
-
-# Project data management {{{1
-upload_file_handler <- function(h, ...)  # {{{2
+# Dataframe with fits for selection {{{2
+update_f.df <- function() {
+  f.n <- length(f)
+  f.df <<- data.frame(Index = 1:f.n,
+                      Dataset = character(f.n),
+                      Model = character(f.n),
+                      stringsAsFactors = FALSE)
+  for (i in 1:f.n) {
+    f.index <- names(f)[[i]]
+    f.df[i, "Dataset"] <<- f[[f.index]]$dataset_title
+    f.df[i, "Model"] <<- f[[f.index]]$model_name
+  }
+}
+f.df <- data.frame()
+update_f.df()
+f.cur = "1"
+# Expandable group for project data management {{{1
+prg <- gexpandgroup("Project file management", cont = g)
+# Project data management handler functions {{{2
+upload_file_handler <- function(h, ...)
 {
   tmpfile <- normalizePath(svalue(h$obj), winslash = "/")
   try(load(tmpfile))
@@ -107,16 +149,13 @@ upload_file_handler <- function(h, ...)  # {{{2
   m.gtable[,] <- m.df
   update_m_editor()
 }
-save_to_file_handler <- function(h, ...) # {{{2
+save_to_file_handler <- function(h, ...)
 {
    studies.df <- data.frame(studies.gdf[,], stringsAsFactors = FALSE)
    save(studies.df, ds, m, file = project_file)
    galert(paste("Saved project contents to", project_file), parent = w)
 }
-
-# Add widgets for project file management to an expandable group {{{1
-prg <- gexpandgroup("Project file management", cont = g)
-
+# Project data management GUI elements {{{2
 pr.vg <- ggroup(cont = prg, horizontal = FALSE)
 pr.hg <- ggroup(cont = pr.vg, horizontal = TRUE)
 pr.gf <- gfile(text = "Select project file", cont = pr.hg,
@@ -469,14 +508,7 @@ prows <- plots <- list()
 
 # Show the fits {{{1
 #mf <- gnotebook(cont = g)
-#fits <- s <- s.gt <- list()
-#override <- function(d) {
-#  data.frame(name = d$name, time = d$time, 
-#             value = ifelse(d$override == "NA", d$value, d$override),
-#             weight = d$weight)
-#}
-#fits[[1]] <- mkinfit(m[[1]], override(ds[[1]]$data), err = "weight")
-#fits[[1]]$name <- "SFO fit to FOCUS dataset A"
+# s <- s.gt <- list()
 #s[[1]] <- summary(fits[[1]])
 #for (i in 1:length(fits)) {
 #  fits[[i]] <- gframe(fits[[1]]$name, cont = mf, label = i)
