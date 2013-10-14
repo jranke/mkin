@@ -211,13 +211,13 @@ m.gtable <- gtable(m.df, multiple = TRUE, cont = dsm)
 addHandlerDoubleClick(m.gtable, m.switcher)
 size(m.gtable) <- list(columnWidths = c(40, 200))
 
-# Section for selecting datasets and model
+# Section for selecting datasets and model {{{2
 dsmsel <- gvbox(cont = dsm)
 ds_plot_handler <- function(h, ...) {
   ds.sel <- svalue(ds.gtable)
   n.ds.sel <- length(ds.sel)
   for (i in 1:n.ds.sel) {
-    prows[[i]] <- ggroup(cont = pfv)
+    prows[[i]] <<- ggroup(cont = pfv)
     d <- ds[[ds.sel[[i]]]]
 
     f <- tempfile()
@@ -517,4 +517,4 @@ prows <- plots <- list()
 #                     use.codemirror = TRUE)
 #}
 # 1}}}
-# vim: set foldmethod=marker ts=2 sw=2 expandtab:
+# vim: set foldmethod=marker foldlevel=0 ts=2 sw=2 expandtab:
