@@ -74,10 +74,15 @@ override <- function(d) {
              value = ifelse(is.na(d$override), d$value, d$override),
              err = d$err)
 }
-f <- f.gg <- s <- list()
+f <- s <- f.gg <- f.gg.rows <- list()
+f.gg.ini <- f.gg.fixed <- f.gg.optim <- list()
 for (ds.i in 1:length(ds)) {
   f[[as.character(ds.i)]] <- list()
   f.gg[[as.character(ds.i)]] <- list()
+  f.gg.rows[[as.character(ds.i)]] <- list()
+  f.gg.ini[[as.character(ds.i)]] <- list()
+  f.gg.fixed[[as.character(ds.i)]] <- list()
+  f.gg.optim[[as.character(ds.i)]] <- list()
   s[[as.character(ds.i)]] <- list()
 }
 # Data frames with datasets, models and fits to be continuosly updated {{{1
@@ -220,14 +225,25 @@ configure_fits_handler <- function(h, ...) {
   m.sel <- as.character(svalue(m.gtable))
   for (ds.i in ds.sel) {
     for (m.i in m.sel) {
-      f.gg[[ds.i]][[m.i]] <- ggroup(cont = f.gn[[ds.i]], label = m[[m.i]]$name)
-      f[[ds.i]][[m.i]] <- mkinfit(m[[m.i]], override(ds[[ds.i]]$data), 
+      f.gg[[ds.i]][[m.i]] <<- ggroup(cont = f.gn[[ds.i]], label = m[[m.i]]$name)
+      f.gg.parms <- gvbox(cont = f.gg[[ds.i]][[m.i]])
+      f.gg.rows[[ds.i]][[m.i]] <<- list()
+      f.gg.ini[[ds.i]][[m.i]] <<- list()
+      f[[ds.i]][[m.i]] <- ftmp <- mkinfit(m[[m.i]], override(ds[[ds.i]]$data), 
                                   err = "err", control.modFit = list(maxiter = 0))
-      s[[ds.i]][[m.i]] <- summary(f[[ds.i]][[m.i]])
-      glabel(s[[ds.i]][[m.i]]$date.fit, cont = f.gg[[ds.i]][[m.i]])
+      s[[ds.i]][[m.i]] <- stmp <- summary(ftmp)
+      pars <- rbind(stmp$start[1:2], stmp$fixed)
+      pars$fixed <- c(rep(FALSE, length(stmp$start$value)),
+                      rep(TRUE, length(stmp$fixed$value)))
+
+      for (parm in c(paste0(names(ftmp$mkinmod$map), "_0"), names(ftmp$bparms.ode))) {
+        f.gg.rows[[ds.i]][[m.i]][[parm]] <- ggroup(cont = f.gg.parms)
+        glabel(parm, cont = f.gg.rows[[ds.i]][[m.i]][[parm]])
+        f.gg.ini[[ds.i]][[m.i]][[parm]] <- gedit(pars[parm, "value"], 
+                                             cont = f.gg.rows[[ds.i]][[m.i]][[parm]])
+      }
     }
   }
-
 }
 dsconfig <- gbutton("Configure fits for selections", cont = dsmsel, 
                   handler = configure_fits_handler)
@@ -552,18 +568,5 @@ update_plot <- function() {
   svalue(plots[[ds.cur]]) <<- svg_plot(ds.cur)
 }
 
-# Show the fits {{{1
-#f[["1"]][["1"]] <- mkinfit(m[["1"]], override(ds[["1"]]$data), err = "err")
-#f[["1"]][["1"]]$dataset_title = ds[["1"]]$title
-#f[["1"]][["1"]]$model_name = m[["1"]]$name
-#mf <- gnotebook(cont = g)
-# s <- s.gt <- list()
-#s[[1]] <- summary(fits[[1]])
-#for (i in 1:length(fits)) {
-#  fits[[i]] <- gframe(fits[[1]]$name, cont = mf, label = i)
-#  s.tmp <- capture.output(print(s[[i]]))
-#  s.gt[[i]] <- gtext(s.tmp, width = 600, cont = fits[[i]],
-#                     use.codemirror = TRUE)
-#}
 # 1}}}
 # vim: set foldmethod=marker foldlevel=0 ts=2 sw=2 expandtab:
