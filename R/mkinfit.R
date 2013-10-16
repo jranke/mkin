@@ -89,10 +89,15 @@ mkinfit <- function(mkinmod, observed,
   state.ini.fixed <- state.ini[fixed_initials]
   state.ini.optim <- state.ini[setdiff(names(state.ini), fixed_initials)]
 
-  # Preserve names of state variables before renaming initial state variable parameters
+  # Preserve names of state variables before renaming initial state variable
+  # parameters
   state.ini.optim.boxnames <- names(state.ini.optim)
+  state.ini.fixed.boxnames <- names(state.ini.fixed)
   if(length(state.ini.optim) > 0) {
     names(state.ini.optim) <- paste(names(state.ini.optim), "0", sep="_")
+  }
+  if(length(state.ini.fixed) > 0) {
+    names(state.ini.fixed) <- paste(names(state.ini.fixed), "0", sep="_")
   }
 
   # Decide if the solution of the model can be based on a simple analytical
@@ -138,8 +143,8 @@ mkinfit <- function(mkinmod, observed,
 
     if(length(state.ini.optim) > 0) {
       odeini <- c(P[1:length(state.ini.optim)], state.ini.fixed)
-      names(odeini) <- c(state.ini.optim.boxnames, names(state.ini.fixed))
-    } else odeini <- state.ini.fixed
+      names(odeini) <- c(state.ini.optim.boxnames, state.ini.fixed.boxnames)
+    } else odeini <- state.ini.fixed.boxnames
 
     odeparms <- c(P[(length(state.ini.optim) + 1):length(P)], parms.fixed)
 
@@ -235,7 +240,7 @@ mkinfit <- function(mkinmod, observed,
   fit$predicted <- mkin_wide_to_long(out_predicted, time = "time")
 
   # Collect initial parameter values in two dataframes
-  fit$start <- data.frame(initial = c(state.ini.optim, 
+  fit$start <- data.frame(value = c(state.ini.optim, 
 		  backtransform_odeparms(parms.optim, mod_vars)))
   fit$start$type = c(rep("state", length(state.ini.optim)), 
                      rep("deparm", length(parms.optim)))

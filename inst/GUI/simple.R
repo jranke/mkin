@@ -19,7 +19,7 @@
 
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
-require(mkin); require(canvas) # {{{1
+require(mkin) # {{{1
 # Set the GUI title and create the parent frame {{{1
 GUI_title <- "Simple Browser based GUI for kinetic evaluations using mkin"
 w <- gwindow(GUI_title)
@@ -54,7 +54,7 @@ for (i in 1:5) {
   )
   ds[[ds.index]]$data$name <- as.character(ds[[ds.index]]$data$name)
   ds[[ds.index]]$data$override = as.numeric(NA)
-  ds[[ds.index]]$data$weight = 1
+  ds[[ds.index]]$data$err = 1
 }
 # Initial models {{{2
 m <- list()
@@ -68,16 +68,18 @@ m[["4"]] <- mkinmod(parent = list(type = "SFO", to = "m1"),
                           m1 = list(type = "SFO"),
                           use_of_ff = "max")
 m[["4"]]$name = "SFO_SFO"
-# Initial fits {{{2
-f <- list()
+# Initial fit lists {{{2
 override <- function(d) {
   data.frame(name = d$name, time = d$time, 
              value = ifelse(is.na(d$override), d$value, d$override),
-             weight = d$weight)
+             err = d$err)
 }
-f[["1"]] <- mkinfit(m[["1"]], override(ds[["1"]]$data), err = "weight")
-f[["1"]]$dataset_title = ds[["1"]]$title
-f[["1"]]$model_name = m[["1"]]$name
+f <- f.gg <- s <- list()
+for (ds.i in 1:length(ds)) {
+  f[[as.character(ds.i)]] <- list()
+  f.gg[[as.character(ds.i)]] <- list()
+  s[[as.character(ds.i)]] <- list()
+}
 # Data frames with datasets, models and fits to be continuosly updated {{{1
 # Dataframe with datasets for selection {{{2
 update_ds.df <- function() {
@@ -113,21 +115,21 @@ m.df <- data.frame()
 update_m.df()
 m.cur = "1"
 # Dataframe with fits for selection {{{2
-update_f.df <- function() {
-  f.n <- length(f)
-  f.df <<- data.frame(Index = 1:f.n,
-                      Dataset = character(f.n),
-                      Model = character(f.n),
-                      stringsAsFactors = FALSE)
-  for (i in 1:f.n) {
-    f.index <- names(f)[[i]]
-    f.df[i, "Dataset"] <<- f[[f.index]]$dataset_title
-    f.df[i, "Model"] <<- f[[f.index]]$model_name
-  }
-}
-f.df <- data.frame()
-update_f.df()
-f.cur = "1"
+#update_f.df <- function() {
+#  f.n <- length(f)
+#  f.df <<- data.frame(Index = 1:f.n,
+#                      Dataset = character(f.n),
+#                      Model = character(f.n),
+#                      stringsAsFactors = FALSE)
+#  for (i in 1:f.n) {
+#    f.index <- names(f)[[i]]
+#    f.df[i, "Dataset"] <<- f[[f.index]]$dataset_title
+#    f.df[i, "Model"] <<- f[[f.index]]$model_name
+#  }
+#}
+#f.df <- data.frame()
+#update_f.df()
+#f.cur = "1"
 # Expandable group for project data management {{{1
 prg <- gexpandgroup("Project file management", cont = g)
 # Project data management handler functions {{{2
@@ -213,29 +215,22 @@ size(m.gtable) <- list(columnWidths = c(40, 200))
 
 # Section for selecting datasets and model {{{2
 dsmsel <- gvbox(cont = dsm)
-ds_plot_handler <- function(h, ...) {
-  ds.sel <- svalue(ds.gtable)
-  n.ds.sel <- length(ds.sel)
-  for (i in 1:n.ds.sel) {
-    prows[[i]] <<- ggroup(cont = pfv)
-    d <- ds[[ds.sel[[i]]]]
-
-    f <- tempfile()
-    canvas(f, width = 500, height = 350)
-      plot(0, type = "n",
-           xlim = c(0, max(d$data$time, na.rm = TRUE)),
-           ylim = c(0, max(d$data$value, na.rm = TRUE)),
-           main = d$title)
-      for (obs_var in d$observed) {
-        points(subset(d$data, name == obs_var, c(time, value))) 
-      }
-    dev.off()
-    plots[[i]] <- gcanvas(f, cont = prows[[i]], width = 500, 350)
+configure_fits_handler <- function(h, ...) {
+  ds.sel <- as.character(svalue(ds.gtable))
+  m.sel <- as.character(svalue(m.gtable))
+  for (ds.i in ds.sel) {
+    for (m.i in m.sel) {
+      f.gg[[ds.i]][[m.i]] <- ggroup(cont = f.gn[[ds.i]], label = m[[m.i]]$name)
+      f[[ds.i]][[m.i]] <- mkinfit(m[[m.i]], override(ds[[ds.i]]$data), 
+                                  err = "err", control.modFit = list(maxiter = 0))
+      s[[ds.i]][[m.i]] <- summary(f[[ds.i]][[m.i]])
+      glabel(s[[ds.i]][[m.i]]$date.fit, cont = f.gg[[ds.i]][[m.i]])
+    }
   }
 
 }
-dsplot <- gbutton("Plot selected datasets", cont = dsmsel, 
-                  handler = ds_plot_handler)
+dsconfig <- gbutton("Configure fits for selections", cont = dsmsel, 
+                  handler = configure_fits_handler)
  
 # Expandable group for the dataset editor {{{1
 dse <- gexpandgroup("Dataset editor", cont = g, horizontal = FALSE)
@@ -249,11 +244,16 @@ copy_dataset_handler <- function(h, ...) {
   ds[[ds.cur]] <<- ds[[ds.old]]
   update_ds.df()
   ds.gtable[,] <- ds.df
+  prows[[ds.cur]] <<- ggroup(cont = pfv)
+  plots[[ds.cur]] <<- gsvg(svg_plot(ds.cur), 
+                        container=prows[[ds.cur]], 
+                        width = 490, height = 350)
 }
  
 delete_dataset_handler <- function(h, ...) {
   ds[[ds.cur]] <<- NULL
-  names(ds) <<- as.character(1:length(ds))
+  delete(pfv, prows[[ds.cur]])
+  names(ds) <<- names(plots) <<- names(prows) <<- as.character(1:length(ds))
   ds.cur <<- names(ds)[[1]]
   update_ds.df()
   ds.gtable[,] <- ds.df
@@ -275,13 +275,17 @@ new_dataset_handler <- function(h, ...) {
                                           time = c(0, 1),
                                           value = c(100, NA),
                                           override = "NA",
-                                          weight = 1,
+                                          err = 1,
                                           stringsAsFactors = FALSE
                                           )
                         )
   update_ds.df()
   ds.gtable[,] <- ds.df
   update_ds_editor()
+  prows[[ds.cur]] <<- ggroup(cont = pfv)
+  plots[[ds.cur]] <<- gsvg(svg_plot(ds.cur), 
+                        container=prows[[ds.cur]], 
+                        width = 490, height = 350)
 }
 
 empty_grid_handler <- function(h, ...) {
@@ -293,7 +297,7 @@ empty_grid_handler <- function(h, ...) {
     time = rep(sampling_times, each = replicates, times = length(obs)),
     value = NA,
     override = NA,
-    weight = 1
+    err = 1
   )
   ds.e.gdf[,] <- new.data
 }
@@ -312,6 +316,7 @@ save_ds_changes_handler <- function(h, ...) {
   ds[[ds.cur]]$replicates <<- max(aggregate(tmpd$time, 
                                             list(tmpd$time, tmpd$name), length)$x)
   update_ds_editor()
+  update_plot()
 }
  
 
@@ -464,6 +469,7 @@ m.observed <- names(m[[m.cur]]$spec)
 m.e.rows <- m.e.obs <- m.e.type <- m.e.to <- m.e.sink <- list()
 obs.to <- ""
 
+# Show the model specification {{{4
 show_m_spec <- function() {
   for (obs.i in 1:length(m.observed)) {
     m.e.rows[[obs.i]] <<- ggroup(cont = m.editor, horizontal = TRUE)
@@ -501,12 +507,55 @@ update_m_editor <- function() {
 
 # 3}}}
 # 2}}}
-# Plots and fitting {{{1
+# Plots and fits {{{1
 pf <- gframe("Plots and fitting", cont = g)
 pfv <- gvbox(cont = pf)
-prows <- plots <- list()
+prows <- plots <- f.gn <- list()
+
+svg_plot <- function(ds.i) {
+    d <- ds[[ds.i]]
+
+    f <- get_tempfile(ext=".svg")
+    svg(f, width = 7, height = 5)
+      plot(0, type = "n",
+           xlim = c(0, max(d$data$time, na.rm = TRUE)),
+           xlab = ifelse(d$time_unit == "", "Time",
+                         paste("Time in", d$time_unit)),
+           ylim = c(0, max(d$data$value, na.rm = TRUE)),
+           ylab = ifelse(d$unit == "", "Observed", 
+                         paste("Observed in", d$unit)),
+           main = d$title)
+      pointcolor = 1
+      for (obs_var in d$observed) {
+        points(subset(d$data, name == obs_var, c(time, value)), 
+               col = pointcolor)
+        pointcolor = pointcolor + 1
+      }
+      legend("topright", inset = c(0.05, 0.05), legend = d$observed,
+             pch = 1, col = 1:length(d$observed))
+    dev.off()
+    return(f)
+}
+
+# Show the plots and the notebooks for the fits
+for (ds.i in 1:length(ds)) {
+  ds.plot <- as.character(ds.i)
+  prows[[ds.plot]] <- ggroup(cont = pfv)
+  plots[[ds.plot]] <- gsvg(svg_plot(ds.plot), 
+                        container=prows[[ds.plot]], 
+                        width = 490, height = 350)
+  f.gn[[ds.plot]] <- gnotebook(cont = prows[[ds.plot]], width = 600,
+                         handler = function(h, ...) galert("test", parent = w))
+}
+
+update_plot <- function() {
+  svalue(plots[[ds.cur]]) <<- svg_plot(ds.cur)
+}
 
 # Show the fits {{{1
+#f[["1"]][["1"]] <- mkinfit(m[["1"]], override(ds[["1"]]$data), err = "err")
+#f[["1"]][["1"]]$dataset_title = ds[["1"]]$title
+#f[["1"]][["1"]]$model_name = m[["1"]]$name
 #mf <- gnotebook(cont = g)
 # s <- s.gt <- list()
 #s[[1]] <- summary(fits[[1]])
