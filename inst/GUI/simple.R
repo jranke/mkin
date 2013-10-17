@@ -38,8 +38,8 @@ studies.df <- data.frame(Index = as.integer(1),
 # Initial datasets {{{2
 ds <- list()
 observed.all <- vector()
-for (i in 1:5) {
-  ds.letter = LETTERS[i]
+for (i in 1:2) {
+  ds.letter = LETTERS[i + 2]
   ds.index <- as.character(i)
   ds.name = paste0("FOCUS_2006_", ds.letter)
   ds[[ds.index]] <- list(
@@ -74,15 +74,13 @@ override <- function(d) {
              value = ifelse(is.na(d$override), d$value, d$override),
              err = d$err)
 }
-f <- s <- f.gg <- f.gg.rows <- list()
-f.gg.ini <- f.gg.fixed <- f.gg.optim <- list()
+f <- s <- f.gg <- list()
+f.gg.parms <- f.gg.opts <- list()
 for (ds.i in 1:length(ds)) {
   f[[as.character(ds.i)]] <- list()
   f.gg[[as.character(ds.i)]] <- list()
-  f.gg.rows[[as.character(ds.i)]] <- list()
-  f.gg.ini[[as.character(ds.i)]] <- list()
-  f.gg.fixed[[as.character(ds.i)]] <- list()
-  f.gg.optim[[as.character(ds.i)]] <- list()
+  f.gg.parms[[as.character(ds.i)]] <- list()
+  f.gg.opts[[as.character(ds.i)]] <- list()
   s[[as.character(ds.i)]] <- list()
 }
 # Data frames with datasets, models and fits to be continuosly updated {{{1
@@ -220,30 +218,112 @@ size(m.gtable) <- list(columnWidths = c(40, 200))
 
 # Section for selecting datasets and model {{{2
 dsmsel <- gvbox(cont = dsm)
+show_plot <- function(ds.i, m.i, type) {
+  ow <- options("warn")
+  options(warn = -1)
+  Parameters <- f.gg.parms[[ds.i]][[m.i]][,]
+  Parameters.de <- subset(Parameters, Type == "deparm", type)
+  stateparms <- subset(Parameters, Type == "state")[[type]]
+  deparms <- as.numeric(Parameters.de[[type]])
+  names(deparms) <- rownames(Parameters.de)
+  if (type == "Initial") {
+    f[[ds.i]][[m.i]] <<- mkinfit(m[[m.i]], override(ds[[ds.i]]$data),
+                                 state.ini = stateparms,
+                                 parms.ini = deparms,
+                                 err = "err", control.modFit = list(maxiter = 0))
+  }
+  options(ow)
+  ftmp <- f[[ds.i]][[m.i]]
+  f <- get_tempfile(ext=".svg")
+  svg(f, width = 7, height = 5)
+  plot(ftmp, main = ds[[ds.i]]$title,
+       xlab = ifelse(ds[[ds.i]]$time_unit == "", "Time", 
+                     paste("Time in", ds[[ds.i]]$time_unit)),
+       ylab = ifelse(ds[[ds.i]]$unit == "", "Observed", 
+                     paste("Observed in", ds[[ds.i]]$unit)))
+  dev.off()
+  svalue(plots[[ds.i]]) <<- f
+}
+get_Parameters <- function(stmp, optimised)
+{
+  pars <- rbind(stmp$start[1:2], stmp$fixed)
+
+  pars$fixed <- c(rep(FALSE, length(stmp$start$value)),
+                  rep(TRUE, length(stmp$fixed$value)))
+  pars$name <- rownames(pars)
+  Parameters <- data.frame(Name = pars$name,
+                           Type = pars$type,
+                           Initial = pars$value,
+                           Fixed = pars$fixed,
+                           Optimised = as.numeric(NA))
+  Parameters <- rbind(subset(Parameters, Type == "state"),
+                      subset(Parameters, Type == "deparm"))
+  rownames(Parameters) <- Parameters$Name
+  if (optimised) {
+    Parameters[rownames(stmp$bpar), "Optimised"] <- stmp$bpar[, "Estimate"]
+  }
+  return(Parameters)
+}
+run_fit <- function(ds.i, m.i) {
+  Parameters <- f.gg.parms[[ds.i]][[m.i]][,]
+  Parameters.de <- subset(Parameters, Type == "deparm")
+  deparms <- Parameters.de$Initial
+  names(deparms) <- rownames(Parameters.de)
+  f[[ds.i]][[m.i]] <<- mkinfit(m[[m.i]], override(ds[[ds.i]]$data),
+                               state.ini = subset(Parameters,
+                                                  Type == "state")$Initial,
+                               parms.ini = deparms, 
+                               err = "err")
+  s[[ds.i]][[m.i]] <<- summary(f[[ds.i]][[m.i]])
+
+  f.gg.parms[[ds.i]][[m.i]][,] <- get_Parameters(s[[ds.i]][[m.i]], TRUE)
+
+  show_plot(ds.i, m.i, "Optimised")
+}
+show_fit_config <- function(ds.i, m.i) {
+  ftmp <- f[[ds.i]][[m.i]]
+  stmp <- summary(ftmp)
+  Parameters <- get_Parameters(stmp, FALSE)
+
+  f.gg.parms[[ds.i]][[m.i]] <<- gdf(Parameters, 
+                                    width = 420, height = 300,
+                                    cont = f.gg[[ds.i]][[m.i]],
+                                    do_add_remove_buttons = FALSE)
+  f.gg.parms[[ds.i]][[m.i]]$set_column_width(1, 200)
+  f.gg.parms[[ds.i]][[m.i]]$set_column_width(2, 50)
+  f.gg.parms[[ds.i]][[m.i]]$set_column_width(3, 60)
+  f.gg.parms[[ds.i]][[m.i]]$set_column_width(4, 50)
+  f.gg.parms[[ds.i]][[m.i]]$set_column_width(5, 60)
+
+  f.gg.rest <- gvbox(cont = f.gg[[ds.i]][[m.i]])
+  f.gg.buttons <- ggroup(cont = f.gg.rest)
+  gbutton("Show initial", handler = function(h, ...) show_plot(ds.i, m.i, "Initial"),
+          cont = f.gg.buttons)
+  gbutton("Run", handler = function(h, ...) run_fit(ds.i, m.i),
+          cont = f.gg.buttons)
+  f.gg.opts[[ds.i]][[m.i]] <<- gformlayout(cont = f.gg.rest)
+  solution_types <- character()
+  if (length(ftmp$mkinmod$map) == 1) solution_types <- "analytical"
+  if (is.matrix(ftmp$mkinmod$coefmat)) solution_types <- c(solution_types, "eigen")
+  solution_types <- c(solution_types, "deSolve")
+
+  gcombobox(solution_types, selected = 1, label = "solution_type", 
+            cont = f.gg.opts[[ds.i]][[m.i]])
+}
 configure_fits_handler <- function(h, ...) {
   ds.sel <- as.character(svalue(ds.gtable))
   m.sel <- as.character(svalue(m.gtable))
+  ow <- options("warn")
+  options("warn" = -1)
   for (ds.i in ds.sel) {
     for (m.i in m.sel) {
       f.gg[[ds.i]][[m.i]] <<- ggroup(cont = f.gn[[ds.i]], label = m[[m.i]]$name)
-      f.gg.parms <- gvbox(cont = f.gg[[ds.i]][[m.i]])
-      f.gg.rows[[ds.i]][[m.i]] <<- list()
-      f.gg.ini[[ds.i]][[m.i]] <<- list()
-      f[[ds.i]][[m.i]] <- ftmp <- mkinfit(m[[m.i]], override(ds[[ds.i]]$data), 
+      f[[ds.i]][[m.i]] <<- mkinfit(m[[m.i]], override(ds[[ds.i]]$data), 
                                   err = "err", control.modFit = list(maxiter = 0))
-      s[[ds.i]][[m.i]] <- stmp <- summary(ftmp)
-      pars <- rbind(stmp$start[1:2], stmp$fixed)
-      pars$fixed <- c(rep(FALSE, length(stmp$start$value)),
-                      rep(TRUE, length(stmp$fixed$value)))
-
-      for (parm in c(paste0(names(ftmp$mkinmod$map), "_0"), names(ftmp$bparms.ode))) {
-        f.gg.rows[[ds.i]][[m.i]][[parm]] <- ggroup(cont = f.gg.parms)
-        glabel(parm, cont = f.gg.rows[[ds.i]][[m.i]][[parm]])
-        f.gg.ini[[ds.i]][[m.i]][[parm]] <- gedit(pars[parm, "value"], 
-                                             cont = f.gg.rows[[ds.i]][[m.i]][[parm]])
-      }
+      show_fit_config(ds.i, m.i)
     }
   }
+  options(ow)
 }
 dsconfig <- gbutton("Configure fits for selections", cont = dsmsel, 
                   handler = configure_fits_handler)
@@ -262,7 +342,7 @@ copy_dataset_handler <- function(h, ...) {
   ds.gtable[,] <- ds.df
   prows[[ds.cur]] <<- ggroup(cont = pfv)
   plots[[ds.cur]] <<- gsvg(svg_plot(ds.cur), 
-                        container=prows[[ds.cur]], 
+                        container = prows[[ds.cur]], 
                         width = 490, height = 350)
 }
  
@@ -560,7 +640,7 @@ for (ds.i in 1:length(ds)) {
   plots[[ds.plot]] <- gsvg(svg_plot(ds.plot), 
                         container=prows[[ds.plot]], 
                         width = 490, height = 350)
-  f.gn[[ds.plot]] <- gnotebook(cont = prows[[ds.plot]], width = 600,
+  f.gn[[ds.plot]] <- gnotebook(cont = prows[[ds.plot]], width = 750,
                          handler = function(h, ...) galert("test", parent = w))
 }
 

@@ -198,7 +198,7 @@ SFORB_SFO <- mkinmod(
 fit.SFORB_SFO <- mkinfit(SFORB_SFO, FOCUS_2006_D)
 # Use starting parameters from parent only SFORB fit (not really needed in this case)
 fit.SFORB = mkinfit(SFORB, FOCUS_2006_D)
-fit.SFORB_SFO <- mkinfit(SFORB_SFO, FOCUS_2006_D, parms.ini = fit.SFORB$bparms.ode, plot=TRUE)
+fit.SFORB_SFO <- mkinfit(SFORB_SFO, FOCUS_2006_D, parms.ini = fit.SFORB$bparms.ode)
 
 # Weighted fits, including IRLS
 SFO_SFO.ff <- mkinmod(parent = list(type = "SFO", to = "m1"),

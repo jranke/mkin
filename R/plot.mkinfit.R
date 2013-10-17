@@ -48,7 +48,7 @@ plot.mkinfit <- function(x, fit = x,
   odeparms <- parms.all[odenames]
 
   out <- mkinpredict(fit$mkinmod, odeparms, odeini, outtimes, 
-          solution_type = solution_type, atol = fit$atol, rtol = fit$rtol, ...)
+          solution_type = solution_type, atol = fit$atol, rtol = fit$rtol)
 
   # Set up the plot if not to be added to an existing plot
   if (add == FALSE) {
