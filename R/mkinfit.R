@@ -215,7 +215,7 @@ mkinfit <- function(mkinmod, observed,
     while (reweight.diff > reweight.tol & n.iter < reweight.max.iter) {
       n.iter <- n.iter + 1
       sigma.old <- sqrt(fit$var_ms_unweighted)
-      observed[err] <- sqrt(fit$var_ms_unweighted)[observed$name]
+      observed[err] <- sqrt(fit$var_ms_unweighted)[as.character(observed$name)]
       fit <- modFit(cost, fit$par, method = method.modFit,
                     control = control.modFit, ...)
       reweight.diff = sum((sqrt(fit$var_ms_unweighted) - sigma.old)^2)
