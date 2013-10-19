@@ -42,7 +42,7 @@ SFO_SFO <- mkinmod(
 # Fit the model to the FOCUS example dataset D using defaults
 fit <- mkinfit(SFO_SFO, FOCUS_2006_D)
 summary(fit, data=FALSE) # See transformed and backtransformed parameters
-initials <- fit$start$initial
+initials <- fit$start$value
 transformed <- fit$start$transformed
 names(initials) <- names(transformed) <- rownames(fit$start)
 transform_odeparms(initials, c("parent", "m1"))
