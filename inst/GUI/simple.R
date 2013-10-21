@@ -75,7 +75,7 @@ override <- function(d) {
              err = d$err)
 }
 # The GUI elements for each dataset are kept in lists
-f.gg <- f.gg.head <- f.gg.sel <- f.gg.parms <- f.gg.opts <- list()
+f.gg <- f.gg.sel <- f.gg.parms <- f.gg.opts <- list()
 # The fits and summaries are collected in a list of lists
 f <- s <- list()
 for (ds.i in 1:length(ds)) {
@@ -201,7 +201,8 @@ size(m.gtable) <- list(columnWidths = c(40, 200))
 
 # Section for selecting datasets and model {{{2
 dsmsel <- gvbox(cont = dsm)
-show_plot <- function(ds.i, m.i, type) {
+show_plot <- function(ds.i, type) {
+  m.i <- as.character(svalue(f.gg.sel[[ds.i]], index = TRUE))
   ow <- options("warn")
   options(warn = -1)
   Parameters <- f.gg.parms[[ds.i]][,]
@@ -210,7 +211,7 @@ show_plot <- function(ds.i, m.i, type) {
   deparms <- as.numeric(Parameters.de[[type]])
   names(deparms) <- rownames(Parameters.de)
   if (type == "Initial") {
-    f[[ds.i]][[m.i]] <<- mkinfit(m[[m.i]], override(ds[[ds.i]]$data),
+    f[[ds.i]][[m.i]] <- mkinfit(m[[m.i]], override(ds[[ds.i]]$data),
                                  state.ini = stateparms,
                                  parms.ini = deparms,
                                  err = "err", control.modFit = list(maxiter = 0))
@@ -247,30 +248,53 @@ get_Parameters <- function(stmp, optimised)
   }
   return(Parameters)
 }
-run_fit <- function(ds.i, m.i) {
+run_fit <- function(ds.i) {
+  m.i <- as.character(svalue(f.gg.sel[[ds.i]], index = TRUE))
   Parameters <- f.gg.parms[[ds.i]][,]
   Parameters.de <- subset(Parameters, Type == "deparm")
   deparms <- Parameters.de$Initial
   names(deparms) <- rownames(Parameters.de)
-  f[[ds.i]][[m.i]] <<- mkinfit(m[[m.i]], override(ds[[ds.i]]$data),
-                               state.ini = subset(Parameters,
-                                                  Type == "state")$Initial,
-                               parms.ini = deparms, 
-                               err = "err")
-  s[[ds.i]][[m.i]] <<- summary(f[[ds.i]][[m.i]])
-
-  f.gg.parms[[ds.i]][[m.i]][,] <- get_Parameters(s[[ds.i]][[m.i]], TRUE)
-
-  show_plot(ds.i, m.i, "Optimised")
+  f[[ds.i]][[m.i]] <- mkinfit(m[[m.i]], override(ds[[ds.i]]$data),
+                              state.ini = subset(Parameters,
+                                                 Type == "state")$Initial,
+                              parms.ini = deparms, 
+                              err = "err")
+  s[[ds.i]][[m.i]] <- summary(f[[ds.i]][[m.i]])
+  f.gg.parms[[ds.i]][,] <- get_Parameters(s[[ds.i]][[m.i]], TRUE)
+  show_plot(ds.i, "Optimised")
 }
-show_fit_config <- function(ds.i, m.i) {
-  ftmp <- f[[ds.i]][[m.i]]
+select_model_handler <- function(h, ...) {
+  m.i <- as.character(svalue(h$obj, index = TRUE))
+  if (is.null(f[[ds.i]][[m.i]])) {
+    f[[ds.i]][[m.i]] <<- mkinfit(m[[m.i]], override(ds[[ds.i]]$data),
+                                err = "err", control.modFit = list(maxiter = 0))
+  }
+  if (is.na(f.gg.parms[[ds.i]][1, "Optimised"])) {
+    f.gg.parms[[ds.i]][,] <- get_Parameters(summary(f[[ds.i]][[m.i]]), FALSE)
+    show_plot(ds.i, "Initial")
+  } else {
+    f.gg.parms[[ds.i]][,] <- get_Parameters(s[[ds.i]][[m.i]], TRUE)
+    show_plot(ds.i, "Optimised")
+  }
+}
+show_fit_config <- function(ds.i) {
+  ftmp <- f[[ds.i]][["1"]]
   stmp <- summary(ftmp)
   Parameters <- get_Parameters(stmp, FALSE)
+  f.gg[[ds.i]] <<- gvbox(cont = prows[[ds.i]])
 
-  f.gg[[ds.i]] <<- ggroup(cont = prows[[ds.i]])
+  f.gg.head <- ggroup(cont = f.gg[[ds.i]])
+  f.gg.sel[[ds.i]] <- gcombobox(m.df$Name, sel = 1, cont = f.gg.head,
+                                handler = select_model_handler)
+  gbutton("Show initial", 
+          handler = function(h, ...) show_plot(ds.i, "Initial"),
+          cont = f.gg.head)
+  gbutton("Run", handler = function(h, ...) run_fit(ds.i),
+          cont = f.gg.head)
+
+  f.gg.rest <- ggroup(cont = f.gg[[ds.i]])
   f.gg.parms[[ds.i]] <<- gdf(Parameters, width = 420, height = 300,
-                             cont = f.gg[[ds.i]], 
+                             cont = f.gg.rest, 
                              do_add_remove_buttons = FALSE)
   f.gg.parms[[ds.i]]$set_column_width(1, 200)
   f.gg.parms[[ds.i]]$set_column_width(2, 50)
@@ -278,12 +302,6 @@ show_fit_config <- function(ds.i, m.i) {
   f.gg.parms[[ds.i]]$set_column_width(4, 50)
   f.gg.parms[[ds.i]]$set_column_width(5, 60)
 
-  f.gg.rest <- gvbox(cont = f.gg[[ds.i]])
-  f.gg.buttons <- ggroup(cont = f.gg.rest)
-  gbutton("Show initial", handler = function(h, ...) show_plot(ds.i, m.i, "Initial"),
-          cont = f.gg.buttons)
-  gbutton("Run", handler = function(h, ...) run_fit(ds.i, m.i),
-          cont = f.gg.buttons)
   f.gg.opts[[ds.i]] <<- gformlayout(cont = f.gg.rest)
   solution_types <- character()
   if (length(ftmp$mkinmod$map) == 1) solution_types <- "analytical"
@@ -294,12 +312,12 @@ show_fit_config <- function(ds.i, m.i) {
             label = "solution_type", 
             cont = f.gg.opts[[ds.i]])
 }
-configure_fits_handler <- function(h, ...) {
-  ds.sel <- as.character(svalue(ds.gtable))
-  m.sel <- as.character(svalue(m.gtable))
-}
-dsconfig <- gbutton("Configure fits for selections", cont = dsmsel, 
-                  handler = configure_fits_handler)
+#configure_fits_handler <- function(h, ...) {
+#  ds.sel <- as.character(svalue(ds.gtable))
+#  m.sel <- as.character(svalue(m.gtable))
+#}
+#dsconfig <- gbutton("Configure fits for selections", cont = dsmsel, 
+#                  handler = configure_fits_handler)
  
 # Expandable group for the dataset editor {{{1
 dse <- gexpandgroup("Dataset editor", cont = g, horizontal = FALSE)
@@ -616,7 +634,7 @@ for (ds.i in 1:length(ds)) {
 
  f[[ds.plot]][["1"]] <- mkinfit(m[["1"]], override(ds[[ds.plot]]$data), 
                                  err = "err", control.modFit = list(maxiter = 0))
- show_fit_config(ds.i, "1")
+ show_fit_config(ds.i)
 }
 
 update_plot <- function() {
