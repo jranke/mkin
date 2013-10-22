@@ -187,7 +187,6 @@ fit.FOMC_SFO <- mkinfit(FOMC_SFO, FOCUS_2006_D)
 fit.FOMC = mkinfit(FOMC, FOCUS_2006_D, plot=TRUE)
 fit.FOMC_SFO <- mkinfit(FOMC_SFO, FOCUS_2006_D, 
   parms.ini = fit.FOMC$bparms.ode, plot=TRUE)
-}
 
 # Use stepwise fitting, using optimised parameters from parent only fit, SFORB
 SFORB <- mkinmod(parent = list(type = "SFORB"))
@@ -199,6 +198,7 @@ fit.SFORB_SFO <- mkinfit(SFORB_SFO, FOCUS_2006_D)
 # Use starting parameters from parent only SFORB fit (not really needed in this case)
 fit.SFORB = mkinfit(SFORB, FOCUS_2006_D)
 fit.SFORB_SFO <- mkinfit(SFORB_SFO, FOCUS_2006_D, parms.ini = fit.SFORB$bparms.ode)
+}
 
 # Weighted fits, including IRLS
 SFO_SFO.ff <- mkinmod(parent = list(type = "SFO", to = "m1"),
@@ -213,6 +213,7 @@ f.w.mean.irls <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, weight = "mean",
                          reweight.method = "obs")
 summary(f.w.mean.irls)
 
+\dontrun{
 # Manual weighting
 dw <- FOCUS_2006_D
 errors <- c(parent = 2, m1 = 1)
@@ -222,6 +223,7 @@ summary(f.w.man)
 f.w.man.irls <- mkinfit(SFO_SFO.ff, dw, err = "err.man",
                        reweight.method = "obs")
 summary(f.w.man.irls)
+}
 }
 \keyword{ models }
 \keyword{ optimize }
