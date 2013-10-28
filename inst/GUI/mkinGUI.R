@@ -23,7 +23,7 @@ require(mkin) # {{{1
 # Set the GUI title and create the basic widget layout {{{1
 w      <- gwindow("Browser based GUI for kinetic evaluations using mkin")
 sb     <- gstatusbar("Powered by gWidgetsWWW2 and Rook", cont = w)
-pg     <- gpanedgroup(cont = w, default.size = 400)
+pg     <- gpanedgroup(cont = w, default.size = 300)
 center <- gnotebook(cont = pg)
 left   <- gvbox(cont = pg)
 # Helper functions {{{1
@@ -38,9 +38,7 @@ override <- function(d) {
 project_file <- "mkin_FOCUS_2006.RData"
 # Initial studies {{{2
 studies.df <- data.frame(Index = as.integer(1), 
-                         Author = "FOCUS kinetics workgroup",
-                         Year = "2006", 
-                         Title = "FOCUS Kinetics",
+                         Citation = "FOCUS (2006) Guidance on degradation kinetics",
                          stringsAsFactors = FALSE)
 # Initial datasets {{{2
 ds <- list()
@@ -157,10 +155,9 @@ update_study_selector <- function(h, ...) {
   svalue(ds.study.gc, index = TRUE) <- ds[[ds.cur]]$study_nr
 }
 studies.gdf <- gdf(studies.df, name = "Edit studies in the project",
-                   width = 390, height = 200, cont = stg)
-studies.gdf$set_column_width(1, 35)
-studies.gdf$set_column_width(2, 150)
-studies.gdf$set_column_width(3, 40)
+                   width = 290, height = 200, cont = stg)
+studies.gdf$set_column_width(1, 40)
+studies.gdf$set_column_width(2, 240)
 addHandlerChanged(studies.gdf, update_study_selector)
 # Datasets and models {{{1
 dsm <- gframe("Datasets and models", cont = left, horizontal = FALSE)
@@ -170,9 +167,9 @@ ds.switcher <- function(h, ...) {
   update_ds_editor()
   svalue(center) <- 1
 }
-ds.gtable <- gtable(ds.df, width = 390, multiple = TRUE, cont = dsm)
+ds.gtable <- gtable(ds.df, width = 290, multiple = TRUE, cont = dsm)
 addHandlerDoubleClick(ds.gtable, ds.switcher)
-size(ds.gtable) <- list(columnWidths = c(40, 300, 40))
+size(ds.gtable) <- list(columnWidths = c(40, 200, 40))
 
 # Model table with handler {{{2
 m.switcher <- function(h, ...) {
@@ -180,9 +177,9 @@ m.switcher <- function(h, ...) {
   update_m_editor()
   svalue(center) <- 2
 }
-m.gtable <- gtable(m.df, width = 390, multiple = TRUE, cont = dsm)
+m.gtable <- gtable(m.df, width = 290, multiple = TRUE, cont = dsm)
 addHandlerDoubleClick(m.gtable, m.switcher)
-size(m.gtable) <- list(columnWidths = c(40, 340))
+size(m.gtable) <- list(columnWidths = c(40, 240))
 
 # Dataset editor {{{1
 ds.editor <- gframe("Dataset 1", horizontal = FALSE, cont = center, label = "Dataset editor")
