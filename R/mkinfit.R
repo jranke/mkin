@@ -53,7 +53,8 @@ mkinfit <- function(mkinmod, observed,
   # Prevent inital parameter specifications that are not in the model
   wrongpar.names <- setdiff(names(parms.ini), mkinmod$parms)
   if (length(wrongpar.names) > 0) {
-    stop("Initial parameter(s) ", paste(wrongpar.names, collapse = ", "), " not used in the model")
+    stop("Initial parameter(s) ", paste(wrongpar.names, collapse = ", "),
+         " not used in the model")
   }
 
   defaultpar.names <- setdiff(mkinmod$parms, names(parms.ini))
