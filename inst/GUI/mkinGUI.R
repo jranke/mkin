@@ -128,26 +128,41 @@ prg <- gexpandgroup("Project file management", cont = left, horizontal = FALSE)
 # Project data management handler functions {{{2
 upload_file_handler <- function(h, ...)
 {
+  # General
   tmpfile <- normalizePath(svalue(h$obj), winslash = "/")
   try(load(tmpfile))
   project_file <<- pr.gf$filename
   svalue(pr.ge) <- project_file
+
+  # Studies
   studies.gdf[,] <- studies.df 
+
+  # Datasets
   ds.cur <<- "1"
   ds <<- ds
   update_ds.df()
   ds.gtable[,] <- ds.df
   update_ds_editor()
+
+  # Models
   m.cur <<- "1"
   m <<- m
   update_m.df()
   m.gtable[,] <- m.df
   update_m_editor()
+
+  # Fits
+  f.cur <<- "1"
+  f <<- f
+  s <<- s
+  update_f.df()
+  f.gtable[,] <- f.df
+  update_plotting_and_fitting()
 }
 save_to_file_handler <- function(h, ...)
 {
    studies.df <- data.frame(studies.gdf[,], stringsAsFactors = FALSE)
-   save(studies.df, ds, m, file = project_file)
+   save(studies.df, ds, m, f, s, file = project_file)
    galert(paste("Saved project contents to", project_file), parent = w)
 }
 change_project_file_handler = function(h, ...) {
@@ -209,11 +224,18 @@ gbutton("Configure fit for selected model and dataset", cont = dsm,
                                 mkinfit(m[[m.i]], override(ds[[ds.i]]$data),
                                         err = "err", 
                                         control.modFit = list(maxiter = 0)))
-          s[[f.cur]] <- summary(f[[f.cur]])
-          f.gg.parms[,] <- get_Parameters(s[[f.cur]], FALSE)
-          show_plot("Initial", default = TRUE)
+          f[[f.cur]]$ds.index <<- ds.i
+          f[[f.cur]]$ds <<- ds[[ds.i]]
+          f[[f.cur]]$m.index <<- m.i
+          f[[f.cur]]$m.name <<- m[[m.i]]$name
+          update_f.df()
+          f.gtable[,] <<- f.df
+          s[[f.cur]] <<- summary(f[[f.cur]])
           svalue(pf) <- paste0("Fit ", f.cur, ": Dataset ", ds.i, 
                                ", Model ", m[[m.i]]$name)
+          show_plot("Initial", default = TRUE)
+          svalue(f.gg.opts.st) <<- "auto"
+          f.gg.parms[,] <- get_Parameters(s[[f.cur]], FALSE)
           svalue(center) <- 3
         })
 
@@ -550,8 +572,9 @@ run_fit <- function() {
   f[[f.cur]]$m.index <<- m.i
   f[[f.cur]]$m.name <<- m[[m.i]]$name
   s[[f.cur]] <<- summary(f[[f.cur]])
-  f.gg.parms[,] <- get_Parameters(s[[f.cur]], TRUE)
   show_plot("Optimised")
+  svalue(f.gg.opts.st) <- f[[f.cur]]$solution_type
+  f.gg.parms[,] <- get_Parameters(s[[f.cur]], TRUE)
 }
 ds.i <- m.i <- f.cur <- "1"
 
@@ -561,18 +584,22 @@ pf <- gframe("Fit 1: Dataset 1, Model SFO", horizontal = FALSE,
 
 # Mid group with plot and options {{{3
 f.gg.mid <- ggroup(cont = pf)
-ftmp <- suppressWarnings(mkinfit(m[["1"]], override(ds[["1"]]$data), 
+f[[f.cur]] <- suppressWarnings(mkinfit(m[[m.cur]], override(ds[[ds.i]]$data), 
                                  err = "err", 
                                  control.modFit = list(maxiter = 0)))
-stmp <- summary(ftmp)
-Parameters <- get_Parameters(stmp, FALSE)
+f[[f.cur]]$ds.index = ds.i
+f[[f.cur]]$ds = ds[[ds.i]]
+f[[f.cur]]$m.index = m.i
+f[[f.cur]]$m.name = m[[m.i]]$name
+s[[f.cur]] <- summary(f[[f.cur]])
+Parameters <- get_Parameters(s[[f.cur]], FALSE)
 tf <- get_tempfile(ext=".svg")
 svg(tf, width = 7, height = 5)
-plot(ftmp)
+plot(f[[f.cur]])
 dev.off()
 plot.gs <- gsvg(tf, container = f.gg.mid, width = 490, height = 350)
 f.gg.opts <- gformlayout(cont = f.gg.mid)
-solution_types <- c("analytical", "eigen", "deSolve")
+solution_types <- c("auto", "analytical", "eigen", "deSolve")
 f.gg.opts.st <- gcombobox(solution_types, selected = 1, 
                           label = "solution_type", width = 200, 
                           cont = f.gg.opts)
@@ -593,17 +620,14 @@ gbutton("Show initial",
         cont = f.gg.buttons)
 gbutton("Run", handler = function(h, ...) run_fit(),
         cont = f.gg.buttons)
-gbutton("Keep", handler = function(h, ...) {
-          update_f.df()
-          f.gtable[,] <<- f.df
-        }, cont = f.gg.buttons)
 gbutton("Delete", handler = function(h, ...) {
           f[[f.cur]] <<- NULL
           s[[f.cur]] <<- NULL
           names(f) <<- as.character(1:length(f))
+          names(s) <<- as.character(1:length(f))
           update_f.df()
           f.gtable[,] <<- f.df
-          f.cur <<- 1
+          f.cur <<- "1"
         }, cont = f.gg.buttons)
 
 # Update the plotting and fitting area {{{3
