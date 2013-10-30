@@ -247,8 +247,8 @@ mkinfit <- function(mkinmod, observed,
                      rep("deparm", length(parms.optim)))
   fit$start$transformed = c(state.ini.optim, parms.optim)
 
-  fit$fixed <- data.frame(
-    value = c(state.ini.fixed, parms.fixed))
+  fit$fixed <- data.frame(value = c(state.ini.fixed, 
+      backtransform_odeparms(parms.fixed, mod_vars)))
   fit$fixed$type = c(rep("state", length(state.ini.fixed)), 
                      rep("deparm", length(parms.fixed)))
 
