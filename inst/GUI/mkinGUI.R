@@ -560,13 +560,19 @@ run_fit <- function() {
   Parameters <- f.gg.parms[,]
   Parameters.de <- subset(Parameters, Type == "deparm")
   deparms <- Parameters.de$Initial
-  names(deparms) <- rownames(Parameters.de)
+  names(deparms) <- Parameters.de$Name
+  defixed <- names(deparms[Parameters.de$Fixed])
+  Parameters.ini <- subset(Parameters, Type == "state")
+  iniparms <- Parameters.ini$Initial
+  names(iniparms) <- sub("_0", "", Parameters.ini$Name)
+  inifixed <- names(iniparms[Parameters.ini$Fixed])
   f[[f.cur]] <<- mkinfit(m[[m.i]], override(ds[[ds.i]]$data),
-                               state.ini = subset(Parameters,
-                                                  Type == "state")$Initial,
-                               solution_type = svalue(f.gg.opts.st),
-                               parms.ini = deparms, 
-                               err = "err")
+                         state.ini = iniparms,
+                         fixed_initials = inifixed,
+                         parms.ini = deparms, 
+                         fixed_parms = defixed,
+                         solution_type = svalue(f.gg.opts.st),
+                         err = "err")
   f[[f.cur]]$ds.index <<- ds.i
   f[[f.cur]]$ds <<- ds[[ds.i]]
   f[[f.cur]]$m.index <<- m.i
