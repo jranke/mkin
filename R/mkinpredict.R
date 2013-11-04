@@ -23,6 +23,11 @@ mkinpredict <- function(mkinmod, odeparms, odeini, outtimes, solution_type = "de
   # Get the names of the state variables in the model
   mod_vars <- names(mkinmod$diffs)
 
+  # Order the inital values for state variables if they are named
+  if (!is.null(names(odeini))) {
+    odeini <- odeini[mod_vars]
+  }
+
   # Create function for evaluation of expressions with ode parameters and initial values
   evalparse <- function(string)
   {

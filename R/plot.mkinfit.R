@@ -38,7 +38,10 @@ plot.mkinfit <- function(x, fit = x,
     rownames(subset(fit$start, type == "state")),
     rownames(subset(fit$fixed, type == "state")))
   odeini <- parms.all[ininames]
-  names(odeini) <- names(fit$mkinmod$diffs)
+
+  # Order initial state variables
+  names(odeini) <- sub("_0", "", names(odeini))
+  odeini <- odeini[names(fit$mkinmod$diffs)]
 
   outtimes <- seq(xlim[1], xlim[2], length.out=100)
 
