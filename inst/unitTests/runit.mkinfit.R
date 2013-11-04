@@ -232,14 +232,11 @@ test.FOCUS_2006_D_SFO_SFO <- function()
 
   fit.1.e <- mkinfit(SFO_SFO.1, FOCUS_2006_D)
   fit.1.d <- mkinfit(SFO_SFO.1, solution_type = "deSolve", FOCUS_2006_D)
-  #fit.2.e <- mkinfit(SFO_SFO.2, FOCUS_2006_D, plot=TRUE)
+  fit.2.e <- mkinfit(SFO_SFO.2, FOCUS_2006_D)
   SFO <- mkinmod(parent = list(type = "SFO"))
   f.SFO <- mkinfit(SFO, FOCUS_2006_D)
-  #fit.2.e <- mkinfit(SFO_SFO.2, parms.ini = f.SFO$odeparms.final, FOCUS_2006_D)
   fit.2.d <- mkinfit(SFO_SFO.2, solution_type = "deSolve", FOCUS_2006_D)
-  # Eigenvalue based solution with maximum use of formation fractions only 
-  # works correctly with initial parameters very close to final parameters!
-  fit.2.e <- mkinfit(SFO_SFO.2, parms.ini = fit.2.d$bparms.ode, FOCUS_2006_D)
+  fit.2.e <- mkinfit(SFO_SFO.2, FOCUS_2006_D)
 
   FOCUS_2006_D_results_schaefer07_means <- c(
     parent_0 = 99.65, DT50_parent = 7.04, DT50_m1 = 131.34)
@@ -293,21 +290,6 @@ test.mkinfit.schaefer07_complex_example <- function()
   r$means <- (r$KinGUI + r$ModelMaker)/2
   r$mkin.deviation <- abs(round(100 * ((r$mkin - r$means)/r$means), digits=1))
   checkIdentical(r$mkin.deviation < 10, rep(TRUE, length(r$mkin.deviation)))
-} # }}}
-
-# Test deSolve based fit to Schaefer 2007 using FOMC for parent (eigenvalue based solution not possible)
-# and skipping B1 because of its high scatter {{{
-test.mkinfit.schaefer07_complex_example_2 <- function()
-{
-  schaefer07_complex_model_2 <- mkinmod(
-    parent = list(type = "FOMC", to = c("A1", "C1")),
-    A1 = list(type = "SFO", to = "A2"),
-    C1 = list(type = "SFO"),
-    A2 = list(type = "SFO"))
-  
-   fit <- mkinfit(schaefer07_complex_model_2, 
-     mkin_wide_to_long(schaefer07_complex_case, time = "time"))
-   checkTrue(fit$ssr < 122)
 } # }}}
 
 # vim: set foldmethod=marker ts=2 sw=2 expandtab:
