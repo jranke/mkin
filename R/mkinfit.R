@@ -60,7 +60,7 @@ mkinfit <- function(mkinmod, observed,
   defaultpar.names <- setdiff(mkinmod$parms, names(parms.ini))
   for (parmname in defaultpar.names) {
     # Default values for rate constants, depending on the parameterisation
-    if (substr(parmname, 1, 2) == "k_") parms.ini[parmname] = 0.1 
+    if (substr(parmname, 1, 2) == "k_") parms.ini[parmname] = 0.1 + runif(1)/1e6
     # Default values for rate constants for reversible binding
     if (grepl("free_bound$", parmname)) parms.ini[parmname] = 0.1 
     if (grepl("bound_free$", parmname)) parms.ini[parmname] = 0.02
@@ -115,7 +115,7 @@ mkinfit <- function(mkinmod, observed,
       solution_type = "analytical"
     } else {
       if (is.matrix(mkinmod$coefmat)) {
-	solution_type = "eigen"
+        solution_type = "eigen"
         if (max(observed$value, na.rm = TRUE) < 0.1) {
           stop("The combination of small observed values (all < 0.1) and solution_type = eigen is error-prone")
         }
