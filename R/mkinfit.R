@@ -145,7 +145,10 @@ mkinfit <- function(mkinmod, observed,
     if(length(state.ini.optim) > 0) {
       odeini <- c(P[1:length(state.ini.optim)], state.ini.fixed)
       names(odeini) <- c(state.ini.optim.boxnames, state.ini.fixed.boxnames)
-    } else odeini <- state.ini.fixed.boxnames
+    } else {
+      odeini <- state.ini.fixed
+      names(odeini) <- state.ini.fixed.boxnames
+    }
 
     odeparms <- c(P[(length(state.ini.optim) + 1):length(P)], parms.fixed)
 
