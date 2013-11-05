@@ -57,10 +57,14 @@ mkinfit <- function(mkinmod, observed,
          " not used in the model")
   }
 
+  k_salt = 0
   defaultpar.names <- setdiff(mkinmod$parms, names(parms.ini))
   for (parmname in defaultpar.names) {
     # Default values for rate constants, depending on the parameterisation
-    if (substr(parmname, 1, 2) == "k_") parms.ini[parmname] = 0.1 + runif(1)/1e6
+    if (substr(parmname, 1, 2) == "k_") {
+      parms.ini[parmname] = 0.1 + k_salt
+      k_salt = k_salt + 1e-4
+    }
     # Default values for rate constants for reversible binding
     if (grepl("free_bound$", parmname)) parms.ini[parmname] = 0.1 
     if (grepl("bound_free$", parmname)) parms.ini[parmname] = 0.02
