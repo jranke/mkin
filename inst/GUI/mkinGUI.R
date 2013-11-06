@@ -161,6 +161,9 @@ upload_file_handler <- function(h, ...)
   if (length(f) > 0) update_f.df()
   else f.df <- f.df.empty
   f.gtable[,] <- f.df
+  ftmp <<- f[[f.cur]]
+  stmp <<- s[[f.cur]]
+  ds.i <<- ds.cur
   update_plotting_and_fitting()
 }
 save_to_file_handler <- function(h, ...)
@@ -229,13 +232,12 @@ gbutton("Configure fit for selected model and dataset", cont = dsm,
                                             control.modFit = list(maxiter = 0)))
           ftmp$ds.index <<- ds.i
           ftmp$ds <<- ds[[ds.i]]
-          update_f.df()
-          f.gtable[,] <<- f.df
           stmp <<- summary(ftmp)
           svalue(pf) <- paste0("Dataset ", ds.i, ", Model ", m[[m.i]]$name)
           show_plot("Initial", default = TRUE)
           svalue(f.gg.opts.st) <<- "auto"
           f.gg.parms[,] <- get_Parameters(stmp, FALSE)
+          svalue(f.gg.summary) <- capture.output(stmp)
           svalue(center) <- 3
         })
 
@@ -246,7 +248,7 @@ f.switcher <- function(h, ...) {
   if (svalue(h$obj) != "0") {
     f.cur <<- svalue(h$obj)
     ftmp <<- f[[f.cur]]
-    stmp <<- f[[f.cur]]
+    stmp <<- s[[f.cur]]
     ds.i <<- ftmp$ds.index
     update_plotting_and_fitting()
   }
@@ -270,7 +272,7 @@ copy_dataset_handler <- function(h, ...) {
  
 delete_dataset_handler <- function(h, ...) {
   ds[[ds.cur]] <<- NULL
-  names(ds) <<- names(plots) <<- names(prows) <<- as.character(1:length(ds))
+  names(ds) <<- as.character(1:length(ds))
   ds.cur <<- names(ds)[[1]]
   update_ds.df()
   ds.gtable[,] <- ds.df
@@ -283,9 +285,9 @@ new_dataset_handler <- function(h, ...) {
                         study_nr = 1,
                         title = "",
                         sampling_times = c(0, 1),
-                        time_unit = "NA",
+                        time_unit = "",
                         observed = "parent",
-                        unit = "NA",
+                        unit = "",
                         replicates = 1,
                         data = data.frame(
                                           name = "parent",
@@ -303,7 +305,7 @@ new_dataset_handler <- function(h, ...) {
 
 new_ds_from_csv_handler <- function(h, ...) {
   tmpfile <- normalizePath(svalue(h$obj), winslash = "/")
-  tmpd <- try(read.table(tmpfile, sep = "\t", header = TRUE))
+  tmpd <- try(read.table(tmpfile, sep = "\t", header = TRUE, stringsAsFactors = FALSE))
   tmpdw <- mkin_wide_to_long(tmpd)
   if (class(tmpd) != "try-error") {
     ds.cur <<- as.character(1 + length(ds))
@@ -311,15 +313,15 @@ new_ds_from_csv_handler <- function(h, ...) {
                           study_nr = NA,
                           title = "New upload",
                           sampling_times = sort(unique(tmpd$t)),
-                          time_unit = "NA",
+                          time_unit = "",
                           observed = unique(tmpdw$name),
-                          unit = "NA",
+                          unit = "",
                           replicates = max(aggregate(tmpdw$time,
                                                        list(tmpdw$time,
                                                             tmpdw$name),
                                                      length)$x),
                           data = tmpdw)
-    ds[[ds.cur]]$data$override <<- "NA"
+    ds[[ds.cur]]$data$override <<- as.numeric(NA)
     ds[[ds.cur]]$data$err <<- 1
     update_ds.df()
     ds.gtable[,] <- ds.df
@@ -335,10 +337,11 @@ empty_grid_handler <- function(h, ...) {
   replicates <- as.numeric(svalue(ds.e.rep))
   new.data = data.frame(
     name = rep(obs, each = replicates * length(sampling_times)),
-    time = rep(sampling_times, each = replicates, times = length(obs)),
-    value = NA,
-    override = NA,
-    err = 1
+    time = as.numeric(rep(sampling_times, each = replicates, times = length(obs))),
+    value = as.numeric(NA),
+    override = as.numeric(NA),
+    err = 1,
+    stringsAsFactors = FALSE
   )
   ds.e.gdf[,] <- new.data
 }
@@ -373,7 +376,7 @@ gbutton("Copy dataset", cont = ds.e.2, handler = copy_dataset_handler)
 gbutton("Delete dataset", cont = ds.e.2, handler = delete_dataset_handler)
 gbutton("New dataset", cont = ds.e.2, handler = new_dataset_handler)
 
-gfile(text = "Select csv file", cont = ds.e.2, 
+upload_dataset.gf <- gfile(text = "Upload text file", cont = ds.e.2, 
         handler = new_ds_from_csv_handler)
 
 # Line 3 with forms {{{4
@@ -400,8 +403,9 @@ ds.e.obs <- gedit(paste(ds[[ds.cur]]$observed, collapse = ", "),
 ds.e.obu <- gedit(ds[[ds.cur]]$unit,
                   width = 20, label = "Unit", 
                   cont = ds.e.3b.gfl)
-gbutton("Generate empty grid for kinetic data", cont = ds.e.3b, 
+generate_grid.gb <- gbutton("Generate empty grid for kinetic data", cont = ds.e.3b, 
         handler = empty_grid_handler)
+tooltip(generate_grid.gb) <- "Overwrites the kinetic data shown below"
 
 # Keep button {{{4
 gbutton("Keep changes", cont = ds.editor, handler = keep_ds_changes_handler)
@@ -506,10 +510,12 @@ obs.to <- ""
 
 # Show the model specification {{{4
 show_m_spec <- function() {
-  for (obs.i in 1:length(m.observed)) {
+  for (obs.i in 1:length(m[[m.cur]]$spec)) {
+    obs.name <- names(m[[m.cur]]$spec)[[obs.i]]
     m.e.rows[[obs.i]] <<- ggroup(cont = m.editor, horizontal = TRUE)
-    m.e.obs[[obs.i]] <<- gcombobox(observed.all, selected = obs.i, 
+    m.e.obs[[obs.i]] <<- gcombobox(observed.all, selected = 0, 
                                   cont = m.e.rows[[obs.i]])
+    svalue(m.e.obs[[obs.i]]) <<- obs.name
     m.e.type[[obs.i]] <<- gcombobox(c("SFO", "FOMC", "DFOP", "HS", "SFORB"),
                                    cont = m.e.rows[[obs.i]])
     svalue(m.e.type[[obs.i]]) <<- m[[m.cur]]$spec[[obs.i]]$type
@@ -613,6 +619,7 @@ run_fit <- function() {
   show_plot("Optimised")
   svalue(f.gg.opts.st) <- ftmp$solution_type
   f.gg.parms[,] <- get_Parameters(stmp, TRUE)
+  svalue(f.gg.summary) <- capture.output(stmp)
 }
 ds.i <- m.i <- "1"
 f.cur <- "0"
@@ -670,6 +677,9 @@ keep.fit.gb <- gbutton("Keep",
                           }, cont = f.gg.buttons)
 tooltip(keep.fit.gb) <- "Store the optimised model with all settings and the current dataset in the fit list"
 
+# Area for summary
+f.gg.summary <- gtext(capture.output(stmp), cont = pf, use.codemirror = TRUE)
+
 delete.fit.gb <- gbutton("Delete", handler = function(h, ...) {
           if (length(f) > 0) {
             f[[f.cur]] <<- NULL
@@ -681,7 +691,7 @@ delete.fit.gb <- gbutton("Delete", handler = function(h, ...) {
             update_f.df()
             f.cur <<- "1"
             ftmp <<- f[[f.cur]]
-            stmp <<- f[[f.cur]]
+            stmp <<- s[[f.cur]]
             ds.i <<- ftmp$ds.index
             update_plotting_and_fitting()
           } else {
@@ -699,5 +709,6 @@ update_plotting_and_fitting <- function() {
   show_plot("Optimised")  
   svalue(f.gg.opts.st) <- ftmp$solution_type
   f.gg.parms[,] <- get_Parameters(stmp, TRUE)
+  svalue(f.gg.summary) <- capture.output(stmp)
 }
 # vim: set foldmethod=marker ts=2 sw=2 expandtab: {{{1
