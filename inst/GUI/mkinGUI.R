@@ -119,10 +119,13 @@ update_f.df <- function() {
   for (fit.index in names(f)) {
     f.count <- f.count + 1
     ftmp <- f[[fit.index]]
-    f.df[f.count, ] <<- c(as.character(f.count), ftmp$ds.index, ftmp$m.name)
+    f.df[f.count, ] <<- c(as.character(f.count), ftmp$ds.index, ftmp$mkinmod$name)
   }
 }
-
+f.df.empty <- f.df <- data.frame(Fit = "0", 
+                               Dataset = "", 
+                               Model = "",
+                               stringsAsFactors = FALSE)
 # Widgets and handlers for project data {{{1
 prg <- gexpandgroup("Project file management", cont = left, horizontal = FALSE)
 # Project data management handler functions {{{2
@@ -138,31 +141,32 @@ upload_file_handler <- function(h, ...)
   studies.gdf[,] <- studies.df 
 
   # Datasets
-  ds.cur <<- "1"
+  ds.cur <<- ds.cur
   ds <<- ds
   update_ds.df()
   ds.gtable[,] <- ds.df
   update_ds_editor()
 
   # Models
-  m.cur <<- "1"
+  m.cur <<- ds.cur
   m <<- m
   update_m.df()
   m.gtable[,] <- m.df
   update_m_editor()
 
   # Fits
-  f.cur <<- "1"
+  f.cur <<- f.cur
   f <<- f
   s <<- s
-  update_f.df()
+  if (length(f) > 0) update_f.df()
+  else f.df <- f.df.empty
   f.gtable[,] <- f.df
   update_plotting_and_fitting()
 }
 save_to_file_handler <- function(h, ...)
 {
    studies.df <- data.frame(studies.gdf[,], stringsAsFactors = FALSE)
-   save(studies.df, ds, m, f, s, file = project_file)
+   save(studies.df, ds, ds.cur, m, m.cur, f, s, f.cur, file = project_file)
    galert(paste("Saved project contents to", project_file), parent = w)
 }
 change_project_file_handler = function(h, ...) {
@@ -219,23 +223,19 @@ gbutton("Configure fit for selected model and dataset", cont = dsm,
         handler = function(h, ...) {
           ds.i <<- as.character(svalue(ds.gtable))
           m.i <<- as.character(svalue(m.gtable))
-          f.cur <<- as.character(as.numeric(f.cur) + 1)
-          f[[f.cur]] <<- suppressWarnings(
-                                mkinfit(m[[m.i]], override(ds[[ds.i]]$data),
-                                        err = "err", 
-                                        control.modFit = list(maxiter = 0)))
-          f[[f.cur]]$ds.index <<- ds.i
-          f[[f.cur]]$ds <<- ds[[ds.i]]
-          f[[f.cur]]$m.index <<- m.i
-          f[[f.cur]]$m.name <<- m[[m.i]]$name
+          ftmp <<- suppressWarnings(mkinfit(m[[m.i]],
+                                            override(ds[[ds.i]]$data),
+                                            err = "err", 
+                                            control.modFit = list(maxiter = 0)))
+          ftmp$ds.index <<- ds.i
+          ftmp$ds <<- ds[[ds.i]]
           update_f.df()
           f.gtable[,] <<- f.df
-          s[[f.cur]] <<- summary(f[[f.cur]])
-          svalue(pf) <- paste0("Fit ", f.cur, ": Dataset ", ds.i, 
-                               ", Model ", m[[m.i]]$name)
+          stmp <<- summary(ftmp)
+          svalue(pf) <- paste0("Dataset ", ds.i, ", Model ", m[[m.i]]$name)
           show_plot("Initial", default = TRUE)
           svalue(f.gg.opts.st) <<- "auto"
-          f.gg.parms[,] <- get_Parameters(s[[f.cur]], FALSE)
+          f.gg.parms[,] <- get_Parameters(stmp, FALSE)
           svalue(center) <- 3
         })
 
@@ -243,15 +243,18 @@ gbutton("Configure fit for selected model and dataset", cont = dsm,
 f.gf <- gframe("Fits", cont = left, horizontal = FALSE)
 # Fit table with handler {{{2
 f.switcher <- function(h, ...) {
-  f.cur <<- svalue(h$obj)
-  update_plotting_and_fitting()
+  if (svalue(h$obj) != "0") {
+    f.cur <<- svalue(h$obj)
+    ftmp <<- f[[f.cur]]
+    stmp <<- f[[f.cur]]
+    ds.i <<- ftmp$ds.index
+    update_plotting_and_fitting()
+  }
   svalue(center) <- 3
 }
-f.df <- data.frame(Fit = "1", Dataset = "1", Model = "SFO", 
-                   stringsAsFactors = FALSE)
 f.gtable <- gtable(f.df, width = 290, cont = f.gf)
 addHandlerDoubleClick(f.gtable, f.switcher)
-size(f.gtable) <- list(columnWidths = c(80, 80, 120))
+size(f.gtable) <- list(columnWidths = c(40, 60, 180))
 
 # Dataset editor {{{1
 ds.editor <- gframe("Dataset 1", horizontal = FALSE, cont = center, label = "Dataset editor")
@@ -516,15 +519,15 @@ show_plot <- function(type, default = FALSE) {
   deparms <- as.numeric(Parameters.de[[type]])
   names(deparms) <- rownames(Parameters.de)
   if (type == "Initial" & default == FALSE) {
-    ftmp <- suppressWarnings(
-                            mkinfit(m[[m.i]], override(ds[[ds.i]]$data),
-                                    state.ini = stateparms, parms.ini = deparms,
-                                    err = "err", 
-                                    control.modFit = list(maxiter = 0))
-                            )
-  } else {
-    ftmp <- f[[f.cur]]
-  }
+    ftmp <<- suppressWarnings(mkinfit(ftmp$mkinmod, 
+                                      override(ds[[ds.i]]$data),
+                                      state.ini = stateparms, 
+                                      parms.ini = deparms,
+                                      err = "err", 
+                                      control.modFit = list(maxiter = 0)))
+    ftmp$ds.index <<- ds.i
+    ftmp$ds <<- ds[[ds.i]]
+  } 
 
   tmp <- get_tempfile(ext=".svg")
   svg(tmp, width = 7, height = 5)
@@ -566,42 +569,39 @@ run_fit <- function() {
   iniparms <- Parameters.ini$Initial
   names(iniparms) <- sub("_0", "", Parameters.ini$Name)
   inifixed <- names(iniparms[Parameters.ini$Fixed])
-  f[[f.cur]] <<- mkinfit(m[[m.i]], override(ds[[ds.i]]$data),
-                         state.ini = iniparms,
-                         fixed_initials = inifixed,
-                         parms.ini = deparms, 
-                         fixed_parms = defixed,
-                         solution_type = svalue(f.gg.opts.st),
-                         err = "err")
-  f[[f.cur]]$ds.index <<- ds.i
-  f[[f.cur]]$ds <<- ds[[ds.i]]
-  f[[f.cur]]$m.index <<- m.i
-  f[[f.cur]]$m.name <<- m[[m.i]]$name
-  s[[f.cur]] <<- summary(f[[f.cur]])
+  ftmp <<- mkinfit(ftmp$mkinmod, override(ds[[ds.i]]$data),
+                   state.ini = iniparms,
+                   fixed_initials = inifixed,
+                   parms.ini = deparms, 
+                   fixed_parms = defixed,
+                   solution_type = svalue(f.gg.opts.st),
+                   err = "err")
+  ftmp$ds.index <<- ds.i
+  ftmp$ds <<- ds[[ds.i]]
+  stmp <<- summary(ftmp)
   show_plot("Optimised")
-  svalue(f.gg.opts.st) <- f[[f.cur]]$solution_type
-  f.gg.parms[,] <- get_Parameters(s[[f.cur]], TRUE)
+  svalue(f.gg.opts.st) <- ftmp$solution_type
+  f.gg.parms[,] <- get_Parameters(stmp, TRUE)
 }
-ds.i <- m.i <- f.cur <- "1"
+ds.i <- m.i <- "1"
+f.cur <- "0"
 
 # GUI widgets {{{2
-pf <- gframe("Fit 1: Dataset 1, Model SFO", horizontal = FALSE, 
+pf <- gframe("Dataset 1, Model SFO", horizontal = FALSE, 
              cont = center, label = "Plotting and fitting")
 
 # Mid group with plot and options {{{3
 f.gg.mid <- ggroup(cont = pf)
-f[[f.cur]] <- suppressWarnings(mkinfit(m[[m.cur]], override(ds[[ds.i]]$data), 
+ftmp <- suppressWarnings(mkinfit(m[[m.cur]], override(ds[[ds.i]]$data), 
                                  err = "err", 
                                  control.modFit = list(maxiter = 0)))
-f[[f.cur]]$ds.index = ds.i
-f[[f.cur]]$ds = ds[[ds.i]]
-f[[f.cur]]$m.index = m.i
-f[[f.cur]]$m.name = m[[m.i]]$name
-s[[f.cur]] <- summary(f[[f.cur]])
-Parameters <- get_Parameters(s[[f.cur]], FALSE)
+ftmp$ds.index = ds.i
+ftmp$ds = ds[[ds.i]]
+stmp <- summary(ftmp)
+Parameters <- get_Parameters(stmp, FALSE)
 tf <- get_tempfile(ext=".svg")
 svg(tf, width = 7, height = 5)
-plot(f[[f.cur]])
+plot(ftmp)
 dev.off()
 plot.gs <- gsvg(tf, container = f.gg.mid, width = 490, height = 350)
 f.gg.opts <- gformlayout(cont = f.gg.mid)
@@ -621,27 +621,52 @@ f.gg.parms$set_column_width(5, 60)
 
 # Row with buttons {{{3
 f.gg.buttons <- ggroup(cont = pf)
-gbutton("Show initial", 
-        handler = function(h, ...) show_plot("Initial"),
-        cont = f.gg.buttons)
-gbutton("Run", handler = function(h, ...) run_fit(),
-        cont = f.gg.buttons)
-gbutton("Delete", handler = function(h, ...) {
-          f[[f.cur]] <<- NULL
-          s[[f.cur]] <<- NULL
-          names(f) <<- as.character(1:length(f))
-          names(s) <<- as.character(1:length(f))
-          update_f.df()
+show.initial.gb <- gbutton("Show initial", 
+                           handler = function(h, ...) show_plot("Initial"),
+                           cont = f.gg.buttons)
+tooltip(show.initial.gb) <- "Show model with current inital settings for current dataset"
+run.fit.gb <- gbutton("Run", 
+                      handler = function(h, ...) run_fit(), cont =
+                      f.gg.buttons)
+tooltip(run.fit.gb) <- "Fit with current settings on the current dataset, with the original model"
+keep.fit.gb <- gbutton("Keep", 
+                       handler = function(h, ...) {
+                            f.cur <<- as.character(length(f) + 1)
+                            f[[f.cur]] <<- ftmp
+                            s[[f.cur]] <<- stmp
+                            update_f.df()
+                            f.gtable[,] <<- f.df
+                          }, cont = f.gg.buttons)
+tooltip(keep.fit.gb) <- "Store the optimised model with all settings and the current dataset in the fit list"
+
+delete.fit.gb <- gbutton("Delete", handler = function(h, ...) {
+          if (length(f) > 0) {
+            f[[f.cur]] <<- NULL
+            s[[f.cur]] <<- NULL
+          }
+          if(length(f) > 1) {
+            names(f) <<- as.character(1:length(f))
+            names(s) <<- as.character(1:length(f))
+            update_f.df()
+            f.cur <<- "1"
+            ftmp <<- f[[f.cur]]
+            stmp <<- f[[f.cur]]
+            ds.i <<- ftmp$ds.index
+            update_plotting_and_fitting()
+          } else {
+            f.df <<- f.df.empty
+            f.cur <<- "0"
+          }
           f.gtable[,] <<- f.df
-          f.cur <<- "1"
         }, cont = f.gg.buttons)
+tooltip(delete.fit.gb) <- "Delete the currently loaded fit from the fit list"
 
 # Update the plotting and fitting area {{{3
 update_plotting_and_fitting <- function() {
-  svalue(pf) <- paste0("Fit ", f.cur, ": Dataset ", f[[f.cur]]$ds.index, 
-                       ", Model ", f[[f.cur]]$m.name)
+  svalue(pf) <- paste0("Fit ", f.cur, ": Dataset ", ftmp$ds.index, 
+                       ", Model ", ftmp$mkinmod$name)
   show_plot("Optimised")  
-  svalue(f.gg.opts.st) <- f[[f.cur]]$solution_type
-  f.gg.parms[,] <- get_Parameters(s[[f.cur]], TRUE)
+  svalue(f.gg.opts.st) <- ftmp$solution_type
+  f.gg.parms[,] <- get_Parameters(stmp, TRUE)
 }
 # vim: set foldmethod=marker ts=2 sw=2 expandtab: {{{1
