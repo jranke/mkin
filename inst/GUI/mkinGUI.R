@@ -301,6 +301,34 @@ new_dataset_handler <- function(h, ...) {
   update_ds_editor()
 }
 
+new_ds_from_csv_handler <- function(h, ...) {
+  tmpfile <- normalizePath(svalue(h$obj), winslash = "/")
+  tmpd <- try(read.table(tmpfile, sep = "\t", header = TRUE))
+  tmpdw <- mkin_wide_to_long(tmpd)
+  if (class(tmpd) != "try-error") {
+    ds.cur <<- as.character(1 + length(ds))
+    ds[[ds.cur]] <<- list(
+                          study_nr = NA,
+                          title = "New upload",
+                          sampling_times = sort(unique(tmpd$t)),
+                          time_unit = "NA",
+                          observed = unique(tmpdw$name),
+                          unit = "NA",
+                          replicates = max(aggregate(tmpdw$time,
+                                                       list(tmpdw$time,
+                                                            tmpdw$name),
+                                                     length)$x),
+                          data = tmpdw)
+    ds[[ds.cur]]$data$override <<- "NA"
+    ds[[ds.cur]]$data$err <<- 1
+    update_ds.df()
+    ds.gtable[,] <- ds.df
+    update_ds_editor()
+  } else {
+    galert("Uploading failed", parent = "w")
+  }
+}
+
 empty_grid_handler <- function(h, ...) {
   obs <- strsplit(svalue(ds.e.obs), ", ")[[1]]
   sampling_times <- strsplit(svalue(ds.e.st), ", ")[[1]]
@@ -344,6 +372,9 @@ ds.e.2 <- ggroup(cont = ds.editor, horizontal = TRUE)
 gbutton("Copy dataset", cont = ds.e.2, handler = copy_dataset_handler)
 gbutton("Delete dataset", cont = ds.e.2, handler = delete_dataset_handler)
 gbutton("New dataset", cont = ds.e.2, handler = new_dataset_handler)
+
+gfile(text = "Select csv file", cont = ds.e.2, 
+        handler = new_ds_from_csv_handler)
 
 # Line 3 with forms {{{4
 ds.e.forms <- ggroup(cont= ds.editor, horizontal = TRUE)
