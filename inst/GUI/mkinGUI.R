@@ -474,8 +474,10 @@ remove_compound_handler <- function(h, ...) {
 keep_m_changes_handler <- function(h, ...) {
   spec <- list()
   for (obs.i in 1:length(m.e.rows)) {
+    to_vector = strsplit(svalue(m.e.to[[obs.i]]), ", ")[[1]]
+    if (length(to_vector) == 0) to_vector = ""
     spec[[obs.i]] <- list(type = svalue(m.e.type[[obs.i]]),
-                          to = svalue(m.e.to[[obs.i]]),
+                          to = to_vector,
                           sink = svalue(m.e.sink[[obs.i]]))
     if(spec[[obs.i]]$to == "") spec[[obs.i]]$to = NULL
     names(spec)[[obs.i]] <- svalue(m.e.obs[[obs.i]])
@@ -521,7 +523,7 @@ show_m_spec <- function() {
     svalue(m.e.type[[obs.i]]) <<- m[[m.cur]]$spec[[obs.i]]$type
     glabel("to", cont = m.e.rows[[obs.i]]) 
     obs.to <<- ifelse(is.null(m[[m.cur]]$spec[[obs.i]]$to), "",
-                 m[[m.cur]]$spec[[obs.i]]$to)
+                 paste(m[[m.cur]]$spec[[obs.i]]$to, collapse = ", "))
     m.e.to[[obs.i]] <<- gedit(obs.to, cont = m.e.rows[[obs.i]])
     m.e.sink[[obs.i]] <<- gcheckbox("Path to sink", checked = m[[m.cur]]$spec[[obs.i]]$sink,
               cont = m.e.rows[[obs.i]]) 
@@ -566,15 +568,15 @@ show_plot <- function(type, default = FALSE) {
     ftmp$ds <<- ds[[ds.i]]
   } 
 
-  tmp <- get_tempfile(ext=".svg")
-  svg(tmp, width = 7, height = 5)
+  #tmp <- get_tempfile(ext=".svg")
+  svg(tf, width = 7, height = 5)
   plot(ftmp, main = ftmp$ds$title,
        xlab = ifelse(ftmp$ds$time_unit == "", "Time", 
                      paste("Time in", ftmp$ds$time_unit)),
        ylab = ifelse(ds[[ds.i]]$unit == "", "Observed", 
                      paste("Observed in", ftmp$ds$unit)))
   dev.off()
-  svalue(plot.gs) <<- tmp
+  svalue(plot.gs) <<- tf
 }
 get_Parameters <- function(stmp, optimised)
 {
@@ -677,8 +679,15 @@ keep.fit.gb <- gbutton("Keep",
                           }, cont = f.gg.buttons)
 tooltip(keep.fit.gb) <- "Store the optimised model with all settings and the current dataset in the fit list"
 
-# Area for summary
-f.gg.summary <- gtext(capture.output(stmp), cont = pf, use.codemirror = TRUE)
+show.plots.gb <- gbutton("Show plots", 
+                      handler = function(h, ...) show_plot_window(), 
+                      cont = f.gg.buttons)
+tooltip(show.plots.gb) <- "Show a window with plots including residual plots"
+
+# Summary {{{3
+f.gg.summary <- gtext(capture.output(stmp), cont = pf,
+                      use.codemirror = TRUE)
+
 
 delete.fit.gb <- gbutton("Delete", handler = function(h, ...) {
           if (length(f) > 0) {
@@ -710,5 +719,64 @@ update_plotting_and_fitting <- function() {
   svalue(f.gg.opts.st) <- ftmp$solution_type
   f.gg.parms[,] <- get_Parameters(stmp, TRUE)
   svalue(f.gg.summary) <- capture.output(stmp)
+}
+
+# Show plot window with residual plots {{{3
+show_plot_window <- function(h, ...) {
+  n.obs = length(ftmp$mkinmod$spec)
+  obs.vars = names(ftmp$mkinmod$spec)
+  parent = obs.vars[1]
+  if(n.obs == 1) {
+    n.rows = 1
+    ps = 7
+  } else {
+    n.rows = 1 + ceiling(n.obs / 2)
+    ps = 10
+  }
+  imgwidth = 800
+  imgheight = 360 * n.rows
+  pw <- gwindow("Plot window", parent = w,
+                width = imgwidth + 20, height = imgheight + 100)
+  pwg <- ggroup(cont = pw, horizontal = FALSE)
+  make_plots <- function() {
+    par(mfrow = c(n.rows, 2))
+    plot(ftmp, main = ftmp$ds$title,
+         xlab = ifelse(ftmp$ds$time_unit == "", "Time", 
+                       paste("Time in", ftmp$ds$time_unit)),
+         ylab = ifelse(ds[[ds.i]]$unit == "", "Observed", 
+                       paste("Observed in", ftmp$ds$unit)))
+    if (n.obs > 1) {
+      plot(ftmp, legend = FALSE,
+           main = paste0("Zoomed in on metabolite", 
+                         ifelse(n.obs > 2, "s", "")),
+           xlab = ifelse(ftmp$ds$time_unit == "", "Time", 
+                         paste("Time in", ftmp$ds$time_unit)),
+           ylab = ifelse(ds[[ds.i]]$unit == "", "Observed", 
+                         paste("Observed in", ftmp$ds$unit)),
+           ylim = c(0, max(subset(ftmp$data, 
+                        variable != parent)$observed)))
+      for (met in obs.vars[-1]) {
+        mkinresplot(ftmp, met, legend = FALSE,
+                    main = paste("Residual plot for", met))
+      }
+    } else {
+      mkinresplot(ftmp, parent, legend = FALSE,
+                  main = paste("Residual plot for", parent),
+           xlab = ifelse(ftmp$ds$time_unit == "", "Time", 
+                         paste("Time in", ftmp$ds$time_unit)),
+           ylab = ifelse(ds[[ds.i]]$unit == "", "Residuals", 
+                         paste("Residuals in", ftmp$ds$unit)))
+    }
+  }
+
+  tf2 <- get_tempfile(ext = ".png")
+  png(tf2,  width = imgwidth / 50 , height = imgheight / 50,
+    units = "cm", res = 300, pointsize = ps)
+  make_plots()
+  dev.off()
+
+  ghtml(paste0("<img width='", imgwidth, "' height='", imgheight,
+               "' src='", get_tempfile_url(tf2), "' />"), 
+        cont = pwg)
 }
 # vim: set foldmethod=marker ts=2 sw=2 expandtab: {{{1
