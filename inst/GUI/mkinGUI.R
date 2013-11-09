@@ -694,7 +694,7 @@ delete.fit.gb <- gbutton("Delete", handler = function(h, ...) {
             f[[f.cur]] <<- NULL
             s[[f.cur]] <<- NULL
           }
-          if(length(f) > 1) {
+          if (length(f) > 0) {
             names(f) <<- as.character(1:length(f))
             names(s) <<- as.character(1:length(f))
             update_f.df()
