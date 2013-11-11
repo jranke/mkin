@@ -56,7 +56,9 @@ test: install
 # Packaging Tasks
 #------------------------------------------------------------------------------
 release:
-	@echo "\nCheck for updates in the svn repository"
-	@svn update
+	@echo "\nPull in changes from svn and merge local commits"
+	@git svn rebase
 	@echo "\nHow about make test, make check and make vignette?"
 	@echo "\nIs the DESCRIPTION file up to date?"
+	@echo "\nIf the above is taken care of, run `git svn dcommit`'
+	@echo "and then `git push origin master`
