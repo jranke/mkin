@@ -60,5 +60,6 @@ release:
 	@git svn rebase
 	@echo "\nHow about make test, make check and make vignette?"
 	@echo "\nIs the DESCRIPTION file up to date?"
+	@echo "\nPerform final changes and commit with `git commit --amend`.'
 	@echo "\nIf the above is taken care of, run `git svn dcommit`'
 	@echo "and then `git push origin master`
