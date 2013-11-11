@@ -58,7 +58,7 @@ test: install
 release:
 	@echo "\nPull in changes from svn and merge local commits"
 	@git svn rebase
-	@echo "\nHow about make test, make check and make vignette?"
+	@echo "\nHow about make test and make check?"
 	@echo "\nIs the DESCRIPTION file up to date?"
 	@echo "\nPerform final changes and commit with 'git commit --amend'."
 	@echo "\nIf the above is taken care of, run 'git svn dcommit'"
