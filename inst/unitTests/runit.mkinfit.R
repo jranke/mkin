@@ -101,7 +101,6 @@ test.FOCUS_2006_DFOP <- function()
 
   # FOCUS_2006_A
   fit.A.DFOP <- mkinfit(DFOP, FOCUS_2006_A, quiet=TRUE)
-  fit.A.DFOP <- mkinfit(DFOP, FOCUS_2006_A, quiet=TRUE, plot=TRUE)
 
   median.A.DFOP <- as.numeric(lapply(subset(FOCUS_2006_DFOP_ref_A_to_B, dataset == "A", 
                    c(M0, k1, k2, f, DT50, DT90)), "median"))

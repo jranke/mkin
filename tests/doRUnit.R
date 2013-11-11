@@ -10,14 +10,6 @@ if(require("RUnit", quietly=TRUE)) {
  
   library(package=pkg, character.only=TRUE)
  
-  ## If desired, load the name space to allow testing of private functions
-  ## if (is.element(pkg, loadedNamespaces()))
-  ##     attach(loadNamespace(pkg), name=paste("namespace", pkg, sep=":"), pos=3)
-  ##
-  ## or simply call PKG:::myPrivateFunction() in tests
- 
-  ## --- Testing ---
- 
   ## Define tests
   testSuite <- defineTestSuite(name=paste(pkg, " Unit Tests"),
                                           dirs=path)
