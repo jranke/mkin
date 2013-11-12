@@ -32,7 +32,7 @@ install_github("mkin", "jranke")
 For a start, have a look at the examples provided in the 
 [mkinfit Documentation](http://kinfit.r-forge.r-project.org/mkin_static/mkinfit.html)
 or the package vignettes referenced from the 
-[mkin package documentation page](http://kinfit.r-forge.r-project.org/mkin_static/mkinfit.html)
+[mkin package documentation page](http://kinfit.r-forge.r-project.org/mkin_static/index.html)
 
 ## Credits
 
@@ -41,22 +41,24 @@ of R and the packages [deSolve](http://cran.r-project.org/package=deSolve),
 [minpack.lm](http://cran.r-project.org/package=minpack.lm) and
 [FME](http://cran.r-project.org/package=FME), to say the least.
 
-Also, it was inspired by the first version of KinGUI developed by BayerCropScience, which is based 
-on the MatLab runtime environment.
+Also, it was inspired by the first version of KinGUI developed by
+BayerCropScience, which is based on the MatLab runtime environment.
 
-Bayer has developed a successor named KinGUII which is based on mkin, but which added, amongst other 
-refinements, a graphical user interface (GUI, which is not open source, iteratively
-reweighted least squares (IRLS) optimisation of the variance for each of the observed variables,
-and Markov Chain Monte Carlo (MCMC) simulation functionality, similar to what is available e.g. in the 
-`FME` package.
+Bayer has developed a successor named KinGUII whose R code is based on `mkin`, but which
+added, amongst other refinements, a closed source graphical user interface
+(GUI), iteratively reweighted least squares (IRLS) optimisation of the variance
+for each of the observed variables, and Markov Chain Monte Carlo (MCMC)
+simulation functionality, similar to what is available e.g. in the `FME`
+package.
 
-Syngenta has sponsored the development of an mkin based GUI application called CAKE, which 
-adds IRLS and MCMC, is more limited in the model formulation, but puts more weight on usability.
-CAKE is available for download from the [CAKE website](http://projects.tessella.com/cake), where 
-you can also find a zip archive of the R scripts derived from mkin, published under the GPL
+Syngenta has sponsored the development of an `mkin` (and KinGUII?) based GUI
+application called CAKE, which adds IRLS and MCMC, is more limited in the model
+formulation, but puts more weight on usability.  CAKE is available for download
+from the [CAKE website](http://projects.tessella.com/cake), where you can also
+find a zip archive of the R scripts derived from `mkin`, published under the GPL
 license.
 
-Finally, I just noticed the github repositories
+Finally, I just (2013-11-11) noticed the github repositories
 [StudyKin](http://github.com/zhenglei-gao/StudyKin) and
 [KineticEval](http://github.com/zhenglei-gao/KineticEval), the latter of which appears to be 
 actively developed.
