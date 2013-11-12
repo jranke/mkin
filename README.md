@@ -79,7 +79,7 @@ or the package vignettes referenced from the
   in a second stage after the primary optimisation algorithm has converged.
 
   
-## Credits
+## Credits and historical remarks
 
 `mkin` would not be possible without the underlying software stack consisting
 of R and the packages [deSolve](http://cran.r-project.org/package=deSolve),
@@ -89,17 +89,27 @@ of R and the packages [deSolve](http://cran.r-project.org/package=deSolve),
 Also, it was inspired by the first version of KinGUI developed by
 BayerCropScience, which is based on the MatLab runtime environment.
 
-Bayer has developed a successor named KinGUII whose R code is based on `mkin`, but which
-added, amongst other refinements, a closed source graphical user interface
-(GUI), iteratively reweighted least squares (IRLS) optimisation of the variance
-for each of the observed variables, and Markov Chain Monte Carlo (MCMC)
-simulation functionality, similar to what is available e.g. in the `FME`
-package.
+The companion package [kinfit](http://kinfit.r-forge.r-project.org/kinfit_static/index.html) was [started in 2008](https://r-forge.r-project.org/scm/viewvc.php?view=rev&root=kinfit&revision=2) and 
+[first published on
+CRAN](http://cran.r-project.org/src/contrib/Archive/kinfit/) on 01 May
+2010.
 
-Syngenta has sponsored the development of an `mkin` (and KinGUII?) based GUI
-application called CAKE, which adds IRLS and MCMC, is more limited in the model
-formulation, but puts more weight on usability.  CAKE is available for download
-from the [CAKE website](http://projects.tessella.com/cake), where you can also
+The first `mkin` code was [published on 11 May 2010](https://r-forge.r-project.org/scm/viewvc.php?view=rev&root=kinfit&revision=8) and the 
+[first CRAN version](http://cran.r-project.org/src/contrib/Archive/mkin)
+on 18 May 2010.
+
+After this, Bayer has developed an R based successor to KinGUI named KinGUII
+whose R code is based on `mkin`, but which added, amongst other refinements, a
+closed source graphical user interface (GUI), iteratively reweighted least
+squares (IRLS) optimisation of the variance for each of the observed
+variables, and Markov Chain Monte Carlo (MCMC) simulation functionality,
+similar to what is available e.g. in the `FME` package.
+
+Somewhat in parallel, Syngenta has sponsored the development of an `mkin` (and
+KinGUII?) based GUI application called CAKE, which also adds IRLS and MCMC, is
+more limited in the model formulation, but puts more weight on usability.
+CAKE is available for download from the [CAKE
+website](http://projects.tessella.com/cake), where you can also
 find a zip archive of the R scripts derived from `mkin`, published under the GPL
 license.
 
