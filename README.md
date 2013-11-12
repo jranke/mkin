@@ -118,3 +118,10 @@ Finally, I just (2013-11-11) noticed the github repositories
 [KineticEval](http://github.com/zhenglei-gao/KineticEval), the latter of which appears to be 
 actively developed, so the different tools will hopefully be able to learn
 from each other in the future as well.
+
+## Contribute
+
+Contributions are welcome! Your [mkin fork](https://help.github.com/articles/fork-a-repo) is just a mouse click away... This git repository is now the 
+master branch, but I figured out how to merge changes in both directions,
+thanks to [this blog entry](http://cameron.bracken.bz/git-with-r-forge)
+by Cameron Bracken, so contributors from r-forge are welcome as well.
