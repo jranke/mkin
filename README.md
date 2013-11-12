@@ -30,9 +30,53 @@ install_github("mkin", "jranke")
 ## Usage
 
 For a start, have a look at the examples provided in the 
-[mkinfit Documentation](http://kinfit.r-forge.r-project.org/mkin_static/mkinfit.html)
+[`mkinfit`](http://kinfit.r-forge.r-project.org/mkin_static/mkinfit.html)
+Documentation 
 or the package vignettes referenced from the 
 [mkin package documentation page](http://kinfit.r-forge.r-project.org/mkin_static/index.html)
+
+## Features
+
+* Highly flexible model specification using
+  [`mkinmod`](http://kinfit.r-forge.r-project.org/mkin_static/mkinmod.html),
+  including equilibrium reactions and using the single first-order 
+  reversible binding (SFORB) model, which will automatically create
+  two latent state variables for the observed variable.
+* Model solution (forward modelling) in the function
+  [`mkinpredict`](http://kinfit.r-forge.r-project.org/mkin_static/mkinpredict.html) 
+  is performed either using the analytical solution for the case of 
+  parent only degradation, an eigenvalue based solution if only simple
+  first-order (SFO) or SFORB kinetics are used in the model, or
+  using a numeric solver from the `deSolve` package (default is `lsoda`).
+  These have decreasing efficiency, and are automatically chosen 
+  by default.
+* Model optimisation with 
+  [`mkinfit`](http://kinfit.r-forge.r-project.org/mkin_static/mkinfit.html)
+  internally using the `modFit` function from the `FME` package,
+  which uses the least-squares Levenberg-Marquardt algorithm from
+  `minpack.lm` per default.
+* Kinetic rate constants and kinetic formation fractions are transformed 
+  internally using
+  [`transform_odeparms`](http://kinfit.r-forge.r-project.org/mkin_static/transform_odeparms.html)
+  so their estimators can more reasonably be expected to follow
+  a normal distribution. This has the side effect that no constraints
+  are needed in the optimisation. Thanks to René Lehmann for the nice
+  cooperation on this, especially the isotropic logration transformation
+  that is now used for the formation fractions.
+* A side effect of this is that when parameter estimates are backtransformed
+  to match the model definition, confidence intervals calculated from
+  standard errors are also backtransformed to the correct scale, and will
+  not include meaningless values (like negative rate constants or 
+  formation fractions adding up to more than 1, which can not occur in 
+  a single experiment with a single defined radiolabel position).
+* Summary and plotting functions. The `summary` of an `mkinfit` object is in
+  fact a full report that should give enough information to be able to
+  approximately reproduce the fit with other tools.
+* I recently added iteratively reweighted least squares in a similar way
+  it is done in KinGUII and CAKE (see below). Simply add the argument
+  `reweight = "obs"` to your call to `mkinfit` and a separate variance 
+  componenent for each of the observed variables will be optimised
+  in a second stage after the primary optimisation algorithm has converged.
 
 ## Credits
 
@@ -61,4 +105,9 @@ license.
 Finally, I just (2013-11-11) noticed the github repositories
 [StudyKin](http://github.com/zhenglei-gao/StudyKin) and
 [KineticEval](http://github.com/zhenglei-gao/KineticEval), the latter of which appears to be 
+<<<<<<< HEAD
 actively developed.
+=======
+actively developed, so the different tools will hopefully be able to learn
+from each other in the future as well.
+>>>>>>> master
