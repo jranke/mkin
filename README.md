@@ -30,10 +30,51 @@ install_github("mkin", "jranke")
 ## Usage
 
 For a start, have a look at the examples provided in the 
-[mkinfit Documentation](http://kinfit.r-forge.r-project.org/mkin_static/mkinfit.html)
+[`mkinfit`](http://kinfit.r-forge.r-project.org/mkin_static/mkinfit.html)
+Documentation 
 or the package vignettes referenced from the 
 [mkin package documentation page](http://kinfit.r-forge.r-project.org/mkin_static/index.html)
 
+## Features
+
+* Highly flexible model specification using
+  [`mkinmod`](http://kinfit.r-forge.r-project.org/mkin_static/mkinmod.html),
+  including reverse reactions and using the single first-order 
+  reversible binding (SFORB) model, which will automatically create
+  two latent state variables for the observed variable.
+* Model solution (forward modelling) in the function
+  [`mkinpredict`](http://kinfit.r-forge.r-project.org/mkin_static/mkinpredict.html) 
+  is performed either using the analytical solution for the case of 
+  parent only degradation, an eigenvalue based solution if only simple
+  first-order (SFO) or SFORB kinetics are used in the model, or
+  using a numeric solver from the `deSolve` package (default is `lsoda`).
+  These have decreasing efficiency, and are automatically chosen 
+  by default.
+* Model optimisation using the `modFit` function from the `FME` package,
+  which uses the least-squares Levenberg-Marquardt algorithm from
+  `minpack.lm` per default.
+* Kinetic rate constants and kinetic formation fractions are transformed 
+  internally so their estimators can more reasonably be expected to follow
+  a normal distribution. This has the side effect that no constraints
+  are needed in the optimisation (Thanks to René Lehmann for the nice
+  cooperation on this, especially the isotropic logration transformation
+  that is now used for the formation fracitons).
+* A side effect of this is that when parameter estimates are backtransformed
+  to match the model definition, confidence intervals calculated from
+  standard errors are also backtransformed to the correct scale, and will
+  not include meaningless values (like negative rate constants or 
+  formation fractions adding up to more than 1, which will not occur in 
+  a single experiment with a single defined radiolabel position).
+* Summary and plotting functions. The summary is in fact a full report
+  that should give enough information to be able to approximately
+  reproduce the fit with other tools.
+* I recently added iteratively reweighted least squares in a similar way
+  it is done in KinGUII and CAKE (see below). Simply add the argument
+  `reweight = "obs"` to your call to mkinfit and a separate variance 
+  componenent for each of the observed variables will be optimised
+  in a second stage after the optimisation step has converged.
+
+  
 ## Credits
 
 `mkin` would not be possible without the underlying software stack consisting
