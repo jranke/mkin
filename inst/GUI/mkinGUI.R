@@ -236,7 +236,14 @@ gbutton("Configure fit for selected model and dataset", cont = dsm,
           svalue(pf) <- paste0("Dataset ", ds.i, ", Model ", m[[m.i]]$name)
           show_plot("Initial", default = TRUE)
           svalue(f.gg.opts.st) <<- ftmp$solution_type
-          svalue(f.gg.opts.weight) <<- "manual"
+          svalue(f.gg.opts.weight) <<- ftmp$weight
+          svalue(f.gg.opts.atol) <<- ftmp$atol
+          svalue(f.gg.opts.rtol) <<- ftmp$rtol
+          svalue(f.gg.opts.reweight.method) <<- ifelse(
+                                         is.null(ftmp$reweight.method),
+                                         "none", ftmp$reweight.method)
+          svalue(f.gg.opts.reweight.tol) <<- ftmp$reweight.tol
+          svalue(f.gg.opts.reweight.max.iter) <<- ftmp$reweight.max.iter
           f.gg.parms[,] <- get_Parameters(stmp, FALSE)
           svalue(f.gg.summary) <- capture.output(stmp)
           svalue(center) <- 3
@@ -614,14 +621,22 @@ run_fit <- function() {
   } else {
     err = NULL
   }
+  reweight.method <- svalue(f.gg.opts.reweight.method)
+  if (reweight.method == "none") reweight.method = NULL
   ftmp <<- mkinfit(ftmp$mkinmod, override(ds[[ds.i]]$data),
                    state.ini = iniparms,
                    fixed_initials = inifixed,
                    parms.ini = deparms, 
                    fixed_parms = defixed,
                    solution_type = svalue(f.gg.opts.st),
+                   atol = as.numeric(svalue(f.gg.opts.atol)),
+                   rtol = as.numeric(svalue(f.gg.opts.rtol)),
                    weight = weight,
-                   err = err)
+                   err = err,
+                   reweight.method = reweight.method,
+                   reweight.tol = as.numeric(svalue(f.gg.opts.reweight.tol)),
+                   reweight.max.iter = as.numeric(svalue(f.gg.opts.reweight.max.iter))
+                   )
   ftmp$ds.index <<- ds.i
   ftmp$ds <<- ds[[ds.i]]
   stmp <<- summary(ftmp)
@@ -651,16 +666,27 @@ tf <- get_tempfile(ext=".svg")
 svg(tf, width = 7, height = 5)
 plot(ftmp)
 dev.off()
-plot.gs <- gsvg(tf, container = f.gg.mid, width = 490, height = 350)
+plot.gs <- gsvg(tf, container = f.gg.mid, width = 420, height = 300)
 f.gg.opts <- gformlayout(cont = f.gg.mid)
 solution_types <- c("auto", "analytical", "eigen", "deSolve")
-weights <- c("manual", "none", "std", "mean")
 f.gg.opts.st <- gcombobox(solution_types, selected = 1, 
                           label = "solution_type", width = 200, 
                           cont = f.gg.opts)
-f.gg.opts.weight <- gcombobox(weights, selected = 1, 
-                          label = "weight", width = 200, 
-                          cont = f.gg.opts)
+f.gg.opts.atol <- gedit(ftmp$atol, label = "atol", width = 20, 
+                         cont = f.gg.opts)
+f.gg.opts.rtol <- gedit(ftmp$rtol, label = "rtol", width = 20, 
+                         cont = f.gg.opts)
+weights <- c("manual", "none", "std", "mean")
+f.gg.opts.weight <- gcombobox(weights, selected = 1, label = "weight", 
+                              width = 200, cont = f.gg.opts)
+f.gg.opts.reweight.method <- gcombobox(c("none", "obs"), selected = 1,
+                                       label = "reweight.method",
+                                       width = 200,
+                                       cont = f.gg.opts)
+f.gg.opts.reweight.tol <- gedit(1e-8, label = "reweight.tol",
+                                 width = 20, cont = f.gg.opts)
+f.gg.opts.reweight.max.iter <- gedit(10, label = "reweight.max.iter",
+                                 width = 20, cont = f.gg.opts)
 
 # Dataframe with initial and optimised parameters {{{3
 f.gg.parms <- gdf(Parameters, width = 420, height = 300, cont = pf, 
@@ -730,6 +756,11 @@ update_plotting_and_fitting <- function() {
   show_plot("Optimised")  
   svalue(f.gg.opts.st) <- ftmp$solution_type
   svalue(f.gg.opts.weight) <- ftmp$weight.ini
+  svalue(f.gg.opts.reweight.method) <- ifelse(is.null(ftmp$reweight.method),
+                                                      "none", 
+                                                      ftmp$reweight.method)
+  svalue(f.gg.opts.reweight.tol) <- ftmp$reweight.tol
+  svalue(f.gg.opts.reweight.max.iter) <- ftmp$reweight.max.iter
   f.gg.parms[,] <- get_Parameters(stmp, TRUE)
   svalue(f.gg.summary) <- capture.output(stmp)
 }
