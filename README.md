@@ -113,11 +113,10 @@ website](http://projects.tessella.com/cake), where you can also
 find a zip archive of the R scripts derived from `mkin`, published under the GPL
 license.
 
-Finally, I just (2013-11-11) noticed the github repositories
-[StudyKin](http://github.com/zhenglei-gao/StudyKin) and
-[KineticEval](http://github.com/zhenglei-gao/KineticEval), the latter of which appears to be 
-actively developed, so the different tools will hopefully be able to learn
-from each other in the future as well.
+Finally, there is 
+[KineticEval](http://github.com/zhenglei-gao/KineticEval), which contains 
+a further development of the scripts used for KinGUII, so the different tools
+will hopefully be able to learn from each other in the future as well.
 
 ## Contribute
 

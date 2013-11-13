@@ -281,6 +281,8 @@ mkinfit <- function(mkinmod, observed,
   fit$rtol <- rtol
   fit$weight.ini <- weight.ini
   fit$reweight.method <- reweight.method
+  fit$reweight.tol <- reweight.tol
+  fit$reweight.max.iter <- reweight.max.iter
 
   # Return all backtransformed parameters for summary
   fit$bparms.optim <- bparms.optim 
