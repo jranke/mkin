@@ -235,7 +235,8 @@ gbutton("Configure fit for selected model and dataset", cont = dsm,
           stmp <<- summary(ftmp)
           svalue(pf) <- paste0("Dataset ", ds.i, ", Model ", m[[m.i]]$name)
           show_plot("Initial", default = TRUE)
-          svalue(f.gg.opts.st) <<- "auto"
+          svalue(f.gg.opts.st) <<- ftmp$solution_type
+          svalue(f.gg.opts.weight) <<- "manual"
           f.gg.parms[,] <- get_Parameters(stmp, FALSE)
           svalue(f.gg.summary) <- capture.output(stmp)
           svalue(center) <- 3
@@ -568,7 +569,6 @@ show_plot <- function(type, default = FALSE) {
     ftmp$ds <<- ds[[ds.i]]
   } 
 
-  #tmp <- get_tempfile(ext=".svg")
   svg(tf, width = 7, height = 5)
   plot(ftmp, main = ftmp$ds$title,
        xlab = ifelse(ftmp$ds$time_unit == "", "Time", 
@@ -608,18 +608,26 @@ run_fit <- function() {
   iniparms <- Parameters.ini$Initial
   names(iniparms) <- sub("_0", "", Parameters.ini$Name)
   inifixed <- names(iniparms[Parameters.ini$Fixed])
+  weight <- svalue(f.gg.opts.weight)
+  if (weight == "manual") {
+    err = "err"
+  } else {
+    err = NULL
+  }
   ftmp <<- mkinfit(ftmp$mkinmod, override(ds[[ds.i]]$data),
                    state.ini = iniparms,
                    fixed_initials = inifixed,
                    parms.ini = deparms, 
                    fixed_parms = defixed,
                    solution_type = svalue(f.gg.opts.st),
-                   err = "err")
+                   weight = weight,
+                   err = err)
   ftmp$ds.index <<- ds.i
   ftmp$ds <<- ds[[ds.i]]
   stmp <<- summary(ftmp)
   show_plot("Optimised")
   svalue(f.gg.opts.st) <- ftmp$solution_type
+  svalue(f.gg.opts.weight) <- ftmp$weight.ini
   f.gg.parms[,] <- get_Parameters(stmp, TRUE)
   svalue(f.gg.summary) <- capture.output(stmp)
 }
@@ -646,8 +654,12 @@ dev.off()
 plot.gs <- gsvg(tf, container = f.gg.mid, width = 490, height = 350)
 f.gg.opts <- gformlayout(cont = f.gg.mid)
 solution_types <- c("auto", "analytical", "eigen", "deSolve")
+weights <- c("manual", "none", "std", "mean")
 f.gg.opts.st <- gcombobox(solution_types, selected = 1, 
                           label = "solution_type", width = 200, 
+                          cont = f.gg.opts)
+f.gg.opts.weight <- gcombobox(weights, selected = 1, 
+                          label = "weight", width = 200, 
                           cont = f.gg.opts)
 
 # Dataframe with initial and optimised parameters {{{3
@@ -717,6 +729,7 @@ update_plotting_and_fitting <- function() {
                        ", Model ", ftmp$mkinmod$name)
   show_plot("Optimised")  
   svalue(f.gg.opts.st) <- ftmp$solution_type
+  svalue(f.gg.opts.weight) <- ftmp$weight.ini
   f.gg.parms[,] <- get_Parameters(stmp, TRUE)
   svalue(f.gg.summary) <- capture.output(stmp)
 }
