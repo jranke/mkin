@@ -1,0 +1,261 @@
+%\VignetteIndexEntry{Examples evaluation of FOCUS dataset Z}
+%\VignetteEngine{knitr::knitr}
+\documentclass[12pt,a4paper]{article}
+\usepackage{a4wide}
+\input{header}
+\hypersetup{  
+  pdftitle = {Example evaluation of FOCUS dataset Z},
+  pdfsubject = {Manuscript},
+  pdfauthor = {Johannes Ranke},
+  colorlinks = {true},
+  linkcolor = {blue},
+  citecolor = {blue},
+  urlcolor = {red},
+  hyperindex = {true},
+  linktocpage = {true},
+}
+
+\begin{document}
+
+<<include=FALSE>>=
+require(knitr)
+opts_chunk$set(engine='R', tidy=FALSE)
+@
+
+\title{Example evaluation of FOCUS dataset Z}
+\author{\textbf{Johannes Ranke} \\[0.5cm]
+%EndAName
+Eurofins Regulatory AG\\
+Weidenweg 15, CH--4310 Rheinfelden, Switzerland\\[0.5cm]
+and\\[0.5cm]
+University of Bremen\\
+}
+\maketitle
+
+\thispagestyle{empty} \setcounter{page}{0}
+
+\clearpage
+
+\tableofcontents
+
+\textbf{Key words}: Kinetics, FOCUS, nonlinear optimisation
+
+\section{The data}
+
+The following code defines the example dataset from Appendix 7 to the FOCUS kinetics
+report \citep{FOCUSkinetics2011}, p.350.
+
+<<FOCUS_2006_Z_data, echo=TRUE, eval=TRUE>>=
+require(mkin)
+LOD = 0.5
+FOCUS_2006_Z = data.frame(
+  t = c(0, 0.04, 0.125, 0.29, 0.54, 1, 2, 3, 4, 7, 10, 14, 21, 
+        42, 61, 96, 124),
+  Z0 = c(100, 81.7, 70.4, 51.1, 41.2, 6.6, 4.6, 3.9, 4.6, 4.3, 6.8, 
+         2.9, 3.5, 5.3, 4.4, 1.2, 0.7),
+  Z1 = c(0, 18.3, 29.6, 46.3, 55.1, 65.7, 39.1, 36, 15.3, 5.6, 1.1, 
+         1.6, 0.6, 0.5 * LOD, NA, NA, NA),
+  Z2 = c(0, NA, 0.5 * LOD, 2.6, 3.8, 15.3, 37.2, 31.7, 35.6, 14.5, 
+         0.8, 2.1, 1.9, 0.5 * LOD, NA, NA, NA),
+  Z3 = c(0, NA, NA, NA, NA, 0.5 * LOD, 9.2, 13.1, 22.3, 28.4, 32.5, 
+         25.2, 17.2, 4.8, 4.5, 2.8, 4.4))
+
+FOCUS_2006_Z_mkin <- mkin_wide_to_long(FOCUS_2006_Z)
+@
+
+\section{Parent compound and one metabolite}
+
+The next step is to set up the models used for the kinetic analysis. As the 
+simultaneous fit of parent and the first metabolite is usually straightforward,
+Step 1 (SFO for parent only) is skipped here. We start with the model 2a, 
+with formation and decline of metabolite Z1 and the pathway from parent
+directly to sink included (default in mkin).
+
+<<FOCUS_2006_Z_fits_1, echo=TRUE, fig.height=4>>=
+Z.2a <- mkinmod(Z0 = list(type = "SFO", to = "Z1"),
+                Z1 = list(type = "SFO"))
+m.Z.2a <- mkinfit(Z.2a, FOCUS_2006_Z_mkin, quiet = TRUE)
+plot(m.Z.2a)
+summary(m.Z.2a, data = FALSE)
+@
+
+As obvious from the summary, the kinetic rate constant from parent compound Z to sink
+is negligible. Accordingly, the exact magnitude of the fitted parameter 
+\texttt{log k\_Z\_sink} is ill-defined and the covariance matrix is not returned.
+This suggests, in agreement with the analysis in the FOCUS kinetics report, to simplify 
+the model by removing the pathway to sink.
+
+A similar result can be obtained when formation fractions are used in the model formulation:
+
+<<FOCUS_2006_Z_fits_2, echo=TRUE, fig.height=4>>=
+Z.2a.ff <- mkinmod(Z0 = list(type = "SFO", to = "Z1"),
+                   Z1 = list(type = "SFO"),
+                   use_of_ff = "max")
+
+m.Z.2a.ff <- mkinfit(Z.2a.ff, FOCUS_2006_Z_mkin, quiet = TRUE)
+plot(m.Z.2a.ff)
+summary(m.Z.2a.ff, data = FALSE)
+@
+
+Here, the ilr transformed formation fraction fitted in the model takes a very large value, 
+and the backtransformed formation fraction from parent Z to Z1 is practically unity. Again,
+the covariance matrix is not returned as the model is overparameterised. 
+
+The simplified model is obtained by setting the list component \texttt{sink} to
+\texttt{FALSE}. This model definition is not supported when formation fractions 
+are used.
+
+<<FOCUS_2006_Z_fits_3, echo=TRUE, fig.height=4>>=
+Z.3 <- mkinmod(Z0 = list(type = "SFO", to = "Z1", sink = FALSE),
+               Z1 = list(type = "SFO"))
+m.Z.3 <- mkinfit(Z.3, FOCUS_2006_Z_mkin, quiet = TRUE)
+plot(m.Z.3)
+summary(m.Z.3, data = FALSE)
+@
+
+\section{Including metabolites Z2 and Z3}
+
+As suggested in the FOCUS report, the pathway to sink was removed for metabolite Z1 as
+well in the next step. While this step appears questionable on the basis of the above results, it 
+is followed here for the purpose of comparison. Also, in the FOCUS report, it is 
+assumed that there is additional empirical evidence that Z1 quickly and exclusively
+hydrolyses to Z2. 
+
+<<FOCUS_2006_Z_fits_5, echo=TRUE, fig.height=4>>=
+Z.5 <- mkinmod(Z0 = list(type = "SFO", to = "Z1", sink = FALSE),
+               Z1 = list(type = "SFO", to = "Z2", sink = FALSE),
+               Z2 = list(type = "SFO"))
+m.Z.5 <- mkinfit(Z.5, FOCUS_2006_Z_mkin, quiet = TRUE)
+plot(m.Z.5)
+summary(m.Z.5, data = FALSE)
+@
+
+Finally, metabolite Z3 is added to the model. The fit is accellerated
+by using the starting parameters from the previous fit.
+
+<<FOCUS_2006_Z_fits_6, echo=TRUE, fig.height=4>>=
+Z.FOCUS <- mkinmod(Z0 = list(type = "SFO", to = "Z1", sink = FALSE),
+                   Z1 = list(type = "SFO", to = "Z2", sink = FALSE),
+                   Z2 = list(type = "SFO", to = "Z3"),
+                   Z3 = list(type = "SFO"))
+m.Z.FOCUS <- mkinfit(Z.FOCUS, FOCUS_2006_Z_mkin, 
+                     parms.ini = m.Z.5$bparms.ode,
+                     quiet = TRUE)
+plot(m.Z.FOCUS)
+summary(m.Z.FOCUS, data = FALSE)
+@
+
+This is the fit corresponding to the final result chosen in Appendix 7 of the 
+FOCUS report. The residual plots can be obtained by
+
+<<FOCUS_2006_Z_residuals_6, echo=TRUE>>=
+par(mfrow = c(2, 2))
+mkinresplot(m.Z.FOCUS, "Z0", lpos = "bottomright")
+mkinresplot(m.Z.FOCUS, "Z1", lpos = "bottomright")
+mkinresplot(m.Z.FOCUS, "Z2", lpos = "bottomright")
+mkinresplot(m.Z.FOCUS, "Z3", lpos = "bottomright")
+@
+
+\section{Using the SFORB model for parent and metabolites}
+
+As the FOCUS report states, there is a certain tailing of the time course of metabolite 
+Z3. Also, the time course of the parent compound is not fitted very well using the 
+SFO model, as residues at a certain low level remain.
+
+Therefore, an additional model is offered here, using the single first-order 
+reversible binding (SFORB) model for metabolite Z3. As expected, the $\chi^2$
+error level is lower for metabolite Z3 using this model and the graphical 
+fit for Z3 is improved. However, the covariance matrix is not returned.
+
+<<FOCUS_2006_Z_fits_7, echo=TRUE, fig.height=4>>=
+Z.mkin.1 <- mkinmod(Z0 = list(type = "SFO", to = "Z1", sink = FALSE),
+                    Z1 = list(type = "SFO", to = "Z2", sink = FALSE),
+                    Z2 = list(type = "SFO", to = "Z3"),
+                    Z3 = list(type = "SFORB"))
+m.Z.mkin.1 <- mkinfit(Z.mkin.1, FOCUS_2006_Z_mkin, 
+                      parms.ini = c(k_Z0_Z1 = 0.5, k_Z1_Z2 = 0.3),
+                      quiet = TRUE)
+plot(m.Z.mkin.1)
+summary(m.Z.mkin.1, data = FALSE)
+@
+
+Therefore, a further stepwise model building is performed starting from the
+stage of parent and one metabolite, starting from the assumption that the model
+fit for the parent compound can be improved by using the SFORB model.
+
+<<FOCUS_2006_Z_fits_8, echo=TRUE, fig.height=4>>=
+Z.mkin.2 <- mkinmod(Z0 = list(type = "SFORB", to = "Z1", sink = FALSE),
+                    Z1 = list(type = "SFO"))
+m.Z.mkin.2 <- mkinfit(Z.mkin.2, FOCUS_2006_Z_mkin, quiet = TRUE)
+plot(m.Z.mkin.2)
+summary(m.Z.mkin.2, data = FALSE)
+@
+
+When metabolite Z2 is added, the additional sink for Z1 is turned off again,
+for the same reasons as in the original analysis.
+
+<<FOCUS_2006_Z_fits_9, echo=TRUE, fig.height=4>>=
+Z.mkin.3 <- mkinmod(Z0 = list(type = "SFORB", to = "Z1", sink = FALSE),
+                    Z1 = list(type = "SFO", to = "Z2"),
+                    Z2 = list(type = "SFO"))
+m.Z.mkin.3 <- mkinfit(Z.mkin.3, FOCUS_2006_Z_mkin, quiet = TRUE)
+plot(m.Z.mkin.3)
+summary(m.Z.mkin.3, data = FALSE)
+@
+
+This results in a much better representation of the behaviour of the parent 
+compound Z0.
+
+Finally, Z3 is added as well. This model appears overparameterised (no
+covariance matrix returned) if the sink for Z1 is left in the model.
+
+<<FOCUS_2006_Z_fits_10, echo=TRUE, fig.height=4>>=
+Z.mkin.4 <- mkinmod(Z0 = list(type = "SFORB", to = "Z1", sink = FALSE),
+                    Z1 = list(type = "SFO", to = "Z2", sink = FALSE),
+                    Z2 = list(type = "SFO", to = "Z3"),
+                    Z3 = list(type = "SFO"))
+m.Z.mkin.4 <- mkinfit(Z.mkin.4, FOCUS_2006_Z_mkin, 
+                      parms.ini = c(k_Z1_Z2 = 0.05), 
+                      quiet = TRUE)
+plot(m.Z.mkin.4)
+summary(m.Z.mkin.4, data = FALSE)
+@
+
+The error level of the fit, but especially of metabolite Z3, can be improved if
+the SFORB model is chosen for this metabolite, as this model is capable of
+representing the tailing of the metabolite decline phase.
+
+<<FOCUS_2006_Z_fits_11, echo=TRUE, fig.height=4>>=
+Z.mkin.5 <- mkinmod(Z0 = list(type = "SFORB", to = "Z1", sink = FALSE),
+                    Z1 = list(type = "SFO", to = "Z2", sink = FALSE),
+                    Z2 = list(type = "SFO", to = "Z3"),
+                    Z3 = list(type = "SFORB"))
+m.Z.mkin.5 <- mkinfit(Z.mkin.5, FOCUS_2006_Z_mkin, 
+                      parms.ini = m.Z.mkin.4$bparms.ode[1:5],
+                      quiet = TRUE)
+plot(m.Z.mkin.5)
+summary(m.Z.mkin.5, data = FALSE)
+@
+
+Looking at the confidence intervals of the SFORB model parameters of Z3, it is
+clear that nothing can be said about the degradation rate of Z3 towards the end 
+of the experiment. However, this appears to be a feature of the data.
+
+<<FOCUS_2006_Z_residuals_11>>=
+par(mfrow = c(2, 2))
+mkinresplot(m.Z.mkin.5, "Z0", lpos = "bottomright")
+mkinresplot(m.Z.mkin.5, "Z1", lpos = "bottomright")
+mkinresplot(m.Z.mkin.5, "Z2", lpos = "bottomright")
+mkinresplot(m.Z.mkin.5, "Z3", lpos = "bottomright")
+@
+
+As expected, the residual plots are much more random than in the case of the 
+all SFO model for which they were shown above. In conclusion, the model
+\texttt{Z.mkin.5} is proposed as the best-fit model for the dataset from
+Appendix 7 of the FOCUS report.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}
+% vim: set foldmethod=syntax:

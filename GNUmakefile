@@ -8,7 +8,6 @@ PKGSRC  := $(shell basename $(PWD))
 # containing the first instance of R on the PATH.
 RBIN ?= $(shell dirname "`which R`")
 
-
 .PHONY: help
 
 help:
@@ -17,7 +16,7 @@ help:
 	@echo ""
 	@echo "Development Tasks"
 	@echo "-----------------"
-	@echo "  build      Invoke docs and then create a package"
+	@echo "  build      Create the package"
 	@echo "  check      Invoke build and then check the package"
 	@echo "  install    Invoke build and then install the result"
 	@echo "  test       Install a new copy of the package and run it "
@@ -40,6 +39,10 @@ build:
 	cd ..;\
 		"$(RBIN)/R" CMD build $(PKGSRC)
 
+build-no-vignettes:
+	cd ..;\
+		"$(RBIN)/R" CMD build $(PKGSRC) --no-build-vignettes
+
 install: build
 	cd ..;\
 		"$(RBIN)/R" CMD INSTALL $(PKGNAME)_$(PKGVERS).tar.gz
@@ -56,10 +59,13 @@ test: install
 # Packaging Tasks
 #------------------------------------------------------------------------------
 release:
-	@echo "\nPull in changes from svn and merge local commits"
-	@git svn rebase
 	@echo "\nHow about make test and make check?"
 	@echo "\nIs the DESCRIPTION file up to date?"
-	@echo "\nPerform final changes and commit with 'git commit --amend'."
-	@echo "\nIf the above is taken care of, run 'git svn dcommit'"
-	@echo "and then 'git push origin master'"
+	@echo "\nTo update the svn repository tied to the local r-forge branch with"
+	@echo "changes in the local master branch, run:"
+	@echo "'git checkout r-forge'"
+	@echo "'git merge --squash master'"
+	@echo "'git commit'"
+	@echo "'git svn dcommit'"
+	@echo "\nThen change back to the master branch:"
+	@echo "'git checkout master'"
