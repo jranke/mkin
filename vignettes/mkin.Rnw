@@ -1,10 +1,7 @@
-% $Id: mkin.Rnw 66 2010-09-03 08:50:26Z jranke $
-%%\VignetteIndexEntry{Routines for fitting kinetic models with one or more state variables to chemical degradation data}
-%%VignetteDepends{FME}
-%%\usepackage{Sweave}
+%\VignetteIndexEntry{Routines for fitting kinetic models with one or more state variables to chemical degradation data}
+%\VignetteEngine{knitr::knitr}
 \documentclass[12pt,a4paper]{article}
 \usepackage{a4wide}
-%%\usepackage[lists,heads]{endfloat}
 \input{header}
 \hypersetup{  
   pdftitle = {mkin - Routines for fitting kinetic models with one or more state variables to chemical degradation data},
@@ -14,18 +11,19 @@
   linkcolor = {blue},
   citecolor = {blue},
   urlcolor = {red},
-  hyperindex = {true},
   linktocpage = {true},
 }
-\SweaveOpts{engine=R, eps=FALSE, keep.source = TRUE}
-<<setup, echo = FALSE, results = hide>>=
-options(prompt = "R> ")
-options(SweaveHooks = list(
-  cex = function() par(cex.lab = 1.3, cex.axis = 1.3)))
-@
+
 \begin{document}
+
+<<include=FALSE>>=
+require(knitr)
+opts_chunk$set(engine='R', tidy=FALSE)
+@
+
 \title{mkin -\\
-Routines for fitting kinetic models with one or more state variables to chemical degradation data}
+Routines for fitting kinetic models with one or more state variables to
+chemical degradation data}
 \author{\textbf{Johannes Ranke} \\[0.5cm]
 %EndAName
 Eurofins Regulatory AG\\
@@ -68,98 +66,6 @@ compound in one compartment.
 The \Rpackage{mkin} package \citep{pkg:mkin} extends this approach to data series
 with metabolites and more than one compartment and includes the possibility 
 for back reactions.
-
-\section{Example}
-\label{exam}
-
-In the following, requirements for data formatting are explained. Then the
-procedure for fitting the four kinetic models recommended by the FOCUS group
-to an example dataset for parent only given in the FOCUS kinetics report is
-illustrated.  The explanations are kept rather verbose in order to lower the
-barrier for \RR{} newcomers.
-
-\subsection{Data format}
-
-The following listing shows example dataset C from the FOCUS kinetics
-report as distributed with the \Rpackage{mkin} package
-
-<<FOCUS_2006_C_data, echo=TRUE, eval=TRUE>>=
-library("mkin")
-FOCUS_2006_C
-@
-
-Note that the data needs to be in the format of a data frame containing a
-variable \Robject{name} specifying the observed variable, indicating the
-compound name and, if applicable, the compartment, a variable \Robject{time}
-containing sampling times, and a numeric variable \Robject{value} specifying
-the observed value of the variable. If a further variable \Robject{error} 
-is present, this will be used to give different weights to the data points 
-(the higher the error, the lower the weight, see the help page of the 
-\Robject{modCost} function of the \Rpackage{FME} package \citep{soetaert10}).
-Replicate measurements are not recorded in extra columns but simply appended,
-leading to multiple occurrences of the sampling times \Robject{time}.
-
-Small to medium size dataset can be conveniently entered directly as \RR{} code
-as shown in the following listing
-
-<<data_format, echo=TRUE>>=
-example_data <- data.frame(
-  name = rep("parent", 9),
-  time = c(0, 1, 3, 7, 14, 28, 63, 91, 119),
-  value = c(85.1, 57.9, 29.9, 14.6, 9.7, 6.6, 4, 3.9, 0.6)
-)
-@
-
-\subsection{Model definition}
-
-The next task is to define the model to be fitted to the data. In order to
-facilitate this task, a convenience function \Robject{mkinmod} is available.
-
-<<model_definition, echo=TRUE>>=
-SFO <- mkinmod(parent = list(type = "SFO"))
-SFORB <- mkinmod(parent = list(type = "SFORB"))
-SFO_SFO <- mkinmod(
-  parent = list(type = "SFO", to = "m1", sink = TRUE),
-  m1 = list(type = "SFO"))
-SFORB_SFO <- mkinmod(
-  parent = list(type = "SFORB", to = "m1", sink = TRUE),
-  m1 = list(type = "SFO"))
-@
-
-The model definitions given above define sets of linear first-order ordinary
-differential equations. In these cases, a coefficient matrix is also returned.
-
-Other models that include time on the right-hand side of the differential 
-equation are the first-order multi-compartment (FOMC) model and the
-Hockey-Stick (HS) model. At present, these models can only be used only for the
-parent compound.
-
-\subsection{Fitting the model}
-
-Then the model parameters should be fitted to the data. The function
-\Robject{mkinfit} internally creates a cost function using \Robject{modCost}
-from the \Rpackage{FME} package and then produces a fit using \Robject{modFit}
-from the same package. In cases of linear first-order differential 
-equations, the solution used for calculating the cost function is based
-on the fundamental system of the coefficient matrix, as proposed by 
-\citet{bates88}.
-
-<<model_fitting, echo=TRUE>>=
-SFO.fit <- mkinfit(SFO, FOCUS_2006_C)
-summary(SFO.fit)
-SFORB.fit <- mkinfit(SFORB, FOCUS_2006_C)
-summary(SFORB.fit)
-SFO_SFO.fit <- mkinfit(SFO_SFO, FOCUS_2006_D)
-summary(SFO_SFO.fit, data=FALSE)
-SFORB_SFO.fit <- mkinfit(SFORB_SFO, FOCUS_2006_D)
-summary(SFORB_SFO.fit, data=FALSE)
-@
-
-\section{Acknowledgements}
-
-This package would not have been written without me being introduced to regulatory
-fate modelling of pesticides by Adrian Gurney during my time at Harlan Laboratories Ltd
-(formerly RCC Ltd). Parts of the package were written during my employment at Harlan.
 
 \bibliographystyle{plainnat}
 \bibliography{references}

@@ -2,7 +2,8 @@
 
 The R package **mkin** provides calculation routines for the analysis of chemical
 degradation data, including **m**ulticompartment **kin**etics as needed for modelling
-the formation and decline of transformation products.
+the formation and decline of transformation products, or if several compartments
+are involved.
 
 ## Installation
 
@@ -27,11 +28,32 @@ require(devtools)
 install_github("mkin", "jranke")
 ```
 
+## Background
+
+In the regulatory evaluation of chemical substances like plant protection
+products (pesticides), biocides and other chemicals, degradation data play an
+important role. For the evaluation of pesticide degradation experiments, 
+detailed guidance and helpful tools have been developed as detailed in
+'Credits and historical remarks' below.
+
 ## Usage
 
-For a start, have a look at the examples provided in the 
+A very simple usage example would be
+
+    library("mkin")
+    example_data = data.frame(
+      name = rep("parent", 9),
+      time = c(0, 1, 3, 7, 14, 28, 63, 91, 119),
+      value = c(85.1, 57.9, 29.9, 14.6, 9.7, 6.6, 4, 3.9, 0.6)
+    )
+    SFO <- mkinmod(parent = list(type = "SFO"))
+    SFO.fit <- mkinfit(SFO, example_data)
+    summary(SFO.fit)
+    plot(SFO.fit) 
+
+For more examples have a look at the examples provided in the
 [`mkinfit`](http://kinfit.r-forge.r-project.org/mkin_static/mkinfit.html)
-Documentation 
+documentation 
 or the package vignettes referenced from the 
 [mkin package documentation page](http://kinfit.r-forge.r-project.org/mkin_static/index.html)
 
@@ -66,12 +88,14 @@ or the package vignettes referenced from the
 * A side effect of this is that when parameter estimates are backtransformed
   to match the model definition, confidence intervals calculated from
   standard errors are also backtransformed to the correct scale, and will
-  not include meaningless values (like negative rate constants or 
+  not include meaningless values like negative rate constants or 
   formation fractions adding up to more than 1, which can not occur in 
-  a single experiment with a single defined radiolabel position).
+  a single experiment with a single defined radiolabel position.
 * Summary and plotting functions. The `summary` of an `mkinfit` object is in
   fact a full report that should give enough information to be able to
   approximately reproduce the fit with other tools.
+* The chi-squared error level as defined in the FOCUS kinetics guidance
+  (see below) is calculated for each observed variable.
 * I recently added iteratively reweighted least squares in a similar way
   it is done in KinGUII and CAKE (see below). Simply add the argument
   `reweight = "obs"` to your call to `mkinfit` and a separate variance 
@@ -85,6 +109,13 @@ or the package vignettes referenced from the
 of R and the packages [deSolve](http://cran.r-project.org/package=deSolve),
 [minpack.lm](http://cran.r-project.org/package=minpack.lm) and
 [FME](http://cran.r-project.org/package=FME), to say the least.
+
+It could not have been written without me being introduced to regulatory fate
+modelling of pesticides by Adrian Gurney during my time at Harlan Laboratories
+Ltd (formerly RCC Ltd). `mkin` greatly profits and largely follows
+the work done by the 
+[FOCUS Degradation Kinetics Workgroup](http://focus.jrc.ec.europa.eu/dk),
+as detailed in ther guidance document from 2006, slightly updated in 2011.
 
 Also, it was inspired by the first version of KinGUI developed by
 BayerCropScience, which is based on the MatLab runtime environment.
