@@ -1,6 +1,4 @@
-# $Id$
-
-# Copyright (C) 2010-2012 Johannes Ranke {{{
+# Copyright (C) 2010-2013 Johannes Ranke {{{
 # Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
@@ -46,19 +44,10 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL)
   # fractions
   if(spec[[1]]$type %in% c("FOMC", "DFOP", "HS")) {
     mat = FALSE 
-    if(!is.null(spec[[1]]$to)) {
-      message <- paste(
-        "Only constant formation fractions over time are implemented.",
-        "Depending on the reason for the time dependence of degradation",
-        "this may be unrealistic. You may want to consider using the",
-        "SFORB model",
-        sep="\n")
-      warning(message)
-    } else message <- "ok"
   } else mat = TRUE
   #}}}
 
-  # Establish list of differential equations as well as map from observed {{{
+  # Establish a list of differential equations as well as a map from observed {{{
   # compartments to differential equations
   for (varname in obs_vars)
   {
