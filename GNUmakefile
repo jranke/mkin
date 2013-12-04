@@ -16,11 +16,12 @@ help:
 	@echo ""
 	@echo "Development Tasks"
 	@echo "-----------------"
-	@echo "  build      Create the package"
-	@echo "  check      Invoke build and then check the package"
-	@echo "  install    Invoke build and then install the result"
-	@echo "  test       Install a new copy of the package and run it "
-	@echo "             through the testsuite"
+	@echo "  build                   Create the package"
+	@echo "  build-no-vignettes      Create the package without rebuilding vignettes"
+	@echo "  check                   Invoke build and then check the package"
+	@echo "  install                 Invoke build and then install the result"
+	@echo "  test                    Install a new copy of the package and run it "
+	@echo "                          through the testsuite"
 	@echo ""
 	@echo "Packaging Tasks"
 	@echo "---------------"
@@ -43,15 +44,15 @@ build-no-vignettes:
 	cd ..;\
 		"$(RBIN)/R" CMD build $(PKGSRC) --no-build-vignettes
 
-install: build
+install%: build%
 	cd ..;\
 		"$(RBIN)/R" CMD INSTALL $(PKGNAME)_$(PKGVERS).tar.gz
 
-check: build
+check%: build%
 	cd ..;\
 		"$(RBIN)/R" CMD check --as-cran --no-tests $(PKGNAME)_$(PKGVERS).tar.gz
 
-test: install
+test%: install%
 	cd tests;\
 		"$(RBIN)/Rscript" doRUnit.R
 
