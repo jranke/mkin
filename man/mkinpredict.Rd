@@ -10,7 +10,7 @@
 }
 \usage{
   mkinpredict(mkinmod, odeparms, odeini, outtimes, solution_type = "deSolve",
-	      map_output = TRUE, atol = 1e-08, rtol = 1e-10, ...)
+	      method.ode = "lsoda", atol = 1e-08, rtol = 1e-10, map_output = TRUE, ...)
 }
 \arguments{
   \item{mkinmod}{
@@ -33,12 +33,13 @@
     The method that should be used for producing the predictions. This should
     generally be "analytical" if there is only one observed variable, and
     usually "deSolve" in the case of several observed variables. The third
-    possibility "eigen" is faster but produces results that the author believes
-    to be less accurate.
+    possibility "eigen" is faster but not applicable to some models e.g.
+    using FOMC for the parent compound.
   }
-  \item{map_output}{
-    Boolean to specify if the output should list values for the observed
-    variables (default) or for all state variables (if set to FALSE). 
+  \item{method.ode}{
+    The solution method passed via \code{\link{mkinpredict}} to
+    \code{\link{ode}} in case the solution type is "deSolve". The default
+    "lsoda" is performant, but sometimes fails to converge.
   }
   \item{atol}{
     Absolute error tolerance, passed to \code{\link{ode}}. Default is 1e-8,
@@ -47,6 +48,10 @@
   \item{rtol}{
     Absolute error tolerance, passed to \code{\link{ode}}. Default is 1e-10,
     much lower than in \code{\link{lsoda}}.
+  }
+  \item{map_output}{
+    Boolean to specify if the output should list values for the observed
+    variables (default) or for all state variables (if set to FALSE). 
   }
   \item{\dots}{
     Further arguments passed to the ode solver in case such a solver is used.

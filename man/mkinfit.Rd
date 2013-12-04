@@ -20,6 +20,7 @@ mkinfit(mkinmod, observed,
   state.ini = c(100, rep(0, length(mkinmod$diffs) - 1)), 
   fixed_parms = NULL, fixed_initials = names(mkinmod$diffs)[-1], 
   solution_type = "auto",
+  method.ode = "lsoda",
   method.modFit = "Marq",
   control.modFit = list(),
   plot = FALSE, quiet = FALSE, err = NULL, weight = "none", 
@@ -84,6 +85,11 @@ mkinfit(mkinmod, observed,
     eigenvectors, and finally "deSolve" for the remaining models (time
     dependence of degradation rates and metabolites). This argument is passed
     on to the helper function \code{\link{mkinpredict}}.
+  }
+  \item{method.ode}{
+    The solution method passed via \code{\link{mkinpredict}} to
+    \code{\link{ode}} in case the solution type is "deSolve". The default
+    "lsoda" is performant, but sometimes fails to converge.
   }
   \item{method.modFit}{
     The optimisation method passed to \code{\link{modFit}}. The default "Marq"

@@ -1,6 +1,4 @@
-# $Id$
-
-# Copyright (C) 2010-2012 Johannes Ranke
+# Copyright (C) 2010-2013 Johannes Ranke
 # Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
@@ -18,7 +16,10 @@
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
 
-mkinpredict <- function(mkinmod, odeparms, odeini, outtimes, solution_type = "deSolve", map_output = TRUE, atol = 1e-8, rtol = 1e-10, ...) {
+mkinpredict <- function(mkinmod, odeparms, odeini, 
+			outtimes, solution_type = "deSolve", 
+			method.ode = "lsoda", atol = 1e-8, rtol = 1e-10,
+			map_output = TRUE, ...) {
 
   # Get the names of the state variables in the model
   mod_vars <- names(mkinmod$diffs)
@@ -96,6 +97,7 @@ mkinpredict <- function(mkinmod, odeparms, odeini, outtimes, solution_type = "de
       times = outtimes,
       func = mkindiff, 
       parms = odeparms,
+      method = method.ode,
       atol = atol,
       rtol = rtol,
       ...
