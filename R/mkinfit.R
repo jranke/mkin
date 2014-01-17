@@ -1,6 +1,6 @@
 # $Id$
 
-# Copyright (C) 2010-2013 Johannes Ranke
+# Copyright (C) 2010-2014 Johannes Ranke
 # Contact: jranke@uni-bremen.de
 # The summary function is an adapted and extended version of summary.modFit
 # from the FME package, v 1.1 by Soetart and Petzoldt, which was in turn
@@ -42,7 +42,7 @@ mkinfit <- function(mkinmod, observed,
   mod_vars <- names(mkinmod$diffs)
 
   # Get the names of observed variables
-  obs_vars = names(mkinmod$map)
+  obs_vars = names(mkinmod$spec)
 
   # Subset observed data with names of observed data in the model
   observed <- subset(observed, name %in% obs_vars)
@@ -110,12 +110,12 @@ mkinfit <- function(mkinmod, observed,
   # or a numeric ode solver from the deSolve package
   if (!solution_type %in% c("auto", "analytical", "eigen", "deSolve"))
      stop("solution_type must be auto, analytical, eigen or de Solve")
-  if (solution_type == "analytical" && length(mkinmod$map) > 1)
+  if (solution_type == "analytical" && length(mkinmod$spec) > 1)
      stop("Analytical solution not implemented for models with metabolites.")
   if (solution_type == "eigen" && !is.matrix(mkinmod$coefmat))
      stop("Eigenvalue based solution not possible, coefficient matrix not present.")
   if (solution_type == "auto") {
-    if (length(mkinmod$map) == 1) {
+    if (length(mkinmod$spec) == 1) {
       solution_type = "analytical"
     } else {
       if (is.matrix(mkinmod$coefmat)) {
