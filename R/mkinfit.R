@@ -1,5 +1,3 @@
-# $Id$
-
 # Copyright (C) 2010-2014 Johannes Ranke
 # Contact: jranke@uni-bremen.de
 # The summary function is an adapted and extended version of summary.modFit
@@ -28,6 +26,7 @@ mkinfit <- function(mkinmod, observed,
   fixed_parms = NULL,
   fixed_initials = names(mkinmod$diffs)[-1],
   solution_type = "auto",
+  method.ode = "lsoda",
   method.modFit = "Marq",
   control.modFit = list(),
   plot = FALSE, quiet = FALSE,
@@ -161,6 +160,7 @@ mkinfit <- function(mkinmod, observed,
     # Solve the system with current transformed parameter values
     out <- mkinpredict(mkinmod, parms, odeini, outtimes, 
                        solution_type = solution_type, 
+                       method.ode = method.ode,
                        atol = atol, rtol = rtol, ...)
 
     assign("out_predicted", out, inherits=TRUE)
@@ -177,7 +177,9 @@ mkinfit <- function(mkinmod, observed,
         outtimes_plot = seq(min(observed$time), max(observed$time), length.out=100)
 
         out_plot <- mkinpredict(mkinmod, parms, odeini, outtimes_plot, 
-          solution_type = solution_type, atol = atol, rtol = rtol, ...)
+                                solution_type = solution_type, 
+                                method.ode = method.ode,
+                                atol = atol, rtol = rtol, ...)
 
         plot(0, type="n", 
           xlim = range(observed$time), ylim = range(observed$value, na.rm=TRUE),

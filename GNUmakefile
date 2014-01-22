@@ -16,11 +16,16 @@ help:
 	@echo ""
 	@echo "Development Tasks"
 	@echo "-----------------"
-	@echo "  build      Create the package"
-	@echo "  check      Invoke build and then check the package"
-	@echo "  install    Invoke build and then install the result"
-	@echo "  test       Install a new copy of the package and run it "
-	@echo "             through the testsuite"
+	@echo "  build                   Create the package"
+	@echo "  build-no-vignettes      Create the package without rebuilding vignettes"
+	@echo "  check                   Invoke build and then check the package"
+	@echo "  check-no-vignettes      Invoke build without rebuilding vignettes, and then check"
+	@echo "  install                 Invoke build and then install the result"
+	@echo "  install                 Invoke build without rebuilding vignettes and then install the result"
+	@echo "  test                    Install a new copy of the package and run it "
+	@echo "                          through the testsuite"
+	@echo "  test-no-vignettes       Invoke build without rebuilding vignettes, and then run it"
+	@echo "                          through the testsuite"
 	@echo ""
 	@echo "Packaging Tasks"
 	@echo "---------------"
@@ -47,11 +52,23 @@ install: build
 	cd ..;\
 		"$(RBIN)/R" CMD INSTALL $(PKGNAME)_$(PKGVERS).tar.gz
 
+install-no-vignettes: build-no-vignettes
+	cd ..;\
+		"$(RBIN)/R" CMD INSTALL $(PKGNAME)_$(PKGVERS).tar.gz
+
 check: build
 	cd ..;\
 		"$(RBIN)/R" CMD check --as-cran --no-tests $(PKGNAME)_$(PKGVERS).tar.gz
 
+check-no-vignettes: build-no-vignettes
+	cd ..;\
+		"$(RBIN)/R" CMD check --as-cran --no-tests $(PKGNAME)_$(PKGVERS).tar.gz
+
 test: install
+	cd tests;\
+		"$(RBIN)/Rscript" doRUnit.R
+
+test-no-vignettes: install-no-vignettes
 	cd tests;\
 		"$(RBIN)/Rscript" doRUnit.R
 

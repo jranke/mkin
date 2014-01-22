@@ -8,6 +8,9 @@
   \href{http://github.com/jverzani/gWidgetsWWW2}{github page of gWidgetsWWW2} 
   for an explanation how this toolkit works.
 }
+\note{
+  This GUI is experimental and not recommended for real work.
+}
 \usage{
   gmkin()
 }
