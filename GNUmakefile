@@ -21,7 +21,7 @@ help:
 	@echo "  check                   Invoke build and then check the package"
 	@echo "  check-no-vignettes      Invoke build without rebuilding vignettes, and then check"
 	@echo "  install                 Invoke build and then install the result"
-	@echo "  install                 Invoke build without rebuilding vignettes and then install the result"
+	@echo "  install-no-vignettes    Invoke build without rebuilding vignettes and then install the result"
 	@echo "  test                    Install a new copy of the package and run it "
 	@echo "                          through the testsuite"
 	@echo "  test-no-vignettes       Invoke build without rebuilding vignettes, and then run it"

@@ -1,9 +1,8 @@
-# $Id: mkinGUI.R 122 2013-10-21 20:19:57Z jranke $ {{{1
+# gWidgetsWWW2 GUI for mkin {{{1
 
-# gWidgetsWWW2 GUI for mkin
-
-# Copyright (C) 2013 Johannes Ranke
-# Contact: jranke@uni-bremen.de, johannesranke@eurofins.com
+# Copyright (C) 2013,2014 Johannes Ranke
+# Portions of this file are copyright (C) 2013 Eurofins Regulatory AG, Switzerland
+# Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
 
@@ -19,10 +18,11 @@
 
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
+
 require(mkin) # {{{1
 # Set the GUI title and create the basic widget layout {{{1
-w      <- gwindow("Browser based GUI for kinetic evaluations using mkin")
-sb     <- gstatusbar("Powered by gWidgetsWWW2 and Rook", cont = w)
+w      <- gwindow("gmkin - Browser based GUI for kinetic evaluations using mkin")
+sb     <- gstatusbar(paste("Powered by gWidgetsWWW2, ExtJS, Rook, FME, deSolve and minpack.lm --- Working directory is", getwd()), cont = w)
 pg     <- gpanedgroup(cont = w, default.size = 300)
 center <- gnotebook(cont = pg)
 left   <- gvbox(cont = pg)
@@ -35,7 +35,8 @@ override <- function(d) {
 }
 # Set default values for project data {{{1
 # Initial project file name {{{2
-project_file <- "mkin_FOCUS_2006.RData"
+project_name <- "mkin_FOCUS_2006"
+project_file <- paste0(project_name, ".RData")
 # Initial studies {{{2
 studies.df <- data.frame(Index = as.integer(1), 
                          Citation = "FOCUS (2006) Guidance on degradation kinetics",
@@ -133,53 +134,79 @@ upload_file_handler <- function(h, ...)
 {
   # General
   tmpfile <- normalizePath(svalue(h$obj), winslash = "/")
-  try(load(tmpfile))
   project_file <<- pr.gf$filename
-  svalue(pr.ge) <- project_file
+  project_name <<- try(load(tmpfile))
+  if (inherits(project_name, "try-error")) {
+    galert(paste("Failed to load", project_file, "from", getwd()), parent = w)
+  } 
+
+  svalue(sb) <- paste("Loaded project file", project_file, "from working directory", getwd())
+  svalue(pr.ge) <- project_name
+  workspace <- get(project_name)
 
   # Studies
-  studies.gdf[,] <- studies.df 
+  studies.gdf[,] <- studies.df <- workspace$studies.df
 
   # Datasets
-  ds.cur <<- ds.cur
-  ds <<- ds
+  ds.cur <<- workspace$ds.cur
+  ds <<- workspace$ds
   update_ds.df()
   ds.gtable[,] <- ds.df
   update_ds_editor()
 
   # Models
-  m.cur <<- ds.cur
-  m <<- m
+  m.cur <<- workspace$m.cur
+  m <<- workspace$m
   update_m.df()
   m.gtable[,] <- m.df
   update_m_editor()
 
   # Fits
-  f.cur <<- f.cur
-  f <<- f
-  s <<- s
-  if (length(f) > 0) update_f.df()
-  else f.df <- f.df.empty
+  f.cur <<- workspace$f.cur
+  f <<- workspace$f
+  s <<- workspace$s
+  if (length(f) > 0) {
+    update_f.df()
+    ftmp <<- f[[f.cur]]
+    stmp <<- s[[f.cur]]
+    ds.i <<- ds.cur
+    update_plotting_and_fitting()
+  } else {
+    f.df <<- f.df.empty
+    update_ds_editor()
+    svalue(center) <- 1
+  }
   f.gtable[,] <- f.df
-  ftmp <<- f[[f.cur]]
-  stmp <<- s[[f.cur]]
-  ds.i <<- ds.cur
-  update_plotting_and_fitting()
 }
 save_to_file_handler <- function(h, ...)
 {
-   studies.df <- data.frame(studies.gdf[,], stringsAsFactors = FALSE)
-   save(studies.df, ds, ds.cur, m, m.cur, f, s, f.cur, file = project_file)
-   galert(paste("Saved project contents to", project_file), parent = w)
+  studies.df <- data.frame(studies.gdf[,], stringsAsFactors = FALSE)
+  workspace <- list(
+                    studies.df = studies.df,
+
+                    ds = ds,
+                    ds.cur = ds.cur,
+
+                    m = m,
+                    m.cur = m.cur,
+
+                    f = f,
+                    f.cur = f.cur,
+
+                    s = s)
+  assign(project_name, workspace)
+  save(list = project_name, file = project_file)
+  svalue(sb) <- paste("Saved project contents to", project_file, "in working directory", getwd())
 }
-change_project_file_handler = function(h, ...) {
-  project_file <<- as.character(svalue(h$obj))
+change_project_name_handler = function(h, ...) {
+  project_name <<- as.character(svalue(h$obj))
+  project_file <<- paste0(project_name, ".RData")
 }
 # Project data management GUI elements {{{2
 pr.gf <- gfile(text = "Select project file", cont = prg,
                handler = upload_file_handler)
-pr.ge <- gedit(project_file, cont = prg, 
-               handler = change_project_file_handler)
+pr.ge <- gedit(project_name, cont = prg, label = "Project", width = 240,
+               handler = change_project_name_handler)
 # The save button is always visible {{{1
 gbutton("Save current project contents", cont = left,
         handler = save_to_file_handler)

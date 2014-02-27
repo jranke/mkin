@@ -1,4 +1,5 @@
 # Copyright (C) 2010-2014 Johannes Ranke
+# Portions of this code are copyright (C) 2013 Eurofins Regulatory AG
 # Contact: jranke@uni-bremen.de
 # The summary function is an adapted and extended version of summary.modFit
 # from the FME package, v 1.1 by Soetart and Petzoldt, which was in turn
