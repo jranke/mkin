@@ -391,6 +391,7 @@ keep_ds_changes_handler <- function(h, ...) {
   ds[[ds.cur]]$sampling_times <<- sort(unique(tmpd$time))
   ds[[ds.cur]]$time_unit <<- svalue(ds.e.stu)
   ds[[ds.cur]]$observed <<- unique(tmpd$name)
+  observed.all <<- union(observed.all, ds[[ds.cur]]$observed)
   ds[[ds.cur]]$unit <<- svalue(ds.e.obu)
   ds[[ds.cur]]$replicates <<- max(aggregate(tmpd$time, 
                                             list(tmpd$time, tmpd$name), length)$x)
