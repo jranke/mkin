@@ -30,6 +30,8 @@ mkinfit <- function(mkinmod, observed,
   method.ode = "lsoda",
   method.modFit = "Marq",
   control.modFit = list(),
+  transform_rates = TRUE,
+  transform_fractions = TRUE,
   plot = FALSE, quiet = FALSE,
   err = NULL, weight = "none", scaleVar = FALSE,
   atol = 1e-8, rtol = 1e-10, n.outtimes = 100,
@@ -83,7 +85,9 @@ mkinfit <- function(mkinmod, observed,
   if(is.null(names(state.ini))) names(state.ini) <- mod_vars
 
   # Transform initial parameter values for fitting
-  transparms.ini <- transform_odeparms(parms.ini, mod_vars)
+  transparms.ini <- transform_odeparms(parms.ini, mod_vars, 
+                                       transform_rates = transform_rates,
+                                       transform_fractions = transform_fractions)
 
   # Parameters to be optimised:
   # Kinetic parameters in parms.ini whose names are not in fixed_parms
@@ -156,7 +160,9 @@ mkinfit <- function(mkinmod, observed,
 
     odeparms <- c(P[(length(state.ini.optim) + 1):length(P)], parms.fixed)
 
-    parms <- backtransform_odeparms(odeparms, mod_vars)
+    parms <- backtransform_odeparms(odeparms, mod_vars,
+                                    transform_rates = transform_rates,
+                                    transform_fractions = transform_fractions)
 
     # Solve the system with current transformed parameter values
     out <- mkinpredict(mkinmod, parms, odeini, outtimes, 
@@ -241,6 +247,8 @@ mkinfit <- function(mkinmod, observed,
 
   # We need to return some more data for summary and plotting
   fit$solution_type <- solution_type
+  fit$transform_rates <- transform_rates
+  fit$transform_fractions <- transform_fractions
 
   # We also need the model for summary and plotting
   fit$mkinmod <- mkinmod
@@ -252,19 +260,27 @@ mkinfit <- function(mkinmod, observed,
 
   # Collect initial parameter values in two dataframes
   fit$start <- data.frame(value = c(state.ini.optim, 
-		  backtransform_odeparms(parms.optim, mod_vars)))
+		  backtransform_odeparms(parms.optim, mod_vars,
+                             transform_rates = transform_rates,
+                             transform_fractions = transform_fractions)))
   fit$start$type = c(rep("state", length(state.ini.optim)), 
                      rep("deparm", length(parms.optim)))
   fit$start$transformed = c(state.ini.optim, parms.optim)
 
   fit$fixed <- data.frame(value = c(state.ini.fixed, 
-      backtransform_odeparms(parms.fixed, mod_vars)))
+      backtransform_odeparms(parms.fixed, mod_vars,
+                             transform_rates = transform_rates,
+                             transform_fractions = transform_fractions)))
   fit$fixed$type = c(rep("state", length(state.ini.fixed)), 
                      rep("deparm", length(parms.fixed)))
 
-  bparms.optim = backtransform_odeparms(fit$par, mod_vars)
+  bparms.optim = backtransform_odeparms(fit$par, mod_vars,
+                                        transform_rates = transform_rates,
+                                        transform_fractions = transform_fractions)
   bparms.fixed = backtransform_odeparms(c(state.ini.fixed, parms.fixed), 
-                                        mod_vars)
+                                        mod_vars,
+                                        transform_rates = transform_rates,
+                                        transform_fractions = transform_fractions)
   bparms.all = c(bparms.optim, bparms.fixed)
 
   # Collect observed, predicted, residuals and weighting
@@ -328,8 +344,10 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
     par.lower <- par.upper <- object$par
     par.lower[pname] <- param[pname, "Lower"]
     par.upper[pname] <- param[pname, "Upper"]
-    blci[pname] <- backtransform_odeparms(par.lower, mod_vars)[pname]
-    buci[pname] <- backtransform_odeparms(par.upper, mod_vars)[pname]
+    blci[pname] <- backtransform_odeparms(par.lower, mod_vars, 
+                                          object$transform_rates, object$transform_fractions)[pname]
+    buci[pname] <- backtransform_odeparms(par.upper, mod_vars,
+                                          object$transform_rates, object$transform_fractions)[pname]
   }
   bparam <- cbind(object$bparms.optim, blci, buci)
   dimnames(bparam) <- list(pnames, c("Estimate", "Lower", "Upper"))

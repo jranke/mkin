@@ -23,6 +23,8 @@ mkinfit(mkinmod, observed,
   method.ode = "lsoda",
   method.modFit = "Marq",
   control.modFit = list(),
+  transform_rates = TRUE,
+  transform_fractions = TRUE,
   plot = FALSE, quiet = FALSE, err = NULL, weight = "none", 
   scaleVar = FALSE, 
   atol = 1e-8, rtol = 1e-10, n.outtimes = 100, 
@@ -101,6 +103,22 @@ mkinfit(mkinmod, observed,
   \item{control.modFit}{
     Additional arguments passed to the optimisation method used by
     \code{\link{modFit}}.
+  }
+  \item{transform_rates}{
+    Boolean specifying if kinetic rate constants should be transformed in the
+    model specification used in the fitting for better compliance with the
+    assumption of normal distribution of the estimator. If TRUE, also 
+    alpha and beta parameters of the FOMC model are log-transformed, as well 
+    as k1 and k2 rate constants for the DFOP and HS models.
+  }
+  \item{transform_fractions}{
+    Boolean specifying if formation fractions constants should be transformed in the
+    model specification used in the fitting for better compliance with the
+    assumption of normal distribution of the estimator. The default (TRUE) is 
+    to do transformations. The g parameter of the DFOP and HS models are also 
+    transformed, as they can also be seen as compositional data. The
+    transformation used for these transformations is the \code{\link{ilr}}
+    transformation.
   }
   \item{plot}{
     Should the observed values and the numerical solutions be plotted at each

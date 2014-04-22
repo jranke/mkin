@@ -13,20 +13,37 @@
   negative, the \code{\link{ilr}} transformation is used.
 }
 \usage{
-transform_odeparms(parms, mod_vars)
-backtransform_odeparms(transparms, mod_vars)
+transform_odeparms(parms, mod_vars, transform_rates = TRUE, transform_fractions = TRUE)
+backtransform_odeparms(transparms, mod_vars, 
+                       transform_rates = TRUE, transform_fractions = TRUE)
 }
 \arguments{
   \item{parms}{
-  Parameters of kinetic models as used in the differential equations.
-}
+    Parameters of kinetic models as used in the differential equations.
+  }
   \item{transparms}{
-  Transformed parameters of kinetic models as used in the fitting procedure.
-}
+    Transformed parameters of kinetic models as used in the fitting procedure.
+  }
   \item{mod_vars}{
-  Names of the state variables in the kinetic model. These are used for 
-  grouping the formation fractions before \code{\link{ilr}} transformation.  
-}
+    Names of the state variables in the kinetic model. These are used for 
+    grouping the formation fractions before \code{\link{ilr}} transformation.  
+  }
+  \item{transform_rates}{
+    Boolean specifying if kinetic rate constants should be transformed in the
+    model specification used in the fitting for better compliance with the
+    assumption of normal distribution of the estimator. If TRUE, also 
+    alpha and beta parameters of the FOMC model are log-transformed, as well 
+    as k1 and k2 rate constants for the DFOP and HS models.
+  }
+  \item{transform_fractions}{
+    Boolean specifying if formation fractions constants should be transformed in the
+    model specification used in the fitting for better compliance with the
+    assumption of normal distribution of the estimator. The default (TRUE) is 
+    to do transformations. The g parameter of the DFOP and HS models are also 
+    transformed, as they can also be seen as compositional data. The
+    transformation used for these transformations is the \code{\link{ilr}}
+    transformation.
+  }
 }
 \value{
   A vector of transformed or backtransformed parameters with the same names
