@@ -110,6 +110,7 @@ mkinfit(mkinmod, observed,
     assumption of normal distribution of the estimator. If TRUE, also 
     alpha and beta parameters of the FOMC model are log-transformed, as well 
     as k1 and k2 rate constants for the DFOP and HS models.
+    If TRUE, zero is used as a lower bound for the rates in the optimisation.
   }
   \item{transform_fractions}{
     Boolean specifying if formation fractions constants should be transformed in the

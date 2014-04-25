@@ -208,8 +208,17 @@ mkinfit <- function(mkinmod, observed,
     return(mC)
   }
 
+  lower <- rep(-Inf, length(c(state.ini.optim, parms.optim)))
+  names(lower) <- c(names(state.ini.optim), names(parms.optim))
+  if (!transform_rates) {
+    index_k <- grep("^k_", names(lower))
+    lower[index_k] <- 0
+    other_rate_parms <- intersect(c("alpha", "beta", "k1", "k2"), names(lower))
+    lower[other_rate_parms] <- 0
+  }
+
   fit <- modFit(cost, c(state.ini.optim, parms.optim), 
-                method = method.modFit, control = control.modFit, ...)
+                method = method.modFit, control = control.modFit, lower = lower, ...)
 
   # Reiterate the fit until convergence of the variance components (IRLS)
   # if requested by the user
@@ -234,7 +243,7 @@ mkinfit <- function(mkinmod, observed,
       sigma.old <- sqrt(fit$var_ms_unweighted)
       observed[err] <- sqrt(fit$var_ms_unweighted)[as.character(observed$name)]
       fit <- modFit(cost, fit$par, method = method.modFit,
-                    control = control.modFit, ...)
+                    control = control.modFit, lower = lower, ...)
       reweight.diff = sum((sqrt(fit$var_ms_unweighted) - sigma.old)^2)
       if (!quiet) {
         cat("Iteration", n.iter, "yields variance estimates:\n")
