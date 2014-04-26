@@ -1,10 +1,5 @@
-# $Id: $
-
-# Copyright (C) 2010-2013 Johannes Ranke
+# Copyright (C) 2010-2014 Johannes Ranke
 # Contact: jranke@uni-bremen.de
-# The summary function is an adapted and extended version of summary.modFit
-# from the FME package, v 1.1 by Soetart and Petzoldt, which was in turn
-# inspired by summary.nls.lm
 
 # This file is part of the R package mkin
 
@@ -23,8 +18,10 @@
 if(getRversion() >= '2.15.1') utils::globalVariables(c("type", "variable", "observed"))
 
 plot.mkinfit <- function(x, fit = x,
+  obs_vars = vector(),
   xlab = "Time", ylab = "Observed",
-  xlim = range(fit$data$time), ylim = c(0, max(fit$data$observed, na.rm = TRUE)),
+  xlim = range(fit$data$time), 
+  ylim = c(0, max(subset(fit$data, variable %in% obs_vars)$observed, na.rm = TRUE)),
   col_obs = 1:length(fit$mkinmod$map),
   pch_obs = col_obs, 
   lty_obs = rep(1, length(fit$mkinmod$map)),
@@ -33,6 +30,12 @@ plot.mkinfit <- function(x, fit = x,
 {
   solution_type = fit$solution_type
   parms.all <- c(fit$bparms.optim, fit$bparms.fixed)
+
+	obs_vars_all <- names(fit$mkinmod$map)
+
+  if (length(obs_vars) > 0){
+      vars <- intersect(obs_vars_all, obs_vars)	
+  } else vars <- obs_vars_all
 
   ininames <- c(
     rownames(subset(fit$start, type == "state")),
@@ -61,13 +64,13 @@ plot.mkinfit <- function(x, fit = x,
   }
   # Plot the data and model output
   names(col_obs) <- names(pch_obs) <- names(lty_obs) <- names(fit$mkinmod$map)
-  for (obs_var in names(fit$mkinmod$map)) {
+  for (obs_var in vars) {
     points(subset(fit$data, variable == obs_var, c(time, observed)), 
       pch = pch_obs[obs_var], col = col_obs[obs_var])
   }
-  matlines(out$time, out[-1], col = col_obs, lty = lty_obs)
+  matlines(out$time, out[vars], col = col_obs[vars], lty = lty_obs[vars])
   if (legend == TRUE) {
-    legend(lpos, inset= inset, legend=names(fit$mkinmod$map),
-      col=col_obs, pch=pch_obs, lty=lty_obs)
+    legend(lpos, inset= inset, legend = vars,
+      col = col_obs[vars], pch = pch_obs[vars], lty = lty_obs[vars])
   }
 }
