@@ -272,7 +272,7 @@ gbutton("Configure fit for selected model and dataset", cont = dsm,
           svalue(f.gg.opts.reweight.tol) <<- ftmp$reweight.tol
           svalue(f.gg.opts.reweight.max.iter) <<- ftmp$reweight.max.iter
           f.gg.parms[,] <- get_Parameters(stmp, FALSE)
-          svalue(f.gg.summary) <- capture.output(stmp)
+          svalue(f.gg.summary) <- c("<pre>", capture.output(stmp), "</pre>")
           svalue(center) <- 3
         })
 
@@ -408,12 +408,16 @@ ds.study.gc <- gcombobox(paste("Study", studies.gdf[,1]), cont = ds.e.1)
 
 # Line 2 {{{4
 ds.e.2 <- ggroup(cont = ds.editor, horizontal = TRUE)
-gbutton("Copy dataset", cont = ds.e.2, handler = copy_dataset_handler)
-gbutton("Delete dataset", cont = ds.e.2, handler = delete_dataset_handler)
-gbutton("New dataset", cont = ds.e.2, handler = new_dataset_handler)
+ds.e.2a <- ggroup(cont = ds.e.2, horizontal = FALSE)
+gbutton("Copy dataset", cont = ds.e.2a, handler = copy_dataset_handler)
+gbutton("Delete dataset", cont = ds.e.2a, handler = delete_dataset_handler)
+gbutton("New dataset", cont = ds.e.2a, handler = new_dataset_handler)
 
-upload_dataset.gf <- gfile(text = "Upload text file", cont = ds.e.2, 
+ds.e.2b <- ggroup(cont = ds.e.2)
+upload_dataset.gf <- gfile(text = "Upload text file", cont = ds.e.2b,
         handler = new_ds_from_csv_handler)
+
+gbutton("Keep changes", cont = ds.e.2, handler = keep_ds_changes_handler)
 
 # Line 3 with forms {{{4
 ds.e.forms <- ggroup(cont= ds.editor, horizontal = TRUE)
@@ -443,8 +447,6 @@ generate_grid.gb <- gbutton("Generate empty grid for kinetic data", cont = ds.e.
         handler = empty_grid_handler)
 tooltip(generate_grid.gb) <- "Overwrites the kinetic data shown below"
 
-# Keep button {{{4
-gbutton("Keep changes", cont = ds.editor, handler = keep_ds_changes_handler)
 
 # Kinetic Data {{{4
 ds.e.gdf <- gdf(ds[[ds.cur]]$data, name = "Kinetic data", 
@@ -603,15 +605,24 @@ show_plot <- function(type, default = FALSE) {
     ftmp$ds.index <<- ds.i
     ftmp$ds <<- ds[[ds.i]]
   } 
-
-  svg(tf, width = 7, height = 5)
-  plot(ftmp, main = ftmp$ds$title,
-       xlab = ifelse(ftmp$ds$time_unit == "", "Time", 
-                     paste("Time in", ftmp$ds$time_unit)),
-       ylab = ifelse(ds[[ds.i]]$unit == "", "Observed", 
-                     paste("Observed in", ftmp$ds$unit)))
-  dev.off()
-  svalue(plot.gs) <<- tf
+#   tf <- get_tempfile(ext=".png")
+#   png(tf, width = 525, height = 600)
+#   layout(matrix(c(1, 2), 2, 1), heights = c(2, 1.3))
+#   par(mar = c(3, 4, 4, 2) + 0.1)
+#   plot(ftmp, main = ftmp$ds$title,
+#        xlab = ifelse(ftmp$ds$time_unit == "", "Time", 
+#                      paste("Time in", ftmp$ds$time_unit)),
+#        ylab = ifelse(ds[[ds.i]]$unit == "", "Observed", 
+#                      paste("Observed in", ftmp$ds$unit)))
+#   par(mar = c(5, 4, 0, 2) + 0.1)
+#   mkinresplot(ftmp, legend = FALSE,
+#        xlab = ifelse(ftmp$ds$time_unit == "", "Time", 
+#                      paste("Time in", ftmp$ds$time_unit)),
+#        ylab = ifelse(ds[[ds.i]]$unit == "", "Observed", 
+#                      paste("Observed in", ftmp$ds$unit)))
+#   dev.off()
+  #plot.gi <- gimage(tf, container = pf, width = 525, height = 600)
+  svalue(plot.gi) <<- plot_ftmp_png()
 }
 get_Parameters <- function(stmp, optimised)
 {
@@ -672,17 +683,16 @@ run_fit <- function() {
   svalue(f.gg.opts.st) <- ftmp$solution_type
   svalue(f.gg.opts.weight) <- ftmp$weight.ini
   f.gg.parms[,] <- get_Parameters(stmp, TRUE)
-  svalue(f.gg.summary) <- capture.output(stmp)
+  svalue(f.gg.summary) <- c("<pre>", capture.output(stmp), "</pre>")
 }
 ds.i <- m.i <- "1"
 f.cur <- "0"
 
 # GUI widgets {{{2
-pf <- gframe("Dataset 1, Model SFO", horizontal = FALSE, 
+pf <- gframe("Dataset 1, Model SFO", horizontal = TRUE, 
              cont = center, label = "Plotting and fitting")
 
-# Mid group with plot and options {{{3
-f.gg.mid <- ggroup(cont = pf)
+# Plot area {{{3
 ftmp <- suppressWarnings(mkinfit(m[[m.cur]], override(ds[[ds.i]]$data), 
                                  err = "err", 
                                  control.modFit = list(maxiter = 0)))
@@ -690,12 +700,65 @@ ftmp$ds.index = ds.i
 ftmp$ds = ds[[ds.i]]
 stmp <- summary(ftmp)
 Parameters <- get_Parameters(stmp, FALSE)
-tf <- get_tempfile(ext=".svg")
-svg(tf, width = 7, height = 5)
-plot(ftmp)
-dev.off()
-plot.gs <- gsvg(tf, container = f.gg.mid, width = 420, height = 300)
-f.gg.opts <- gformlayout(cont = f.gg.mid)
+
+plot_ftmp_png <- function() {
+  tf <- get_tempfile(ext=".png")
+  png(tf, width = 525, height = 600)
+  layout(matrix(c(1, 2), 2, 1), heights = c(2, 1.3))
+  par(mar = c(3, 4, 4, 2) + 0.1)
+  plot(ftmp, main = ftmp$ds$title,
+       xlab = ifelse(ftmp$ds$time_unit == "", "Time", 
+                     paste("Time in", ftmp$ds$time_unit)),
+       ylab = ifelse(ds[[ds.i]]$unit == "", "Observed", 
+                     paste("Observed in", ftmp$ds$unit)))
+  par(mar = c(5, 4, 0, 2) + 0.1)
+  mkinresplot(ftmp, legend = FALSE,
+       xlab = ifelse(ftmp$ds$time_unit == "", "Time", 
+                     paste("Time in", ftmp$ds$time_unit)),
+       ylab = ifelse(ds[[ds.i]]$unit == "", "Observed", 
+                     paste("Observed in", ftmp$ds$unit)))
+  dev.off()
+  return(tf)
+}
+
+plot.gi <- gimage(plot_ftmp_png(), container = pf, width = 525, height = 600)
+
+# Buttons and notebook area to the left {{{3
+p.gg <- ggroup(cont = pf, horizontal = FALSE)
+# Row with buttons {{{4
+f.gg.buttons <- ggroup(cont = p.gg)
+show.initial.gb <- gbutton("Show initial", 
+                           handler = function(h, ...) show_plot("Initial"),
+                           cont = f.gg.buttons)
+tooltip(show.initial.gb) <- "Show model with current inital settings for current dataset"
+run.fit.gb <- gbutton("Run", 
+                      handler = function(h, ...) run_fit(), cont =
+                      f.gg.buttons)
+tooltip(run.fit.gb) <- "Fit with current settings on the current dataset, with the original model"
+keep.fit.gb <- gbutton("Keep", 
+                       handler = function(h, ...) {
+                            f.cur <<- as.character(length(f) + 1)
+                            f[[f.cur]] <<- ftmp
+                            s[[f.cur]] <<- stmp
+                            update_f.df()
+                            f.gtable[,] <<- f.df
+                          }, cont = f.gg.buttons)
+tooltip(keep.fit.gb) <- "Store the optimised model with all settings and the current dataset in the fit list"
+
+
+# Notebook to the right {{{3
+f.gn <- gnotebook(cont = p.gg, width = 800, height = 700)
+# Dataframe with initial and optimised parameters {{{4
+f.gg.parms <- gdf(Parameters, cont = f.gn, width = 780, height = 660,
+                   do_add_remove_buttons = FALSE, label = "Parameters")
+f.gg.parms$set_column_width(1, 200)
+f.gg.parms$set_column_width(2, 50)
+f.gg.parms$set_column_width(3, 60)
+f.gg.parms$set_column_width(4, 50)
+f.gg.parms$set_column_width(5, 60)
+
+# Fit options form {{{4
+f.gg.opts <- gformlayout(cont = f.gn, label = "Fit options")
 solution_types <- c("auto", "analytical", "eigen", "deSolve")
 f.gg.opts.st <- gcombobox(solution_types, selected = 1, 
                           label = "solution_type", width = 200, 
@@ -716,44 +779,9 @@ f.gg.opts.reweight.tol <- gedit(1e-8, label = "reweight.tol",
 f.gg.opts.reweight.max.iter <- gedit(10, label = "reweight.max.iter",
                                  width = 20, cont = f.gg.opts)
 
-# Dataframe with initial and optimised parameters {{{3
-f.gg.parms <- gdf(Parameters, width = 420, height = 300, cont = pf, 
-                   do_add_remove_buttons = FALSE)
-f.gg.parms$set_column_width(1, 200)
-f.gg.parms$set_column_width(2, 50)
-f.gg.parms$set_column_width(3, 60)
-f.gg.parms$set_column_width(4, 50)
-f.gg.parms$set_column_width(5, 60)
-
-# Row with buttons {{{3
-f.gg.buttons <- ggroup(cont = pf)
-show.initial.gb <- gbutton("Show initial", 
-                           handler = function(h, ...) show_plot("Initial"),
-                           cont = f.gg.buttons)
-tooltip(show.initial.gb) <- "Show model with current inital settings for current dataset"
-run.fit.gb <- gbutton("Run", 
-                      handler = function(h, ...) run_fit(), cont =
-                      f.gg.buttons)
-tooltip(run.fit.gb) <- "Fit with current settings on the current dataset, with the original model"
-keep.fit.gb <- gbutton("Keep", 
-                       handler = function(h, ...) {
-                            f.cur <<- as.character(length(f) + 1)
-                            f[[f.cur]] <<- ftmp
-                            s[[f.cur]] <<- stmp
-                            update_f.df()
-                            f.gtable[,] <<- f.df
-                          }, cont = f.gg.buttons)
-tooltip(keep.fit.gb) <- "Store the optimised model with all settings and the current dataset in the fit list"
-
-show.plots.gb <- gbutton("Show plots", 
-                      handler = function(h, ...) show_plot_window(), 
-                      cont = f.gg.buttons)
-tooltip(show.plots.gb) <- "Show a window with plots including residual plots"
-
 # Summary {{{3
-f.gg.summary <- gtext(capture.output(stmp), cont = pf,
-                      use.codemirror = TRUE)
-
+f.gg.summary <- ghtml(c("<pre>", capture.output(stmp), "</pre>"),
+                        cont = f.gn, label = "Summary")
 
 delete.fit.gb <- gbutton("Delete", handler = function(h, ...) {
           if (length(f) > 0) {
@@ -776,6 +804,7 @@ delete.fit.gb <- gbutton("Delete", handler = function(h, ...) {
           f.gtable[,] <<- f.df
         }, cont = f.gg.buttons)
 tooltip(delete.fit.gb) <- "Delete the currently loaded fit from the fit list"
+svalue(f.gn) <- 1
 
 # Update the plotting and fitting area {{{3
 update_plotting_and_fitting <- function() {
@@ -790,65 +819,6 @@ update_plotting_and_fitting <- function() {
   svalue(f.gg.opts.reweight.tol) <- ftmp$reweight.tol
   svalue(f.gg.opts.reweight.max.iter) <- ftmp$reweight.max.iter
   f.gg.parms[,] <- get_Parameters(stmp, TRUE)
-  svalue(f.gg.summary) <- capture.output(stmp)
-}
-
-# Show plot window with residual plots {{{3
-show_plot_window <- function(h, ...) {
-  n.obs = length(ftmp$mkinmod$spec)
-  obs.vars = names(ftmp$mkinmod$spec)
-  parent = obs.vars[1]
-  if(n.obs == 1) {
-    n.rows = 1
-    ps = 7
-  } else {
-    n.rows = 1 + ceiling(n.obs / 2)
-    ps = 10
-  }
-  imgwidth = 800
-  imgheight = 360 * n.rows
-  pw <- gwindow("Plot window", parent = w,
-                width = imgwidth + 20, height = imgheight + 100)
-  pwg <- ggroup(cont = pw, horizontal = FALSE)
-  make_plots <- function() {
-    par(mfrow = c(n.rows, 2))
-    plot(ftmp, main = ftmp$ds$title,
-         xlab = ifelse(ftmp$ds$time_unit == "", "Time", 
-                       paste("Time in", ftmp$ds$time_unit)),
-         ylab = ifelse(ds[[ds.i]]$unit == "", "Observed", 
-                       paste("Observed in", ftmp$ds$unit)))
-    if (n.obs > 1) {
-      plot(ftmp, legend = FALSE,
-           main = paste0("Zoomed in on metabolite", 
-                         ifelse(n.obs > 2, "s", "")),
-           xlab = ifelse(ftmp$ds$time_unit == "", "Time", 
-                         paste("Time in", ftmp$ds$time_unit)),
-           ylab = ifelse(ds[[ds.i]]$unit == "", "Observed", 
-                         paste("Observed in", ftmp$ds$unit)),
-           ylim = c(0, max(subset(ftmp$data, 
-                        variable != parent)$observed)))
-      for (met in obs.vars[-1]) {
-        mkinresplot(ftmp, met, legend = FALSE,
-                    main = paste("Residual plot for", met))
-      }
-    } else {
-      mkinresplot(ftmp, parent, legend = FALSE,
-                  main = paste("Residual plot for", parent),
-           xlab = ifelse(ftmp$ds$time_unit == "", "Time", 
-                         paste("Time in", ftmp$ds$time_unit)),
-           ylab = ifelse(ds[[ds.i]]$unit == "", "Residuals", 
-                         paste("Residuals in", ftmp$ds$unit)))
-    }
-  }
-
-  tf2 <- get_tempfile(ext = ".png")
-  png(tf2,  width = imgwidth / 50 , height = imgheight / 50,
-    units = "cm", res = 300, pointsize = ps)
-  make_plots()
-  dev.off()
-
-  ghtml(paste0("<img width='", imgwidth, "' height='", imgheight,
-               "' src='", get_tempfile_url(tf2), "' />"), 
-        cont = pwg)
+  svalue(f.gg.summary) <- c("<pre>", capture.output(stmp), "</pre>")
 }
 # vim: set foldmethod=marker ts=2 sw=2 expandtab: {{{1
