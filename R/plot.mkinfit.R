@@ -18,7 +18,7 @@
 if(getRversion() >= '2.15.1') utils::globalVariables(c("type", "variable", "observed"))
 
 plot.mkinfit <- function(x, fit = x,
-  obs_vars = vector(),
+  obs_vars = names(fit$mkinmod$map),
   xlab = "Time", ylab = "Observed",
   xlim = range(fit$data$time), 
   ylim = c(0, max(subset(fit$data, variable %in% obs_vars)$observed, na.rm = TRUE)),
@@ -30,12 +30,6 @@ plot.mkinfit <- function(x, fit = x,
 {
   solution_type = fit$solution_type
   parms.all <- c(fit$bparms.optim, fit$bparms.fixed)
-
-	obs_vars_all <- names(fit$mkinmod$map)
-
-  if (length(obs_vars) > 0){
-      vars <- intersect(obs_vars_all, obs_vars)	
-  } else vars <- obs_vars_all
 
   ininames <- c(
     rownames(subset(fit$start, type == "state")),
@@ -64,13 +58,13 @@ plot.mkinfit <- function(x, fit = x,
   }
   # Plot the data and model output
   names(col_obs) <- names(pch_obs) <- names(lty_obs) <- names(fit$mkinmod$map)
-  for (obs_var in vars) {
+  for (obs_var in obs_vars) {
     points(subset(fit$data, variable == obs_var, c(time, observed)), 
       pch = pch_obs[obs_var], col = col_obs[obs_var])
   }
-  matlines(out$time, out[vars], col = col_obs[vars], lty = lty_obs[vars])
+  matlines(out$time, out[obs_vars], col = col_obs[obs_vars], lty = lty_obs[obs_vars])
   if (legend == TRUE) {
-    legend(lpos, inset= inset, legend = vars,
-      col = col_obs[vars], pch = pch_obs[vars], lty = lty_obs[vars])
+    legend(lpos, inset= inset, legend = obs_vars,
+      col = col_obs[obs_vars], pch = pch_obs[obs_vars], lty = lty_obs[obs_vars])
   }
 }

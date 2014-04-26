@@ -10,7 +10,7 @@
 }
 \usage{
 \method{plot}{mkinfit}(x, fit = x,
-  obs_vars = vector(),
+  obs_vars = names(fit$mkinmod$map),
   xlab = "Time", ylab = "Observed", 
   xlim = range(fit$data$time), ylim = c(0, max(fit$data$observed, na.rm = TRUE)),
   col_obs = 1:length(fit$mkinmod$map), pch_obs = col_obs, 
@@ -26,7 +26,8 @@
   }
   \item{obs_vars}{
     A character vector of names of the observed variables for which the 
-    data and the model should be plotted.
+    data and the model should be plotted. Defauls to all observed variables
+    in the model.
   }
   \item{xlab}{
     label for the x axis.
