@@ -33,7 +33,8 @@ backtransform_odeparms(transparms, mod_vars,
     model specification used in the fitting for better compliance with the
     assumption of normal distribution of the estimator. If TRUE, also 
     alpha and beta parameters of the FOMC model are log-transformed, as well 
-    as k1 and k2 rate constants for the DFOP and HS models.
+    as k1 and k2 rate constants for the DFOP and HS models and the break point tb
+    of the HS model
   }
   \item{transform_fractions}{
     Boolean specifying if formation fractions constants should be transformed in the
