@@ -170,6 +170,9 @@ upload_file_handler <- function(h, ...)
     ftmp <<- f[[f.cur]]
     stmp <<- s[[f.cur]]
     ds.i <<- ds.cur
+    delete(f.gg.plotopts, f.gg.po.obssel)
+    f.gg.po.obssel <<- gcheckboxgroup(names(ftmp$mkinmod$spec), cont = f.gg.plotopts, 
+                                     checked = TRUE)
     update_plotting_and_fitting()
   } else {
     f.df <<- f.df.empty
