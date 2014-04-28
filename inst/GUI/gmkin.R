@@ -261,7 +261,6 @@ gbutton("Configure fit for selected model and dataset", cont = dsm,
           ftmp$ds <<- ds[[ds.i]]
           stmp <<- summary(ftmp)
           svalue(pf) <- paste0("Dataset ", ds.i, ", Model ", m[[m.i]]$name)
-          show_plot("Initial", default = TRUE)
           svalue(f.gg.opts.st) <<- ftmp$solution_type
           svalue(f.gg.opts.weight) <<- ftmp$weight
           svalue(f.gg.opts.atol) <<- ftmp$atol
@@ -272,6 +271,10 @@ gbutton("Configure fit for selected model and dataset", cont = dsm,
           svalue(f.gg.opts.reweight.tol) <<- ftmp$reweight.tol
           svalue(f.gg.opts.reweight.max.iter) <<- ftmp$reweight.max.iter
           f.gg.parms[,] <- get_Parameters(stmp, FALSE)
+          delete(f.gg.plotopts, f.gg.po.obssel)
+          f.gg.po.obssel <<- gcheckboxgroup(names(ftmp$mkinmod$spec), cont = f.gg.plotopts, 
+                                           checked = TRUE)
+          show_plot("Initial", default = TRUE)
           svalue(f.gg.summary) <- c("<pre>", capture.output(stmp), "</pre>")
           svalue(center) <- 3
         })
@@ -605,23 +608,6 @@ show_plot <- function(type, default = FALSE) {
     ftmp$ds.index <<- ds.i
     ftmp$ds <<- ds[[ds.i]]
   } 
-#   tf <- get_tempfile(ext=".png")
-#   png(tf, width = 525, height = 600)
-#   layout(matrix(c(1, 2), 2, 1), heights = c(2, 1.3))
-#   par(mar = c(3, 4, 4, 2) + 0.1)
-#   plot(ftmp, main = ftmp$ds$title,
-#        xlab = ifelse(ftmp$ds$time_unit == "", "Time", 
-#                      paste("Time in", ftmp$ds$time_unit)),
-#        ylab = ifelse(ds[[ds.i]]$unit == "", "Observed", 
-#                      paste("Observed in", ftmp$ds$unit)))
-#   par(mar = c(5, 4, 0, 2) + 0.1)
-#   mkinresplot(ftmp, legend = FALSE,
-#        xlab = ifelse(ftmp$ds$time_unit == "", "Time", 
-#                      paste("Time in", ftmp$ds$time_unit)),
-#        ylab = ifelse(ds[[ds.i]]$unit == "", "Observed", 
-#                      paste("Observed in", ftmp$ds$unit)))
-#   dev.off()
-  #plot.gi <- gimage(tf, container = pf, width = 525, height = 600)
   svalue(plot.gi) <<- plot_ftmp_png()
 }
 get_Parameters <- function(stmp, optimised)
@@ -703,20 +689,25 @@ Parameters <- get_Parameters(stmp, FALSE)
 
 plot_ftmp_png <- function() {
   tf <- get_tempfile(ext=".png")
+  if(exists("f.gg.po.obssel")) {
+    obs_vars_plot = svalue(f.gg.po.obssel)
+  } else {
+    obs_vars_plot = names(ftmp$mkinmod$spec)
+  }
   png(tf, width = 525, height = 600)
   layout(matrix(c(1, 2), 2, 1), heights = c(2, 1.3))
   par(mar = c(3, 4, 4, 2) + 0.1)
-  plot(ftmp, main = ftmp$ds$title,
+  plot(ftmp, main = ftmp$ds$title, obs_vars = obs_vars_plot,
        xlab = ifelse(ftmp$ds$time_unit == "", "Time", 
                      paste("Time in", ftmp$ds$time_unit)),
        ylab = ifelse(ds[[ds.i]]$unit == "", "Observed", 
                      paste("Observed in", ftmp$ds$unit)))
   par(mar = c(5, 4, 0, 2) + 0.1)
-  mkinresplot(ftmp, legend = FALSE,
+  mkinresplot(ftmp, legend = FALSE, obs_vars = obs_vars_plot,
        xlab = ifelse(ftmp$ds$time_unit == "", "Time", 
                      paste("Time in", ftmp$ds$time_unit)),
        ylab = ifelse(ds[[ds.i]]$unit == "", "Observed", 
-                     paste("Observed in", ftmp$ds$unit)))
+                     paste("Residuals in", ftmp$ds$unit)))
   dev.off()
   return(tf)
 }
@@ -747,10 +738,11 @@ tooltip(keep.fit.gb) <- "Store the optimised model with all settings and the cur
 
 
 # Notebook to the right {{{3
-f.gn <- gnotebook(cont = p.gg, width = 800, height = 700)
+f.gn <- gnotebook(cont = p.gg, width = 700, height = 700)
 # Dataframe with initial and optimised parameters {{{4
-f.gg.parms <- gdf(Parameters, cont = f.gn, width = 780, height = 660,
-                   do_add_remove_buttons = FALSE, label = "Parameters")
+f.gg.parms <- gdf(Parameters, cont = f.gn, 
+                 width = 690, height = 660,
+                 do_add_remove_buttons = FALSE, label = "Parameters")
 f.gg.parms$set_column_width(1, 200)
 f.gg.parms$set_column_width(2, 50)
 f.gg.parms$set_column_width(3, 60)
@@ -804,6 +796,14 @@ delete.fit.gb <- gbutton("Delete", handler = function(h, ...) {
           f.gtable[,] <<- f.df
         }, cont = f.gg.buttons)
 tooltip(delete.fit.gb) <- "Delete the currently loaded fit from the fit list"
+
+# Plot options {{{4
+f.gg.plotopts <- ggroup(cont = f.gn, label = "Plot options", horizontal = FALSE)
+f.gg.po.update <- gbutton("Update plot", 
+                          handler = function(h, ...) show_plot("Optimised"), 
+                          cont = f.gg.plotopts)
+f.gg.po.obssel <- gcheckboxgroup(names(m[[m.cur]]$spec), cont = f.gg.plotopts, 
+                                 checked = TRUE)
 svalue(f.gn) <- 1
 
 # Update the plotting and fitting area {{{3
@@ -819,6 +819,9 @@ update_plotting_and_fitting <- function() {
   svalue(f.gg.opts.reweight.tol) <- ftmp$reweight.tol
   svalue(f.gg.opts.reweight.max.iter) <- ftmp$reweight.max.iter
   f.gg.parms[,] <- get_Parameters(stmp, TRUE)
+  delete(f.gg.plotopts, f.gg.po.obssel)
+  f.gg.po.obssel <<- gcheckboxgroup(names(m[[m.cur]]$spec), cont = f.gg.plotopts, 
+                                   checked = TRUE)
   svalue(f.gg.summary) <- c("<pre>", capture.output(stmp), "</pre>")
 }
 # vim: set foldmethod=marker ts=2 sw=2 expandtab: {{{1
