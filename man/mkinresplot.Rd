@@ -5,10 +5,13 @@
 }
 \description{
   This function plots the residuals for the specified subset of the 
-  observed variables from an mkinfit object.
+  observed variables from an mkinfit object. A combined plot of the fitted
+  model and the residuals can be obtained using \code{\link{plot.mkinfit}}
+  using the argument \code{show_residuals = TRUE}.
 }
 \usage{
-  mkinresplot(object, obs_vars = vector(), 
+  mkinresplot(object, 
+    obs_vars = names(object$mkinmod$map),
     xlab = "Time", ylab = "Residual", 
     maxabs = "auto", legend = TRUE, lpos = "topright", ...)
 }
@@ -18,7 +21,7 @@
 }
   \item{obs_vars}{
     A character vector of names of the observed variables for which residuals
-    should be plotted.
+    should be plotted. Defaults to all observed variables in the model
 }
   \item{xlab}{
     Label for the x axis. Defaults to "Time [days]".
@@ -44,7 +47,7 @@
   Nothing is returned by this function, as it is called for its side effect, namely to produce a plot.
 }
 \author{
-  Katrin Lindenberger and Johannes Ranke
+  Johannes Ranke
 }
 
 \seealso{

@@ -12,10 +12,13 @@
 \method{plot}{mkinfit}(x, fit = x,
   obs_vars = names(fit$mkinmod$map),
   xlab = "Time", ylab = "Observed", 
-  xlim = range(fit$data$time), ylim = c(0, max(fit$data$observed, na.rm = TRUE)),
+  xlim = range(fit$data$time),
+  ylim = "default",
   col_obs = 1:length(fit$mkinmod$map), pch_obs = col_obs, 
   lty_obs = rep(1, length(fit$mkinmod$map)),
-  add = FALSE, legend = !add, lpos = "topright", inset = c(0.05, 0.05), ...)
+  add = FALSE, legend = !add,
+  show_residuals = FALSE, maxabs = "auto",
+  lpos = "topright", inset = c(0.05, 0.05), \dots)
 }
 \arguments{
   \item{x}{
@@ -55,6 +58,13 @@
   }
   \item{legend}{
     should a legend be added to the plot?
+  }
+  \item{show_residuals}{
+    should residuals be shown in the lower third of the plot?
+  }
+  \item{maxabs}{
+    Maximum absolute value of the residuals. This is used for the scaling of
+    the y axis and defaults to "auto".
   }
   \item{lpos}{
     position of the legend. Passed to \code{\link{legend}} as the first argument.

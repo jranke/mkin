@@ -698,19 +698,12 @@ plot_ftmp_png <- function() {
     obs_vars_plot = names(ftmp$mkinmod$spec)
   }
   png(tf, width = 525, height = 600)
-  layout(matrix(c(1, 2), 2, 1), heights = c(2, 1.3))
-  par(mar = c(3, 4, 4, 2) + 0.1)
   plot(ftmp, main = ftmp$ds$title, obs_vars = obs_vars_plot,
        xlab = ifelse(ftmp$ds$time_unit == "", "Time", 
                      paste("Time in", ftmp$ds$time_unit)),
        ylab = ifelse(ds[[ds.i]]$unit == "", "Observed", 
-                     paste("Observed in", ftmp$ds$unit)))
-  par(mar = c(5, 4, 0, 2) + 0.1)
-  mkinresplot(ftmp, legend = FALSE, obs_vars = obs_vars_plot,
-       xlab = ifelse(ftmp$ds$time_unit == "", "Time", 
-                     paste("Time in", ftmp$ds$time_unit)),
-       ylab = ifelse(ds[[ds.i]]$unit == "", "Observed", 
-                     paste("Residuals in", ftmp$ds$unit)))
+                     paste("Observed in", ftmp$ds$unit)),
+       show_residuals = TRUE)
   dev.off()
   return(tf)
 }
