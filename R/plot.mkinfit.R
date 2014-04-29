@@ -86,7 +86,7 @@ plot.mkinfit <- function(x, fit = x,
     plot(0, type="n", 
       xlim = xlim, 
       ylim = c(-1.2 * maxabs, 1.2 * maxabs),
-      xlab = xlab, ylab = ylab)
+      xlab = xlab, ylab = "Residuals")
     for(obs_var in obs_vars){
       residuals_plot <- subset(fit$data, variable == obs_var, c("time", "residual"))
       points(residuals_plot, pch = pch_obs[obs_var], col = col_obs[obs_var])
