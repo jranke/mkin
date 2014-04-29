@@ -60,6 +60,7 @@ plot.mkinfit <- function(x, fit = x,
   # Set up the plot if not to be added to an existing plot
   if (add == FALSE) {
     if (show_residuals) {
+      oldpar <- par(no.readonly = TRUE)
       layout(matrix(c(1, 2), 2, 1), heights = c(2, 1.3))
       par(mar = c(3, 4, 4, 2) + 0.1)
     }
@@ -92,5 +93,6 @@ plot.mkinfit <- function(x, fit = x,
       points(residuals_plot, pch = pch_obs[obs_var], col = col_obs[obs_var])
     }
     abline(h = 0, lty = 2)
+    par(oldpar, no.readonly = TRUE)
   }
 }
