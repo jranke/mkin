@@ -338,14 +338,17 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
     se     <- sqrt(diag(covar) * resvar)
     lci    <- param + qt(alpha/2, rdf) * se
     uci    <- param + qt(1-alpha/2, rdf) * se
-
+    tval   <- param/se
+    pval1   <- 2 * pt(abs(tval), rdf, lower.tail = FALSE)
+    pval2   <- pt(abs(tval), rdf, lower.tail = FALSE)
   }
 
   names(se) <- pnames
   modVariance <- object$ssr / length(object$residuals)
 
-  param <- cbind(param, se, lci, uci)
-  dimnames(param) <- list(pnames, c("Estimate", "Std. Error", "Lower", "Upper"))
+  param <- cbind(param, se, lci, uci, tval, pval1, pval2)
+  dimnames(param) <- list(pnames, c("Estimate", "Std. Error", "Lower", "Upper",
+                                    "t value", "Pr(>|t|)", "Pr(>t)"))
 
   blci <- buci <- numeric()
   # Only transform boundaries of CI for one parameter at a time
