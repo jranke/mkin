@@ -332,7 +332,7 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
   resvar <- object$ssr / rdf
   if (!is.numeric(covar)) {
     covar <- NULL
-    se <- lci <- uci <- rep(NA, p)
+    se <- lci <- uci <- tval <- pval1 <- pval2 <- rep(NA, p)
   } else {
     rownames(covar) <- colnames(covar) <- pnames
     se     <- sqrt(diag(covar) * resvar)
