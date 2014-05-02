@@ -102,6 +102,26 @@ or the package vignettes referenced from the
   componenent for each of the observed variables will be optimised
   in a second stage after the primary optimisation algorithm has converged.
 
+## GUI
+
+There is a graphical user interface. It depends on the gWidgetsWWW2 package 
+from John Verzani which also lives on github. You simply start the GUI
+from your R terminal whith latest mkin installed.
+
+```s
+install_github("gWidgetsWWW2", "jverzani")
+gmkin()
+```
+The following screenshot is taken after loading the gmkin workspace with
+an analysis of FOCUS dataset Z. It has to be saved as an .RData file 
+first, and can then be loaded to the GUI.
+
+```s
+save(FOCUS_2006_Z_gmkin, file = "FOCUS_2006_gmkin_Z.RData")
+gmkin()
+```
+
+![gmkin screenshot](https://github.com/jranke/mkin/gmkin_screenshot.png?raw=true)
   
 ## Credits and historical remarks
 
