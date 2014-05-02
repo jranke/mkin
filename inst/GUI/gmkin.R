@@ -22,7 +22,8 @@
 require(mkin) # {{{1
 # Set the GUI title and create the basic widget layout {{{1
 w      <- gwindow("gmkin - Browser based GUI for kinetic evaluations using mkin")
-sb     <- gstatusbar(paste("Powered by gWidgetsWWW2, ExtJS, Rook, FME, deSolve and minpack.lm --- Working directory is", getwd()), cont = w)
+sb     <- gstatusbar(paste("Powered by gWidgetsWWW2, ExtJS, Rook, FME, deSolve",
+                           "and minpack.lm --- Working directory is", getwd()), cont = w)
 pg     <- gpanedgroup(cont = w, default.size = 260)
 center <- gnotebook(cont = pg)
 left   <- gvbox(cont = pg, use.scrollwindow = TRUE)
