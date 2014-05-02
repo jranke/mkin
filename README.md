@@ -105,13 +105,20 @@ or the package vignettes referenced from the
 ## GUI
 
 There is a graphical user interface. It depends on the gWidgetsWWW2 package 
-from John Verzani which also lives on github. You simply start the GUI
-from your R terminal whith latest mkin installed.
+from John Verzani which also lives on github. 
+
 
 ```s
+require(devtools)
 install_github("gWidgetsWWW2", "jverzani")
+```
+You simply start the GUI from your R terminal whith latest mkin installed.
+
+```s
+require(mkin)
 gmkin()
 ```
+
 The following screenshot is taken after loading the gmkin workspace with
 an analysis of FOCUS dataset Z. It has to be saved as an .RData file 
 first, and can then be loaded to the GUI.
