@@ -685,7 +685,8 @@ show_plot <- function(type, default = FALSE) {
     ftmp$ds.index <<- ds.i
     ftmp$ds <<- ds[[ds.i]]
   } 
-  svalue(plot.gi) <<- plot_ftmp_png()
+  svalue(plot.ftmp.gi) <<- plot_ftmp_png()
+  svalue(plot.confint.gi) <<- plot_confint_png()
 }
 get_Parameters <- function(stmp, optimised)
 {
@@ -758,6 +759,7 @@ pf <- gframe("Dataset 1, Model SFO", horizontal = TRUE,
              cont = center, label = "Plotting and fitting")
 
 # Plot area {{{3
+pf.p <- ggroup(cont = pf, horizontal = FALSE)
 ftmp <- suppressWarnings(mkinfit(m[[m.cur]], override(ds[[ds.i]]$data), 
                                  err = "err", 
                                  control.modFit = list(maxiter = 0)))
@@ -773,7 +775,7 @@ plot_ftmp_png <- function() {
   } else {
     obs_vars_plot = names(ftmp$mkinmod$spec)
   }
-  png(tf, width = 400, height = 500)
+  png(tf, width = 400, height = 400)
   plot(ftmp, main = ftmp$ds$title, obs_vars = obs_vars_plot,
        xlab = ifelse(ftmp$ds$time_unit == "", "Time", 
                      paste("Time in", ftmp$ds$time_unit)),
@@ -784,7 +786,16 @@ plot_ftmp_png <- function() {
   return(tf)
 }
 
-plot.gi <- gimage(plot_ftmp_png(), container = pf, width = 400, height = 500)
+plot_confint_png <- function() {
+  tf <- get_tempfile(ext=".png")
+  png(tf, width = 400, height = 400)
+  mkinparplot(ftmp) 
+  dev.off()
+  return(tf)
+}
+
+plot.ftmp.gi <- gimage(plot_ftmp_png(), container = pf.p, width = 400, height = 400)
+plot.confint.gi <- gimage(plot_confint_png(), container = pf.p, width = 400, height = 400)
 
 # Buttons and notebook area to the left {{{3
 p.gg <- ggroup(cont = pf, horizontal = FALSE)
