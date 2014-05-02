@@ -38,16 +38,20 @@ mkinparplot <- function(object) {
     xlim = switch(type,
                   state.optim = range(c(0, unlist(values)), 
                                       na.rm = TRUE, finite = TRUE),
-                  rates.optim = range(unlist(values), 
+                  rates.optim = range(c(0, unlist(values)), 
                                       na.rm = TRUE, finite = TRUE),
                   fractions.optim = range(c(0, 1, unlist(values)), 
                                           na.rm = TRUE, finite = TRUE))
-    stripchart(bpar[get(type)], xlim = xlim,
-               yaxt = "n", ylim = c(0.5, length(get(type)) + 0.5))
+    stripchart(values["Estimate", ], 
+               xlim = xlim,
+               ylim = c(0.5, length(get(type)) + 0.5),
+               yaxt = "n")
+    if (type %in% c("rates.optim", "fractions.optim")) abline(v = 0, lty = 2)
+    if (type %in% c("fractions.optim")) abline(v = 1, lty = 2)
     text(mean(xlim), 1:length(parnames), parnames, pos = 3, offset = 1)
     arrows(as.numeric(values["Lower", ]), 1:length(parnames), 
            as.numeric(values["Upper", ]), 1:length(parnames), 
-           code = 3, angle = 90, length = 0.1)
+           code = 3, angle = 90, length = 0.05)
   }
   par(oldpars)
 }
