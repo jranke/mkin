@@ -112,7 +112,7 @@ from John Verzani which also lives on github.
 require(devtools)
 install_github("gWidgetsWWW2", "jverzani")
 ```
-You simply start the GUI from your R terminal whith latest mkin installed.
+You simply start the GUI from your R terminal with latest mkin installed.
 
 ```s
 require(mkin)
@@ -125,7 +125,6 @@ first, and can then be loaded to the GUI.
 
 ```s
 save(FOCUS_2006_Z_gmkin, file = "FOCUS_2006_gmkin_Z.RData")
-gmkin()
 ```
 
 ![gmkin screenshot](gmkin_screenshot.png)
