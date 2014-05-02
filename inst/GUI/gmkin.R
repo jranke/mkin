@@ -182,7 +182,7 @@ pr.gf <- gfile(text = "Select project file", cont = prg,
                handler = upload_file_handler)
 pr.ge <- gedit(project_name, cont = prg, label = "Project",
                handler = change_project_name_handler)
-# The save button is always visible {{{1
+# The save button is always visible {{{2
 gbutton("Save current project contents", cont = left,
         handler = save_to_file_handler)
 
@@ -223,7 +223,7 @@ addHandlerDoubleClick(m.gtable, m.switcher)
 m.gtable$set_column_width(1, 40)
 m.gtable$value <- 1
 
-# Button for setting up a fit for the selected dataset and model
+# Button for setting up a fit for the selected dataset and model {{{2
 gbutton("Configure fit for selected model and dataset", cont = dsm, 
         handler = function(h, ...) {
           ds.i <<- as.character(svalue(ds.gtable))
@@ -259,7 +259,6 @@ gbutton("Configure fit for selected model and dataset", cont = dsm,
 
 # Fits {{{1
 f.gf <- gframe("Fits", cont = left, horizontal = FALSE)
-# Fit table with handler {{{2
 f.switcher <- function(h, ...) {
   if (svalue(h$obj) != "0") {
     f.cur <<- svalue(h$obj)
@@ -276,8 +275,9 @@ f.gtable$set_column_width(1, 40)
 f.gtable$set_column_width(2, 60)
 
 # Dataset editor {{{1
-ds.editor <- gframe("Dataset 1", horizontal = FALSE, cont = center, label = "Dataset editor")
-# # Handler functions {{{3
+ds.editor <- gframe("Dataset 1", horizontal = FALSE, cont = center, 
+                    label = "Dataset editor")
+# Handler functions {{{3
 copy_dataset_handler <- function(h, ...) {
   ds.old <- ds.cur
   ds.cur <<- as.character(1 + length(ds))
@@ -728,7 +728,7 @@ f.cur <- "0"
 pf <- gframe("Dataset 1, Model SFO", horizontal = TRUE, 
              cont = center, label = "Plotting and fitting")
 
-# Plot area {{{3
+# Plot area to the left {{{3
 pf.p <- ggroup(cont = pf, horizontal = FALSE)
 ftmp <- suppressWarnings(mkinfit(m[[m.cur]], override(ds[[ds.i]]$data), 
                                  err = "err", 
@@ -767,7 +767,7 @@ plot_confint_png <- function() {
 plot.ftmp.gi <- gimage(plot_ftmp_png(), container = pf.p, width = 400, height = 400)
 plot.confint.gi <- gimage(plot_confint_png(), container = pf.p, width = 400, height = 400)
 
-# Buttons and notebook area to the left {{{3
+# Buttons and notebook area to the right {{{3
 p.gg <- ggroup(cont = pf, horizontal = FALSE)
 # Row with buttons {{{4
 f.gg.buttons <- ggroup(cont = p.gg)
@@ -783,6 +783,10 @@ keep.fit.gb <- gbutton("Keep",
                             s[[f.cur]] <<- stmp
                             update_f.df()
                             f.gtable[,] <<- f.df
+                            delete(f.gg.plotopts, f.gg.po.obssel)
+                            f.gg.po.obssel <<- gcheckboxgroup(names(ftmp$mkinmod$spec), 
+                                                              cont = f.gg.plotopts, 
+                                                              checked = TRUE)
                           }, cont = f.gg.buttons)
 tooltip(keep.fit.gb) <- "Store the optimised model with all settings and the current dataset in the fit list"
 
@@ -884,11 +888,15 @@ svalue(f.gn) <- 1
 
 # Update the plotting and fitting area {{{3
 update_plotting_and_fitting <- function() {
-  delete(f.gg.buttons, get.initials.gc)
-  get.initials.gc <<- gcombobox(paste("Fit", f.df$Fit), cont = f.gg.buttons)
   svalue(pf) <- paste0("Fit ", f.cur, ": Dataset ", ftmp$ds.index, 
                        ", Model ", ftmp$mkinmod$name)
-  show_plot("Optimised")  
+  # Parameters
+  f.gg.parms[,] <- get_Parameters(stmp, TRUE)
+
+  # Fit options
+  delete(f.gg.buttons, get.initials.gc)
+  get.initials.gc <<- gcombobox(paste("Fit", f.df$Fit), cont = f.gg.buttons)
+
   svalue(f.gg.opts.st) <- ftmp$solution_type
   svalue(f.gg.opts.weight) <- ftmp$weight.ini
   svalue(f.gg.opts.reweight.method) <- ifelse(is.null(ftmp$reweight.method),
@@ -896,13 +904,19 @@ update_plotting_and_fitting <- function() {
                                                       ftmp$reweight.method)
   svalue(f.gg.opts.reweight.tol) <- ftmp$reweight.tol
   svalue(f.gg.opts.reweight.max.iter) <- ftmp$reweight.max.iter
-  f.gg.parms[,] <- get_Parameters(stmp, TRUE)
-  delete(f.gg.plotopts, f.gg.po.obssel)
-  f.gg.po.obssel <<- gcheckboxgroup(names(m[[m.cur]]$spec), cont = f.gg.plotopts, 
-                                   checked = TRUE)
+
+  # Summary
   oldwidth <<- options()$width
   options(width = 90)
   svalue(f.gg.summary) <- c("<pre>", capture.output(stmp), "</pre>")
   options(width = oldwidth)
+
+  # Plot options
+  delete(f.gg.plotopts, f.gg.po.obssel)
+  f.gg.po.obssel <<- gcheckboxgroup(names(ftmp$mkinmod$spec), cont = f.gg.plotopts, 
+                                   checked = TRUE)
+  # Plot
+  show_plot("Optimised")  
+ 
 }
 # vim: set foldmethod=marker ts=2 sw=2 expandtab: {{{1
