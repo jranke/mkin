@@ -85,7 +85,8 @@ is negligible. Accordingly, the exact magnitude of the fitted parameter
 This suggests, in agreement with the analysis in the FOCUS kinetics report, to simplify 
 the model by removing the pathway to sink.
 
-A similar result can be obtained when formation fractions are used in the model formulation:
+A similar result can be obtained when formation fractions are used in the model 
+formulation:
 
 <<FOCUS_2006_Z_fits_2, echo=TRUE, fig.height=4>>=
 Z.2a.ff <- mkinmod(Z0 = list(type = "SFO", to = "Z1"),
@@ -97,13 +98,13 @@ plot(m.Z.2a.ff)
 summary(m.Z.2a.ff, data = FALSE)
 @
 
-Here, the ilr transformed formation fraction fitted in the model takes a very large value, 
-and the backtransformed formation fraction from parent Z to Z1 is practically unity. Again,
-the covariance matrix is not returned as the model is overparameterised. 
+Here, the ilr transformed formation fraction fitted in the model takes a very
+large value, and the backtransformed formation fraction from parent Z to Z1 is
+practically unity. Again, the covariance matrix is not returned as the model is
+overparameterised. 
 
 The simplified model is obtained by setting the list component \texttt{sink} to
-\texttt{FALSE}. This model definition is not supported when formation fractions 
-are used.
+\texttt{FALSE}. 
 
 <<FOCUS_2006_Z_fits_3, echo=TRUE, fig.height=4>>=
 Z.3 <- mkinmod(Z0 = list(type = "SFO", to = "Z1", sink = FALSE),
@@ -111,6 +112,19 @@ Z.3 <- mkinmod(Z0 = list(type = "SFO", to = "Z1", sink = FALSE),
 m.Z.3 <- mkinfit(Z.3, FOCUS_2006_Z_mkin, quiet = TRUE)
 plot(m.Z.3)
 summary(m.Z.3, data = FALSE)
+@
+
+This model definition is not supported when formation fractions 
+are used, but the formation fraction can be fixed to unity.
+
+<<FOCUS_2006_Z_fits_3.ff, echo=TRUE, fig.height=4>>=
+Z.3.ff <- mkinmod(Z0 = list(type = "SFO", to = "Z1"),
+               Z1 = list(type = "SFO"), use_of_ff = "max")
+m.Z.3.ff <- mkinfit(Z.3.ff, FOCUS_2006_Z_mkin, 
+                    parms.ini = c(f_Z0_to_Z1 = 1),
+                    fixed_parms = "f_Z0_to_Z1",
+                    quiet = TRUE)
+summary(m.Z.3.ff, data = FALSE)
 @
 
 \section{Including metabolites Z2 and Z3}
@@ -196,7 +210,7 @@ for the same reasons as in the original analysis.
 
 <<FOCUS_2006_Z_fits_9, echo=TRUE, fig.height=4>>=
 Z.mkin.3 <- mkinmod(Z0 = list(type = "SFORB", to = "Z1", sink = FALSE),
-                    Z1 = list(type = "SFO", to = "Z2"),
+                    Z1 = list(type = "SFO", to = "Z2", sink = FALSE),
                     Z2 = list(type = "SFO"))
 m.Z.mkin.3 <- mkinfit(Z.mkin.3, FOCUS_2006_Z_mkin, quiet = TRUE)
 plot(m.Z.mkin.3)
@@ -206,8 +220,8 @@ summary(m.Z.mkin.3, data = FALSE)
 This results in a much better representation of the behaviour of the parent 
 compound Z0.
 
-Finally, Z3 is added as well. This model appears overparameterised (no
-covariance matrix returned) if the sink for Z1 is left in the model.
+Finally, Z3 is added as well. These models appear overparameterised (no
+covariance matrix returned) if the sink for Z1 is left in the models.
 
 <<FOCUS_2006_Z_fits_10, echo=TRUE, fig.height=4>>=
 Z.mkin.4 <- mkinmod(Z0 = list(type = "SFORB", to = "Z1", sink = FALSE),
@@ -234,12 +248,29 @@ m.Z.mkin.5 <- mkinfit(Z.mkin.5, FOCUS_2006_Z_mkin,
                       parms.ini = m.Z.mkin.4$bparms.ode[1:5],
                       quiet = TRUE)
 plot(m.Z.mkin.5)
-summary(m.Z.mkin.5, data = FALSE)
+summary(m.Z.mkin.5, data = FALSE)$bpar
 @
 
-Looking at the confidence intervals of the SFORB model parameters of Z3, it is
-clear that nothing can be said about the degradation rate of Z3 towards the end 
-of the experiment. However, this appears to be a feature of the data.
+The summary view of the backtransformed parameters shows that we get no
+confidence intervals due to overparameterisation. As the optimized
+\texttt{k\_Z3\_bound\_free} is excessively small, it is reasonable to fix it to
+zero. 
+<<FOCUS_2006_Z_fits_11a, echo=TRUE, fig.height=4>>=
+m.Z.mkin.5a <- mkinfit(Z.mkin.5, FOCUS_2006_Z_mkin, 
+                       parms.ini = c(m.Z.mkin.4$bparms.ode[1:5],
+                                    k_Z3_bound_free = 0),
+                       fixed_parms = "k_Z3_bound_free",
+                       quiet = TRUE)
+summary(m.Z.mkin.5a, data = FALSE)$bpar
+@
+
+A graphical representation of the confidence intervals can finally be obtained.
+<<FOCUS_2006_Z_fits_11b, echo=TRUE, fig.height=4>>=
+mkinparplot(m.Z.mkin.5a)
+@
+
+It is clear that nothing can be said about the degradation rate of Z3 towards
+the end of the experiment. However, this appears to be a feature of the data.
 
 <<FOCUS_2006_Z_residuals_11>>=
 par(mfrow = c(2, 2))
