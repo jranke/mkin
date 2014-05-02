@@ -121,7 +121,7 @@ save(FOCUS_2006_Z_gmkin, file = "FOCUS_2006_gmkin_Z.RData")
 gmkin()
 ```
 
-![gmkin screenshot](https://github.com/jranke/mkin/gmkin_screenshot.png?raw=true)
+![gmkin screenshot](gmkin_screenshot.png)
   
 ## Credits and historical remarks
 
