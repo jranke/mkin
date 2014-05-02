@@ -27,6 +27,30 @@ sb     <- gstatusbar(paste("Powered by gWidgetsWWW2, ExtJS, Rook, FME, deSolve",
 pg     <- gpanedgroup(cont = w, default.size = 260)
 center <- gnotebook(cont = pg)
 left   <- gvbox(cont = pg, use.scrollwindow = TRUE)
+# Set initial values {{{1
+# Initial project workspace contents {{{2
+project_name <- "FOCUS_2006_gmkin"
+project_file <- paste0(project_name, ".RData")
+workspace <- get(project_name)     # From dataset distributed with mkin
+studies.df <- workspace$studies.df # dataframe containing study titles
+ds <- workspace$ds                 # list of datasets
+ds.cur <- workspace$ds.cur         # current dataset index
+m <- workspace$m                   # list with mkinmod models, amended with mkinmod$name
+m.cur <- workspace$m.cur           # m.cur current model index
+f <- workspace$f                   # f list of fitted mkinfit objects
+f.cur <- workspace$f.cur           # current fit index
+s <- workspace$s                   # list of summaries of the fitted mkinfit objects
+# Initialise meta data objects so assignments within functions using <<- will {{{2
+# update them in the right environment
+observed.all <- vector()           # vector of names of observed variables in datasets
+ds.df <- data.frame()
+m.df <- data.frame()
+f.df <- data.frame()
+# Empty versions of meta data {{{2
+f.df.empty <- data.frame(Fit = "0", 
+                         Dataset = "", 
+                         Model = "",
+                         stringsAsFactors = FALSE)
 # Helper functions {{{1
 # Override function for making it possible to override original data in the GUI {{{2
 override <- function(d) {
@@ -34,36 +58,7 @@ override <- function(d) {
              value = ifelse(is.na(d$override), d$value, d$override),
              err = d$err)
 }
-# Set default values for project data {{{1
-# Initial project file name {{{2
-project_name <- "mkin_FOCUS_2006"
-project_file <- paste0(project_name, ".RData")
-# Initial studies {{{2
-studies.df <- data.frame(Index = as.integer(1), 
-                         Citation = "FOCUS (2006) Guidance on degradation kinetics",
-                         stringsAsFactors = FALSE)
-# Initial datasets {{{2
-ds <- list()
-observed.all <- vector()
-for (i in 1:2) {
-  ds.letter = LETTERS[i + 2]
-  ds.index <- as.character(i)
-  ds.name = paste0("FOCUS_2006_", ds.letter)
-  ds[[ds.index]] <- list(
-    study_nr = 1,
-    title = paste("FOCUS example dataset", ds.letter),
-    sampling_times = unique(get(ds.name)$time),
-    time_unit = "",
-    observed = as.character(unique(get(ds.name)$name)),
-    unit = "% AR",
-    replicates = 1,
-    data = get(ds.name)
-  )
-  ds[[ds.index]]$data$name <- as.character(ds[[ds.index]]$data$name)
-  ds[[ds.index]]$data$override = as.numeric(NA)
-  ds[[ds.index]]$data$err = 1
-}
-# Dataframe with datasets for selection {{{2
+# Update dataframe with datasets for selection {{{2
 update_ds.df <- function() {
   ds.n <- length(ds)
   ds.df <<- data.frame(Index = 1:ds.n, 
@@ -79,22 +74,7 @@ update_ds.df <- function() {
     observed.all <<- union(observed, observed.all)
   }
 }
-ds.df <- data.frame()
-update_ds.df()
-ds.cur = "1"
-# Initial models {{{2
-m <- list()
-m[["1"]] <- mkinmod(parent = list(type = "SFO"))
-m[["1"]]$name = "SFO"
-m[["2"]] <- mkinmod(parent = list(type = "FOMC"))
-m[["2"]]$name = "FOMC"
-m[["3"]] <- mkinmod(parent = list(type = "DFOP"))
-m[["3"]]$name = "DFOP"
-m[["4"]] <- mkinmod(parent = list(type = "SFO", to = "m1"),
-                          m1 = list(type = "SFO"),
-                          use_of_ff = "max")
-m[["4"]]$name = "SFO_SFO"
-# Dataframe with models for selection {{{2
+# Update dataframe with models for selection {{{2
 update_m.df <- function() {
   m.n <- length(m)
   m.df <<- data.frame(Index = 1:m.n, 
@@ -105,31 +85,20 @@ update_m.df <- function() {
     m.df[i, "Name"] <<- m[[m.index]]$name
   }
 }
-m.df <- data.frame()
-update_m.df()
-m.cur = "1"
-# Initial fit lists {{{2
-# The fits and summaries are collected in lists of lists
-f <- s <- list()
-# Dataframe with fits for selection {{{2
+# Update dataframe with fits for selection {{{2
 update_f.df <- function() {
-  f.df <<- data.frame(Fit = character(),
-                      Dataset = character(),
-                      Model = character(), 
-                      stringsAsFactors = FALSE)
+  f.df <<- f.df.empty
   f.count <- 0
   for (fit.index in names(f)) {
     f.count <- f.count + 1
     ftmp <- f[[fit.index]]
     f.df[f.count, ] <<- c(as.character(f.count), ftmp$ds.index, ftmp$mkinmod$name)
   }
-  delete(f.gg.buttons, get.initials.gc)
-  get.initials.gc <<- gcombobox(paste("Fit", f.df$Fit), cont = f.gg.buttons)
 }
-f.df.empty <- f.df <- data.frame(Fit = "0", 
-                               Dataset = "", 
-                               Model = "",
-                               stringsAsFactors = FALSE)
+# Initialise meta data objects {{{1
+update_ds.df()
+update_m.df()
+update_f.df()
 # Widgets and handlers for project data {{{1
 prg <- gexpandgroup("Project file management", cont = left, horizontal = FALSE)
 # Project data management handler functions {{{2
@@ -915,6 +884,8 @@ svalue(f.gn) <- 1
 
 # Update the plotting and fitting area {{{3
 update_plotting_and_fitting <- function() {
+  delete(f.gg.buttons, get.initials.gc)
+  get.initials.gc <<- gcombobox(paste("Fit", f.df$Fit), cont = f.gg.buttons)
   svalue(pf) <- paste0("Fit ", f.cur, ": Dataset ", ftmp$ds.index, 
                        ", Model ", ftmp$mkinmod$name)
   show_plot("Optimised")  
