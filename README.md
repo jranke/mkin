@@ -138,7 +138,7 @@ of R and the packages [deSolve](http://cran.r-project.org/package=deSolve),
 
 It could not have been written without me being introduced to regulatory fate
 modelling of pesticides by Adrian Gurney during my time at Harlan Laboratories
-Ltd (formerly RCC Ltd). `mkin` greatly profits and largely follows
+Ltd (formerly RCC Ltd). `mkin` greatly profits from and largely follows
 the work done by the 
 [FOCUS Degradation Kinetics Workgroup](http://focus.jrc.ec.europa.eu/dk),
 as detailed in ther guidance document from 2006, slightly updated in 2011.
