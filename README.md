@@ -21,11 +21,11 @@ install.packages('mkin', repos = 'http://r-forge.r-project.org')
 ```
 
 If R-Forge is lacking behind or if you prefer, you can install directly from
-github using the `devtools` package:
+github using the `devtools` package. 
 
 ```s
 require(devtools)
-install_github("mkin", "jranke")
+install_github("mkin", "jranke", quick = TRUE) # quick = TRUE avoids vignette rebuilds
 ```
 
 ## Background
@@ -104,15 +104,21 @@ or the package vignettes referenced from the
 
 ## GUI
 
-There is a graphical user interface. It depends on the gWidgetsWWW2 package 
-from John Verzani which also lives on github. 
+There is a graphical user interface that I consider useful for real work.  It
+depends on the gWidgetsWWW2 package from John Verzani which also lives on
+github. Installing gWidgetsWWW2 yields a lot of warnings concerning overly 
+long path names. This is because the JavaScript library ExtJS is installed 
+along with it which has lots of files with long paths to be installed.
 
 
 ```s
 require(devtools)
 install_github("gWidgetsWWW2", "jverzani")
 ```
-You simply start the GUI from your R terminal with latest mkin installed.
+You start the GUI from your R terminal with latest mkin installed as shown below. 
+You may also want to adapt the browser that R starts (using
+`options(browser="/usr/bin/firefox")` on linux, or setting the default browser
+on Windows from the browser itself). Development was done with firefox.
 
 ```s
 require(mkin)
