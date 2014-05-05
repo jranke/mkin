@@ -27,12 +27,12 @@ mkinparplot <- function(object) {
               fractions.optim = length(fractions.optim))
   n.plot <- n.plot[n.plot > 0]
 
+  oldpars <- par(no.readonly = TRUE)
   layout(matrix(1:length(n.plot), ncol = 1), heights = n.plot + 1)
 
   s <- summary(object)
   bpar <- data.frame(t(s$bpar))
-  oldpars <- par(no.readonly = TRUE)
-  par(mar = c(3.1, 2.1, 0.1, 2.1))
+  par(mar = c(2.1, 2.1, 0.1, 2.1))
   par(cex = 1)
   for (type in names(n.plot)) {
     parnames <- get(type)
