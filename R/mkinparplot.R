@@ -32,7 +32,8 @@ mkinparplot <- function(object) {
   s <- summary(object)
   bpar <- data.frame(t(s$bpar))
   oldpars <- par(no.readonly = TRUE)
-  par(mar = c(2.1, 2.1, 0.1, 2.1))
+  par(mar = c(3.1, 2.1, 0.1, 2.1))
+  par(cex = 1)
   for (type in names(n.plot)) {
     parnames <- get(type)
     values <- bpar[parnames]
