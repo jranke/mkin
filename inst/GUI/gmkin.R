@@ -224,8 +224,7 @@ m.gtable$set_column_width(1, 40)
 m.gtable$value <- 1
 
 # Button for setting up a fit for the selected dataset and model {{{2
-gbutton("Configure fit for selected model and dataset", cont = dsm, 
-        handler = function(h, ...) {
+configure_fit_handler = function(h, ...) {
           ds.i <<- as.character(svalue(ds.gtable))
           m.i <<- as.character(svalue(m.gtable))
           ftmp <<- suppressWarnings(mkinfit(m[[m.i]],
@@ -240,6 +239,8 @@ gbutton("Configure fit for selected model and dataset", cont = dsm,
           svalue(f.gg.opts.weight) <<- ftmp$weight
           svalue(f.gg.opts.atol) <<- ftmp$atol
           svalue(f.gg.opts.rtol) <<- ftmp$rtol
+          svalue(f.gg.opts.transform_rates) <<- ftmp$transform_rates
+          svalue(f.gg.opts.transform_fractions) <<- ftmp$transform_fractions
           svalue(f.gg.opts.reweight.method) <<- ifelse(
                                          is.null(ftmp$reweight.method),
                                          "none", ftmp$reweight.method)
@@ -255,7 +256,9 @@ gbutton("Configure fit for selected model and dataset", cont = dsm,
           svalue(f.gg.summary) <- c("<pre>", capture.output(stmp), "</pre>")
           options(width = oldwidth)
           svalue(center) <- 3
-        })
+}
+gbutton("Configure fit for selected model and dataset", cont = dsm, 
+        handler = configure_fit_handler)
 
 # Fits {{{1
 f.gf <- gframe("Fits", cont = left, horizontal = FALSE)
@@ -776,7 +779,7 @@ run.fit.gb <- gbutton("Run", width = 100,
                       f.gg.buttons)
 tooltip(run.fit.gb) <- "Fit with current settings on the current dataset, with the original model"
 
-keep.fit.gb <- gbutton("Keep", 
+keep.fit.gb <- gbutton("Keep fit", 
                        handler = function(h, ...) {
                             f.cur <<- as.character(length(f) + 1)
                             f[[f.cur]] <<- ftmp
@@ -787,6 +790,9 @@ keep.fit.gb <- gbutton("Keep",
                             f.gg.po.obssel <<- gcheckboxgroup(names(ftmp$mkinmod$spec), 
                                                               cont = f.gg.plotopts, 
                                                               checked = TRUE)
+                            delete(f.gg.buttons, get.initials.gc)
+                            get.initials.gc <<- gcombobox(paste("Fit", f.df$Fit), 
+                                                          cont = f.gg.buttons)
                           }, cont = f.gg.buttons)
 tooltip(keep.fit.gb) <- "Store the optimised model with all settings and the current dataset in the fit list"
 
