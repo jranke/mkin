@@ -115,10 +115,14 @@ along with it which has lots of files with long paths to be installed.
 require(devtools)
 install_github("gWidgetsWWW2", "jverzani")
 ```
+
 You start the GUI from your R terminal with latest mkin installed as shown below. 
 You may also want to adapt the browser that R starts (using
 `options(browser="/usr/bin/firefox")` on linux, or setting the default browser
-on Windows from the browser itself). Development was done with firefox.
+on Windows from the browser itself). Development was done with firefox. I also
+did some testing with Chrome on Windows. Chrome sometimes hung when loading
+the GUI and therefore ExtJS the first time, but when the GUI is loaded it appears
+to work fine.
 
 ```s
 require(mkin)
