@@ -25,8 +25,8 @@ opts_chunk$set(engine='R', tidy=FALSE)
 \title{Example evaluation of FOCUS dataset Z}
 \author{\textbf{Johannes Ranke} \\[0.5cm]
 %EndAName
-Eurofins Regulatory AG\\
-Weidenweg 15, CH--4310 Rheinfelden, Switzerland\\[0.5cm]
+Wissenschaftlicher Berater\\
+Kronacher Str. 8, 79639 Grenzach-Wyhlen, Germany\\[0.5cm]
 and\\[0.5cm]
 University of Bremen\\
 }
@@ -170,6 +170,23 @@ mkinresplot(m.Z.FOCUS, "Z2", lpos = "bottomright")
 mkinresplot(m.Z.FOCUS, "Z3", lpos = "bottomright")
 @
 
+We can also investigate the confidence interval for the formation
+fraction from Z1 to Z2 by specifying the model using formation
+fractions, and fixing only the formation fraction from Z0 to Z1
+to unity.
+
+<<FOCUS_2006_Z_fits_6_ff, echo=TRUE, fig.height=4>>=
+Z.FOCUS.ff <- mkinmod(Z0 = list(type = "SFO", to = "Z1"),
+                   Z1 = list(type = "SFO", to = "Z2"),
+                   Z2 = list(type = "SFO", to = "Z3"),
+                   Z3 = list(type = "SFO"), use_of_ff = "max")
+m.Z.FOCUS.ff <- mkinfit(Z.FOCUS.ff, FOCUS_2006_Z_mkin,
+                        parms.ini = c(f_Z0_to_Z1 = 1),
+                        fixed_parms = c("f_Z0_to_Z1"), quiet = TRUE) 
+plot(m.Z.FOCUS.ff)
+summary(m.Z.FOCUS.ff, data = FALSE)
+@
+
 \section{Using the SFORB model for parent and metabolites}
 
 As the FOCUS report states, there is a certain tailing of the time course of metabolite 
@@ -255,7 +272,8 @@ The summary view of the backtransformed parameters shows that we get no
 confidence intervals due to overparameterisation. As the optimized
 \texttt{k\_Z3\_bound\_free} is excessively small, it is reasonable to fix it to
 zero. 
-<<FOCUS_2006_Z_fits_11a, echo=TRUE, fig.height=4>>=
+
+<<FOCUS_2006_Z_fits_11a, echo=TRUE>>=
 m.Z.mkin.5a <- mkinfit(Z.mkin.5, FOCUS_2006_Z_mkin, 
                        parms.ini = c(m.Z.mkin.4$bparms.ode[1:5],
                                     k_Z3_bound_free = 0),
