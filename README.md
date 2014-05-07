@@ -104,40 +104,10 @@ or the package vignettes referenced from the
 
 ## GUI
 
-There is a graphical user interface that I consider useful for real work.  It
-depends on the gWidgetsWWW2 package from John Verzani which also lives on
-github. Installing gWidgetsWWW2 yields a lot of warnings concerning overly 
-long path names. This is because the JavaScript library ExtJS is installed 
-along with it which has lots of files with long paths to be installed.
+There is a graphical user interface that I consider useful for real work.
+It is available from github in the separate package 
+[gmkin](http://github.com/jranke/gmkin).
 
-
-```s
-require(devtools)
-install_github("gWidgetsWWW2", "jverzani")
-```
-
-You start the GUI from your R terminal with latest mkin installed as shown below. 
-You may also want to adapt the browser that R starts (using
-`options(browser="/usr/bin/firefox")` on linux, or setting the default browser
-on Windows from the browser itself). Development was done with firefox. I also
-did some testing with Chrome on Windows. Chrome sometimes hung when loading
-the GUI and therefore ExtJS the first time, but when the GUI is loaded it appears
-to work fine.
-
-```s
-require(mkin)
-gmkin()
-```
-
-The following screenshot is taken after loading the gmkin workspace with
-an analysis of FOCUS dataset Z. It has to be saved as an .RData file 
-first, and can then be loaded to the GUI.
-
-```s
-save(FOCUS_2006_Z_gmkin, file = "FOCUS_2006_gmkin_Z.RData")
-```
-
-![gmkin screenshot](gmkin_screenshot.png)
   
 ## Credits and historical remarks
 
