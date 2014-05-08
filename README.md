@@ -21,11 +21,13 @@ install.packages('mkin', repos = 'http://r-forge.r-project.org')
 ```
 
 If R-Forge is lacking behind or if you prefer, you can install directly from
-github using the `devtools` package. 
+github using the `devtools` package. Using `quick = TRUE` skips docs,
+multiple-architecture builds, demos, and vignettes, to make installation as fast 
+and painless as possible.
 
 ```s
 require(devtools)
-install_github("mkin", "jranke", quick = TRUE) # quick = TRUE avoids vignette rebuilds
+install_github("mkin", "jranke", quick = TRUE)
 ```
 
 ## Background
