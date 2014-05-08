@@ -22,10 +22,8 @@ help:
 	@echo "  check-no-vignettes      Invoke build without rebuilding vignettes, and then check"
 	@echo "  install                 Invoke build and then install the result"
 	@echo "  install-no-vignettes    Invoke build without rebuilding vignettes and then install the result"
-	@echo "  test                    Install a new copy of the package and run it "
-	@echo "                          through the testsuite"
-	@echo "  test-no-vignettes       Invoke build without rebuilding vignettes, and then run it"
-	@echo "                          through the testsuite"
+	@echo "  test                    Install a new copy of the package without vignette rebuilding"
+	@echo "                          and run it through the testsuite"
 	@echo ""
 	@echo "Packaging Tasks"
 	@echo "---------------"
@@ -64,11 +62,7 @@ check-no-vignettes: build-no-vignettes
 	cd ..;\
 		"$(RBIN)/R" CMD check --as-cran --no-tests $(PKGNAME)_$(PKGVERS).tar.gz
 
-test: install
-	cd tests;\
-		"$(RBIN)/Rscript" doRUnit.R
-
-test-no-vignettes: install-no-vignettes
+test: install-no-vignettes
 	cd tests;\
 		"$(RBIN)/Rscript" doRUnit.R
 
