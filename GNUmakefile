@@ -86,7 +86,7 @@ release:
 	@echo "\nTo update the svn repository tied to the local r-forge branch with"
 	@echo "changes in the local master branch, run:"
 	@echo "'git checkout r-forge'"
-	@echo "'git merge --squash master'"
+	@echo "'git merge --squash -srecursive -Xtheirs --no-commit master'"
 	@echo "'git commit'"
 	@echo "'git svn dcommit'"
 	@echo "\nThen change back to the master branch:"
