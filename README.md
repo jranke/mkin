@@ -162,5 +162,4 @@ away... The master branch on github should always be in good shape, I implement
 new features in separate branches now. If you prefer subversion, project
 members for the 
 [r-forge project](http://r-forge.r-project.org/R/?group_id=615) are welcome as well.
-Generally, the source code of the latest CRAN version should be checked in to 
-r-forge.
+Generally, the source code of the latest CRAN version should be available there.
