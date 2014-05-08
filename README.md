@@ -14,16 +14,10 @@ You can install the latest released version from
 install.packages('mkin')
 ```
 
-A development version is usually available from [R-Forge](http://r-forge.r-project.org/R/?group_id=615):
-
-```s
-install.packages('mkin', repos = 'http://r-forge.r-project.org')
-```
-
-If R-Forge is lacking behind or if you prefer, you can install directly from
-github using the `devtools` package. Using `quick = TRUE` skips docs,
-multiple-architecture builds, demos, and vignettes, to make installation as fast 
-and painless as possible.
+If looking for the latest features, you can install directly from 
+[github](http://github.com/jranke/mkin), e.g.  using the `devtools` package.
+Using `quick = TRUE` skips docs, multiple-architecture builds, demos, and
+vignettes, to make installation as fast and painless as possible.
 
 ```s
 require(devtools)
@@ -128,12 +122,14 @@ as detailed in ther guidance document from 2006, slightly updated in 2011.
 Also, it was inspired by the first version of KinGUI developed by
 BayerCropScience, which is based on the MatLab runtime environment.
 
-The companion package [kinfit](http://kinfit.r-forge.r-project.org/kinfit_static/index.html) was [started in 2008](https://r-forge.r-project.org/scm/viewvc.php?view=rev&root=kinfit&revision=2) and 
-[first published on
-CRAN](http://cran.r-project.org/src/contrib/Archive/kinfit/) on 01 May
-2010.
+The companion package 
+[kinfit](http://kinfit.r-forge.r-project.org/kinfit_static/index.html) was 
+[started in 2008](https://r-forge.r-project.org/scm/viewvc.php?view=rev&root=kinfit&revision=2) and 
+[first published](http://cran.r-project.org/src/contrib/Archive/kinfit/) on
+CRAN on 01 May 2010.
 
-The first `mkin` code was [published on 11 May 2010](https://r-forge.r-project.org/scm/viewvc.php?view=rev&root=kinfit&revision=8) and the 
+The first `mkin` code was 
+[published on 11 May 2010](https://r-forge.r-project.org/scm/viewvc.php?view=rev&root=kinfit&revision=8) and the 
 [first CRAN version](http://cran.r-project.org/src/contrib/Archive/mkin)
 on 18 May 2010.
 
@@ -158,9 +154,13 @@ a further development of the scripts used for KinGUII, so the different tools
 will hopefully be able to learn from each other in the future as well.
 
 
-## Contribute
+## Development
 
-Contributions are welcome! Your [mkin fork](https://help.github.com/articles/fork-a-repo) is just a mouse click away... This git repository is now the 
-master branch, but I figured out how to merge changes in both directions,
-thanks to [this blog entry](http://cameron.bracken.bz/git-with-r-forge)
-by Cameron Bracken, so contributors from r-forge are welcome as well.
+Contributions are welcome! Your 
+[mkin fork](https://help.github.com/articles/fork-a-repo) is just a mouse click
+away... The master branch on github should always be in good shape, I implement 
+new features in separate branches now. If you prefer subversion, project
+members for the 
+[r-forge project](http://r-forge.r-project.org/R/?group_id=615) are welcome as well.
+Generally, the source code of the latest CRAN version should be checked in to 
+r-forge.
