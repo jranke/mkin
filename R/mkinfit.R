@@ -209,7 +209,8 @@ mkinfit <- function(mkinmod, observed,
   }
 
   lower <- rep(-Inf, length(c(state.ini.optim, parms.optim)))
-  names(lower) <- c(names(state.ini.optim), names(parms.optim))
+  upper <- rep(Inf, length(c(state.ini.optim, parms.optim)))
+  names(lower) <- names(upper) <- c(names(state.ini.optim), names(parms.optim))
   if (!transform_rates) {
     index_k <- grep("^k_", names(lower))
     lower[index_k] <- 0
@@ -217,8 +218,18 @@ mkinfit <- function(mkinmod, observed,
     lower[other_rate_parms] <- 0
   }
 
+  if (!transform_fractions) {
+    index_f <- grep("^f_", names(upper))
+    lower[index_f] <- 0
+    upper[index_f] <- 1
+    other_fraction_parms <- intersect(c("g"), names(upper))
+    lower[other_fraction_parms] <- 0
+    upper[other_fraction_parms] <- 1
+  }
+
   fit <- modFit(cost, c(state.ini.optim, parms.optim), 
-                method = method.modFit, control = control.modFit, lower = lower, ...)
+                method = method.modFit, control = control.modFit, 
+                lower = lower, upper = upper, ...)
 
   # Reiterate the fit until convergence of the variance components (IRLS)
   # if requested by the user
@@ -243,7 +254,7 @@ mkinfit <- function(mkinmod, observed,
       sigma.old <- sqrt(fit$var_ms_unweighted)
       observed[err] <- sqrt(fit$var_ms_unweighted)[as.character(observed$name)]
       fit <- modFit(cost, fit$par, method = method.modFit,
-                    control = control.modFit, lower = lower, ...)
+                    control = control.modFit, lower = lower, upper = upper, ...)
       reweight.diff = sum((sqrt(fit$var_ms_unweighted) - sigma.old)^2)
       if (!quiet) {
         cat("Iteration", n.iter, "yields variance estimates:\n")
@@ -275,6 +286,8 @@ mkinfit <- function(mkinmod, observed,
   fit$start$type = c(rep("state", length(state.ini.optim)), 
                      rep("deparm", length(parms.optim)))
   fit$start$transformed = c(state.ini.optim, parms.optim)
+  fit$start$lower_bound = lower
+  fit$start$upper_bound = upper
 
   fit$fixed <- data.frame(value = c(state.ini.fixed, 
       backtransform_odeparms(parms.fixed, mod_vars,
