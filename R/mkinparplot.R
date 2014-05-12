@@ -50,7 +50,7 @@ mkinparplot <- function(object) {
                yaxt = "n")
     if (type %in% c("rates.optim", "fractions.optim")) abline(v = 0, lty = 2)
     if (type %in% c("fractions.optim")) abline(v = 1, lty = 2)
-    position <- ifelse(values["Estimate", ] < mean(xlim)/2, "right", "left")
+    position <- ifelse(values["Estimate", ] < mean(xlim), "right", "left")
     text(ifelse(position == "left", min(xlim), max(xlim)), 
          length(parnames):1, parnames, 
          pos = ifelse(position == "left", 4, 2))
