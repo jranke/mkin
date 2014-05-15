@@ -54,8 +54,9 @@ mkinparplot <- function(object) {
     text(ifelse(position == "left", min(xlim), max(xlim)), 
          length(parnames):1, parnames, 
          pos = ifelse(position == "left", 4, 2))
+    values.upper.nonInf <- ifelse(values["Upper", ] == Inf, 1.5 * xlim[[2]], values["Upper", ])
     arrows(as.numeric(values["Lower", ]), length(parnames):1, 
-           as.numeric(values["Upper", ]), length(parnames):1, 
+           as.numeric(values.upper.nonInf), length(parnames):1, 
            code = 3, angle = 90, length = 0.05)
   }
   par(oldpars)
