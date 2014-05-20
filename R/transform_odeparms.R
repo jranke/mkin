@@ -30,7 +30,7 @@ transform_odeparms <- function(parms, mod_vars,
     else transparms[index_k] <- parms[index_k]
   }
 
-  # Go through state variables and apply isotropic logratio transformation if requested
+  # Go through state variables and apply isometric logratio transformation if requested
   for (box in mod_vars) {
     indices_f <- grep(paste("^f", box, sep = "_"), names(parms))
     f_names <- grep(paste("^f", box, sep = "_"), names(parms), value = TRUE)
@@ -73,7 +73,7 @@ backtransform_odeparms <- function(transparms, mod_vars,
     else parms[index_k] <- transparms[index_k]
   }
 
-  # Go through state variables and apply inverse isotropic logratio transformation
+  # Go through state variables and apply inverse isometric logratio transformation
   for (box in mod_vars) {
     indices_f <- grep(paste("^f", box, sep = "_"), names(transparms))
     f_names <- grep(paste("^f", box, sep = "_"), names(transparms), value = TRUE)

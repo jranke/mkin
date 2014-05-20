@@ -79,7 +79,7 @@ or the package vignettes referenced from the
   so their estimators can more reasonably be expected to follow
   a normal distribution. This has the side effect that no constraints
   are needed in the optimisation. Thanks to René Lehmann for the nice
-  cooperation on this, especially the isotropic logration transformation
+  cooperation on this, especially the isometric logration transformation
   that is now used for the formation fractions.
 * A side effect of this is that when parameter estimates are backtransformed
   to match the model definition, confidence intervals calculated from

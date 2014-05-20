@@ -364,15 +364,27 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
                                     "t value", "Pr(>|t|)", "Pr(>t)"))
 
   blci <- buci <- numeric()
-  # Only transform boundaries of CI for one parameter at a time
+  # Transform boundaries of CI for one parameter at a time,
+  # with the exception of sets of formation fractions (single fractions are OK).
+  f_names_skip <- character(0)
+  for (box in mod_vars) { # Figure out sets of fractions to skip
+    f_names <- grep(paste("^f", box, sep = "_"), pnames, value = TRUE)
+    n_paths <- length(f_names)
+    if (n_paths > 1) f_names_skip <- c(f_names_skip, f_names)
+  }
+
   for (pname in pnames) {
     par.lower <- par.upper <- object$par
     par.lower[pname] <- param[pname, "Lower"]
     par.upper[pname] <- param[pname, "Upper"]
-    blci[pname] <- backtransform_odeparms(par.lower, mod_vars, 
+    if (!pname %in% f_names_skip) {
+      blci[pname] <- backtransform_odeparms(par.lower, mod_vars, 
                                           object$transform_rates, object$transform_fractions)[pname]
-    buci[pname] <- backtransform_odeparms(par.upper, mod_vars,
+      buci[pname] <- backtransform_odeparms(par.upper, mod_vars,
                                           object$transform_rates, object$transform_fractions)[pname]
+    } else {
+      blci[pname] <- buci[pname] <- NA
+    }
   }
   bparam <- cbind(object$bparms.optim, blci, buci)
   dimnames(bparam) <- list(pnames, c("Estimate", "Lower", "Upper"))

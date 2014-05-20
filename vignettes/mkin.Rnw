@@ -2,6 +2,7 @@
 %\VignetteEngine{knitr::knitr}
 \documentclass[12pt,a4paper]{article}
 \usepackage{a4wide}
+\usepackage[utf8]{inputenc}
 \input{header}
 \hypersetup{  
   pdftitle = {mkin - Routines for fitting kinetic models with one or more state variables to chemical degradation data},
@@ -29,7 +30,7 @@ chemical degradation data}
 Wissenschaftlicher Berater\\
 Kronacher Str. 8, 79639 Grenzach-Wyhlen, Germany\\[0.5cm]
 and\\[0.5cm]
-University of Bremen\\
+Privatdozent at the University of Bremen\\
 }
 \maketitle
 
@@ -58,14 +59,100 @@ metabolites.
 
 Many approaches are possible regarding the evaluation of chemical degradation
 data.  The \Rpackage{kinfit} package \citep{pkg:kinfit} in \RR{}
-\citep{rcore2013} implements the approach recommended in the kinetics report
+\citep{rcore2014} implements the approach recommended in the kinetics report
 provided by the FOrum for Co-ordination of pesticide fate models and their
 USe \citep{FOCUS2006, FOCUSkinetics2011} for simple data series for one parent
 compound in one compartment.
 
 The \Rpackage{mkin} package \citep{pkg:mkin} extends this approach to data series
-with metabolites and more than one compartment and includes the possibility 
-for back reactions.
+with transformation products, commonly termed metabolites, and to more than one
+compartment. It is also possible to include back reactions, so equilibrium reactions
+and equilibrium partitioning can be specified, although this oftentimes leads 
+to an overparameterisation of the model.
+
+When mkin was first published in May 2010, the most commonly used tools
+for fitting more complex kinetic degradation models to experimental data were KinGUI
+\citep{schaefer2007}, a MATLAB$^\circledR$ based tool with a graphical user
+interface that was specifically tailored to the task and included some output
+as proposed by the FOCUS Kinetics Workgroup, and ModelMaker, a general purpose
+compartment based tool providing infrastructure for fitting dynamic simulation
+models based on differential equations to data.
+
+At that time, the R package \Rpackage{FME} (Flexible Modelling Environment) 
+\citep{soetaert2010} was already available, and provided a good basis for
+developing a package specifically tailored to the task. The remaining challenge
+was to make it as easy as possible for the users (including the author of this
+vignette) to specify the system of differential equations and to include the
+output requested by the FOCUS guidance, such as the relative standard deviation
+that has to be assumed for the residuals, such that the $\chi^2$
+goodness-of-fit test as defined by the FOCUS kinetics workgroup would pass
+using an significance level $\alpha$ of 0.05.
+
+Also, mkin introduced using analytical solutions for parent only kinetics for
+improved optimization speed. Later, Eigenvalue based solutions were
+introduced to mkin for the case of linear differential equations (\textit{i.e.}
+where the FOMC or DFOP models were not used for the parent compound), greatly
+improving the optimization speed for these cases.
+
+Soon after the publication of mkin, two derived tools were published, namely
+KinGUII (available from Bayer Crop Science) and CAKE (commissioned to Tessella
+by Syngenta), which added a graphical user interface (GUI), and added fitting by
+iteratively reweighted least squares (IRLS) and characterisation of likely
+parameter distributions by Markov Chain Monte Carlo (MCMC) sampling.
+
+CAKE focuses on a smooth use experience, sacrificing some flexibility in the model
+definition, allowing only two primary metabolites in parallel. KinGUI offers
+quite a flexible widget for specifying complex kinetic models. Back-reactions
+(non-instanteneous equilibria) were not present in the first version of
+KinGUII, and only simple first-order models could be specified for
+transformation products.  As of May 2014 (KinGUII version 2.1), back-reactions
+and biphasic modelling of metabolites are also available in KinGUII.
+
+Currently (May 2014), the main feature available in \Rpackage{mkin} which is
+not present in KinGUII or CAKE, is the estimation of parameter confidence
+intervals based on transformed parameters. For rate constants, the log
+transformation is used, as proposed by Bates and Watts \citep[p. 77, p.
+149]{bates1988}. Approximate intervals are constructed for the transformed rate
+constants \citep[compare][p. 153]{bates1988}, \textit{i.e.} for their logarithms.
+Confidence intervals for the rate constants are then obtained using the
+appropriate backtransformation using the exponential function.
+
+In the first version of \Rpackage{mkin} allowing for specifying models using 
+formation fractions, a home-made reparameterisation was used in order to ensure
+that the sum of formation fractions would not exceed unity. 
+
+This method is still used in the current version of KinGUII (v2.1), with a
+modification that allows for fixing the pathway to sink to zero. CAKE uses
+penalties in the objective function in order to enforce this constraint.
+
+In 2012, an alternative reparameterisation of the formation fractions was
+proposed together with René Lehmann \citep{ranke2012}, based on isometric
+logratio transformation (ILR). The aim was to improve the validity of the
+linear approximation of the objective function during the parameter
+estimation procedure as well as in the subsequent calculation of parameter
+confidence intervals.
+
+In the first attempt at providing improved parameter confidence intervals
+introduced to \Rpackage{mkin} in 2013, confidence intervals obtained from 
+FME on the transformed parameters were simply all backtransformed one by one
+to yield asymetric confidence intervals for the backtransformed parameters.
+
+However, while there is a 1:1 relation between the rate constants in the model
+and the transformed parameters fitted in the model, the parameters obtained by the
+isometric logratio transformation are calculated from the set of formation
+fractions that quantify the paths to each of the compounds formed from a
+specific parent compound, and no such 1:1 relation exists.
+
+Therefore, parameter confidence intervals for formation fractions obtained with
+this method only appear valid for the case of a single transformation product, where 
+only one formation fraction is to be estimated, directly corresponding to one
+component of the ilr transformed parameter.
+
+The confidence intervals obtained by backtransformation for the cases where a 
+1:1 relation between transformed and original parameter exist are considered by 
+the author of this vignette to be more accurate than those obtained using a
+re-estimation of the Hessian matrix after backtransformation, as implemented 
+in the FME package.
 
 \bibliographystyle{plainnat}
 \bibliography{references}

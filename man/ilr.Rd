@@ -2,10 +2,10 @@
 \alias{ilr}
 \alias{invilr}
 \title{
-  Function to perform isotropic log-ratio transformation
+  Function to perform isometric log-ratio transformation
 }
 \description{
-  This implementation is a special case of the class of isotropic log-ratio transformations.
+  This implementation is a special case of the class of isometric log-ratio transformations.
 }
 \usage{
   ilr(x)
@@ -28,7 +28,7 @@
   René Lehmann and Johannes Ranke
 }
 \seealso{
-  Other implementations are in R packages \code{compositions} and \code{robCompositions}.
+  Another implementation can be found in R package \code{robCompositions}.
 }
 \examples{
 # Order matters
