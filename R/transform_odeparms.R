@@ -44,7 +44,8 @@ transform_odeparms <- function(parms, mod_vars,
     }
   }
 
-  # Transform rates, fractions and tb also for FOMC, DFOP and HS models if requested
+  # Transform also FOMC parameters alpha and beta, DFOP and HS rates k1 and k2
+  # and HS parameter tb if transformation of rates is requested
   for (pname in c("alpha", "beta", "k1", "k2", "tb")) {
     if (!is.na(parms[pname])) {
       transparms[pname] <- ifelse(transform_rates, log(parms[pname]), parms[pname])
