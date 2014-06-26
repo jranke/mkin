@@ -10,7 +10,7 @@ the Eigenvalues are returned. These are equivalent to the rate constantes of the
 with the advantage that the SFORB model can also be used for metabolites.
 }
 \usage{
-endpoints(fit, pseudoDT50 = FALSE)
+endpoints(fit)
 }
 \arguments{
   \item{fit}{

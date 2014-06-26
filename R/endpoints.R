@@ -117,8 +117,8 @@ endpoints <- function(fit) {
       ep$SFORB[[paste(obs_var, "b1", sep="_")]] = b1
       ep$SFORB[[paste(obs_var, "b2", sep="_")]] = b2
 
-      ep$distimes[obs_var, c("DT50_b1")] = DT50_b1
-      ep$distimes[obs_var, c("DT50_b2")] = DT50_b2
+      ep$distimes[obs_var, c(paste("DT50", obs_var, "b1", sep = "_"))] = DT50_b1
+      ep$distimes[obs_var, c(paste("DT50", obs_var, "b2", sep = "_"))] = DT50_b2
     }
     ep$distimes[obs_var, c("DT50", "DT90")] = c(DT50, DT90)
   }
