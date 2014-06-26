@@ -19,8 +19,9 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("variable", "residual"))
 
 mkinresplot <- function (object, 
   obs_vars = names(object$mkinmod$map),
+  xlim = c(0, 1.1 * max(object$data$time)),
   xlab = "Time", ylab = "Residual",
-	maxabs = "auto", legend= TRUE, lpos = "topright", ...) 
+  maxabs = "auto", legend= TRUE, lpos = "topright", ...) 
 {
 	obs_vars_all <- as.character(unique(object$data$variable))
 
@@ -36,7 +37,7 @@ mkinresplot <- function (object,
  	names(col_obs) <- names(pch_obs) <- obs_vars
 
   plot(0,  xlab = xlab, ylab = ylab, 
-       xlim = c(0, 1.1 * max(object$data$time)), 
+       xlim = xlim,
        ylim = c(-1.2 * maxabs, 1.2 * maxabs), ...)
 
 	for(obs_var in obs_vars){

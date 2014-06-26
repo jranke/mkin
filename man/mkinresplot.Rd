@@ -12,6 +12,7 @@
 \usage{
   mkinresplot(object, 
     obs_vars = names(object$mkinmod$map),
+    xlim = c(0, 1.1 * max(object$data$time)),
     xlab = "Time", ylab = "Residual", 
     maxabs = "auto", legend = TRUE, lpos = "topright", ...)
 }
@@ -23,6 +24,9 @@
     A character vector of names of the observed variables for which residuals
     should be plotted. Defaults to all observed variables in the model
 }
+  \item{xlim}{
+    plot range in x direction.
+  }
   \item{xlab}{
     Label for the x axis. Defaults to "Time [days]".
 }
