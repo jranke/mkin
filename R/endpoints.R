@@ -32,9 +32,11 @@ endpoints <- function(fit) {
       k_tot = sum(parms.all[k_names])
       DT50 = log(2)/k_tot
       DT90 = log(10)/k_tot
-      for (k_name in k_names)
-      {
-        ep$ff[[sub("k_", "", k_name)]] = parms.all[[k_name]] / k_tot
+      if (fit$mkinmod$use_of_ff == "min") {
+        for (k_name in k_names)
+        {
+          ep$ff[[sub("k_", "", k_name)]] = parms.all[[k_name]] / k_tot
+        }
       }
     }
     if (type == "FOMC") {
