@@ -1,6 +1,8 @@
-endpoints <- function(fit, pseudoDT50 = FALSE) {
+endpoints <- function(fit) {
   # Calculate dissipation times DT50 and DT90 and, if necessary, formation
   # fractions and SFORB eigenvalues from optimised parameters
+  # Additional DT50 values are calculated from the FOMC DT90 and k1 and k2 from HS and DFOP,
+  # as well as from Eigenvalues b1 and b2 of the SFORB model
   ep <- list()
   obs_vars <- fit$obs_vars
   parms.all <- fit$bparms.ode
@@ -40,6 +42,8 @@ endpoints <- function(fit, pseudoDT50 = FALSE) {
       beta = parms.all["beta"]
       DT50 = beta * (2^(1/alpha) - 1)
       DT90 = beta * (10^(1/alpha) - 1)
+      DT50_back = DT90 / (log(10)/log(2)) # Backcalculated DT50 as recommended in FOCUS 2011
+      ep$distimes[obs_var, c("DT50back")] = DT50_back
     }
     if (type == "DFOP") {
       k1 = parms.all["k1"]
@@ -54,6 +58,10 @@ endpoints <- function(fit, pseudoDT50 = FALSE) {
       DT50 = ifelse(DTmax - DT50.o < 0.1, NA, DT50.o)
       DT90.o <- optimize(f, c(0.001, DTmax), x=90)$minimum
       DT90 = ifelse(DTmax - DT90.o < 0.1, NA, DT90.o)
+      DT50_k1 = log(2)/k1
+      DT50_k2 = log(2)/k2
+      ep$distimes[obs_var, c("DT50_k1")] = DT50_k1
+      ep$distimes[obs_var, c("DT50_k2")] = DT50_k2
     }
     if (type == "HS") {
       k1 = parms.all["k1"]
@@ -68,6 +76,10 @@ endpoints <- function(fit, pseudoDT50 = FALSE) {
       }
       DT50 <- DTx(50)
       DT90 <- DTx(90)
+      DT50_k1 = log(2)/k1
+      DT50_k2 = log(2)/k2
+      ep$distimes[obs_var, c("DT50_k1")] = DT50_k1
+      ep$distimes[obs_var, c("DT50_k2")] = DT50_k2
     }
     if (type == "SFORB") {
       # FOCUS kinetics (2006), p. 60 f
@@ -98,11 +110,17 @@ endpoints <- function(fit, pseudoDT50 = FALSE) {
         ep$ff[[sub("k_", "", k_out_name)]] = parms.all[[k_out_name]] / k_1output
       }
 
+      DT50_b1 = log(2)/b1
+      DT50_b2 = log(2)/b2
+
       # Return the eigenvalues for comparison with DFOP rate constants
       ep$SFORB[[paste(obs_var, "b1", sep="_")]] = b1
       ep$SFORB[[paste(obs_var, "b2", sep="_")]] = b2
+
+      ep$distimes[obs_var, c("DT50_b1")] = DT50_b1
+      ep$distimes[obs_var, c("DT50_b2")] = DT50_b2
     }
-    ep$distimes[obs_var, ] = c(DT50, DT90)
+    ep$distimes[obs_var, c("DT50", "DT90")] = c(DT50, DT90)
   }
   return(ep)
 }

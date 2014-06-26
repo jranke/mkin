@@ -15,11 +15,7 @@ endpoints(fit, pseudoDT50 = FALSE)
 \arguments{
   \item{fit}{
   An object of class \code{\link{mkinfit}}.
-}
-  \item{pseudoDT50}{
-  Should pseudoDT50 values for FOMC, DFOP and SFORB models be reported, as 
-  recommended by the FOCUS group? Currently not implemented.
-}
+  }
 }
 \note{
   The function is used internally by \code{\link{summary.mkinfit}}.
