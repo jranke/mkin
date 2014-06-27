@@ -102,6 +102,7 @@ move-sd:
 # Packaging Tasks
 #------------------------------------------------------------------------------
 winbuilder: build
+	date
 	@echo "Uploading to R-release on win-builder"
 	curl -T $(TGZ) ftp://anonymous@win-builder.r-project.org/R-release/
 	@echo "Uploading to R-devel on win-builder"
