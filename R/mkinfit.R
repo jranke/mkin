@@ -459,20 +459,29 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
   cat("\nOptimised, transformed parameters:\n")
   print(signif(x$par, digits = digits))
 
-  cat("\nBacktransformed parameters:\n")
-  print(signif(x$bpar, digits = digits))
+  cat("\nParameter correlation:\n")
+  if (!is.null(x$cov.unscaled)){
+    Corr <- cov2cor(x$cov.unscaled)
+    rownames(Corr) <- colnames(Corr) <- rownames(x$par)
+    print(Corr, digits = digits, ...)
+  } else {
+    cat("Could not estimate covariance matrix; singular system:\n")
+  }
 
   cat("\nResidual standard error:",
       format(signif(x$sigma, digits)), "on", rdf, "degrees of freedom\n")
+
+  cat("\nBacktransformed parameters:\n")
+  print(signif(x$bpar, digits = digits))
 
   cat("\nChi2 error levels in percent:\n")
   x$errmin$err.min <- 100 * x$errmin$err.min
   print(x$errmin, digits=digits,...)
 
-  printdistimes <- !is.null(x$distimes)
-  if(printdistimes){
-    cat("\nEstimated disappearance times:\n")
-    print(x$distimes, digits=digits,...)
+  printSFORB <- !is.null(x$SFORB)
+  if(printSFORB){
+    cat("\nEstimated Eigenvalues of SFORB model(s):\n")
+    print(x$SFORB, digits=digits,...)
   }
 
   printff <- !is.null(x$ff)
@@ -481,19 +490,10 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
     print(data.frame(ff = x$ff), digits=digits,...)
   }
 
-  printSFORB <- !is.null(x$SFORB)
-  if(printSFORB){
-    cat("\nEstimated Eigenvalues of SFORB model(s):\n")
-    print(x$SFORB, digits=digits,...)
-  }
-
-  cat("\nParameter correlation:\n")
-  if (!is.null(x$cov.unscaled)){
-    Corr <- cov2cor(x$cov.unscaled)
-    rownames(Corr) <- colnames(Corr) <- rownames(x$par)
-    print(Corr, digits = digits, ...)
-  } else {
-    cat("Could not estimate covariance matrix; singular system:\n")
+  printdistimes <- !is.null(x$distimes)
+  if(printdistimes){
+    cat("\nEstimated disappearance times:\n")
+    print(x$distimes, digits=digits,...)
   }
 
   printdata <- !is.null(x$data)
