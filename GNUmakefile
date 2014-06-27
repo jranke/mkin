@@ -75,20 +75,17 @@ build: $(TGZ)
 build-no-vignettes: $(TGZVNR)
 
 install: build
-	cd ..;\
-		"$(RBIN)/R" CMD INSTALL $(PKGNAME)_$(PKGVERS).tar.gz
+	"$(RBIN)/R" CMD INSTALL $(TGZ)
 
 install-no-vignettes: build-no-vignettes
-	cd ..;\
-		"$(RBIN)/R" CMD INSTALL $(PKGNAME)_$(PKGVERS).tar.gz
+	"$(RBIN)/R" CMD INSTALL $(TGZVNR)
 
 check: build
-	cd ..;\
-		"$(RBIN)/R" CMD check --as-cran --no-tests $(PKGNAME)_$(PKGVERS).tar.gz
+	# Vignettes have been rebuilt by the build target so do not repeat that here
+	"$(RBIN)/R" CMD check --as-cran --no-tests --no-build-vignettes $(TGZ)
 
 check-no-vignettes: build-no-vignettes
-	cd ..;\
-		"$(RBIN)/R" CMD check --as-cran --no-tests $(PKGNAME)_$(PKGVERS).tar.gz
+	"$(RBIN)/R" CMD check --as-cran --no-tests $(TGZVNR)
 
 test: install-no-vignettes
 	cd tests;\
@@ -125,4 +122,4 @@ r-forge:
 
 submit:
 	@echo "\nAre you sure you want to release to CRAN?"
-	@echo "\nThen open the form at http://cran.r-project.org/submit.html"
+	@echo "\nThen use the form at http://cran.r-project.org/submit.html"
