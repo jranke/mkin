@@ -13,7 +13,24 @@ RBIN ?= $(shell dirname "`which R`")
 # Specify the directory where the static documentation belongs
 SDDIR ?= $(HOME)/svn/kinfit.r-forge/www/mkin_static
 
-.PHONY: help
+#------------------------------------------------------------------------------
+# These must be manually kept up to date 
+#------------------------------------------------------------------------------
+pkgfiles = ChangeLog \
+	   data/* \
+	   DESCRIPTION \
+	   inst/unitTests* \
+	   inst/staticdocs/README \
+	   man/* \
+	   NAMESPACE \
+	   R/* \
+	   README.md \
+	   tests/* \
+	   TODO \
+	   vignettes/*
+#------------------------------------------------------------------------------
+
+.PHONY: help vignettes
 
 help:
 	@echo "\nExecute development tasks for $(PKGNAME)\n"
@@ -29,6 +46,7 @@ help:
 	@echo "  install-no-vignettes    Invoke build without rebuilding vignettes and then install the result"
 	@echo "  test                    Install a new copy of the package without vignette rebuilding"
 	@echo "                          and run it through the testsuite"
+	@echo "  vignettes               Build the vignettes"
 	@echo "  sd                      Build the static documentation"
 	@echo "  move-sd                 Move the static documentation where it belongs"
 	@echo ""
@@ -45,20 +63,6 @@ help:
 #------------------------------------------------------------------------------
 # Development Tasks
 #------------------------------------------------------------------------------
-
-# These must be manually kept up to date 
-pkgfiles = ChangeLog \
-	   data/* \
-	   DESCRIPTION \
-	   inst/unitTests* \
-	   inst/staticdocs/README \
-	   man/* \
-	   NAMESPACE \
-	   R/* \
-	   README.md \
-	   tests/* \
-	   TODO \
-	   vignettes/*
 
 $(TGZ): $(pkgfiles)
 	cd ..;\
@@ -81,7 +85,7 @@ install-no-vignettes: build-no-vignettes
 	"$(RBIN)/R" CMD INSTALL $(TGZVNR)
 
 check: build
-	# Vignettes have been rebuilt by the build target so do not repeat that here
+	# Vignettes have been rebuilt by the build target
 	"$(RBIN)/R" CMD check --as-cran --no-tests --no-build-vignettes $(TGZ)
 
 check-no-vignettes: build-no-vignettes
@@ -91,6 +95,9 @@ test: install-no-vignettes
 	cd tests;\
 		"$(RBIN)/Rscript" doRUnit.R
 
+vignettes:
+	"$(RBIN)/Rscript" -e "tools::buildVignettes(dir = '.')"
+		
 sd:
 	"$(RBIN)/Rscript" -e "library(staticdocs); build_site()"
 
@@ -107,7 +114,6 @@ winbuilder: build
 	curl -T $(TGZ) ftp://anonymous@win-builder.r-project.org/R-release/
 	@echo "Uploading to R-devel on win-builder"
 	curl -T $(TGZ) ftp://anonymous@win-builder.r-project.org/R-devel/
-
 
 r-forge:
 	@echo "\nHow about make test and make check?"
