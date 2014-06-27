@@ -6,11 +6,11 @@ endpoints <- function(fit) {
   ep <- list()
   obs_vars <- fit$obs_vars
   parms.all <- fit$bparms.ode
+  ep$ff <- vector()
+  ep$SFORB <- vector()
   ep$distimes <- data.frame(DT50 = rep(NA, length(obs_vars)), 
 			    DT90 = rep(NA, length(obs_vars)), 
     row.names = obs_vars)
-  ep$ff <- vector()
-  ep$SFORB <- vector()
   for (obs_var in obs_vars) {
     type = names(fit$mkinmod$map[[obs_var]])[1]  
 
