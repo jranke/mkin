@@ -1,6 +1,8 @@
 PKGNAME := $(shell sed -n "s/Package: *\([^ ]*\)/\1/p" DESCRIPTION)
 PKGVERS := $(shell sed -n "s/Version: *\([^ ]*\)/\1/p" DESCRIPTION)
 PKGSRC  := $(shell basename $(PWD))
+TGZ     := ../$(PKGSRC)_$(PKGVERS).tar.gz
+TGZVNR  := ../$(PKGSRC)_$(PKGVERS)-vignettes-not-rebuilt.tar.gz
 
 # Specify the directory holding R binaries. To use an alternate R build (say a
 # pre-prelease version) use `make RBIN=/path/to/other/R/` or `export RBIN=...`
@@ -8,6 +10,7 @@ PKGSRC  := $(shell basename $(PWD))
 # containing the first instance of R on the PATH.
 RBIN ?= $(shell dirname "`which R`")
 
+# Specify the directory where the static documentation belongs
 SDDIR ?= $(HOME)/svn/kinfit.r-forge/www/mkin_static
 
 .PHONY: help
@@ -31,24 +34,45 @@ help:
 	@echo ""
 	@echo "Packaging Tasks"
 	@echo "---------------"
-	@echo "  release    Give some reminders"
+	@echo "  winbuilder              Check building on Windows using the winbuilder service"
+	@echo "  r-forge                 Give reminders how to sync the r-forge repo"
+	@echo "  submit                  Submit to CRAN"
 	@echo ""
 	@echo "Using R in: $(RBIN)"
 	@echo "Set the RBIN environment variable to change this."
 	@echo ""
 
-
 #------------------------------------------------------------------------------
 # Development Tasks
 #------------------------------------------------------------------------------
 
-build:
+# These must be manually kept up to date 
+pkgfiles = ChangeLog \
+	   data/* \
+	   DESCRIPTION \
+	   inst/unitTests* \
+	   inst/staticdocs/README \
+	   man/* \
+	   NAMESPACE \
+	   R/* \
+	   README.md \
+	   tests/* \
+	   TODO \
+	   vignettes/*
+
+$(TGZ): $(pkgfiles)
 	cd ..;\
 		"$(RBIN)/R" CMD build $(PKGSRC)
 
-build-no-vignettes:
+$(TGZVNR): $(pkgfiles)
 	cd ..;\
-		"$(RBIN)/R" CMD build $(PKGSRC) --no-build-vignettes
+		"$(RBIN)/R" CMD build $(PKGSRC) --no-build-vignettes;\
+		cd $(PKGSRC);\
+	mv $(TGZ) $(TGZVNR)
+                
+build: $(TGZ)
+
+build-no-vignettes: $(TGZVNR)
 
 install: build
 	cd ..;\
@@ -80,7 +104,14 @@ move-sd:
 #------------------------------------------------------------------------------
 # Packaging Tasks
 #------------------------------------------------------------------------------
-release:
+winbuilder: build
+	@echo "Uploading to R-release on win-builder"
+	curl -T $(TGZ) ftp://anonymous@win-builder.r-project.org/R-release/
+	@echo "Uploading to R-devel on win-builder"
+	curl -T $(TGZ) ftp://anonymous@win-builder.r-project.org/R-devel/
+
+
+r-forge:
 	@echo "\nHow about make test and make check?"
 	@echo "\nIs the DESCRIPTION file up to date?"
 	@echo "\nTo update the svn repository tied to the local r-forge branch with"
@@ -91,3 +122,7 @@ release:
 	@echo "'git svn dcommit'"
 	@echo "\nThen change back to the master branch:"
 	@echo "'git checkout master'"
+
+submit:
+	@echo "\nAre you sure you want to release to CRAN?"
+	@echo "\nThen open the form at http://cran.r-project.org/submit.html"
