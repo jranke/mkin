@@ -16,7 +16,7 @@ SDDIR ?= $(HOME)/svn/kinfit.r-forge/www/mkin_static
 #------------------------------------------------------------------------------
 # These must be manually kept up to date 
 #------------------------------------------------------------------------------
-pkgfiles = ChangeLog \
+pkgfiles = NEWS \
 	   data/* \
 	   DESCRIPTION \
 	   inst/unitTests* \
