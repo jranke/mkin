@@ -1,6 +1,6 @@
 # CHANGES in mkin VERSION 0.9-30 
 
-- The ChangeLog was renamed to NEWS.md and the entries were converted to markdown syntax compatible with the `tools::news()` function built into R. For a detailed list of changes to the mkin source please consult the commit history on http://github.com/jranke/mkin
+- The ChangeLog was renamed to NEWS.md and the entries were converted to markdown syntax compatible with the `tools::news()` function built into R.
 
 - The order of some of the information blocks in `print.summary.mkinfit.R()` has been ordered in a more logical way
 
@@ -54,7 +54,7 @@
 
 # CHANGES in mkin VERSION 0.9-22
 
-- Get rid of the optimisation step in `mkinerrmin` - this was unnecessary Thanks to KinGUII for the inspiration - actually this is equation 6-2 in FOCUS kinetics p. 91 that I had overlooked originally
+- Get rid of the optimisation step in `mkinerrmin` - this was unnecessary. Thanks to KinGUII for the inspiration - actually this is equation 6-2 in FOCUS kinetics p. 91 that I had overlooked originally
 - Fix `plot.mkinfit` as it passed graphical arguments like main to the solver
 - Do not use `plot=TRUE` in `mkinfit()` example
 - The first successful fits in the not so simple GUI
@@ -65,3 +65,5 @@
 - Correct the output of the data in the case of manual weighting
 - Implement IRLS assuming different variances for observed variables
 - Do not use 0 values at time zero for chi2 error level calculations. This is the way it is done in KinGUII and it makes sense. It does impact the chi2 error levels in the output. Generally they seem to be lower for metabolites now, presumably because the mean of the observed values is higher
+
+For a detailed list of changes to the mkin source please consult the commit history on http://github.com/jranke/mkin
