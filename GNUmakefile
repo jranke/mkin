@@ -13,9 +13,6 @@ RBIN ?= $(shell dirname "`which R`")
 # Specify the directory where the static documentation belongs
 SDDIR ?= $(HOME)/svn/kinfit.r-forge/www/mkin_static
 
-#------------------------------------------------------------------------------
-# These must be manually kept up to date 
-#------------------------------------------------------------------------------
 pkgfiles = NEWS \
 	   data/* \
 	   DESCRIPTION \
@@ -28,41 +25,12 @@ pkgfiles = NEWS \
 	   tests/* \
 	   TODO \
 	   vignettes/*
-#------------------------------------------------------------------------------
 
-.PHONY: help vignettes
+all: NEWS check
 
-help:
-	@echo "\nExecute development tasks for $(PKGNAME)\n"
-	@echo "Usage: \`make <task>\` where <task> is one of:"
-	@echo ""
-	@echo "Development Tasks"
-	@echo "-----------------"
-	@echo "  build                   Create the package"
-	@echo "  build-no-vignettes      Create the package without rebuilding vignettes"
-	@echo "  check                   Invoke build and then check the package"
-	@echo "  check-no-vignettes      Invoke build without rebuilding vignettes, and then check"
-	@echo "  install                 Invoke build and then install the result"
-	@echo "  install-no-vignettes    Invoke build without rebuilding vignettes and then install the result"
-	@echo "  test                    Install a new copy of the package without vignette rebuilding"
-	@echo "                          and run it through the testsuite"
-	@echo "  vignettes               Build the vignettes"
-	@echo "  sd                      Build the static documentation"
-	@echo "  move-sd                 Move the static documentation where it belongs"
-	@echo ""
-	@echo "Packaging Tasks"
-	@echo "---------------"
-	@echo "  winbuilder              Check building on Windows using the winbuilder service"
-	@echo "  r-forge                 Give reminders how to sync the r-forge repo"
-	@echo "  submit                  Submit to CRAN"
-	@echo ""
-	@echo "Using R in: $(RBIN)"
-	@echo "Set the RBIN environment variable to change this."
-	@echo ""
-
-#------------------------------------------------------------------------------
-# Development Tasks
-#------------------------------------------------------------------------------
+# convert markdown to R's NEWS format (from knitr package)
+NEWS: NEWS.md
+	sed -e 's/^-/ -/' -e 's/^## *//' -e 's/^#/\t\t/' <NEWS.md | fmt -80 >NEWS
 
 $(TGZ): $(pkgfiles)
 	cd ..;\
@@ -95,6 +63,7 @@ test: install-no-vignettes
 	cd tests;\
 		"$(RBIN)/Rscript" doRUnit.R
 
+.PHONY: vignettes
 vignettes:
 	"$(RBIN)/Rscript" -e "tools::buildVignettes(dir = '.')"
 		
