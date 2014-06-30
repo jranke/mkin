@@ -22,7 +22,7 @@
 
 # CHANGES in mkin VERSION 0.9-27
 
-- Fork the GUI into a separate package gmkin
+- Fork the GUI into a separate package [gmkin](http://github.com/jranke/gmkin)
 - DESCRIPTION, NAMESPACE, TODO: Adapt and add copyright information
 - Remove files belonging to the GUI
 - Possibility to fit without parameter transformations, using bounds as implemented in FME
