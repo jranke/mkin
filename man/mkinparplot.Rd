@@ -25,11 +25,10 @@
 
 \examples{
 model <- mkinmod(
-  T245 = list(type = "SFO", to = c("phenol")),
+  T245 = list(type = "SFO", to = c("phenol"), sink = FALSE),
   phenol = list(type = "SFO", to = c("anisole")),
   anisole = list(type = "SFO"), use_of_ff = "max")
-fit <- mkinfit(model, subset(mccall81_245T, soil == "Commerce"), 
-  parms.ini = c(f_phenol_to_anisole = 1), fixed_parms = "f_phenol_to_anisole")
+fit <- mkinfit(model, subset(mccall81_245T, soil == "Commerce"))
 \dontrun{mkinparplot(fit)}
 }
 \keyword{ hplot }

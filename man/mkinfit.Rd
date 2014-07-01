@@ -94,11 +94,16 @@ mkinfit(mkinmod, observed,
     "lsoda" is performant, but sometimes fails to converge.
   }
   \item{method.modFit}{
-    The optimisation method passed to \code{\link{modFit}}. The default "Marq"
+    The optimisation method passed to \code{\link{modFit}}.  The default "Marq"
     is the Levenberg Marquardt algorithm \code{\link{nls.lm}} from the package
-    \code{minpack.lm}. Often other methods need more iterations to find the
-    same result. When using "Pseudo", "upper" and "lower" need to be 
-    specified for the transformed parameters.
+    \code{minpack.lm} and usually needs the least number of iterations.
+
+    For more complex problems where local minima occur, the "Port" algorithm is
+    recommended as it is less prone to get trapped in local minima and depends
+    less on starting values for parameters.  However, it needs more iterations.
+
+    When using "Pseudo", "upper" and "lower" need to be specified for the
+    transformed parameters.
   }
   \item{control.modFit}{
     Additional arguments passed to the optimisation method used by

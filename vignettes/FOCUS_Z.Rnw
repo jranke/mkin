@@ -108,24 +108,14 @@ The simplified model is obtained by setting the list component \texttt{sink} to
 
 <<FOCUS_2006_Z_fits_3, echo=TRUE, fig.height=4>>=
 Z.3 <- mkinmod(Z0 = list(type = "SFO", to = "Z1", sink = FALSE),
-               Z1 = list(type = "SFO"))
+               Z1 = list(type = "SFO"), use_of_ff = "max")
 m.Z.3 <- mkinfit(Z.3, FOCUS_2006_Z_mkin, quiet = TRUE)
 plot(m.Z.3)
 summary(m.Z.3, data = FALSE)
 @
 
-This model definition is not supported when formation fractions 
-are used, but the formation fraction can be fixed to unity.
-
-<<FOCUS_2006_Z_fits_3.ff, echo=TRUE, fig.height=4>>=
-Z.3.ff <- mkinmod(Z0 = list(type = "SFO", to = "Z1"),
-               Z1 = list(type = "SFO"), use_of_ff = "max")
-m.Z.3.ff <- mkinfit(Z.3.ff, FOCUS_2006_Z_mkin, 
-                    parms.ini = c(f_Z0_to_Z1 = 1),
-                    fixed_parms = "f_Z0_to_Z1",
-                    quiet = TRUE)
-summary(m.Z.3.ff, data = FALSE)
-@
+As there is only one transformation product for Z0 and no pathway
+to sink, the formation fraction is internally fixed to unity.
 
 \section{Including metabolites Z2 and Z3}
 
@@ -172,17 +162,15 @@ mkinresplot(m.Z.FOCUS, "Z3", lpos = "bottomright")
 
 We can also investigate the confidence interval for the formation
 fraction from Z1 to Z2 by specifying the model using formation
-fractions, and fixing only the formation fraction from Z0 to Z1
-to unity.
+fractions.
 
 <<FOCUS_2006_Z_fits_6_ff, echo=TRUE, fig.height=4>>=
-Z.FOCUS.ff <- mkinmod(Z0 = list(type = "SFO", to = "Z1"),
-                   Z1 = list(type = "SFO", to = "Z2"),
+Z.FOCUS.ff <- mkinmod(Z0 = list(type = "SFO", to = "Z1", sink = FALSE),
+                   Z1 = list(type = "SFO", to = "Z2", sink = FALSE),
                    Z2 = list(type = "SFO", to = "Z3"),
-                   Z3 = list(type = "SFO"), use_of_ff = "max")
-m.Z.FOCUS.ff <- mkinfit(Z.FOCUS.ff, FOCUS_2006_Z_mkin,
-                        parms.ini = c(f_Z0_to_Z1 = 1),
-                        fixed_parms = c("f_Z0_to_Z1"), quiet = TRUE) 
+                   Z3 = list(type = "SFO"), 
+                   use_of_ff = "max")
+m.Z.FOCUS.ff <- mkinfit(Z.FOCUS.ff, FOCUS_2006_Z_mkin, quiet = TRUE)
 plot(m.Z.FOCUS.ff)
 summary(m.Z.FOCUS.ff, data = FALSE)
 @

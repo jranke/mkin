@@ -16,31 +16,52 @@
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
 
-transform_odeparms <- function(parms, mod_vars, 
+transform_odeparms <- function(parms, mkinmod,
                                transform_rates = TRUE, 
                                transform_fractions = TRUE) 
 {
+  # We need the model specification for the names of the model 
+  # variables and the information on the sink
+  spec = mkinmod$spec
+
   # Set up container for transformed parameters
-  transparms <- parms
+  transparms <- numeric(0)
+
+  # Do not transform initial values for state variables
+  state.ini.optim <- parms[grep("_0$", names(parms))]
+  transparms[names(state.ini.optim)] <- state.ini.optim
 
   # Log transformation for rate constants if requested
-  index_k <- grep("^k_", names(transparms))
-  if (length(index_k) > 0) {
-    if(transform_rates) transparms[index_k] <- log(parms[index_k])
-    else transparms[index_k] <- parms[index_k]
+  k <- parms[grep("^k_", names(parms))]
+  if (length(k) > 0) {
+    if(transform_rates) {
+      transparms[paste0("log_", names(k))] <- log(k)
+    }
+    else transparms[names(k)] <- k
   }
 
-  # Go through state variables and apply isometric logratio transformation if requested
+  # Go through state variables and apply isometric logratio transformation to
+  # formation fractions if requested
+  mod_vars = names(spec)
   for (box in mod_vars) {
-    indices_f <- grep(paste("^f", box, sep = "_"), names(parms))
-    f_names <- grep(paste("^f", box, sep = "_"), names(parms), value = TRUE)
-    n_paths <- length(indices_f)
-    if (n_paths > 0) {
-      f <- parms[indices_f]
-      trans_f <- ilr(c(f, 1 - sum(f)))
-      names(trans_f) <- f_names
-      if(transform_fractions) transparms[indices_f] <- trans_f
-      else transparms[indices_f] <- f
+    f <- parms[grep(paste("^f", box, sep = "_"), names(parms))]
+
+    if (length(f) > 0) {
+      if(transform_fractions) {
+        if (spec[[box]]$sink) {
+          trans_f <- ilr(c(f, 1 - sum(f)))
+          trans_f_names <- paste("f", box, "ilr", 1:length(trans_f), sep = "_")
+          transparms[trans_f_names] <- trans_f
+        } else {
+          if (length(f) > 1) {
+            trans_f <- ilr(f)
+            trans_f_names <- paste("f", box, "ilr", 1:length(trans_f), sep = "_")
+            transparms[trans_f_names] <- trans_f
+          }
+        }
+      } else {
+        transparms[names(f)] <- f
+      }
     }
   }
 
@@ -48,55 +69,85 @@ transform_odeparms <- function(parms, mod_vars,
   # and HS parameter tb if transformation of rates is requested
   for (pname in c("alpha", "beta", "k1", "k2", "tb")) {
     if (!is.na(parms[pname])) {
-      transparms[pname] <- ifelse(transform_rates, log(parms[pname]), parms[pname])
-      transparms[pname] <- ifelse(transform_rates, log(parms[pname]), parms[pname])
+      transparms[paste0("log_", pname)] <- ifelse(transform_rates, log(parms[pname]), parms[pname])
     } 
   }
   if (!is.na(parms["g"])) {
     g <- parms["g"]
-    transparms["g"] <- ifelse(transform_fractions, ilr(c(g, 1 - g)), g)
+    transparms["g_ilr"] <- ifelse(transform_fractions, ilr(c(g, 1 - g)), g)
   }
 
   return(transparms)
 }
 
-backtransform_odeparms <- function(transparms, mod_vars,
+backtransform_odeparms <- function(transparms, mkinmod,
                                    transform_rates = TRUE,
                                    transform_fractions = TRUE)
 {
+  # We need the model specification for the names of the model 
+  # variables and the information on the sink
+  spec = mkinmod$spec
+
   # Set up container for backtransformed parameters
-  parms <- transparms
+  parms <- numeric(0)
+
+  # Do not transform initial values for state variables
+  state.ini.optim <- transparms[grep("_0$", names(transparms))]
+  parms[names(state.ini.optim)] <- state.ini.optim
 
   # Exponential transformation for rate constants
-  index_k <- grep("^k_", names(parms))
-  if (length(index_k) > 0) {
-    if(transform_rates) parms[index_k] <- exp(transparms[index_k])
-    else parms[index_k] <- transparms[index_k]
+  if(transform_rates) {
+    trans_k <- transparms[grep("^log_k_", names(transparms))]
+    if (length(trans_k) > 0) {
+      k_names <- gsub("^log_k_", "k_", names(trans_k))
+      parms[k_names] <- exp(trans_k)
+    }
+  } else {
+    trans_k <- transparms[grep("^k_", names(transparms))]
+    parms[names(trans_k)] <- trans_k
   }
 
   # Go through state variables and apply inverse isometric logratio transformation
+  mod_vars = names(spec)
   for (box in mod_vars) {
-    indices_f <- grep(paste("^f", box, sep = "_"), names(transparms))
-    f_names <- grep(paste("^f", box, sep = "_"), names(transparms), value = TRUE)
-    n_paths <- length(indices_f)
-    if (n_paths > 0) {
-      f <- invilr(transparms[indices_f])[1:n_paths] # We do not need the last component
-      names(f) <- f_names
-      if(transform_fractions) parms[indices_f] <- f
-      else parms[indices_f] <- transparms[indices_f]
+    # Get the names as used in the model
+    f_names = grep(paste("^f", box, sep = "_"), mkinmod$parms, value = TRUE)
+    # Get the formation fraction parameters
+    trans_f = transparms[grep(paste("^f", box, sep = "_"), names(transparms))]
+
+    # If we have one formation fraction parameter, but no optimised parameter,
+    # the one must be unity
+    if (length(trans_f) == 0 & length(f_names == 1)) {
+      parms[f_names] = 1
+    }
+    if (length(trans_f) > 0) {
+      if(transform_fractions) {
+        f <- invilr(trans_f)
+        if (spec[[box]]$sink) {
+          parms[f_names] <- f[1:length(f)-1]
+        } else {
+          parms[f_names] <- f
+        }
+      } else {
+        parms[names(trans_f)] <- trans_f
+      }
     }
   }
 
   # Transform parameters also for FOMC, DFOP and HS models
   for (pname in c("alpha", "beta", "k1", "k2", "tb")) {
-    if (!is.na(transparms[pname])) {
-      parms[pname] <- ifelse(transform_rates, exp(transparms[pname]), transparms[pname])
+    pname_trans = paste0("log_", pname)
+    if (!is.na(transparms[pname_trans])) {
+      parms[pname] <- ifelse(transform_rates, 
+                             exp(transparms[pname_trans]), 
+                             transparms[pname])
     } 
   }
-  if (!is.na(transparms["g"])) {
-    g <- transparms["g"]
-    parms["g"] <- ifelse(transform_fractions, invilr(g)[1], g)
+  if (!is.na(transparms["g_ilr"])) {
+    g_ilr <- transparms["g_ilr"]
+    parms["g"] <- ifelse(transform_fractions, invilr(g_ilr)[1], g_ilr)
   }
 
   return(parms)
 }
+# vim: set ts=2 sw=2 expandtab:

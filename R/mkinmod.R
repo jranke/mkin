@@ -164,9 +164,6 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL)
           diffs[[target_box]] <- paste(diffs[[target_box]], "+", 
             k_from_to, "*", origin_box)
         } else {
-          if (!spec[[varname]]$sink) {
-            stop("Turning off the sink when using formation fractions is not supported")
-          }
           fraction_to_target = paste("f", origin_box, "to", target, sep="_")
           parms <- c(parms, fraction_to_target)
           diffs[[target_box]] <- paste(diffs[[target_box]], "+", 

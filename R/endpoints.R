@@ -1,8 +1,8 @@
 endpoints <- function(fit) {
-  # Calculate dissipation times DT50 and DT90 and, if necessary, formation
-  # fractions and SFORB eigenvalues from optimised parameters
+  # Calculate dissipation times DT50 and DT90 and formation
+  # fractions as well as SFORB eigenvalues from optimised parameters
   # Additional DT50 values are calculated from the FOMC DT90 and k1 and k2 from HS and DFOP,
-  # as well as from Eigenvalues b1 and b2 of the SFORB model
+  # as well as from Eigenvalues b1 and b2 of any SFORB models
   ep <- list()
   obs_vars <- fit$obs_vars
   parms.all <- fit$bparms.ode
@@ -16,15 +16,17 @@ endpoints <- function(fit) {
 
     # Get formation fractions if directly fitted, and calculate remaining fraction to sink
     f_names = grep(paste("f", obs_var, sep = "_"), names(parms.all), value=TRUE)
-    f_values = parms.all[f_names]
-    f_to_sink = 1 - sum(f_values)
-    names(f_to_sink) = ifelse(type == "SFORB", 
-                            paste(obs_var, "free", "sink", sep = "_"), 
-                            paste(obs_var, "sink", sep = "_"))
-    for (f_name in f_names) {
-      ep$ff[[sub("f_", "", sub("_to_", "_", f_name))]] = f_values[[f_name]]
+    if (length(f_names) > 0) {
+      f_values = parms.all[f_names]
+      f_to_sink = 1 - sum(f_values)
+      names(f_to_sink) = ifelse(type == "SFORB", 
+                              paste(obs_var, "free", "sink", sep = "_"), 
+                              paste(obs_var, "sink", sep = "_"))
+      for (f_name in f_names) {
+        ep$ff[[sub("f_", "", sub("_to_", "_", f_name))]] = f_values[[f_name]]
+      }
+      ep$ff = append(ep$ff, f_to_sink)
     }
-    ep$ff = append(ep$ff, f_to_sink)
 
     # Get the rest
     if (type == "SFO") {

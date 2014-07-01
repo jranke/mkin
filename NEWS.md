@@ -1,12 +1,28 @@
 # CHANGES in mkin VERSION 0.9-30 
 
-- The ChangeLog was renamed to NEWS.md and the entries were converted to markdown syntax compatible with the `tools::news()` function built into R.
+## NEW FEATURES
+
+- It is now possible to use formation fractions in combination with turning off the sink in `mkinmod()`.
+
+## MAJOR CHANGES
+
+- The original and the transformed parameters now have different names (e.g. `k_parent` and `log_k_parent`. They also differ in how many they are when we have formation fractions but no pathway to sink.
 
 - The order of some of the information blocks in `print.summary.mkinfit.R()` has been ordered in a more logical way
 
-- The vignette FOCUS_Z has been slightly amended to use the new versions of DT50 values calculated since mkin 0.9-29.
+## MINOR CHANGES
+
+- The vignette FOCUS_Z has been simplified to use formation fractions with turning off the sink, and slightly amended to use the new versions of DT50 values calculated since mkin 0.9-29.
 
 - All vignettes have been rebuilt so they reflect all changes
+
+- The ChangeLog was renamed to NEWS.md and the entries were converted to markdown syntax compatible with the `tools::news()` function built into R.
+
+- The test suite was overhauled. Tests of the DFOP and SFORB models with dataset FOCUS_2006_A were removed, as they were too much dependent on the optimisation algorithm and/or starting parameters, because the dataset is SFO (compare kinfit vignette).
+
+- Also, the Schaefer complex case can now be fitted using formation fractions, and with the 'Port' optimisation method we also fit A2 in the same way as published in the Piacenza paper.
+
+- Some more checks were introduced to `mkinfit()`, leading to warnings or stopping execution if unsupported combinations of methods and parameters are requested.
 
 # CHANGES in mkin VERSION 0.9-29
 

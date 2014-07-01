@@ -59,6 +59,31 @@ mkinfit <- function(mkinmod, observed,
          " not used in the model")
   }
 
+  # Warn that the sum of formation fractions may exceed one they are not
+  # fitted in the transformed way
+  if (mkinmod$use_of_ff == "max" & transform_fractions == FALSE) {
+    warning("The sum of formation fractions may exceed one if you do not use ",
+            "transform_fractions = TRUE." )
+    for (box in mod_vars) {
+      # Stop if formation fractions are not transformed and we have no sink
+      if (mkinmod$spec[[box]]$sink == FALSE) {
+        stop("If formation fractions are not transformed during the fitting, ",
+             "it is not supported to turn off pathways to sink.\n ",
+             "Consider turning on the transformation of formation fractions or ",
+             "setting up a model with use_of_ff = 'min'.\n")
+      }
+    }
+  }
+
+  # Do not allow fixing formation fractions if we are using the ilr transformation,
+  # this is not supported
+  if (transform_fractions == TRUE && length(fixed_parms) > 0) {
+    if (grepl("^f_", fixed_parms)) {
+      stop("Fixing formation fractions is not supported when using the ilr ",
+           "transformation.")
+    }
+ }
+
   # Set initial parameter values, including a small increment (salt)
   # to avoid linear dependencies (singular matrix) in Eigenvalue based solutions
   k_salt = 0
@@ -72,8 +97,6 @@ mkinfit <- function(mkinmod, observed,
     # Default values for rate constants for reversible binding
     if (grepl("free_bound$", parmname)) parms.ini[parmname] = 0.1 
     if (grepl("bound_free$", parmname)) parms.ini[parmname] = 0.02
-    # Default values for formation fractions
-    if (substr(parmname, 1, 2) == "f_") parms.ini[parmname] = 0.2
     # Default values for the FOMC, DFOP and HS models
     if (parmname == "alpha") parms.ini[parmname] = 1
     if (parmname == "beta") parms.ini[parmname] = 10
@@ -82,19 +105,47 @@ mkinfit <- function(mkinmod, observed,
     if (parmname == "tb") parms.ini[parmname] = 5
     if (parmname == "g") parms.ini[parmname] = 0.5
   }
+  # Default values for formation fractions in case they are used
+  if (mkinmod$use_of_ff == "max") {
+    for (box in mod_vars) {
+      f_names <- mkinmod$parms[grep(paste0("^f_", box), mkinmod$parms)]
+      f_default_names <- intersect(f_names, defaultpar.names)
+      f_specified_names <- setdiff(f_names, defaultpar.names)
+      sum_f_specified = sum(parms.ini[f_specified_names])
+      if (sum_f_specified > 1) {
+        stop("Starting values for the formation fractions originating from ",
+             box, " sum up to more than 1.")
+      }
+      if (mkinmod$spec[[box]]$sink) n_unspecified = length(f_default_names) + 1
+      else {
+        n_unspecified = length(f_default_names)
+        # When we have no sink and only one pathway, we get an implicitly
+        # fixed parameter
+        if (length(f_names) == 1) fixed_parms = c(fixed_parms, f_names)
+      }
+      parms.ini[f_default_names] <- (1 - sum_f_specified) / n_unspecified
+    }
+  }
 
   # Name the inital state variable values if they are not named yet
   if(is.null(names(state.ini))) names(state.ini) <- mod_vars
 
   # Transform initial parameter values for fitting
-  transparms.ini <- transform_odeparms(parms.ini, mod_vars, 
+  transparms.ini <- transform_odeparms(parms.ini, mkinmod,
                                        transform_rates = transform_rates,
                                        transform_fractions = transform_fractions)
 
   # Parameters to be optimised:
   # Kinetic parameters in parms.ini whose names are not in fixed_parms
-  parms.fixed <- transparms.ini[fixed_parms]
-  parms.optim <- transparms.ini[setdiff(names(transparms.ini), fixed_parms)]
+  parms.fixed <- parms.ini[fixed_parms]
+  parms.optim <- parms.ini[setdiff(names(parms.ini), fixed_parms)]
+
+  transparms.fixed <- transform_odeparms(parms.fixed, mkinmod,
+                                       transform_rates = transform_rates,
+                                       transform_fractions = transform_fractions)
+  transparms.optim <- transform_odeparms(parms.optim, mkinmod,
+                                       transform_rates = transform_rates,
+                                       transform_fractions = transform_fractions)
 
   # Inital state variables in state.ini whose names are not in fixed_initials
   state.ini.fixed <- state.ini[fixed_initials]
@@ -160,9 +211,9 @@ mkinfit <- function(mkinmod, observed,
       names(odeini) <- state.ini.fixed.boxnames
     }
 
-    odeparms <- c(P[(length(state.ini.optim) + 1):length(P)], parms.fixed)
+    odeparms <- c(P[(length(state.ini.optim) + 1):length(P)], transparms.fixed)
 
-    parms <- backtransform_odeparms(odeparms, mod_vars,
+    parms <- backtransform_odeparms(odeparms, mkinmod,
                                     transform_rates = transform_rates,
                                     transform_fractions = transform_fractions)
 
@@ -210,9 +261,9 @@ mkinfit <- function(mkinmod, observed,
     return(mC)
   }
 
-  lower <- rep(-Inf, length(c(state.ini.optim, parms.optim)))
-  upper <- rep(Inf, length(c(state.ini.optim, parms.optim)))
-  names(lower) <- names(upper) <- c(names(state.ini.optim), names(parms.optim))
+  lower <- rep(-Inf, length(c(state.ini.optim, transparms.optim)))
+  upper <- rep(Inf, length(c(state.ini.optim, transparms.optim)))
+  names(lower) <- names(upper) <- c(names(state.ini.optim), names(transparms.optim))
   if (!transform_rates) {
     index_k <- grep("^k_", names(lower))
     lower[index_k] <- 0
@@ -229,7 +280,7 @@ mkinfit <- function(mkinmod, observed,
     upper[other_fraction_parms] <- 1
   }
 
-  fit <- modFit(cost, c(state.ini.optim, parms.optim), 
+  fit <- modFit(cost, c(state.ini.optim, transparms.optim), 
                 method = method.modFit, control = control.modFit, 
                 lower = lower, upper = upper, ...)
 
@@ -280,32 +331,31 @@ mkinfit <- function(mkinmod, observed,
   fit$obs_vars <- obs_vars
   fit$predicted <- mkin_wide_to_long(out_predicted, time = "time")
 
-  # Collect initial parameter values in two dataframes
+  # Backtransform parameters
+  bparms.optim = backtransform_odeparms(fit$par, fit$mkinmod,
+                                        transform_rates = transform_rates,
+                                        transform_fractions = transform_fractions)
+  # As backtransform_odeparms does not know about fixed values, it
+  # generates a formation fraction even it is an implicitly fixed one.
+  # This needs to be removed from bparms.optim
+  bparms.optim = bparms.optim[setdiff(names(bparms.optim), names(parms.fixed))]
+  bparms.fixed = c(state.ini.fixed, parms.fixed)
+  bparms.all = c(bparms.optim, parms.fixed)
+
+  # Collect initial parameter values in three dataframes
   fit$start <- data.frame(value = c(state.ini.optim, 
-		  backtransform_odeparms(parms.optim, mod_vars,
-                             transform_rates = transform_rates,
-                             transform_fractions = transform_fractions)))
+                                    parms.optim))
   fit$start$type = c(rep("state", length(state.ini.optim)), 
                      rep("deparm", length(parms.optim)))
-  fit$start$transformed = c(state.ini.optim, parms.optim)
-  fit$start$lower_bound = lower
-  fit$start$upper_bound = upper
 
-  fit$fixed <- data.frame(value = c(state.ini.fixed, 
-      backtransform_odeparms(parms.fixed, mod_vars,
-                             transform_rates = transform_rates,
-                             transform_fractions = transform_fractions)))
+  fit$start_transformed = data.frame(
+      value = c(state.ini.optim, transparms.optim),
+      lower = lower,
+      upper = upper)
+
+  fit$fixed <- data.frame(value = c(state.ini.fixed, parms.fixed))
   fit$fixed$type = c(rep("state", length(state.ini.fixed)), 
                      rep("deparm", length(parms.fixed)))
-
-  bparms.optim = backtransform_odeparms(fit$par, mod_vars,
-                                        transform_rates = transform_rates,
-                                        transform_fractions = transform_fractions)
-  bparms.fixed = backtransform_odeparms(c(state.ini.fixed, parms.fixed), 
-                                        mod_vars,
-                                        transform_rates = transform_rates,
-                                        transform_fractions = transform_fractions)
-  bparms.all = c(bparms.optim, bparms.fixed)
 
   # Collect observed, predicted, residuals and weighting
   data <- merge(fit$observed, fit$predicted, by = c("time", "name"))
@@ -327,10 +377,13 @@ mkinfit <- function(mkinmod, observed,
   fit$reweight.tol <- reweight.tol
   fit$reweight.max.iter <- reweight.max.iter
 
-  # Return all backtransformed parameters for summary
+  # Return different sets of backtransformed parameters for summary and plotting
   fit$bparms.optim <- bparms.optim 
   fit$bparms.fixed <- bparms.fixed
-  fit$bparms.ode <- bparms.all[mkinmod$parms] # Return ode parameters for further fitting
+
+  # Return ode parameters for further fitting
+  fit$bparms.ode <- bparms.all[mkinmod$parms] 
+
   fit$date <- date()
 
   class(fit) <- c("mkinfit", "modFit") 
@@ -340,6 +393,7 @@ mkinfit <- function(mkinmod, observed,
 summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, ...) {
   param  <- object$par
   pnames <- names(param)
+  bpnames <- names(object$bparms.optim)
   p      <- length(param)
   mod_vars <- names(object$mkinmod$diffs)
   covar  <- try(solve(0.5*object$hessian), silent = TRUE)   # unscaled covariance
@@ -365,7 +419,8 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
   dimnames(param) <- list(pnames, c("Estimate", "Std. Error", "Lower", "Upper",
                                     "t value", "Pr(>|t|)", "Pr(>t)"))
 
-  blci <- buci <- numeric()
+  bparam <- cbind(Estimate = object$bparms.optim, Lower = NA, Upper = NA)
+
   # Transform boundaries of CI for one parameter at a time,
   # with the exception of sets of formation fractions (single fractions are OK).
   f_names_skip <- character(0)
@@ -376,20 +431,24 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
   }
 
   for (pname in pnames) {
-    par.lower <- par.upper <- object$par
-    par.lower[pname] <- param[pname, "Lower"]
-    par.upper[pname] <- param[pname, "Upper"]
     if (!pname %in% f_names_skip) {
-      blci[pname] <- backtransform_odeparms(par.lower, mod_vars, 
-                                          object$transform_rates, object$transform_fractions)[pname]
-      buci[pname] <- backtransform_odeparms(par.upper, mod_vars,
-                                          object$transform_rates, object$transform_fractions)[pname]
-    } else {
-      blci[pname] <- buci[pname] <- NA
-    }
+      par.lower <- param[pname, "Lower"]
+      par.upper <- param[pname, "Upper"]
+      names(par.lower) <- names(par.upper) <- pname
+      bpl <- backtransform_odeparms(par.lower, object$mkinmod, 
+                                            object$transform_rates, 
+                                            object$transform_fractions)
+      bpu <- backtransform_odeparms(par.upper, object$mkinmod,
+                                            object$transform_rates, 
+                                            object$transform_fractions)
+      # Again, we have to remove formation fractions that were implicitly generated
+      bpl <- bpl[intersect(bpnames, names(bpl))]
+      bpu <- bpu[intersect(bpnames, names(bpu))]
+
+      bparam[names(bpl), "Lower"] <- bpl
+      bparam[names(bpu), "Upper"] <- bpu
+    } 
   }
-  bparam <- cbind(object$bparms.optim, blci, buci)
-  dimnames(bparam) <- list(pnames, c("Estimate", "Lower", "Upper"))
 
   ans <- list(
     version = as.character(packageVersion("mkin")),
@@ -416,6 +475,7 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
   ans$diffs <- object$mkinmod$diffs
   if(data) ans$data <- object$data
   ans$start <- object$start
+  ans$start_transformed <- object$start_transformed
 
   ans$fixed <- object$fixed
 
@@ -451,8 +511,11 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
                                       x$reweight.method)
   cat("\n")
 
-  cat("\nStarting values for optimised parameters:\n")
+  cat("\nStarting values for parameters to be optimised:\n")
   print(x$start)
+
+  cat("\nStarting values for the transformed parameters actually optimised:\n")
+  print(x$start_transformed)
 
   cat("\nFixed parameter values:\n")
   if(length(x$fixed$value) == 0) cat("None\n")
@@ -487,8 +550,8 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
   }
 
   printff <- !is.null(x$ff)
-  if(printff & x$use_of_ff == "min"){
-    cat("\nEstimated formation fractions:\n")
+  if(printff){
+    cat("\nResulting formation fractions:\n")
     print(data.frame(ff = x$ff), digits=digits,...)
   }
 

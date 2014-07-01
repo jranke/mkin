@@ -26,7 +26,7 @@ pkgfiles = NEWS \
 	   TODO \
 	   vignettes/*
 
-all: NEWS check
+all: NEWS check clean
 
 # convert markdown to R's NEWS format (from knitr package)
 NEWS: NEWS.md
@@ -57,7 +57,12 @@ check: build
 	"$(RBIN)/R" CMD check --as-cran --no-tests --no-build-vignettes $(TGZ)
 
 check-no-vignettes: build-no-vignettes
-	"$(RBIN)/R" CMD check --as-cran --no-tests $(TGZVNR)
+	mv $(TGZVNR) $(TGZ)
+	"$(RBIN)/R" CMD check --as-cran --no-tests $(TGZ)
+	mv $(TGZ) $(TGZVNR)
+
+clean: 
+	$(RM) -r $(PKGNAME).Rcheck/
 
 test: install-no-vignettes
 	cd tests;\
@@ -74,9 +79,6 @@ move-sd:
 	rm -rf $(SDDIR)/*;\
 		cp -r inst/web/* $(SDDIR)
 
-#------------------------------------------------------------------------------
-# Packaging Tasks
-#------------------------------------------------------------------------------
 winbuilder: build
 	date
 	@echo "Uploading to R-release on win-builder"
