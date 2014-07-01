@@ -59,6 +59,8 @@ mkinfit <- function(mkinmod, observed,
          " not used in the model")
   }
 
+  # Set initial parameter values, including a small increment (salt)
+  # to avoid linear dependencies (singular matrix) in Eigenvalue based solutions
   k_salt = 0
   defaultpar.names <- setdiff(mkinmod$parms, names(parms.ini))
   for (parmname in defaultpar.names) {
