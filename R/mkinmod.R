@@ -26,6 +26,7 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL)
   for (obs_var in obs_vars) {
     if (length(grep(obs_var, obs_vars)) > 1) stop("Sorry, variable names can not contain each other")
     if (grepl("_to_", obs_var)) stop("Sorry, names of observed variables can not contain _to_")
+    if (obs_var == "sink") stop("Naming a compound 'sink' is not supported")
   }
 
   if (!use_of_ff %in% c("min", "max"))
@@ -40,8 +41,8 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL)
   map <- list()
   # }}}
 
-  # Give a warning when a model with time dependent degradation uses formation {{{
-  # fractions
+  # Do not return a coefficient matrix mat when FOMC, DFOP or HS are used for
+  # the parent compound {{{
   if(spec[[1]]$type %in% c("FOMC", "DFOP", "HS")) {
     mat = FALSE 
   } else mat = TRUE
