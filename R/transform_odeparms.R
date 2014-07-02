@@ -114,12 +114,6 @@ backtransform_odeparms <- function(transparms, mkinmod,
     f_names = grep(paste("^f", box, sep = "_"), mkinmod$parms, value = TRUE)
     # Get the formation fraction parameters
     trans_f = transparms[grep(paste("^f", box, sep = "_"), names(transparms))]
-
-    # If we have one formation fraction parameter, but no optimised parameter,
-    # the one must be unity
-    if (length(trans_f) == 0 & length(f_names == 1)) {
-      parms[f_names] = 1
-    }
     if (length(trans_f) > 0) {
       if(transform_fractions) {
         f <- invilr(trans_f)

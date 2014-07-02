@@ -106,6 +106,7 @@ mkinfit <- function(mkinmod, observed,
     if (parmname == "g") parms.ini[parmname] = 0.5
   }
   # Default values for formation fractions in case they are used
+  f_fixed_implicit = numeric(0)
   if (mkinmod$use_of_ff == "max") {
     for (box in mod_vars) {
       f_names <- mkinmod$parms[grep(paste0("^f_", box), mkinmod$parms)]
@@ -118,10 +119,13 @@ mkinfit <- function(mkinmod, observed,
       }
       if (mkinmod$spec[[box]]$sink) n_unspecified = length(f_default_names) + 1
       else {
-        n_unspecified = length(f_default_names)
         # When we have no sink and only one pathway, we get an implicitly
-        # fixed parameter
-        if (length(f_names) == 1) fixed_parms = c(fixed_parms, f_names)
+        # fixed parameter which we need in the model
+        n_unspecified = length(f_default_names)
+        if (length(f_names) == 1) {
+          f_fixed_implicit[f_names] = 1
+          fixed_parms = c(fixed_parms, f_names)
+        }
       }
       parms.ini[f_default_names] <- (1 - sum_f_specified) / n_unspecified
     }
@@ -218,7 +222,8 @@ mkinfit <- function(mkinmod, observed,
                                     transform_fractions = transform_fractions)
 
     # Solve the system with current transformed parameter values
-    out <- mkinpredict(mkinmod, parms, odeini, outtimes, 
+    out <- mkinpredict(mkinmod, c(parms, f_fixed_implicit), 
+                       odeini, outtimes, 
                        solution_type = solution_type, 
                        method.ode = method.ode,
                        atol = atol, rtol = rtol, ...)
@@ -236,7 +241,8 @@ mkinfit <- function(mkinmod, observed,
       if(plot) {
         outtimes_plot = seq(min(observed$time), max(observed$time), length.out=100)
 
-        out_plot <- mkinpredict(mkinmod, parms, odeini, outtimes_plot, 
+        out_plot <- mkinpredict(mkinmod, c(parms, f_fixed_implicit),
+                                odeini, outtimes_plot, 
                                 solution_type = solution_type, 
                                 method.ode = method.ode,
                                 atol = atol, rtol = rtol, ...)
@@ -335,10 +341,6 @@ mkinfit <- function(mkinmod, observed,
   bparms.optim = backtransform_odeparms(fit$par, fit$mkinmod,
                                         transform_rates = transform_rates,
                                         transform_fractions = transform_fractions)
-  # As backtransform_odeparms does not know about fixed values, it
-  # generates a formation fraction even it is an implicitly fixed one.
-  # This needs to be removed from bparms.optim
-  bparms.optim = bparms.optim[setdiff(names(bparms.optim), names(parms.fixed))]
   bparms.fixed = c(state.ini.fixed, parms.fixed)
   bparms.all = c(bparms.optim, parms.fixed)
 
@@ -441,10 +443,6 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
       bpu <- backtransform_odeparms(par.upper, object$mkinmod,
                                             object$transform_rates, 
                                             object$transform_fractions)
-      # Again, we have to remove formation fractions that were implicitly generated
-      bpl <- bpl[intersect(bpnames, names(bpl))]
-      bpu <- bpu[intersect(bpnames, names(bpu))]
-
       bparam[names(bpl), "Lower"] <- bpl
       bparam[names(bpu), "Upper"] <- bpu
     } 
