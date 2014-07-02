@@ -110,6 +110,14 @@ mkinfit <- function(mkinmod, observed,
   if (mkinmod$use_of_ff == "max") {
     for (box in mod_vars) {
       f_names <- mkinmod$parms[grep(paste0("^f_", box), mkinmod$parms)]
+      # When we have no sink and only one pathway, we get an implicitly
+      # fixed parameter which we need in the model
+      if (!mkinmod$spec[[box]]$sink && length(f_names) == 1) {
+        if (f_names %in% names(parms.ini)) warning("Setting ", f_names, " to 1")
+        parms.ini[f_names] = 1
+        defaultpar.names <- setdiff(defaultpar.names, f_names)
+        f_fixed_implicit[f_names] = 1
+      }
       f_default_names <- intersect(f_names, defaultpar.names)
       f_specified_names <- setdiff(f_names, defaultpar.names)
       sum_f_specified = sum(parms.ini[f_specified_names])
@@ -119,13 +127,7 @@ mkinfit <- function(mkinmod, observed,
       }
       if (mkinmod$spec[[box]]$sink) n_unspecified = length(f_default_names) + 1
       else {
-        # When we have no sink and only one pathway, we get an implicitly
-        # fixed parameter which we need in the model
         n_unspecified = length(f_default_names)
-        if (length(f_names) == 1) {
-          f_fixed_implicit[f_names] = 1
-          fixed_parms = c(fixed_parms, f_names)
-        }
       }
       parms.ini[f_default_names] <- (1 - sum_f_specified) / n_unspecified
     }
