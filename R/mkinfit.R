@@ -113,8 +113,10 @@ mkinfit <- function(mkinmod, observed,
       # When we have no sink and only one pathway, we get an implicitly
       # fixed parameter which we need in the model
       if (!mkinmod$spec[[box]]$sink && length(f_names) == 1) {
-        if (f_names %in% names(parms.ini)) warning("Setting ", f_names, " to 1")
-        parms.ini[f_names] = 1
+        if (f_names %in% names(parms.ini) && parms.ini[f_names] != 1) {
+          message("Setting ", f_names, " to 1")
+          parms.ini[f_names] = 1
+        }
         defaultpar.names <- setdiff(defaultpar.names, f_names)
         f_fixed_implicit[f_names] = 1
       }
