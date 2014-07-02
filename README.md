@@ -73,8 +73,8 @@ or the package vignettes referenced from the
   internally using the `modFit` function from the `FME` package,
   which uses the least-squares Levenberg-Marquardt algorithm from
   `minpack.lm` per default.
-* Kinetic rate constants and kinetic formation fractions are transformed 
-  internally using
+* By default, kinetic rate constants and kinetic formation fractions are
+  transformed internally using
   [`transform_odeparms`](http://kinfit.r-forge.r-project.org/mkin_static/transform_odeparms.html)
   so their estimators can more reasonably be expected to follow
   a normal distribution. This has the side effect that no constraints
