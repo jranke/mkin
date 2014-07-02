@@ -106,32 +106,25 @@ mkinfit <- function(mkinmod, observed,
     if (parmname == "g") parms.ini[parmname] = 0.5
   }
   # Default values for formation fractions in case they are used
-  f_fixed_implicit = numeric(0)
   if (mkinmod$use_of_ff == "max") {
     for (box in mod_vars) {
       f_names <- mkinmod$parms[grep(paste0("^f_", box), mkinmod$parms)]
-      # When we have no sink and only one pathway, we get an implicitly
-      # fixed parameter which we need in the model
-      if (!mkinmod$spec[[box]]$sink && length(f_names) == 1) {
-        if (f_names %in% names(parms.ini) && parms.ini[f_names] != 1) {
-          message("Setting ", f_names, " to 1")
-          parms.ini[f_names] = 1
+      if (length(f_names) > 0) {
+        # We need to differentiate between default and specified fractions
+        # and set the unspecified to 1 - sum(specified)/n_unspecified
+        f_default_names <- intersect(f_names, defaultpar.names)
+        f_specified_names <- setdiff(f_names, defaultpar.names)
+        sum_f_specified = sum(parms.ini[f_specified_names])
+        if (sum_f_specified > 1) {
+          stop("Starting values for the formation fractions originating from ",
+               box, " sum up to more than 1.")
         }
-        defaultpar.names <- setdiff(defaultpar.names, f_names)
-        f_fixed_implicit[f_names] = 1
+        if (mkinmod$spec[[box]]$sink) n_unspecified = length(f_default_names) + 1
+        else {
+          n_unspecified = length(f_default_names)
+        }
+        parms.ini[f_default_names] <- (1 - sum_f_specified) / n_unspecified
       }
-      f_default_names <- intersect(f_names, defaultpar.names)
-      f_specified_names <- setdiff(f_names, defaultpar.names)
-      sum_f_specified = sum(parms.ini[f_specified_names])
-      if (sum_f_specified > 1) {
-        stop("Starting values for the formation fractions originating from ",
-             box, " sum up to more than 1.")
-      }
-      if (mkinmod$spec[[box]]$sink) n_unspecified = length(f_default_names) + 1
-      else {
-        n_unspecified = length(f_default_names)
-      }
-      parms.ini[f_default_names] <- (1 - sum_f_specified) / n_unspecified
     }
   }
 
@@ -226,7 +219,7 @@ mkinfit <- function(mkinmod, observed,
                                     transform_fractions = transform_fractions)
 
     # Solve the system with current transformed parameter values
-    out <- mkinpredict(mkinmod, c(parms, f_fixed_implicit), 
+    out <- mkinpredict(mkinmod, parms, 
                        odeini, outtimes, 
                        solution_type = solution_type, 
                        method.ode = method.ode,
@@ -245,7 +238,7 @@ mkinfit <- function(mkinmod, observed,
       if(plot) {
         outtimes_plot = seq(min(observed$time), max(observed$time), length.out=100)
 
-        out_plot <- mkinpredict(mkinmod, c(parms, f_fixed_implicit),
+        out_plot <- mkinpredict(mkinmod, parms,
                                 odeini, outtimes_plot, 
                                 solution_type = solution_type, 
                                 method.ode = method.ode,

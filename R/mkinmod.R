@@ -150,6 +150,9 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL)
       # Name of box from which transfer takes place
       origin_box <- box_1
 
+      # Number of targets
+      n_targets = length(to)
+
       # Add transfer terms to listed compartments
       for (target in to) {
         target_box <- switch(spec[[target]]$type,
@@ -164,10 +167,16 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL)
           diffs[[target_box]] <- paste(diffs[[target_box]], "+", 
             k_from_to, "*", origin_box)
         } else {
-          fraction_to_target = paste("f", origin_box, "to", target, sep="_")
-          parms <- c(parms, fraction_to_target)
-          diffs[[target_box]] <- paste(diffs[[target_box]], "+", 
-              fraction_to_target, "*", decline_term)
+          # Do not introduce a formation fraction if this is the only target
+          if (spec[[origin_box]]$sink == FALSE && n_targets == 1) {
+            diffs[[target_box]] <- paste(diffs[[target_box]], "+",
+                                         decline_term)
+          } else {
+            fraction_to_target = paste("f", origin_box, "to", target, sep="_")
+            parms <- c(parms, fraction_to_target)
+            diffs[[target_box]] <- paste(diffs[[target_box]], "+", 
+                fraction_to_target, "*", decline_term)
+          }
         }
       }
     } #}}}
