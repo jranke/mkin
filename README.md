@@ -47,7 +47,23 @@ A very simple usage example would be
     summary(SFO.fit)
     plot(SFO.fit) 
 
-For more examples have a look at the examples provided in the
+A fairly complex usage example using a built-in dataset:
+
+    data <- mkin_wide_to_long(schaefer07_complex_case, time = "time")
+
+    model <- mkinmod(
+      parent = list(type = "SFO", to = c("A1", "B1", "C1"), sink = FALSE),
+      A1 = list(type = "SFO", to = "A2"),
+      B1 = list(type = "SFO"),
+      C1 = list(type = "SFO"),
+      A2 = list(type = "SFO"), use_of_ff = "max")
+
+    fit <- mkinfit(model, data, method.modFit = "Port")
+
+    plot(fit, show_residuals = TRUE) 
+    s <- summary(fit)
+
+For more examples and to see results, have a look at the examples provided in the
 [`mkinfit`](http://kinfit.r-forge.r-project.org/mkin_static/mkinfit.html)
 documentation 
 or the package vignettes referenced from the 
