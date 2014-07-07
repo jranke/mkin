@@ -67,12 +67,12 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL)
       FOMC = varname,
       DFOP = varname,
       HS = varname,
-      SFORB = paste(varname, c("free", "bound"), sep="_")
+      SFORB = paste(varname, c("free", "bound"), sep = "_")
     )
     map[[varname]] <- new_boxes
     names(map[[varname]]) <- rep(spec[[varname]]$type, length(new_boxes)) #}}}
     # Start a new differential equation for each new box {{{
-    new_diffs <- paste("d_", new_boxes, " =", sep="")
+    new_diffs <- paste("d_", new_boxes, " =", sep = "")
     names(new_diffs) <- new_boxes
     diffs <- c(diffs, new_diffs) #}}}
   } #}}}
@@ -89,14 +89,14 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL)
       if (use_of_ff == "min") { # Minimum use of formation fractions
         if(spec[[varname]]$sink) {
           # If sink is required, add first-order sink term
-          k_compound_sink <- paste("k", box_1, "sink", sep="_")
+          k_compound_sink <- paste("k", box_1, "sink", sep = "_")
           parms <- c(parms, k_compound_sink)
           decline_term <- paste(k_compound_sink, "*", box_1)
         } else { # otherwise no decline term needed here
           decline_term = "0" 
         }
       } else {
-        k_compound <- paste("k", box_1, sep="_")
+        k_compound <- paste("k", box_1, sep = "_")
         parms <- c(parms, k_compound)
         decline_term <- paste(k_compound, "*", box_1)
       }
@@ -121,8 +121,8 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL)
     if(spec[[varname]]$type == "SFORB") { # {{{ Add SFORB reversible binding terms
       box_2 = map[[varname]][[2]]
       if (use_of_ff == "min") { # Minimum use of formation fractions
-        k_free_bound <- paste("k", varname, "free", "bound", sep="_")
-        k_bound_free <- paste("k", varname, "bound", "free", sep="_")
+        k_free_bound <- paste("k", varname, "free", "bound", sep = "_")
+        k_bound_free <- paste("k", varname, "bound", "free", sep = "_")
         parms <- c(parms, k_free_bound, k_bound_free)
         reversible_binding_term_1 <- paste("-", k_free_bound, "*", box_1, "+",
           k_bound_free, "*", box_2)
@@ -133,8 +133,8 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL)
         # The problems were: Calculation of dissipation times did not work in this case
         # and the coefficient matrix is not generated correctly by the code present 
         # in this file in this case
-        f_free_bound <- paste("f", varname, "free", "bound", sep="_")
-        k_bound_free <- paste("k", varname, "bound", "free", sep="_")
+        f_free_bound <- paste("f", varname, "free", "bound", sep = "_")
+        k_bound_free <- paste("k", varname, "bound", "free", sep = "_")
         parms <- c(parms, f_free_bound, k_bound_free)
         reversible_binding_term_1 <- paste("+", k_bound_free, "*", box_2)
         reversible_binding_term_2 <- paste("+", f_free_bound, "*", k_compound, "*", box_1, "-",
@@ -157,10 +157,10 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL)
       for (target in to) {
         target_box <- switch(spec[[target]]$type,
           SFO = target,
-          SFORB = paste(target, "free", sep="_"))
+          SFORB = paste(target, "free", sep = "_"))
         if (use_of_ff == "min" && spec[[varname]]$type %in% c("SFO",
           "SFORB")) {
-          k_from_to <- paste("k", origin_box, target_box, sep="_")
+          k_from_to <- paste("k", origin_box, target_box, sep = "_")
           parms <- c(parms, k_from_to)
           diffs[[origin_box]] <- paste(diffs[[origin_box]], "-", 
             k_from_to, "*", origin_box)
@@ -172,7 +172,7 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL)
             diffs[[target_box]] <- paste(diffs[[target_box]], "+",
                                          decline_term)
           } else {
-            fraction_to_target = paste("f", origin_box, "to", target, sep="_")
+            fraction_to_target = paste("f", origin_box, "to", target, sep = "_")
             parms <- c(parms, fraction_to_target)
             diffs[[target_box]] <- paste(diffs[[target_box]], "+", 
                 fraction_to_target, "*", decline_term)
@@ -194,7 +194,7 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL)
       for (from in boxes) {
         for (to in boxes) {
           if (from == to) { # diagonal elements
-            k.candidate = paste("k", from, c(boxes, "sink"), sep="_")
+            k.candidate = paste("k", from, c(boxes, "sink"), sep = "_")
             k.candidate = sub("free.*bound", "free_bound", k.candidate)
             k.candidate = sub("bound.*free", "bound_free", k.candidate)
             k.effective = intersect(model$parms, k.candidate)
@@ -202,12 +202,12 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL)
                 paste("-", k.effective, collapse = " "), "0")
 
           } else {          # off-diagonal elements
-            k.candidate = paste("k", from, to, sep="_")
+            k.candidate = paste("k", from, to, sep = "_")
 	    if (sub("_free$", "", from) == sub("_bound$", "", to)) {
-              k.candidate = paste("k", sub("_free$", "_free_bound", from), sep="_")
+              k.candidate = paste("k", sub("_free$", "_free_bound", from), sep = "_")
 	    }
 	    if (sub("_bound$", "", from) == sub("_free$", "", to)) {
-              k.candidate = paste("k", sub("_bound$", "_bound_free", from), sep="_")
+              k.candidate = paste("k", sub("_bound$", "_bound_free", from), sep = "_")
 	    }
             k.effective = intersect(model$parms, k.candidate)
             m[to, from] = ifelse(length(k.effective) > 0,
@@ -219,23 +219,27 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL)
       for (from in boxes) {
         for (to in boxes) {
           if (from == to) { # diagonal elements
-            k.candidate = paste("k", from, sep="_")
+            k.candidate = paste("k", from, sep = "_")
             m[from,to] = ifelse(k.candidate %in% model$parms,
                 paste("-", k.candidate), "0")
             if(grepl("_free", from)) { # add transfer to bound compartment for SFORB
-              m[from,to] = paste(m[from,to], "-", paste("k", from, "bound", sep="_"))
+              m[from,to] = paste(m[from,to], "-", paste("k", from, "bound", sep = "_"))
             }
             if(grepl("_bound", from)) { # add backtransfer to free compartment for SFORB
-              m[from,to] = paste("- k", from, "free", sep="_")
+              m[from,to] = paste("- k", from, "free", sep = "_")
             }
             m[from,to] = m[from,to]
           } else {          # off-diagonal elements
-            f.candidate = paste("f", from, "to", to, sep="_")
-            k.candidate = paste("k", from, to, sep="_")
-	    # SFORB with maximum use of formation fractions not implemented, see above
+            f.candidate = paste("f", from, "to", to, sep = "_")
+            k.candidate = paste("k", from, to, sep = "_")
+            # SFORB with maximum use of formation fractions not implemented, see above
             m[to, from] = ifelse(f.candidate %in% model$parms,
-              paste(f.candidate, " * k_", from, sep=""), 
+              paste(f.candidate, " * k_", from, sep = ""), 
               ifelse(k.candidate %in% model$parms, k.candidate, "0"))
+            # Special case: singular pathway and no sink
+            if (spec[[from]]$sink == FALSE && length(spec[[from]]$to) == 1 && to %in% spec[[from]]$to) {
+              m[to, from] = paste("k", from, sep = "_")
+            }
           }
         }
       }
