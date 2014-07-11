@@ -10,8 +10,10 @@ TGZVNR  := ../$(PKGSRC)_$(PKGVERS)-vignettes-not-rebuilt.tar.gz
 # containing the first instance of R on the PATH.
 RBIN ?= $(shell dirname "`which R`")
 
-# Specify the directory where the static documentation belongs
-SDDIR ?= $(HOME)/svn/kinfit.r-forge/www/mkin_static
+# Specify package and static documentation directories for subversion on r-forge
+RFSVN ?= $(HOME)/svn/kinfit.r-forge
+RFDIR ?= $(RFSVN)/pkg/mkin
+SDDIR ?= $(RFSVN)/www/mkin_static
 
 pkgfiles = NEWS \
 	   data/* \
@@ -77,7 +79,12 @@ sd:
 
 move-sd:
 	rm -rf $(SDDIR)/*;\
-		cp -r inst/web/* $(SDDIR)
+	cp -r inst/web/* $(SDDIR); cd $(SDDIR) && svn add --force .
+
+r-forge: sd move-sd
+	git archive master >> $(HOME)/mkin.tar;\
+	cd $(RFDIR) && rm -r `ls` && tar -xf $(HOME)/mkin.tar;\
+	svn add --force .; cd $(RFSVN) && svn commit -m 'sync with git'
 
 winbuilder: build
 	date
@@ -86,18 +93,8 @@ winbuilder: build
 	@echo "Uploading to R-devel on win-builder"
 	curl -T $(TGZ) ftp://anonymous@win-builder.r-project.org/R-devel/
 
-r-forge:
-	@echo "\nHow about make test and make check?"
-	@echo "\nIs the DESCRIPTION file up to date?"
-	@echo "\nTo update the svn repository tied to the local r-forge branch with"
-	@echo "changes in the local master branch, run:"
-	@echo "'git checkout r-forge'"
-	@echo "'git merge --squash -srecursive -Xtheirs --no-commit master'"
-	@echo "'git commit'"
-	@echo "'git svn dcommit'"
-	@echo "\nThen change back to the master branch:"
-	@echo "'git checkout master'"
-
 submit:
+	@echo "\nHow about make test, make check, make winbuilder and make r-forge?"
+	@echo "\nIs the DESCRIPTION file up to date?"
 	@echo "\nAre you sure you want to release to CRAN?"
 	@echo "\nThen use the form at http://cran.r-project.org/submit.html"
