@@ -33,12 +33,18 @@ transform_odeparms <- function(parms, mkinmod,
 
   # Log transformation for rate constants if requested
   k <- parms[grep("^k_", names(parms))]
+  k.iore <- parms[grep("^k.iore_", names(parms))]
+  k <- c(k, k.iore)
   if (length(k) > 0) {
     if(transform_rates) {
       transparms[paste0("log_", names(k))] <- log(k)
     }
     else transparms[names(k)] <- k
   }
+
+  # Do not transform exponents in IORE models
+  N <- parms[grep("^N", names(parms))]
+  transparms[names(N)] <- N
 
   # Go through state variables and apply isometric logratio transformation to
   # formation fractions if requested
@@ -98,14 +104,20 @@ backtransform_odeparms <- function(transparms, mkinmod,
   # Exponential transformation for rate constants
   if(transform_rates) {
     trans_k <- transparms[grep("^log_k_", names(transparms))]
+    trans_k.iore <- transparms[grep("^log_k.iore_", names(transparms))]
+    trans_k = c(trans_k, trans_k.iore)
     if (length(trans_k) > 0) {
-      k_names <- gsub("^log_k_", "k_", names(trans_k))
+      k_names <- gsub("^log_k", "k", names(trans_k))
       parms[k_names] <- exp(trans_k)
     }
   } else {
     trans_k <- transparms[grep("^k_", names(transparms))]
     parms[names(trans_k)] <- trans_k
   }
+
+  # Do not transform exponents in IORE models
+  N <- transparms[grep("^N", names(transparms))]
+  parms[names(N)] <- N
 
   # Go through state variables and apply inverse isometric logratio transformation
   mod_vars = names(spec)

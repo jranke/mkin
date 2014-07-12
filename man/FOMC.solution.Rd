@@ -44,6 +44,6 @@ FOMC.solution(t, parent.0, alpha, beta)
   Technology} \bold{24}, 1032-1038
 }
 \examples{
-  \dontrun{plot(function(x) FOMC.solution(x, 100, 10, 2), 0, 2)}
+  \dontrun{plot(function(x) FOMC.solution(x, 100, 10, 2), 0, 2, ylim = c(0, 100))}
 }
 \keyword{ manip }

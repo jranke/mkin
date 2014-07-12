@@ -18,7 +18,7 @@ mkinmod(..., use_of_ff = "min", speclist = NULL)
     for the variable. Currently, single first order kinetics "SFO" or
     single first order with reversible binding "SFORB" are implemented for all
     variables, while 
-    "FOMC", "DFOP" and "HS" can additionally be chosen for the first
+    "FOMC", "IORE", "DFOP" and "HS" can additionally be chosen for the first
     variable which is assumed to be the source compartment.
     Additionally, each component of the list can include a character vector \code{to},
     specifying names of variables to which a transfer is to be assumed in the
@@ -46,7 +46,8 @@ mkinmod(..., use_of_ff = "min", speclist = NULL)
     \item{map}{ A list containing named character vectors for each observed variable, specifying
       the modelling variables by which it is represented. }
     \item{use_of_ff}{ The content of \code{use_of_ff} is passed on in this list component. }
-    \item{coefmat}{ The coefficient matrix, if the system of differential equations can be represented by one. }
+    \item{coefmat}{ The coefficient matrix, if the system of differential equations can be
+      represented by one. }
 }
 \author{
   Johannes Ranke

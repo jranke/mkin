@@ -90,13 +90,15 @@ mkinfit <- function(mkinmod, observed,
   defaultpar.names <- setdiff(mkinmod$parms, names(parms.ini))
   for (parmname in defaultpar.names) {
     # Default values for rate constants, depending on the parameterisation
-    if (substr(parmname, 1, 2) == "k_") {
+    if (grepl("^k", parmname)) {
       parms.ini[parmname] = 0.1 + k_salt
       k_salt = k_salt + 1e-4
     }
     # Default values for rate constants for reversible binding
     if (grepl("free_bound$", parmname)) parms.ini[parmname] = 0.1 
     if (grepl("bound_free$", parmname)) parms.ini[parmname] = 0.02
+    # Default values for IORE exponents
+    if (grepl("^N", parmname)) parms.ini[parmname] = 1
     # Default values for the FOMC, DFOP and HS models
     if (parmname == "alpha") parms.ini[parmname] = 1
     if (parmname == "beta") parms.ini[parmname] = 10
