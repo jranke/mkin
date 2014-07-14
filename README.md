@@ -44,8 +44,8 @@ A very simple usage example would be
     )
     SFO <- mkinmod(parent = list(type = "SFO"))
     SFO.fit <- mkinfit(SFO, example_data)
+    plot(SFO.fit, show_residuals = TRUE) 
     summary(SFO.fit)
-    plot(SFO.fit) 
 
 A fairly complex usage example using a built-in dataset:
 
@@ -61,7 +61,8 @@ A fairly complex usage example using a built-in dataset:
     fit <- mkinfit(model, data, method.modFit = "Port")
 
     plot(fit, show_residuals = TRUE) 
-    s <- summary(fit)
+    summary(fit)
+    mkinparplot(fit)
 
 For more examples and to see results, have a look at the examples provided in the
 [`mkinfit`](http://kinfit.r-forge.r-project.org/mkin_static/mkinfit.html)
