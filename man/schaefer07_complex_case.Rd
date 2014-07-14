@@ -25,7 +25,7 @@
   The results are a data frame with 14 results for different parameter values
 }
 \references{
-  Schäfer D, Mikolasch M, Rainbird P and Harvey B (2007). KinGUI: a new kinetic
+  Schäfer D, Mikolasch B, Rainbird P and Harvey B (2007). KinGUI: a new kinetic
   software tool for evaluations according to FOCUS degradation kinetics. In: Del
   Re AAM, Capri E, Fragoulis G and Trevisan M (Eds.). Proceedings of the XIII
   Symposium Pesticide Chemistry, Piacenza, 2007, p. 916-923.  }
