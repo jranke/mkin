@@ -48,6 +48,7 @@ mkinerrmin <- function(fit, alpha = 0.05)
     n.optim = errmin.overall$n.optim, df = errmin.overall$df)
   rownames(errmin) <- "All data"
 
+  # The degrees of freedom are counted according to FOCUS kinetics (2011, p. 164)
   for (obs_var in fit$obs_vars)
   {
     errdata.var <- subset(errdata, name == obs_var)
@@ -57,21 +58,31 @@ mkinerrmin <- function(fit, alpha = 0.05)
 
     # Rate constants are attributed to the source variable
     n.k.optim <- length(grep(paste("^k", obs_var, sep="_"), names(parms.optim)))
+    n.k.optim <- n.k.optim + length(grep(paste("^log_k", obs_var, sep="_"), 
+                                         names(parms.optim)))
 
-    # Formation fractions are attributed to the target variable
-    n.ff.optim <- length(grep(paste("^f", ".*", obs_var, "$", sep=""), names(parms.optim)))
+    n.ff.optim <- 0
+    # Formation fractions are attributed to the target variable, so look
+    # for source compartments with formation fractions
+    for (source_var in fit$obs_vars) {
+      for (target_var in fit$mkinmod$spec[[source_var]]$to) {
+        if (obs_var == target_var) {
+          n.ff.optim <- n.ff.optim +  
+                        length(grep(paste("^f", source_var, sep = "_"),
+                                    names(parms.optim))) 
+        }
+      }
+    }
 
     n.optim <- n.k.optim + n.initials.optim + n.ff.optim
 
     # FOMC, DFOP and HS parameters are only counted if we are looking at the
     # first variable in the model which is always the source variable
     if (obs_var == fit$obs_vars[[1]]) {
-      if ("alpha" %in% names(parms.optim)) n.optim <- n.optim + 1
-      if ("beta" %in% names(parms.optim)) n.optim <- n.optim + 1
-      if ("k1" %in% names(parms.optim)) n.optim <- n.optim + 1
-      if ("k2" %in% names(parms.optim)) n.optim <- n.optim + 1
-      if ("g" %in% names(parms.optim)) n.optim <- n.optim + 1
-      if ("tb" %in% names(parms.optim)) n.optim <- n.optim + 1
+      special_parms = c("alpha", "log_alpha", "beta", "log_beta", 
+                        "k1", "log_k1", "k2", "log_k2", 
+                        "g", "g_ilr", "tb", "log_tb")
+      n.optim <- n.optim + length(intersect(special_parms, names(parms.optim)))
     }
 
     # Calculate and add a line to the results

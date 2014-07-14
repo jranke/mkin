@@ -105,26 +105,24 @@ mkinfit <- function(mkinmod, observed,
     if (parmname == "tb") parms.ini[parmname] = 5
     if (parmname == "g") parms.ini[parmname] = 0.5
   }
-  # Default values for formation fractions in case they are used
-  if (mkinmod$use_of_ff == "max") {
-    for (box in mod_vars) {
-      f_names <- mkinmod$parms[grep(paste0("^f_", box), mkinmod$parms)]
-      if (length(f_names) > 0) {
-        # We need to differentiate between default and specified fractions
-        # and set the unspecified to 1 - sum(specified)/n_unspecified
-        f_default_names <- intersect(f_names, defaultpar.names)
-        f_specified_names <- setdiff(f_names, defaultpar.names)
-        sum_f_specified = sum(parms.ini[f_specified_names])
-        if (sum_f_specified > 1) {
-          stop("Starting values for the formation fractions originating from ",
-               box, " sum up to more than 1.")
-        }
-        if (mkinmod$spec[[box]]$sink) n_unspecified = length(f_default_names) + 1
-        else {
-          n_unspecified = length(f_default_names)
-        }
-        parms.ini[f_default_names] <- (1 - sum_f_specified) / n_unspecified
+  # Default values for formation fractions in case they are present
+  for (box in mod_vars) {
+    f_names <- mkinmod$parms[grep(paste0("^f_", box), mkinmod$parms)]
+    if (length(f_names) > 0) {
+      # We need to differentiate between default and specified fractions
+      # and set the unspecified to 1 - sum(specified)/n_unspecified
+      f_default_names <- intersect(f_names, defaultpar.names)
+      f_specified_names <- setdiff(f_names, defaultpar.names)
+      sum_f_specified = sum(parms.ini[f_specified_names])
+      if (sum_f_specified > 1) {
+        stop("Starting values for the formation fractions originating from ",
+             box, " sum up to more than 1.")
       }
+      if (mkinmod$spec[[box]]$sink) n_unspecified = length(f_default_names) + 1
+      else {
+        n_unspecified = length(f_default_names)
+      }
+      parms.ini[f_default_names] <- (1 - sum_f_specified) / n_unspecified
     }
   }
 

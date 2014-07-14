@@ -1,3 +1,11 @@
+# CHANGES in mkin VERSION 0.9-31
+
+## BUG FIXES
+
+- The internal renaming of optimised parameters in Version 0.9-30 led to errors in the determination of the degrees of freedom for the chi2 error level calulations in `mkinerrmin()` used by the summary function.
+
+- Initial values for formation fractions were not set in all cases
+
 # CHANGES in mkin VERSION 0.9-30 
 
 ## NEW FEATURES
