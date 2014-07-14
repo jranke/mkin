@@ -1,8 +1,16 @@
-# CHANGES in mkin VERSION 0.9-31
+# CHANGES in mkin VERSION 0.9-32
 
 ## NEW FEATURES
 
-- Add the possibility to fit indeterminate order rate equation (IORE) models using an analytical solution (parent only) or a numeric solution. Paths from IORE compounds to metabolites are supported when using of formation fractions (use_of_ff = 'max'). The numerical solution (method.ode = 'deSolve') of the IORE differential equations sometimes fails due to numerical problems.
+- Add the possibility to fit indeterminate order rate equation (IORE) models using an analytical solution (parent only) or a numeric solution. Paths from IORE compounds to metabolites are supported when using of formation fractions (use_of_ff = 'max'). Note that the numerical solution (method.ode = 'deSolve') of the IORE differential equations sometimes fails due to numerical problems.
+
+# CHANGES in mkin VERSION 0.9-31
+
+## BUG FIXES
+
+- The internal renaming of optimised parameters in Version 0.9-30 led to errors in the determination of the degrees of freedom for the chi2 error level calulations in `mkinerrmin()` used by the summary function.
+
+- Initial values for formation fractions were not set in all cases
 
 # CHANGES in mkin VERSION 0.9-30 
 
