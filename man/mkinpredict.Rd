@@ -65,21 +65,25 @@
 }
 \examples{
   SFO <- mkinmod(degradinol = list(type = "SFO"))
+  # Compare solution types
   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20, 
 	      solution_type = "analytical")
   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20, 
+	      solution_type = "deSolve")
+  mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20, 
 	      solution_type = "eigen")
 
-  mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 1:20, 
-	      solution_type = "analytical")[20,]
-  mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20, 
-	      atol = 1e-20)[20,]
 
-  # The integration method does not make a lot of difference
+  # Compare integration methods to analytical solution
   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20, 
-	      atol = 1e-20, method = "ode45")[20,]
+	      solution_type = "analytical")[21,]
   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20, 
-	      atol = 1e-20, method = "rk4")[20,]
+	      method = "lsoda")[21,]
+  mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20,
+	      method = "ode45")[21,]
+  mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20,
+	      method = "rk4")[21,]
+ # rk4 is not as precise here
 
   # The number of output times used to make a lot of difference until the
   # default for atol was adjusted
@@ -87,5 +91,6 @@
 	      seq(0, 20, by = 0.1))[201,]
   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 
 	      seq(0, 20, by = 0.01))[2001,]
+
 }
 \keyword{ manip }

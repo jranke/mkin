@@ -19,11 +19,13 @@ mkinparplot <- function(object) {
   state.optim = rownames(subset(object$start, type == "state"))
   deparms.optim = rownames(subset(object$start, type == "deparm"))
   fractions.optim = grep("^f_", deparms.optim, value = TRUE)
+  N.optim = grep("^N_", deparms.optim, value = TRUE)
   if ("g" %in% deparms.optim) fractions.optim <- c("g", fractions.optim)
-  rates.optim.unsorted = setdiff(deparms.optim, fractions.optim)
+  rates.optim.unsorted = setdiff(deparms.optim, union(fractions.optim, N.optim))
   rates.optim <- rownames(object$start[rates.optim.unsorted, ])
   n.plot <- c(state.optim = length(state.optim), 
               rates.optim = length(rates.optim), 
+	      N.optim = length(N.optim),
               fractions.optim = length(fractions.optim))
   n.plot <- n.plot[n.plot > 0]
 
@@ -42,6 +44,8 @@ mkinparplot <- function(object) {
                                       na.rm = TRUE, finite = TRUE),
                   rates.optim = range(c(0, unlist(values)), 
                                       na.rm = TRUE, finite = TRUE),
+                  N.optim = range(c(0, 1, unlist(values)), 
+                                      na.rm = TRUE, finite = TRUE),
                   fractions.optim = range(c(0, 1, unlist(values)), 
                                           na.rm = TRUE, finite = TRUE))
     stripchart(values["Estimate", ][length(parnames):1], 
@@ -49,7 +53,7 @@ mkinparplot <- function(object) {
                ylim = c(0.5, length(get(type)) + 0.5),
                yaxt = "n")
     if (type %in% c("rates.optim", "fractions.optim")) abline(v = 0, lty = 2)
-    if (type %in% c("fractions.optim")) abline(v = 1, lty = 2)
+    if (type %in% c("N.optim", "fractions.optim")) abline(v = 1, lty = 2)
     position <- ifelse(values["Estimate", ] < mean(xlim), "right", "left")
     text(ifelse(position == "left", min(xlim), max(xlim)), 
          length(parnames):1, parnames, 

@@ -109,6 +109,10 @@ mkinpredict <- function(mkinmod, odeparms, odeini,
       rtol = rtol,
       ...
     )
+    if (sum(is.na(out)) > 0) {
+      stop("Differential equations were not integrated for all output times because\n",
+	   "NaN values occurred in output from ode()")
+      }
   }
   if (map_output) {
     # Output transformation for models with unobserved compartments like SFORB

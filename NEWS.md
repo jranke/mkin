@@ -1,3 +1,9 @@
+# CHANGES in mkin VERSION 0.9-31
+
+## NEW FEATURES
+
+- Add the possibility to fit indeterminate order rate equation (IORE) models using an analytical solution (parent only) or a numeric solution. Paths from IORE compounds to metabolites are supported when using of formation fractions (use_of_ff = 'max'). The numerical solution (method.ode = 'deSolve') of the IORE differential equations sometimes fails due to numerical problems.
+
 # CHANGES in mkin VERSION 0.9-30 
 
 ## NEW FEATURES

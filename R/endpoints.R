@@ -1,11 +1,11 @@
 endpoints <- function(fit) {
   # Calculate dissipation times DT50 and DT90 and formation
   # fractions as well as SFORB eigenvalues from optimised parameters
-  # Additional DT50 values are calculated from the FOMC DT90 and k1 and k2 from HS and DFOP,
-  # as well as from Eigenvalues b1 and b2 of any SFORB models
+  # Additional DT50 values are calculated from the FOMC DT90 and k1 and k2 from
+  # HS and DFOP, as well as from Eigenvalues b1 and b2 of any SFORB models
   ep <- list()
   obs_vars <- fit$obs_vars
-  parms.all <- fit$bparms.ode
+  parms.all <- c(fit$bparms.optim, fit$bparms.fixed)
   ep$ff <- vector()
   ep$SFORB <- vector()
   ep$distimes <- data.frame(DT50 = rep(NA, length(obs_vars)), 
@@ -48,6 +48,28 @@ endpoints <- function(fit) {
       DT90 = beta * (10^(1/alpha) - 1)
       DT50_back = DT90 / (log(10)/log(2)) # Backcalculated DT50 as recommended in FOCUS 2011
       ep$distimes[obs_var, c("DT50back")] = DT50_back
+    }
+    if (type == "IORE") {
+      k_names = grep(paste("k.iore", obs_var, sep="_"), names(parms.all), value=TRUE)
+      k_tot = sum(parms.all[k_names])
+      # From the NAFTA kinetics guidance, p. 5
+      n = parms.all[paste("N", obs_var, sep = "_")]
+      k = k_tot
+      # Use the initial concentration of the parent compound
+      source_name = fit$mkinmod$map[[1]][[1]]
+      c0 = parms.all[paste(source_name, "0", sep = "_")]
+      alpha = 1 / (n - 1)
+      beta = (c0^(1 - n))/(k * (n - 1))
+      DT50 = beta * (2^(1/alpha) - 1)
+      DT90 = beta * (10^(1/alpha) - 1)
+      DT50_back = DT90 / (log(10)/log(2)) # Backcalculated DT50 as recommended in FOCUS 2011
+      ep$distimes[obs_var, c("DT50back")] = DT50_back
+      if (fit$mkinmod$use_of_ff == "min") {
+        for (k_name in k_names)
+        {
+          ep$ff[[sub("k_", "", k_name)]] = parms.all[[k_name]] / k_tot
+        }
+      }
     }
     if (type == "DFOP") {
       k1 = parms.all["k1"]

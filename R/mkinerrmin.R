@@ -55,13 +55,15 @@ mkinerrmin <- function(fit, alpha = 0.05)
     # Check if initial value is optimised
     n.initials.optim <- length(grep(paste(obs_var, ".*", "_0", sep=""), names(parms.optim)))
 
-    # Rate constants are attributed to the source variable
+    # Rate constants and IORE exponents are attributed to the source variable
     n.k.optim <- length(grep(paste("^k", obs_var, sep="_"), names(parms.optim)))
+    n.k.iore.optim <- length(grep(paste("^k.iore", obs_var, sep="_"), names(parms.optim)))
+    n.N.optim <- length(grep(paste("^N", obs_var, sep="_"), names(parms.optim)))
 
     # Formation fractions are attributed to the target variable
     n.ff.optim <- length(grep(paste("^f", ".*", obs_var, "$", sep=""), names(parms.optim)))
 
-    n.optim <- n.k.optim + n.initials.optim + n.ff.optim
+    n.optim <- sum(n.initials.optim, n.k.optim, n.k.iore.optim, n.N.optim, n.ff.optim)
 
     # FOMC, DFOP and HS parameters are only counted if we are looking at the
     # first variable in the model which is always the source variable
@@ -74,7 +76,7 @@ mkinerrmin <- function(fit, alpha = 0.05)
       if ("tb" %in% names(parms.optim)) n.optim <- n.optim + 1
     }
 
-    # Calculate and add a line to the results
+    # Calculate and add a line to the dataframe holding the results
     errmin.tmp <- kinerrmin(errdata.var, n.optim)
     errmin[obs_var, c("err.min", "n.optim", "df")] <- errmin.tmp
   }

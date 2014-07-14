@@ -113,6 +113,9 @@ or the package vignettes referenced from the
   `reweight = "obs"` to your call to `mkinfit` and a separate variance 
   componenent for each of the observed variables will be optimised
   in a second stage after the primary optimisation algorithm has converged.
+* When a metabolite decline phase is not described well by SFO kinetics, 
+  either IORE kinetics or SFORB kinetics can be used for the metabolite, 
+  adding one respectively two parameters to the system.
 
 ## GUI
 
