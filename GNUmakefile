@@ -82,7 +82,7 @@ move-sd:
 	cp -r inst/web/* $(SDDIR); cd $(SDDIR) && svn add --force .
 
 r-forge: sd move-sd
-	git archive master >> $(HOME)/mkin.tar;\
+	git archive master > $(HOME)/mkin.tar;\
 	cd $(RFDIR) && rm -r `ls` && tar -xf $(HOME)/mkin.tar;\
 	svn add --force .; cd $(RFSVN) && svn commit -m 'sync with git'
 
