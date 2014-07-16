@@ -35,41 +35,61 @@
 # CHANGES in mkin VERSION 0.9-29
 
 - R/mkinresplot.R: Make it possible to specify `xlim`
+
 - R/geometric_mean.R, man/geometric_mean.Rd: Add geometric mean function
+
 - R/endpoints.R, man/endpoints.Rd: Calculate additional (pseudo)-DT50 values for FOMC, DFOP, HS and SFORB. Avoid calculation of formation fractions from rate constants when they are directly fitted
 
 # CHANGES in mkin VERSION 0.9-28
 
 - Do not backtransform confidence intervals for formation fractions if more than one compound is formed, as such parameters only define the pathways as a set
+
 - Add historical remarks and some background to the main package vignette
+
 - Correct 'isotropic' into 'isometric' for the ilr transformation
 
 # CHANGES in mkin VERSION 0.9-27
 
 - Fork the GUI into a separate package [gmkin](http://github.com/jranke/gmkin)
+
 - DESCRIPTION, NAMESPACE, TODO: Adapt and add copyright information
+
 - Remove files belonging to the GUI
+
 - Possibility to fit without parameter transformations, using bounds as implemented in FME
+
 - Add McCall 2,4,5-T dataset
+
 - Enable selection of observed variables in plotting
+
 - Add possibility to show residual plot in `plot.mkinfit`
+
 - R/mkinparplot.R, man/mkinparplot.Rd: plot parameters with confidence intervals
 
 # CHANGES in mkin VERSION 0.9-25
 
 - Change vignette format from Sweave to knitr
+
 - Split examples vignette to FOCUS_L and FOCUS_Z
+
 - Remove warning about constant formation fractions in mkinmod as it was based on a misconception
+
 - Restrict the unit test with the Schaefer data to parent and primary metabolites as formation fraction and DT50 for A2 are higly correlated and passing the test is platform dependent. For example, the test fails in 1 out of 14 platforms on CRAN as of today.
+
 - Add Eurofins Regulatory AG copyright notices
+
 - Import FME and deSolve instead of depending on them to have clean startup
+
 - Add a starter function for the GUI: `gmkin()`
+
 - Change the format of the workspace files of gmkin so they can be distributed and documented in the package
+
 - Add gmkin workspace datasets FOCUS_2006_gmkin and FOCUS_2006_Z_gmkin
 
 # CHANGES in mkin VERSION 0.9-24
 
 - Bugfix re-enabling the fixing of any combination of initial values for state variables
+
 - Default values for kinetic rate constants are not all 0.1 any more but are "salted" with a small increment to avoid numeric artefacts with the eigenvalue based solutions
 
 # CHANGES in mkin VERSION 0.9-23
@@ -79,15 +99,25 @@
 # CHANGES in mkin VERSION 0.9-22
 
 - Get rid of the optimisation step in `mkinerrmin` - this was unnecessary. Thanks to KinGUII for the inspiration - actually this is equation 6-2 in FOCUS kinetics p. 91 that I had overlooked originally
+
 - Fix `plot.mkinfit` as it passed graphical arguments like main to the solver
+
 - Do not use `plot=TRUE` in `mkinfit()` example
+
 - The first successful fits in the not so simple GUI
+
 - Fix iteratively reweighted least squares for the case of many metabolites
+
 - Unify naming of initial values of state variables
+
 - Unify naming in dataframes of optimised and fixed parameters in the summary
+
 - Show the weighting method for residuals in the summary
+
 - Correct the output of the data in the case of manual weighting
+
 - Implement IRLS assuming different variances for observed variables
+
 - Do not use 0 values at time zero for chi2 error level calculations. This is the way it is done in KinGUII and it makes sense. It does impact the chi2 error levels in the output. Generally they seem to be lower for metabolites now, presumably because the mean of the observed values is higher
 
 For a detailed list of changes to the mkin source please consult the commit history on http://github.com/jranke/mkin
