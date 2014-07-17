@@ -21,7 +21,8 @@ mkinfit(mkinmod, observed,
   fixed_parms = NULL, fixed_initials = names(mkinmod$diffs)[-1], 
   solution_type = "auto",
   method.ode = "lsoda",
-  method.modFit = "Marq",
+  method.modFit = c("Marq", "Port", "SANN", "Nelder-Mead", "BFSG", "CG", "L-BFGS-B"),
+  maxit.modFit = "auto",
   control.modFit = list(),
   transform_rates = TRUE,
   transform_fractions = TRUE,
@@ -102,12 +103,21 @@ mkinfit(mkinmod, observed,
     recommended as it is less prone to get trapped in local minima and depends
     less on starting values for parameters.  However, it needs more iterations.
 
-    When using "Pseudo", "upper" and "lower" need to be specified for the
-    transformed parameters.
+    The "Pseudo" algorithm is not included because it needs finite parameter bounds
+    which are currently not supported.
+
+    The "Newton" algorithm is not included because its number of iterations
+    can not be controlled by \code{control.modFit} and it does not appear
+    to provide advantages over the other algorithms.
+  }
+  \item{maxit.modFit}{
+    Maximum number of iterations in the optimisation. If not "auto", this will
+    be passed to the method called by \code{\link{modFit}}, overriding 
+    what may be specified in the next argument \code{control.modFit}.
   }
   \item{control.modFit}{
     Additional arguments passed to the optimisation method used by
-    \code{\link{modFit}}.
+    \code{\link{modFit}}. 
   }
   \item{transform_rates}{
     Boolean specifying if kinetic rate constants should be transformed in the

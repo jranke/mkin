@@ -1,10 +1,32 @@
+# CHANGES in mkin VERSION 0.9-32
+
+## NEW FEATURES
+
+- Optimisation method, number of model evaluations and time elapsed during optimisation are given in the summary of mkinfit objects.
+
+- The maximum number of iterations in the optimisation algorithm can be specified using the argument `maxit.modFit` to the mkinfit function.
+
+- mkinfit gives a warning when the fit does not converge (does not apply to SANN method). This warning is included in the summary.
+
+## BUG FIXES
+
+- Initial values for formation fractions were not set in all cases.
+
+- No warning was given when the fit did not converge when a method other than the default Levenberg-Marquardt method `Marq` was used.
+
+## MINOR CHANGES
+
+- Vignettes were rebuilt to reflect the changes in the summary method.
+
+- Algorithm `Pseudo` was excluded because it needs user-defined parameter limits which are not supported.
+
+- Algorithm `Newton` was excluded because of its different way to specify the maximum number of iterations and because it does not appear to provide additional benefits.
+
 # CHANGES in mkin VERSION 0.9-31
 
 ## BUG FIXES
 
 - The internal renaming of optimised parameters in Version 0.9-30 led to errors in the determination of the degrees of freedom for the chi2 error level calulations in `mkinerrmin()` used by the summary function.
-
-- Initial values for formation fractions were not set in all cases
 
 # CHANGES in mkin VERSION 0.9-30 
 
@@ -16,13 +38,13 @@
 
 - The original and the transformed parameters now have different names (e.g. `k_parent` and `log_k_parent`. They also differ in how many they are when we have formation fractions but no pathway to sink.
 
-- The order of some of the information blocks in `print.summary.mkinfit.R()` has been ordered in a more logical way
+- The order of some of the information blocks in `print.summary.mkinfit.R()` has been ordered in a more logical way.
 
 ## MINOR CHANGES
 
 - The vignette FOCUS_Z has been simplified to use formation fractions with turning off the sink, and slightly amended to use the new versions of DT50 values calculated since mkin 0.9-29.
 
-- All vignettes have been rebuilt so they reflect all changes
+- All vignettes have been rebuilt so they reflect all changes.
 
 - The ChangeLog was renamed to NEWS.md and the entries were converted to markdown syntax compatible with the `tools::news()` function built into R.
 
