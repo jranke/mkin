@@ -417,8 +417,11 @@ mkinfit <- function(mkinmod, observed,
   fit$bparms.optim <- bparms.optim 
   fit$bparms.fixed <- bparms.fixed
 
-  # Return ode parameters for further fitting
+  # Return ode and state parameters for further fitting
   fit$bparms.ode <- bparms.all[mkinmod$parms] 
+  fit$bparms.state <- c(bparms.all[setdiff(names(bparms.all), names(fit$bparms.ode))],
+                        state.ini.fixed)
+  names(fit$bparms.state) <- gsub("_0$", "", names(fit$bparms.state))
 
   fit$date <- date()
 
