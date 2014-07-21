@@ -51,6 +51,7 @@ code would be
       value = c(85.1, 57.9, 29.9, 14.6, 9.7, 6.6, 4, 3.9, 0.6)
     )
     fit2 <- mkinfit("FOMC", example_data)
+    plot(fit2, show_residuals = TRUE) 
 
 A fairly complex usage example using another built-in dataset:
 
