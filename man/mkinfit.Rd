@@ -17,7 +17,7 @@
 \usage{
 mkinfit(mkinmod, observed, 
   parms.ini = "auto",
-  state.ini = c(100, rep(0, length(mkinmod$diffs) - 1)), 
+  state.ini = "auto",
   fixed_parms = NULL, fixed_initials = names(mkinmod$diffs)[-1], 
   solution_type = "auto",
   method.ode = "lsoda",
@@ -35,7 +35,11 @@ mkinfit(mkinmod, observed,
 }
 \arguments{
   \item{mkinmod}{
-    A list of class \code{\link{mkinmod}}, containing the kinetic model to be fitted to the data.
+    A list of class \code{\link{mkinmod}}, containing the kinetic model to be
+    fitted to the data, or one of the shorthand names ("SFO", "FOMC", "DFOP",
+    "HS", "SFORB"). If a shorthand name is given, a parent only degradation
+    model is generated for the observation with the highest value in
+    \code{observed}.
   }
   \item{observed}{
     The observed data. It has to be in the long format as described in
@@ -65,7 +69,8 @@ mkinfit(mkinmod, observed,
     case the observed variables are represented by more than one model
     variable, the names will differ from the names of the observed variables
     (see \code{map} component of \code{\link{mkinmod}}). The default is to set
-    the initial value of the first model variable to 100 and all others to 0.
+    the initial value of the first model variable to the mean of the time zero
+    values for the variable with the maximum observed value, and all others to 0.
   }
   \item{fixed_parms}{
     The names of parameters that should not be optimised but rather kept at the
@@ -124,8 +129,9 @@ mkinfit(mkinmod, observed,
     model specification used in the fitting for better compliance with the
     assumption of normal distribution of the estimator. If TRUE, also 
     alpha and beta parameters of the FOMC model are log-transformed, as well 
-    as k1 and k2 rate constants for the DFOP and HS models.
-    If TRUE, zero is used as a lower bound for the rates in the optimisation.
+    as k1 and k2 rate constants for the DFOP and HS models and the break point
+    tb of the HS model.
+    If FALSE, zero is used as a lower bound for the rates in the optimisation.
   }
   \item{transform_fractions}{
     Boolean specifying if formation fractions constants should be transformed in the
@@ -204,9 +210,13 @@ mkinfit(mkinmod, observed,
   other GUI derivative of mkin, sponsored by Syngenta.
 }
 \author{
-  Johannes Ranke <jranke@uni-bremen.de>
+  Johannes Ranke
 }
 \examples{
+# Use shorthand notation for parent only degradation
+fit <- mkinfit("FOMC", FOCUS_2006_C)
+summary(fit)
+
 # One parent compound, one metabolite, both single first order.
 SFO_SFO <- mkinmod(
   parent = list(type = "SFO", to = "m1", sink = TRUE),

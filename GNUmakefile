@@ -70,10 +70,17 @@ test: install-no-vignettes
 	cd tests;\
 		"$(RBIN)/Rscript" doRUnit.R
 
-.PHONY: vignettes
-vignettes:
-	"$(RBIN)/Rscript" -e "tools::buildVignettes(dir = '.')"
-		
+vignettes/mkin.pdf: vignettes/mkin.Rnw
+	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/mkin.Rnw', dir = 'vignettes')"
+
+vignettes/FOCUS_L.html: vignettes/FOCUS_L.Rmd
+	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/FOCUS_L.Rmd', dir = 'vignettes')"
+
+vignettes/FOCUS_Z.pdf: vignettes/FOCUS_Z.Rnw
+	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/FOCUS_Z.Rnw', dir = 'vignettes')"
+
+vignettes: vignettes/mkin.pdf vignettes/FOCUS_L.html vignettes/FOCUS_Z.pdf
+
 sd:
 	"$(RBIN)/Rscript" -e "library(staticdocs); build_site()"
 

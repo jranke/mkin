@@ -69,7 +69,11 @@ transform_odeparms <- function(parms, mkinmod,
   # and HS parameter tb if transformation of rates is requested
   for (pname in c("alpha", "beta", "k1", "k2", "tb")) {
     if (!is.na(parms[pname])) {
-      transparms[paste0("log_", pname)] <- ifelse(transform_rates, log(parms[pname]), parms[pname])
+      if (transform_rates) {
+        transparms[paste0("log_", pname)] <- log(parms[pname])
+      } else {
+        transparms[pname] <- parms[pname]
+      }
     } 
   }
   if (!is.na(parms["g"])) {
@@ -130,12 +134,16 @@ backtransform_odeparms <- function(transparms, mkinmod,
 
   # Transform parameters also for FOMC, DFOP and HS models
   for (pname in c("alpha", "beta", "k1", "k2", "tb")) {
-    pname_trans = paste0("log_", pname)
-    if (!is.na(transparms[pname_trans])) {
-      parms[pname] <- ifelse(transform_rates, 
-                             exp(transparms[pname_trans]), 
-                             transparms[pname])
-    } 
+    if (transform_rates) {
+      pname_trans = paste0("log_", pname)
+      if (!is.na(transparms[pname_trans])) {
+        parms[pname] <- exp(transparms[pname_trans])
+      }
+    } else {
+      if (!is.na(transparms[pname])) {
+        parms[pname] <- transparms[pname]
+      }
+    }
   }
   if (!is.na(transparms["g_ilr"])) {
     g_ilr <- transparms["g_ilr"]

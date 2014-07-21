@@ -23,7 +23,7 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "value"))
 
 mkinfit <- function(mkinmod, observed,
   parms.ini = "auto",
-  state.ini = c(100, rep(0, length(mkinmod$diffs) - 1)), 
+  state.ini = "auto", 
   fixed_parms = NULL,
   fixed_initials = names(mkinmod$diffs)[-1],
   solution_type = "auto",
@@ -41,6 +41,21 @@ mkinfit <- function(mkinmod, observed,
   trace_parms = FALSE,
   ...)
 {
+  # Check mkinmod and generate a model for the variable whithe the highest value
+  # if a suitable string is given
+  parent_models_available = c("SFO", "FOMC", "DFOP", "HS", "SFORB") 
+  presumed_parent_name = observed[which.max(observed$value), "name"]
+  if (class(mkinmod) != "mkinmod") {
+    if (mkinmod[[1]] %in% parent_models_available) {
+      speclist <- list(list(type = mkinmod, sink = TRUE))
+      names(speclist) <- presumed_parent_name
+      mkinmod <- mkinmod(speclist = speclist)
+    } else {
+      stop("Argument mkinmod must be of class mkinmod or a string containing one of\n  ",
+           paste(parent_models_available, collapse = ", "))
+    } 
+  }
+
   # Check optimisation method and set maximum number of iterations if specified
   method.modFit = match.arg(method.modFit)
   if (maxit.modFit != "auto") {
@@ -55,7 +70,7 @@ mkinfit <- function(mkinmod, observed,
   mod_vars <- names(mkinmod$diffs)
 
   # Get the names of observed variables
-  obs_vars = names(mkinmod$spec)
+  obs_vars <- names(mkinmod$spec)
 
   # Subset observed data with names of observed data in the model
   observed <- subset(observed, name %in% obs_vars)
@@ -135,6 +150,12 @@ mkinfit <- function(mkinmod, observed,
       }
       parms.ini[f_default_names] <- (1 - sum_f_specified) / n_unspecified
     }
+  }
+
+  # Set default for state.ini if appropriate
+  if (state.ini[1] == "auto") {
+    state.ini = c(mean(subset(observed, time == 0 & name == presumed_parent_name)$value), 
+                  rep(0, length(mkinmod$diffs) - 1))
   }
 
   # Name the inital state variable values if they are not named yet
@@ -279,7 +300,7 @@ mkinfit <- function(mkinmod, observed,
   if (!transform_rates) {
     index_k <- grep("^k_", names(lower))
     lower[index_k] <- 0
-    other_rate_parms <- intersect(c("alpha", "beta", "k1", "k2"), names(lower))
+    other_rate_parms <- intersect(c("alpha", "beta", "k1", "k2", "tb"), names(lower))
     lower[other_rate_parms] <- 0
   }
 

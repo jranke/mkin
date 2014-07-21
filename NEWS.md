@@ -2,6 +2,10 @@
 
 ## NEW FEATURES
 
+- The default for the initial value for the first state value is now taken from the mean of the observations at time zero, if available.
+
+- The kinetic model can alternatively be specified with a shorthand name for parent only degradation models, e.g. `SFO`, or `DFOP`.
+
 - Optimisation method, number of model evaluations and time elapsed during optimisation are given in the summary of mkinfit objects.
 
 - The maximum number of iterations in the optimisation algorithm can be specified using the argument `maxit.modFit` to the mkinfit function.
@@ -9,6 +13,8 @@
 - mkinfit gives a warning when the fit does not converge (does not apply to SANN method). This warning is included in the summary.
 
 ## BUG FIXES
+
+- `transform_rates=FALSE` in `mkinfit` now also works for FOMC and HS models.
 
 - Initial values for formation fractions were not set in all cases.
 

@@ -47,6 +47,11 @@ A very simple usage example would be
     plot(SFO.fit, show_residuals = TRUE) 
     summary(SFO.fit)
 
+If you have parent only degradation data, you can use a shorthand notation
+like `SFO` or `FOMC` for the model without the need to use `mkinmod`
+
+    FOMC.fit <- mkinfit("FOMC", example_data)    
+
 A fairly complex usage example using a built-in dataset:
 
     data <- mkin_wide_to_long(schaefer07_complex_case, time = "time")
