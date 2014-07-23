@@ -2,6 +2,8 @@
 
 ## NEW FEATURES
 
+- The number of degrees of freedom is difficult to define in the case of ilr transformation of formation fractions. Now for each source compartment the number of ilr parameters (=number of optimised parameters) is divided by the number of pathways to metabolites (=number of affected data series) which leads to fractional degrees of freedom in some cases.
+
 - The default for the initial value for the first state value is now taken from the mean of the observations at time zero, if available.
 
 - The kinetic model can alternatively be specified with a shorthand name for parent only degradation models, e.g. `SFO`, or `DFOP`.
@@ -13,6 +15,8 @@
 - mkinfit gives a warning when the fit does not converge (does not apply to SANN method). This warning is included in the summary.
 
 ## BUG FIXES
+
+- In the determination of the degrees of freedom in `mkinerrmin`, formation fractions were accounted for multiple times in the case of parallel formation of metabolites. See the new feature described above for the solution.
 
 - `transform_rates=FALSE` in `mkinfit` now also works for FOMC and HS models.
 

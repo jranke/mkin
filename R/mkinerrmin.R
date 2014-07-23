@@ -65,11 +65,12 @@ mkinerrmin <- function(fit, alpha = 0.05)
     # Formation fractions are attributed to the target variable, so look
     # for source compartments with formation fractions
     for (source_var in fit$obs_vars) {
+      n.ff.source = length(grep(paste("^f", source_var, sep = "_"),
+                                 names(parms.optim)))
+      n.paths.source = length(fit$mkinmod$spec[[source_var]]$to)
       for (target_var in fit$mkinmod$spec[[source_var]]$to) {
         if (obs_var == target_var) {
-          n.ff.optim <- n.ff.optim +  
-                        length(grep(paste("^f", source_var, sep = "_"),
-                                    names(parms.optim))) 
+          n.ff.optim <- n.ff.optim + n.ff.source/n.paths.source
         }
       }
     }
