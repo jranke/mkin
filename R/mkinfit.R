@@ -154,8 +154,14 @@ mkinfit <- function(mkinmod, observed,
 
   # Set default for state.ini if appropriate
   if (state.ini[1] == "auto") {
-    state.ini = c(mean(subset(observed, time == 0 & name == presumed_parent_name)$value), 
-                  rep(0, length(mkinmod$diffs) - 1))
+    presumed_parent_time_0 = subset(observed, 
+                                    time == 0 & name == presumed_parent_name)$value
+    presumed_parent_time_0_mean = mean(presumed_parent_time_0, na.rm = TRUE)
+    if (is.na(presumed_parent_time_0_mean)) {
+      state.ini = c(100, rep(0, length(mkinmod$diffs) - 1))
+    } else {
+      state.ini = c(presumed_parent_time_0_mean, rep(0, length(mkinmod$diffs) - 1))
+    }
   }
 
   # Name the inital state variable values if they are not named yet

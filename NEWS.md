@@ -1,3 +1,9 @@
+# CHANGES in mkin VERSION 0.9-33
+
+## NEW FEATURES
+
+- The initial value (state.ini) for the observed variable with the highest observed residue is set to 100 in case it has no time zero observation and `state.ini = "auto"`
+
 # CHANGES in mkin VERSION 0.9-32
 
 ## NEW FEATURES
