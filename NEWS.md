@@ -16,6 +16,8 @@
 
 ## BUG FIXES
 
+- Avoid plotting an artifical 0 residual at time zero in `mkinresplot`
+
 - In the determination of the degrees of freedom in `mkinerrmin`, formation fractions were accounted for multiple times in the case of parallel formation of metabolites. See the new feature described above for the solution.
 
 - `transform_rates=FALSE` in `mkinfit` now also works for FOMC and HS models.
