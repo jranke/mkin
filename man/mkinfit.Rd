@@ -38,7 +38,7 @@ mkinfit(mkinmod, observed,
     A list of class \code{\link{mkinmod}}, containing the kinetic model to be
     fitted to the data, or one of the shorthand names ("SFO", "FOMC", "DFOP",
     "HS", "SFORB"). If a shorthand name is given, a parent only degradation
-    model is generated for the observation with the highest value in
+    model is generated for the observed variable with the highest value in
     \code{observed}.
   }
   \item{observed}{
