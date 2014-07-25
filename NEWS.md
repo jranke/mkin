@@ -4,6 +4,10 @@
 
 - The initial value (state.ini) for the observed variable with the highest observed residue is set to 100 in case it has no time zero observation and `state.ini = "auto"`
 
+## BUG FIXES
+
+- `mkinfit()`: The internally fitted parameter for `g` was named `g_ilr` even when `transform_fractions=FALSE`
+
 # CHANGES in mkin VERSION 0.9-32
 
 ## NEW FEATURES

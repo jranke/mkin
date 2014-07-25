@@ -76,9 +76,15 @@ transform_odeparms <- function(parms, mkinmod,
       }
     } 
   }
+
+  # DFOP parameter g is treated as a fraction
   if (!is.na(parms["g"])) {
     g <- parms["g"]
-    transparms["g_ilr"] <- ifelse(transform_fractions, ilr(c(g, 1 - g)), g)
+    if (transform_fractions) {
+      transparms["g_ilr"] <- ilr(c(g, 1 - g))
+    } else {
+      transparms["g"] <- g
+    }
   }
 
   return(transparms)
@@ -145,9 +151,14 @@ backtransform_odeparms <- function(transparms, mkinmod,
       }
     }
   }
+
+  # DFOP parameter g is treated as a fraction
   if (!is.na(transparms["g_ilr"])) {
     g_ilr <- transparms["g_ilr"]
-    parms["g"] <- ifelse(transform_fractions, invilr(g_ilr)[1], g_ilr)
+    parms["g"] <- invilr(g_ilr)[1]
+  }
+  if (!is.na(transparms["g"])) {
+    parms["g"] <- transparms["g"]
   }
 
   return(parms)
