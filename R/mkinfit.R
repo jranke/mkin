@@ -567,7 +567,7 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
   if (!is.null(x$warning)) cat("\n\nWarning:", x$warning, "\n\n")
 
   cat("\nEquations:\n")
-  print(noquote(as.character(x[["diffs"]])))
+  cat(noquote(strwrap(x[["diffs"]], exdent = 11)), fill = TRUE)
   df  <- x$df
   rdf <- df[2]
 
