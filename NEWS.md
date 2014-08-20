@@ -8,6 +8,12 @@
 
 - `mkinfit()`: The internally fitted parameter for `g` was named `g_ilr` even when `transform_fractions=FALSE`
 
+## MINOR CHANGES
+
+- The formatting of differential equations in the summary was improved by wrapping overly long lines
+
+- The FOCUS_Z vignette was rebuilt with the above improvement and using a width of 70 to avoid output outside of the grey area
+
 # CHANGES in mkin VERSION 0.9-32
 
 ## NEW FEATURES
