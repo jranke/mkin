@@ -41,11 +41,11 @@ mkinfit <- function(mkinmod, observed,
   trace_parms = FALSE,
   ...)
 {
-  # Check mkinmod and generate a model for the variable whithe the highest value
+  # Check mkinmod and generate a model for the variable whith the highest value
   # if a suitable string is given
   parent_models_available = c("SFO", "FOMC", "DFOP", "HS", "SFORB") 
-  presumed_parent_name = observed[which.max(observed$value), "name"]
   if (class(mkinmod) != "mkinmod") {
+    presumed_parent_name = observed[which.max(observed$value), "name"]
     if (mkinmod[[1]] %in% parent_models_available) {
       speclist <- list(list(type = mkinmod, sink = TRUE))
       names(speclist) <- presumed_parent_name
@@ -153,14 +153,14 @@ mkinfit <- function(mkinmod, observed,
   }
 
   # Set default for state.ini if appropriate
+  parent_name = names(mkinmod$spec)[[1]]
   if (state.ini[1] == "auto") {
-    presumed_parent_time_0 = subset(observed, 
-                                    time == 0 & name == presumed_parent_name)$value
-    presumed_parent_time_0_mean = mean(presumed_parent_time_0, na.rm = TRUE)
-    if (is.na(presumed_parent_time_0_mean)) {
+    parent_time_0 = subset(observed, time == 0 & name == parent_name)$value
+    parent_time_0_mean = mean(parent_time_0, na.rm = TRUE)
+    if (is.na(parent_time_0_mean)) {
       state.ini = c(100, rep(0, length(mkinmod$diffs) - 1))
     } else {
-      state.ini = c(presumed_parent_time_0_mean, rep(0, length(mkinmod$diffs) - 1))
+      state.ini = c(parent_time_0_mean, rep(0, length(mkinmod$diffs) - 1))
     }
   }
 

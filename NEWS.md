@@ -8,6 +8,8 @@
 
 - `mkinfit()`: The internally fitted parameter for `g` was named `g_ilr` even when `transform_fractions=FALSE`
 
+- `mkinfit()`: The initial value (state.ini) for the parent compound was not set when the parent was not the (only) variable with the highest value in the observed data.
+
 ## MINOR CHANGES
 
 - The formatting of differential equations in the summary was improved by wrapping overly long lines
