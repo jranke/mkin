@@ -65,6 +65,7 @@ check-no-vignettes: build-no-vignettes
 
 clean: 
 	$(RM) -r $(PKGNAME).Rcheck/
+	$(RM) vignettes/*.R
 
 test: install-no-vignettes
 	cd tests;\
