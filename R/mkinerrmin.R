@@ -36,10 +36,11 @@ mkinerrmin <- function(fit, alpha = 0.05)
     suffixes = c("_mean", "_pred"))
   errdata <- errdata[order(errdata$time, errdata$name), ]
 
-  # Any value that is set to exactly zero is not really an observed value
-  # Remove those at time 0 - those are caused by the FOCUS recommendation
-  # to set metabolites occurring at time 0 to 0
-  errdata <- subset(errdata, !(time == 0 & value_mean == 0))
+  # Remove values at time zero for variables whose value for state.ini is fixed,
+  # as these will not have any effect in the optimization and should therefore not 
+  # be counted as degrees of freedom.
+  fixed_initials = gsub("_0$", "", rownames(subset(fit$fixed, type = "state")))
+  errdata <- subset(errdata, !(time == 0 & name %in% fixed_initials))
 
   n.optim.overall <- length(parms.optim)
 

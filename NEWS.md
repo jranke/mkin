@@ -4,11 +4,18 @@
 
 - The initial value (state.ini) for the observed variable with the highest observed residue is set to 100 in case it has no time zero observation and `state.ini = "auto"`
 
+- A basic unit test for `mkinerrmin()` was written
+
 ## BUG FIXES
 
 - `mkinfit()`: The internally fitted parameter for `g` was named `g_ilr` even when `transform_fractions=FALSE`
 
 - `mkinfit()`: The initial value (state.ini) for the parent compound was not set when the parent was not the (only) variable with the highest value in the observed data.
+
+- `mkinerrmin()`: When checking for degrees of freedom for metabolites, check
+  if their time zero value is fixed instead of checking if the observed value
+  is zero. This ensures correct calculation of degrees of freedom also in cases
+  where the metabolite residue at time zero is greater zero.
 
 ## MINOR CHANGES
 
