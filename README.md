@@ -155,7 +155,8 @@ The first `mkin` code was
 [first CRAN version](http://cran.r-project.org/src/contrib/Archive/mkin)
 on 18 May 2010.
 
-After this, Bayer has developed an R based successor to KinGUI named KinGUII
+After this, Bayer has developed an R based successor to KinGUI named 
+![KinGUII](http://kinguii.github.io) 
 whose R code is based on `mkin`, but which added, amongst other refinements, a
 closed source graphical user interface (GUI), iteratively reweighted least
 squares (IRLS) optimisation of the variance for each of the observed
