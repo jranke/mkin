@@ -31,7 +31,7 @@ plot.mkinfit <- function(x, fit = x,
 {
   if (add && show_residuals) stop("If adding to an existing plot we can not show residuals")
 
-  if (ylim == "default") {
+  if (ylim[[1]] == "default") {
     ylim = c(0, max(subset(fit$data, variable %in% obs_vars)$observed, na.rm = TRUE))
   }
 
