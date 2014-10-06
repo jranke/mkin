@@ -594,13 +594,15 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
   cat("\nOptimised, transformed parameters:\n")
   print(signif(x$par, digits = digits))
 
-  cat("\nParameter correlation:\n")
-  if (!is.null(x$cov.unscaled)){
-    Corr <- cov2cor(x$cov.unscaled)
-    rownames(Corr) <- colnames(Corr) <- rownames(x$par)
-    print(Corr, digits = digits, ...)
-  } else {
-    cat("Could not estimate covariance matrix; singular system:\n")
+  if (x$niter != 0) {
+    cat("\nParameter correlation:\n")
+    if (!is.null(x$cov.unscaled)){
+      Corr <- cov2cor(x$cov.unscaled)
+      rownames(Corr) <- colnames(Corr) <- rownames(x$par)
+      print(Corr, digits = digits, ...)
+    } else {
+      cat("Could not estimate covariance matrix; singular system:\n")
+    }
   }
 
   cat("\nResidual standard error:",

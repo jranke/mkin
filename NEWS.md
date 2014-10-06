@@ -16,12 +16,13 @@
 
 - `plot.mkinfit()`: Avoid a warning message about only using the first component of ylim that occurred when ylim was specified explicitly
 
-
 ## MINOR CHANGES
 
 - The formatting of differential equations in the summary was improved by wrapping overly long lines
 
 - The FOCUS_Z vignette was rebuilt with the above improvement and using a width of 70 to avoid output outside of the grey area
+
+- `print.summary.mkinfit()`: Avoid a warning that occurred when gmkin showed summaries ofinitial fits without iterations
 
 # CHANGES in mkin VERSION 0.9-32
 
