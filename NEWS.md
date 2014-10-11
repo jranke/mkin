@@ -1,3 +1,5 @@
+# CHANGES in mkin VERSION 0.9-34
+
 # CHANGES in mkin VERSION 0.9-33
 
 ## NEW FEATURES
