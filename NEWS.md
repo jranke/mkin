@@ -24,6 +24,8 @@
 
 - `print.summary.mkinfit()`: Avoid a warning that occurred when gmkin showed summaries ofinitial fits without iterations
 
+- `mkinfit()`: Avoid a warning that occurred when summarising a fit that was performed with maxitmodFit = 0 as done in gmkin for configuring new fits.
+
 # CHANGES in mkin VERSION 0.9-32
 
 ## NEW FEATURES
