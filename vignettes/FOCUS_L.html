@@ -5,6 +5,18 @@
 
 <title>Example evaluation of FOCUS Laboratory Data L1 to L3</title>
 
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
 <!-- Styles for R syntax highlighter -->
 <style type="text/css">
    pre .operator,
@@ -13,19 +25,21 @@
    }
 
    pre .literal {
-     color: rgb(88, 72, 246)
+     color: #990073
    }
 
    pre .number {
-     color: rgb(0, 0, 205);
+     color: #099;
    }
 
    pre .comment {
-     color: rgb(76, 136, 107);
+     color: #998;
+     font-style: italic
    }
 
    pre .keyword {
-     color: rgb(0, 0, 255);
+     color: #900;
+     font-weight: bold
    }
 
    pre .identifier {
@@ -33,7 +47,7 @@
    }
 
    pre .string {
-     color: rgb(3, 106, 7);
+     color: #d14;
    }
 </style>
 
@@ -43,64 +57,71 @@ var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/<
 hljs.initHighlightingOnLoad();
 </script>
 
-<!-- MathJax scripts -->
-<script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
 
 
 <style type="text/css">
 body, td {
    font-family: sans-serif;
    background-color: white;
-   font-size: 12px;
-   margin: 8px;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
 }
 
 tt, code, pre {
    font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
 }
 
-h1 { 
-   font-size:2.2em; 
+h1 {
+   font-size:2.2em;
 }
 
-h2 { 
-   font-size:1.8em; 
+h2 {
+   font-size:1.8em;
 }
 
-h3 { 
-   font-size:1.4em; 
+h3 {
+   font-size:1.4em;
 }
 
-h4 { 
-   font-size:1.0em; 
+h4 {
+   font-size:1.0em;
 }
 
-h5 { 
-   font-size:0.9em; 
+h5 {
+   font-size:0.9em;
 }
 
-h6 { 
-   font-size:0.8em; 
+h6 {
+   font-size:0.8em;
 }
 
 a:visited {
    color: rgb(50%, 0%, 50%);
 }
 
-pre {	
-   margin-top: 0;
-   max-width: 95%;
-   border: 1px solid #ccc;
-   white-space: pre-wrap;
+pre, img {
+  max-width: 100%;
 }
-
+pre {
+  overflow-x: auto;
+}
 pre code {
    display: block; padding: 0.5em;
 }
 
-code.r, code.cpp {
-   background-color: #F8F8F8;
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
 }
 
 table, td, th {
@@ -123,54 +144,54 @@ hr {
 }
 
 @media print {
-   * { 
-      background: transparent !important; 
-      color: black !important; 
-      filter:none !important; 
-      -ms-filter: none !important; 
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
    }
 
-   body { 
-      font-size:12pt; 
-      max-width:100%; 
-   }
-       
-   a, a:visited { 
-      text-decoration: underline; 
+   body {
+      font-size:12pt;
+      max-width:100%;
    }
 
-   hr { 
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
       visibility: hidden;
       page-break-before: always;
    }
 
-   pre, blockquote { 
-      padding-right: 1em; 
-      page-break-inside: avoid; 
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
    }
 
-   tr, img { 
-      page-break-inside: avoid; 
+   tr, img {
+      page-break-inside: avoid;
    }
 
-   img { 
-      max-width: 100% !important; 
+   img {
+      max-width: 100% !important;
    }
 
-   @page :left { 
-      margin: 15mm 20mm 15mm 10mm; 
-   }
-     
-   @page :right { 
-      margin: 15mm 10mm 15mm 20mm; 
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
    }
 
-   p, h2, h3 { 
-      orphans: 3; widows: 3; 
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
    }
 
-   h2, h3 { 
-      page-break-after: avoid; 
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
    }
 }
 </style>
@@ -193,13 +214,7 @@ hr {
 report, p. 284:</p>
 
 <pre><code class="r">library(&quot;mkin&quot;)
-</code></pre>
-
-<pre><code>## Loading required package: minpack.lm
-## Loading required package: rootSolve
-</code></pre>
-
-<pre><code class="r">FOCUS_2006_L1 = data.frame(
+FOCUS_2006_L1 = data.frame(
   t = rep(c(0, 1, 2, 3, 5, 7, 14, 21, 30), each = 2),
   parent = c(88.3, 91.4, 85.6, 84.5, 78.9, 77.6, 
              72.0, 71.9, 50.3, 59.4, 47.0, 45.1,
@@ -223,8 +238,8 @@ summary(m.L1.SFO)
 
 <pre><code>## mkin version:    0.9.33 
 ## R version:       3.1.1 
-## Date of fit:     Mon Aug 25 10:34:14 2014 
-## Date of summary: Mon Aug 25 10:34:14 2014 
+## Date of fit:     Sat Oct 11 11:06:43 2014 
+## Date of summary: Sat Oct 11 11:06:43 2014 
 ## 
 ## Equations:
 ## d_parent = - k_parent_sink * parent
@@ -308,9 +323,8 @@ summary(m.L1.SFO)
 <pre><code class="r">plot(m.L1.SFO)
 </code></pre>
 
-<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-4"/> </p>
-
-<p>The residual plot can be easily obtained by</p>
+<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-4"/> 
+The residual plot can be easily obtained by</p>
 
 <pre><code class="r">mkinresplot(m.L1.SFO, ylab = &quot;Observed&quot;, xlab = &quot;Time&quot;)
 </code></pre>
@@ -326,15 +340,15 @@ summary(m.L1.FOMC, data = FALSE)
 
 <pre><code>## mkin version:    0.9.33 
 ## R version:       3.1.1 
-## Date of fit:     Mon Aug 25 10:34:17 2014 
-## Date of summary: Mon Aug 25 10:34:17 2014 
+## Date of fit:     Sat Oct 11 11:06:44 2014 
+## Date of summary: Sat Oct 11 11:06:44 2014 
 ## 
 ## Equations:
 ## d_parent = - (alpha/beta) * ((time/beta) + 1)^-1 * parent
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted with method Marq using 53 model solutions performed in 0.3 s
+## Fitted with method Marq using 53 model solutions performed in 0.314 s
 ## 
 ## Weighting: none
 ## 
@@ -420,15 +434,15 @@ summary(m.L2.SFO)
 
 <pre><code>## mkin version:    0.9.33 
 ## R version:       3.1.1 
-## Date of fit:     Mon Aug 25 10:34:17 2014 
-## Date of summary: Mon Aug 25 10:34:17 2014 
+## Date of fit:     Sat Oct 11 11:06:44 2014 
+## Date of summary: Sat Oct 11 11:06:44 2014 
 ## 
 ## Equations:
 ## d_parent = - k_parent_sink * parent
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted with method Marq using 29 model solutions performed in 0.184 s
+## Fitted with method Marq using 29 model solutions performed in 0.173 s
 ## 
 ## Weighting: none
 ## 
@@ -530,15 +544,15 @@ mkinresplot(m.L2.FOMC)
 
 <pre><code>## mkin version:    0.9.33 
 ## R version:       3.1.1 
-## Date of fit:     Mon Aug 25 10:34:17 2014 
-## Date of summary: Mon Aug 25 10:34:17 2014 
+## Date of fit:     Sat Oct 11 11:06:46 2014 
+## Date of summary: Sat Oct 11 11:06:47 2014 
 ## 
 ## Equations:
 ## d_parent = - (alpha/beta) * ((time/beta) + 1)^-1 * parent
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted with method Marq using 35 model solutions performed in 0.2 s
+## Fitted with method Marq using 35 model solutions performed in 0.206 s
 ## 
 ## Weighting: none
 ## 
@@ -616,8 +630,8 @@ plot(m.L2.DFOP)
 
 <pre><code>## mkin version:    0.9.33 
 ## R version:       3.1.1 
-## Date of fit:     Mon Aug 25 10:34:18 2014 
-## Date of summary: Mon Aug 25 10:34:18 2014 
+## Date of fit:     Sat Oct 11 11:06:47 2014 
+## Date of summary: Sat Oct 11 11:06:47 2014 
 ## 
 ## Equations:
 ## d_parent = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 * 
@@ -626,7 +640,7 @@ plot(m.L2.DFOP)
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted with method Marq using 43 model solutions performed in 0.26 s
+## Fitted with method Marq using 43 model solutions performed in 0.265 s
 ## 
 ## Weighting: none
 ## 
@@ -705,15 +719,15 @@ plot(m.L3.SFO)
 
 <pre><code>## mkin version:    0.9.33 
 ## R version:       3.1.1 
-## Date of fit:     Mon Aug 25 10:34:18 2014 
-## Date of summary: Mon Aug 25 10:34:18 2014 
+## Date of fit:     Sat Oct 11 11:06:48 2014 
+## Date of summary: Sat Oct 11 11:06:48 2014 
 ## 
 ## Equations:
 ## d_parent = - k_parent_sink * parent
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted with method Marq using 44 model solutions performed in 0.252 s
+## Fitted with method Marq using 44 model solutions performed in 0.261 s
 ## 
 ## Weighting: none
 ## 
@@ -791,15 +805,15 @@ plot(m.L3.FOMC)
 
 <pre><code>## mkin version:    0.9.33 
 ## R version:       3.1.1 
-## Date of fit:     Mon Aug 25 10:34:19 2014 
-## Date of summary: Mon Aug 25 10:34:19 2014 
+## Date of fit:     Sat Oct 11 11:06:48 2014 
+## Date of summary: Sat Oct 11 11:06:48 2014 
 ## 
 ## Equations:
 ## d_parent = - (alpha/beta) * ((time/beta) + 1)^-1 * parent
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted with method Marq using 26 model solutions performed in 0.148 s
+## Fitted with method Marq using 26 model solutions performed in 0.159 s
 ## 
 ## Weighting: none
 ## 
@@ -864,8 +878,8 @@ plot(m.L3.DFOP)
 
 <pre><code>## mkin version:    0.9.33 
 ## R version:       3.1.1 
-## Date of fit:     Mon Aug 25 10:34:19 2014 
-## Date of summary: Mon Aug 25 10:34:19 2014 
+## Date of fit:     Sat Oct 11 11:06:50 2014 
+## Date of summary: Sat Oct 11 11:06:50 2014 
 ## 
 ## Equations:
 ## d_parent = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 * 
@@ -874,7 +888,7 @@ plot(m.L3.DFOP)
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted with method Marq using 37 model solutions performed in 0.236 s
+## Fitted with method Marq using 37 model solutions performed in 0.225 s
 ## 
 ## Weighting: none
 ## 
@@ -962,15 +976,15 @@ plot(m.L4.SFO)
 
 <pre><code>## mkin version:    0.9.33 
 ## R version:       3.1.1 
-## Date of fit:     Mon Aug 25 10:34:19 2014 
-## Date of summary: Mon Aug 25 10:34:19 2014 
+## Date of fit:     Sat Oct 11 11:06:51 2014 
+## Date of summary: Sat Oct 11 11:06:51 2014 
 ## 
 ## Equations:
 ## d_parent = - k_parent_sink * parent
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted with method Marq using 20 model solutions performed in 0.123 s
+## Fitted with method Marq using 20 model solutions performed in 0.119 s
 ## 
 ## Weighting: none
 ## 
@@ -1037,15 +1051,15 @@ plot(m.L4.FOMC)
 
 <pre><code>## mkin version:    0.9.33 
 ## R version:       3.1.1 
-## Date of fit:     Mon Aug 25 10:34:20 2014 
-## Date of summary: Mon Aug 25 10:34:20 2014 
+## Date of fit:     Sat Oct 11 11:06:51 2014 
+## Date of summary: Sat Oct 11 11:06:51 2014 
 ## 
 ## Equations:
 ## d_parent = - (alpha/beta) * ((time/beta) + 1)^-1 * parent
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted with method Marq using 48 model solutions performed in 0.281 s
+## Fitted with method Marq using 48 model solutions performed in 0.283 s
 ## 
 ## Weighting: none
 ## 
