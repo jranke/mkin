@@ -9,6 +9,12 @@
   deviation between the kinetic model and the observed data. This model cost is
   then minimised using the Levenberg-Marquardt algorithm \code{\link{nls.lm}}, 
   using the specified initial or fixed parameters and starting values.
+  Per default, parameters in the kinetic models are internally transformed in order 
+  to better satisfy the assumption of a normal distribution of their estimators.
+  If fitting with transformed fractions leads to a suboptimal fit, doing a
+  first run without transforming fractions may help. A final
+  run using the optimised parameters from the previous run as starting values
+  can then be performed with transformed fractions.
   In each step of the optimsation, the kinetic model is solved using the
   function \code{\link{mkinpredict}}. The variance of the residuals for each
   observed variable can optionally be iteratively reweighted until convergence
@@ -138,10 +144,10 @@ mkinfit(mkinmod, observed,
     Boolean specifying if formation fractions constants should be transformed in the
     model specification used in the fitting for better compliance with the
     assumption of normal distribution of the estimator. The default (TRUE) is 
-    to do transformations. The g parameter of the DFOP and HS models are also 
-    transformed, as they can also be seen as compositional data. The
-    transformation used for these transformations is the \code{\link{ilr}}
-    transformation.
+    to do transformations. If TRUE, the g parameter of the DFOP and HS
+    models are also transformed, as they can also be seen as compositional
+    data. The transformation used for these transformations is the
+    \code{\link{ilr}} transformation.
   }
   \item{plot}{
     Should the observed values and the numerical solutions be plotted at each
