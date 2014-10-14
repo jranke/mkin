@@ -122,10 +122,9 @@ documentation or the package vignettes referenced from the
 
 ## GUI
 
-There is a graphical user interface that I consider useful for real work.
-It is available from github in the separate package 
-[gmkin](http://github.com/jranke/gmkin).
-
+There is a graphical user interface that I consider useful for real work. Please
+refer to its homepage of [gmkin](http://kinfit.r-forge.r-project.org/gmkin_static)
+for installation instructions and futher information.
   
 ## Credits and historical remarks
 
