@@ -7,14 +7,10 @@
   This function uses the Flexible Modelling Environment package
   \code{\link{FME}} to create a function calculating the model cost, i.e. the 
   deviation between the kinetic model and the observed data. This model cost is
-  then minimised using the Levenberg-Marquardt algorithm \code{\link{nls.lm}}, 
+  then minimised using the Port algorithm \code{\link{nlminb}}, 
   using the specified initial or fixed parameters and starting values.
   Per default, parameters in the kinetic models are internally transformed in order 
   to better satisfy the assumption of a normal distribution of their estimators.
-  If fitting with transformed fractions leads to a suboptimal fit, doing a
-  first run without transforming fractions may help. A final
-  run using the optimised parameters from the previous run as starting values
-  can then be performed with transformed fractions.
   In each step of the optimsation, the kinetic model is solved using the
   function \code{\link{mkinpredict}}. The variance of the residuals for each
   observed variable can optionally be iteratively reweighted until convergence
@@ -27,7 +23,7 @@ mkinfit(mkinmod, observed,
   fixed_parms = NULL, fixed_initials = names(mkinmod$diffs)[-1], 
   solution_type = "auto",
   method.ode = "lsoda",
-  method.modFit = c("Marq", "Port", "SANN", "Nelder-Mead", "BFSG", "CG", "L-BFGS-B"),
+  method.modFit = c("Port", "Marq", "SANN", "Nelder-Mead", "BFSG", "CG", "L-BFGS-B"),
   maxit.modFit = "auto",
   control.modFit = list(),
   transform_rates = TRUE,
@@ -107,13 +103,17 @@ mkinfit(mkinmod, observed,
     "lsoda" is performant, but sometimes fails to converge.
   }
   \item{method.modFit}{
-    The optimisation method passed to \code{\link{modFit}}.  The default "Marq"
-    is the Levenberg Marquardt algorithm \code{\link{nls.lm}} from the package
-    \code{minpack.lm} and usually needs the least number of iterations.
+    The optimisation method passed to \code{\link{modFit}}.  
 
-    For more complex problems where local minima occur, the "Port" algorithm is
-    recommended as it is less prone to get trapped in local minima and depends
-    less on starting values for parameters.  However, it needs more iterations.
+    In order to optimally deal with problems where local minima occur, the
+    "Port" algorithm is now used per default as it is less prone to get trapped
+    in local minima and depends less on starting values for parameters than
+    the Levenberg Marquardt variant selected by "Marq".  However, "Port" needs
+    more iterations.
+
+    The former default "Marq" is the Levenberg Marquardt algorithm
+    \code{\link{nls.lm}} from the package \code{minpack.lm} and usually needs
+    the least number of iterations.
 
     The "Pseudo" algorithm is not included because it needs finite parameter bounds
     which are currently not supported.

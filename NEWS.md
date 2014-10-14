@@ -1,5 +1,9 @@
 # CHANGES in mkin VERSION 0.9-34
 
+## NEW FEATURES
+
+- Switch to using the Port algorithm (using a model/trust region approach) per default. While needing more iterations than the Levenberg-Marquardt algorithm previously used per default, it is less sensitive to starting parameters.
+
 ## MINOR CHANGES
 
 - The formatting of differential equations in the summary was further improved

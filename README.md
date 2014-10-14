@@ -93,8 +93,7 @@ documentation or the package vignettes referenced from the
 * Model optimisation with 
   [`mkinfit`](http://kinfit.r-forge.r-project.org/mkin_static/mkinfit.html)
   internally using the `modFit` function from the `FME` package,
-  which uses the least-squares Levenberg-Marquardt algorithm from
-  `minpack.lm` per default.
+  but using the Port routine `nlminb` per default.
 * By default, kinetic rate constants and kinetic formation fractions are
   transformed internally using
   [`transform_odeparms`](http://kinfit.r-forge.r-project.org/mkin_static/transform_odeparms.html)
