@@ -11,7 +11,7 @@ You can install the latest released version from
 [CRAN](http://cran.r-project.org/package=mkin) from within R:
 
 ```s
-install.packages('mkin')
+install.packages("mkin")
 ```
 
 If looking for the latest features, you can install directly from 
@@ -21,7 +21,7 @@ vignettes, to make installation as fast and painless as possible.
 
 ```s
 require(devtools)
-install_github("mkin", "jranke", quick = TRUE)
+install_github("jranke/mkin", quick = TRUE)
 ```
 
 ## Background
@@ -37,7 +37,7 @@ detailed guidance and helpful tools have been developed as detailed in
 The simplest usage example that I can think of, using model shorthand notation
 (available since mkin 0.9-32) and a built-in dataset is
 
-    library("mkin")
+    library(mkin)
     fit <- mkinfit("SFO", FOCUS_2006_C)
     plot(fit, show_residuals = TRUE) 
     summary(fit)
@@ -124,7 +124,7 @@ documentation or the package vignettes referenced from the
 
 There is a graphical user interface that I consider useful for real work. Please
 refer to its homepage of [gmkin](http://kinfit.r-forge.r-project.org/gmkin_static)
-for installation instructions and futher information.
+for installation instructions and further information.
   
 ## Credits and historical remarks
 
