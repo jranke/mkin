@@ -1,5 +1,9 @@
 # CHANGES in mkin VERSION 0.9-34
 
+## MINOR CHANGES
+
+- The formatting of differential equations in the summary was further improved
+
 # CHANGES in mkin VERSION 0.9-33
 
 ## NEW FEATURES
