@@ -8,6 +8,8 @@
 
 - The formatting of differential equations in the summary was further improved
 
+- Always include 0 on y axis when plotting during the fit
+
 # CHANGES in mkin VERSION 0.9-33
 
 ## NEW FEATURES

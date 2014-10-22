@@ -281,7 +281,7 @@ mkinfit <- function(mkinmod, observed,
                                 atol = atol, rtol = rtol, ...)
 
         plot(0, type="n", 
-          xlim = range(observed$time), ylim = range(observed$value, na.rm=TRUE),
+          xlim = range(observed$time), ylim = c(0, max(observed$value, na.rm=TRUE)),
           xlab = "Time", ylab = "Observed")
         col_obs <- pch_obs <- 1:length(obs_vars)
         lty_obs <- rep(1, length(obs_vars))
