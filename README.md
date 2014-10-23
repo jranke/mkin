@@ -122,8 +122,8 @@ documentation or the package vignettes referenced from the
 ## GUI
 
 There is a graphical user interface that I consider useful for real work. Please
-refer to its homepage of [gmkin](http://kinfit.r-forge.r-project.org/gmkin_static)
-for installation instructions and further information.
+refer to its [documentation page](http://kinfit.r-forge.r-project.org/gmkin_static)
+for installation instructions and a manual.
   
 ## Credits and historical remarks
 
