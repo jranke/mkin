@@ -2,7 +2,7 @@
 \Rdversion{1.1}
 \alias{DFOP.solution}
 \title{
-Dual First-Order in Parallel kinetics
+Double First-Order in Parallel kinetics
 }
 \description{
   Function describing decline from a defined starting value using the sum
