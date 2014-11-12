@@ -38,8 +38,7 @@ transform_odeparms <- function(parms, mkinmod,
   if (length(k) > 0) {
     if(transform_rates) {
       transparms[paste0("log_", names(k))] <- log(k)
-    }
-    else transparms[names(k)] <- k
+    } else transparms[names(k)] <- k
   }
 
   # Do not transform exponents in IORE models
@@ -123,6 +122,8 @@ backtransform_odeparms <- function(transparms, mkinmod,
   } else {
     trans_k <- transparms[grep("^k_", names(transparms))]
     parms[names(trans_k)] <- trans_k
+    trans_k.iore <- transparms[grep("^k.iore_", names(transparms))]
+    parms[names(trans_k.iore)] <- trans_k.iore
   }
 
   # Do not transform exponents in IORE models

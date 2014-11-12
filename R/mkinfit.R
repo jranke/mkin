@@ -43,7 +43,7 @@ mkinfit <- function(mkinmod, observed,
 {
   # Check mkinmod and generate a model for the variable whith the highest value
   # if a suitable string is given
-  parent_models_available = c("SFO", "FOMC", "DFOP", "HS", "SFORB") 
+  parent_models_available = c("SFO", "FOMC", "DFOP", "HS", "SFORB", "IORE") 
   if (class(mkinmod) != "mkinmod") {
     presumed_parent_name = observed[which.max(observed$value), "name"]
     if (mkinmod[[1]] %in% parent_models_available) {
@@ -60,7 +60,10 @@ mkinfit <- function(mkinmod, observed,
   method.modFit = match.arg(method.modFit)
   if (maxit.modFit != "auto") {
     if (method.modFit == "Marq") control.modFit$maxiter = maxit.modFit
-    if (method.modFit == "Port") control.modFit$iter.max = maxit.modFit
+    if (method.modFit == "Port") {
+      control.modFit$iter.max = maxit.modFit
+      control.modFit$eval.max = maxit.modFit
+    }
     if (method.modFit %in% c("SANN", "Nelder-Mead", "BFGS", "CG", "L-BFGS-B")) {
         control.modFit$maxit = maxit.modFit
     }
@@ -308,6 +311,8 @@ mkinfit <- function(mkinmod, observed,
   if (!transform_rates) {
     index_k <- grep("^k_", names(lower))
     lower[index_k] <- 0
+    index_k.iore <- grep("^k.iore_", names(lower))
+    lower[index_k.iore] <- 0
     other_rate_parms <- intersect(c("alpha", "beta", "k1", "k2", "tb"), names(lower))
     lower[other_rate_parms] <- 0
   }

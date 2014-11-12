@@ -216,6 +216,12 @@ mkinfit(mkinmod, observed,
   Gao). A similar implemention can also be found in CAKE 2.0, which is the
   other GUI derivative of mkin, sponsored by Syngenta.
 }
+\note{
+  When using the "IORE" submodel for metabolites, fitting with 
+  "transform_rates = TRUE" (the default) often leads to failures of the
+  numerical ODE solver. In this situation it may help to switch off the
+  internal rate transformation.
+}
 \author{
   Johannes Ranke
 }

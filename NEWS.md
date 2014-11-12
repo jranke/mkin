@@ -2,6 +2,7 @@
 
 ## NEW FEATURES
 
+- Add the convenience function `mkinsub()` for creating the lists used in `mkinmod()`
 
 - Add the possibility to fit indeterminate order rate equation (IORE) models using an analytical solution (parent only) or a numeric solution. Paths from IORE compounds to metabolites are supported when using of formation fractions (use_of_ff = 'max'). Note that the numerical solution (method.ode = 'deSolve') of the IORE differential equations sometimes fails due to numerical problems.
 
