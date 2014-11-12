@@ -18,6 +18,8 @@
 \note{
   The solution of the IORE kinetic model reduces to the
   \code{\link{SFO.solution}} if N = 1.
+  The parameters of the IORE model can be transformed to equivalent parameters
+  of the FOMC mode - see the NAFTA guidance for details.
 }
 \value{
   The value of the response variable at time \code{t}.
