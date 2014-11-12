@@ -30,5 +30,9 @@
 \examples{
   \dontrun{plot(function(x) IORE.solution(x, 100, 0.2, 1.3), 0, 2, 
 	                                  ylim = c(0, 100))}
+  m.iore <- mkinfit("IORE", FOCUS_2006_C, quiet = TRUE)
+  m.fomc <- mkinfit("FOMC", FOCUS_2006_C, quiet = TRUE)
+  rbind(coef(m.iore), coef(m.fomc))
+  rbind(endpoints(m.iore)$distimes, endpoints(m.fomc)$distimes)
 }
 \keyword{ manip }
