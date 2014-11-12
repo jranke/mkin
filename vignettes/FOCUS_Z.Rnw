@@ -144,7 +144,6 @@ Z.FOCUS <- mkinmod(Z0 = list(type = "SFO", to = "Z1", sink = FALSE),
                    Z2 = list(type = "SFO", to = "Z3"),
                    Z3 = list(type = "SFO"))
 m.Z.FOCUS <- mkinfit(Z.FOCUS, FOCUS_2006_Z_mkin, 
-                     parms.ini = m.Z.5$bparms.ode,
                      quiet = TRUE)
 plot(m.Z.FOCUS)
 summary(m.Z.FOCUS, data = FALSE)
@@ -192,9 +191,7 @@ Z.mkin.1 <- mkinmod(Z0 = list(type = "SFO", to = "Z1", sink = FALSE),
                     Z1 = list(type = "SFO", to = "Z2", sink = FALSE),
                     Z2 = list(type = "SFO", to = "Z3"),
                     Z3 = list(type = "SFORB"))
-m.Z.mkin.1 <- mkinfit(Z.mkin.1, FOCUS_2006_Z_mkin, 
-                      parms.ini = c(k_Z0_Z1 = 0.5, k_Z1_Z2 = 0.3),
-                      quiet = TRUE)
+m.Z.mkin.1 <- mkinfit(Z.mkin.1, FOCUS_2006_Z_mkin, quiet = TRUE)
 plot(m.Z.mkin.1)
 summary(m.Z.mkin.1, data = FALSE)
 @
@@ -235,7 +232,6 @@ Z.mkin.4 <- mkinmod(Z0 = list(type = "SFORB", to = "Z1", sink = FALSE),
                     Z2 = list(type = "SFO", to = "Z3"),
                     Z3 = list(type = "SFO"))
 m.Z.mkin.4 <- mkinfit(Z.mkin.4, FOCUS_2006_Z_mkin, 
-                      parms.ini = c(k_Z1_Z2 = 0.05), 
                       quiet = TRUE)
 plot(m.Z.mkin.4)
 summary(m.Z.mkin.4, data = FALSE)
@@ -250,22 +246,19 @@ Z.mkin.5 <- mkinmod(Z0 = list(type = "SFORB", to = "Z1", sink = FALSE),
                     Z1 = list(type = "SFO", to = "Z2", sink = FALSE),
                     Z2 = list(type = "SFO", to = "Z3"),
                     Z3 = list(type = "SFORB"))
-m.Z.mkin.5 <- mkinfit(Z.mkin.5, FOCUS_2006_Z_mkin, 
-                      parms.ini = m.Z.mkin.4$bparms.ode[1:5],
-                      quiet = TRUE)
+m.Z.mkin.5 <- mkinfit(Z.mkin.5, FOCUS_2006_Z_mkin, quiet = TRUE)
 plot(m.Z.mkin.5)
 summary(m.Z.mkin.5, data = FALSE)$bpar
 @
 
 The summary view of the backtransformed parameters shows that we get no
 confidence intervals due to overparameterisation. As the optimized
-\texttt{k\_Z3\_bound\_free} is excessively small, it is reasonable to fix it to
+\texttt{k\_Z3\_bound\_free} is excessively small, it seems reasonable to fix it to
 zero. 
 
 <<FOCUS_2006_Z_fits_11a, echo=TRUE>>=
 m.Z.mkin.5a <- mkinfit(Z.mkin.5, FOCUS_2006_Z_mkin, 
-                       parms.ini = c(m.Z.mkin.4$bparms.ode[1:5],
-                                    k_Z3_bound_free = 0),
+                       parms.ini = c(k_Z3_bound_free = 0),
                        fixed_parms = "k_Z3_bound_free",
                        quiet = TRUE)
 summary(m.Z.mkin.5a, data = FALSE)$bpar
