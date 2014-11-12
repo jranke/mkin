@@ -88,11 +88,11 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL)
     if(is.null(spec[[varname]]$sink)) spec[[varname]]$sink <- TRUE
     if(spec[[varname]]$type %in% c("SFO", "IORE", "SFORB")) { # {{{ Add decline term
       if (use_of_ff == "min") { # Minimum use of formation fractions
+        if(spec[[varname]]$type == "IORE" && length(spec[[varname]]$to) > 0) {
+           stop("Transformation reactions from compounds modelled with IORE\n",
+                "are only supported with formation fractions (use_of_ff = 'max')")
+        }
         if(spec[[varname]]$sink) {
-          if(spec[[varname]]$type == "IORE" && length(spec[[varname]]$to) > 0) {
-             stop("Transformation reactions from compounds modelled with IORE\n",
-                  "are only supported with formation fractions (use_of_ff = 'max')")
-          }
           # If sink is required, add first-order/IORE sink term
           k_compound_sink <- paste("k", box_1, "sink", sep = "_")
           if(spec[[varname]]$type == "IORE") {

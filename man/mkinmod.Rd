@@ -54,6 +54,11 @@ mkinmod(..., use_of_ff = "min", speclist = NULL)
     \item{coefmat}{ The coefficient matrix, if the system of differential equations can be
       represented by one. }
 }
+\note{
+  The IORE submodel is not well tested (yet). When using this model for metabolites, 
+  you may want to read the second note in the help page to 
+  \code{\link{mkinfit}}.
+}
 \references{
   FOCUS (2006) \dQuote{Guidance Document on Estimating Persistence and
   Degradation Kinetics from Environmental Fate Studies on Pesticides in EU
