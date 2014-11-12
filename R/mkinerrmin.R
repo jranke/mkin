@@ -36,10 +36,11 @@ mkinerrmin <- function(fit, alpha = 0.05)
     suffixes = c("_mean", "_pred"))
   errdata <- errdata[order(errdata$time, errdata$name), ]
 
-  # Any value that is set to exactly zero is not really an observed value
-  # Remove those at time 0 - those are caused by the FOCUS recommendation
-  # to set metabolites occurring at time 0 to 0
-  errdata <- subset(errdata, !(time == 0 & value_mean == 0))
+  # Remove values at time zero for variables whose value for state.ini is fixed,
+  # as these will not have any effect in the optimization and should therefore not 
+  # be counted as degrees of freedom.
+  fixed_initials = gsub("_0$", "", rownames(subset(fit$fixed, type = "state")))
+  errdata <- subset(errdata, !(time == 0 & name %in% fixed_initials))
 
   n.optim.overall <- length(parms.optim)
 
@@ -71,11 +72,12 @@ mkinerrmin <- function(fit, alpha = 0.05)
     # Formation fractions are attributed to the target variable, so look
     # for source compartments with formation fractions
     for (source_var in fit$obs_vars) {
+      n.ff.source = length(grep(paste("^f", source_var, sep = "_"),
+                                 names(parms.optim)))
+      n.paths.source = length(fit$mkinmod$spec[[source_var]]$to)
       for (target_var in fit$mkinmod$spec[[source_var]]$to) {
         if (obs_var == target_var) {
-          n.ff.optim <- n.ff.optim +  
-                        length(grep(paste("^f", source_var, sep = "_"),
-                                    names(parms.optim))) 
+          n.ff.optim <- n.ff.optim + n.ff.source/n.paths.source
         }
       }
     }

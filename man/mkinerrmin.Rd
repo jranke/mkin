@@ -34,6 +34,16 @@ mkinerrmin(fit, alpha = 0.05)
 \details{
     This function is used internally by \code{\link{summary.mkinfit}}.
 }
+\examples{
+SFO_SFO = mkinmod(parent = list(type = "SFO", to = "m1"),
+                  m1 = list(type = "SFO"),
+                  use_of_ff = "max")
+
+fit_FOCUS_D = mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE)
+round(mkinerrmin(fit_FOCUS_D), 4)
+fit_FOCUS_E = mkinfit(SFO_SFO, FOCUS_2006_E, quiet = TRUE)
+round(mkinerrmin(fit_FOCUS_E), 4)
+}
 \references{ 
   FOCUS (2006) \dQuote{Guidance Document on Estimating Persistence and
   Degradation Kinetics from Environmental Fate Studies on Pesticides in EU

@@ -1,6 +1,4 @@
-# $Id: runit.mkinfit.R 68 2010-09-09 22:40:04Z jranke $
-
-# Copyright (C) 2010-2013 Johannes Ranke
+# Copyright (C) 2010-2014 Johannes Ranke
 # Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
@@ -187,40 +185,6 @@ test.FOCUS_2006_SFORB <- function()
                       endpoints(fit.B.SFORB.2)$distimes[c("DT50", "DT90")]))
   dev.B.SFORB.2 <- abs(round(100 * ((median.B.SFORB - fit.B.SFORB.2.r)/median.B.SFORB), digits=1))
   checkIdentical(dev.B.SFORB.2 < 1, rep(TRUE, length(dev.B.SFORB.2)))
-} # }}}
-
-# Test SFO_SFO model with FOCUS_2006_D against Schaefer 2007 paper, tolerance = 1% # {{{
-test.FOCUS_2006_D_SFO_SFO <- function()
-{
-  SFO_SFO.1 <- mkinmod(parent = list(type = "SFO", to = "m1"),
-         m1 = list(type = "SFO"), use_of_ff = "min")
-  SFO_SFO.2 <- mkinmod(parent = list(type = "SFO", to = "m1"),
-         m1 = list(type = "SFO"), use_of_ff = "max")
-
-  fit.1.e <- mkinfit(SFO_SFO.1, FOCUS_2006_D)
-  fit.1.d <- mkinfit(SFO_SFO.1, solution_type = "deSolve", FOCUS_2006_D)
-  fit.2.e <- mkinfit(SFO_SFO.2, FOCUS_2006_D)
-  SFO <- mkinmod(parent = list(type = "SFO"))
-  f.SFO <- mkinfit(SFO, FOCUS_2006_D)
-  fit.2.d <- mkinfit(SFO_SFO.2, solution_type = "deSolve", FOCUS_2006_D)
-  fit.2.e <- mkinfit(SFO_SFO.2, FOCUS_2006_D)
-
-  FOCUS_2006_D_results_schaefer07_means <- c(
-    parent_0 = 99.65, DT50_parent = 7.04, DT50_m1 = 131.34)
-
-  r.1.e <- c(fit.1.e$bparms.optim[[1]], endpoints(fit.1.e)$distimes[[1]])
-  r.1.d <- c(fit.1.d$bparms.optim[[1]], endpoints(fit.1.d)$distimes[[1]])
-  r.2.e <- c(fit.2.e$bparms.optim[[1]], endpoints(fit.2.e)$distimes[[1]])
-  r.2.d <- c(fit.2.d$bparms.optim[[1]], endpoints(fit.2.d)$distimes[[1]])
-
-  dev.1.e <- 100 * (r.1.e - FOCUS_2006_D_results_schaefer07_means)/r.1.e 
-  checkIdentical(as.numeric(abs(dev.1.e)) < 1, rep(TRUE, 3))
-  dev.1.d <- 100 * (r.1.d - FOCUS_2006_D_results_schaefer07_means)/r.1.d 
-  checkIdentical(as.numeric(abs(dev.1.d)) < 1, rep(TRUE, 3))
-  dev.2.e <- 100 * (r.2.e - FOCUS_2006_D_results_schaefer07_means)/r.2.e 
-  checkIdentical(as.numeric(abs(dev.2.e)) < 1, rep(TRUE, 3))
-  dev.2.d <- 100 * (r.2.d - FOCUS_2006_D_results_schaefer07_means)/r.2.d 
-  checkIdentical(as.numeric(abs(dev.2.d)) < 1, rep(TRUE, 3))
 } # }}}
 
 # Test eigenvalue based fit to Schaefer 2007 data against solution from conference paper {{{

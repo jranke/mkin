@@ -7,8 +7,10 @@
   This function uses the Flexible Modelling Environment package
   \code{\link{FME}} to create a function calculating the model cost, i.e. the 
   deviation between the kinetic model and the observed data. This model cost is
-  then minimised using the Levenberg-Marquardt algorithm \code{\link{nls.lm}}, 
+  then minimised using the Port algorithm \code{\link{nlminb}}, 
   using the specified initial or fixed parameters and starting values.
+  Per default, parameters in the kinetic models are internally transformed in order 
+  to better satisfy the assumption of a normal distribution of their estimators.
   In each step of the optimsation, the kinetic model is solved using the
   function \code{\link{mkinpredict}}. The variance of the residuals for each
   observed variable can optionally be iteratively reweighted until convergence
@@ -17,11 +19,12 @@
 \usage{
 mkinfit(mkinmod, observed, 
   parms.ini = "auto",
-  state.ini = c(100, rep(0, length(mkinmod$diffs) - 1)), 
+  state.ini = "auto",
   fixed_parms = NULL, fixed_initials = names(mkinmod$diffs)[-1], 
   solution_type = "auto",
   method.ode = "lsoda",
-  method.modFit = "Marq",
+  method.modFit = c("Port", "Marq", "SANN", "Nelder-Mead", "BFSG", "CG", "L-BFGS-B"),
+  maxit.modFit = "auto",
   control.modFit = list(),
   transform_rates = TRUE,
   transform_fractions = TRUE,
@@ -34,7 +37,11 @@ mkinfit(mkinmod, observed,
 }
 \arguments{
   \item{mkinmod}{
-    A list of class \code{\link{mkinmod}}, containing the kinetic model to be fitted to the data.
+    A list of class \code{\link{mkinmod}}, containing the kinetic model to be
+    fitted to the data, or one of the shorthand names ("SFO", "FOMC", "DFOP",
+    "HS", "SFORB"). If a shorthand name is given, a parent only degradation
+    model is generated for the variable with the highest value in
+    \code{observed}.
   }
   \item{observed}{
     The observed data. It has to be in the long format as described in
@@ -64,7 +71,9 @@ mkinfit(mkinmod, observed,
     case the observed variables are represented by more than one model
     variable, the names will differ from the names of the observed variables
     (see \code{map} component of \code{\link{mkinmod}}). The default is to set
-    the initial value of the first model variable to 100 and all others to 0.
+    the initial value of the first model variable to the mean of the time zero
+    values for the variable with the maximum observed value, and all others to 0.
+    If this variable has no time zero observations, its initial value is set to 100.
   }
   \item{fixed_parms}{
     The names of parameters that should not be optimised but rather kept at the
@@ -94,37 +103,51 @@ mkinfit(mkinmod, observed,
     "lsoda" is performant, but sometimes fails to converge.
   }
   \item{method.modFit}{
-    The optimisation method passed to \code{\link{modFit}}.  The default "Marq"
-    is the Levenberg Marquardt algorithm \code{\link{nls.lm}} from the package
-    \code{minpack.lm} and usually needs the least number of iterations.
+    The optimisation method passed to \code{\link{modFit}}.  
 
-    For more complex problems where local minima occur, the "Port" algorithm is
-    recommended as it is less prone to get trapped in local minima and depends
-    less on starting values for parameters.  However, it needs more iterations.
+    In order to optimally deal with problems where local minima occur, the
+    "Port" algorithm is now used per default as it is less prone to get trapped
+    in local minima and depends less on starting values for parameters than
+    the Levenberg Marquardt variant selected by "Marq".  However, "Port" needs
+    more iterations.
 
-    When using "Pseudo", "upper" and "lower" need to be specified for the
-    transformed parameters.
+    The former default "Marq" is the Levenberg Marquardt algorithm
+    \code{\link{nls.lm}} from the package \code{minpack.lm} and usually needs
+    the least number of iterations.
+
+    The "Pseudo" algorithm is not included because it needs finite parameter bounds
+    which are currently not supported.
+
+    The "Newton" algorithm is not included because its number of iterations
+    can not be controlled by \code{control.modFit} and it does not appear
+    to provide advantages over the other algorithms.
+  }
+  \item{maxit.modFit}{
+    Maximum number of iterations in the optimisation. If not "auto", this will
+    be passed to the method called by \code{\link{modFit}}, overriding 
+    what may be specified in the next argument \code{control.modFit}.
   }
   \item{control.modFit}{
     Additional arguments passed to the optimisation method used by
-    \code{\link{modFit}}.
+    \code{\link{modFit}}. 
   }
   \item{transform_rates}{
     Boolean specifying if kinetic rate constants should be transformed in the
     model specification used in the fitting for better compliance with the
     assumption of normal distribution of the estimator. If TRUE, also 
     alpha and beta parameters of the FOMC model are log-transformed, as well 
-    as k1 and k2 rate constants for the DFOP and HS models.
-    If TRUE, zero is used as a lower bound for the rates in the optimisation.
+    as k1 and k2 rate constants for the DFOP and HS models and the break point
+    tb of the HS model.
+    If FALSE, zero is used as a lower bound for the rates in the optimisation.
   }
   \item{transform_fractions}{
     Boolean specifying if formation fractions constants should be transformed in the
     model specification used in the fitting for better compliance with the
     assumption of normal distribution of the estimator. The default (TRUE) is 
-    to do transformations. The g parameter of the DFOP and HS models are also 
-    transformed, as they can also be seen as compositional data. The
-    transformation used for these transformations is the \code{\link{ilr}}
-    transformation.
+    to do transformations. If TRUE, the g parameter of the DFOP and HS
+    models are also transformed, as they can also be seen as compositional
+    data. The transformation used for these transformations is the
+    \code{\link{ilr}} transformation.
   }
   \item{plot}{
     Should the observed values and the numerical solutions be plotted at each
@@ -194,9 +217,13 @@ mkinfit(mkinmod, observed,
   other GUI derivative of mkin, sponsored by Syngenta.
 }
 \author{
-  Johannes Ranke <jranke@uni-bremen.de>
+  Johannes Ranke
 }
 \examples{
+# Use shorthand notation for parent only degradation
+fit <- mkinfit("FOMC", FOCUS_2006_C)
+summary(fit)
+
 # One parent compound, one metabolite, both single first order.
 SFO_SFO <- mkinmod(
   parent = list(type = "SFO", to = "m1", sink = TRUE),

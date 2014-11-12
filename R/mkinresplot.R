@@ -36,7 +36,8 @@ mkinresplot <- function (object,
 	col_obs <- pch_obs <- 1:length(obs_vars)
  	names(col_obs) <- names(pch_obs) <- obs_vars
 
-  plot(0,  xlab = xlab, ylab = ylab, 
+  plot(0, type = "n",
+       xlab = xlab, ylab = ylab, 
        xlim = xlim,
        ylim = c(-1.2 * maxabs, 1.2 * maxabs), ...)
 

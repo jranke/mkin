@@ -23,12 +23,13 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "value"))
 
 mkinfit <- function(mkinmod, observed,
   parms.ini = "auto",
-  state.ini = c(100, rep(0, length(mkinmod$diffs) - 1)), 
+  state.ini = "auto", 
   fixed_parms = NULL,
   fixed_initials = names(mkinmod$diffs)[-1],
   solution_type = "auto",
   method.ode = "lsoda",
-  method.modFit = "Marq",
+  method.modFit = c("Port", "Marq", "SANN", "Nelder-Mead", "BFGS", "CG", "L-BFGS-B"),
+  maxit.modFit = "auto",
   control.modFit = list(),
   transform_rates = TRUE,
   transform_fractions = TRUE,
@@ -40,11 +41,36 @@ mkinfit <- function(mkinmod, observed,
   trace_parms = FALSE,
   ...)
 {
+  # Check mkinmod and generate a model for the variable whith the highest value
+  # if a suitable string is given
+  parent_models_available = c("SFO", "FOMC", "DFOP", "HS", "SFORB") 
+  if (class(mkinmod) != "mkinmod") {
+    presumed_parent_name = observed[which.max(observed$value), "name"]
+    if (mkinmod[[1]] %in% parent_models_available) {
+      speclist <- list(list(type = mkinmod, sink = TRUE))
+      names(speclist) <- presumed_parent_name
+      mkinmod <- mkinmod(speclist = speclist)
+    } else {
+      stop("Argument mkinmod must be of class mkinmod or a string containing one of\n  ",
+           paste(parent_models_available, collapse = ", "))
+    } 
+  }
+
+  # Check optimisation method and set maximum number of iterations if specified
+  method.modFit = match.arg(method.modFit)
+  if (maxit.modFit != "auto") {
+    if (method.modFit == "Marq") control.modFit$maxiter = maxit.modFit
+    if (method.modFit == "Port") control.modFit$iter.max = maxit.modFit
+    if (method.modFit %in% c("SANN", "Nelder-Mead", "BFGS", "CG", "L-BFGS-B")) {
+        control.modFit$maxit = maxit.modFit
+    }
+  }
+
   # Get the names of the state variables in the model
   mod_vars <- names(mkinmod$diffs)
 
   # Get the names of observed variables
-  obs_vars = names(mkinmod$spec)
+  obs_vars <- names(mkinmod$spec)
 
   # Subset observed data with names of observed data in the model
   observed <- subset(observed, name %in% obs_vars)
@@ -125,6 +151,18 @@ mkinfit <- function(mkinmod, observed,
         n_unspecified = length(f_default_names)
       }
       parms.ini[f_default_names] <- (1 - sum_f_specified) / n_unspecified
+    }
+  }
+
+  # Set default for state.ini if appropriate
+  parent_name = names(mkinmod$spec)[[1]]
+  if (state.ini[1] == "auto") {
+    parent_time_0 = subset(observed, time == 0 & name == parent_name)$value
+    parent_time_0_mean = mean(parent_time_0, na.rm = TRUE)
+    if (is.na(parent_time_0_mean)) {
+      state.ini = c(100, rep(0, length(mkinmod$diffs) - 1))
+    } else {
+      state.ini = c(parent_time_0_mean, rep(0, length(mkinmod$diffs) - 1))
     }
   }
 
@@ -245,7 +283,7 @@ mkinfit <- function(mkinmod, observed,
                                 atol = atol, rtol = rtol, ...)
 
         plot(0, type="n", 
-          xlim = range(observed$time), ylim = range(observed$value, na.rm=TRUE),
+          xlim = range(observed$time), ylim = c(0, max(observed$value, na.rm=TRUE)),
           xlab = "Time", ylab = "Observed")
         col_obs <- pch_obs <- 1:length(obs_vars)
         lty_obs <- rep(1, length(obs_vars))
@@ -270,7 +308,7 @@ mkinfit <- function(mkinmod, observed,
   if (!transform_rates) {
     index_k <- grep("^k_", names(lower))
     lower[index_k] <- 0
-    other_rate_parms <- intersect(c("alpha", "beta", "k1", "k2"), names(lower))
+    other_rate_parms <- intersect(c("alpha", "beta", "k1", "k2", "tb"), names(lower))
     lower[other_rate_parms] <- 0
   }
 
@@ -283,41 +321,65 @@ mkinfit <- function(mkinmod, observed,
     upper[other_fraction_parms] <- 1
   }
 
-  fit <- modFit(cost, c(state.ini.optim, transparms.optim), 
-                method = method.modFit, control = control.modFit, 
-                lower = lower, upper = upper, ...)
+  # Do the fit and take the time
+  fit_time <- system.time({
+    fit <- modFit(cost, c(state.ini.optim, transparms.optim), 
+                  method = method.modFit, control = control.modFit, 
+                  lower = lower, upper = upper, ...)
 
-  # Reiterate the fit until convergence of the variance components (IRLS)
-  # if requested by the user
-  weight.ini = weight
-  if (!is.null(err)) weight.ini = "manual"
+    # Reiterate the fit until convergence of the variance components (IRLS)
+    # if requested by the user
+    weight.ini = weight
+    if (!is.null(err)) weight.ini = "manual"
 
-  if (!is.null(reweight.method)) {
-    if (reweight.method != "obs") stop("Only reweighting method 'obs' is implemented")
-    if(!quiet) {
-      cat("IRLS based on variance estimates for each observed variable\n")
-    }
-    if (!quiet) {
-      cat("Initial variance estimates are:\n")
-      print(signif(fit$var_ms_unweighted, 8))
-    }
-    reweight.diff = 1
-    n.iter <- 0
-    if (!is.null(err)) observed$err.ini <- observed[[err]]
-    err = "err.irls"
-    while (reweight.diff > reweight.tol & n.iter < reweight.max.iter) {
-      n.iter <- n.iter + 1
-      sigma.old <- sqrt(fit$var_ms_unweighted)
-      observed[err] <- sqrt(fit$var_ms_unweighted)[as.character(observed$name)]
-      fit <- modFit(cost, fit$par, method = method.modFit,
-                    control = control.modFit, lower = lower, upper = upper, ...)
-      reweight.diff = sum((sqrt(fit$var_ms_unweighted) - sigma.old)^2)
-      if (!quiet) {
-        cat("Iteration", n.iter, "yields variance estimates:\n")
-        print(signif(fit$var_ms_unweighted, 8))
-        cat("Sum of squared differences to last variance estimates:",
-            signif(reweight.diff, 2), "\n")
+    if (!is.null(reweight.method)) {
+      if (reweight.method != "obs") stop("Only reweighting method 'obs' is implemented")
+      if(!quiet) {
+        cat("IRLS based on variance estimates for each observed variable\n")
       }
+      if (!quiet) {
+        cat("Initial variance estimates are:\n")
+        print(signif(fit$var_ms_unweighted, 8))
+      }
+      reweight.diff = 1
+      n.iter <- 0
+      if (!is.null(err)) observed$err.ini <- observed[[err]]
+      err = "err.irls"
+      while (reweight.diff > reweight.tol & n.iter < reweight.max.iter) {
+        n.iter <- n.iter + 1
+        sigma.old <- sqrt(fit$var_ms_unweighted)
+        observed[err] <- sqrt(fit$var_ms_unweighted)[as.character(observed$name)]
+        fit <- modFit(cost, fit$par, method = method.modFit,
+                      control = control.modFit, lower = lower, upper = upper, ...)
+        reweight.diff = sum((sqrt(fit$var_ms_unweighted) - sigma.old)^2)
+        if (!quiet) {
+          cat("Iteration", n.iter, "yields variance estimates:\n")
+          print(signif(fit$var_ms_unweighted, 8))
+          cat("Sum of squared differences to last variance estimates:",
+              signif(reweight.diff, 2), "\n")
+        }
+      }
+    }
+  })
+
+  # Check for convergence
+  if (method.modFit == "Marq") {
+    if (!fit$info %in% c(1, 2, 3)) {
+      fit$warning = paste0("Optimisation by method ", method.modFit, 
+                           " did not converge.\n",
+                           "The message returned by nls.lm is:\n",
+                                    fit$message)
+      warning(fit$warning)
+    }
+  }
+  if (method.modFit %in% c("Port", "SANN", "Nelder-Mead", "BFGS", "CG", "L-BFGS-B")) {
+    if (fit$convergence != 0) {
+      fit$warning = paste0("Optimisation by method ", method.modFit, 
+                           " did not converge.\n",
+                           "Convergence code is ", fit$convergence,
+                           ifelse(is.null(fit$message), "", 
+                                  paste0("\nMessage is ", fit$message)))
+      warning(fit$warning)
     }
   }
 
@@ -325,6 +387,10 @@ mkinfit <- function(mkinmod, observed,
   fit$solution_type <- solution_type
   fit$transform_rates <- transform_rates
   fit$transform_fractions <- transform_fractions
+  fit$method.modFit <- method.modFit
+  fit$maxit.modFit <- maxit.modFit
+  fit$calls <- calls
+  fit$time <- fit_time
 
   # We also need the model for summary and plotting
   fit$mkinmod <- mkinmod
@@ -380,8 +446,11 @@ mkinfit <- function(mkinmod, observed,
   fit$bparms.optim <- bparms.optim 
   fit$bparms.fixed <- bparms.fixed
 
-  # Return ode parameters for further fitting
+  # Return ode and state parameters for further fitting
   fit$bparms.ode <- bparms.all[mkinmod$parms] 
+  fit$bparms.state <- c(bparms.all[setdiff(names(bparms.all), names(fit$bparms.ode))],
+                        state.ini.fixed)
+  names(fit$bparms.state) <- gsub("_0$", "", names(fit$bparms.state))
 
   fit$date <- date()
 
@@ -451,6 +520,8 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
 	  date.fit = object$date,
 	  date.summary = date(),
 	  solution_type = object$solution_type,
+	  method.modFit = object$method.modFit,
+	  warning = object$warning,
 	  use_of_ff = object$mkinmod$use_of_ff,
     weight.ini = object$weight.ini,
     reweight.method = object$reweight.method,
@@ -463,6 +534,8 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
     cov.scaled = covar * resvar,
     info = object$info, 
     niter = object$iterations,
+    calls = object$calls,
+    time = object$time,
     stopmess = message,
     par = param,
     bpar = bparam)
@@ -493,13 +566,17 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
   cat("Date of fit:    ", x$date.fit, "\n")
   cat("Date of summary:", x$date.summary, "\n")
 
+  if (!is.null(x$warning)) cat("\n\nWarning:", x$warning, "\n\n")
+
   cat("\nEquations:\n")
-  print(noquote(as.character(x[["diffs"]])))
+  writeLines(strwrap(x[["diffs"]], exdent = 11))
   df  <- x$df
   rdf <- df[2]
 
-  cat("\nMethod used for solution of differential equation system:\n")
-  cat(x$solution_type, "\n")
+  cat("\nModel predictions using solution type", x$solution_type, "\n")
+
+  cat("\nFitted with method", x$method.modFit, 
+      "using", x$calls, "model solutions performed in", x$time[["elapsed"]],  "s\n")
 
   cat("\nWeighting:", x$weight.ini)
   if(!is.null(x$reweight.method)) cat(" then iterative reweighting method",
@@ -519,13 +596,15 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
   cat("\nOptimised, transformed parameters:\n")
   print(signif(x$par, digits = digits))
 
-  cat("\nParameter correlation:\n")
-  if (!is.null(x$cov.unscaled)){
-    Corr <- cov2cor(x$cov.unscaled)
-    rownames(Corr) <- colnames(Corr) <- rownames(x$par)
-    print(Corr, digits = digits, ...)
-  } else {
-    cat("Could not estimate covariance matrix; singular system:\n")
+  if (x$niter != 0) {
+    cat("\nParameter correlation:\n")
+    if (!is.null(x$cov.unscaled)){
+      Corr <- cov2cor(x$cov.unscaled)
+      rownames(Corr) <- colnames(Corr) <- rownames(x$par)
+      print(Corr, digits = digits, ...)
+    } else {
+      cat("Could not estimate covariance matrix; singular system:\n")
+    }
   }
 
   cat("\nResidual standard error:",

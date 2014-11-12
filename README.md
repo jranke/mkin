@@ -11,7 +11,7 @@ You can install the latest released version from
 [CRAN](http://cran.r-project.org/package=mkin) from within R:
 
 ```s
-install.packages('mkin')
+install.packages("mkin")
 ```
 
 If looking for the latest features, you can install directly from 
@@ -21,7 +21,7 @@ vignettes, to make installation as fast and painless as possible.
 
 ```s
 require(devtools)
-install_github("mkin", "jranke", quick = TRUE)
+install_github("jranke/mkin", quick = TRUE)
 ```
 
 ## Background
@@ -34,20 +34,26 @@ detailed guidance and helpful tools have been developed as detailed in
 
 ## Usage
 
-A very simple usage example would be
+The simplest usage example that I can think of, using model shorthand notation
+(available since mkin 0.9-32) and a built-in dataset is
 
-    library("mkin")
+    library(mkin)
+    fit <- mkinfit("SFO", FOCUS_2006_C)
+    plot(fit, show_residuals = TRUE) 
+    summary(fit)
+
+A still very simple usage example including the definition of the same data in R
+code would be
+
     example_data = data.frame(
       name = rep("parent", 9),
       time = c(0, 1, 3, 7, 14, 28, 63, 91, 119),
       value = c(85.1, 57.9, 29.9, 14.6, 9.7, 6.6, 4, 3.9, 0.6)
     )
-    SFO <- mkinmod(parent = list(type = "SFO"))
-    SFO.fit <- mkinfit(SFO, example_data)
-    plot(SFO.fit, show_residuals = TRUE) 
-    summary(SFO.fit)
+    fit2 <- mkinfit("FOMC", example_data)
+    plot(fit2, show_residuals = TRUE) 
 
-A fairly complex usage example using a built-in dataset:
+A fairly complex usage example using another built-in dataset:
 
     data <- mkin_wide_to_long(schaefer07_complex_case, time = "time")
 
@@ -58,16 +64,15 @@ A fairly complex usage example using a built-in dataset:
       C1 = list(type = "SFO"),
       A2 = list(type = "SFO"), use_of_ff = "max")
 
-    fit <- mkinfit(model, data, method.modFit = "Port")
+    fit3 <- mkinfit(model, data, method.modFit = "Port")
 
-    plot(fit, show_residuals = TRUE) 
-    summary(fit)
-    mkinparplot(fit)
+    plot(fit3, show_residuals = TRUE) 
+    summary(fit3)
+    mkinparplot(fit3)
 
 For more examples and to see results, have a look at the examples provided in the
 [`mkinfit`](http://kinfit.r-forge.r-project.org/mkin_static/mkinfit.html)
-documentation 
-or the package vignettes referenced from the 
+documentation or the package vignettes referenced from the 
 [mkin package documentation page](http://kinfit.r-forge.r-project.org/mkin_static/index.html)
 
 ## Features
@@ -88,8 +93,7 @@ or the package vignettes referenced from the
 * Model optimisation with 
   [`mkinfit`](http://kinfit.r-forge.r-project.org/mkin_static/mkinfit.html)
   internally using the `modFit` function from the `FME` package,
-  which uses the least-squares Levenberg-Marquardt algorithm from
-  `minpack.lm` per default.
+  but using the Port routine `nlminb` per default.
 * By default, kinetic rate constants and kinetic formation fractions are
   transformed internally using
   [`transform_odeparms`](http://kinfit.r-forge.r-project.org/mkin_static/transform_odeparms.html)
@@ -120,10 +124,9 @@ or the package vignettes referenced from the
 
 ## GUI
 
-There is a graphical user interface that I consider useful for real work.
-It is available from github in the separate package 
-[gmkin](http://github.com/jranke/gmkin).
-
+There is a graphical user interface that I consider useful for real work. Please
+refer to its [documentation page](http://kinfit.r-forge.r-project.org/gmkin_static)
+for installation instructions and a manual.
   
 ## Credits and historical remarks
 
@@ -153,7 +156,8 @@ The first `mkin` code was
 [first CRAN version](http://cran.r-project.org/src/contrib/Archive/mkin)
 on 18 May 2010.
 
-After this, Bayer has developed an R based successor to KinGUI named KinGUII
+After this, Bayer has developed an R based successor to KinGUI named 
+[KinGUII](https://kinguii.github.io) 
 whose R code is based on `mkin`, but which added, amongst other refinements, a
 closed source graphical user interface (GUI), iteratively reweighted least
 squares (IRLS) optimisation of the variance for each of the observed

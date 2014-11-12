@@ -1,17 +1,86 @@
+# CHANGES in mkin VERSION 0.9-34
+
+## NEW FEATURES
+
+
+- Add the possibility to fit indeterminate order rate equation (IORE) models using an analytical solution (parent only) or a numeric solution. Paths from IORE compounds to metabolites are supported when using of formation fractions (use_of_ff = 'max'). Note that the numerical solution (method.ode = 'deSolve') of the IORE differential equations sometimes fails due to numerical problems.
+
+- Switch to using the Port algorithm (using a model/trust region approach) per default. While needing more iterations than the Levenberg-Marquardt algorithm previously used per default, it is less sensitive to starting parameters.
+## MINOR CHANGES
+
+- The formatting of differential equations in the summary was further improved
+
+- Always include 0 on y axis when plotting during the fit
+
+# CHANGES in mkin VERSION 0.9-33
+
+## NEW FEATURES
+
+- The initial value (state.ini) for the observed variable with the highest observed residue is set to 100 in case it has no time zero observation and `state.ini = "auto"`
+
+- A basic unit test for `mkinerrmin()` was written
+
+## BUG FIXES
+
+- `mkinfit()`: The internally fitted parameter for `g` was named `g_ilr` even when `transform_fractions=FALSE`
+
+- `mkinfit()`: The initial value (state.ini) for the parent compound was not set when the parent was not the (only) variable with the highest value in the observed data.
+
+- `mkinerrmin()`: When checking for degrees of freedom for metabolites, check if their time zero value is fixed instead of checking if the observed value is zero. This ensures correct calculation of degrees of freedom also in cases where the metabolite residue at time zero is greater zero.
+
+- `plot.mkinfit()`: Avoid a warning message about only using the first component of ylim that occurred when ylim was specified explicitly
+
+## MINOR CHANGES
+
+- The formatting of differential equations in the summary was improved by wrapping overly long lines
+
+- The FOCUS_Z vignette was rebuilt with the above improvement and using a width of 70 to avoid output outside of the grey area
+
+- `print.summary.mkinfit()`: Avoid a warning that occurred when gmkin showed summaries ofinitial fits without iterations
+
+- `mkinfit()`: Avoid a warning that occurred when summarising a fit that was performed with maxitmodFit = 0 as done in gmkin for configuring new fits.
+
 # CHANGES in mkin VERSION 0.9-32
 
 ## NEW FEATURES
 
-- Add the possibility to fit indeterminate order rate equation (IORE) models using an analytical solution (parent only) or a numeric solution. Paths from IORE compounds to metabolites are supported when using of formation fractions (use_of_ff = 'max'). Note that the numerical solution (method.ode = 'deSolve') of the IORE differential equations sometimes fails due to numerical problems.
+- The number of degrees of freedom is difficult to define in the case of ilr transformation of formation fractions. Now for each source compartment the number of ilr parameters (=number of optimised parameters) is divided by the number of pathways to metabolites (=number of affected data series) which leads to fractional degrees of freedom in some cases.
+
+- The default for the initial value for the first state value is now taken from the mean of the observations at time zero, if available.
+
+- The kinetic model can alternatively be specified with a shorthand name for parent only degradation models, e.g. `SFO`, or `DFOP`.
+
+- Optimisation method, number of model evaluations and time elapsed during optimisation are given in the summary of mkinfit objects.
+
+- The maximum number of iterations in the optimisation algorithm can be specified using the argument `maxit.modFit` to the mkinfit function.
+
+- mkinfit gives a warning when the fit does not converge (does not apply to SANN method). This warning is included in the summary.
+
+## BUG FIXES
+
+- Avoid plotting an artifical 0 residual at time zero in `mkinresplot`
+
+- In the determination of the degrees of freedom in `mkinerrmin`, formation fractions were accounted for multiple times in the case of parallel formation of metabolites. See the new feature described above for the solution.
+
+- `transform_rates=FALSE` in `mkinfit` now also works for FOMC and HS models.
+
+- Initial values for formation fractions were not set in all cases.
+
+- No warning was given when the fit did not converge when a method other than the default Levenberg-Marquardt method `Marq` was used.
+
+## MINOR CHANGES
+
+- Vignettes were rebuilt to reflect the changes in the summary method.
+
+- Algorithm `Pseudo` was excluded because it needs user-defined parameter limits which are not supported.
+
+- Algorithm `Newton` was excluded because of its different way to specify the maximum number of iterations and because it does not appear to provide additional benefits.
 
 # CHANGES in mkin VERSION 0.9-31
 
 ## BUG FIXES
 
 - The internal renaming of optimised parameters in Version 0.9-30 led to errors in the determination of the degrees of freedom for the chi2 error level calulations in `mkinerrmin()` used by the summary function.
-
-- Initial values for formation fractions were not set in all cases
-
 # CHANGES in mkin VERSION 0.9-30 
 
 ## NEW FEATURES
@@ -22,13 +91,13 @@
 
 - The original and the transformed parameters now have different names (e.g. `k_parent` and `log_k_parent`. They also differ in how many they are when we have formation fractions but no pathway to sink.
 
-- The order of some of the information blocks in `print.summary.mkinfit.R()` has been ordered in a more logical way
+- The order of some of the information blocks in `print.summary.mkinfit.R()` has been ordered in a more logical way.
 
 ## MINOR CHANGES
 
 - The vignette FOCUS_Z has been simplified to use formation fractions with turning off the sink, and slightly amended to use the new versions of DT50 values calculated since mkin 0.9-29.
 
-- All vignettes have been rebuilt so they reflect all changes
+- All vignettes have been rebuilt so they reflect all changes.
 
 - The ChangeLog was renamed to NEWS.md and the entries were converted to markdown syntax compatible with the `tools::news()` function built into R.
 

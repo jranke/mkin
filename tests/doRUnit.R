@@ -1,4 +1,3 @@
-# $Id: doRUnit.R 96 2011-04-29 11:10:40Z jranke $
 # Adapted from a version around 2.9 of the rcdk package by Rajarshi Guha
 if(require("RUnit", quietly=TRUE)) {
  
