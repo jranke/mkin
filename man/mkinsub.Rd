@@ -8,10 +8,10 @@
   \code{\link{mkinmod}}.
 }
 \usage{
-mkinsub(type, to = NULL, sink = TRUE)
+mkinsub(submodel, to = NULL, sink = TRUE)
 }
 \arguments{
-  \item{type}{
+  \item{submodel}{
     Character vector of length one to specify the submodel type. See 
     \code{\link{mkinmod}} for the list of allowed submodel names.
   }
