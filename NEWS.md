@@ -1,3 +1,9 @@
+# CHANGES in mkin VERSION 0.9-35
+
+## BUG FIXES
+
+- `mkinparplot()`: Avoid warnings that occurred when not all confidence intervals were available in the summary of the fit
+
 # CHANGES in mkin VERSION 0.9-34
 
 ## NEW FEATURES
