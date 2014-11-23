@@ -40,7 +40,6 @@ mkinparplot <- function(object) {
     parnames <- get(type)
     values <- bpar[parnames]
     values_with_confints <- data.frame(t(subset(data.frame(t(values)), !is.na(Lower))))
-    parnames_with_confints <- names(values_with_confints)
     xlim = switch(type,
                   state.optim = range(c(0, unlist(values)), 
                                       na.rm = TRUE, finite = TRUE),
@@ -51,8 +50,7 @@ mkinparplot <- function(object) {
                   fractions.optim = range(c(0, 1, unlist(values)), 
                                           na.rm = TRUE, finite = TRUE))
     parname_index <- length(parnames):1 # Reverse order for strip chart
-    names(parname_index) <- parnames
-    parnames_with_confints_index <- parname_index[parnames_with_confints]
+
     stripchart(values["Estimate", ][parname_index], 
                xlim = xlim,
                ylim = c(0.5, length(get(type)) + 0.5),
@@ -61,13 +59,14 @@ mkinparplot <- function(object) {
     if (type %in% c("N.optim", "fractions.optim")) abline(v = 1, lty = 2)
     position <- ifelse(values["Estimate", ] < mean(xlim), "right", "left")
     text(ifelse(position == "left", min(xlim), max(xlim)), 
-         length(parnames):1, parnames, 
+         parname_index, parnames, 
          pos = ifelse(position == "left", 4, 2))
 
-    values_with_confints.upper.nonInf <- ifelse(values_with_confints["Upper", ] == Inf, 1.5 * xlim[[2]], values_with_confints["Upper", ])
-    arrows(as.numeric(values_with_confints["Lower", ]), parnames_with_confints_index, 
-           as.numeric(values_with_confints.upper.nonInf), parnames_with_confints_index, 
-           code = 3, angle = 90, length = 0.05)
+    values.upper.nonInf <- ifelse(values["Upper", ] == Inf, 1.5 * xlim[[2]], values["Upper", ])
+    # Suppress warnings for non-existing arrow lengths
+    suppressWarnings(arrows(as.numeric(values["Lower", ]), parname_index, 
+	   as.numeric(values.upper.nonInf), parname_index, 
+	   code = 3, angle = 90, length = 0.05))
   }
   par(oldpars)
 }
