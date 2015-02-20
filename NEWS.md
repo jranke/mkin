@@ -5,6 +5,10 @@
 - `mkinparplot()`: Avoid warnings that occurred when not all confidence intervals were available in the summary of the fit
 - `print.summary.mkinfit()`: Fix printing the summary for the case that the number of iterations is not available
 
+## NEW FEATURES
+
+- `mkinfit()`: Report successful termination when quiet = FALSE. This is helpful for more difficult problems fitted with reweight.method = obs, as no progress is often indicated during the reweighting.
+
 # CHANGES in mkin VERSION 0.9-34
 
 ## NEW FEATURES

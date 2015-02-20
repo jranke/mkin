@@ -376,6 +376,9 @@ mkinfit <- function(mkinmod, observed,
                                     fit$message)
       warning(fit$warning)
     }
+    else {
+      if(!quiet) cat("Optimisation by method", method.modFit, "successfully terminated.\n")
+    }
   }
   if (method.modFit %in% c("Port", "SANN", "Nelder-Mead", "BFGS", "CG", "L-BFGS-B")) {
     if (fit$convergence != 0) {
@@ -385,11 +388,16 @@ mkinfit <- function(mkinmod, observed,
                            ifelse(is.null(fit$message), "", 
                                   paste0("\nMessage is ", fit$message)))
       warning(fit$warning)
+    } else {
+      if(!quiet) cat("Optimisation by method", method.modFit, "successfully terminated.\n")
     }
   }
 
   # Return number of iterations for SANN method
-  if (method.modFit == "SANN") fit$iter = maxit.modFit
+  if (method.modFit == "SANN") {
+    fit$iter = maxit.modFit
+    if(!quiet) cat("Termination of the SANN algorithm does not imply convergence.\n")
+  }
 
   # We need to return some more data for summary and plotting
   fit$solution_type <- solution_type
