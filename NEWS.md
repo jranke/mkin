@@ -3,6 +3,7 @@
 ## BUG FIXES
 
 - `mkinparplot()`: Avoid warnings that occurred when not all confidence intervals were available in the summary of the fit
+- `print.summary.mkinfit()`: Fix printing the summary for the case that the number of iterations is not available
 
 # CHANGES in mkin VERSION 0.9-34
 

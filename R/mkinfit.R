@@ -388,6 +388,9 @@ mkinfit <- function(mkinmod, observed,
     }
   }
 
+  # Return number of iterations for SANN method
+  if (method.modFit == "SANN") fit$iter = maxit.modFit
+
   # We need to return some more data for summary and plotting
   fit$solution_type <- solution_type
   fit$transform_rates <- transform_rates
@@ -601,7 +604,7 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
   cat("\nOptimised, transformed parameters:\n")
   print(signif(x$par, digits = digits))
 
-  if (x$niter != 0) {
+  if (x$calls > 0) {
     cat("\nParameter correlation:\n")
     if (!is.null(x$cov.unscaled)){
       Corr <- cov2cor(x$cov.unscaled)
