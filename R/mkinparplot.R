@@ -39,7 +39,7 @@ mkinparplot <- function(object) {
   for (type in names(n.plot)) {
     parnames <- get(type)
     values <- bpar[parnames]
-    values_with_confints <- data.frame(t(subset(data.frame(t(values)), !is.na(Lower))))
+    values_with_confints <- data.frame(t(subset(data.frame(t(values)), !is.na("Lower"))))
     xlim = switch(type,
                   state.optim = range(c(0, unlist(values)), 
                                       na.rm = TRUE, finite = TRUE),

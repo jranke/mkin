@@ -4,6 +4,8 @@
 
 - `mkinparplot()`: Avoid warnings that occurred when not all confidence intervals were available in the summary of the fit
 - `print.summary.mkinfit()`: Fix printing the summary for the case that the number of iterations is not available
+- NAMESPACE: export S3 methods plot.mkinfit, summary.mkinfit and print.summary.mkinfit to satisfy R CMD check on R-devel
+- `mkinparplot()`: Avoid warning in R CMD check about undeclared global variable `Lower`
 
 ## NEW FEATURES
 
