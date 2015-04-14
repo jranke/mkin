@@ -87,17 +87,21 @@ mkinpredict <- function(mkinmod, odeparms, odeini,
     names(out) <- c("time", mod_vars)
   } 
   if (solution_type == "deSolve") {
-    mkindiff <- function(t, state, parms) {
+    if (!is.null(mkinmod$compiled)) {
+       mkindiff <- mkinmod$compiled
+     } else {
+       mkindiff <- function(t, state, parms) {
 
-      time <- t
-      diffs <- vector()
-      for (box in names(mkinmod$diffs))
-      {
-        diffname <- paste("d", box, sep="_")      
-        diffs[diffname] <- with(as.list(c(time, state, parms)),
-          eval(parse(text=mkinmod$diffs[[box]])))
+        time <- t
+        diffs <- vector()
+        for (box in names(mkinmod$diffs))
+        {
+          diffname <- paste("d", box, sep="_")      
+          diffs[diffname] <- with(as.list(c(time, state, parms)),
+            eval(parse(text=mkinmod$diffs[[box]])))
+        }
+        return(list(c(diffs)))
       }
-      return(list(c(diffs)))
     } 
     out <- ode(
       y = odeini,
