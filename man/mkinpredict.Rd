@@ -10,7 +10,8 @@
 }
 \usage{
   mkinpredict(mkinmod, odeparms, odeini, outtimes, solution_type = "deSolve",
-	      method.ode = "lsoda", atol = 1e-08, rtol = 1e-10, map_output = TRUE, ...)
+	      method.ode = "lsoda", use_compiled = "auto", atol = 1e-08, rtol = 1e-10,
+        map_output = TRUE, ...)
 }
 \arguments{
   \item{mkinmod}{
@@ -40,6 +41,10 @@
     The solution method passed via \code{\link{mkinpredict}} to
     \code{\link{ode}} in case the solution type is "deSolve". The default
     "lsoda" is performant, but sometimes fails to converge.
+  }
+  \item{use_compiled}{
+    If set to \code{FALSE}, no compiled version of the \code{\link{mkinmod}} 
+    model is used, even if is present. 
   }
   \item{atol}{
     Absolute error tolerance, passed to \code{\link{ode}}. Default is 1e-8,
@@ -71,6 +76,8 @@
   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20, 
 	      solution_type = "deSolve")
   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20, 
+	      solution_type = "deSolve", use_compiled = FALSE)
+  mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20, 
 	      solution_type = "eigen")
 
 
@@ -92,5 +99,20 @@
   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 
 	      seq(0, 20, by = 0.01))[2001,]
 
+  # Check compiled model versions - they are faster than the eigenvalue based solutions!
+  SFO_SFO = mkinmod(parent = list(type = "SFO", to = "m1"),
+                    m1 = list(type = "SFO"))
+  system.time(
+    print(mkinpredict(SFO_SFO, c(k_parent_m1 = 0.05, k_parent_sink = 0.1, k_m1_sink = 0.01),
+                c(parent = 100, m1 = 0), seq(0, 20, by = 0.1),
+                solution_type = "eigen")[201,]))
+  system.time(
+    print(mkinpredict(SFO_SFO, c(k_parent_m1 = 0.05, k_parent_sink = 0.1, k_m1_sink = 0.01),
+                c(parent = 100, m1 = 0), seq(0, 20, by = 0.1), 
+                solution_type = "deSolve")[201,]))
+  system.time(
+    print(mkinpredict(SFO_SFO, c(k_parent_m1 = 0.05, k_parent_sink = 0.1, k_m1_sink = 0.01),
+                c(parent = 100, m1 = 0), seq(0, 20, by = 0.1), 
+                solution_type = "deSolve", use_compiled = FALSE)[201,]))
 }
 \keyword{ manip }

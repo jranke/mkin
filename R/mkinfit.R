@@ -28,6 +28,7 @@ mkinfit <- function(mkinmod, observed,
   fixed_initials = names(mkinmod$diffs)[-1],
   solution_type = "auto",
   method.ode = "lsoda",
+  use_compiled = "auto",
   method.modFit = c("Port", "Marq", "SANN", "Nelder-Mead", "BFGS", "CG", "L-BFGS-B"),
   maxit.modFit = "auto",
   control.modFit = list(),
@@ -263,6 +264,7 @@ mkinfit <- function(mkinmod, observed,
     out <- mkinpredict(mkinmod, parms, 
                        odeini, outtimes, 
                        solution_type = solution_type, 
+                       use_compiled = use_compiled,
                        method.ode = method.ode,
                        atol = atol, rtol = rtol, ...)
 
@@ -282,6 +284,7 @@ mkinfit <- function(mkinmod, observed,
         out_plot <- mkinpredict(mkinmod, parms,
                                 odeini, outtimes_plot, 
                                 solution_type = solution_type, 
+                                use_compiled = use_compiled,
                                 method.ode = method.ode,
                                 atol = atol, rtol = rtol, ...)
 

@@ -19,6 +19,7 @@
 
 mkinpredict <- function(mkinmod, odeparms, odeini, 
 			outtimes, solution_type = "deSolve", 
+      use_compiled = "auto",
 			method.ode = "lsoda", atol = 1e-8, rtol = 1e-10,
 			map_output = TRUE, ...) {
 
@@ -87,7 +88,7 @@ mkinpredict <- function(mkinmod, odeparms, odeini,
     names(out) <- c("time", mod_vars)
   } 
   if (solution_type == "deSolve") {
-    if (!is.null(mkinmod$compiled)) {
+    if (!is.null(mkinmod$compiled) & use_compiled[1] != FALSE) {
        mkindiff <- mkinmod$compiled
      } else {
        mkindiff <- function(t, state, parms) {

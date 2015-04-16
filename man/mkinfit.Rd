@@ -23,6 +23,7 @@ mkinfit(mkinmod, observed,
   fixed_parms = NULL, fixed_initials = names(mkinmod$diffs)[-1], 
   solution_type = "auto",
   method.ode = "lsoda",
+  use_compiled = "auto",
   method.modFit = c("Port", "Marq", "SANN", "Nelder-Mead", "BFGS", "CG", "L-BFGS-B"),
   maxit.modFit = "auto",
   control.modFit = list(),
@@ -101,6 +102,10 @@ mkinfit(mkinmod, observed,
     The solution method passed via \code{\link{mkinpredict}} to
     \code{\link{ode}} in case the solution type is "deSolve". The default
     "lsoda" is performant, but sometimes fails to converge.
+  }
+  \item{use_compiled}{
+    If set to \code{FALSE}, no compiled version of the \code{\link{mkinmod}} 
+    model is used, even if is present. 
   }
   \item{method.modFit}{
     The optimisation method passed to \code{\link{modFit}}.  
@@ -235,9 +240,18 @@ SFO_SFO <- mkinmod(
   parent = list(type = "SFO", to = "m1", sink = TRUE),
   m1 = list(type = "SFO"))
 # Fit the model to the FOCUS example dataset D using defaults
-fit <- mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = "eigen")
-fit.deSolve <- mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = "deSolve")
-summary(fit)
+system.time(fit <- mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = "eigen"))
+system.time(fit.deSolve <- mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = "deSolve", use_compiled = FALSE))
+system.time(fit.deSolve.compiled <- mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = "deSolve", use_compiled = TRUE))
+# The performance benefit of using the compiled version is immense compared with deSolve without compilation, and
+# about a factor of two compared with the eigenvalue based solution
+coef(fit)
+coef(fit.deSolve)
+coef(fit.deSolve.compiled)
+endpoints(fit)
+endpoints(fit.deSolve)
+# Check compiled model versions against other solutions
+
 
 # Use stepwise fitting, using optimised parameters from parent only fit, FOMC
 \dontrun{
@@ -289,6 +303,7 @@ f.w.man.irls <- mkinfit(SFO_SFO.ff, dw, err = "err.man",
                        reweight.method = "obs")
 summary(f.w.man.irls)
 }
+
 }
 \keyword{ models }
 \keyword{ optimize }
