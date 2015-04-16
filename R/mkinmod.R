@@ -36,6 +36,9 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL)
   # differential equations (if supported), parameter names and a mapping from
   # model variables to observed variables. If possible, a matrix representation
   # of the differential equations is included
+  # Compiling the functions from the C code generated below using the ccSolve package
+  # only works if the implicit assumption about differential equations specified below
+  # is satisfied
   parms <- vector()
   # }}}
 
@@ -268,6 +271,37 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL)
     } # }}}
     model$coefmat <- m
   }#}}}
+
+  # Create a function compiled from C code if possible #{{{
+  if (require(ccSolve)) {
+    diffs.C <- paste(diffs, collapse = ";\n")
+    diffs.C <- paste0(diffs.C, ";")
+    for (i in seq_along(diffs)) {
+      obs_var <- names(diffs)[i]
+
+      # Replace d_... terms by f[i-1]
+      # First line
+      pattern <- paste0("^d_", obs_var)
+      replacement <- paste0("\nf[", i - 1, "]")
+      diffs.C <- gsub(pattern, replacement, diffs.C)
+      # Other lines
+      pattern <- paste0("\\nd_", obs_var)
+      replacement <- paste0("\nf[", i - 1, "]")
+      diffs.C <- gsub(pattern, replacement, diffs.C)
+
+      # Replace names of observed variables by y[i],
+      # making the implicit assumption that the observed variables only occur after "* "
+      pattern <- paste0("\\* ", obs_var)
+      replacement <- paste0("* y[", i - 1, "]")
+      diffs.C <- gsub(pattern, replacement, diffs.C)
+    }
+    # Unfortunately, the models with time occuring in the diffs do not compile
+    if (sum(sapply(spec, function(x) x$type %in% c("SFO", "SFORB"))) == length(spec)) {
+      message("Compiling differential equation model from auto-generated C code...")
+      model$compiled <- compile.ode(diffs.C, language = "C", parms = parms)
+    }
+  }
+  # }}}
 
   class(model) <- "mkinmod"
   return(model)

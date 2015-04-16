@@ -235,7 +235,8 @@ SFO_SFO <- mkinmod(
   parent = list(type = "SFO", to = "m1", sink = TRUE),
   m1 = list(type = "SFO"))
 # Fit the model to the FOCUS example dataset D using defaults
-fit <- mkinfit(SFO_SFO, FOCUS_2006_D)
+fit <- mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = "eigen")
+fit.deSolve <- mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = "deSolve")
 summary(fit)
 
 # Use stepwise fitting, using optimised parameters from parent only fit, FOMC
@@ -258,10 +259,10 @@ SFORB_SFO <- mkinmod(
   m1 = list(type = "SFO"))
 # Fit the model to the FOCUS example dataset D using defaults
 fit.SFORB_SFO <- mkinfit(SFORB_SFO, FOCUS_2006_D)
+fit.SFORB_SFO.deSolve <- mkinfit(SFORB_SFO, FOCUS_2006_D, solution_type = "deSolve")
 # Use starting parameters from parent only SFORB fit (not really needed in this case)
 fit.SFORB = mkinfit(SFORB, FOCUS_2006_D)
 fit.SFORB_SFO <- mkinfit(SFORB_SFO, FOCUS_2006_D, parms.ini = fit.SFORB$bparms.ode)
-}
 
 # Weighted fits, including IRLS
 SFO_SFO.ff <- mkinmod(parent = list(type = "SFO", to = "m1"),
@@ -275,6 +276,7 @@ summary(f.w.mean)
 f.w.mean.irls <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, weight = "mean",
                          reweight.method = "obs")
 summary(f.w.mean.irls)
+}
 
 \dontrun{
 # Manual weighting
