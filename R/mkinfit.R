@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2014 Johannes Ranke
+# Copyright (C) 2010-2015 Johannes Ranke
 # Portions of this code are copyright (C) 2013 Eurofins Regulatory AG
 # Contact: jranke@uni-bremen.de
 # The summary function is an adapted and extended version of summary.modFit
@@ -26,7 +26,7 @@ mkinfit <- function(mkinmod, observed,
   state.ini = "auto", 
   fixed_parms = NULL,
   fixed_initials = names(mkinmod$diffs)[-1],
-  solution_type = "auto",
+  solution_type = c("auto", "analytical", "eigen", "deSolve"),
   method.ode = "lsoda",
   use_compiled = "auto",
   method.modFit = c("Port", "Marq", "SANN", "Nelder-Mead", "BFGS", "CG", "L-BFGS-B"),
@@ -89,7 +89,7 @@ mkinfit <- function(mkinmod, observed,
          " not used in the model")
   }
 
-  # Warn that the sum of formation fractions may exceed one they are not
+  # Warn that the sum of formation fractions may exceed one if they are not
   # fitted in the transformed way
   if (mkinmod$use_of_ff == "max" & transform_fractions == FALSE) {
     warning("The sum of formation fractions may exceed one if you do not use ",
@@ -112,7 +112,7 @@ mkinfit <- function(mkinmod, observed,
       stop("Fixing formation fractions is not supported when using the ilr ",
            "transformation.")
     }
- }
+  }
 
   # Set initial parameter values, including a small increment (salt)
   # to avoid linear dependencies (singular matrix) in Eigenvalue based solutions
@@ -208,8 +208,9 @@ mkinfit <- function(mkinmod, observed,
   # Decide if the solution of the model can be based on a simple analytical
   # formula, the spectral decomposition of the matrix (fundamental system)
   # or a numeric ode solver from the deSolve package
-  if (!solution_type %in% c("auto", "analytical", "eigen", "deSolve"))
-     stop("solution_type must be auto, analytical, eigen or de Solve")
+  # Prefer deSolve over eigen if a compiled model is present and use_compiled
+  # is not set to FALSE
+  solution_type = match.arg(solution_type)
   if (solution_type == "analytical" && length(mkinmod$spec) > 1)
      stop("Analytical solution not implemented for models with metabolites.")
   if (solution_type == "eigen" && !is.matrix(mkinmod$coefmat))
@@ -218,13 +219,17 @@ mkinfit <- function(mkinmod, observed,
     if (length(mkinmod$spec) == 1) {
       solution_type = "analytical"
     } else {
-      if (is.matrix(mkinmod$coefmat)) {
-        solution_type = "eigen"
-        if (max(observed$value, na.rm = TRUE) < 0.1) {
-          stop("The combination of small observed values (all < 0.1) and solution_type = eigen is error-prone")
-        }
-      } else {
+      if (!is.null(mkinmod$compiled) & use_compiled[1] != FALSE) {
         solution_type = "deSolve"
+      } else {
+        if (is.matrix(mkinmod$coefmat)) {
+          solution_type = "eigen"
+          if (max(observed$value, na.rm = TRUE) < 0.1) {
+            stop("The combination of small observed values (all < 0.1) and solution_type = eigen is error-prone")
+          }
+        } else {
+          solution_type = "deSolve"
+        }
       }
     }
   }

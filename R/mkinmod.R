@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2014 Johannes Ranke {{{
+# Copyright (C) 2010-2015 Johannes Ranke {{{
 # Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin

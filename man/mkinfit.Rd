@@ -21,7 +21,7 @@ mkinfit(mkinmod, observed,
   parms.ini = "auto",
   state.ini = "auto",
   fixed_parms = NULL, fixed_initials = names(mkinmod$diffs)[-1], 
-  solution_type = "auto",
+  solution_type = c("auto", "analytical", "eigen", "deSolve")
   method.ode = "lsoda",
   use_compiled = "auto",
   method.modFit = c("Port", "Marq", "SANN", "Nelder-Mead", "BFGS", "CG", "L-BFGS-B"),
@@ -105,7 +105,8 @@ mkinfit(mkinmod, observed,
   }
   \item{use_compiled}{
     If set to \code{FALSE}, no compiled version of the \code{\link{mkinmod}} 
-    model is used, even if is present. 
+    model is used, in the calls to \code{\link{mkinpredict}} even if
+    a compiled verion is present. 
   }
   \item{method.modFit}{
     The optimisation method passed to \code{\link{modFit}}.  
