@@ -70,7 +70,7 @@ test.SFO_solution_types <- function()
   checkIdentical(dev.1.e_d.percent < tol, rep(TRUE, length(dev.1.e_d.percent)))
 
   # Compare eigen and deSolve for maximum use of formation fractions
-  dev.2.e_d.percent = 100 * (r.1.e[-1] - r.1.d[-1])/r.1.e[-1]
+  dev.2.e_d.percent = 100 * (r.2.e[-1] - r.2.d[-1])/r.2.e[-1]
   dev.2.e_d.percent = as.numeric(unlist((dev.2.e_d.percent)))
   dev.2.e_d.percent = ifelse(is.na(dev.2.e_d.percent), 0, dev.2.e_d.percent)
   checkIdentical(dev.2.e_d.percent < tol, rep(TRUE, length(dev.2.e_d.percent)))
