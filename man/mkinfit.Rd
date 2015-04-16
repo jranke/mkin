@@ -276,6 +276,7 @@ summary(f.w.mean)
 f.w.mean.irls <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, weight = "mean",
                          reweight.method = "obs")
 summary(f.w.mean.irls)
+}
 
 \dontrun{
 # Manual weighting
