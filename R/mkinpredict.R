@@ -108,7 +108,7 @@ mkinpredict <- function(mkinmod, odeparms, odeini,
       y = odeini,
       times = outtimes,
       func = mkindiff, 
-      parms = odeparms,
+      parms = odeparms[mkinmod$parms], # Order matters when using compiled models
       method = method.ode,
       atol = atol,
       rtol = rtol,
