@@ -126,8 +126,8 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL)
       }
     } #}}}
     if(spec[[varname]]$type == "FOMC") { # {{{ Add FOMC decline term
-      # From p. 53 of the FOCUS kinetics report
-      decline_term <- paste("(alpha/beta) * ((time/beta) + 1)^-1 *", box_1)
+      # From p. 53 of the FOCUS kinetics report, without the power function so it works in C
+      decline_term <- paste("(alpha/beta) * 1/((time/beta) + 1) *", box_1)
       parms <- c(parms, "alpha", "beta")
     } #}}}
     if(spec[[varname]]$type == "DFOP") { # {{{ Add DFOP decline term
@@ -295,10 +295,9 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL)
       replacement <- paste0("* y[", i - 1, "]")
       diffs.C <- gsub(pattern, replacement, diffs.C)
     }
-    # Unfortunately, the models with time occuring in the diffs do not compile
-    if (sum(sapply(spec, function(x) x$type %in% c("SFO", "SFORB"))) == length(spec)) {
+    if (sum(sapply(spec, function(x) x$type %in% c("SFO", "FOMC", "DFOP", "SFORB"))) == length(spec)) {
       message("Compiling differential equation model from auto-generated C code...")
-      model$compiled <- compile.ode(diffs.C, language = "C", parms = parms)
+      model$compiled <- compile.ode(diffs.C, language = "C", parms = parms, declaration = "double time = *t;")
     }
   }
   # }}}

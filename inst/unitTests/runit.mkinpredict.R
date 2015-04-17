@@ -34,6 +34,26 @@ test.SFO_solution_types <- function()
   checkEquals(SFO.analytical, SFO.eigen)
 } # }}}
 
+# Check solution types for FOMC {{{
+test.FOMC_solution_types <- function()
+{
+  ot = seq(0, 100, by = 1)
+  FOMC <- mkinmod(parent = list(type = "FOMC"))
+  FOMC.analytical <- round(subset(mkinpredict(FOMC, c(alpha = 1, beta = 10),
+        c(parent = 100), ot, solution_type = "analytical"), time == 100), digits=5)
+  FOMC.deSolve <- round(subset(mkinpredict(FOMC, c(alpha = 1, beta = 10),
+        c(parent = 100), ot, solution_type = "deSolve"), use_compiled = FALSE, time == 100), digits=5)
+  checkEquals(FOMC.analytical, FOMC.deSolve)
+
+  if (require(ccSolve)) {
+    checkTrue(!is.null(FOMC$compiled))
+    FOMC.deSolve.compiled <- round(subset(mkinpredict(FOMC, c(alpha = 1, beta = 10),
+          c(parent = 100), ot, solution_type = "deSolve"), time == 100), digits=5)
+    checkEquals(FOMC.analytical, FOMC.deSolve.compiled)
+  }
+
+} # }}}
+
 # Check model specification and solution types for SFO_SFO {{{
 # Relative Tolerance is 0.01%
 # Do not use time 0, as eigenvalue based solution does not give 0 at time 0 for metabolites

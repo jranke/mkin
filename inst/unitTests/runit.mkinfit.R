@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2014 Johannes Ranke
+# Copyright (C) 2010-2015 Johannes Ranke
 # Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
@@ -112,6 +112,18 @@ test.FOCUS_2006_DFOP <- function()
   dev.B.DFOP <- abs(round(100 * ((median.B.DFOP - fit.B.DFOP.r)/median.B.DFOP), digits=1))
   # about 0.6% deviation for parameter f, the others are <= 0.1%
   checkIdentical(dev.B.DFOP < 1, rep(TRUE, length(dev.B.DFOP)))
+
+  # Check the compiled version of possible FOCUS_2006_B
+  if (require(ccSolve)) {
+    checkTrue(!is.null(DFOP$compiled))
+    fit.B.DFOP.compiled <- mkinfit(DFOP, FOCUS_2006_B, solution_type = "deSolve", use_compiled = TRUE, quiet=TRUE)
+
+    fit.B.DFOP.compiled.r <- as.numeric(c(fit.B.DFOP.compiled$bparms.optim, 
+                                          endpoints(fit.B.DFOP)$distimes[c("DT50", "DT90")]))
+    dev.B.DFOP.compiled <- abs(round(100 * ((median.B.DFOP - fit.B.DFOP.compiled.r)/median.B.DFOP), digits=1))
+    # about 0.6% deviation for parameter f, the others are <= 0.1%
+    checkIdentical(dev.B.DFOP.compiled < 1, rep(TRUE, length(dev.B.DFOP)))
+  }
 } # }}}
 
 # Test HS model to a relative tolerance of 1% excluding Mathematica values {{{
