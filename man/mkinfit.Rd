@@ -21,7 +21,7 @@ mkinfit(mkinmod, observed,
   parms.ini = "auto",
   state.ini = "auto",
   fixed_parms = NULL, fixed_initials = names(mkinmod$diffs)[-1], 
-  solution_type = c("auto", "analytical", "eigen", "deSolve")
+  solution_type = c("auto", "analytical", "eigen", "deSolve"),
   method.ode = "lsoda",
   use_compiled = "auto",
   method.modFit = c("Port", "Marq", "SANN", "Nelder-Mead", "BFGS", "CG", "L-BFGS-B"),
@@ -241,11 +241,15 @@ SFO_SFO <- mkinmod(
   parent = list(type = "SFO", to = "m1", sink = TRUE),
   m1 = list(type = "SFO"))
 # Fit the model to the FOCUS example dataset D using defaults
-system.time(fit <- mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = "eigen"))
-system.time(fit.deSolve <- mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = "deSolve", use_compiled = FALSE))
-system.time(fit.deSolve.compiled <- mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = "deSolve", use_compiled = TRUE))
-# The performance benefit of using the compiled version is immense compared with deSolve without compilation, and
-# about a factor of two compared with the eigenvalue based solution
+system.time(fit <- mkinfit(SFO_SFO, FOCUS_2006_D, 
+                           solution_type = "eigen"))
+system.time(fit.deSolve <- mkinfit(SFO_SFO, FOCUS_2006_D, 
+                           solution_type = "deSolve", use_compiled = FALSE))
+system.time(fit.deSolve.compiled <- mkinfit(SFO_SFO, FOCUS_2006_D, 
+                           solution_type = "deSolve", use_compiled = TRUE))
+# The performance benefit of using the compiled version is immense compared
+# with deSolve without compilation, and about a factor of two compared with the
+# eigenvalue based solution
 coef(fit)
 coef(fit.deSolve)
 coef(fit.deSolve.compiled)

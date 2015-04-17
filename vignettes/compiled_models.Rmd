@@ -1,0 +1,87 @@
+---
+title: "Performance benefit by using compiled model definitions in mkin"
+output:
+  html_document:
+    css: mkin_vignettes.css
+    toc: true
+    mathjax: null
+    theme: united
+---
+<!--
+%\VignetteEngine{knitr::rmarkdown}
+%\VignetteIndexEntry{Performance benefit by using compiled model definitions in mkin}
+-->
+
+```{r, include = FALSE}
+library(knitr)
+opts_chunk$set(tidy = FALSE, cache = TRUE)
+if (!require("ccSolve")) 
+  message("Please install the ccSolve package for this vignette to produce sensible output")
+
+```
+
+# Benchmark for a model that can also be solved with Eigenvalues
+
+This evaluation is taken from the example section of mkinfit. When using an mkin version
+greater than 0.9-36 and the ccSolve package is installed and functional, you will get a
+message that the model is being compiled when defining a model using mkinmod.
+
+```{r create_SFO_SFO}
+library("mkin")
+SFO_SFO <- mkinmod(
+  parent = list(type = "SFO", to = "m1", sink = TRUE),
+  m1 = list(type = "SFO"))
+```
+
+We can compare the performance of the Eigenvalue based solution against the
+compiled version and the R implementation of the differential equations using
+the microbenchmark package.
+
+
+```{r benchmark_SFO_SFO, echo=-(1:2)}
+# Redefining the model, in order not to confuse the knitr cache which leads to segfaults
+suppressMessages(SFO_SFO <- mkinmod(
+  parent = list(type = "SFO", to = "m1", sink = TRUE),
+  m1 = list(type = "SFO")))
+library("microbenchmark")
+mb.1 <- microbenchmark(
+  mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = "deSolve", use_compiled = FALSE, 
+          quiet = TRUE),
+  mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = "eigen", quiet = TRUE),
+  mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = "deSolve", quiet = TRUE),
+  times = 3, control = list(warmup = 1))
+smb.1 <- summary(mb.1)[-1]
+rownames(smb.1) <- c("deSolve, not compiled", "Eigenvalue based", "deSolve, compiled")
+print(smb.1)
+```
+
+We see that using the compiled model is almost a factor of 8 faster than using the R version
+with the default ode solver, and it is even faster than the Eigenvalue based solution implemented
+in R which does not need iterative solution of the ODEs:
+
+```{r}
+smb.1["median"]/smb.1["deSolve, compiled", "median"]
+```
+
+# Benchmark for a model that can not be solved with Eigenvalues
+
+This evaluation is also taken from the example section of mkinfit. 
+
+```{r benchmark_FOMC_SFO}
+FOMC_SFO <- mkinmod(
+  parent = list(type = "FOMC", to = "m1", sink = TRUE),
+  m1 = list(type = "SFO"))
+
+mb.2 <- microbenchmark(
+  mkinfit(FOMC_SFO, FOCUS_2006_D, use_compiled = FALSE, quiet = TRUE),
+  mkinfit(FOMC_SFO, FOCUS_2006_D, quiet = TRUE),
+  times = 3, control = list(warmup = 1))
+smb.2 <- summary(mb.2)[-1]
+rownames(smb.2) <- c("deSolve, not compiled", "deSolve, compiled")
+print(smb.2)
+smb.2["median"]/smb.2["deSolve, compiled", "median"]
+
+```
+
+Here we get a performance benefit of more than a factor of 8 using the version
+of the differential equation model compiled from C code using the ccSolve package!

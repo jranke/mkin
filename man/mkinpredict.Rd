@@ -10,7 +10,7 @@
 }
 \usage{
   mkinpredict(mkinmod, odeparms, odeini, outtimes, solution_type = "deSolve",
-	      method.ode = "lsoda", use_compiled = "auto", atol = 1e-08, rtol = 1e-10,
+	      use_compiled = "auto", method.ode = "lsoda", atol = 1e-08, rtol = 1e-10,
         map_output = TRUE, ...)
 }
 \arguments{

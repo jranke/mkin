@@ -273,7 +273,7 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL)
   }#}}}
 
   # Create a function compiled from C code if possible #{{{
-  if (require(ccSolve)) {
+  if (requireNamespace("ccSolve", quietly = TRUE)) {
     diffs.C <- paste(diffs, collapse = ";\n")
     diffs.C <- paste0(diffs.C, ";")
     for (i in seq_along(diffs)) {
@@ -295,9 +295,12 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL)
       replacement <- paste0("* y[", i - 1, "]")
       diffs.C <- gsub(pattern, replacement, diffs.C)
     }
-    if (sum(sapply(spec, function(x) x$type %in% c("SFO", "FOMC", "DFOP", "SFORB"))) == length(spec)) {
+    if (sum(sapply(spec, function(x) x$type %in% 
+                   c("SFO", "FOMC", "DFOP", "SFORB"))) == length(spec)) {
       message("Compiling differential equation model from auto-generated C code...")
-      model$compiled <- compile.ode(diffs.C, language = "C", parms = parms, declaration = "double time = *t;")
+      model$compiled <- ccSolve::compile.ode(diffs.C, language = "C", 
+                                             parms = parms, 
+                                             declaration = "double time = *t;")
     }
   }
   # }}}
