@@ -18,13 +18,13 @@ SDDIR ?= $(RFSVN)/www/mkin_static
 pkgfiles = NEWS \
 	   data/* \
 	   DESCRIPTION \
-	   inst/unitTests* \
 	   inst/staticdocs/README \
 	   man/* \
 	   NAMESPACE \
 	   R/* \
 	   README.md \
 	   tests/* \
+	   tests/testthat* \
 	   TODO \
 	   vignettes/*
 
@@ -69,7 +69,7 @@ clean:
 
 test: install-no-vignettes
 	cd tests;\
-		"$(RBIN)/Rscript" doRUnit.R
+		"$(RBIN)/Rscript" testthat.R
 
 vignettes/mkin.pdf: vignettes/mkin.Rnw
 	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/mkin.Rnw', dir = 'vignettes')"
