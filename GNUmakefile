@@ -102,8 +102,8 @@ winbuilder: build
 	curl -T $(TGZ) ftp://anonymous@win-builder.r-project.org/R-devel/
 
 submit:
-	@echo "\nHow about make test, make check, make winbuilder and make r-forge?"
+	@echo "\nHow about make test, make check, make winbuilder"
 	@echo "\nIs the DESCRIPTION file up to date?"
 	@echo "\nIs the NEWS.md file up to date?"
 	@echo "\nAre you sure you want to release to CRAN?"
-	@echo "\nThen use the form at http://cran.r-project.org/submit.html"
+	@echo "\nThen make r-forge, commit leftover changes if any, tag the release and use the form at http://cran.r-project.org/submit.html"
