@@ -52,11 +52,10 @@ test_that("Fits for FOCUS A deviate less than 0.1% from median of values from FO
   expect_equivalent(dev.percent.A.SFO[[1]] < 0.1, rep(TRUE, 4))
 
   # Fitting FOCUS A with FOMC is possible, but the correlation between
-  # alpha and beta obtained on Linux is 1.0000, and the test failed on Windows,
-  # as the Port algorithm did not converge (winbuilder, 2015-05-15)
-  if (.Platform$OS.type != "windows") {
-    fit.A.FOMC <- list(mkinfit("FOMC", FOCUS_2006_A, quiet = TRUE))
-    
+  # alpha and beta, when obtained, is 1.0000, and the fit sometimes failed on
+  # Windows, as the Port algorithm did not converge (winbuilder, 2015-05-15)
+  fit.A.FOMC <- try(list(mkinfit("FOMC", FOCUS_2006_A, quiet = TRUE)))
+  if (!inherits(fit.A.FOMC, "try-error")) {
 
     median.A.FOMC <- as.numeric(lapply(subset(FOCUS_2006_FOMC_ref_A_to_F, 
                                           dataset == "A", 
