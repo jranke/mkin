@@ -199,7 +199,7 @@ test_that("DFOP fits give approximately (0.001%) equal results with different so
   expect_equivalent(dev.percent[[2]] < 0.001, rep(TRUE, 4))
 })
 
-test_that("SFORB fits give approximately (0.001%) equal results with different solution methods", {
+test_that("SFORB fits give approximately (0.002%) equal results with different solution methods", {
   fit.B.SFORB.default <- mkinfit(SFORB, FOCUS_2006_B, quiet=TRUE)$bparms.optim
 
   fits.B.SFORB <- list()          
@@ -207,5 +207,5 @@ test_that("SFORB fits give approximately (0.001%) equal results with different s
   fits.B.SFORB[[2]] <- mkinfit(SFORB, FOCUS_2006_B, quiet=TRUE, solution_type = "deSolve")
   dev.percent <- calc_dev.percent(fits.B.SFORB, fit.B.SFORB.default, endpoints = FALSE)
   expect_equivalent(dev.percent[[1]] < 0.001, rep(TRUE, 4))
-  expect_equivalent(dev.percent[[2]] < 0.001, rep(TRUE, 4))
+  expect_equivalent(dev.percent[[2]] < 0.002, rep(TRUE, 4))
 })
