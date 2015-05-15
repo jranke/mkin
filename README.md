@@ -157,12 +157,11 @@ The first `mkin` code was
 on 18 May 2010.
 
 In 2011, Bayer Crop Science started to distribute an R based successor to KinGUI named 
-[KinGUII](https://kinguii.github.io) 
-whose R code is based on `mkin`, but which added, amongst other refinements, a
-closed source graphical user interface (GUI), iteratively reweighted least
-squares (IRLS) optimisation of the variance for each of the observed
-variables, and Markov Chain Monte Carlo (MCMC) simulation functionality,
-similar to what is available e.g. in the `FME` package.
+KinGUII whose R code is based on `mkin`, but which added, amongst other
+refinements, a closed source graphical user interface (GUI), iteratively
+reweighted least squares (IRLS) optimisation of the variance for each of the
+observed variables, and Markov Chain Monte Carlo (MCMC) simulation
+functionality, similar to what is available e.g. in the `FME` package.
 
 Somewhat in parallel, Syngenta has sponsored the development of an `mkin` and
 KinGUII based GUI application called CAKE, which also adds IRLS and MCMC, is
