@@ -92,7 +92,7 @@ move-sd:
 r-forge: sd move-sd
 	git archive master > $(HOME)/mkin.tar;\
 	cd $(RFDIR) && rm -r `ls` && tar -xf $(HOME)/mkin.tar;\
-	svn add --force .; cd $(RFSVN) && svn commit -m 'sync with git'
+	svn add --force .; svn rm --force `svn status | grep "\!" | cut -d " " -f 8`; cd $(RFSVN) && svn commit -m 'sync with git'
 
 winbuilder: build
 	date
