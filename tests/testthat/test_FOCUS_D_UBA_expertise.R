@@ -34,7 +34,7 @@ test_that("Fitted parameters are correct for FOCUS D", {
                     c(99.60, 0.0987, 0.0053, 0.5145))
 })
 
-test_that("Fitted parameters are correct for FOCUS D", {
+test_that("FOCUS chi2 error levels are correct for FOCUS D", {
   expect_equivalent(round(100 * mkinerrmin(fit.ff)$err.min, 2), 
                     c(6.40, 6.46, 4.69))
 })
