@@ -1,5 +1,9 @@
 # CHANGES in mkin VERSION 0.9-35
 
+## MAJOR CHANGES
+
+- Switch from RUnit to testthat for testing
+
 ## BUG FIXES
 
 - `mkinparplot()`: Avoid warnings that occurred when not all confidence intervals were available in the summary of the fit
@@ -10,6 +14,7 @@
 ## NEW FEATURES
 
 - `mkinfit()`: Report successful termination when quiet = FALSE. This is helpful for more difficult problems fitted with reweight.method = obs, as no progress is often indicated during the reweighting.
+- A first test using results established in the expertise written for the German Federal Environmental Agency (UBA) was added.
 
 # CHANGES in mkin VERSION 0.9-34
 

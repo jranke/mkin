@@ -104,5 +104,6 @@ winbuilder: build
 submit:
 	@echo "\nHow about make test, make check, make winbuilder and make r-forge?"
 	@echo "\nIs the DESCRIPTION file up to date?"
+	@echo "\nIs the NEWS.md file up to date?"
 	@echo "\nAre you sure you want to release to CRAN?"
 	@echo "\nThen use the form at http://cran.r-project.org/submit.html"
