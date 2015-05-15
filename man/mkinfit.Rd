@@ -263,6 +263,7 @@ fit.SFORB = mkinfit(SFORB, FOCUS_2006_D)
 fit.SFORB_SFO <- mkinfit(SFORB_SFO, FOCUS_2006_D, parms.ini = fit.SFORB$bparms.ode)
 }
 
+\dontrun{
 # Weighted fits, including IRLS
 SFO_SFO.ff <- mkinmod(parent = list(type = "SFO", to = "m1"),
                       m1 = list(type = "SFO"), use_of_ff = "max")
@@ -275,6 +276,7 @@ summary(f.w.mean)
 f.w.mean.irls <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, weight = "mean",
                          reweight.method = "obs")
 summary(f.w.mean.irls)
+}
 
 \dontrun{
 # Manual weighting
