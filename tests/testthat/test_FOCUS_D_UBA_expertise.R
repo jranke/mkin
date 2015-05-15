@@ -19,10 +19,10 @@
 context("Results for FOCUS D established in expertise for UBA (Ranke 2014)")
 
 SFO_SFO <- mkinmod(parent = list(type = "SFO", to = "m1"),
-                   m1 = list(type = "SFO"))
+                   m1 = list(type = "SFO"), quiet = TRUE)
 SFO_SFO.ff <- mkinmod(parent = list(type = "SFO", to = "m1"),
                       m1 = list(type = "SFO"), 
-                      use_of_ff = "max")
+                      use_of_ff = "max", quiet = TRUE)
 
 fit.default <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE)
 fit.ff <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, quiet = TRUE)

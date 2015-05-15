@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/> }}}
 
-mkinmod <- function(..., use_of_ff = "min", speclist = NULL)
+mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE)
 {
   if (is.null(speclist)) spec <- list(...)
   else spec <- speclist
@@ -272,8 +272,8 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL)
     model$coefmat <- m
   }#}}}
 
-  # Create a function compiled from C code if possible #{{{
-  if (requireNamespace("ccSolve", quietly = TRUE)) {
+  # Create a function compiled from C code if more than one observed variable and ccSolve is available #{{{
+  if (length(obs_vars) > 1 & requireNamespace("ccSolve", quietly = TRUE)) {
     diffs.C <- paste(diffs, collapse = ";\n")
     diffs.C <- paste0(diffs.C, ";")
     for (i in seq_along(diffs)) {
@@ -297,7 +297,7 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL)
     }
     if (sum(sapply(spec, function(x) x$type %in% 
                    c("SFO", "FOMC", "DFOP", "SFORB"))) == length(spec)) {
-      message("Compiling differential equation model from auto-generated C code...")
+      if (!quiet) message("Compiling differential equation model from auto-generated C code...")
       model$compiled <- ccSolve::compile.ode(diffs.C, language = "C", 
                                              parms = parms, 
                                              declaration = "double time = *t;")

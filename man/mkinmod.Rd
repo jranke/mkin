@@ -13,7 +13,7 @@
   in the FOCUS and NAFTA guidance documents are used.
 }
 \usage{
-mkinmod(..., use_of_ff = "min", speclist = NULL)
+mkinmod(..., use_of_ff = "min", speclist = NULL, quiet = FALSE)
 }
 \arguments{
   \item{...}{
@@ -41,6 +41,9 @@ mkinmod(..., use_of_ff = "min", speclist = NULL)
   \item{speclist}{
     The specification of the observed variables and their submodel types and 
     pathways can be given as a single list using this argument. Default is NULL.
+  }
+  \item{quiet}{
+    Should messages be suppressed?
   }
 }
 \value{

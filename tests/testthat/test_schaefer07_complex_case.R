@@ -25,7 +25,7 @@ schaefer07_complex_model <- mkinmod(
   A1 = list(type = "SFO", to = "A2"),
   B1 = list(type = "SFO"),
   C1 = list(type = "SFO"),
-  A2 = list(type = "SFO"), use_of_ff = "max")
+  A2 = list(type = "SFO"), use_of_ff = "max", quiet = TRUE)
 
 schaefer07_long <- mkin_wide_to_long(schaefer07_complex_case, time = "time")
 

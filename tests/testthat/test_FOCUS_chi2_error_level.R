@@ -22,7 +22,7 @@ context("Calculation of FOCUS chi2 error levels")
 
 SFO_SFO.ff <- mkinmod(parent = list(type = "SFO", to = "m1"),
                       m1 = list(type = "SFO"), 
-                      use_of_ff = "max")
+                      use_of_ff = "max", quiet = TRUE)
 
 test_that("Chi2 error levels for FOCUS D are as in mkin 0.9-33", {
 

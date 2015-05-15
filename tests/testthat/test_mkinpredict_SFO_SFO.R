@@ -28,9 +28,9 @@ test_that("Variants of model predictions for SFO_SFO model give equivalent resul
   # and relative tolerance is thus not met
   tol = 0.01
   SFO_SFO.1 <- mkinmod(parent = list(type = "SFO", to = "m1"),
-         m1 = list(type = "SFO"), use_of_ff = "min")
+         m1 = list(type = "SFO"), use_of_ff = "min", quiet = TRUE)
   SFO_SFO.2 <- mkinmod(parent = list(type = "SFO", to = "m1"),
-         m1 = list(type = "SFO"), use_of_ff = "max")
+         m1 = list(type = "SFO"), use_of_ff = "max", quiet = TRUE)
 
   ot = seq(0, 100, by = 1)
   r.1.e <- subset(mkinpredict(SFO_SFO.1, 
