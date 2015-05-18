@@ -76,6 +76,7 @@ names(transformed) <- rownames(fit$start_transformed)
 transform_odeparms(initials, SFO_SFO)
 backtransform_odeparms(transformed, SFO_SFO)
 
+\dontrun{
 # The case of formation fractions
 SFO_SFO.ff <- mkinmod(
   parent = list(type = "SFO", to = "m1", sink = TRUE),
@@ -97,5 +98,6 @@ SFO_SFO.ff.2 <- mkinmod(
 
 fit.ff.2 <- mkinfit(SFO_SFO.ff.2, FOCUS_2006_D)
 summary(fit.ff.2, data = FALSE)
+}
 }
 \keyword{ manip }

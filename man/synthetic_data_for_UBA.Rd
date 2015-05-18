@@ -41,6 +41,7 @@
   measurement error in analytical chemistry. Technometrics 37(2), 176-184.
 }
 \examples{
+\dontrun{
 m_synth_SFO_lin <- mkinmod(parent = list(type = "SFO", to = "M1"),
                            M1 = list(type = "SFO", to = "M2"),
                            M2 = list(type = "SFO"), use_of_ff = "max")
@@ -61,5 +62,6 @@ m_synth_DFOP_par <- mkinmod(parent = list(type = "DFOP", to = c("M1", "M2"),
                             M2 = list(type = "SFO"), use_of_ff = "max")
 
 mkinfit(m_synth_SFO_lin, synthetic_data_for_UBA_2014[[1]]$data)
+}
 }
 \keyword{datasets}

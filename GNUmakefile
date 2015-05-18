@@ -60,7 +60,7 @@ check: build
 
 check-no-vignettes: build-no-vignettes
 	mv $(TGZVNR) $(TGZ)
-	"$(RBIN)/R" CMD check --as-cran --no-tests $(TGZ)
+	"$(RBIN)/R" CMD check --as-cran --no-tests --no-build-vignettes --no-vignettes $(TGZ)
 	mv $(TGZ) $(TGZVNR)
 
 clean: 
