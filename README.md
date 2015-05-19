@@ -42,14 +42,6 @@ The simplest usage example that I can think of, using model shorthand notation
 
 ```r
 library(mkin)
-```
-
-```
-## Loading required package: minpack.lm
-## Loading required package: rootSolve
-```
-
-```r
 fit <- mkinfit("SFO", FOCUS_2006_C, quiet = TRUE)
 plot(fit, show_residuals = TRUE) 
 ```
@@ -81,9 +73,6 @@ plot(fit2, show_residuals = TRUE)
 A fairly complex usage example using another built-in dataset:
 
 
-```
-## Loading required package: methods
-```
 
 
 ```r
@@ -95,141 +84,9 @@ model <- mkinmod(
   B1 = mkinsub("SFO"),
   C1 = mkinsub("SFO"),
   A2 = mkinsub("SFO"), use_of_ff = "max")
-```
 
-```
-## Compiling differential equation model from auto-generated C code...
-```
+fit3 <- mkinfit(model, data, method.modFit = "Port", quiet = TRUE)
 
-```r
-fit3 <- mkinfit(model, data, method.modFit = "Port")
-```
-
-```
-## Model cost at call  1 :  2511.655 
-## Model cost at call  2 :  2511.655 
-## Model cost at call  11 :  1436.639 
-## Model cost at call  12 :  1436.638 
-## Model cost at call  13 :  1436.566 
-## Model cost at call  21 :  643.6583 
-## Model cost at call  22 :  643.6583 
-## Model cost at call  23 :  643.6582 
-## Model cost at call  29 :  643.6576 
-## Model cost at call  31 :  454.0244 
-## Model cost at call  32 :  454.0241 
-## Model cost at call  34 :  454.0229 
-## Model cost at call  43 :  378.1144 
-## Model cost at call  45 :  378.1143 
-## Model cost at call  53 :  357.245 
-## Model cost at call  55 :  357.2449 
-## Model cost at call  56 :  357.2447 
-## Model cost at call  63 :  354.3415 
-## Model cost at call  64 :  354.3415 
-## Model cost at call  65 :  354.3413 
-## Model cost at call  73 :  332.49 
-## Model cost at call  74 :  332.49 
-## Model cost at call  81 :  332.4899 
-## Model cost at call  83 :  315.2962 
-## Model cost at call  84 :  306.3085 
-## Model cost at call  86 :  306.3084 
-## Model cost at call  87 :  306.3084 
-## Model cost at call  92 :  306.3083 
-## Model cost at call  94 :  290.6377 
-## Model cost at call  96 :  290.6375 
-## Model cost at call  98 :  290.6375 
-## Model cost at call  101 :  290.6371 
-## Model cost at call  105 :  269.09 
-## Model cost at call  107 :  269.0899 
-## Model cost at call  115 :  259.7551 
-## Model cost at call  120 :  259.7549 
-## Model cost at call  123 :  259.7547 
-## Model cost at call  126 :  253.7973 
-## Model cost at call  128 :  253.7972 
-## Model cost at call  137 :  251.7358 
-## Model cost at call  139 :  251.7358 
-## Model cost at call  147 :  250.7394 
-## Model cost at call  149 :  250.7393 
-## Model cost at call  157 :  249.1148 
-## Model cost at call  159 :  249.1148 
-## Model cost at call  167 :  246.8768 
-## Model cost at call  169 :  246.8768 
-## Model cost at call  177 :  244.9758 
-## Model cost at call  179 :  244.9758 
-## Model cost at call  187 :  243.2914 
-## Model cost at call  189 :  243.2914 
-## Model cost at call  190 :  243.2914 
-## Model cost at call  194 :  243.2914 
-## Model cost at call  199 :  242.9202 
-## Model cost at call  201 :  242.9202 
-## Model cost at call  202 :  242.9202 
-## Model cost at call  209 :  242.7695 
-## Model cost at call  211 :  242.7695 
-## Model cost at call  216 :  242.7695 
-## Model cost at call  219 :  242.5771 
-## Model cost at call  221 :  242.5771 
-## Model cost at call  229 :  242.4402 
-## Model cost at call  231 :  242.4402 
-## Model cost at call  239 :  242.1878 
-## Model cost at call  241 :  242.1878 
-## Model cost at call  249 :  242.0553 
-## Model cost at call  251 :  242.0553 
-## Model cost at call  256 :  242.0553 
-## Model cost at call  259 :  241.8761 
-## Model cost at call  260 :  241.7412 
-## Model cost at call  261 :  241.6954 
-## Model cost at call  264 :  241.6954 
-## Model cost at call  275 :  241.5982 
-## Model cost at call  277 :  241.5982 
-## Model cost at call  285 :  241.5459 
-## Model cost at call  287 :  241.5459 
-## Model cost at call  295 :  241.4837 
-## Model cost at call  297 :  241.4837 
-## Model cost at call  305 :  241.3882 
-## Model cost at call  306 :  241.3161 
-## Model cost at call  307 :  241.2315 
-## Model cost at call  309 :  241.2315 
-## Model cost at call  314 :  241.2315 
-## Model cost at call  317 :  240.9738 
-## Model cost at call  322 :  240.9738 
-## Model cost at call  327 :  240.8244 
-## Model cost at call  329 :  240.8244 
-## Model cost at call  337 :  240.7005 
-## Model cost at call  339 :  240.7005 
-## Model cost at call  342 :  240.7005 
-## Model cost at call  347 :  240.629 
-## Model cost at call  350 :  240.629 
-## Model cost at call  357 :  240.6193 
-## Model cost at call  358 :  240.6193 
-## Model cost at call  364 :  240.6193 
-## Model cost at call  367 :  240.6193 
-## Model cost at call  369 :  240.5873 
-## Model cost at call  374 :  240.5873 
-## Model cost at call  380 :  240.578 
-## Model cost at call  382 :  240.578 
-## Model cost at call  390 :  240.5723 
-## Model cost at call  393 :  240.5723 
-## Model cost at call  403 :  240.569 
-## Model cost at call  404 :  240.569 
-## Model cost at call  413 :  240.569 
-## Model cost at call  415 :  240.5688 
-## Model cost at call  416 :  240.5688 
-## Model cost at call  417 :  240.5688 
-## Model cost at call  431 :  240.5686 
-## Model cost at call  432 :  240.5686 
-## Model cost at call  434 :  240.5686 
-## Model cost at call  443 :  240.5686 
-## Model cost at call  444 :  240.5686 
-## Model cost at call  447 :  240.5686 
-## Model cost at call  449 :  240.5686 
-## Model cost at call  450 :  240.5686 
-## Model cost at call  466 :  240.5686 
-## Model cost at call  470 :  240.5686 
-## Model cost at call  485 :  240.5686 
-## Model cost at call  509 :  240.5686 
-## Optimisation by method Port successfully terminated.
-```
-
-```r
 plot(fit3, show_residuals = TRUE) 
 ```
 
