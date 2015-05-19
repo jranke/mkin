@@ -10,7 +10,7 @@ if several compartments are involved.
 You can install the latest released version from 
 [CRAN](http://cran.r-project.org/package=mkin) from within R:
 
-```s
+```{r}
 install.packages("mkin")
 ```
 
@@ -19,7 +19,7 @@ If looking for the latest features, you can install directly from
 Using `quick = TRUE` skips docs, multiple-architecture builds, demos, and
 vignettes, to make installation as fast and painless as possible.
 
-```s
+```{r}
 require(devtools)
 install_github("jranke/mkin", quick = TRUE)
 ```
@@ -37,38 +37,44 @@ detailed guidance and helpful tools have been developed as detailed in
 The simplest usage example that I can think of, using model shorthand notation
 (available since mkin 0.9-32) and a built-in dataset is
 
-    library(mkin)
-    fit <- mkinfit("SFO", FOCUS_2006_C)
-    plot(fit, show_residuals = TRUE) 
-    summary(fit)
+```{r}
+library(mkin)
+fit <- mkinfit("SFO", FOCUS_2006_C)
+plot(fit, show_residuals = TRUE) 
+summary(fit)
+```
 
 A still very simple usage example including the definition of the same data in R
 code would be
 
-    example_data = data.frame(
-      name = rep("parent", 9),
-      time = c(0, 1, 3, 7, 14, 28, 63, 91, 119),
-      value = c(85.1, 57.9, 29.9, 14.6, 9.7, 6.6, 4, 3.9, 0.6)
-    )
-    fit2 <- mkinfit("FOMC", example_data)
-    plot(fit2, show_residuals = TRUE) 
+```{r}
+example_data = data.frame(
+  name = rep("parent", 9),
+  time = c(0, 1, 3, 7, 14, 28, 63, 91, 119),
+  value = c(85.1, 57.9, 29.9, 14.6, 9.7, 6.6, 4, 3.9, 0.6)
+)
+fit2 <- mkinfit("FOMC", example_data)
+plot(fit2, show_residuals = TRUE) 
+```
 
 A fairly complex usage example using another built-in dataset:
 
-    data <- mkin_wide_to_long(schaefer07_complex_case, time = "time")
+```{r}
+data <- mkin_wide_to_long(schaefer07_complex_case, time = "time")
 
-    model <- mkinmod(
-      parent = list(type = "SFO", to = c("A1", "B1", "C1"), sink = FALSE),
-      A1 = list(type = "SFO", to = "A2"),
-      B1 = list(type = "SFO"),
-      C1 = list(type = "SFO"),
-      A2 = list(type = "SFO"), use_of_ff = "max")
+model <- mkinmod(
+  parent = mkinsub("SFO", c("A1", "B1", "C1"), sink = FALSE),
+  A1 = mkinsub("SFO", "A2"),
+  B1 = mkinsub("SFO"),
+  C1 = mkinsub("SFO"),
+  A2 = mkinsub("SFO"), use_of_ff = "max")
 
-    fit3 <- mkinfit(model, data, method.modFit = "Port")
+fit3 <- mkinfit(model, data, method.modFit = "Port")
 
-    plot(fit3, show_residuals = TRUE) 
-    summary(fit3)
-    mkinparplot(fit3)
+plot(fit3, show_residuals = TRUE) 
+summary(fit3)
+mkinparplot(fit3)
+```
 
 For more examples and to see results, have a look at the examples provided in the
 [`mkinfit`](http://kinfit.r-forge.r-project.org/mkin_static/mkinfit.html)
