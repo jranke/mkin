@@ -237,36 +237,36 @@ fit <- mkinfit("FOMC", FOCUS_2006_C)
 summary(fit)
 
 # One parent compound, one metabolite, both single first order.
+# Use mkinsub for convenience in model formulation. Pathway to sink included per default.
 SFO_SFO <- mkinmod(
-  parent = list(type = "SFO", to = "m1", sink = TRUE),
-  m1 = list(type = "SFO"))
+  parent = mkinsub("SFO", "m1"),
+  m1 = mkinsub("SFO"))
 # Fit the model to the FOCUS example dataset D using defaults
-system.time(fit <- mkinfit(SFO_SFO, FOCUS_2006_D, 
-                           solution_type = "eigen"))
+print(system.time(fit <- mkinfit(SFO_SFO, FOCUS_2006_D, 
+                           solution_type = "eigen")))
 coef(fit)
 endpoints(fit)
 \dontrun{
-system.time(fit.deSolve <- mkinfit(SFO_SFO, FOCUS_2006_D, 
-                           solution_type = "deSolve"))
+# deSolve is slower when ccSolve is not installed and set up
+print(system.time(fit.deSolve <- mkinfit(SFO_SFO, FOCUS_2006_D, 
+                           solution_type = "deSolve")))
 coef(fit.deSolve)
 endpoints(fit.deSolve)
 }
 
 # Use stepwise fitting, using optimised parameters from parent only fit, FOMC
 \dontrun{
-FOMC <- mkinmod(parent = list(type = "FOMC"))
 FOMC_SFO <- mkinmod(
-  parent = list(type = "FOMC", to = "m1", sink = TRUE),
-  m1 = list(type = "SFO"))
+  parent = mkinsub("FOMC", "m1"),
+  m1 = mkinsub("SFO"))
 # Fit the model to the FOCUS example dataset D using defaults
 fit.FOMC_SFO <- mkinfit(FOMC_SFO, FOCUS_2006_D)
 # Use starting parameters from parent only FOMC fit
-fit.FOMC = mkinfit(FOMC, FOCUS_2006_D, plot=TRUE)
+fit.FOMC = mkinfit("FOMC", FOCUS_2006_D, plot=TRUE)
 fit.FOMC_SFO <- mkinfit(FOMC_SFO, FOCUS_2006_D, 
   parms.ini = fit.FOMC$bparms.ode, plot=TRUE)
 
 # Use stepwise fitting, using optimised parameters from parent only fit, SFORB
-SFORB <- mkinmod(parent = list(type = "SFORB"))
 SFORB_SFO <- mkinmod(
   parent = list(type = "SFORB", to = "m1", sink = TRUE),
   m1 = list(type = "SFO"))
@@ -274,14 +274,14 @@ SFORB_SFO <- mkinmod(
 fit.SFORB_SFO <- mkinfit(SFORB_SFO, FOCUS_2006_D)
 fit.SFORB_SFO.deSolve <- mkinfit(SFORB_SFO, FOCUS_2006_D, solution_type = "deSolve")
 # Use starting parameters from parent only SFORB fit (not really needed in this case)
-fit.SFORB = mkinfit(SFORB, FOCUS_2006_D)
+fit.SFORB = mkinfit("SFORB", FOCUS_2006_D)
 fit.SFORB_SFO <- mkinfit(SFORB_SFO, FOCUS_2006_D, parms.ini = fit.SFORB$bparms.ode)
 }
 
 \dontrun{
 # Weighted fits, including IRLS
-SFO_SFO.ff <- mkinmod(parent = list(type = "SFO", to = "m1"),
-                      m1 = list(type = "SFO"), use_of_ff = "max")
+SFO_SFO.ff <- mkinmod(parent = mkinsub("SFO", "m1"),
+                      m1 = mkinsub("SFO"), use_of_ff = "max")
 f.noweight <- mkinfit(SFO_SFO.ff, FOCUS_2006_D)
 summary(f.noweight)
 f.irls <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, reweight.method = "obs")

@@ -28,11 +28,14 @@ pkgfiles = NEWS \
 	   TODO \
 	   vignettes/*
 
-all: NEWS check clean
+all: check clean
 
 # convert markdown to R's NEWS format (from knitr package)
 NEWS: NEWS.md
 	sed -e 's/^-/ -/' -e 's/^## *//' -e 's/^#/\t\t/' <NEWS.md | fmt -80 >NEWS
+
+README.md: README.Rmd
+	"$(RBIN)/Rscript" -e 'require(knitr); knit("README.Rmd")'
 
 $(TGZ): $(pkgfiles)
 	cd ..;\

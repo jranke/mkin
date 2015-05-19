@@ -19,14 +19,15 @@
 context("Results for synthetic data established in expertise for UBA (Ranke 2014)")
 
 
-m_synth_SFO_lin <- mkinmod(parent = list(type = "SFO", to = "M1"),
-                           M1 = list(type = "SFO", to = "M2"),
-                           M2 = list(type = "SFO"), use_of_ff = "max", quiet = TRUE)
+m_synth_SFO_lin <- mkinmod(parent = mkinsub("SFO", "M1"),
+                           M1 = mkinsub("SFO", "M2"),
+                           M2 = mkinsub("SFO"),
+                           use_of_ff = "max", quiet = TRUE)
 
-
-m_synth_DFOP_par <- mkinmod(parent = list(type = "DFOP", to = c("M1", "M2")),
-                            M1 = list(type = "SFO"),
-                            M2 = list(type = "SFO"), use_of_ff = "max", quiet = TRUE)
+m_synth_DFOP_par <- mkinmod(parent = mkinsub("DFOP", c("M1", "M2")),
+                           M1 = mkinsub("SFO"),
+                           M2 = mkinsub("SFO"),
+                           use_of_ff = "max", quiet = TRUE)
 
 fit_SFO_lin_a <- mkinfit(m_synth_SFO_lin, 
                          synthetic_data_for_UBA_2014[[1]]$data, 

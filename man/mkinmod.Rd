@@ -77,12 +77,30 @@ mkinmod(..., use_of_ff = "min", speclist = NULL, quiet = FALSE)
   Johannes Ranke
 }
 \examples{
-# Specify the SFO model
+# Specify the SFO model (this is not needed any more, as we can now mkinfit("SFO", ...)
 SFO <- mkinmod(parent = list(type = "SFO"))
 
 # One parent compound, one metabolite, both single first order.
 SFO_SFO <- mkinmod(
+  parent = mkinsub("SFO", "m1"),
+  m1 = mkinsub("SFO"))
+
+# The above model used to be specified like this, before the advent of mkinsub()
+SFO_SFO <- mkinmod(
   parent = list(type = "SFO", to = "m1"),
   m1 = list(type = "SFO"))
+
+# If we have several parallel metabolites 
+# (compare tests/testthat/test_synthetic_data_for_UBA_2014.R)
+m_synth_DFOP_par <- mkinmod(parent = mkinsub("DFOP", c("M1", "M2")),
+                           M1 = mkinsub("SFO"),
+                           M2 = mkinsub("SFO"),
+                           use_of_ff = "max", quiet = TRUE)
+
+\dontrun{
+fit_DFOP_par_c <- mkinfit(m_synth_DFOP_par, 
+                          synthetic_data_for_UBA_2014[[12]]$data,
+                          quiet = TRUE)
+}
 }
 \keyword{ models }
