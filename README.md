@@ -89,10 +89,11 @@ documentation or the package vignettes referenced from the
   first-order (SFO) or SFORB kinetics are used in the model, or
   using a numeric solver from the `deSolve` package (default is `lsoda`).
   These have decreasing efficiency, and are automatically chosen 
-  by default. As of mkin 0.9-36, model solution for models with more than 
-  one state observed variable (not only parent) is based on the
+  by default. 
+* As of mkin 0.9-36, model solution for models with more than one observed
+  variable is based on the
   [`ccSolve`](https://github.com/karlines/ccSolve) package, if installed.
-  This is even faster than eigenvalue based solution, at least in the examples
+  This is even faster than eigenvalue based solution, at least in the example
   shown in the [vignette `compiled_models`](http://rawgit.com/jranke/mkin/master/vignettes/compiled_models.html)
 * Model optimisation with 
   [`mkinfit`](http://kinfit.r-forge.r-project.org/mkin_static/mkinfit.html)
