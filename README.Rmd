@@ -37,7 +37,7 @@ detailed guidance and helpful tools have been developed as detailed in
 The simplest usage example that I can think of, using model shorthand notation
 (available since mkin 0.9-32) and a built-in dataset is
 
-```{r}
+```{r, message = FALSE}
 library(mkin)
 fit <- mkinfit("SFO", FOCUS_2006_C, quiet = TRUE)
 plot(fit, show_residuals = TRUE) 
@@ -63,12 +63,12 @@ plot(fit2, show_residuals = TRUE)
 
 A fairly complex usage example using another built-in dataset:
 
-```{r echo = FALSE}
+```{r echo = FALSE, message = FALSE}
 # Somehow knitr does not find the signature() function
 require(methods)
 ```
 
-```{r}
+```{r, message = FALSE}
 data <- mkin_wide_to_long(schaefer07_complex_case, time = "time")
 
 model <- mkinmod(
@@ -78,7 +78,7 @@ model <- mkinmod(
   C1 = mkinsub("SFO"),
   A2 = mkinsub("SFO"), use_of_ff = "max")
 
-fit3 <- mkinfit(model, data, method.modFit = "Port")
+fit3 <- mkinfit(model, data, method.modFit = "Port", quiet = TRUE)
 
 plot(fit3, show_residuals = TRUE) 
 #summary(fit3) # Commented out to avoid distraction from README content
