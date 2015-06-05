@@ -77,6 +77,9 @@ test: install-no-vignettes
 vignettes/mkin.pdf: vignettes/mkin.Rnw
 	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/mkin.Rnw', dir = 'vignettes')"
 
+vignettes/FOCUS_D.html: vignettes/FOCUS_D.Rmd
+	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/FOCUS_D.Rmd', dir = 'vignettes')"
+
 vignettes/FOCUS_L.html: vignettes/FOCUS_L.Rmd
 	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/FOCUS_L.Rmd', dir = 'vignettes')"
 
@@ -86,7 +89,7 @@ vignettes/FOCUS_Z.pdf: vignettes/FOCUS_Z.Rnw
 vignettes/compiled_models.html: vignettes/compiled_models.Rmd
 	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/compiled_models.Rmd', dir = 'vignettes')"
 
-vignettes: vignettes/mkin.pdf vignettes/FOCUS_L.html vignettes/FOCUS_Z.pdf vignettes/compiled_models.html
+vignettes: vignettes/mkin.pdf vignettes/FOCUS_D.html vignettes/FOCUS_L.html vignettes/FOCUS_Z.pdf vignettes/compiled_models.html
 
 sd:
 	"$(RBIN)/Rscript" -e "library(staticdocs); build_site()"

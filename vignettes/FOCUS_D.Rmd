@@ -1,0 +1,66 @@
+<!--
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Simple Evaluation of FOCUS Example Dataset D}
+-->
+
+```{r, include = FALSE}
+library(knitr)
+library(methods)
+opts_chunk$set(tidy = FALSE, cache = FALSE)
+```
+# Example evaluation of FOCUS Example Dataset D
+
+This is just a very simple vignette showing how to fit a degradation model for a parent 
+compound with one transformation product using `mkin`.  After loading the
+library we look a the data. We have observed concentrations in the column named
+`value` at the times specified in column `time` for the two observed variables
+named `parent` and `m1`.
+
+
+```{r}
+library("mkin")
+print(FOCUS_2006_D)
+```
+
+Next we specify the degradation model: The parent compound degrades with simple first-order
+kinetics (SFO) to one metabolite named m1, which also degrades with SFO kinetics.
+
+The call to mkinmod returns a degradation model. The differential equations represented in 
+R code can be found in the character vector `$diffs` of the `mkinmod` object. If
+the `ccSolve` package is installed and functional, the differential equation model
+will be compiled from auto-generated C code.
+
+
+```{r}
+SFO_SFO <- mkinmod(parent = mkinsub("SFO", "m1"), m1 = mkinsub("SFO"))
+print(SFO_SFO$diffs)
+```
+
+We do the fitting without progress report (`quiet = TRUE`).
+
+
+```{r}
+fit <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE)
+```
+
+A plot of the fit including a residual plot for both observed variables is obtained
+using the `plot` method for `mkinfit` objects.
+
+```{r, fig.height = 7}
+plot(fit, show_residuals = TRUE)
+```
+
+Confidence intervals for the parameter estimates are obtained using the `mkinparplot` function.
+
+
+```{r}
+mkinparplot(fit)
+```
+
+A comprehensive report of the results is obtained using the `summary` method for `mkinfit`
+objects.
+
+
+```{r}
+summary(fit)
+```
