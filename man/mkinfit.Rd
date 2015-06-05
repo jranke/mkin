@@ -233,7 +233,7 @@ mkinfit(mkinmod, observed,
 }
 \examples{
 # Use shorthand notation for parent only degradation
-fit <- mkinfit("FOMC", FOCUS_2006_C)
+fit <- mkinfit("FOMC", FOCUS_2006_C, quiet = TRUE)
 summary(fit)
 
 # One parent compound, one metabolite, both single first order.
@@ -243,7 +243,7 @@ SFO_SFO <- mkinmod(
   m1 = mkinsub("SFO"))
 # Fit the model to the FOCUS example dataset D using defaults
 print(system.time(fit <- mkinfit(SFO_SFO, FOCUS_2006_D, 
-                           solution_type = "eigen")))
+                           solution_type = "eigen", quiet = TRUE)))
 coef(fit)
 endpoints(fit)
 \dontrun{
