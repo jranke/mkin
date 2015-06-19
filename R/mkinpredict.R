@@ -18,10 +18,11 @@
 # this program. If not, see <http://www.gnu.org/licenses/>
 
 mkinpredict <- function(mkinmod, odeparms, odeini, 
-			outtimes, solution_type = "deSolve", 
-      use_compiled = "auto",
-			method.ode = "lsoda", atol = 1e-8, rtol = 1e-10,
+			outtimes, solution_type = c("deSolve", "analytical", "eigen", "odeintr"),
+			method.ode = "lsoda", atol.deSolve = 1e-8, rtol.deSolve = 1e-10,
 			map_output = TRUE, ...) {
+
+  solution_type = match.arg(solution_type)
 
   # Get the names of the state variables in the model
   mod_vars <- names(mkinmod$diffs)
@@ -54,8 +55,8 @@ mkinpredict <- function(mkinmod, odeparms, odeini,
       IORE = IORE.solution(outtimes,
           evalparse(parent.name),
           ifelse(mkinmod$use_of_ff == "min", 
-	    evalparse(paste("k.iore", parent.name, "sink", sep="_")),
-	    evalparse(paste("k.iore", parent.name, sep="_"))),
+	    evalparse(paste("k__iore", parent.name, "sink", sep="_")),
+	    evalparse(paste("k__iore", parent.name, sep="_"))),
             evalparse("N_parent")),
       DFOP = DFOP.solution(outtimes,
           evalparse(parent.name),
@@ -88,36 +89,43 @@ mkinpredict <- function(mkinmod, odeparms, odeini,
     names(out) <- c("time", mod_vars)
   } 
   if (solution_type == "deSolve") {
-    if (!is.null(mkinmod$compiled) & use_compiled[1] != FALSE) {
-       mkindiff <- mkinmod$compiled
-     } else {
-       mkindiff <- function(t, state, parms) {
+     mkindiff <- function(t, state, parms) {
 
-        time <- t
-        diffs <- vector()
-        for (box in names(mkinmod$diffs))
-        {
-          diffname <- paste("d", box, sep="_")      
-          diffs[diffname] <- with(as.list(c(time, state, parms)),
-            eval(parse(text=mkinmod$diffs[[box]])))
-        }
-        return(list(c(diffs)))
+      time <- t
+      diffs <- vector()
+      for (box in names(mkinmod$diffs))
+      {
+        diffname <- paste("d", box, sep="_")      
+        diffs[diffname] <- with(as.list(c(time, state, parms)),
+          eval(parse(text=mkinmod$diffs[[box]])))
       }
-    } 
+      return(list(c(diffs)))
+    }
     out <- ode(
       y = odeini,
       times = outtimes,
       func = mkindiff, 
       parms = odeparms[mkinmod$parms], # Order matters when using compiled models
       method = method.ode,
-      atol = atol,
-      rtol = rtol,
+      atol = atol.deSolve,
+      rtol = rtol.deSolve,
       ...
     )
     if (sum(is.na(out)) > 0) {
       stop("Differential equations were not integrated for all output times because\n",
 	   "NaN values occurred in output from ode()")
       }
+  }
+  if (solution_type == "odeintr") {
+    if (is.null(mkinmod$e$m)) stop("Method odeintr can not be used as no compiled version of the model is available")
+    odeparms_argstring = ""
+    for (parname in names(odeparms)) {
+      odeparms_argstring = paste0(odeparms_argstring, parname, " = ", odeparms[parname], ", ")
+    }
+    odeparms_argstring = gsub(", $", "", odeparms_argstring)
+    with(as.list(odeparms_argstring), eval(parse(text=paste0("mkinmod$e$m_set_params(", odeparms_argstring, ")"))))
+    out <- mkinmod$e$m_at(init = odeini, times = outtimes)
+    names(out) <- c("time", names(mkinmod$diffs))
   }
   if (map_output) {
     # Output transformation for models with unobserved compartments like SFORB

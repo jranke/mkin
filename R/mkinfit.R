@@ -26,9 +26,8 @@ mkinfit <- function(mkinmod, observed,
   state.ini = "auto", 
   fixed_parms = NULL,
   fixed_initials = names(mkinmod$diffs)[-1],
-  solution_type = c("auto", "analytical", "eigen", "deSolve"),
+  solution_type = c("auto", "analytical", "eigen", "deSolve", "odeintr"),
   method.ode = "lsoda",
-  use_compiled = "auto",
   method.modFit = c("Port", "Marq", "SANN", "Nelder-Mead", "BFGS", "CG", "L-BFGS-B"),
   maxit.modFit = "auto",
   control.modFit = list(),
@@ -208,8 +207,7 @@ mkinfit <- function(mkinmod, observed,
   # Decide if the solution of the model can be based on a simple analytical
   # formula, the spectral decomposition of the matrix (fundamental system)
   # or a numeric ode solver from the deSolve package
-  # Prefer deSolve over eigen if a compiled model is present and use_compiled
-  # is not set to FALSE
+  # Prefer odeintr if a compiled model is present
   solution_type = match.arg(solution_type)
   if (solution_type == "analytical" && length(mkinmod$spec) > 1)
      stop("Analytical solution not implemented for models with metabolites.")
@@ -219,8 +217,11 @@ mkinfit <- function(mkinmod, observed,
     if (length(mkinmod$spec) == 1) {
       solution_type = "analytical"
     } else {
-      if (!is.null(mkinmod$compiled) & use_compiled[1] != FALSE) {
-        solution_type = "deSolve"
+      if (!is.null(mkinmod$e$m)) {
+        solution_type = "odeintr"
+        if (!missing(atol) | !missing(rtol)) {
+          message("When fitting with solution type odeintr, atol and rtol can only be set in the call to mkinmod()")
+        }
       } else {
         if (is.matrix(mkinmod$coefmat)) {
           solution_type = "eigen"
@@ -269,9 +270,8 @@ mkinfit <- function(mkinmod, observed,
     out <- mkinpredict(mkinmod, parms, 
                        odeini, outtimes, 
                        solution_type = solution_type, 
-                       use_compiled = use_compiled,
                        method.ode = method.ode,
-                       atol = atol, rtol = rtol, ...)
+                       atol.deSolve = atol, rtol.deSolve = rtol, ...)
 
     assign("out_predicted", out, inherits=TRUE)
 
@@ -289,9 +289,8 @@ mkinfit <- function(mkinmod, observed,
         out_plot <- mkinpredict(mkinmod, parms,
                                 odeini, outtimes_plot, 
                                 solution_type = solution_type, 
-                                use_compiled = use_compiled,
                                 method.ode = method.ode,
-                                atol = atol, rtol = rtol, ...)
+                                atol.deSolve = atol, rtol.deSolve = rtol, ...)
 
         plot(0, type="n", 
           xlim = range(observed$time), ylim = c(0, max(observed$value, na.rm=TRUE)),
@@ -319,8 +318,8 @@ mkinfit <- function(mkinmod, observed,
   if (!transform_rates) {
     index_k <- grep("^k_", names(lower))
     lower[index_k] <- 0
-    index_k.iore <- grep("^k.iore_", names(lower))
-    lower[index_k.iore] <- 0
+    index_k__iore <- grep("^k__iore_", names(lower))
+    lower[index_k__iore] <- 0
     other_rate_parms <- intersect(c("alpha", "beta", "k1", "k2", "tb"), names(lower))
     lower[other_rate_parms] <- 0
   }

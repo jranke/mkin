@@ -28,19 +28,22 @@ test_that("Variants of model predictions for SFO_SFO model give equivalent resul
   # and relative tolerance is thus not met
   tol = 0.01
   SFO_SFO.1 <- mkinmod(parent = list(type = "SFO", to = "m1"),
-         m1 = list(type = "SFO"), use_of_ff = "min", quiet = TRUE)
+         m1 = list(type = "SFO"), use_of_ff = "min", quiet = TRUE, odeintr_compile = "yes")
   SFO_SFO.2 <- mkinmod(parent = list(type = "SFO", to = "m1"),
          m1 = list(type = "SFO"), use_of_ff = "max", quiet = TRUE)
 
   ot = seq(0, 100, by = 1)
-  r.1.e <- subset(mkinpredict(SFO_SFO.1, 
-             c(k_parent_m1 = 0.1, k_parent_sink = 0.1, k_m1_sink = 0.1), 
-             c(parent = 100, m1 = 0), ot, solution_type = "eigen"), 
-                 time %in% c(1, 10, 50, 100))
-  r.1.d <- subset(mkinpredict(SFO_SFO.1, 
-             c(k_parent_m1 = 0.1, k_parent_sink = 0.1, k_m1_sink = 0.1), 
-             c(parent = 100, m1 = 0), ot, solution_type = "deSolve"), 
-                 time %in% c(1, 10, 50, 100))
+  test_parms = c(k_parent_m1 = 0.1, k_parent_sink = 0.1, k_m1_sink = 0.1) 
+  test_ini = c(parent = 100, m1 = 0)
+  r.1.e <- subset(mkinpredict(SFO_SFO.1, test_parms, test_ini, ot,
+                              solution_type = "eigen"), 
+                  time %in% c(1, 10, 50, 100))
+  r.1.d <- subset(mkinpredict(SFO_SFO.1, test_parms, test_ini, ot,
+                              solution_type = "deSolve"), 
+                  time %in% c(1, 10, 50, 100))
+  r.1.o <- subset(mkinpredict(SFO_SFO.1, test_parms, test_ini, ot,
+                              solution_type = "odeintr"), 
+                  time %in% c(1, 10, 50, 100))
 
   r.2.e <- subset(mkinpredict(SFO_SFO.2, c(k_parent = 0.2, f_parent_to_m1 = 0.5, k_m1 = 0.1), 
 	    c(parent = 100, m1 = 0), ot, solution_type = "eigen"),
@@ -54,6 +57,12 @@ test_that("Variants of model predictions for SFO_SFO model give equivalent resul
   dev.1.e_d.percent = as.numeric(unlist((dev.1.e_d.percent)))
   dev.1.e_d.percent = ifelse(is.na(dev.1.e_d.percent), 0, dev.1.e_d.percent)
   expect_equivalent(dev.1.e_d.percent < tol, rep(TRUE, length(dev.1.e_d.percent)))
+
+  # Compare eigen and odeintr for minimum use of formation fractions
+  dev.1.e_o.percent = 100 * (r.1.e[-1] - r.1.o[-1])/r.1.e[-1]
+  dev.1.e_o.percent = as.numeric(unlist((dev.1.e_o.percent)))
+  dev.1.e_o.percent = ifelse(is.na(dev.1.e_o.percent), 0, dev.1.e_o.percent)
+  expect_equivalent(dev.1.e_o.percent < tol, rep(TRUE, length(dev.1.e_o.percent)))
 
   # Compare eigen and deSolve for maximum use of formation fractions
   dev.2.e_d.percent = 100 * (r.1.e[-1] - r.1.d[-1])/r.1.e[-1]

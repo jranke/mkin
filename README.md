@@ -121,7 +121,7 @@ documentation or the package vignettes referenced from the
   by default. 
 * As of mkin 0.9-36, model solution for models with more than one observed
   variable is based on the
-  [`ccSolve`](https://github.com/karlines/ccSolve) package, if installed.
+  [`odeintr`](http://cran.r-project.org/package=odeintr) package, if installed.
   This is even faster than eigenvalue based solution, at least in the example
   shown in the [vignette `compiled_models`](http://rawgit.com/jranke/mkin/master/vignettes/compiled_models.html)
 * Model optimisation with 

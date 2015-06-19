@@ -16,11 +16,16 @@
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/> }}}
 
-mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE)
+mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE,
+                    odeintr_compile = c("auto", "no", "yes"),
+                    odeintr_method = "rk5_i",
+                    odeintr_atol = 1e-8, odeintr_rtol = 1e-10)
 {
   if (is.null(speclist)) spec <- list(...)
   else spec <- speclist
   obs_vars <- names(spec)
+
+  odeintr_compile <- match.arg(odeintr_compile)
 
   # Check if any of the names of the observed variables contains any other
   for (obs_var in obs_vars) {
@@ -99,7 +104,7 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE)
           # If sink is required, add first-order/IORE sink term
           k_compound_sink <- paste("k", box_1, "sink", sep = "_")
           if(spec[[varname]]$type == "IORE") {
-            k_compound_sink <- paste("k.iore", box_1, "sink", sep = "_")
+            k_compound_sink <- paste("k__iore", box_1, "sink", sep = "_")
           }
           parms <- c(parms, k_compound_sink)
           decline_term <- paste(k_compound_sink, "*", box_1)
@@ -114,7 +119,7 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE)
       } else {
         k_compound <- paste("k", box_1, sep = "_")
         if(spec[[varname]]$type == "IORE") {
-          k_compound <- paste("k.iore", box_1, sep = "_")
+          k_compound <- paste("k__iore", box_1, sep = "_")
         }
         parms <- c(parms, k_compound)
         decline_term <- paste(k_compound, "*", box_1)
@@ -127,17 +132,18 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE)
     } #}}}
     if(spec[[varname]]$type == "FOMC") { # {{{ Add FOMC decline term
       # From p. 53 of the FOCUS kinetics report, without the power function so it works in C
-      decline_term <- paste("(alpha/beta) * 1/((time/beta) + 1) *", box_1)
+      decline_term <- paste("(alpha/beta) * 1/(( time /beta) + 1) *", box_1)
       parms <- c(parms, "alpha", "beta")
     } #}}}
     if(spec[[varname]]$type == "DFOP") { # {{{ Add DFOP decline term
       # From p. 57 of the FOCUS kinetics report
-      decline_term <- paste("((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 * time)) / (g * exp(-k1 * time) + (1 - g) * exp(-k2 * time))) *", box_1)
+      decline_term <- paste("((k1 * g * exp(-k1 * time ) + k2 * (1 - g) * exp(-k2 * time )) / (g * exp(-k1 * time ) + (1 - g) * exp(-k2 * time ))) *", box_1)
       parms <- c(parms, "k1", "k2", "g")
     } #}}}
+    HS_decline <- "ifelse(time <= tb, k1, k2)" # Used below for automatic translation to C++
     if(spec[[varname]]$type == "HS") { # {{{ Add HS decline term
       # From p. 55 of the FOCUS kinetics report
-      decline_term <- paste("ifelse(time <= tb, k1, k2)", "*", box_1)
+      decline_term <- paste(HS_decline, "*", box_1)
       parms <- c(parms, "k1", "k2", "tb")
     } #}}}
     # Add origin decline term to box 1 (usually the only box, unless type is SFORB)#{{{
@@ -272,35 +278,58 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE)
     model$coefmat <- m
   }#}}}
 
-  # Create a function compiled from C code if more than one observed variable and ccSolve is available #{{{
-  if (length(obs_vars) > 1 & requireNamespace("ccSolve", quietly = TRUE)) {
-    diffs.C <- paste(diffs, collapse = ";\n")
-    diffs.C <- paste0(diffs.C, ";")
-    for (i in seq_along(diffs)) {
-      obs_var <- names(diffs)[i]
+  # Try to create a function compiled from C code if more than one observed variable and g++ can be called #{{{
+  if (length(obs_vars) > 1) {
+    try(gcc_version <- system("g++ -v 2>&1", intern = TRUE))
+    if (!inherits(gcc_version, "try-error") & odeintr_compile != "no") {
 
-      # Replace d_... terms by f[i-1]
-      # First line
-      pattern <- paste0("^d_", obs_var)
-      replacement <- paste0("\nf[", i - 1, "]")
-      diffs.C <- gsub(pattern, replacement, diffs.C)
-      # Other lines
-      pattern <- paste0("\\nd_", obs_var)
-      replacement <- paste0("\nf[", i - 1, "]")
-      diffs.C <- gsub(pattern, replacement, diffs.C)
+      if ((odeintr_compile == "auto" & mat == FALSE) | odeintr_compile == "yes") {
+        # HS
+        diffs <- gsub(HS_decline, "(t <= tb ? k1 : k2)", diffs, fixed = TRUE)
 
-      # Replace names of observed variables by y[i],
-      # making the implicit assumption that the observed variables only occur after "* "
-      pattern <- paste0("\\* ", obs_var)
-      replacement <- paste0("* y[", i - 1, "]")
-      diffs.C <- gsub(pattern, replacement, diffs.C)
-    }
-    if (sum(sapply(spec, function(x) x$type %in% 
-                   c("SFO", "FOMC", "DFOP", "SFORB"))) == length(spec)) {
-      if (!quiet) message("Compiling differential equation model from auto-generated C code...")
-      model$compiled <- ccSolve::compile.ode(diffs.C, language = "C", 
-                                             parms = parms, 
-                                             declaration = "double time = *t;")
+        diffs.C <- paste(diffs, collapse = ";\n")
+        diffs.C <- paste0(diffs.C, ";")
+
+        for (i in seq_along(diffs)) {
+          state_var <- names(diffs)[i]
+
+          # IORE
+          if (state_var %in% obs_vars) {
+            if (spec[[state_var]]$type == "IORE") {
+              diffs.C <- gsub(paste0(state_var, "^N_", state_var), 
+                              paste0("pow(x[", i - 1, "], N_", state_var, ")"), 
+                              diffs.C, fixed = TRUE)
+            }
+          }
+
+          # Replace d_... terms by dxdt[i-1]
+          # First line
+          pattern <- paste0("^d_", state_var)
+          replacement <- paste0("\ndxdt[", i - 1, "]")
+          diffs.C <- gsub(pattern, replacement, diffs.C)
+          # Other lines
+          pattern <- paste0("\\nd_", state_var)
+          replacement <- paste0("\ndxdt[", i - 1, "]")
+          diffs.C <- gsub(pattern, replacement, diffs.C)
+
+          # Replace names of observed variables by x[i],
+          # making the implicit assumption that the observed variables only occur after "* "
+          pattern <- paste0("\\* ", state_var)
+          replacement <- paste0("* x[", i - 1, "]")
+          diffs.C <- gsub(pattern, replacement, diffs.C)
+
+          # Handle time, which needs to be enclosed by spaces (except for HS which is handled separately)
+          diffs.C <- gsub(" time ", " t ", diffs.C)
+        }
+        if (!quiet) message("Compiling differential equation model from auto-generated C++ code...")
+        model$e <- new.env()
+        model$e$code <- try(compile_sys("m", diffs.C, pars = parms, method = odeintr_method, 
+                                        atol = odeintr_atol, rtol = odeintr_rtol, env = model$e))
+
+        if (inherits(model$e$code, "try-error")) {
+          if (!quiet) message("Compilation failed, model solution will be slower than necessary")
+        }
+      }
     }
   }
   # }}}

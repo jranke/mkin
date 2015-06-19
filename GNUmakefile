@@ -26,7 +26,8 @@ pkgfiles = NEWS \
 	   tests/* \
 	   tests/testthat* \
 	   TODO \
-	   vignettes/*
+	   vignettes/*.Rmd \
+		 vignettes/*.Rnw
 
 all: check clean
 

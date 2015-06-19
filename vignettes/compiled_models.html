@@ -77,37 +77,30 @@ img {
 -->
 <div id="benchmark-for-a-model-that-can-also-be-solved-with-eigenvalues" class="section level1">
 <h1>Benchmark for a model that can also be solved with Eigenvalues</h1>
-<p>This evaluation is taken from the example section of mkinfit. When using an mkin version greater than 0.9-36 and the ccSolve package is installed and functional, you will get a message that the model is being compiled when defining a model using mkinmod.</p>
+<p>This evaluation is taken from the example section of mkinfit. When using an mkin version greater or equal than 0.9-36 and the C++ compiler g++ is installed and functional (on Windows, install Rtools), you will get a message that the model is being compiled when defining a model using mkinmod.</p>
 <pre class="r"><code>library(&quot;mkin&quot;)
 SFO_SFO &lt;- mkinmod(
   parent = list(type = &quot;SFO&quot;, to = &quot;m1&quot;, sink = TRUE),
-  m1 = list(type = &quot;SFO&quot;))</code></pre>
-<pre><code>## Compiling differential equation model from auto-generated C code...</code></pre>
+  m1 = list(type = &quot;SFO&quot;), odeintr_compile = &quot;yes&quot;)</code></pre>
+<pre><code>## Compiling differential equation model from auto-generated C++ code...</code></pre>
 <p>We can compare the performance of the Eigenvalue based solution against the compiled version and the R implementation of the differential equations using the microbenchmark package.</p>
-<pre class="r"><code>library(&quot;microbenchmark&quot;)
-mb.1 &lt;- microbenchmark(
-  mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = &quot;deSolve&quot;, use_compiled = FALSE, 
-          quiet = TRUE),
-  mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = &quot;eigen&quot;, quiet = TRUE),
-  mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = &quot;deSolve&quot;, quiet = TRUE),
-  times = 3, control = list(warmup = 1))
-smb.1 &lt;- summary(mb.1)[-1]
-rownames(smb.1) &lt;- c(&quot;deSolve, not compiled&quot;, &quot;Eigenvalue based&quot;, &quot;deSolve, compiled&quot;)
+<pre class="r"><code>smb.1 &lt;- summary(mb.1)[-1]
+rownames(smb.1) &lt;- c(&quot;deSolve, not compiled&quot;, &quot;Eigenvalue based&quot;, &quot;odeintr, compiled&quot;)
 print(smb.1)</code></pre>
 <pre><code>##                             min        lq      mean    median        uq
-## deSolve, not compiled 6192.0125 6195.3470 6211.0309 6198.6816 6220.5401
-## Eigenvalue based       956.7604 1008.7224 1026.2572 1060.6844 1061.0055
-## deSolve, compiled      869.6880  871.9315  883.4929  874.1751  890.3953
+## deSolve, not compiled 5254.1030 5261.3501 5277.1074 5268.5973 5288.6096
+## Eigenvalue based       897.1575  921.6935  930.9546  946.2296  947.8531
+## odeintr, compiled      693.6001  709.0719  719.5530  724.5438  732.5295
 ##                             max neval
-## deSolve, not compiled 6242.3986     3
-## Eigenvalue based      1061.3266     3
-## deSolve, compiled      906.6155     3</code></pre>
-<p>We see that using the compiled model is almost a factor of 8 faster than using the R version with the default ode solver, and it is even faster than the Eigenvalue based solution implemented in R which does not need iterative solution of the ODEs:</p>
-<pre class="r"><code>smb.1[&quot;median&quot;]/smb.1[&quot;deSolve, compiled&quot;, &quot;median&quot;]</code></pre>
+## deSolve, not compiled 5308.6218     3
+## Eigenvalue based       949.4766     3
+## odeintr, compiled      740.5151     3</code></pre>
+<p>We see that using the compiled model is more than a factor of 7 faster than using the R version with the default ode solver, and it is even faster than the Eigenvalue based solution implemented in R which does not need iterative solution of the ODEs:</p>
+<pre class="r"><code>smb.1[&quot;median&quot;]/smb.1[&quot;odeintr, compiled&quot;, &quot;median&quot;]</code></pre>
 <pre><code>##                         median
-## deSolve, not compiled 7.120877
-## Eigenvalue based      1.205328
-## deSolve, compiled     1.000000</code></pre>
+## deSolve, not compiled 7.290796
+## Eigenvalue based      1.370242
+## odeintr, compiled     1.000000</code></pre>
 </div>
 <div id="benchmark-for-a-model-that-can-not-be-solved-with-eigenvalues" class="section level1">
 <h1>Benchmark for a model that can not be solved with Eigenvalues</h1>
@@ -115,25 +108,25 @@ print(smb.1)</code></pre>
 <pre class="r"><code>FOMC_SFO &lt;- mkinmod(
   parent = list(type = &quot;FOMC&quot;, to = &quot;m1&quot;, sink = TRUE),
   m1 = list(type = &quot;SFO&quot;))</code></pre>
-<pre><code>## Compiling differential equation model from auto-generated C code...</code></pre>
+<pre><code>## Compiling differential equation model from auto-generated C++ code...</code></pre>
 <pre class="r"><code>mb.2 &lt;- microbenchmark(
-  mkinfit(FOMC_SFO, FOCUS_2006_D, use_compiled = FALSE, quiet = TRUE),
-  mkinfit(FOMC_SFO, FOCUS_2006_D, quiet = TRUE),
+  mkinfit(FOMC_SFO, FOCUS_2006_D, solution_type = &quot;deSolve&quot;, quiet = TRUE),
+  mkinfit(FOMC_SFO, FOCUS_2006_D, solution_type = &quot;odeintr&quot;, quiet = TRUE),
   times = 3, control = list(warmup = 1))
 smb.2 &lt;- summary(mb.2)[-1]
-rownames(smb.2) &lt;- c(&quot;deSolve, not compiled&quot;, &quot;deSolve, compiled&quot;)
+rownames(smb.2) &lt;- c(&quot;deSolve, not compiled&quot;, &quot;odeintr, compiled&quot;)
 print(smb.2)</code></pre>
 <pre><code>##                             min        lq      mean    median        uq
-## deSolve, not compiled 13.297283 13.427702 13.481155 13.558121 13.573092
-## deSolve, compiled      1.486926  1.526887  1.546851  1.566848  1.576813
+## deSolve, not compiled 11.243675 11.324875 11.382415 11.406074 11.451785
+## odeintr, compiled      1.207114  1.209908  1.239989  1.212703  1.256426
 ##                             max neval
-## deSolve, not compiled 13.588063     3
-## deSolve, compiled      1.586778     3</code></pre>
-<pre class="r"><code>smb.2[&quot;median&quot;]/smb.2[&quot;deSolve, compiled&quot;, &quot;median&quot;]</code></pre>
+## deSolve, not compiled 11.497496     3
+## odeintr, compiled      1.300149     3</code></pre>
+<pre class="r"><code>smb.2[&quot;median&quot;]/smb.2[&quot;odeintr, compiled&quot;, &quot;median&quot;]</code></pre>
 <pre><code>##                         median
-## deSolve, not compiled 8.653119
-## deSolve, compiled     1.000000</code></pre>
-<p>Here we get a performance benefit of more than a factor of 8 using the version of the differential equation model compiled from C code using the ccSolve package!</p>
+## deSolve, not compiled 9.405494
+## odeintr, compiled     1.000000</code></pre>
+<p>Here we get a performance benefit of more than a factor of 8 using the version of the differential equation model compiled from C++ code using the odeintr package!</p>
 </div>
 
 
