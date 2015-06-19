@@ -50,7 +50,7 @@ endpoints <- function(fit) {
       ep$distimes[obs_var, c("DT50back")] = DT50_back
     }
     if (type == "IORE") {
-      k_names = grep(paste("k.iore", obs_var, sep="_"), names(parms.all), value=TRUE)
+      k_names = grep(paste("k__iore", obs_var, sep="_"), names(parms.all), value=TRUE)
       k_tot = sum(parms.all[k_names])
       # From the NAFTA kinetics guidance, p. 5
       n = parms.all[paste("N", obs_var, sep = "_")]

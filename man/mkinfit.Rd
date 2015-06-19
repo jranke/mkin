@@ -247,7 +247,7 @@ print(system.time(fit <- mkinfit(SFO_SFO, FOCUS_2006_D,
 coef(fit)
 endpoints(fit)
 \dontrun{
-# deSolve is slower when ccSolve is not installed and set up
+# deSolve is slower when the gcc compiler is not available
 print(system.time(fit.deSolve <- mkinfit(SFO_SFO, FOCUS_2006_D, 
                            solution_type = "deSolve")))
 coef(fit.deSolve)

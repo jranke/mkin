@@ -219,7 +219,7 @@ mkinfit <- function(mkinmod, observed,
     if (length(mkinmod$spec) == 1) {
       solution_type = "analytical"
     } else {
-      if (!is.null(mkinmod$compiled) & use_compiled[1] != FALSE) {
+      if (!is.null(mkinmod$cf) & use_compiled[1] != FALSE) {
         solution_type = "deSolve"
       } else {
         if (is.matrix(mkinmod$coefmat)) {
@@ -319,8 +319,8 @@ mkinfit <- function(mkinmod, observed,
   if (!transform_rates) {
     index_k <- grep("^k_", names(lower))
     lower[index_k] <- 0
-    index_k.iore <- grep("^k.iore_", names(lower))
-    lower[index_k.iore] <- 0
+    index_k__iore <- grep("^k__iore_", names(lower))
+    lower[index_k__iore] <- 0
     other_rate_parms <- intersect(c("alpha", "beta", "k1", "k2", "tb"), names(lower))
     lower[other_rate_parms] <- 0
   }

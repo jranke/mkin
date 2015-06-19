@@ -54,8 +54,8 @@ mkinpredict <- function(mkinmod, odeparms, odeini,
       IORE = IORE.solution(outtimes,
           evalparse(parent.name),
           ifelse(mkinmod$use_of_ff == "min", 
-	    evalparse(paste("k.iore", parent.name, "sink", sep="_")),
-	    evalparse(paste("k.iore", parent.name, sep="_"))),
+	    evalparse(paste("k__iore", parent.name, "sink", sep="_")),
+	    evalparse(paste("k__iore", parent.name, sep="_"))),
             evalparse("N_parent")),
       DFOP = DFOP.solution(outtimes,
           evalparse(parent.name),
@@ -88,10 +88,21 @@ mkinpredict <- function(mkinmod, odeparms, odeini,
     names(out) <- c("time", mod_vars)
   } 
   if (solution_type == "deSolve") {
-    if (!is.null(mkinmod$compiled) & use_compiled[1] != FALSE) {
-       mkindiff <- mkinmod$compiled
-     } else {
-       mkindiff <- function(t, state, parms) {
+    if (!is.null(mkinmod$cf) & use_compiled[1] != FALSE) {
+      out <- ode(
+        y = odeini,
+        times = outtimes,
+        func = "func",
+        initfunc = "initpar",
+        dllname = getDynLib(mkinmod$cf)[["name"]],
+        parms = odeparms[mkinmod$parms], # Order matters when using compiled models
+        method = method.ode,
+        atol = atol,
+        rtol = rtol,
+        ...
+      )
+    } else {
+      mkindiff <- function(t, state, parms) {
 
         time <- t
         diffs <- vector()
@@ -103,17 +114,17 @@ mkinpredict <- function(mkinmod, odeparms, odeini,
         }
         return(list(c(diffs)))
       }
+      out <- ode(
+        y = odeini,
+        times = outtimes,
+        func = mkindiff, 
+        parms = odeparms,
+        method = method.ode,
+        atol = atol,
+        rtol = rtol,
+        ...
+      )
     } 
-    out <- ode(
-      y = odeini,
-      times = outtimes,
-      func = mkindiff, 
-      parms = odeparms[mkinmod$parms], # Order matters when using compiled models
-      method = method.ode,
-      atol = atol,
-      rtol = rtol,
-      ...
-    )
     if (sum(is.na(out)) > 0) {
       stop("Differential equations were not integrated for all output times because\n",
 	   "NaN values occurred in output from ode()")

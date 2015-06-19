@@ -7,12 +7,12 @@
   a concentration dependent rate constant.
 }
 \usage{
-  IORE.solution(t, parent.0, k.iore, N)
+  IORE.solution(t, parent.0, k__iore, N)
 }
 \arguments{
   \item{t}{ Time. }
   \item{parent.0}{ Starting value for the response variable at time zero. }
-  \item{k.iore}{ Rate constant. Note that this depends on the concentration units used. }
+  \item{k__iore}{ Rate constant. Note that this depends on the concentration units used. }
   \item{N}{ Exponent describing the nonlinearity of the rate equation } 
 }
 \note{

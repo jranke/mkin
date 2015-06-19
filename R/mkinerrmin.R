@@ -61,8 +61,8 @@ mkinerrmin <- function(fit, alpha = 0.05)
     n.k.optim <- length(grep(paste("^k", obs_var, sep="_"), names(parms.optim)))
     n.k.optim <- n.k.optim + length(grep(paste("^log_k", obs_var, sep="_"), 
                                          names(parms.optim)))
-    n.k.iore.optim <- length(grep(paste("^k.iore", obs_var, sep="_"), names(parms.optim)))
-    n.k.iore.optim <- n.k.iore.optim + length(grep(paste("^log_k.iore", obs_var, 
+    n.k__iore.optim <- length(grep(paste("^k__iore", obs_var, sep="_"), names(parms.optim)))
+    n.k__iore.optim <- n.k__iore.optim + length(grep(paste("^log_k__iore", obs_var, 
 							 sep = "_"),
 						   names(parms.optim)))
 
@@ -82,7 +82,7 @@ mkinerrmin <- function(fit, alpha = 0.05)
       }
     }
 
-    n.optim <- sum(n.initials.optim, n.k.optim, n.k.iore.optim, n.N.optim, n.ff.optim)
+    n.optim <- sum(n.initials.optim, n.k.optim, n.k__iore.optim, n.N.optim, n.ff.optim)
 
     # FOMC, DFOP and HS parameters are only counted if we are looking at the
     # first variable in the model which is always the source variable

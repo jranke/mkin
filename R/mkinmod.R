@@ -36,8 +36,8 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE)
   # differential equations (if supported), parameter names and a mapping from
   # model variables to observed variables. If possible, a matrix representation
   # of the differential equations is included
-  # Compiling the functions from the C code generated below using the ccSolve package
-  # only works if the implicit assumption about differential equations specified below
+  # Compiling the functions from the C code generated below only works if the
+  # implicit assumption about differential equations specified below
   # is satisfied
   parms <- vector()
   # }}}
@@ -99,7 +99,7 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE)
           # If sink is required, add first-order/IORE sink term
           k_compound_sink <- paste("k", box_1, "sink", sep = "_")
           if(spec[[varname]]$type == "IORE") {
-            k_compound_sink <- paste("k.iore", box_1, "sink", sep = "_")
+            k_compound_sink <- paste("k__iore", box_1, "sink", sep = "_")
           }
           parms <- c(parms, k_compound_sink)
           decline_term <- paste(k_compound_sink, "*", box_1)
@@ -114,7 +114,7 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE)
       } else {
         k_compound <- paste("k", box_1, sep = "_")
         if(spec[[varname]]$type == "IORE") {
-          k_compound <- paste("k.iore", box_1, sep = "_")
+          k_compound <- paste("k__iore", box_1, sep = "_")
         }
         parms <- c(parms, k_compound)
         decline_term <- paste(k_compound, "*", box_1)
@@ -135,9 +135,10 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE)
       decline_term <- paste("((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 * time)) / (g * exp(-k1 * time) + (1 - g) * exp(-k2 * time))) *", box_1)
       parms <- c(parms, "k1", "k2", "g")
     } #}}}
+    HS_decline <- "ifelse(time <= tb, k1, k2)" # Used below for automatic translation to C
     if(spec[[varname]]$type == "HS") { # {{{ Add HS decline term
       # From p. 55 of the FOCUS kinetics report
-      decline_term <- paste("ifelse(time <= tb, k1, k2)", "*", box_1)
+      decline_term <- paste(HS_decline, "*", box_1)
       parms <- c(parms, "k1", "k2", "tb")
     } #}}}
     # Add origin decline term to box 1 (usually the only box, unless type is SFORB)#{{{
@@ -272,35 +273,65 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE)
     model$coefmat <- m
   }#}}}
 
-  # Create a function compiled from C code if more than one observed variable and ccSolve is available #{{{
-  if (length(obs_vars) > 1 & requireNamespace("ccSolve", quietly = TRUE)) {
-    diffs.C <- paste(diffs, collapse = ";\n")
-    diffs.C <- paste0(diffs.C, ";")
-    for (i in seq_along(diffs)) {
-      obs_var <- names(diffs)[i]
+  # Create a function compiled from C code if more than one observed variable and gcc is available #{{{
+  if (length(obs_vars) > 1) {
+    if (Sys.which("gcc") != "") {
 
-      # Replace d_... terms by f[i-1]
-      # First line
-      pattern <- paste0("^d_", obs_var)
-      replacement <- paste0("\nf[", i - 1, "]")
-      diffs.C <- gsub(pattern, replacement, diffs.C)
-      # Other lines
-      pattern <- paste0("\\nd_", obs_var)
-      replacement <- paste0("\nf[", i - 1, "]")
-      diffs.C <- gsub(pattern, replacement, diffs.C)
+      diffs.C <- paste(diffs, collapse = ";\n")
+      diffs.C <- paste0(diffs.C, ";")
 
-      # Replace names of observed variables by y[i],
-      # making the implicit assumption that the observed variables only occur after "* "
-      pattern <- paste0("\\* ", obs_var)
-      replacement <- paste0("* y[", i - 1, "]")
-      diffs.C <- gsub(pattern, replacement, diffs.C)
-    }
-    if (sum(sapply(spec, function(x) x$type %in% 
-                   c("SFO", "FOMC", "DFOP", "SFORB"))) == length(spec)) {
+      # HS
+      diffs.C <- gsub(HS_decline, "(time <= tb ? k1 : k2)", diffs.C, fixed = TRUE)
+
+      for (i in seq_along(diffs)) {
+        state_var <- names(diffs)[i]
+
+        # IORE
+        if (state_var %in% obs_vars) {
+          if (spec[[state_var]]$type == "IORE") {
+            diffs.C <- gsub(paste0(state_var, "^N_", state_var),
+                            paste0("pow(y[", i - 1, "], N_", state_var, ")"),
+                            diffs.C, fixed = TRUE)
+          }
+        }
+
+        # Replace d_... terms by f[i-1]
+        # First line
+        pattern <- paste0("^d_", state_var)
+        replacement <- paste0("\nf[", i - 1, "]")
+        diffs.C <- gsub(pattern, replacement, diffs.C)
+        # Other lines
+        pattern <- paste0("\\nd_", state_var)
+        replacement <- paste0("\nf[", i - 1, "]")
+        diffs.C <- gsub(pattern, replacement, diffs.C)
+
+        # Replace names of observed variables by y[i],
+        # making the implicit assumption that the observed variables only occur after "* "
+        pattern <- paste0("\\* ", state_var)
+        replacement <- paste0("* y[", i - 1, "]")
+        diffs.C <- gsub(pattern, replacement, diffs.C)
+      }
+
       if (!quiet) message("Compiling differential equation model from auto-generated C code...")
-      model$compiled <- ccSolve::compile.ode(diffs.C, language = "C", 
-                                             parms = parms, 
-                                             declaration = "double time = *t;")
+
+      npar <- length(parms)
+
+      initpar_code <- paste0(
+        "static double parms [", npar, "];\n",
+        paste0("#define ", parms, " parms[", 0:(npar - 1), "]\n", collapse = ""),
+        "\n",
+        "void initpar(void (* odeparms)(int *, double *)) {\n",
+        "    int N = ", npar, ";\n",
+        "    odeparms(&N, parms);\n",
+        "}\n\n")
+
+      derivs_code <- paste0("double time = *t;\n", diffs.C)
+      derivs_sig <- signature(n = "integer", t = "numeric", y = "numeric",
+                              f = "numeric", rpar = "numeric", ipar = "integer")
+
+      model$cf <- cfunction(list(func = derivs_sig), derivs_code,
+                            otherdefs = initpar_code,
+                            convention = ".C", language = "C")
     }
   }
   # }}}
