@@ -144,6 +144,8 @@ documentation or the package vignettes referenced from the
   not include meaningless values like negative rate constants or 
   formation fractions adding up to more than 1, which can not occur in 
   a single experiment with a single defined radiolabel position.
+* The usual one-sided t-test for significant difference from zero is nevertheless
+  shown based on estimators for the untransformed parameters.
 * Summary and plotting functions. The `summary` of an `mkinfit` object is in
   fact a full report that should give enough information to be able to
   approximately reproduce the fit with other tools.
