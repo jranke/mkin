@@ -273,7 +273,8 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE)
     model$coefmat <- m
   }#}}}
 
-  # Create a function compiled from C code if more than one observed variable and gcc is available #{{{
+  # Create a function compiled from C code if more than one observed {{{
+  # variable and gcc is available
   if (length(obs_vars) > 1) {
     if (Sys.which("gcc") != "") {
 
@@ -331,6 +332,7 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE)
 
       model$cf <- cfunction(list(func = derivs_sig), derivs_code,
                             otherdefs = initpar_code,
+                            cppargs = "-Wno-unused-variable",
                             convention = ".C", language = "C")
     }
   }
