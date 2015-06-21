@@ -94,20 +94,20 @@ mb.1 &lt;- microbenchmark(
 smb.1 &lt;- summary(mb.1)[-1]
 rownames(smb.1) &lt;- c(&quot;deSolve, not compiled&quot;, &quot;Eigenvalue based&quot;, &quot;deSolve, compiled&quot;)
 print(smb.1)</code></pre>
-<pre><code>##                            min        lq      mean    median        uq
-## deSolve, not compiled 4969.585 5033.7311 5092.7389 5097.8773 5154.3160
-## Eigenvalue based       868.731  891.7239  909.6449  914.7169  930.1018
-## deSolve, compiled     4935.049 4935.4796 4968.2150 4935.9097 4984.7978
+<pre><code>##                             min        lq      mean    median        uq
+## deSolve, not compiled 6980.8002 6996.4739 7024.5611 7012.1476 7046.4415
+## Eigenvalue based       925.3350  928.9405  951.8405  932.5460  965.0932
+## deSolve, compiled      747.2635  761.9405  771.4339  776.6174  783.5191
 ##                             max neval
-## deSolve, not compiled 5210.7547     3
-## Eigenvalue based       945.4867     3
-## deSolve, compiled     5033.6858     3</code></pre>
-<p>We see that using the compiled model is almost a factor of 8 faster than using the R version with the default ode solver, and it is even faster than the Eigenvalue based solution implemented in R which does not need iterative solution of the ODEs:</p>
+## deSolve, not compiled 7080.7354     3
+## Eigenvalue based       997.6404     3
+## deSolve, compiled      790.4207     3</code></pre>
+<p>We see that using the compiled model is by a factor of 9 faster than using the R version with the default ode solver, and it is even faster than the Eigenvalue based solution implemented in R which does not need iterative solution of the ODEs:</p>
 <pre class="r"><code>smb.1[&quot;median&quot;]/smb.1[&quot;deSolve, compiled&quot;, &quot;median&quot;]</code></pre>
-<pre><code>##                          median
-## deSolve, not compiled 1.0328141
-## Eigenvalue based      0.1853188
-## deSolve, compiled     1.0000000</code></pre>
+<pre><code>##                         median
+## deSolve, not compiled 9.029089
+## Eigenvalue based      1.200779
+## deSolve, compiled     1.000000</code></pre>
 </div>
 <div id="benchmark-for-a-model-that-can-not-be-solved-with-eigenvalues" class="section level1">
 <h1>Benchmark for a model that can not be solved with Eigenvalues</h1>
@@ -124,16 +124,16 @@ smb.2 &lt;- summary(mb.2)[-1]
 rownames(smb.2) &lt;- c(&quot;deSolve, not compiled&quot;, &quot;deSolve, compiled&quot;)
 print(smb.2)</code></pre>
 <pre><code>##                             min        lq      mean    median        uq
-## deSolve, not compiled 11.745276 11.754288 11.820726 11.763300 11.858451
-## deSolve, compiled      1.385829  1.386407  1.400841  1.386985  1.408347
-##                            max neval
-## deSolve, not compiled 11.95360     3
-## deSolve, compiled      1.42971     3</code></pre>
+## deSolve, not compiled 14.127630 14.245064 14.298201 14.362497 14.383486
+## deSolve, compiled      1.354744  1.362167  1.366362  1.369589  1.372171
+##                             max neval
+## deSolve, not compiled 14.404474     3
+## deSolve, compiled      1.374752     3</code></pre>
 <pre class="r"><code>smb.2[&quot;median&quot;]/smb.2[&quot;deSolve, compiled&quot;, &quot;median&quot;]</code></pre>
-<pre><code>##                       median
-## deSolve, not compiled 8.4812
-## deSolve, compiled     1.0000</code></pre>
-<p>Here we get a performance benefit of more than a factor of 10 using the version of the differential equation model compiled from C code using the inline package!</p>
+<pre><code>##                         median
+## deSolve, not compiled 10.48672
+## deSolve, compiled      1.00000</code></pre>
+<p>Here we get a performance benefit of a factor of 10.5 using the version of the differential equation model compiled from C code using the inline package!</p>
 </div>
 
 

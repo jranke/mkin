@@ -53,9 +53,11 @@ rownames(smb.1) <- c("deSolve, not compiled", "Eigenvalue based", "deSolve, comp
 print(smb.1)
 ```
 
-We see that using the compiled model is almost a factor of 8 faster than using the R version
-with the default ode solver, and it is even faster than the Eigenvalue based solution implemented
-in R which does not need iterative solution of the ODEs:
+We see that using the compiled model is by a factor of 
+`r round(smb.1["deSolve, not compiled", "median"]/smb.1["deSolve, compiled", "median"], 1)` 
+faster than using the R version with the default ode solver, and it is even
+faster than the Eigenvalue based solution implemented in R which does not need
+iterative solution of the ODEs:
 
 ```{r}
 smb.1["median"]/smb.1["deSolve, compiled", "median"]
@@ -81,5 +83,7 @@ smb.2["median"]/smb.2["deSolve, compiled", "median"]
 
 ```
 
-Here we get a performance benefit of more than a factor of 10 using the version
-of the differential equation model compiled from C code using the inline package!
+Here we get a performance benefit of a factor of 
+`r round(smb.2["deSolve, not compiled", "median"]/smb.2["deSolve, compiled", "median"], 1)` 
+using the version of the differential equation model compiled from C code using
+the inline package!
