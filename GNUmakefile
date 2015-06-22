@@ -15,23 +15,19 @@ RFSVN ?= $(HOME)/svn/kinfit.r-forge
 RFDIR ?= $(RFSVN)/pkg/mkin
 SDDIR ?= $(RFSVN)/www/mkin_static
 
+# Vignettes are listed in the build target
 pkgfiles = NEWS \
-	   data/* \
-	   DESCRIPTION \
-	   inst/staticdocs/README \
-	   man/* \
-	   NAMESPACE \
-	   R/* \
-	   README.md \
-	   tests/* \
-	   tests/testthat* \
-		 vignettes/header.tex \
-		 vignettes/mkin_vignettes.css* \
-		 vignettes/*.Rnw \
-		 vignettes/*.html \
-		 vignettes/*.Rmd \
-		 vignettes/*.pdf \
-	   TODO
+	.Rbuildignore \
+	data/* \
+	DESCRIPTION \
+	inst/staticdocs/README \
+	man/* \
+	NAMESPACE \
+	R/* \
+	README.md \
+	tests/* \
+	tests/testthat* \
+	TODO
 
 all: build
 
@@ -42,7 +38,7 @@ NEWS: NEWS.md
 README.md: README.Rmd
 	"$(RBIN)/Rscript" -e 'require(knitr); knit("README.Rmd")'
 
-$(TGZ): $(pkgfiles)
+$(TGZ): $(pkgfiles) vignettes/*.html vignettes/*.pdf
 	cd ..;\
 		"$(RBIN)/R" CMD build $(PKGSRC)
 
@@ -70,15 +66,26 @@ check-no-vignettes: build-no-vignettes
 	"$(RBIN)/R" CMD check --as-cran --no-tests --no-build-vignettes --no-vignettes $(TGZ)
 	mv $(TGZ) $(TGZVNR)
 
-clean: clean-vignettes
+clean:
 	$(RM) -r $(PKGNAME).Rcheck/
+	$(RM) -r vignettes/*.fls
+	$(RM) -r vignettes/*.fdb_latexmk
+	$(RM) -r vignettes/*_cache
+	$(RM) -r vignettes/*_files
+	$(RM) -r vignettes/*-concordance.tex
+	$(RM) -r vignettes/*.syntex.gz
 
 test: install-no-vignettes
 	cd tests;\
 		"$(RBIN)/Rscript" testthat.R
 
-vignettes: install-no-vignettes vignettes/*
-	$(MAKE) -C vignettes
+vignettes/%.pdf: vignettes/header.tex vignettes/references.bib vignettes/%.Rnw
+	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/$*.Rnw', dir = 'vignettes')"
+
+vignettes/%.html: vignettes/mkin_vignettes.css vignettes/%.Rmd
+	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/$*.Rmd', dir = 'vignettes')"
+
+vignettes: install-no-vignettes vignettes/mkin.pdf vignettes/FOCUS_D.html vignettes/FOCUS_L.html vignettes/FOCUS_Z.pdf vignettes/compiled_models.html
 
 sd:
 	"$(RBIN)/Rscript" -e "library(staticdocs); build_site()"
@@ -91,6 +98,8 @@ r-forge: sd move-sd
 	git archive master > $(HOME)/mkin.tar;\
 	cd $(RFDIR) && rm -r `ls` && tar -xf $(HOME)/mkin.tar;\
 	svn add --force .; svn rm --force `svn status | grep "\!" | cut -d " " -f 8`; cd $(RFSVN) && svn commit -m 'sync with git'
+	git add -A
+	git commit -m 'Vignettes rebuilt by staticdocs::build_site() for static documentation on r-forge'
 
 winbuilder: build
 	date
