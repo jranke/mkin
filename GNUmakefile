@@ -28,7 +28,9 @@ pkgfiles = NEWS \
 		 vignettes/header.tex \
 		 vignettes/mkin_vignettes.css* \
 		 vignettes/*.Rnw \
+		 vignettes/*.html \
 		 vignettes/*.Rmd \
+		 vignettes/*.pdf \
 	   TODO
 
 all: build
