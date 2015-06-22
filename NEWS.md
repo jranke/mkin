@@ -1,3 +1,10 @@
+# CHANGES in mkin VERSION 0.9-37
+
+## MINOR CHANGES
+
+- `vignettes/compiled_models.html`: Show the performance improvement factor actually obtained when building the vignette, as well as mkin version, some system info and the CPU model used for building the vignette.
+- `GNUMakefile`,`vignettes/*`: Clean up vignette generation and include table of contents in HTML vignettes
+
 # CHANGES in mkin VERSION 0.9-36
 
 ## MAJOR CHANGES
