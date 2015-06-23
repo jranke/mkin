@@ -40,7 +40,7 @@ README.md: README.Rmd
 
 $(TGZ): $(pkgfiles) vignettes/*.html vignettes/*.pdf
 	cd ..;\
-		"$(RBIN)/R" CMD build $(PKGSRC)
+		"$(RBIN)/R" CMD build $(PKGSRC) 2>&1 | tee $(PKGNAME)/build.log
 
 $(TGZVNR): $(pkgfiles)
 	cd ..;\
@@ -59,7 +59,7 @@ install-no-vignettes: build-no-vignettes
 	"$(RBIN)/R" CMD INSTALL $(TGZVNR)
 
 check: build
-	"$(RBIN)/R" CMD check --as-cran --no-tests $(TGZ)
+	"$(RBIN)/R" CMD check --as-cran --no-tests $(TGZ) 2>&1 | tee check.log
 
 quickcheck: build-no-vignettes
 	mv $(TGZVNR) $(TGZ)
@@ -78,7 +78,7 @@ clean:
 
 test: install-no-vignettes
 	cd tests;\
-		"$(RBIN)/Rscript" testthat.R
+		"$(RBIN)/Rscript" testthat.R 2>&1 | tee ../test.log
 
 vignettes/%.pdf: vignettes/header.tex vignettes/references.bib vignettes/%.Rnw
 	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/$*.Rnw', dir = 'vignettes')"
