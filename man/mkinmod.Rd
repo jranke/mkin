@@ -13,7 +13,7 @@
   in the FOCUS and NAFTA guidance documents are used.
 }
 \usage{
-mkinmod(..., use_of_ff = "min", speclist = NULL, quiet = FALSE)
+mkinmod(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verbose = FALSE)
 }
 \arguments{
   \item{...}{
@@ -44,6 +44,10 @@ mkinmod(..., use_of_ff = "min", speclist = NULL, quiet = FALSE)
   }
   \item{quiet}{
     Should messages be suppressed?
+  }
+  \item{verbose}{
+    If \code{TRUE}, passed to \code{\link{cfunction}} if applicable to give
+    detailed information about the C function being built.
   }
 }
 \value{
@@ -80,7 +84,7 @@ mkinmod(..., use_of_ff = "min", speclist = NULL, quiet = FALSE)
 # Specify the SFO model (this is not needed any more, as we can now mkinfit("SFO", ...)
 SFO <- mkinmod(parent = list(type = "SFO"))
 
-# One parent compound, one metabolite, both single first order.
+# One parent compound, one metabolite, both single first order
 SFO_SFO <- mkinmod(
   parent = mkinsub("SFO", "m1"),
   m1 = mkinsub("SFO"))
@@ -89,6 +93,11 @@ SFO_SFO <- mkinmod(
 SFO_SFO <- mkinmod(
   parent = list(type = "SFO", to = "m1"),
   m1 = list(type = "SFO"))
+
+# Show details of creating the C function
+SFO_SFO <- mkinmod(
+  parent = mkinsub("SFO", "m1"),
+  m1 = mkinsub("SFO"), verbose = TRUE)
 
 # If we have several parallel metabolites 
 # (compare tests/testthat/test_synthetic_data_for_UBA_2014.R)

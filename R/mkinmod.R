@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/> }}}
 
-mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE)
+mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verbose = FALSE)
 {
   if (is.null(speclist)) spec <- list(...)
   else spec <- speclist
@@ -273,11 +273,12 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE)
     model$coefmat <- m
   }#}}}
 
-  # Create a function compiled from C code if more than one observed {{{
+  # Try to create a function compiled from C code if more than one observed {{{
   # variable and gcc is available
   if (length(obs_vars) > 1) {
     if (Sys.which("gcc") != "") {
 
+      # Translate the R code for the derivatives to C code
       diffs.C <- paste(diffs, collapse = ";\n")
       diffs.C <- paste0(diffs.C, ";")
 
@@ -313,10 +314,18 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE)
         diffs.C <- gsub(pattern, replacement, diffs.C)
       }
 
-      if (!quiet) message("Compiling differential equation model from auto-generated C code...")
+      derivs_sig <- signature(n = "integer", t = "numeric", y = "numeric",
+                              f = "numeric", rpar = "numeric", ipar = "integer")
+      
+      # Declare the time variable in the body of the function if it is used
+      derivs_code <- if (spec[[1]]$type %in% c("FOMC", "DFOP", "HS")) {
+        paste0("double time = *t;\n", diffs.C)
+      } else {
+        diffs.C
+      }
 
+      # Define the function initializing the parameters
       npar <- length(parms)
-
       initpar_code <- paste0(
         "static double parms [", npar, "];\n",
         paste0("#define ", parms, " parms[", 0:(npar - 1), "]\n", collapse = ""),
@@ -326,14 +335,17 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE)
         "    odeparms(&N, parms);\n",
         "}\n\n")
 
-      derivs_code <- paste0("double time = *t;\n", diffs.C)
-      derivs_sig <- signature(n = "integer", t = "numeric", y = "numeric",
-                              f = "numeric", rpar = "numeric", ipar = "integer")
+      # Try to build a shared library
+      cf <- try(cfunction(list(func = derivs_sig), derivs_code,
+                          otherdefs = initpar_code,
+                          verbose = verbose,
+                          convention = ".C", language = "C"),
+                silent = TRUE)
 
-      model$cf <- cfunction(list(func = derivs_sig), derivs_code,
-                            otherdefs = initpar_code,
-                            cppargs = "-Wno-unused-variable",
-                            convention = ".C", language = "C")
+      if (!inherits(cf, "try-error")) {
+        if (!quiet) message("Successfully compiled differential equation model from auto-generated C code.")
+        model$cf <- cf
+      }
     }
   }
   # }}}

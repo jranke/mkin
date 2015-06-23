@@ -3,7 +3,11 @@
 ## MINOR CHANGES
 
 - `vignettes/compiled_models.html`: Show the performance improvement factor actually obtained when building the vignette, as well as mkin version, some system info and the CPU model used for building the vignette.
-- `GNUMakefile`,`vignettes/*`: Clean up vignette generation and include table of contents in HTML vignettes
+- `GNUMakefile`,`vignettes/*`: Clean up vignette generation and include table of contents in HTML vignettes.
+
+## BUG FIXES
+
+- `mkinmod.R()`: When generating the C code for the derivatives, only declare the time variable when it is needed and remove the '-W-no-unused-variable' compiler flag as the C compiler used in the CRAN checks on Solaris does not know it.
 
 # CHANGES in mkin VERSION 0.9-36
 
