@@ -74,6 +74,7 @@ clean:
 	$(RM) -r vignettes/*_files
 	$(RM) -r vignettes/*-concordance.tex
 	$(RM) -r vignettes/*.syntex.gz
+	$(RM) Rplots.pdf
 
 test: install-no-vignettes
 	cd tests;\
@@ -89,6 +90,7 @@ vignettes: install-no-vignettes vignettes/mkin.pdf vignettes/FOCUS_D.html vignet
 
 sd:
 	"$(RBIN)/Rscript" -e "library(staticdocs); build_site()"
+	$(RM) Rplots.pdf
 
 move-sd:
 	rm -rf $(SDDIR)/*;\
