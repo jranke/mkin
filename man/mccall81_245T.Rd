@@ -31,8 +31,10 @@
   SFO_SFO_SFO <- mkinmod(T245 = list(type = "SFO", to = "phenol"),
                          phenol = list(type = "SFO", to = "anisole"),
                          anisole = list(type = "SFO"))
-  \dontrun{fit.1 <- mkinfit(SFO_SFO_SFO, subset(mccall81_245T, soil == "Commerce"))
-  summary(fit.1, data = FALSE)}
+  \dontrun{
+    fit.1 <- mkinfit(SFO_SFO_SFO, subset(mccall81_245T, soil == "Commerce"))
+    summary(fit.1, data = FALSE)
+  }
   # No covariance matrix and k_phenol_sink is really small, therefore fix it to zero
   fit.2 <- mkinfit(SFO_SFO_SFO, subset(mccall81_245T, soil == "Commerce"),
                  parms.ini = c(k_phenol_sink = 0),
