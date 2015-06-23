@@ -92,7 +92,7 @@ sd:
 
 move-sd:
 	rm -rf $(SDDIR)/*;\
-	cp -r inst/web/* $(SDDIR); cd $(SDDIR) && svn add --force .
+	cp -r inst/web/* $(SDDIR); cp -r figure $(SDDIR); cd $(SDDIR) && svn add --force .
 
 r-forge: sd move-sd
 	git archive master > $(HOME)/mkin.tar;\
