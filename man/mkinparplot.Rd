@@ -28,7 +28,7 @@ model <- mkinmod(
   T245 = list(type = "SFO", to = c("phenol"), sink = FALSE),
   phenol = list(type = "SFO", to = c("anisole")),
   anisole = list(type = "SFO"), use_of_ff = "max")
-fit <- mkinfit(model, subset(mccall81_245T, soil == "Commerce"))
-\dontrun{mkinparplot(fit)}
+fit <- mkinfit(model, subset(mccall81_245T, soil == "Commerce"), quiet = TRUE)
+mkinparplot(fit)
 }
 \keyword{ hplot }

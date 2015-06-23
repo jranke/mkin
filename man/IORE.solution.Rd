@@ -30,12 +30,14 @@
   Media
 }
 \examples{
-  \dontrun{plot(function(x) IORE.solution(x, 100, 0.2, 1.3), 0, 2, 
-	                                  ylim = c(0, 100))}
-  m.fomc <- mkinfit("FOMC", FOCUS_2006_C, quiet = TRUE)
-  m.iore <- mkinfit("IORE", FOCUS_2006_C, quiet = TRUE)
-  m.iore.deS <- mkinfit("IORE", FOCUS_2006_C, solution_type = "deSolve", quiet = TRUE)
-  data.frame(coef(m.fomc), coef(m.iore), coef(m.iore.deS), row.names = paste("par", 1:3))
-  rbind(endpoints(m.fomc)$distimes, endpoints(m.iore)$distimes, endpoints(m.iore)$distimes)
+  plot(function(x) IORE.solution(x, 100, 0.2, 1.3), 0, 2, 
+	                               ylim = c(0, 100))
+  fit.fomc <- mkinfit("FOMC", FOCUS_2006_C, quiet = TRUE)
+  fit.iore <- mkinfit("IORE", FOCUS_2006_C, quiet = TRUE)
+  fit.iore.deS <- mkinfit("IORE", FOCUS_2006_C, solution_type = "deSolve", quiet = TRUE)
+
+  data.frame(coef(fit.fomc), coef(fit.iore), coef(fit.iore.deS), row.names = paste("model par", 1:3))
+  print(rbind(fomc = endpoints(m.fomc)$distimes, iore = endpoints(m.iore)$distimes, 
+              iore.deS = endpoints(m.iore)$distimes))
 }
 \keyword{ manip }

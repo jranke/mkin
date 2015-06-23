@@ -247,7 +247,7 @@ print(system.time(fit <- mkinfit(SFO_SFO, FOCUS_2006_D,
 coef(fit)
 endpoints(fit)
 \dontrun{
-# deSolve is slower when the gcc compiler is not available
+# deSolve is slower when no C compiler (gcc) was available during model generation
 print(system.time(fit.deSolve <- mkinfit(SFO_SFO, FOCUS_2006_D, 
                            solution_type = "deSolve")))
 coef(fit.deSolve)
