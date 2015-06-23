@@ -61,9 +61,9 @@ install-no-vignettes: build-no-vignettes
 check: build
 	"$(RBIN)/R" CMD check --as-cran --no-tests $(TGZ)
 
-check-no-vignettes: build-no-vignettes
+quickcheck: build-no-vignettes
 	mv $(TGZVNR) $(TGZ)
-	"$(RBIN)/R" CMD check --as-cran --no-tests --no-build-vignettes --no-vignettes $(TGZ)
+	"$(RBIN)/R" CMD check --no-tests --no-build-vignettes --no-vignettes $(TGZ)
 	mv $(TGZ) $(TGZVNR)
 
 clean:
