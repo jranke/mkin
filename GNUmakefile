@@ -89,14 +89,13 @@ vignettes/%.html: vignettes/mkin_vignettes.css vignettes/%.Rmd
 vignettes: install-no-vignettes vignettes/mkin.pdf vignettes/FOCUS_D.html vignettes/FOCUS_L.html vignettes/FOCUS_Z.pdf vignettes/compiled_models.html
 
 sd:
-	"$(RBIN)/Rscript" -e "library(staticdocs); build_site()"
-	$(RM) Rplots.pdf
+	rm -rf $(SDDIR)/*
+	"$(RBIN)/Rscript" -e "library(staticdocs); build_site(site_path = '$(SDDIR)')"
+	$(RM) $(SDDIR)/Rplots.pdf
+	cp -r figure $(SDDIR)
 
-move-sd:
-	rm -rf $(SDDIR)/*;\
-	cp -r inst/web/* $(SDDIR); cp -r figure $(SDDIR); cd $(SDDIR) && svn add --force .
-
-r-forge: sd move-sd
+r-forge: sd
+	cd $(SDDIR) && svn add --force .
 	git archive master > $(HOME)/mkin.tar;\
 	cd $(RFDIR) && rm -r `ls` && tar -xf $(HOME)/mkin.tar;\
 	svn add --force .; svn rm --force `svn status | grep "\!" | cut -d " " -f 8`; cd $(RFSVN) && svn commit -m 'sync with git'
