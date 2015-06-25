@@ -1,6 +1,8 @@
 # CHANGES in mkin VERSION 0.9-39
 
- 
+## MAJOR CHANGES
+
+- New function `mmkin()`: This function takes a character vector of model shorthand names, or alternatively a list of mkinmod models, as well as a list of dataset as main arguments. It returns a matrix of mkinfit objects, with a row for each model and a column for each dataset.
 
 # CHANGES in mkin VERSION 0.9-38
 
