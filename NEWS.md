@@ -1,30 +1,26 @@
-# CHANGES in mkin VERSION 0.9-39
+# NEWS for package 'mkin'
 
-## MAJOR CHANGES
+## CHANGES in mkin VERSION 0.9-39
+
+### MAJOR CHANGES
 
 - New function `mmkin()`: This function takes a character vector of model shorthand names, or alternatively a list of mkinmod models, as well as a list of dataset as main arguments. It returns a matrix of mkinfit objects, with a row for each model and a column for each dataset.
 
-# CHANGES in mkin VERSION 0.9-38
+## CHANGES in mkin VERSION 0.9-38 (2015-06-24)
 
-## BUG FIXES
-
-- Remove top-level file Rplots.pdf that R CMD check complained about
-
-# CHANGES in mkin VERSION 0.9-37
-
-## MINOR CHANGES
+### MINOR CHANGES
 
 - `vignettes/compiled_models.html`: Show the performance improvement factor actually obtained when building the vignette, as well as mkin version, some system info and the CPU model used for building the vignette.
 
 - `GNUMakefile`,`vignettes/*`: Clean up vignette generation and include table of contents in HTML vignettes.
 
-## BUG FIXES
+### BUG FIXES
 
 - `mkinmod.R()`: When generating the C code for the derivatives, only declare the time variable when it is needed and remove the '-W-no-unused-variable' compiler flag as the C compiler used in the CRAN checks on Solaris does not know it.
 
-# CHANGES in mkin VERSION 0.9-36
+## CHANGES in mkin VERSION 0.9-36 (2015-06-21)
 
-## MAJOR CHANGES
+### MAJOR CHANGES
 
 - `summary.mkinfit()`: A one-sided t-test for significant difference of untransformed parameters from zero is now always shown, based on the assumption of normal distribution for estimators of all untransformed parameters. Use with caution, as this assumption is unrealistic e.g. for rate constants in these nonlinear kinetic models.
 
@@ -34,17 +30,17 @@
 
 - `mkinfit()`: Set the default `solution_type` to `deSolve` when a compiled version of the model is present, except when an analytical solution is possible.
 
-## MINOR CHANGES
+### MINOR CHANGES
 
 - Added a simple showcase vignette with an evaluation of FOCUS example dataset D
 
-# CHANGES in mkin VERSION 0.9-35
+## CHANGES in mkin VERSION 0.9-35 (2015-05-15)
 
-## MAJOR CHANGES
+### MAJOR CHANGES
 
 - Switch from RUnit to testthat for testing
 
-## BUG FIXES
+### BUG FIXES
 
 - `mkinparplot()`: Avoid warnings that occurred when not all confidence intervals were available in the summary of the fit
 
@@ -54,7 +50,7 @@
 
 - `mkinparplot()`: Avoid warning in R CMD check about undeclared global variable `Lower`
 
-## NEW FEATURES
+### NEW FEATURES
 
 - `mkinfit()`: Report successful termination when quiet = FALSE. This is helpful for more difficult problems fitted with reweight.method = obs, as no progress is often indicated during the reweighting.
 
@@ -64,9 +60,9 @@
 
 - Add tests based on these datasets
 
-# CHANGES in mkin VERSION 0.9-34
+## CHANGES in mkin VERSION 0.9-34 (2014-11-22)
 
-## NEW FEATURES
+### NEW FEATURES
 
 - Add the convenience function `mkinsub()` for creating the lists used in `mkinmod()`
 
@@ -74,21 +70,21 @@
 
 - Switch to using the Port algorithm (using a model/trust region approach) per default. While needing more iterations than the Levenberg-Marquardt algorithm previously used per default, it is less sensitive to starting parameters.
 
-## MINOR CHANGES
+### MINOR CHANGES
 
 - The formatting of differential equations in the summary was further improved
 
 - Always include 0 on y axis when plotting during the fit
 
-# CHANGES in mkin VERSION 0.9-33
+## CHANGES in mkin VERSION 0.9-33 (2014-10-22)
 
-## NEW FEATURES
+### NEW FEATURES
 
 - The initial value (state.ini) for the observed variable with the highest observed residue is set to 100 in case it has no time zero observation and `state.ini = "auto"`
 
 - A basic unit test for `mkinerrmin()` was written
 
-## BUG FIXES
+### BUG FIXES
 
 - `mkinfit()`: The internally fitted parameter for `g` was named `g_ilr` even when `transform_fractions=FALSE`
 
@@ -98,7 +94,7 @@
 
 - `plot.mkinfit()`: Avoid a warning message about only using the first component of ylim that occurred when ylim was specified explicitly
 
-## MINOR CHANGES
+### MINOR CHANGES
 
 - The formatting of differential equations in the summary was improved by wrapping overly long lines
 
@@ -108,9 +104,9 @@
 
 - `mkinfit()`: Avoid a warning that occurred when summarising a fit that was performed with maxitmodFit = 0 as done in gmkin for configuring new fits.
 
-# CHANGES in mkin VERSION 0.9-32
+## CHANGES in mkin VERSION 0.9-32 (2014-07-24)
 
-## NEW FEATURES
+### NEW FEATURES
 
 - The number of degrees of freedom is difficult to define in the case of ilr transformation of formation fractions. Now for each source compartment the number of ilr parameters (=number of optimised parameters) is divided by the number of pathways to metabolites (=number of affected data series) which leads to fractional degrees of freedom in some cases.
 
@@ -124,7 +120,7 @@
 
 - mkinfit gives a warning when the fit does not converge (does not apply to SANN method). This warning is included in the summary.
 
-## BUG FIXES
+### BUG FIXES
 
 - Avoid plotting an artifical 0 residual at time zero in `mkinresplot`
 
@@ -136,7 +132,7 @@
 
 - No warning was given when the fit did not converge when a method other than the default Levenberg-Marquardt method `Marq` was used.
 
-## MINOR CHANGES
+### MINOR CHANGES
 
 - Vignettes were rebuilt to reflect the changes in the summary method.
 
@@ -144,24 +140,25 @@
 
 - Algorithm `Newton` was excluded because of its different way to specify the maximum number of iterations and because it does not appear to provide additional benefits.
 
-# CHANGES in mkin VERSION 0.9-31
+## CHANGES in mkin VERSION 0.9-31 (2014-07-14)
 
-## BUG FIXES
+### BUG FIXES
 
 - The internal renaming of optimised parameters in Version 0.9-30 led to errors in the determination of the degrees of freedom for the chi2 error level calulations in `mkinerrmin()` used by the summary function.
-# CHANGES in mkin VERSION 0.9-30 
 
-## NEW FEATURES
+## CHANGES in mkin VERSION 0.9-30 (2014-07-11)
+
+### NEW FEATURES
 
 - It is now possible to use formation fractions in combination with turning off the sink in `mkinmod()`.
 
-## MAJOR CHANGES
+### MAJOR CHANGES
 
 - The original and the transformed parameters now have different names (e.g. `k_parent` and `log_k_parent`. They also differ in how many they are when we have formation fractions but no pathway to sink.
 
 - The order of some of the information blocks in `print.summary.mkinfit.R()` has been ordered in a more logical way.
 
-## MINOR CHANGES
+### MINOR CHANGES
 
 - The vignette FOCUS_Z has been simplified to use formation fractions with turning off the sink, and slightly amended to use the new versions of DT50 values calculated since mkin 0.9-29.
 
@@ -175,7 +172,7 @@
 
 - Some more checks were introduced to `mkinfit()`, leading to warnings or stopping execution if unsupported combinations of methods and parameters are requested.
 
-# CHANGES in mkin VERSION 0.9-29
+## CHANGES in mkin VERSION 0.9-29 (2014-06-27)
 
 - R/mkinresplot.R: Make it possible to specify `xlim`
 
@@ -183,7 +180,7 @@
 
 - R/endpoints.R, man/endpoints.Rd: Calculate additional (pseudo)-DT50 values for FOMC, DFOP, HS and SFORB. Avoid calculation of formation fractions from rate constants when they are directly fitted
 
-# CHANGES in mkin VERSION 0.9-28
+## CHANGES in mkin VERSION 0.9-28 (2014-05-20)
 
 - Do not backtransform confidence intervals for formation fractions if more than one compound is formed, as such parameters only define the pathways as a set
 
@@ -191,7 +188,7 @@
 
 - Correct 'isotropic' into 'isometric' for the ilr transformation
 
-# CHANGES in mkin VERSION 0.9-27
+## CHANGES in mkin VERSION 0.9-27 (2014-05-10)
 
 - Fork the GUI into a separate package [gmkin](http://github.com/jranke/gmkin)
 
@@ -208,8 +205,6 @@
 - Add possibility to show residual plot in `plot.mkinfit`
 
 - R/mkinparplot.R, man/mkinparplot.Rd: plot parameters with confidence intervals
-
-# CHANGES in mkin VERSION 0.9-25
 
 - Change vignette format from Sweave to knitr
 
@@ -229,17 +224,15 @@
 
 - Add gmkin workspace datasets FOCUS_2006_gmkin and FOCUS_2006_Z_gmkin
 
-# CHANGES in mkin VERSION 0.9-24
+## CHANGES in mkin VERSION 0.9-24 (2013-11-06)
 
 - Bugfix re-enabling the fixing of any combination of initial values for state variables
 
 - Default values for kinetic rate constants are not all 0.1 any more but are "salted" with a small increment to avoid numeric artefacts with the eigenvalue based solutions
 
-# CHANGES in mkin VERSION 0.9-23
-
 - Backtransform fixed ODE parameters for the summary
 
-# CHANGES in mkin VERSION 0.9-22
+## CHANGES in mkin VERSION 0.9-22 (2013-10-26)
 
 - Get rid of the optimisation step in `mkinerrmin` - this was unnecessary. Thanks to KinGUII for the inspiration - actually this is equation 6-2 in FOCUS kinetics p. 91 that I had overlooked originally
 
