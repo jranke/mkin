@@ -16,7 +16,7 @@ RFDIR ?= $(RFSVN)/pkg/mkin
 SDDIR ?= $(RFSVN)/www/mkin_static
 
 # Vignettes are listed in the build target
-pkgfiles = NEWS \
+pkgfiles = \
 	.Rbuildignore \
 	data/* \
 	DESCRIPTION \
