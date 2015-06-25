@@ -20,7 +20,6 @@ pkgfiles = NEWS \
 	.Rbuildignore \
 	data/* \
 	DESCRIPTION \
-	inst/staticdocs/README \
 	man/* \
 	NAMESPACE \
 	R/* \
