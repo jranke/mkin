@@ -61,4 +61,5 @@ time_1
 
 endpoints(fits[["SFO_lin", 2]])
 }
+}
 \keyword{ optimize }

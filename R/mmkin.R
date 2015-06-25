@@ -37,7 +37,7 @@ mmkin <- function(models = c("SFO", "FOMC", "DFOP"), datasets,
   if (is.null(cluster)) {
     results <- mclapply(as.list(1:n.fits), fit_function, mc.cores = cores)
   } else {
-    results <- parLapply(cluster, list(1:n.fit), fit_function)
+    results <- parLapply(cluster, as.list(1:n.fits), fit_function)
   }
 
   attributes(results) <- attributes(fit_indices)
