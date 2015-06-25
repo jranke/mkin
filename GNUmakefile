@@ -22,6 +22,7 @@ pkgfiles = NEWS \
 	DESCRIPTION \
 	man/* \
 	NAMESPACE \
+	NEWS.md \
 	R/* \
 	README.md \
 	tests/* \
@@ -29,10 +30,6 @@ pkgfiles = NEWS \
 	TODO
 
 all: build
-
-# convert markdown to R's NEWS format (from knitr package)
-NEWS: NEWS.md
-	sed -e 's/^-/ -/' -e 's/^## *//' -e 's/^#/\t\t/' <NEWS.md | fmt -80 >NEWS
 
 README.md: README.Rmd
 	"$(RBIN)/Rscript" -e 'require(knitr); knit("README.Rmd")'
