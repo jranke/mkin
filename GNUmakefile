@@ -54,7 +54,7 @@ build-no-vignettes: $(TGZVNR)
 install: build
 	"$(RBIN)/R" CMD INSTALL $(TGZ)
 
-install-no-vignettes: build-no-vignettes
+quickinstall: build-no-vignettes
 	"$(RBIN)/R" CMD INSTALL $(TGZVNR)
 
 check: build
