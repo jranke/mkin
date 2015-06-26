@@ -1,3 +1,24 @@
+# Copyright (C) 2015 Johannes Ranke
+# Contact: jranke@uni-bremen.de
+# The summary function is an adapted and extended version of summary.modFit
+# from the FME package, v 1.1 by Soetart and Petzoldt, which was in turn
+# inspired by summary.nls.lm
+
+# This file is part of the R package mkin
+
+# mkin is free software: you can redistribute it and/or modify it under the
+# terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
+
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
+
+# You should have received a copy of the GNU General Public License along with
+# this program. If not, see <http://www.gnu.org/licenses/>
+
 mmkin <- function(models = c("SFO", "FOMC", "DFOP"), datasets, 
                   cores = round(detectCores()/2), cluster = NULL, ...) 
 {
@@ -43,4 +64,11 @@ mmkin <- function(models = c("SFO", "FOMC", "DFOP"), datasets,
   attributes(results) <- attributes(fit_indices)
   class(results) <- "mmkin"
   return(results)
+}
+
+"[.mmkin" <- function(x, i, j, ..., drop = FALSE) {
+  class(x) <- NULL
+  x_sub <- x[i, j, drop = drop]
+  if (!drop) class(x_sub) <- "mmkin"
+  return(x_sub)
 }

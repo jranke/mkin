@@ -1,0 +1,50 @@
+\name{plot.mmkin}
+\alias{plot.mmkin}
+\title{
+  Plot model fits (observed and fitted) and the residuals for a row or column of an mmkin object.
+}
+\description{
+  When x is a row selected from an mmkin object (\code{\link{[.mmkin}}), the same model
+  fitted for at least one dataset is shown. When it is a column, the fit of at least one model 
+  to the same dataset is shown.
+}
+\usage{
+\method{plot}{mmkin}(x, main = "auto", legends = 1, errmin_var = "All data", errmin_digits = 2, 
+           cex = 0.7, rel.height.middle = 0.9, ...)
+}
+\arguments{
+  \item{x}{
+    An object of class \{code{\link{mmkin}}, with either one row or one column.
+}
+  \item{main}{
+    The main title placed on the outer margin of the plot.
+}
+  \item{legends}{
+    An index for the fits for which legends should be shown.
+}
+  \item{errmin_var}{
+    The variable for which the FOCUS chi2 error value should be shown.
+}
+  \item{errmin_digits}{
+    The number of digits for rounding the FOCUS chi2 error percentage.
+}
+  \item{cex}{
+    Passed to the plot functions and \code{\link{mtext}}.
+}
+  \item{rel.height.middle}{
+    The relative height of the middle plot.
+}
+  \item{\dots}{
+    Further arguments passed to \code{\link{plot.mkinfit}} and \code{\link{mkinresplot}}.
+}
+}
+\value{
+  The function is called for its side effect.
+}
+\author{
+  Johannes Ranke
+}
+\examples{
+  fits <- mmkin(c("SFO", "FOMC"), list("FOCUS B" = FOCUS_2006_B, "FOCUS C" = FOCUS_2006_C))
+  plot(fits[, "FOCUS C"])
+}

@@ -4,8 +4,8 @@
   Fit one or more kinetic models with one or more state variables to one or more datasets
 }
 \description{
-  This code calls \code{\link{mkinfit}} on each combination of model and dataset
-  given in its first two arguments.
+  This function calls \code{\link{mkinfit}} on all combinations of models and datasets
+  specified in its first two arguments.
 }
 \usage{
 mmkin(models, datasets,
@@ -26,7 +26,7 @@ mmkin(models, datasets,
     used when the \code{cluster} argument is \code{NULL}.
   }
   \item{cluster}{
-    A cluster as returned by \code{link{makeCluster}} to be used for parallel 
+    A cluster as returned by \code{\link{makeCluster}} to be used for parallel 
     execution.
   }
   \item{\dots}{
