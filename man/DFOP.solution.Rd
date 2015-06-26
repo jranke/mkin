@@ -31,6 +31,6 @@ DFOP.solution(t, parent.0, k1, k2, g)
   \url{http://focus.jrc.ec.europa.eu/dk} 
 }
 \examples{
-  \dontrun{plot(function(x) DFOP.solution(x, 100, 5, 0.5, 0.3), 0, 4, ylim=c(0,100))}
+  plot(function(x) DFOP.solution(x, 100, 5, 0.5, 0.3), 0, 4, ylim=c(0,100))
 }
 \keyword{ manip }

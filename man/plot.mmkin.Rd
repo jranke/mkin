@@ -45,6 +45,7 @@
   Johannes Ranke
 }
 \examples{
-  fits <- mmkin(c("SFO", "FOMC"), list("FOCUS B" = FOCUS_2006_B, "FOCUS C" = FOCUS_2006_C))
+  fits <- mmkin(c("SFO", "FOMC", "HS"), list("FOCUS B" = FOCUS_2006_B, "FOCUS C" = FOCUS_2006_C))
   plot(fits[, "FOCUS C"])
+  plot(fits["FOMC", ])
 }

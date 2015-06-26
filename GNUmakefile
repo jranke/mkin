@@ -72,7 +72,7 @@ clean:
 	$(RM) -r vignettes/*.syntex.gz
 	$(RM) Rplots.pdf
 
-test: install-no-vignettes
+test: quickinstall
 	cd tests;\
 		"$(RBIN)/Rscript" testthat.R 2>&1 | tee ../test.log
 
@@ -82,12 +82,13 @@ vignettes/%.pdf: vignettes/header.tex vignettes/references.bib vignettes/%.Rnw
 vignettes/%.html: vignettes/mkin_vignettes.css vignettes/%.Rmd
 	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/$*.Rmd', dir = 'vignettes')"
 
-vignettes: install-no-vignettes vignettes/mkin.pdf vignettes/FOCUS_D.html vignettes/FOCUS_L.html vignettes/FOCUS_Z.pdf vignettes/compiled_models.html
+vignettes: quickinstall vignettes/mkin.pdf vignettes/FOCUS_D.html vignettes/FOCUS_L.html vignettes/FOCUS_Z.pdf vignettes/compiled_models.html
 
 sd:
 	rm -rf $(SDDIR)/*
-	"$(RBIN)/Rscript" -e "library(staticdocs); build_site(site_path = '$(SDDIR)')"
-	$(RM) $(SDDIR)/Rplots.pdf
+	@echo Now execute
+	@echo "\nlibrary(staticdocs); build_site(site_path = '$(SDDIR)')\n"
+	$(RBIN)/R
 	cp -r figure $(SDDIR)
 
 r-forge: sd

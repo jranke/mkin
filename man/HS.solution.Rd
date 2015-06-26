@@ -29,6 +29,6 @@ HS.solution(t, parent.0, k1, k2, tb)
   \url{http://focus.jrc.ec.europa.eu/dk} 
 }
 \examples{
-  \dontrun{plot(function(x) HS.solution(x, 100, 2, 0.3, 0.5), 0, 2, ylim=c(0,100))}
+  plot(function(x) HS.solution(x, 100, 2, 0.3, 0.5), 0, 2, ylim=c(0,100))
 }
 \keyword{ manip }

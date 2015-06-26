@@ -80,13 +80,11 @@
   The function is called for its side effect.
 }
 \examples{
-# One parent compound, one metabolite, both single first order.
-SFO_SFO <- mkinmod(
-  parent = list(type = "SFO", to = "m1", sink = TRUE),
-  m1 = list(type = "SFO"))
-# Fit the model to the FOCUS example dataset D using defaults
+# One parent compound, one metabolite, both single first order, path from
+# parent to sink included
+SFO_SFO <- mkinmod(parent = mkinsub("SFO", "m1"), m1 = mkinsub("SFO"))
 fit <- mkinfit(SFO_SFO, FOCUS_2006_D)
-\dontrun{plot(fit)}
+plot(fit)
 }
 \author{
   Johannes Ranke

@@ -53,19 +53,12 @@
 \author{
   Johannes Ranke
 }
-
 \seealso{
  \code{\link{mkinplot}}, for a way to plot the data and the fitted lines of the
  mkinfit object.  }
 \examples{
-data <- mkin_wide_to_long(schaefer07_complex_case, time = "time")
-model <- mkinmod(
-  parent = list(type = "SFO", to = c("A1", "B1", "C1"), sink = FALSE),
-  A1 = list(type = "SFO", to = "A2"),
-  B1 = list(type = "SFO"),
-  C1 = list(type = "SFO"),
-  A2 = list(type = "SFO"))
-\dontrun{fit <- mkinfit(model, data, plot=TRUE)}
-\dontrun{mkinresplot(fit, "A1")}
+model <- mkinmod(parent = mkinsub("SFO", "m1"), m1 = mkinsub("SFO"))
+fit <- mkinfit(model, FOCUS_2006_D)
+mkinresplot(fit, "m1")
 }
 \keyword{ hplot }
