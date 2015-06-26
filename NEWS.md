@@ -4,7 +4,7 @@
 
 ### MAJOR CHANGES
 
-- New function `mmkin()`: This function takes a character vector of model shorthand names, or alternatively a list of mkinmod models, as well as a list of dataset as main arguments. It returns a matrix of mkinfit objects, with a row for each model and a column for each dataset. A subsetting method with single brackets is available.
+- New function `mmkin()`: This function takes a character vector of model shorthand names, or alternatively a list of mkinmod models, as well as a list of dataset as main arguments. It returns a matrix of mkinfit objects, with a row for each model and a column for each dataset. A subsetting method with single brackets is available. Fitting the models in parallel using the `parallel` package is supported.
 
 - New function `plot.mmkin()`: Plots single-row or single-column `mmkin` objects including residual plots.
 
