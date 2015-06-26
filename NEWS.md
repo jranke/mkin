@@ -8,6 +8,10 @@
 
 - New function `plot.mmkin()`: Plots single-row or single-column `mmkin` objects including residual plots.
 
+### BUG FIXES
+
+- `mkinparplot()`: Fix the x axis scaling for rate constants and formation fractions that got confused by the introduction of the t-values of transformed parameters.
+
 ## CHANGES in mkin VERSION 0.9-38 (2015-06-24)
 
 ### MINOR CHANGES
@@ -18,7 +22,7 @@
 
 ### BUG FIXES
 
-- `mkinmod.R()`: When generating the C code for the derivatives, only declare the time variable when it is needed and remove the '-W-no-unused-variable' compiler flag as the C compiler used in the CRAN checks on Solaris does not know it.
+- `mkinmod()`: When generating the C code for the derivatives, only declare the time variable when it is needed and remove the '-W-no-unused-variable' compiler flag as the C compiler used in the CRAN checks on Solaris does not know it.
 
 ## CHANGES in mkin VERSION 0.9-36 (2015-06-21)
 

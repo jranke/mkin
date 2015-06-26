@@ -33,7 +33,7 @@ mkinparplot <- function(object) {
   layout(matrix(1:length(n.plot), ncol = 1), heights = n.plot + 1)
 
   s <- summary(object)
-  bpar <- data.frame(t(s$bpar))
+  bpar <- data.frame(t(s$bpar[, c("Estimate", "Lower", "Upper")]))
   par(mar = c(2.1, 2.1, 0.1, 2.1))
   par(cex = 1)
   for (type in names(n.plot)) {
