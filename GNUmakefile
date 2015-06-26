@@ -86,10 +86,10 @@ vignettes: vignettes/mkin.pdf vignettes/FOCUS_D.html vignettes/FOCUS_L.html vign
 
 sd:
 	rm -rf $(SDDIR)/*
-	@echo Now execute
-	@echo "\nlibrary(staticdocs); build_site(site_path = '$(SDDIR)')\n"
-	$(RBIN)/R
 	cp -r figure $(SDDIR)
+	@echo Now execute
+	@echo "\n  library(staticdocs); build_site(site_path = '$(SDDIR)')\n"
+	$(RBIN)/R
 
 r-forge: sd
 	cd $(SDDIR) && svn add --force .
