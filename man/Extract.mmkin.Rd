@@ -26,7 +26,8 @@
   Johannes Ranke
 }
 \examples{
-  fits <- mmkin(c("SFO", "FOMC"), list(B = FOCUS_2006_B, C = FOCUS_2006_C))
+  # Only use one core so we pass R CMD check
+  fits <- mmkin(c("SFO", "FOMC"), list(B = FOCUS_2006_B, C = FOCUS_2006_C), cores = 1)
   fits["FOMC", ]
   fits[, "B"]
   fits[, "B", drop = TRUE]$FOMC

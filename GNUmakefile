@@ -34,7 +34,7 @@ all: build
 README.md: README.Rmd
 	"$(RBIN)/Rscript" -e 'require(knitr); knit("README.Rmd")'
 
-$(TGZ): $(pkgfiles) vignettes/*.html vignettes/*.pdf
+$(TGZ): $(pkgfiles) quickinstall vignettes
 	cd ..;\
 		"$(RBIN)/R" CMD build $(PKGSRC) 2>&1 | tee $(PKGNAME)/build.log
 
@@ -82,7 +82,7 @@ vignettes/%.pdf: vignettes/header.tex vignettes/references.bib vignettes/%.Rnw
 vignettes/%.html: vignettes/mkin_vignettes.css vignettes/%.Rmd
 	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/$*.Rmd', dir = 'vignettes')"
 
-vignettes: quickinstall vignettes/mkin.pdf vignettes/FOCUS_D.html vignettes/FOCUS_L.html vignettes/FOCUS_Z.pdf vignettes/compiled_models.html
+vignettes: vignettes/mkin.pdf vignettes/FOCUS_D.html vignettes/FOCUS_L.html vignettes/FOCUS_Z.pdf vignettes/compiled_models.html
 
 sd:
 	rm -rf $(SDDIR)/*

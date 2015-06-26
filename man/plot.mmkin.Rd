@@ -10,7 +10,7 @@
 }
 \usage{
 \method{plot}{mmkin}(x, main = "auto", legends = 1, errmin_var = "All data", errmin_digits = 2, 
-           cex = 0.7, rel.height.middle = 0.9, ...)
+              cex = 0.7, rel.height.middle = 0.9, ...)
 }
 \arguments{
   \item{x}{
@@ -45,7 +45,9 @@
   Johannes Ranke
 }
 \examples{
-  fits <- mmkin(c("SFO", "FOMC", "HS"), list("FOCUS B" = FOCUS_2006_B, "FOCUS C" = FOCUS_2006_C))
+  # Only use one core not to offend CRAN checks
+  fits <- mmkin(c("FOMC", "HS"), list("FOCUS B" = FOCUS_2006_B, "FOCUS C" = FOCUS_2006_C), 
+                cores = 1)
   plot(fits[, "FOCUS C"])
   plot(fits["FOMC", ])
 }
