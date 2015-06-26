@@ -168,7 +168,7 @@ for installation instructions and a manual.
   
 ## News
 
-Yes, there is a ![Changelog](NEWS.md).
+Yes, there is a ![Changelog](https://github.com/jranke/mkin/blob/master/NEWS.md).
 
 ## Credits and historical remarks
 
