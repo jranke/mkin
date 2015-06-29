@@ -19,7 +19,7 @@
 
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
-if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "value"))
+if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 
 mkinfit <- function(mkinmod, observed,
   parms.ini = "auto",
@@ -589,7 +589,7 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
   }
 
   ans <- list(
-    version = as.character(packageVersion("mkin")),
+    version = as.character(utils::packageVersion("mkin")),
     Rversion = paste(R.version$major, R.version$minor, sep="."),
 	  date.fit = object$date,
 	  date.summary = date(),

@@ -17,7 +17,7 @@
 
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
-if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "value"))
+if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 
 mkin_wide_to_long <- function(wide_data, time = "t")
 {
