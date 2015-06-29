@@ -36,73 +36,13 @@ detailed guidance and helpful tools have been developed as detailed in
 
 ## Usage
 
-The simplest usage example that I can think of, using model shorthand notation
-(available since mkin 0.9-32) and a built-in dataset is
-
-
-```r
-library(mkin)
-fit <- mkinfit("SFO", FOCUS_2006_C, quiet = TRUE)
-plot(fit, show_residuals = TRUE) 
-```
-
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png) 
-
-
-```r
-# Output not shown in this README to avoid distraction
-summary(fit)
-```
-
-A still very simple usage example including the definition of the same data in R
-code would be
-
-
-```r
-example_data = data.frame(
-  name = rep("parent", 9),
-  time = c(0, 1, 3, 7, 14, 28, 63, 91, 119),
-  value = c(85.1, 57.9, 29.9, 14.6, 9.7, 6.6, 4, 3.9, 0.6)
-)
-fit2 <- mkinfit("FOMC", example_data, quiet = TRUE)
-plot(fit2, show_residuals = TRUE) 
-```
-
-![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png) 
-
-A fairly complex usage example using another built-in dataset:
-
-
-
-
-```r
-data <- mkin_wide_to_long(schaefer07_complex_case, time = "time")
-
-model <- mkinmod(
-  parent = mkinsub("SFO", c("A1", "B1", "C1"), sink = FALSE),
-  A1 = mkinsub("SFO", "A2"),
-  B1 = mkinsub("SFO"),
-  C1 = mkinsub("SFO"),
-  A2 = mkinsub("SFO"), use_of_ff = "max")
-
-fit3 <- mkinfit(model, data, method.modFit = "Port", quiet = TRUE)
-
-plot(fit3, show_residuals = TRUE) 
-```
-
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7-1.png) 
-
-```r
-#summary(fit3) # Commented out to avoid distraction from README content
-mkinparplot(fit3)
-```
-
-![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7-2.png) 
-
-For more examples and to see results, have a look at the examples provided in the
-[`mkinfit`](http://kinfit.r-forge.r-project.org/mkin_static/mkinfit.html)
-documentation or the package vignettes referenced from the 
-[mkin package documentation page](http://kinfit.r-forge.r-project.org/mkin_static/index.html)
+For a start, have a look a the code examples provided for
+[`plot.mkinfit`](http://kinfit.r-forge.r-project.org/mkin_static/plot.mkinfit.html)
+and 
+[`plot.mmkin`](http://kinfit.r-forge.r-project.org/mkin_static/plot.mmmkin.html), and 
+at the package vignettes
+[`FOCUS L`](http://kinfit.r-forge.r-project.org/mkin_static/vignettes/FOCUS_L.html) and
+[`FOCUS D`](http://kinfit.r-forge.r-project.org/mkin_static/vignettes/FOCUS_D.html).
 
 ## Features
 
@@ -111,18 +51,18 @@ documentation or the package vignettes referenced from the
   including equilibrium reactions and using the single first-order 
   reversible binding (SFORB) model, which will automatically create
   two latent state variables for the observed variable.
+* As of version 0.9-39, fitting of several models to several datasets, optionally in 
+  parallel, is supported, see for example
+  [`plot.mmkin`](http://kinfit.r-forge.r-project.org/mkin_static/plot.mmkin.html) 
 * Model solution (forward modelling) in the function
   [`mkinpredict`](http://kinfit.r-forge.r-project.org/mkin_static/mkinpredict.html) 
   is performed either using the analytical solution for the case of 
   parent only degradation, an eigenvalue based solution if only simple
   first-order (SFO) or SFORB kinetics are used in the model, or
   using a numeric solver from the `deSolve` package (default is `lsoda`).
-  These have decreasing efficiency, and are automatically chosen 
-  by default. 
-* As of mkin 0.9-36, model solution for models with more than one observed
-  variable is based on the inline package.  This is even faster than eigenvalue
-  based solution, at least in the example shown in the
-  [vignette `compiled_models`](http://rawgit.com/jranke/mkin/master/vignettes/compiled_models.html).
+* If a C compiler is installed, the kinetic models are compiled from automatically
+  generated C code, see  
+  [vignette `compiled_models`](http://kinfit.r-forge.r-project.org/mkin_static/vignettes/compiled_models.html).
   The autogeneration of C code was
   inspired by the [`ccSolve`](https://github.com/karlines/ccSolve) package. Thanks
   to Karline Soetaert for her work on that.
@@ -151,14 +91,15 @@ documentation or the package vignettes referenced from the
   approximately reproduce the fit with other tools.
 * The chi-squared error level as defined in the FOCUS kinetics guidance
   (see below) is calculated for each observed variable.
-* I recently added iteratively reweighted least squares in a similar way
-  it is done in KinGUII and CAKE (see below). Simply add the argument
+* Iteratively reweighted least squares fitting is implemented in a similar way
+  as in KinGUII and CAKE (see below). Simply add the argument
   `reweight = "obs"` to your call to `mkinfit` and a separate variance 
   componenent for each of the observed variables will be optimised
   in a second stage after the primary optimisation algorithm has converged.
 * When a metabolite decline phase is not described well by SFO kinetics, 
-  either IORE kinetics or SFORB kinetics can be used for the metabolite, 
-  adding one respectively two parameters to the system.
+  either IORE kinetics (often producing failures of the integration algorithm)
+  or SFORB kinetics (working nicely) can be used for the metabolite, adding one
+  respectively two parameters to the system.
 
 ## GUI
 

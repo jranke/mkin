@@ -31,9 +31,6 @@ pkgfiles = \
 
 all: build
 
-README.md: README.Rmd
-	"$(RBIN)/Rscript" -e 'require(knitr); knit("README.Rmd")'
-
 $(TGZ): $(pkgfiles)
 	cd ..;\
 		"$(RBIN)/R" CMD build $(PKGSRC) 2>&1 | tee $(PKGNAME)/build.log
@@ -86,7 +83,6 @@ vignettes: vignettes/mkin.pdf vignettes/FOCUS_D.html vignettes/FOCUS_L.html vign
 
 sd: install
 	rm -rf $(SDDIR)/*
-	cp -r figure $(SDDIR)
 	@echo Now execute
 	@echo "\n  library(staticdocs); build_site(site_path = '$(SDDIR)')\n"
 	$(RBIN)/R
