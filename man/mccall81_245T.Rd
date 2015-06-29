@@ -38,7 +38,7 @@
   # No covariance matrix and k_phenol_sink is really small, therefore fix it to zero
   fit.2 <- mkinfit(SFO_SFO_SFO, subset(mccall81_245T, soil == "Commerce"),
                  parms.ini = c(k_phenol_sink = 0),
-                 fixed_parms = "k_phenol_sink")
+                 fixed_parms = "k_phenol_sink", quiet = TRUE)
   summary(fit.2, data = FALSE)
 }
 \keyword{datasets}

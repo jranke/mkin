@@ -67,9 +67,9 @@
   \url{http://focus.jrc.ec.europa.eu/dk} 
 }
 \author{
-  Johannes Ranke <jranke@{harlan.com,uni-bremen.de}>
+  Johannes Ranke
 }
 \examples{
-  summary(mkinfit(mkinmod(parent = list(type = "SFO")), FOCUS_2006_A))
+  summary(mkinfit(mkinmod(parent = list(type = "SFO")), FOCUS_2006_A, quiet = TRUE))
 }
 \keyword{ utilities }

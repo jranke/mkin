@@ -216,6 +216,13 @@ mkinfit(mkinmod, observed,
   A list with "mkinfit" and "modFit" in the class attribute. 
   A summary can be obtained by \code{\link{summary.mkinfit}}. 
 }
+\seealso{
+  Plotting methods \code{\link{plot.mkinfit}} and
+  \code{\link{mkinparplot}}. 
+
+  Fitting of several models to several datasets in a single call to 
+  \code{\link{mmkin}}. 
+}
 \note{
   The implementation of iteratively reweighted least squares is inspired by the
   work of the KinGUII team at Bayer Crop Science (Walter Schmitt and Zhenglei

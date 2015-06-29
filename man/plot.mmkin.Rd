@@ -47,7 +47,7 @@
 \examples{
   # Only use one core not to offend CRAN checks
   fits <- mmkin(c("FOMC", "HS"), list("FOCUS B" = FOCUS_2006_B, "FOCUS C" = FOCUS_2006_C), 
-                cores = 1)
+                cores = 1, quiet = TRUE)
   plot(fits[, "FOCUS C"])
   plot(fits["FOMC", ])
 }

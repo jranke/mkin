@@ -58,7 +58,7 @@
  mkinfit object.  }
 \examples{
 model <- mkinmod(parent = mkinsub("SFO", "m1"), m1 = mkinsub("SFO"))
-fit <- mkinfit(model, FOCUS_2006_D)
+fit <- mkinfit(model, FOCUS_2006_D, quiet = TRUE)
 mkinresplot(fit, "m1")
 }
 \keyword{ hplot }

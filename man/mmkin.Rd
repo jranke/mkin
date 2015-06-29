@@ -34,8 +34,11 @@ mmkin(models, datasets,
   }
 }
 \value{
-  A matrix of "mkinfit" objects that can be indexed using the 
-  model and dataset names as row and column indices.
+  A matrix of \code{\link{mkinfit}} objects that can be indexed using the model
+  and dataset names as row and column indices.
+}
+\seealso{
+  \code{\link{[.mmkin}} for subsetting, \code{\link{plot.mmkin}} for plotting.
 }
 \author{
   Johannes Ranke

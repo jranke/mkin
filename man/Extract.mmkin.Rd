@@ -26,8 +26,9 @@
   Johannes Ranke
 }
 \examples{
-  # Only use one core so we pass R CMD check
-  fits <- mmkin(c("SFO", "FOMC"), list(B = FOCUS_2006_B, C = FOCUS_2006_C), cores = 1)
+  # Only use one core, to pass R CMD check --as-cran
+  fits <- mmkin(c("SFO", "FOMC"), list(B = FOCUS_2006_B, C = FOCUS_2006_C), 
+                cores = 1, quiet = TRUE)
   fits["FOMC", ]
   fits[, "B"]
   fits[, "B", drop = TRUE]$FOMC

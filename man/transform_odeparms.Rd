@@ -65,7 +65,7 @@ SFO_SFO <- mkinmod(
   parent = list(type = "SFO", to = "m1", sink = TRUE),
   m1 = list(type = "SFO"))
 # Fit the model to the FOCUS example dataset D using defaults
-fit <- mkinfit(SFO_SFO, FOCUS_2006_D)
+fit <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE)
 summary(fit, data=FALSE) # See transformed and backtransformed parameters
 
 \dontrun{
