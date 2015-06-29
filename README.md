@@ -39,7 +39,7 @@ detailed guidance and helpful tools have been developed as detailed in
 For a start, have a look a the code examples provided for
 [`plot.mkinfit`](http://kinfit.r-forge.r-project.org/mkin_static/plot.mkinfit.html)
 and 
-[`plot.mmkin`](http://kinfit.r-forge.r-project.org/mkin_static/plot.mmmkin.html), and 
+[`plot.mmkin`](http://kinfit.r-forge.r-project.org/mkin_static/plot.mmkin.html), and 
 at the package vignettes
 [`FOCUS L`](http://kinfit.r-forge.r-project.org/mkin_static/vignettes/FOCUS_L.html) and
 [`FOCUS D`](http://kinfit.r-forge.r-project.org/mkin_static/vignettes/FOCUS_D.html).
