@@ -75,17 +75,20 @@ endpoints <- function(fit) {
       k1 = parms.all["k1"]
       k2 = parms.all["k2"]
       g = parms.all["g"]
-      f <- function(t, x) {
+      f <- function(log_t, x) {
+        t <- exp(log_t)
         fraction <- g * exp( - k1 * t) + (1 - g) * exp( - k2 * t)
         (fraction - (1 - x/100))^2
       }
-      DTmax <- 1000
-      DT50.o <- optimize(f, c(0.001, DTmax), x=50)$minimum
-      DT50 = ifelse(DTmax - DT50.o < 0.1, NA, DT50.o)
-      DT90.o <- optimize(f, c(0.001, DTmax), x=90)$minimum
-      DT90 = ifelse(DTmax - DT90.o < 0.1, NA, DT90.o)
       DT50_k1 = log(2)/k1
       DT50_k2 = log(2)/k2
+      DT90_k1 = log(10)/k1
+      DT90_k2 = log(10)/k2
+      DT50 <- try(exp(optimize(f, c(log(DT50_k1), log(DT50_k2)), x=50)$minimum))
+      DT90 <- try(exp(optimize(f, c(log(DT90_k1), log(DT90_k2)), x=90)$minimum))
+      if (inherits(DT50, "try-error")) DT50 = NA
+      if (inherits(DT90, "try-error")) DT90 = NA
+      
       ep$distimes[obs_var, c("DT50_k1")] = DT50_k1
       ep$distimes[obs_var, c("DT50_k2")] = DT50_k2
     }
@@ -119,25 +122,28 @@ endpoints <- function(fit) {
       b1 = 0.5 * (k_12 + k_21 + k_1output) + sqrt_exp
       b2 = 0.5 * (k_12 + k_21 + k_1output) - sqrt_exp
 
+      DT50_b1 = log(2)/b1
+      DT50_b2 = log(2)/b2
+      DT90_b1 = log(10)/b1
+      DT90_b2 = log(10)/b2
+
+
       SFORB_fraction = function(t) {
         ((k_12 + k_21 - b1)/(b2 - b1)) * exp(-b1 * t) +
         ((k_12 + k_21 - b2)/(b1 - b2)) * exp(-b2 * t)
       }
-      f_50 <- function(t) (SFORB_fraction(t) - 0.5)^2
-      max_DT <- 1000
-      DT50.o <- optimize(f_50, c(0.01, max_DT))$minimum
-      if (abs(DT50.o - max_DT) < 0.01) DT50 = NA else DT50 = DT50.o
-      f_90 <- function(t) (SFORB_fraction(t) - 0.1)^2
-      DT90.o <- optimize(f_90, c(0.01, max_DT))$minimum
-      if (abs(DT90.o - max_DT) < 0.01) DT90 = NA else DT90 = DT90.o
+      f_50 <- function(log_t) (SFORB_fraction(exp(log_t)) - 0.5)^2
+      DT50 <- try(exp(optimize(f_50, c(log(DT50_b1), log(DT50_b2)))$minimum))
+      f_90 <- function(log_t) (SFORB_fraction(exp(log_t)) - 0.1)^2
+      DT90 <- try(exp(optimize(f_90, c(log(DT90_b1), log(DT90_b2)))$minimum))
+
+      if (inherits(DT50, "try-error")) DT50 = NA
+      if (inherits(DT90, "try-error")) DT90 = NA
 
       for (k_out_name in k_out_names)
       {
         ep$ff[[sub("k_", "", k_out_name)]] = parms.all[[k_out_name]] / k_1output
       }
-
-      DT50_b1 = log(2)/b1
-      DT50_b2 = log(2)/b2
 
       # Return the eigenvalues for comparison with DFOP rate constants
       ep$SFORB[[paste(obs_var, "b1", sep="_")]] = b1

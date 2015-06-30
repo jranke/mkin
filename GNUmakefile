@@ -61,8 +61,12 @@ quickcheck: build-no-vignettes
 
 clean:
 	$(RM) -r $(PKGNAME).Rcheck/
+	$(RM) -r vignettes/*.bbl
+	$(RM) -r vignettes/*.blg
 	$(RM) -r vignettes/*.fls
 	$(RM) -r vignettes/*.fdb_latexmk
+	$(RM) -r vignettes/cache
+	$(RM) -r vignettes/files
 	$(RM) -r vignettes/*_cache
 	$(RM) -r vignettes/*_files
 	$(RM) -r vignettes/*-concordance.tex

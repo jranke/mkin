@@ -1,6 +1,16 @@
 # NEWS for package 'mkin'
 
-## CHANGES in mkin VERSION 0.9-39
+## CHANGES in mkin VERSION 0.9-40
+
+### BUG FIXES
+
+- `endpoints()`: For DFOP and SFORB models, where `optimize()` is used, make use of the fact that the DT50 must be between DT50_k1 and DT50_k2 (DFOP) or DT50_b1 and DT50_b2 (SFORB), as `optimize()` sometimes did not find the minimum. Likewise for finding DT90 values. Also fit on the log scale to make the function more efficient.
+
+### INTERNAL CHANGES
+
+- `DESCRIPTION`, `NAMESPACE`, `R/*.R`: Import stats and graphics package, qualify function calls for non-base packages installed with R to avoid NOTES made by R CMD check --as-cran with upcoming R versions.
+
+## CHANGES in mkin VERSION 0.9-39 (2015-06-26)
 
 ### MAJOR CHANGES
 
