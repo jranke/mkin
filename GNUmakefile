@@ -66,11 +66,11 @@ clean:
 	$(RM) -r vignettes/*.fls
 	$(RM) -r vignettes/*.fdb_latexmk
 	$(RM) -r vignettes/cache
-	$(RM) -r vignettes/files
+	$(RM) -r vignettes/figure
 	$(RM) -r vignettes/*_cache
 	$(RM) -r vignettes/*_files
 	$(RM) -r vignettes/*-concordance.tex
-	$(RM) -r vignettes/*.syntex.gz
+	$(RM) -r vignettes/*.synctex.gz
 	$(RM) Rplots.pdf
 
 test: quickinstall
