@@ -91,6 +91,10 @@ sd: install
 	@echo "\n  library(staticdocs); build_site(site_path = '$(SDDIR)')\n"
 	$(RBIN)/R
 
+sd2: install
+	rm -rf $(SDDIR)/*
+	xvfb-run $(RBIN)/R -e "library(staticdocs); build_site(site_path = '$(SDDIR)')"
+
 r-forge: sd
 	cd $(SDDIR) && svn add --force .
 	git archive master > $(HOME)/mkin.tar;\

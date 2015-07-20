@@ -84,8 +84,11 @@ endpoints <- function(fit) {
       DT50_k2 = log(2)/k2
       DT90_k1 = log(10)/k1
       DT90_k2 = log(10)/k2
-      DT50 <- try(exp(optimize(f, c(log(DT50_k1), log(DT50_k2)), x=50)$minimum))
-      DT90 <- try(exp(optimize(f, c(log(DT90_k1), log(DT90_k2)), x=90)$minimum))
+
+      DT50 <- try(exp(optimize(f, c(log(DT50_k1), log(DT50_k2)), x=50)$minimum),
+                  silent = TRUE)
+      DT90 <- try(exp(optimize(f, c(log(DT90_k1), log(DT90_k2)), x=90)$minimum),
+                  silent = TRUE)
       if (inherits(DT50, "try-error")) DT50 = NA
       if (inherits(DT90, "try-error")) DT90 = NA
       
@@ -127,18 +130,22 @@ endpoints <- function(fit) {
       DT90_b1 = log(10)/b1
       DT90_b2 = log(10)/b2
 
-
       SFORB_fraction = function(t) {
         ((k_12 + k_21 - b1)/(b2 - b1)) * exp(-b1 * t) +
         ((k_12 + k_21 - b2)/(b1 - b2)) * exp(-b2 * t)
       }
-      f_50 <- function(log_t) (SFORB_fraction(exp(log_t)) - 0.5)^2
-      DT50 <- try(exp(optimize(f_50, c(log(DT50_b1), log(DT50_b2)))$minimum))
-      f_90 <- function(log_t) (SFORB_fraction(exp(log_t)) - 0.1)^2
-      DT90 <- try(exp(optimize(f_90, c(log(DT90_b1), log(DT90_b2)))$minimum))
 
-      if (inherits(DT50, "try-error")) DT50 = NA
-      if (inherits(DT90, "try-error")) DT90 = NA
+      f_50 <- function(log_t) (SFORB_fraction(exp(log_t)) - 0.5)^2
+      log_DT50 <- try(optimize(f_50, c(log(DT50_b1), log(DT50_b2)))$minimum,
+                      silent = TRUE)
+      f_90 <- function(log_t) (SFORB_fraction(exp(log_t)) - 0.1)^2
+      log_DT90 <- try(optimize(f_90, c(log(DT90_b1), log(DT90_b2)))$minimum,
+                      silent = TRUE)
+
+      DT50 = if (inherits(log_DT50, "try-error")) NA
+             else exp(log_DT50)
+      DT90 = if (inherits(log_DT90, "try-error")) NA
+             else exp(log_DT90)
 
       for (k_out_name in k_out_names)
       {
