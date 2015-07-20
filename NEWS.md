@@ -8,7 +8,7 @@
 
 ### INTERNAL CHANGES
 
-- `DESCRIPTION`, `NAMESPACE`, `R/*.R`: Import stats and graphics package, qualify function calls for non-base packages installed with R to avoid NOTES made by R CMD check --as-cran with upcoming R versions.
+- `DESCRIPTION`, `NAMESPACE`, `R/*.R`: Import (from) stats, graphics and methods packages, and qualify some function calls for non-base packages installed with R to avoid NOTES made by R CMD check --as-cran with upcoming R versions.
 
 ## CHANGES in mkin VERSION 0.9-39 (2015-06-26)
 
