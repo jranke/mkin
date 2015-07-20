@@ -1,5 +1,4 @@
 \name{IORE.solution}
-\Rdversion{1.1}
 \alias{IORE.solution}
 \title{ Indeterminate order rate equation kinetics }
 \description{

@@ -1,5 +1,4 @@
 \name{FOCUS_2006_DFOP_ref_A_to_B}
-\Rdversion{1.1}
 \alias{FOCUS_2006_DFOP_ref_A_to_B}
 \docType{data}
 \title{

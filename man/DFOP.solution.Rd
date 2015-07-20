@@ -1,5 +1,4 @@
 \name{DFOP.solution}
-\Rdversion{1.1}
 \alias{DFOP.solution}
 \title{
 Double First-Order in Parallel kinetics

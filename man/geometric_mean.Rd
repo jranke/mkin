@@ -1,5 +1,4 @@
 \name{geometric_mean}
-\Rdversion{1.1}
 \alias{geometric_mean}
 \title{ Calculate the geometric mean }
 \description{

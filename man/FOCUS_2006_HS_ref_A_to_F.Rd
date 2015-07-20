@@ -1,5 +1,4 @@
 \name{FOCUS_2006_HS_ref_A_to_F}
-\Rdversion{1.1}
 \alias{FOCUS_2006_HS_ref_A_to_F}
 \docType{data}
 \title{

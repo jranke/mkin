@@ -1,5 +1,4 @@
 \name{SFORB.solution}
-\Rdversion{1.1}
 \alias{SFORB.solution}
 \title{ Single First-Order Reversible Binding kinetics }
 \description{

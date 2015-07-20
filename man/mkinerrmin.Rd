@@ -1,5 +1,4 @@
 \name{mkinerrmin}
-\Rdversion{1.1}
 \alias{mkinerrmin}
 \title{
 Calculate the minimum error to assume in order to pass the variance test

@@ -1,5 +1,4 @@
 \name{SFO.solution}
-\Rdversion{1.1}
 \alias{SFO.solution}
 \title{ Single First-Order kinetics }
 \description{

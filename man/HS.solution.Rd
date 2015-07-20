@@ -1,5 +1,4 @@
 \name{HS.solution}
-\Rdversion{1.1}
 \alias{HS.solution}
 \title{ Hockey-Stick kinetics }
 \description{

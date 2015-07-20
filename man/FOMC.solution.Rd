@@ -1,5 +1,4 @@
 \name{FOMC.solution}
-\Rdversion{1.1}
 \alias{FOMC.solution}
 \title{ First-Order Multi-Compartment kinetics }
 \description{

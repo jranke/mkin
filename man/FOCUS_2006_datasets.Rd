@@ -1,5 +1,4 @@
 \name{FOCUS_2006_datasets}
-\Rdversion{1.1}
 \alias{FOCUS_2006_A}
 \alias{FOCUS_2006_B}
 \alias{FOCUS_2006_C}
