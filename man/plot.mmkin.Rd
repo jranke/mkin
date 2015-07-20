@@ -14,7 +14,7 @@
 }
 \arguments{
   \item{x}{
-    An object of class \{code{\link{mmkin}}, with either one row or one column.
+    An object of class \code{\link{mmkin}}, with either one row or one column.
 }
   \item{main}{
     The main title placed on the outer margin of the plot.

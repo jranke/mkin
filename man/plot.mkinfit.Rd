@@ -1,7 +1,7 @@
 \name{plot.mkinfit}
 \alias{plot.mkinfit}
 \title{
-  Plot the observed data and the fitted model of an mkinfit object.
+  Plot the observed data and the fitted model of an mkinfit object
 }
 \description{
   Solves the differential equations with the optimised and fixed parameters

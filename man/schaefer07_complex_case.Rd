@@ -1,7 +1,6 @@
 \name{schaefer07_complex_case}
 \alias{schaefer07_complex_case}
 \alias{schaefer07_complex_results}
-\encoding{latin1}
 \docType{data}
 \title{
   Metabolism data set used for checking the software quality of KinGUI
