@@ -1,7 +1,7 @@
 \name{plot.mmkin}
 \alias{plot.mmkin}
 \title{
-  Plot model fits (observed and fitted) and the residuals for a row or column of an mmkin object.
+  Plot model fits (observed and fitted) and the residuals for a row or column of an mmkin object
 }
 \description{
   When x is a row selected from an mmkin object (\code{\link{[.mmkin}}), the same model

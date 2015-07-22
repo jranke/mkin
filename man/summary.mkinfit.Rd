@@ -2,7 +2,7 @@
 \alias{summary.mkinfit}
 \alias{print.summary.mkinfit}
 \title{
-  Summary method for class "mkinfit".
+  Summary method for class "mkinfit"
 }
 \description{
   Lists model equations, the summary as returned by \code{\link{summary.modFit}},

@@ -1,7 +1,7 @@
 \name{mkinplot}
 \alias{mkinplot}
 \title{
-  Plot the observed data and the fitted model of an mkinfit.
+  Plot the observed data and the fitted model of an mkinfit
 }
 \description{
   Deprecated function. It now only calls the plot method \code{\link{plot.mkinfit}}.

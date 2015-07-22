@@ -1,7 +1,7 @@
 \name{mkin_long_to_wide}
 \alias{mkin_long_to_wide}
 \title{
-  Convert a dataframe from long to wide format.
+  Convert a dataframe from long to wide format
 }
 \usage{
 mkin_long_to_wide(long_data, time = "time", outtime = "time")

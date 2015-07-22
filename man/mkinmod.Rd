@@ -1,7 +1,7 @@
 \name{mkinmod}
 \alias{mkinmod}
 \title{
-  Function to set up a kinetic model with one or more state variables.
+  Function to set up a kinetic model with one or more state variables
 }
 \description{
   The function usually takes several expressions, each assigning a compound name to 

@@ -1,7 +1,7 @@
 \name{mkinfit}
 \alias{mkinfit}
 \title{
-  Fit a kinetic model to data with one or more state variables.
+  Fit a kinetic model to data with one or more state variables
 }
 \description{
   This function uses the Flexible Modelling Environment package

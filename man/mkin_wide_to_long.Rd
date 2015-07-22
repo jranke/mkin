@@ -1,7 +1,7 @@
 \name{mkin_wide_to_long}
 \alias{mkin_wide_to_long}
 \title{
-  Convert a dataframe with observations over time into long format.
+  Convert a dataframe with observations over time into long format
 }
 \usage{
 mkin_wide_to_long(wide_data, time = "t")
