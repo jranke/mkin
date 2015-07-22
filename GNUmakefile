@@ -85,15 +85,13 @@ vignettes/%.html: vignettes/mkin_vignettes.css vignettes/%.Rmd
 
 vignettes: vignettes/mkin.pdf vignettes/FOCUS_D.html vignettes/FOCUS_L.html vignettes/FOCUS_Z.pdf vignettes/compiled_models.html
 
-sd: install
+sd:
 	rm -rf $(SDDIR)/*
+	cp index.r $(SDDIR)
 	@echo Now execute
 	@echo "\n  library(staticdocs); build_site(site_path = '$(SDDIR)')\n"
 	$(RBIN)/R
-
-sd2: install
-	rm -rf $(SDDIR)/*
-	xvfb-run $(RBIN)/R -e "library(staticdocs); build_site(site_path = '$(SDDIR)')"
+	rm $(SDDIR)/index.r
 
 r-forge: sd
 	cd $(SDDIR) && svn add --force .

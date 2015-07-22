@@ -2,7 +2,9 @@
 
 ## mkin 0.9-40.9000
 
+### Minor changes
 
+- Use an index.r file to group help topics in static documentation
 
 ## mkin 0.9-40 (2015-07-21)
 
