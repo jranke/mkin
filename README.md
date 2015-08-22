@@ -46,6 +46,11 @@ at the package vignettes
 [`FOCUS L`](http://kinfit.r-forge.r-project.org/mkin_static/vignettes/FOCUS_L.html) and
 [`FOCUS D`](http://kinfit.r-forge.r-project.org/mkin_static/vignettes/FOCUS_D.html).
 
+## Documentation
+
+The [HTML documentation](http://kinfit.r-forge.r-project.org/mkin_static) is
+maintained at the R-Forge project site.
+
 ## Features
 
 * Highly flexible model specification using
