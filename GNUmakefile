@@ -23,8 +23,8 @@ pkgfiles = \
 	man/* \
 	NAMESPACE \
 	NEWS.md \
+	README.html \
 	R/* \
-	README.md \
 	tests/* \
 	tests/testthat* \
 	TODO
@@ -41,9 +41,9 @@ $(TGZVNR): $(pkgfiles)
 		cd $(PKGSRC);\
 	mv $(TGZ) $(TGZVNR)
                 
-build: $(TGZ)
+build: $(TGZ) vignettes
 
-build-no-vignettes: $(TGZVNR)
+build-no-vignettes: $(TGZVNR) vignettes
 
 install: build
 	"$(RBIN)/R" CMD INSTALL $(TGZ)
@@ -76,6 +76,9 @@ clean:
 test: quickinstall
 	cd tests;\
 		"$(RBIN)/Rscript" testthat.R 2>&1 | tee ../test.log
+
+README.html: README.md
+	"$(RBIN)/Rscript" -e "rmarkdown::render('README.md', output_format = 'html_document')"
 
 vignettes/%.pdf: vignettes/header.tex vignettes/references.bib vignettes/%.Rnw
 	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/$*.Rnw', dir = 'vignettes')"
