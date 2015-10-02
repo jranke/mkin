@@ -52,7 +52,7 @@ quickinstall: build-no-vignettes
 	"$(RBIN)/R" CMD INSTALL $(TGZVNR)
 
 check: build
-	"$(RBIN)/R" CMD check --as-cran --no-tests $(TGZ) 2>&1 | tee check.log
+	"$(RBIN)/R" CMD check --as-cran --no-tests $(TGZ)
 
 quickcheck: build-no-vignettes
 	mv $(TGZVNR) $(TGZ)
@@ -60,7 +60,6 @@ quickcheck: build-no-vignettes
 	mv $(TGZ) $(TGZVNR)
 
 clean:
-	$(RM) -r $(PKGNAME).Rcheck/
 	$(RM) -r vignettes/*.bbl
 	$(RM) -r vignettes/*.blg
 	$(RM) -r vignettes/*.fls
