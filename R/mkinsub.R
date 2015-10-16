@@ -1,4 +1,4 @@
-# Copyright (C) 2014 Johannes Ranke
+# Copyright (C) 2014,2015 Johannes Ranke
 # Portions of this code are copyright (C) 2013 Eurofins Regulatory AG
 # Contact: jranke@uni-bremen.de
 
@@ -16,8 +16,8 @@
 
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
-mkinsub <- function(submodel, to = NULL, sink = TRUE)
+mkinsub <- function(submodel, to = NULL, sink = TRUE, full_name = NA)
 {
-  return(list(type = submodel, to = to, sink = sink))
+  return(list(type = submodel, to = to, sink = sink, full_name = full_name))
 }
 # vim: set ts=2 sw=2 expandtab:

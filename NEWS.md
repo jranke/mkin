@@ -4,6 +4,8 @@
 
 ### Minor changes
 
+- Make it possible to specify arbitrary strings as names for the compounds in `mkinmod`, and show them in the plot
+
 - Use an index.r file to group help topics in static documentation
 
 ## mkin 0.9-40 (2015-07-21)

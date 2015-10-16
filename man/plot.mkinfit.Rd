@@ -82,7 +82,8 @@
 \examples{
 # One parent compound, one metabolite, both single first order, path from
 # parent to sink included
-SFO_SFO <- mkinmod(parent = mkinsub("SFO", "m1"), m1 = mkinsub("SFO"))
+SFO_SFO <- mkinmod(parent = mkinsub("SFO", "m1", full = "Parent"),
+                   m1 = mkinsub("SFO", full = "Metabolite M1" ))
 fit <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE)
 plot(fit)
 }

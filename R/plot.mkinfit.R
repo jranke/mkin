@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2014 Johannes Ranke
+# Copyright (C) 2010-2015 Johannes Ranke
 # Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
@@ -76,7 +76,11 @@ plot.mkinfit <- function(x, fit = x,
   }
   matlines(out$time, out[obs_vars], col = col_obs[obs_vars], lty = lty_obs[obs_vars])
   if (legend == TRUE) {
-    legend(lpos, inset= inset, legend = obs_vars,
+    legend_names = lapply(names(fit$mkinmod$spec), function(x) {
+                            if (is.na(fit$mkinmod$spec[[x]]$full_name)) x
+                            else fit$mkinmod$spec[[x]]$full_name
+      })
+    legend(lpos, inset= inset, legend = legend_names,
       col = col_obs[obs_vars], pch = pch_obs[obs_vars], lty = lty_obs[obs_vars])
   }
   # Show residuals if requested

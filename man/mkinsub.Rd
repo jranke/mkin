@@ -8,7 +8,7 @@
   \code{\link{mkinmod}}.
 }
 \usage{
-mkinsub(submodel, to = NULL, sink = TRUE)
+mkinsub(submodel, to = NULL, sink = TRUE, full_name = NA)
 }
 \arguments{
   \item{submodel}{
@@ -22,6 +22,12 @@ mkinsub(submodel, to = NULL, sink = TRUE)
   \item{sink}{
     Should a pathway to sink be included in the model in addition to the 
     pathways to other state variables?
+  }
+  \item{full_name}{
+    An optional name to be used e.g. for plotting fits performed with the model.
+    You can use non-ASCII characters here, but then your R code will not be
+    portable, \emph{i.e.} may produce unintended plot results on other
+    operating systems or system configurations.
   }
 }
 \value{
@@ -40,5 +46,10 @@ SFO_SFO <- mkinmod(
 SFO_SFO.2 <- mkinmod(
   parent = mkinsub("SFO", "m1"),
   m1 = mkinsub("SFO"))
+
+# Now supplying full names
+SFO_SFO.2 <- mkinmod(
+  parent = mkinsub("SFO", "m1", full_name = "Test compound"),
+  m1 = mkinsub("SFO", full_name = "Metabolite M1"))
 }
 
