@@ -77,8 +77,10 @@ plot.mkinfit <- function(x, fit = x,
   matlines(out$time, out[obs_vars], col = col_obs[obs_vars], lty = lty_obs[obs_vars])
   if (legend == TRUE) {
     legend_names = lapply(names(fit$mkinmod$spec), function(x) {
+                          if (!is.null(fit$mkinmod$spec[[x]]$full_name))
                             if (is.na(fit$mkinmod$spec[[x]]$full_name)) x
                             else fit$mkinmod$spec[[x]]$full_name
+                          else x
       })
     legend(lpos, inset= inset, legend = legend_names,
       col = col_obs[obs_vars], pch = pch_obs[obs_vars], lty = lty_obs[obs_vars])
