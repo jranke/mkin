@@ -8,6 +8,8 @@
 
 - Use an index.r file to group help topics in static documentation
 
+- Add a printing method for mkinmod objects
+
 ## mkin 0.9-40 (2015-07-21)
 
 ### Bug fixes

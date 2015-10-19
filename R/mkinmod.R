@@ -353,4 +353,20 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
   class(model) <- "mkinmod"
   return(model)
 }
+
+print.mkinmod <- function(x, ...) {
+  cat("<mkinmod> model generated with\n")
+  cat("Use of formation fractions $use_of_ff:", x$use_of_ff, "\n")
+  cat("Specification $spec:\n")
+  for (obs in names(x$spec)) {
+    cat("$", obs, "\n", sep = "")
+    spl <- x$spec[[obs]]
+    cat("$type:", spl$type)
+    if (!is.null(spl$to)) cat(", $to: ", spl$to, ", $sink: ", spl$sink, sep = "")
+    if (!is.null(spl$full_name)) if (!is.na(spl$full_name)) cat(", $full_name:", spl$full_name)
+    cat("\n")
+  }
+  if (is.matrix(x$coefmat)) cat("Coefficient matrix $coefmat available\n")
+  if (!is.null(x$cf)) cat("Compiled model $cf available\n")  
+}
 # vim: set foldmethod=marker ts=2 sw=2 expandtab:
