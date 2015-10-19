@@ -30,7 +30,7 @@
 #' @field replicates The number of replicates
 #' @field data A dataframe with at least the columns name, time and value
 #'   in order to be compatible with mkinfit
-#' @examples inst/examples/mkinds.R
+#' @example inst/examples/mkinds.R
 mkinds <- R6Class("mkinds", 
   public = list(
     title = NULL,

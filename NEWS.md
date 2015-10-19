@@ -4,11 +4,13 @@
 
 ### Minor changes
 
+- Add an R6 class `mkinds` representing datasets with a printing method
+
+- Add a printing method for mkinmod objects
+
 - Make it possible to specify arbitrary strings as names for the compounds in `mkinmod`, and show them in the plot
 
 - Use an index.r file to group help topics in static documentation
-
-- Add a printing method for mkinmod objects
 
 ## mkin 0.9-40 (2015-07-21)
 
