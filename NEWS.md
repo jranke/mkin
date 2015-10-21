@@ -12,6 +12,10 @@
 
 - Use an index.r file to group help topics in static documentation
 
+### Bug fixes
+
+- `print.summary.mkinfit()`: Avoid an error that occurred when printing summaries generated with mkin versions before 0.9-36
+
 ## mkin 0.9-40 (2015-07-21)
 
 ### Bug fixes

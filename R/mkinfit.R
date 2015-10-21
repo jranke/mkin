@@ -684,11 +684,16 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
   cat("\nResidual standard error:",
       format(signif(x$sigma, digits)), "on", rdf, "degrees of freedom\n")
 
-  cat("\nBacktransformed parameters:\n",
-      "  Confidence intervals for internally transformed parameters are asymmetric.\n",
-      "  t-test (unrealistically) based on the assumption of normal distribution\n",
-      "  for estimators of untransformed parameters.\n", sep = "")
-  print(signif(x$bpar[, c(1, 3, 4, 5, 6)], digits = digits))
+  cat("\nBacktransformed parameters:\n")
+  cat("  Confidence intervals for internally transformed parameters are asymmetric.\n")
+  if ((x$version) < "0.9-36") {
+    cat("  To get the usual (questionable) t-test, upgrade mkin and repeat the fit.\n")
+    print(signif(x$bpar, digits = digits))
+  } else {
+    cat("  t-test (unrealistically) based on the assumption of normal distribution\n")
+    cat("  for estimators of untransformed parameters.\n")
+    print(signif(x$bpar[, c(1, 3, 4, 5, 6)], digits = digits))
+  }
 
   cat("\nChi2 error levels in percent:\n")
   x$errmin$err.min <- 100 * x$errmin$err.min
