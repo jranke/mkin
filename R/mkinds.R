@@ -44,7 +44,7 @@ mkinds <- R6Class("mkinds",
     initialize = function(title = "", data, time_unit = NA, unit = NA) {
 
       self$title = title
-      self$sampling_times = unique(data$time)
+      self$sampling_times = sort(unique(data$time))
       self$time_unit = time_unit
       self$observed = unique(data$name)
       self$unit = unit
