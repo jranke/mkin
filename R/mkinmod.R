@@ -362,7 +362,7 @@ print.mkinmod <- function(x, ...) {
     cat("$", obs, "\n", sep = "")
     spl <- x$spec[[obs]]
     cat("$type:", spl$type)
-    if (!is.null(spl$to)) cat(", $to: ", spl$to, ", $sink: ", spl$sink, sep = "")
+    if (!is.null(spl$to)) cat(", $to: ", paste(spl$to, collapse = ", "), ", $sink: ", spl$sink, sep = "")
     if (!is.null(spl$full_name)) if (!is.na(spl$full_name)) cat(", $full_name:", spl$full_name)
     cat("\n")
   }
