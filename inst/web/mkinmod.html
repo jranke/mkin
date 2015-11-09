@@ -170,51 +170,24 @@ SFO_SFO &lt;- mkinmod(
 </div>
 <strong class='message'>Successfully compiled differential equation model from auto-generated C code.</strong>
 <div class='input'>
-# The above model used to be specified like this, before the advent of mkinsub()
-SFO_SFO &lt;- mkinmod(
-  parent = list(type = &quot;SFO&quot;, to = &quot;m1&quot;),
-  m1 = list(type = &quot;SFO&quot;))
-</div>
-<strong class='message'>Successfully compiled differential equation model from auto-generated C code.</strong>
-<div class='input'>
-# Show details of creating the C function
-SFO_SFO &lt;- mkinmod(
-  parent = mkinsub(&quot;SFO&quot;, &quot;m1&quot;),
-  m1 = mkinsub(&quot;SFO&quot;), verbose = TRUE)
-</div>
-<div class='output'>Compilation argument:
- /usr/lib/R/bin/R CMD SHLIB file16d352645eb9.c 2&gt; file16d352645eb9.c.err.txt 
-Program source:
-  1: #include &lt;R.h&gt;
-  2: 
-  3: 
-  4: static double parms [3];
-  5: #define k_parent_sink parms[0]
-  6: #define k_parent_m1 parms[1]
-  7: #define k_m1_sink parms[2]
-  8: 
-  9: void initpar(void (* odeparms)(int *, double *)) {
- 10:     int N = 3;
- 11:     odeparms(&amp;N, parms);
- 12: }
- 13: 
- 14: 
- 15: void func ( int * n, double * t, double * y, double * f, double * rpar, int * ipar ) {
- 16: 
- 17: f[0] = - k_parent_sink * y[0] - k_parent_m1 * y[0];
- 18: f[1] = + k_parent_m1 * y[0] - k_m1_sink * y[1];
- 19: }
-</div>
-<strong class='message'>Successfully compiled differential equation model from auto-generated C code.</strong>
-<div class='input'>
-# If we have several parallel metabolites 
-# (compare tests/testthat/test_synthetic_data_for_UBA_2014.R)
-m_synth_DFOP_par &lt;- mkinmod(parent = mkinsub(&quot;DFOP&quot;, c(&quot;M1&quot;, &quot;M2&quot;)),
-                           M1 = mkinsub(&quot;SFO&quot;),
-                           M2 = mkinsub(&quot;SFO&quot;),
-                           use_of_ff = &quot;max&quot;, quiet = TRUE)
-
 ## Not run: 
+# # The above model used to be specified like this, before the advent of mkinsub()
+# SFO_SFO &lt;- mkinmod(
+#   parent = list(type = &quot;SFO&quot;, to = &quot;m1&quot;),
+#   m1 = list(type = &quot;SFO&quot;))
+# 
+# # Show details of creating the C function
+# SFO_SFO &lt;- mkinmod(
+#   parent = mkinsub(&quot;SFO&quot;, &quot;m1&quot;),
+#   m1 = mkinsub(&quot;SFO&quot;), verbose = TRUE)
+# 
+# # If we have several parallel metabolites 
+# # (compare tests/testthat/test_synthetic_data_for_UBA_2014.R)
+# m_synth_DFOP_par &lt;- mkinmod(parent = mkinsub(&quot;DFOP&quot;, c(&quot;M1&quot;, &quot;M2&quot;)),
+#                            M1 = mkinsub(&quot;SFO&quot;),
+#                            M2 = mkinsub(&quot;SFO&quot;),
+#                            use_of_ff = &quot;max&quot;, quiet = TRUE)
+# 
 # fit_DFOP_par_c &lt;- mkinfit(m_synth_DFOP_par, 
 #                           synthetic_data_for_UBA_2014[[12]]$data,
 #                           quiet = TRUE)
