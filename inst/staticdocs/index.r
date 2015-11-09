@@ -38,6 +38,8 @@ sd_section(
   c("mkin_wide_to_long", 
     "mkin_long_to_wide",
     "mkinsub",
+    "mkinds", "print.mkinds",
+    "print.mkinmod",
     "mkinpredict",
     "transform_odeparms",
     "ilr",

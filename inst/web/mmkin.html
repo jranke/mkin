@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>mmkin. mkin 0.9-41</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="
+  Johannes Ranke
+">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">mkin 0.9-41</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>
+  Fit one or more kinetic models with one or more state variables to one or more datasets
+</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>mmkin(models, datasets, cores&nbsp;=&nbsp;round(detectCores()/2), cluster&nbsp;=&nbsp;NULL, ...)</div></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>models</dt>
+      <dd>
+    Either a character vector of shorthand names ("SFO", "FOMC", "DFOP",
+    "HS", "SFORB"), or an optionally named list of <code><a href='mkinmod.html'>mkinmod</a></code>
+    objects.
+  </dd>
+      <dt>datasets</dt>
+      <dd>
+    An optionally named list of datasets suitable as observed data for
+    <code><a href='mkinfit.html'>mkinfit</a></code>.
+  </dd>
+      <dt>cores</dt>
+      <dd>
+    The number of cores to be used for multicore processing. This is only
+    used when the <code>cluster</code> argument is <code>NULL</code>.
+  </dd>
+      <dt>cluster</dt>
+      <dd>
+    A cluster as returned by <code><a href='http://www.inside-r.org/r-doc/parallel/makeCluster'>makeCluster</a></code> to be used for parallel 
+    execution.
+  </dd>
+      <dt>...</dt>
+      <dd>
+    Further arguments that will be passed to <code><a href='mkinfit.html'>mkinfit</a></code>. 
+  </dd>
+    </dl>
+    
+    <div class="Description">
+      <h2>Description</h2>
+
+      <p>This function calls <code><a href='mkinfit.html'>mkinfit</a></code> on all combinations of models and datasets
+  specified in its first two arguments.</p>
+  
+    </div>
+
+    <div class="Value">
+      <h2>Value</h2>
+
+      <p><dl>
+  A matrix of <code><a href='mkinfit.html'>mkinfit</a></code> objects that can be indexed using the model
+  and dataset names as row and column indices.
+</dl></p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>## Not run: 
+# m_synth_SFO_lin &lt;- mkinmod(parent = list(type = &quot;SFO&quot;, to = &quot;M1&quot;),
+#                            M1 = list(type = &quot;SFO&quot;, to = &quot;M2&quot;),
+#                            M2 = list(type = &quot;SFO&quot;), use_of_ff = &quot;max&quot;)
+# 
+# m_synth_FOMC_lin &lt;- mkinmod(parent = list(type = &quot;FOMC&quot;, to = &quot;M1&quot;),
+#                            M1 = list(type = &quot;SFO&quot;, to = &quot;M2&quot;),
+#                            M2 = list(type = &quot;SFO&quot;), use_of_ff = &quot;max&quot;)
+# 
+# models &lt;- list(SFO_lin = m_synth_SFO_lin, FOMC_lin = m_synth_FOMC_lin)
+# datasets &lt;- lapply(synthetic_data_for_UBA_2014[1:3], function(x) x$data)
+# 
+# time_default &lt;- system.time(fits &lt;- mmkin(models, datasets))
+# time_1 &lt;- system.time(fits.1 &lt;- mmkin(models, datasets, cores = 1))
+# 
+# time_default
+# time_1
+# 
+# endpoints(fits[[&quot;SFO_lin&quot;, 2]])
+# ## End(Not run)
+</div></pre>
+  </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>mmkin</li>
+    </ul>
+    <ul>
+      <li> optimize </li>
+    </ul> -->
+      
+    <h2>See also</h2>
+    
+  <code><a href='Extract.mmkin.html'>[.mmkin</a></code> for subsetting, <code><a href='plot.mmkin.html'>plot.mmkin</a></code> for plotting.
+
+    
+    <h2>Author</h2>
+    
+  Johannes Ranke
+
+    
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

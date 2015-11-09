@@ -31,19 +31,19 @@ pkgfiles = \
 
 all: build
 
-$(TGZ): $(pkgfiles)
+$(TGZ): $(pkgfiles) vignettes
 	cd ..;\
 		"$(RBIN)/R" CMD build $(PKGSRC) 2>&1 | tee $(PKGNAME)/build.log
 
-$(TGZVNR): $(pkgfiles)
+$(TGZVNR): $(pkgfiles) vignettes
 	cd ..;\
 		"$(RBIN)/R" CMD build $(PKGSRC) --no-build-vignettes;\
 		cd $(PKGSRC);\
 	mv $(TGZ) $(TGZVNR)
                 
-build: $(TGZ) vignettes
+build: $(TGZ)
 
-build-no-vignettes: $(TGZVNR) vignettes
+build-no-vignettes: $(TGZVNR)
 
 install: build
 	"$(RBIN)/R" CMD INSTALL $(TGZ)
@@ -88,14 +88,13 @@ vignettes/%.html: vignettes/mkin_vignettes.css vignettes/%.Rmd
 vignettes: vignettes/mkin.pdf vignettes/FOCUS_D.html vignettes/FOCUS_L.html vignettes/FOCUS_Z.pdf vignettes/compiled_models.html
 
 sd:
-	rm -rf $(SDDIR)/*
-	cp index.r $(SDDIR)
 	@echo Now execute
-	@echo "\n  library(staticdocs); build_site(site_path = '$(SDDIR)')\n"
+	@echo "\n  staticdocs::build_site()\n"
 	$(RBIN)/R
-	rm $(SDDIR)/index.r
 
 r-forge: sd
+	rm -rf $(SDDIR)/*
+	cp -a inst/web/* $(SDDIR)
 	cd $(SDDIR) && svn add --force .
 	git archive master > $(HOME)/mkin.tar;\
 	cd $(RFDIR) && rm -r `ls` && tar -xf $(HOME)/mkin.tar;\

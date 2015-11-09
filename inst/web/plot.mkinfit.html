@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>plot.mkinfit. mkin 0.9-41</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="
+  Johannes Ranke
+">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">mkin 0.9-41</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>
+  Plot the observed data and the fitted model of an mkinfit object
+</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>"plot"(x, fit&nbsp;=&nbsp;x, obs_vars&nbsp;=&nbsp;names(fit$mkinmod$map), xlab&nbsp;=&nbsp;"Time", ylab&nbsp;=&nbsp;"Observed",  xlim&nbsp;=&nbsp;range(fit$data$time), ylim&nbsp;=&nbsp;"default", col_obs&nbsp;=&nbsp;1:length(fit$mkinmod$map), pch_obs&nbsp;=&nbsp;col_obs,  lty_obs&nbsp;=&nbsp;rep(1, length(fit$mkinmod$map)), add&nbsp;=&nbsp;FALSE, legend&nbsp;=&nbsp;!add, show_residuals&nbsp;=&nbsp;FALSE, maxabs&nbsp;=&nbsp;"auto", lpos&nbsp;=&nbsp;"topright", inset&nbsp;=&nbsp;c(0.05, 0.05), ...)</div></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>x</dt>
+      <dd>
+    Alias for fit introduced for compatibility with the generic S3 method.  
+  </dd>
+      <dt>fit</dt>
+      <dd>
+    an object of class <code><a href='mkinfit.html'>mkinfit</a></code>.
+  </dd>
+      <dt>obs_vars</dt>
+      <dd>
+    A character vector of names of the observed variables for which the 
+    data and the model should be plotted. Defauls to all observed variables
+    in the model.
+  </dd>
+      <dt>xlab</dt>
+      <dd>
+    label for the x axis.
+  </dd>
+      <dt>ylab</dt>
+      <dd>
+    label for the y axis.
+  </dd>
+      <dt>xlim</dt>
+      <dd>
+    plot range in x direction.
+  </dd>
+      <dt>ylim</dt>
+      <dd>
+    plot range in y direction.
+  </dd>
+      <dt>col_obs</dt>
+      <dd>
+    colors used for plotting the observed data and the corresponding model prediction lines.
+  </dd>
+      <dt>pch_obs</dt>
+      <dd>
+    symbols to be used for plotting the data.
+  </dd>
+      <dt>lty_obs</dt>
+      <dd>
+    line types to be used for the model predictions.
+  </dd>
+      <dt>add</dt>
+      <dd>
+    should the plot be added to an existing plot?
+  </dd>
+      <dt>legend</dt>
+      <dd>
+    should a legend be added to the plot?
+  </dd>
+      <dt>show_residuals</dt>
+      <dd>
+    should residuals be shown in the lower third of the plot?
+  </dd>
+      <dt>maxabs</dt>
+      <dd>
+    Maximum absolute value of the residuals. This is used for the scaling of
+    the y axis and defaults to "auto".
+  </dd>
+      <dt>lpos</dt>
+      <dd>
+    position of the legend. Passed to <code><a href='http://www.inside-r.org/r-doc/graphics/legend'>legend</a></code> as the first argument.
+  </dd>
+      <dt>inset</dt>
+      <dd>
+    Passed to <code><a href='http://www.inside-r.org/r-doc/graphics/legend'>legend</a></code> if applicable.
+  </dd>
+      <dt>...</dt>
+      <dd>
+   further arguments passed to <code><a href='http://www.inside-r.org/r-doc/graphics/plot'>plot</a></code>.
+  </dd>
+    </dl>
+    
+    <div class="Description">
+      <h2>Description</h2>
+
+      <p>Solves the differential equations with the optimised and fixed parameters
+  from a previous successful call to <code><a href='mkinfit.html'>mkinfit</a></code> and plots 
+  the observed data together with the solution of the fitted model.</p>
+  
+    </div>
+
+    <div class="Value">
+      <h2>Value</h2>
+
+      <p><dl>
+  The function is called for its side effect.
+</dl></p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'># One parent compound, one metabolite, both single first order, path from
+# parent to sink included
+SFO_SFO &lt;- mkinmod(parent = mkinsub(&quot;SFO&quot;, &quot;m1&quot;, full = &quot;Parent&quot;),
+                   m1 = mkinsub(&quot;SFO&quot;, full = &quot;Metabolite M1&quot; ))
+</div>
+<strong class='message'>Successfully compiled differential equation model from auto-generated C code.</strong>
+<div class='input'>fit &lt;- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE)
+plot(fit)
+</div>
+<p><img src='plot.mkinfit-4.png' alt='' width='540' height='400' /></p></pre>
+  </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>plot.mkinfit</li>
+    </ul>
+    <ul>
+      <li> hplot </li>
+    </ul> -->
+      
+    
+    <h2>Author</h2>
+    
+  Johannes Ranke
+
+    
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

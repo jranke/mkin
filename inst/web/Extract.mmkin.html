@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>[.mmkin. mkin 0.9-41</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="
+  Johannes Ranke
+">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">mkin 0.9-41</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>Subsetting method for mmkin objects</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>"["(x, i, j, ..., drop&nbsp;=&nbsp;FALSE)</div></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>x</dt>
+      <dd>An <code><a href='mmkin.html'>mmkin</a> object</code></dd>
+      <dt>i</dt>
+      <dd>Row index selecting the fits for specific models</dd>
+      <dt>j</dt>
+      <dd>Column index selecting the fits to specific datasets</dd>
+      <dt>...</dt>
+      <dd>Not used, only there to satisfy the generic method definition</dd>
+      <dt>drop</dt>
+      <dd>If FALSE, the method always returns an mmkin object, otherwise either 
+  a list of mkinfit objects or a single mkinfit object.</dd>
+    </dl>
+    
+    <div class="Description">
+      <h2>Description</h2>
+
+      <p>Subsetting method for mmkin objects.</p>
+  
+    </div>
+
+    <div class="Value">
+      <h2>Value</h2>
+
+      <p><dl>
+  An object of class <code><a href='mmkin.html'>mmkin</a></code>.
+</dl></p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>  # Only use one core, to pass R CMD check --as-cran
+  fits &lt;- mmkin(c(&quot;SFO&quot;, &quot;FOMC&quot;), list(B = FOCUS_2006_B, C = FOCUS_2006_C), 
+                cores = 1, quiet = TRUE)
+  fits[&quot;FOMC&quot;, ]
+</div>
+<div class='output'>      dataset
+model  B       C      
+  FOMC List,42 List,42
+attr(,&quot;class&quot;)
+[1] &quot;mmkin&quot;
+</div>
+<div class='input'>  fits[, &quot;B&quot;]
+</div>
+<div class='output'>      dataset
+model  B      
+  SFO  List,42
+  FOMC List,42
+attr(,&quot;class&quot;)
+[1] &quot;mmkin&quot;
+</div>
+<div class='input'>  fits[, &quot;B&quot;, drop = TRUE]$FOMC
+</div>
+<div class='output'>$par
+ parent_0 log_alpha  log_beta 
+99.666193  2.549849  5.050586 
+
+$ssr
+[1] 28.58291
+
+$convergence
+[1] 0
+
+$iterations
+[1] 21
+
+$evaluations
+function gradient 
+      25       78 
+
+$counts
+[1] &quot;both X-convergence and relative convergence (5)&quot;
+
+$hessian
+            parent_0   log_alpha    log_beta
+parent_0    4.123033   -95.69983    93.17699
+log_alpha -95.699832  6618.85833 -6352.46648
+log_beta   93.176993 -6352.46648  6101.23483
+
+$residuals
+      parent       parent       parent       parent       parent       parent       parent       parent 
+ 1.046192647 -3.322396479  3.655156669 -1.705316770  0.406306255 -0.123734689 -0.036886982 -0.006240458 
+
+$ms
+[1] 3.572863
+
+$var_ms
+  parent 
+3.572863 
+
+$var_ms_unscaled
+  parent 
+3.572863 
+
+$var_ms_unweighted
+  parent 
+3.572863 
+
+$rank
+[1] 3
+
+$df.residual
+[1] 5
+
+$solution_type
+[1] &quot;analytical&quot;
+
+$transform_rates
+[1] TRUE
+
+$transform_fractions
+[1] TRUE
+
+$method.modFit
+[1] &quot;Port&quot;
+
+$maxit.modFit
+[1] &quot;auto&quot;
+
+$calls
+[1] 111
+
+$time
+   user  system elapsed 
+  0.264   0.000   0.264 
+
+$mkinmod
+&lt;mkinmod&gt; model generated with
+Use of formation fractions $use_of_ff: min 
+Specification $spec:
+$parent
+$type: FOMC
+
+$observed
+    name time value
+1 parent    0 98.62
+2 parent    3 81.43
+3 parent    7 53.18
+4 parent   14 34.89
+5 parent   30 10.09
+6 parent   62  1.50
+7 parent   90  0.33
+8 parent  118  0.08
+
+$obs_vars
+[1] &quot;parent&quot;
+
+$predicted
+      name       time       value
+1   parent   0.000000 99.66619265
+2   parent   1.191919 90.41690342
+3   parent   2.383838 82.08630014
+4   parent   3.000000 78.10760352
+5   parent   3.575758 74.57722848
+6   parent   4.767677 67.80342415
+7   parent   5.959596 61.68822425
+8   parent   7.000000 56.83515667
+9   parent   7.151515 56.16343898
+10  parent   8.343434 51.16836285
+11  parent   9.535354 46.64890734
+12  parent  10.727273 42.55683931
+13  parent  11.919192 38.84911158
+14  parent  13.111111 35.48727414
+15  parent  14.000000 33.18468323
+16  parent  14.303030 32.43695565
+17  parent  15.494949 29.66740651
+18  parent  16.686869 27.15109578
+19  parent  17.878788 24.86335532
+20  parent  19.070707 22.78206538
+21  parent  20.262626 20.88737647
+22  parent  21.454545 19.16146324
+23  parent  22.646465 17.58830644
+24  parent  23.838384 16.15349953
+25  parent  25.030303 14.84407724
+26  parent  26.222222 13.64836315
+27  parent  27.414141 12.55583436
+28  parent  28.606061 11.55700107
+29  parent  29.797980 10.64329940
+30  parent  30.000000 10.49630626
+31  parent  30.989899  9.80699593
+32  parent  32.181818  9.04110261
+33  parent  33.373737  8.33930082
+34  parent  34.565657  7.69587362
+35  parent  35.757576  7.10564515
+36  parent  36.949495  6.56392657
+37  parent  38.141414  6.06646759
+38  parent  39.333333  5.60941311
+39  parent  40.525253  5.18926438
+40  parent  41.717172  4.80284421
+41  parent  42.909091  4.44726569
+42  parent  44.101010  4.11990420
+43  parent  45.292929  3.81837216
+44  parent  46.484848  3.54049644
+45  parent  47.676768  3.28429799
+46  parent  48.868687  3.04797350
+47  parent  50.060606  2.82987892
+48  parent  51.252525  2.62851456
+49  parent  52.444444  2.44251172
+50  parent  53.636364  2.27062056
+51  parent  54.828283  2.11169922
+52  parent  56.020202  1.96470393
+53  parent  57.212121  1.82868009
+54  parent  58.404040  1.70275424
+55  parent  59.595960  1.58612677
+56  parent  60.787879  1.47806529
+57  parent  61.979798  1.37789865
+58  parent  62.000000  1.37626531
+59  parent  63.171717  1.28501157
+60  parent  64.363636  1.19883967
+61  parent  65.555556  1.11886504
+62  parent  66.747475  1.04461220
+63  parent  67.939394  0.97564441
+64  parent  69.131313  0.91156031
+65  parent  70.323232  0.85199096
+66  parent  71.515152  0.79659697
+67  parent  72.707071  0.74506609
+68  parent  73.898990  0.69711084
+69  parent  75.090909  0.65246649
+70  parent  76.282828  0.61088912
+71  parent  77.474747  0.57215389
+72  parent  78.666667  0.53605348
+73  parent  79.858586  0.50239663
+74  parent  81.050505  0.47100683
+75  parent  82.242424  0.44172111
+76  parent  83.434343  0.41438896
+77  parent  84.626263  0.38887128
+78  parent  85.818182  0.36503953
+79  parent  87.010101  0.34277481
+80  parent  88.202020  0.32196716
+81  parent  89.393939  0.30251479
+82  parent  90.000000  0.29311302
+83  parent  90.585859  0.28432347
+84  parent  91.777778  0.26730596
+85  parent  92.969697  0.25138141
+86  parent  94.161616  0.23647487
+87  parent  95.353535  0.22251689
+88  parent  96.545455  0.20944302
+89  parent  97.737374  0.19719349
+90  parent  98.929293  0.18571281
+91  parent 100.121212  0.17494947
+92  parent 101.313131  0.16485560
+93  parent 102.505051  0.15538676
+94  parent 103.696970  0.14650163
+95  parent 104.888889  0.13816179
+96  parent 106.080808  0.13033150
+97  parent 107.272727  0.12297753
+98  parent 108.464646  0.11606895
+99  parent 109.656566  0.10957695
+100 parent 110.848485  0.10347470
+101 parent 112.040404  0.09773723
+102 parent 113.232323  0.09234125
+103 parent 114.424242  0.08726506
+104 parent 115.616162  0.08248842
+105 parent 116.808081  0.07799245
+106 parent 118.000000  0.07375954
+
+$cost
+function (P) 
+{
+    assign(&quot;calls&quot;, calls + 1, inherits = TRUE)
+    if (trace_parms) 
+        cat(P, &quot;\n&quot;)
+    if (length(state.ini.optim) &gt; 0) {
+        odeini &lt;- c(P[1:length(state.ini.optim)], state.ini.fixed)
+        names(odeini) &lt;- c(state.ini.optim.boxnames, state.ini.fixed.boxnames)
+    }
+    else {
+        odeini &lt;- state.ini.fixed
+        names(odeini) &lt;- state.ini.fixed.boxnames
+    }
+    odeparms &lt;- c(P[(length(state.ini.optim) + 1):length(P)], 
+        transparms.fixed)
+    parms &lt;- backtransform_odeparms(odeparms, mkinmod, transform_rates = transform_rates, 
+        transform_fractions = transform_fractions)
+    out &lt;- mkinpredict(mkinmod, parms, odeini, outtimes, solution_type = solution_type, 
+        use_compiled = use_compiled, method.ode = method.ode, 
+        atol = atol, rtol = rtol, ...)
+    assign(&quot;out_predicted&quot;, out, inherits = TRUE)
+    mC &lt;- modCost(out, observed, y = &quot;value&quot;, err = err, weight = weight, 
+        scaleVar = scaleVar)
+    if (mC$model &lt; cost.old) {
+        if (!quiet) 
+            cat(&quot;Model cost at call &quot;, calls, &quot;: &quot;, mC$model, 
+                &quot;\n&quot;)
+        if (plot) {
+            outtimes_plot = seq(min(observed$time), max(observed$time), 
+                length.out = 100)
+            out_plot &lt;- mkinpredict(mkinmod, parms, odeini, outtimes_plot, 
+                solution_type = solution_type, use_compiled = use_compiled, 
+                method.ode = method.ode, atol = atol, rtol = rtol, 
+                ...)
+            plot(0, type = &quot;n&quot;, xlim = range(observed$time), 
+                ylim = c(0, max(observed$value, na.rm = TRUE)), 
+                xlab = &quot;Time&quot;, ylab = &quot;Observed&quot;)
+            col_obs &lt;- pch_obs &lt;- 1:length(obs_vars)
+            lty_obs &lt;- rep(1, length(obs_vars))
+            names(col_obs) &lt;- names(pch_obs) &lt;- names(lty_obs) &lt;- obs_vars
+            for (obs_var in obs_vars) {
+                points(subset(observed, name == obs_var, c(time, 
+                  value)), pch = pch_obs[obs_var], col = col_obs[obs_var])
+            }
+            matlines(out_plot$time, out_plot[-1], col = col_obs, 
+                lty = lty_obs)
+            legend(&quot;topright&quot;, inset = c(0.05, 0.05), legend = obs_vars, 
+                col = col_obs, pch = pch_obs, lty = 1:length(pch_obs))
+        }
+        assign(&quot;cost.old&quot;, mC$model, inherits = TRUE)
+    }
+    return(mC)
+}
+&lt;environment: 0x3b41780&gt;
+
+$cost_notrans
+function (P) 
+{
+    if (length(state.ini.optim) &gt; 0) {
+        odeini &lt;- c(P[1:length(state.ini.optim)], state.ini.fixed)
+        names(odeini) &lt;- c(state.ini.optim.boxnames, state.ini.fixed.boxnames)
+    }
+    else {
+        odeini &lt;- state.ini.fixed
+        names(odeini) &lt;- state.ini.fixed.boxnames
+    }
+    odeparms &lt;- c(P[(length(state.ini.optim) + 1):length(P)], 
+        parms.fixed)
+    out &lt;- mkinpredict(mkinmod, odeparms, odeini, outtimes, solution_type = solution_type, 
+        use_compiled = use_compiled, method.ode = method.ode, 
+        atol = atol, rtol = rtol, ...)
+    mC &lt;- modCost(out, observed, y = &quot;value&quot;, err = err, weight = weight, 
+        scaleVar = scaleVar)
+    return(mC)
+}
+&lt;environment: 0x3b41780&gt;
+
+$hessian_notrans
+           parent_0     alpha       beta
+parent_0  4.1230329 -7.473531  0.5968527
+alpha    -7.4735307 40.365690 -3.1777189
+beta      0.5968527 -3.177719  0.2503425
+
+$start
+         value   type
+parent_0 98.62  state
+alpha     1.00 deparm
+beta     10.00 deparm
+
+$start_transformed
+              value lower upper
+parent_0  98.620000  -Inf   Inf
+log_alpha  0.000000  -Inf   Inf
+log_beta   2.302585  -Inf   Inf
+
+$fixed
+[1] value type 
+&lt;0 rows&gt; (or 0-length row.names)
+
+$data
+  time variable observed   predicted     residual
+1    0   parent    98.62 99.66619265 -1.046192647
+2    3   parent    81.43 78.10760352  3.322396479
+3    7   parent    53.18 56.83515667 -3.655156669
+4   14   parent    34.89 33.18468323  1.705316770
+5   30   parent    10.09 10.49630626 -0.406306255
+6   62   parent     1.50  1.37626531  0.123734689
+7   90   parent     0.33  0.29311302  0.036886982
+8  118   parent     0.08  0.07375954  0.006240458
+
+$atol
+[1] 1e-08
+
+$rtol
+[1] 1e-10
+
+$weight.ini
+[1] &quot;none&quot;
+
+$reweight.tol
+[1] 1e-08
+
+$reweight.max.iter
+[1] 10
+
+$bparms.optim
+ parent_0     alpha      beta 
+ 99.66619  12.80517 156.11390 
+
+$bparms.fixed
+numeric(0)
+
+$bparms.ode
+    alpha      beta 
+ 12.80517 156.11390 
+
+$bparms.state
+  parent 
+99.66619 
+
+$date
+[1] &quot;Mon Nov  9 08:25:11 2015&quot;
+
+attr(,&quot;class&quot;)
+[1] &quot;mkinfit&quot; &quot;modFit&quot; 
+</div>
+<div class='input'>  fits[&quot;SFO&quot;, &quot;B&quot;]
+</div>
+<div class='output'>     dataset
+model B      
+  SFO List,42
+attr(,&quot;class&quot;)
+[1] &quot;mmkin&quot;
+</div>
+<div class='input'>  fits[[&quot;SFO&quot;, &quot;B&quot;]] # This is equivalent to
+</div>
+<div class='output'>$par
+         parent_0 log_k_parent_sink 
+        99.174072         -2.549028 
+
+$ssr
+[1] 30.65564
+
+$convergence
+[1] 0
+
+$iterations
+[1] 5
+
+$evaluations
+function gradient 
+       8       15 
+
+$counts
+[1] &quot;relative convergence (4)&quot;
+
+$hessian
+                    parent_0 log_k_parent_sink
+parent_0            4.163631         -94.09343
+log_k_parent_sink -94.093431        6311.34610
+
+$residuals
+     parent      parent      parent      parent      parent      parent      parent      parent 
+ 0.55407218 -2.98452128  4.20445742 -1.68599939 -0.58185357 -0.72033730 -0.24260405 -0.07020339 
+
+$ms
+[1] 3.831956
+
+$var_ms
+  parent 
+3.831956 
+
+$var_ms_unscaled
+  parent 
+3.831956 
+
+$var_ms_unweighted
+  parent 
+3.831956 
+
+$rank
+[1] 2
+
+$df.residual
+[1] 6
+
+$solution_type
+[1] &quot;analytical&quot;
+
+$transform_rates
+[1] TRUE
+
+$transform_fractions
+[1] TRUE
+
+$method.modFit
+[1] &quot;Port&quot;
+
+$maxit.modFit
+[1] &quot;auto&quot;
+
+$calls
+[1] 29
+
+$time
+   user  system elapsed 
+  0.100   0.000   0.101 
+
+$mkinmod
+&lt;mkinmod&gt; model generated with
+Use of formation fractions $use_of_ff: min 
+Specification $spec:
+$parent
+$type: SFO
+Coefficient matrix $coefmat available
+
+$observed
+    name time value
+1 parent    0 98.62
+2 parent    3 81.43
+3 parent    7 53.18
+4 parent   14 34.89
+5 parent   30 10.09
+6 parent   62  1.50
+7 parent   90  0.33
+8 parent  118  0.08
+
+$obs_vars
+[1] &quot;parent&quot;
+
+$predicted
+      name       time       value
+1   parent   0.000000 99.17407218
+2   parent   1.191919 90.35253561
+3   parent   2.383838 82.31567498
+4   parent   3.000000 78.44547872
+5   parent   3.575758 74.99369333
+6   parent   4.767677 68.32300215
+7   parent   5.959596 62.24566915
+8   parent   7.000000 57.38445742
+9   parent   7.151515 56.70891509
+10  parent   8.343434 51.66465547
+11  parent   9.535354 47.06908288
+12  parent  10.727273 42.88228661
+13  parent  11.919192 39.06790599
+14  parent  13.111111 35.59281463
+15  parent  14.000000 33.20400061
+16  parent  14.303030 32.42683275
+17  parent  15.494949 29.54246504
+18  parent  16.686869 26.91466193
+19  parent  17.878788 24.52060198
+20  parent  19.070707 22.33949373
+21  parent  20.262626 20.35239512
+22  parent  21.454545 18.54204899
+23  parent  22.646465 16.89273320
+24  parent  23.838384 15.39012410
+25  parent  25.030303 14.02117212
+26  parent  26.222222 12.77398846
+27  parent  27.414141 11.63774182
+28  parent  28.606061 10.60256435
+29  parent  29.797980  9.65946594
+30  parent  30.000000  9.50814643
+31  parent  30.989899  8.80025617
+32  parent  32.181818  8.01747313
+33  parent  33.373737  7.30431867
+34  parent  34.565657  6.65459931
+35  parent  35.757576  6.06267251
+36  parent  36.949495  5.52339762
+37  parent  38.141414  5.03209124
+38  parent  39.333333  4.58448658
+39  parent  40.525253  4.17669637
+40  parent  41.717172  3.80517911
+41  parent  42.909091  3.46670832
+42  parent  44.101010  3.15834451
+43  parent  45.292929  2.87740968
+44  parent  46.484848  2.62146400
+45  parent  47.676768  2.38828471
+46  parent  48.868687  2.17584671
+47  parent  50.060606  1.98230508
+48  parent  51.252525  1.80597899
+49  parent  52.444444  1.64533711
+50  parent  53.636364  1.49898432
+51  parent  54.828283  1.36564963
+52  parent  56.020202  1.24417505
+53  parent  57.212121  1.13350565
+54  parent  58.404040  1.03268029
+55  parent  59.595960  0.94082335
+56  parent  60.787879  0.85713708
+57  parent  61.979798  0.78089471
+58  parent  62.000000  0.77966270
+59  parent  63.171717  0.71143411
+60  parent  64.363636  0.64815202
+61  parent  65.555556  0.59049888
+62  parent  66.747475  0.53797399
+63  parent  67.939394  0.49012119
+64  parent  69.131313  0.44652489
+65  parent  70.323232  0.40680649
+66  parent  71.515152  0.37062104
+67  parent  72.707071  0.33765429
+68  parent  73.898990  0.30761993
+69  parent  75.090909  0.28025713
+70  parent  76.282828  0.25532825
+71  parent  77.474747  0.23261679
+72  parent  78.666667  0.21192552
+73  parent  79.858586  0.19307474
+74  parent  81.050505  0.17590074
+75  parent  82.242424  0.16025436
+76  parent  83.434343  0.14599973
+77  parent  84.626263  0.13301305
+78  parent  85.818182  0.12118154
+79  parent  87.010101  0.11040244
+80  parent  88.202020  0.10058214
+81  parent  89.393939  0.09163535
+82  parent  90.000000  0.08739595
+83  parent  90.585859  0.08348439
+84  parent  91.777778  0.07605845
+85  parent  92.969697  0.06929305
+86  parent  94.161616  0.06312943
+87  parent  95.353535  0.05751406
+88  parent  96.545455  0.05239819
+89  parent  97.737374  0.04773737
+90  parent  98.929293  0.04349113
+91  parent 100.121212  0.03962259
+92  parent 101.313131  0.03609816
+93  parent 102.505051  0.03288723
+94  parent 103.696970  0.02996191
+95  parent 104.888889  0.02729679
+96  parent 106.080808  0.02486874
+97  parent 107.272727  0.02265667
+98  parent 108.464646  0.02064136
+99  parent 109.656566  0.01880531
+100 parent 110.848485  0.01713257
+101 parent 112.040404  0.01560863
+102 parent 113.232323  0.01422024
+103 parent 114.424242  0.01295535
+104 parent 115.616162  0.01180297
+105 parent 116.808081  0.01075310
+106 parent 118.000000  0.00979661
+
+$cost
+function (P) 
+{
+    assign(&quot;calls&quot;, calls + 1, inherits = TRUE)
+    if (trace_parms) 
+        cat(P, &quot;\n&quot;)
+    if (length(state.ini.optim) &gt; 0) {
+        odeini &lt;- c(P[1:length(state.ini.optim)], state.ini.fixed)
+        names(odeini) &lt;- c(state.ini.optim.boxnames, state.ini.fixed.boxnames)
+    }
+    else {
+        odeini &lt;- state.ini.fixed
+        names(odeini) &lt;- state.ini.fixed.boxnames
+    }
+    odeparms &lt;- c(P[(length(state.ini.optim) + 1):length(P)], 
+        transparms.fixed)
+    parms &lt;- backtransform_odeparms(odeparms, mkinmod, transform_rates = transform_rates, 
+        transform_fractions = transform_fractions)
+    out &lt;- mkinpredict(mkinmod, parms, odeini, outtimes, solution_type = solution_type, 
+        use_compiled = use_compiled, method.ode = method.ode, 
+        atol = atol, rtol = rtol, ...)
+    assign(&quot;out_predicted&quot;, out, inherits = TRUE)
+    mC &lt;- modCost(out, observed, y = &quot;value&quot;, err = err, weight = weight, 
+        scaleVar = scaleVar)
+    if (mC$model &lt; cost.old) {
+        if (!quiet) 
+            cat(&quot;Model cost at call &quot;, calls, &quot;: &quot;, mC$model, 
+                &quot;\n&quot;)
+        if (plot) {
+            outtimes_plot = seq(min(observed$time), max(observed$time), 
+                length.out = 100)
+            out_plot &lt;- mkinpredict(mkinmod, parms, odeini, outtimes_plot, 
+                solution_type = solution_type, use_compiled = use_compiled, 
+                method.ode = method.ode, atol = atol, rtol = rtol, 
+                ...)
+            plot(0, type = &quot;n&quot;, xlim = range(observed$time), 
+                ylim = c(0, max(observed$value, na.rm = TRUE)), 
+                xlab = &quot;Time&quot;, ylab = &quot;Observed&quot;)
+            col_obs &lt;- pch_obs &lt;- 1:length(obs_vars)
+            lty_obs &lt;- rep(1, length(obs_vars))
+            names(col_obs) &lt;- names(pch_obs) &lt;- names(lty_obs) &lt;- obs_vars
+            for (obs_var in obs_vars) {
+                points(subset(observed, name == obs_var, c(time, 
+                  value)), pch = pch_obs[obs_var], col = col_obs[obs_var])
+            }
+            matlines(out_plot$time, out_plot[-1], col = col_obs, 
+                lty = lty_obs)
+            legend(&quot;topright&quot;, inset = c(0.05, 0.05), legend = obs_vars, 
+                col = col_obs, pch = pch_obs, lty = 1:length(pch_obs))
+        }
+        assign(&quot;cost.old&quot;, mC$model, inherits = TRUE)
+    }
+    return(mC)
+}
+&lt;environment: 0x3d4fdb8&gt;
+
+$cost_notrans
+function (P) 
+{
+    if (length(state.ini.optim) &gt; 0) {
+        odeini &lt;- c(P[1:length(state.ini.optim)], state.ini.fixed)
+        names(odeini) &lt;- c(state.ini.optim.boxnames, state.ini.fixed.boxnames)
+    }
+    else {
+        odeini &lt;- state.ini.fixed
+        names(odeini) &lt;- state.ini.fixed.boxnames
+    }
+    odeparms &lt;- c(P[(length(state.ini.optim) + 1):length(P)], 
+        parms.fixed)
+    out &lt;- mkinpredict(mkinmod, odeparms, odeini, outtimes, solution_type = solution_type, 
+        use_compiled = use_compiled, method.ode = method.ode, 
+        atol = atol, rtol = rtol, ...)
+    mC &lt;- modCost(out, observed, y = &quot;value&quot;, err = err, weight = weight, 
+        scaleVar = scaleVar)
+    return(mC)
+}
+&lt;environment: 0x3d4fdb8&gt;
+
+$hessian_notrans
+                  parent_0 k_parent_sink
+parent_0          4.163631     -1203.894
+k_parent_sink -1203.893702   1033188.753
+
+$start
+              value   type
+parent_0      98.62  state
+k_parent_sink  0.10 deparm
+
+$start_transformed
+                      value lower upper
+parent_0          98.620000  -Inf   Inf
+log_k_parent_sink -2.302585  -Inf   Inf
+
+$fixed
+[1] value type 
+&lt;0 rows&gt; (or 0-length row.names)
+
+$data
+  time variable observed   predicted    residual
+1    0   parent    98.62 99.17407218 -0.55407218
+2    3   parent    81.43 78.44547872  2.98452128
+3    7   parent    53.18 57.38445742 -4.20445742
+4   14   parent    34.89 33.20400061  1.68599939
+5   30   parent    10.09  9.50814643  0.58185357
+6   62   parent     1.50  0.77966270  0.72033730
+7   90   parent     0.33  0.08739595  0.24260405
+8  118   parent     0.08  0.00979661  0.07020339
+
+$atol
+[1] 1e-08
+
+$rtol
+[1] 1e-10
+
+$weight.ini
+[1] &quot;none&quot;
+
+$reweight.tol
+[1] 1e-08
+
+$reweight.max.iter
+[1] 10
+
+$bparms.optim
+     parent_0 k_parent_sink 
+  99.17407218    0.07815759 
+
+$bparms.fixed
+numeric(0)
+
+$bparms.ode
+k_parent_sink 
+   0.07815759 
+
+$bparms.state
+  parent 
+99.17407 
+
+$date
+[1] &quot;Mon Nov  9 08:25:11 2015&quot;
+
+attr(,&quot;class&quot;)
+[1] &quot;mkinfit&quot; &quot;modFit&quot; 
+</div>
+<div class='input'>  fits[&quot;SFO&quot;, &quot;B&quot;, drop = TRUE]
+</div>
+<div class='output'>[[1]]
+$par
+         parent_0 log_k_parent_sink 
+        99.174072         -2.549028 
+
+$ssr
+[1] 30.65564
+
+$convergence
+[1] 0
+
+$iterations
+[1] 5
+
+$evaluations
+function gradient 
+       8       15 
+
+$counts
+[1] &quot;relative convergence (4)&quot;
+
+$hessian
+                    parent_0 log_k_parent_sink
+parent_0            4.163631         -94.09343
+log_k_parent_sink -94.093431        6311.34610
+
+$residuals
+     parent      parent      parent      parent      parent      parent      parent      parent 
+ 0.55407218 -2.98452128  4.20445742 -1.68599939 -0.58185357 -0.72033730 -0.24260405 -0.07020339 
+
+$ms
+[1] 3.831956
+
+$var_ms
+  parent 
+3.831956 
+
+$var_ms_unscaled
+  parent 
+3.831956 
+
+$var_ms_unweighted
+  parent 
+3.831956 
+
+$rank
+[1] 2
+
+$df.residual
+[1] 6
+
+$solution_type
+[1] &quot;analytical&quot;
+
+$transform_rates
+[1] TRUE
+
+$transform_fractions
+[1] TRUE
+
+$method.modFit
+[1] &quot;Port&quot;
+
+$maxit.modFit
+[1] &quot;auto&quot;
+
+$calls
+[1] 29
+
+$time
+   user  system elapsed 
+  0.100   0.000   0.101 
+
+$mkinmod
+&lt;mkinmod&gt; model generated with
+Use of formation fractions $use_of_ff: min 
+Specification $spec:
+$parent
+$type: SFO
+Coefficient matrix $coefmat available
+
+$observed
+    name time value
+1 parent    0 98.62
+2 parent    3 81.43
+3 parent    7 53.18
+4 parent   14 34.89
+5 parent   30 10.09
+6 parent   62  1.50
+7 parent   90  0.33
+8 parent  118  0.08
+
+$obs_vars
+[1] &quot;parent&quot;
+
+$predicted
+      name       time       value
+1   parent   0.000000 99.17407218
+2   parent   1.191919 90.35253561
+3   parent   2.383838 82.31567498
+4   parent   3.000000 78.44547872
+5   parent   3.575758 74.99369333
+6   parent   4.767677 68.32300215
+7   parent   5.959596 62.24566915
+8   parent   7.000000 57.38445742
+9   parent   7.151515 56.70891509
+10  parent   8.343434 51.66465547
+11  parent   9.535354 47.06908288
+12  parent  10.727273 42.88228661
+13  parent  11.919192 39.06790599
+14  parent  13.111111 35.59281463
+15  parent  14.000000 33.20400061
+16  parent  14.303030 32.42683275
+17  parent  15.494949 29.54246504
+18  parent  16.686869 26.91466193
+19  parent  17.878788 24.52060198
+20  parent  19.070707 22.33949373
+21  parent  20.262626 20.35239512
+22  parent  21.454545 18.54204899
+23  parent  22.646465 16.89273320
+24  parent  23.838384 15.39012410
+25  parent  25.030303 14.02117212
+26  parent  26.222222 12.77398846
+27  parent  27.414141 11.63774182
+28  parent  28.606061 10.60256435
+29  parent  29.797980  9.65946594
+30  parent  30.000000  9.50814643
+31  parent  30.989899  8.80025617
+32  parent  32.181818  8.01747313
+33  parent  33.373737  7.30431867
+34  parent  34.565657  6.65459931
+35  parent  35.757576  6.06267251
+36  parent  36.949495  5.52339762
+37  parent  38.141414  5.03209124
+38  parent  39.333333  4.58448658
+39  parent  40.525253  4.17669637
+40  parent  41.717172  3.80517911
+41  parent  42.909091  3.46670832
+42  parent  44.101010  3.15834451
+43  parent  45.292929  2.87740968
+44  parent  46.484848  2.62146400
+45  parent  47.676768  2.38828471
+46  parent  48.868687  2.17584671
+47  parent  50.060606  1.98230508
+48  parent  51.252525  1.80597899
+49  parent  52.444444  1.64533711
+50  parent  53.636364  1.49898432
+51  parent  54.828283  1.36564963
+52  parent  56.020202  1.24417505
+53  parent  57.212121  1.13350565
+54  parent  58.404040  1.03268029
+55  parent  59.595960  0.94082335
+56  parent  60.787879  0.85713708
+57  parent  61.979798  0.78089471
+58  parent  62.000000  0.77966270
+59  parent  63.171717  0.71143411
+60  parent  64.363636  0.64815202
+61  parent  65.555556  0.59049888
+62  parent  66.747475  0.53797399
+63  parent  67.939394  0.49012119
+64  parent  69.131313  0.44652489
+65  parent  70.323232  0.40680649
+66  parent  71.515152  0.37062104
+67  parent  72.707071  0.33765429
+68  parent  73.898990  0.30761993
+69  parent  75.090909  0.28025713
+70  parent  76.282828  0.25532825
+71  parent  77.474747  0.23261679
+72  parent  78.666667  0.21192552
+73  parent  79.858586  0.19307474
+74  parent  81.050505  0.17590074
+75  parent  82.242424  0.16025436
+76  parent  83.434343  0.14599973
+77  parent  84.626263  0.13301305
+78  parent  85.818182  0.12118154
+79  parent  87.010101  0.11040244
+80  parent  88.202020  0.10058214
+81  parent  89.393939  0.09163535
+82  parent  90.000000  0.08739595
+83  parent  90.585859  0.08348439
+84  parent  91.777778  0.07605845
+85  parent  92.969697  0.06929305
+86  parent  94.161616  0.06312943
+87  parent  95.353535  0.05751406
+88  parent  96.545455  0.05239819
+89  parent  97.737374  0.04773737
+90  parent  98.929293  0.04349113
+91  parent 100.121212  0.03962259
+92  parent 101.313131  0.03609816
+93  parent 102.505051  0.03288723
+94  parent 103.696970  0.02996191
+95  parent 104.888889  0.02729679
+96  parent 106.080808  0.02486874
+97  parent 107.272727  0.02265667
+98  parent 108.464646  0.02064136
+99  parent 109.656566  0.01880531
+100 parent 110.848485  0.01713257
+101 parent 112.040404  0.01560863
+102 parent 113.232323  0.01422024
+103 parent 114.424242  0.01295535
+104 parent 115.616162  0.01180297
+105 parent 116.808081  0.01075310
+106 parent 118.000000  0.00979661
+
+$cost
+function (P) 
+{
+    assign(&quot;calls&quot;, calls + 1, inherits = TRUE)
+    if (trace_parms) 
+        cat(P, &quot;\n&quot;)
+    if (length(state.ini.optim) &gt; 0) {
+        odeini &lt;- c(P[1:length(state.ini.optim)], state.ini.fixed)
+        names(odeini) &lt;- c(state.ini.optim.boxnames, state.ini.fixed.boxnames)
+    }
+    else {
+        odeini &lt;- state.ini.fixed
+        names(odeini) &lt;- state.ini.fixed.boxnames
+    }
+    odeparms &lt;- c(P[(length(state.ini.optim) + 1):length(P)], 
+        transparms.fixed)
+    parms &lt;- backtransform_odeparms(odeparms, mkinmod, transform_rates = transform_rates, 
+        transform_fractions = transform_fractions)
+    out &lt;- mkinpredict(mkinmod, parms, odeini, outtimes, solution_type = solution_type, 
+        use_compiled = use_compiled, method.ode = method.ode, 
+        atol = atol, rtol = rtol, ...)
+    assign(&quot;out_predicted&quot;, out, inherits = TRUE)
+    mC &lt;- modCost(out, observed, y = &quot;value&quot;, err = err, weight = weight, 
+        scaleVar = scaleVar)
+    if (mC$model &lt; cost.old) {
+        if (!quiet) 
+            cat(&quot;Model cost at call &quot;, calls, &quot;: &quot;, mC$model, 
+                &quot;\n&quot;)
+        if (plot) {
+            outtimes_plot = seq(min(observed$time), max(observed$time), 
+                length.out = 100)
+            out_plot &lt;- mkinpredict(mkinmod, parms, odeini, outtimes_plot, 
+                solution_type = solution_type, use_compiled = use_compiled, 
+                method.ode = method.ode, atol = atol, rtol = rtol, 
+                ...)
+            plot(0, type = &quot;n&quot;, xlim = range(observed$time), 
+                ylim = c(0, max(observed$value, na.rm = TRUE)), 
+                xlab = &quot;Time&quot;, ylab = &quot;Observed&quot;)
+            col_obs &lt;- pch_obs &lt;- 1:length(obs_vars)
+            lty_obs &lt;- rep(1, length(obs_vars))
+            names(col_obs) &lt;- names(pch_obs) &lt;- names(lty_obs) &lt;- obs_vars
+            for (obs_var in obs_vars) {
+                points(subset(observed, name == obs_var, c(time, 
+                  value)), pch = pch_obs[obs_var], col = col_obs[obs_var])
+            }
+            matlines(out_plot$time, out_plot[-1], col = col_obs, 
+                lty = lty_obs)
+            legend(&quot;topright&quot;, inset = c(0.05, 0.05), legend = obs_vars, 
+                col = col_obs, pch = pch_obs, lty = 1:length(pch_obs))
+        }
+        assign(&quot;cost.old&quot;, mC$model, inherits = TRUE)
+    }
+    return(mC)
+}
+&lt;environment: 0x3d4fdb8&gt;
+
+$cost_notrans
+function (P) 
+{
+    if (length(state.ini.optim) &gt; 0) {
+        odeini &lt;- c(P[1:length(state.ini.optim)], state.ini.fixed)
+        names(odeini) &lt;- c(state.ini.optim.boxnames, state.ini.fixed.boxnames)
+    }
+    else {
+        odeini &lt;- state.ini.fixed
+        names(odeini) &lt;- state.ini.fixed.boxnames
+    }
+    odeparms &lt;- c(P[(length(state.ini.optim) + 1):length(P)], 
+        parms.fixed)
+    out &lt;- mkinpredict(mkinmod, odeparms, odeini, outtimes, solution_type = solution_type, 
+        use_compiled = use_compiled, method.ode = method.ode, 
+        atol = atol, rtol = rtol, ...)
+    mC &lt;- modCost(out, observed, y = &quot;value&quot;, err = err, weight = weight, 
+        scaleVar = scaleVar)
+    return(mC)
+}
+&lt;environment: 0x3d4fdb8&gt;
+
+$hessian_notrans
+                  parent_0 k_parent_sink
+parent_0          4.163631     -1203.894
+k_parent_sink -1203.893702   1033188.753
+
+$start
+              value   type
+parent_0      98.62  state
+k_parent_sink  0.10 deparm
+
+$start_transformed
+                      value lower upper
+parent_0          98.620000  -Inf   Inf
+log_k_parent_sink -2.302585  -Inf   Inf
+
+$fixed
+[1] value type 
+&lt;0 rows&gt; (or 0-length row.names)
+
+$data
+  time variable observed   predicted    residual
+1    0   parent    98.62 99.17407218 -0.55407218
+2    3   parent    81.43 78.44547872  2.98452128
+3    7   parent    53.18 57.38445742 -4.20445742
+4   14   parent    34.89 33.20400061  1.68599939
+5   30   parent    10.09  9.50814643  0.58185357
+6   62   parent     1.50  0.77966270  0.72033730
+7   90   parent     0.33  0.08739595  0.24260405
+8  118   parent     0.08  0.00979661  0.07020339
+
+$atol
+[1] 1e-08
+
+$rtol
+[1] 1e-10
+
+$weight.ini
+[1] &quot;none&quot;
+
+$reweight.tol
+[1] 1e-08
+
+$reweight.max.iter
+[1] 10
+
+$bparms.optim
+     parent_0 k_parent_sink 
+  99.17407218    0.07815759 
+
+$bparms.fixed
+numeric(0)
+
+$bparms.ode
+k_parent_sink 
+   0.07815759 
+
+$bparms.state
+  parent 
+99.17407 
+
+$date
+[1] &quot;Mon Nov  9 08:25:11 2015&quot;
+
+attr(,&quot;class&quot;)
+[1] &quot;mkinfit&quot; &quot;modFit&quot; 
+
+</div></pre>
+  </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>[.mmkin</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+    
+    <h2>Author</h2>
+    
+  Johannes Ranke
+
+    
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

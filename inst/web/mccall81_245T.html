@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>mccall81_245T. mkin 0.9-41</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">mkin 0.9-41</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>
+  Datasets on aerobic soil metabolism of 2,4,5-T in six soils
+</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>mccall81_245T</div></pre>
+        
+    <div class="Description">
+      <h2>Description</h2>
+
+      <p>Time course of 2,4,5-trichlorophenoxyacetic acid, and the corresponding
+ 2,4,5-trichlorophenol and 2,4,5-trichloroanisole as recovered in diethylether
+ extracts.</p>
+  
+    </div>
+
+    <div class="Format">
+      <h2>Format</h2>
+
+      <p>A dataframe containing the following variables.
+  <dl>
+    <dt><code>name</code></dt><dd>the name of the compound observed. Note that T245 is used as 
+                       an acronym for 2,4,5-T. T245 is a legitimate object name
+                       in R, which is necessary for specifying models using
+                       <code><a href='mkinmod.html'>mkinmod</a></code>.</dd></p>
+  
+      <p><dt><code>time</code></dt><dd>a numeric vector containing sampling times in days after
+                       treatment</dd></p>
+  
+      <p><dt><code>value</code></dt><dd>a numeric vector containing concentrations in percent of applied radioactivity</dd></p>
+  
+      <p><dt><code>soil</code></dt><dd>a factor containing the name of the soil</dd></p>
+  
+      <p></dl></p>
+  
+      <p></p>
+  
+    </div>
+
+    <div class="Source">
+      <h2>Source</h2>
+
+      <p>McCall P, Vrona SA, Kelley SS (1981) Fate of uniformly carbon-14 ring labeled 2,4,5-Trichlorophenoxyacetic acid and 2,4-dichlorophenoxyacetic acid. J Agric Chem 29, 100-107
+  <a href = 'http://dx.doi.org/10.1021/jf00103a026'>http://dx.doi.org/10.1021/jf00103a026</a></p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>  SFO_SFO_SFO &lt;- mkinmod(T245 = list(type = &quot;SFO&quot;, to = &quot;phenol&quot;),
+                         phenol = list(type = &quot;SFO&quot;, to = &quot;anisole&quot;),
+                         anisole = list(type = &quot;SFO&quot;))
+</div>
+<strong class='message'>Successfully compiled differential equation model from auto-generated C code.</strong>
+<div class='input'>  ## Not run: 
+#     fit.1 &lt;- mkinfit(SFO_SFO_SFO, subset(mccall81_245T, soil == &quot;Commerce&quot;))
+#     summary(fit.1, data = FALSE)
+#   ## End(Not run)
+  # No covariance matrix and k_phenol_sink is really small, therefore fix it to zero
+  fit.2 &lt;- mkinfit(SFO_SFO_SFO, subset(mccall81_245T, soil == &quot;Commerce&quot;),
+                 parms.ini = c(k_phenol_sink = 0),
+                 fixed_parms = &quot;k_phenol_sink&quot;, quiet = TRUE)
+  summary(fit.2, data = FALSE)
+</div>
+<div class='output'>mkin version:    0.9.41 
+R version:       3.2.2 
+Date of fit:     Mon Nov  9 08:25:18 2015 
+Date of summary: Mon Nov  9 08:25:18 2015 
+
+Equations:
+d_T245 = - k_T245_sink * T245 - k_T245_phenol * T245
+d_phenol = + k_T245_phenol * T245 - k_phenol_sink * phenol - k_phenol_anisole * phenol
+d_anisole = + k_phenol_anisole * phenol - k_anisole_sink * anisole
+
+Model predictions using solution type deSolve 
+
+Fitted with method Port using 246 model solutions performed in 1.369 s
+
+Weighting: none
+
+Starting values for parameters to be optimised:
+                    value   type
+T245_0           100.9000  state
+k_T245_sink        0.1000 deparm
+k_T245_phenol      0.1001 deparm
+k_phenol_anisole   0.1002 deparm
+k_anisole_sink     0.1003 deparm
+
+Starting values for the transformed parameters actually optimised:
+                          value lower upper
+T245_0               100.900000  -Inf   Inf
+log_k_T245_sink       -2.302585  -Inf   Inf
+log_k_T245_phenol     -2.301586  -Inf   Inf
+log_k_phenol_anisole  -2.300587  -Inf   Inf
+log_k_anisole_sink    -2.299590  -Inf   Inf
+
+Fixed parameter values:
+              value   type
+phenol_0          0  state
+anisole_0         0  state
+k_phenol_sink     0 deparm
+
+Optimised, transformed parameters with symmetric confidence intervals:
+                     Estimate Std. Error  Lower    Upper
+T245_0               103.9000    2.35200 98.930 108.8000
+log_k_T245_sink       -4.1130    0.13250 -4.390  -3.8350
+log_k_T245_phenol     -3.6120    0.05002 -3.716  -3.5070
+log_k_phenol_anisole  -0.9037    0.30580 -1.544  -0.2637
+log_k_anisole_sink    -5.0090    0.11180 -5.243  -4.7750
+
+Parameter correlation:
+                       T245_0 log_k_T245_sink log_k_T245_phenol log_k_phenol_anisole log_k_anisole_sink
+T245_0                1.00000         0.63761           -0.1742             -0.05948            -0.1621
+log_k_T245_sink       0.63761         1.00000           -0.3831              0.08745            -0.6047
+log_k_T245_phenol    -0.17416        -0.38313            1.0000             -0.30470             0.5227
+log_k_phenol_anisole -0.05948         0.08745           -0.3047              1.00000            -0.1774
+log_k_anisole_sink   -0.16208        -0.60469            0.5227             -0.17744             1.0000
+
+Residual standard error: 2.706 on 19 degrees of freedom
+
+Backtransformed parameters:
+Confidence intervals for internally transformed parameters are asymmetric.
+t-test (unrealistically) based on the assumption of normal distribution
+for estimators of untransformed parameters.
+                  Estimate t value    Pr(&gt;t)     Lower     Upper
+T245_0           1.039e+02  44.160 6.462e-21 98.930000 108.80000
+k_T245_sink      1.636e-02   7.545 1.978e-07  0.012400   0.02159
+k_T245_phenol    2.701e-02  19.990 1.607e-14  0.024320   0.02999
+k_phenol_anisole 4.051e-01   3.270 2.014e-03  0.213600   0.76820
+k_anisole_sink   6.679e-03   8.942 1.544e-08  0.005285   0.00844
+
+Chi2 error levels in percent:
+         err.min n.optim df
+All data   9.831       5 17
+T245       7.908       3  5
+phenol    99.808       1  6
+anisole    5.379       1  6
+
+Resulting formation fractions:
+                   ff
+T245_sink      0.3772
+T245_phenol    0.6228
+phenol_anisole 1.0000
+phenol_sink    0.0000
+anisole_sink   1.0000
+
+Estimated disappearance times:
+           DT50    DT90
+T245     15.982  53.091
+phenol    1.711   5.685
+anisole 103.784 344.763
+</div></pre>
+  </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>mccall81_245T</li>
+    </ul>
+    <ul>
+      <li>datasets</li>
+    </ul> -->
+      
+        
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

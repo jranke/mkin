@@ -1,6 +1,6 @@
 # NEWS for package 'mkin'
 
-## mkin 0.9-40.9000
+## mkin 0.9-41
 
 ### Minor changes
 

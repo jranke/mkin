@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>IORE.solution. mkin 0.9-41</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">mkin 0.9-41</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1> Indeterminate order rate equation kinetics </h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>IORE.solution(t, parent.0, k__iore, N)</div></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>t</dt>
+      <dd> Time. </dd>
+      <dt>parent.0</dt>
+      <dd> Starting value for the response variable at time zero. </dd>
+      <dt>k__iore</dt>
+      <dd> Rate constant. Note that this depends on the concentration units used. </dd>
+      <dt>N</dt>
+      <dd> Exponent describing the nonlinearity of the rate equation </dd>
+    </dl>
+    
+    <div class="Description">
+      <h2>Description</h2>
+
+      <p>Function describing exponential decline from a defined starting value, with 
+  a concentration dependent rate constant.</p>
+  
+    </div>
+
+    <div class="Note">
+      <h2>Note</h2>
+
+      <p>The solution of the IORE kinetic model reduces to the
+  <code><a href='SFO.solution.html'>SFO.solution</a></code> if N = 1.
+  The parameters of the IORE model can be transformed to equivalent parameters
+  of the FOMC mode - see the NAFTA guidance for details.</p>
+  
+    </div>
+
+    <div class="Value">
+      <h2>Value</h2>
+
+      <p><dl>
+  The value of the response variable at time <code>t</code>.
+</dl></p>
+  
+    </div>
+
+    <div class="References">
+      <h2>References</h2>
+
+      <p>NAFTA Technical Working Group on Pesticides (not dated) Guidance for
+  Evaluating and Calculating Degradation Kinetics in Environmental 
+  Media</p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>  plot(function(x) IORE.solution(x, 100, 0.2, 1.3), 0, 2, 
+	                               ylim = c(0, 100))
+</div>
+<p><img src='IORE.solution-2.png' alt='' width='540' height='400' /></p>
+<div class='input'>  fit.fomc &lt;- mkinfit(&quot;FOMC&quot;, FOCUS_2006_C, quiet = TRUE)
+  fit.iore &lt;- mkinfit(&quot;IORE&quot;, FOCUS_2006_C, quiet = TRUE)
+  fit.iore.deS &lt;- mkinfit(&quot;IORE&quot;, FOCUS_2006_C, solution_type = &quot;deSolve&quot;, quiet = TRUE)
+
+  print(data.frame(coef(fit.fomc), coef(fit.iore), coef(fit.iore.deS), 
+                   row.names = paste(&quot;model par&quot;, 1:3)))
+</div>
+<div class='output'>            coef.fit.fomc. coef.fit.iore. coef.fit.iore.deS.
+model par 1    85.87489063      85.874891          85.874890
+model par 2     0.05192238      -4.826631          -4.826631
+model par 3     0.65096665       1.949403           1.949403
+</div>
+<div class='input'>  print(rbind(fomc = endpoints(fit.fomc)$distimes, iore = endpoints(fit.iore)$distimes, 
+              iore.deS = endpoints(fit.iore)$distimes))
+</div>
+<div class='output'>             DT50    DT90 DT50back
+fomc     1.785233 15.1479 4.559973
+iore     1.785233 15.1479 4.559973
+iore.deS 1.785233 15.1479 4.559973
+</div></pre>
+  </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>IORE.solution</li>
+    </ul>
+    <ul>
+      <li> manip </li>
+    </ul> -->
+      
+        
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>
