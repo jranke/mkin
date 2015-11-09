@@ -89,6 +89,7 @@ SFO_SFO <- mkinmod(
   parent = mkinsub("SFO", "m1"),
   m1 = mkinsub("SFO"))
 
+\dontrun{
 # The above model used to be specified like this, before the advent of mkinsub()
 SFO_SFO <- mkinmod(
   parent = list(type = "SFO", to = "m1"),
@@ -106,7 +107,6 @@ m_synth_DFOP_par <- mkinmod(parent = mkinsub("DFOP", c("M1", "M2")),
                            M2 = mkinsub("SFO"),
                            use_of_ff = "max", quiet = TRUE)
 
-\dontrun{
 fit_DFOP_par_c <- mkinfit(m_synth_DFOP_par, 
                           synthetic_data_for_UBA_2014[[12]]$data,
                           quiet = TRUE)
