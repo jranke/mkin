@@ -77,7 +77,7 @@ test: quickinstall
 		"$(RBIN)/Rscript" testthat.R 2>&1 | tee ../test.log
 
 README.html: README.md
-	"$(RBIN)/Rscript" -e "rmarkdown::render('README.md', output_format = 'html_document')"
+	"$(RBIN)/Rscript" -e "rmarkdown::render('README.md', output_format = 'html_document', output_options = list(mathjax = NULL))"
 
 vignettes/%.pdf: vignettes/header.tex vignettes/references.bib vignettes/%.Rnw
 	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/$*.Rnw', dir = 'vignettes')"
