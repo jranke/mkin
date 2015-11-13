@@ -91,6 +91,8 @@ sd:
 	@echo Now execute
 	@echo "\n  staticdocs::build_site()\n"
 	$(RBIN)/R
+	git add -A
+	git commit -m 'Static documentation rebuilt by staticdocs::build_site()' -e
 
 r-forge: sd
 	rm -rf $(SDDIR)/*
@@ -99,8 +101,6 @@ r-forge: sd
 	git archive master > $(HOME)/mkin.tar;\
 	cd $(RFDIR) && rm -r `ls` && tar -xf $(HOME)/mkin.tar;\
 	svn add --force .; svn rm --force `svn status | grep "\!" | cut -d " " -f 8`; cd $(RFSVN) && svn commit -m 'sync with git'
-	git add -A
-	git commit -m 'Vignettes rebuilt by staticdocs::build_site() for static documentation on r-forge'
 
 winbuilder: build
 	date
