@@ -12,20 +12,8 @@ if several compartments are involved.
 You can install the latest released version from 
 [CRAN](http://cran.r-project.org/package=mkin) from within R:
 
-
 ```r
 install.packages("mkin")
-```
-
-If looking for the latest features, you can install directly from 
-[github](http://github.com/jranke/mkin), e.g.  using the `devtools` package.
-Using `quick = TRUE` skips docs, multiple-architecture builds, demos, and
-vignettes, to make installation as fast and painless as possible.
-
-
-```r
-require(devtools)
-install_github("jranke/mkin", quick = TRUE)
 ```
 
 ## Background
@@ -60,7 +48,7 @@ maintained at the R-Forge project site.
   two latent state variables for the observed variable.
 * As of version 0.9-39, fitting of several models to several datasets, optionally in 
   parallel, is supported, see for example
-  [`plot.mmkin`](http://kinfit.r-forge.r-project.org/mkin_static/plot.mmkin.html) 
+  [`plot.mmkin`](http://kinfit.r-forge.r-project.org/mkin_static/plot.mmkin.html).
 * Model solution (forward modelling) in the function
   [`mkinpredict`](http://kinfit.r-forge.r-project.org/mkin_static/mkinpredict.html) 
   is performed either using the analytical solution for the case of 
@@ -73,10 +61,6 @@ maintained at the R-Forge project site.
   The autogeneration of C code was
   inspired by the [`ccSolve`](https://github.com/karlines/ccSolve) package. Thanks
   to Karline Soetaert for her work on that.
-* Model optimisation with 
-  [`mkinfit`](http://kinfit.r-forge.r-project.org/mkin_static/mkinfit.html)
-  internally using the `modFit` function from the `FME` package,
-  but using the Port routine `nlminb` per default.
 * By default, kinetic rate constants and kinetic formation fractions are
   transformed internally using
   [`transform_odeparms`](http://kinfit.r-forge.r-project.org/mkin_static/transform_odeparms.html)
@@ -104,9 +88,7 @@ maintained at the R-Forge project site.
   componenent for each of the observed variables will be optimised
   in a second stage after the primary optimisation algorithm has converged.
 * When a metabolite decline phase is not described well by SFO kinetics, 
-  either IORE kinetics (often producing failures of the integration algorithm)
-  or SFORB kinetics (working nicely) can be used for the metabolite, adding one
-  respectively two parameters to the system.
+  SFORB kinetics can be used for the metabolite.
 
 ## GUI
 
@@ -122,9 +104,8 @@ and one for the [github master branch](https://github.com/jranke/mkin/blob/maste
 ## Credits and historical remarks
 
 `mkin` would not be possible without the underlying software stack consisting
-of R and the packages [deSolve](http://cran.r-project.org/package=deSolve),
-[minpack.lm](http://cran.r-project.org/package=minpack.lm) and
-[FME](http://cran.r-project.org/package=FME), to say the least.
+of R and the packages [deSolve](http://cran.r-project.org/package=deSolve)
+and [FME](http://cran.r-project.org/package=FME), to say the least.
 
 It could not have been written without me being introduced to regulatory fate
 modelling of pesticides by Adrian Gurney during my time at Harlan Laboratories
@@ -138,7 +119,7 @@ Also, it was inspired by the first version of KinGUI developed by
 BayerCropScience, which is based on the MatLab runtime environment.
 
 The companion package 
-[kinfit](http://kinfit.r-forge.r-project.org/kinfit_static/index.html) was 
+[kinfit](http://kinfit.r-forge.r-project.org/kinfit_static/index.html) (now deprecated) was 
 [started in 2008](https://r-forge.r-project.org/scm/viewvc.php?view=rev&root=kinfit&revision=2) and 
 [first published](http://cran.r-project.org/src/contrib/Archive/kinfit/) on
 CRAN on 01 May 2010.
