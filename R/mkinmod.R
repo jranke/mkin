@@ -180,6 +180,7 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
 
       # Add transfer terms to listed compartments
       for (target in to) {
+        if (!target %in% obs_vars) stop("You did not specify a submodel for target variable ", target)
         target_box <- switch(spec[[target]]$type,
           SFO = target,
           IORE = target,

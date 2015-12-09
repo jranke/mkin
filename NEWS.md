@@ -6,6 +6,8 @@
 
 - Add plots to `compiled_models` vignette
 
+- Give an explanatory error message when mkinmod fails due to a missing definition of a target variable
+
 ## mkin 0.9-41 (2015-11-09)
 
 ### Minor changes
