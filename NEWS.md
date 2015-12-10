@@ -8,6 +8,8 @@
 
 - Give an explanatory error message when mkinmod fails due to a missing definition of a target variable
 
+- `print.mkinmod()`: Improve formatting when printing mkinmod model definitions
+
 ## mkin 0.9-41 (2015-11-09)
 
 ### Minor changes

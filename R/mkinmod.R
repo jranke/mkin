@@ -363,8 +363,9 @@ print.mkinmod <- function(x, ...) {
     cat("$", obs, "\n", sep = "")
     spl <- x$spec[[obs]]
     cat("$type:", spl$type)
-    if (!is.null(spl$to)) cat(", $to: ", paste(spl$to, collapse = ", "), ", $sink: ", spl$sink, sep = "")
-    if (!is.null(spl$full_name)) if (!is.na(spl$full_name)) cat(", $full_name:", spl$full_name)
+    if (!is.null(spl$to) && length(spl$to)) cat("; $to: ", paste(spl$to, collapse = ", "), sep = "")
+    cat("; $sink: ", spl$sink, sep = "")
+    if (!is.null(spl$full_name)) if (!is.na(spl$full_name)) cat("; $full_name:", spl$full_name)
     cat("\n")
   }
   if (is.matrix(x$coefmat)) cat("Coefficient matrix $coefmat available\n")
