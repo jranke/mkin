@@ -21,6 +21,7 @@ mkinfit(mkinmod, observed,
   parms.ini = "auto",
   state.ini = "auto",
   fixed_parms = NULL, fixed_initials = names(mkinmod$diffs)[-1], 
+  from_max_mean = FALSE,
   solution_type = c("auto", "analytical", "eigen", "deSolve"),
   method.ode = "lsoda",
   use_compiled = "auto",
@@ -84,6 +85,13 @@ mkinfit(mkinmod, observed,
     The names of model variables for which the initial state at time 0 should
     be excluded from the optimisation. Defaults to all state variables except
     for the first one.
+  }
+  \item{from_max_mean}{
+    If this is set to TRUE, and the model has only one observed variable, then
+    data before the time of the maximum observed value (after averaging for each
+    sampling time) are discarded, and this time is subtracted from all
+    remaining time values, so the time of the maximum observed mean value is
+    the new time zero.
   }
   \item{solution_type}{
     If set to "eigen", the solution of the system of differential equations is

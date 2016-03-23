@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2015 Johannes Ranke
+# Copyright (C) 2010-2016 Johannes Ranke
 # Portions of this code are copyright (C) 2013 Eurofins Regulatory AG
 # Contact: jranke@uni-bremen.de
 # The summary function is an adapted and extended version of summary.modFit
@@ -26,6 +26,7 @@ mkinfit <- function(mkinmod, observed,
   state.ini = "auto", 
   fixed_parms = NULL,
   fixed_initials = names(mkinmod$diffs)[-1],
+  from_max_mean = FALSE,
   solution_type = c("auto", "analytical", "eigen", "deSolve"),
   method.ode = "lsoda",
   use_compiled = "auto",
@@ -78,6 +79,18 @@ mkinfit <- function(mkinmod, observed,
 
   # Subset observed data with names of observed data in the model
   observed <- subset(observed, name %in% obs_vars)
+
+  # Obtain data for decline from maximum mean value if requested
+  if (from_max_mean) {
+    # This is only used for simple decline models
+    if (length(obs_vars) > 1) 
+      stop("Decline from maximum is only implemented for models with a single observed variable")
+
+    means <- aggregate(value ~ time, data = observed, mean, na.rm=TRUE)
+    t_of_max <- means[which.max(means$value), "time"]
+    observed <- subset(observed, time >= t_of_max)
+    observed$time <- observed$time - t_of_max
+  }
 
   # Define starting values for parameters where not specified by the user
   if (parms.ini[[1]] == "auto") parms.ini = vector()

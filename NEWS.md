@@ -1,6 +1,10 @@
 # NEWS for package 'mkin'
 
-## mkin 0.9.41.9000
+## mkin 0.9.42
+
+### Major changes
+
+- Add the argument `from_max_mean` to `mkinfit`, for fitting only the decline from the maximum observed value for models with a single observed variable
 
 ### Minor changes
 

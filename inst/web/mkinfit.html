@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-<title>mkinfit. mkin 0.9.41.9000</title>
+<title>mkinfit. mkin 0.9.42</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="
   Johannes Ranke
@@ -34,7 +34,7 @@
     <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="#">mkin 0.9.41.9000</a>
+      <a class="brand" href="#">mkin 0.9.42</a>
       <div class="nav">
         <ul class="nav">
           <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
@@ -56,7 +56,7 @@
 <div class="row">
   <div class="span8">
     <h2>Usage</h2>
-    <pre><div>mkinfit(mkinmod, observed,  parms.ini&nbsp;=&nbsp;"auto", state.ini&nbsp;=&nbsp;"auto", fixed_parms&nbsp;=&nbsp;NULL, fixed_initials&nbsp;=&nbsp;names(mkinmod$diffs)[-1],  solution_type&nbsp;=&nbsp;c("auto", "analytical", "eigen", "deSolve"), method.ode&nbsp;=&nbsp;"lsoda", use_compiled&nbsp;=&nbsp;"auto", method.modFit&nbsp;=&nbsp;c("Port", "Marq", "SANN", "Nelder-Mead", "BFGS", "CG", "L-BFGS-B"), maxit.modFit&nbsp;=&nbsp;"auto", control.modFit&nbsp;=&nbsp;list(), transform_rates&nbsp;=&nbsp;TRUE, transform_fractions&nbsp;=&nbsp;TRUE, plot&nbsp;=&nbsp;FALSE, quiet&nbsp;=&nbsp;FALSE, err&nbsp;=&nbsp;NULL, weight&nbsp;=&nbsp;"none",  scaleVar&nbsp;=&nbsp;FALSE,  atol&nbsp;=&nbsp;1e-8, rtol&nbsp;=&nbsp;1e-10, n.outtimes&nbsp;=&nbsp;100,  reweight.method&nbsp;=&nbsp;NULL, reweight.tol&nbsp;=&nbsp;1e-8, reweight.max.iter&nbsp;=&nbsp;10, trace_parms&nbsp;=&nbsp;FALSE, ...)</div></pre>
+    <pre><div>mkinfit(mkinmod, observed,  parms.ini&nbsp;=&nbsp;"auto", state.ini&nbsp;=&nbsp;"auto", fixed_parms&nbsp;=&nbsp;NULL, fixed_initials&nbsp;=&nbsp;names(mkinmod$diffs)[-1],  from_max_mean&nbsp;=&nbsp;FALSE, solution_type&nbsp;=&nbsp;c("auto", "analytical", "eigen", "deSolve"), method.ode&nbsp;=&nbsp;"lsoda", use_compiled&nbsp;=&nbsp;"auto", method.modFit&nbsp;=&nbsp;c("Port", "Marq", "SANN", "Nelder-Mead", "BFGS", "CG", "L-BFGS-B"), maxit.modFit&nbsp;=&nbsp;"auto", control.modFit&nbsp;=&nbsp;list(), transform_rates&nbsp;=&nbsp;TRUE, transform_fractions&nbsp;=&nbsp;TRUE, plot&nbsp;=&nbsp;FALSE, quiet&nbsp;=&nbsp;FALSE, err&nbsp;=&nbsp;NULL, weight&nbsp;=&nbsp;"none",  scaleVar&nbsp;=&nbsp;FALSE,  atol&nbsp;=&nbsp;1e-8, rtol&nbsp;=&nbsp;1e-10, n.outtimes&nbsp;=&nbsp;100,  reweight.method&nbsp;=&nbsp;NULL, reweight.tol&nbsp;=&nbsp;1e-8, reweight.max.iter&nbsp;=&nbsp;10, trace_parms&nbsp;=&nbsp;FALSE, ...)</div></pre>
     
     <h2>Arguments</h2>
     <dl>
@@ -113,6 +113,14 @@
     The names of model variables for which the initial state at time 0 should
     be excluded from the optimisation. Defaults to all state variables except
     for the first one.
+  </dd>
+      <dt>from_max_mean</dt>
+      <dd>
+    If this is set to TRUE, and the model has only one observed variable, then
+    data before the time of the maximum observed value (after averaging for each
+    sampling time) are discarded, and this time is subtracted from all
+    remaining time values, so the time of the maximum observed mean value is
+    the new time zero.
   </dd>
       <dt>solution_type</dt>
       <dd>
@@ -315,17 +323,17 @@
 fit &lt;- mkinfit(&quot;FOMC&quot;, FOCUS_2006_C, quiet = TRUE)
 summary(fit)
 </div>
-<div class='output'>mkin version:    0.9.41.9000 
-R version:       3.2.2 
-Date of fit:     Wed Dec  9 10:16:57 2015 
-Date of summary: Wed Dec  9 10:16:57 2015 
+<div class='output'>mkin version:    0.9.42 
+R version:       3.2.4 
+Date of fit:     Wed Mar 23 16:59:43 2016 
+Date of summary: Wed Mar 23 16:59:43 2016 
 
 Equations:
 d_parent = - (alpha/beta) * 1/((time/beta) + 1) * parent
 
 Model predictions using solution type analytical 
 
-Fitted with method Port using 64 model solutions performed in 0.189 s
+Fitted with method Port using 64 model solutions performed in 0.195 s
 
 Weighting: none
 
@@ -401,7 +409,7 @@ print(system.time(fit &lt;- mkinfit(SFO_SFO, FOCUS_2006_D,
                            solution_type = &quot;eigen&quot;, quiet = TRUE)))
 </div>
 <div class='output'>   user  system elapsed 
-  1.184   1.180   0.891 
+  1.200   1.272   0.936 
 </div>
 <div class='input'>coef(fit)
 </div>
