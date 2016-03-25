@@ -1,5 +1,11 @@
 # NEWS for package 'mkin'
 
+## mkin 0.9.42-9000
+
+### Minor changes
+
+- Remove an outdated reference to the inline package in the compiled_models vignette
+
 ## mkin 0.9.42
 
 ### Major changes
