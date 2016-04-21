@@ -2,11 +2,19 @@
 
 ## mkin 0.9.42-9000
 
+### Major changes
+
+- `mkinfit`: Do not error out in cases where the fit converges, but the Jacobian for the untransformed model cost can not be estimated. Give a warning instead and return NA for the t-test results.
+
+- `summary.mkinfit`: Give a warning message when the covariance matrix can not be obtained.
+
+- A test has been added to containing a corresponding edge case to check that the warnings are correctly issued and the fit does not terminate.
+
 ### Minor changes
 
-- Remove an outdated reference to the inline package in the compiled_models vignette
+- Remove an outdated reference to the inline package in the `compiled_models` vignette
 
-## mkin 0.9.42
+## mkin 0.9.42 (2016-03-25)
 
 ### Major changes
 

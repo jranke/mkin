@@ -483,9 +483,15 @@ mkinfit <- function(mkinmod, observed,
   # Estimate the Hessian for the model cost without parameter transformations
   # to make it possible to obtain the usual t-test
   # Code ported from FME::modFit
-  Jac_notrans <- gradient(function(p, ...) cost_notrans(p)$residuals$res, 
-                          bparms.optim, centered = TRUE)
-  fit$hessian_notrans <- 2 * t(Jac_notrans) %*% Jac_notrans
+  Jac_notrans <- try(gradient(function(p, ...) cost_notrans(p)$residuals$res, 
+                              bparms.optim, centered = TRUE), silent = TRUE)
+  if (inherits(Jac_notrans, "try-error")) {
+    warning("Calculation of the Jacobian failed for the cost function of the untransformed model.\n",
+            "No t-test results will be available")
+    fit$hessian_notrans <- NA
+  } else {
+    fit$hessian_notrans <- 2 * t(Jac_notrans) %*% Jac_notrans
+  }
 
   # Collect initial parameter values in three dataframes
   fit$start <- data.frame(value = c(state.ini.optim, 
@@ -548,7 +554,7 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
   covar_notrans  <- try(solve(0.5*object$hessian_notrans), silent = TRUE)   # unscaled covariance
   rdf    <- object$df.residual
   resvar <- object$ssr / rdf
-  if (!is.numeric(covar)) {
+  if (!is.numeric(covar) | is.na(covar[1])) {
     covar <- NULL
     se <- lci <- uci <- rep(NA, p)
   } else {
@@ -558,7 +564,7 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
     uci    <- param + qt(1-alpha/2, rdf) * se
   }
 
-  if (!is.numeric(covar_notrans)) {
+  if (!is.numeric(covar_notrans) | is.na(covar_notrans[1])) {
     covar_notrans <- NULL
     se_notrans <- tval <- pval <- rep(NA, p)
   } else {
@@ -690,7 +696,9 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
       rownames(Corr) <- colnames(Corr) <- rownames(x$par)
       print(Corr, digits = digits, ...)
     } else {
-      cat("Could not estimate covariance matrix; singular system:\n")
+      msg <- "Could not estimate covariance matrix; singular system:\n"
+      warning(msg)
+      cat(msg)
     }
   }
 
