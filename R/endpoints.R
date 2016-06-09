@@ -15,7 +15,7 @@ endpoints <- function(fit) {
     type = names(fit$mkinmod$map[[obs_var]])[1]  
 
     # Get formation fractions if directly fitted, and calculate remaining fraction to sink
-    f_names = grep(paste("f", obs_var, sep = "_"), names(parms.all), value=TRUE)
+    f_names = grep(paste("^f", obs_var, sep = "_"), names(parms.all), value=TRUE)
     if (length(f_names) > 0) {
       f_values = parms.all[f_names]
       f_to_sink = 1 - sum(f_values)
@@ -30,7 +30,7 @@ endpoints <- function(fit) {
 
     # Get the rest
     if (type == "SFO") {
-      k_names = grep(paste("k", obs_var, sep="_"), names(parms.all), value=TRUE)
+      k_names = grep(paste("^k", obs_var, sep="_"), names(parms.all), value=TRUE)
       k_tot = sum(parms.all[k_names])
       DT50 = log(2)/k_tot
       DT90 = log(10)/k_tot
@@ -50,7 +50,7 @@ endpoints <- function(fit) {
       ep$distimes[obs_var, c("DT50back")] = DT50_back
     }
     if (type == "IORE") {
-      k_names = grep(paste("k__iore", obs_var, sep="_"), names(parms.all), value=TRUE)
+      k_names = grep(paste("^k__iore", obs_var, sep="_"), names(parms.all), value=TRUE)
       k_tot = sum(parms.all[k_names])
       # From the NAFTA kinetics guidance, p. 5
       n = parms.all[paste("N", obs_var, sep = "_")]
@@ -115,7 +115,7 @@ endpoints <- function(fit) {
     }
     if (type == "SFORB") {
       # FOCUS kinetics (2006), p. 60 f
-      k_out_names = grep(paste("k", obs_var, "free", sep="_"), names(parms.all), value=TRUE)
+      k_out_names = grep(paste("^k", obs_var, "free", sep="_"), names(parms.all), value=TRUE)
       k_out_names = setdiff(k_out_names, paste("k", obs_var, "free", "bound", sep="_"))
       k_1output = sum(parms.all[k_out_names])
       k_12 = parms.all[paste("k", obs_var, "free", "bound", sep="_")]

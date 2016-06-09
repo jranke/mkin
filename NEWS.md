@@ -14,6 +14,10 @@
 
 - Remove an outdated reference to the inline package in the `compiled_models` vignette
 
+### Bug fixes
+
+- `endpoints`: When the name of a substance degrading to a metabolite (e.g. a parent compound) used in the model formulation ended in the letter `f`, some rate parameters could be listed as formation fractions with mixed up names. These would also appear in the summary.
+
 ## mkin 0.9.42 (2016-03-25)
 
 ### Major changes
