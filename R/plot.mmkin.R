@@ -1,8 +1,5 @@
-# Copyright (C) 2015 Johannes Ranke
+# Copyright (C) 2015-2016 Johannes Ranke
 # Contact: jranke@uni-bremen.de
-# The summary function is an adapted and extended version of summary.modFit
-# from the FME package, v 1.1 by Soetart and Petzoldt, which was in turn
-# inspired by summary.nls.lm
 
 # This file is part of the R package mkin
 
