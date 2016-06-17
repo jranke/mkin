@@ -4,6 +4,8 @@
 
 ### Major changes
 
+- The title was changed to `Kinetic evaluations of chemical degradation data`
+
 - `mkinfit`: Do not error out in cases where the fit converges, but the Jacobian for the untransformed model cost can not be estimated. Give a warning instead and return NA for the t-test results.
 
 - `summary.mkinfit`: Give a warning message when the covariance matrix can not be obtained.
@@ -17,6 +19,8 @@
 ### Bug fixes
 
 - `endpoints`: When the name of a substance degrading to a metabolite (e.g. a parent compound) used in the model formulation ended in the letter `f`, some rate parameters could be listed as formation fractions with mixed up names. These would also appear in the summary.
+
+- `mkinfit`: Check for all observed variables when checking if the user tried to fix formation fractions when fitting them using ilr transformation.
 
 ## mkin 0.9.42 (2016-03-25)
 

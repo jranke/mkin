@@ -121,7 +121,7 @@ mkinfit <- function(mkinmod, observed,
   # Do not allow fixing formation fractions if we are using the ilr transformation,
   # this is not supported
   if (transform_fractions == TRUE && length(fixed_parms) > 0) {
-    if (grepl("^f_", fixed_parms)) {
+    if (any(grepl("^f_", fixed_parms))) {
       stop("Fixing formation fractions is not supported when using the ilr ",
            "transformation.")
     }
