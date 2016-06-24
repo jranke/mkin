@@ -20,12 +20,17 @@ plot.mmkin <- function(x, main = "auto", legends = 1, errmin_var = "All data", e
                        cex = 0.7, rel.height.middle = 0.9, ...) {
   n.m <- nrow(x)
   n.d <- ncol(x)
+
+  # We can handle either a row (different models, same dataset) 
+  # or a column (same model, different datasets)
   if (n.m > 1 & n.d > 1) stop("Please select fits either for one model or for one dataset")
   if (n.m == 1 & n.d == 1) loop_over = "none"
   if (n.m > 1) loop_over <- "models"
   if (n.d > 1) loop_over <- "datasets"
   n.fits <- length(x)
 
+  # Set the main plot titles from the names of the models or the datasets
+  # Will be integer indexes if no other names are present in the mmkin object
   if (main == "auto") {
     main = switch(loop_over,
                   none = paste(rownames(x), colnames(x)),
@@ -34,11 +39,13 @@ plot.mmkin <- function(x, main = "auto", legends = 1, errmin_var = "All data", e
   }
 
   oldpar <- par(no.readonly = TRUE)
+
+  # Set relative plot heights, so the first and the last plot are the norm
+  # and the middle plots (if n.fits >2) are smaller by rel.height.middle
   rel.heights <- if (n.fits > 2) c(1, rep(rel.height.middle, n.fits - 2), 1)
                  else rep(1, n.fits)
   layout(matrix(1:(2 * n.fits), n.fits, 2, byrow = TRUE), heights = rel.heights)
 
-  #par(mfrow = c(n.fits, 2))
   par(mar = c(3.0, 4.1, 4.1, 2.1)) # Reduce bottom margin by 2.1 - hides x axis legend
   par(cex = cex)
 
@@ -47,12 +54,6 @@ plot.mmkin <- function(x, main = "auto", legends = 1, errmin_var = "All data", e
       # Reduce top margin by 2 after the first plot as we have no main title, 
       # reduced plot height, therefore we need rel.height.middle in the layout
       par(mar = c(3.0, 4.1, 2.1, 2.1))
-    }
-    if (i.fit == n.fits) {
-      # Reduce top margin by 2 after the first plot as we have no main title, 
-      # plot height remains about constant
-      par(mar = c(5.1, 4.1, 2.1, 2.1))
-
     }
     fit <- x[[i.fit]]
     plot(fit, legend = legends == i.fit, ...)

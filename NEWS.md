@@ -6,21 +6,27 @@
 
 - The title was changed to `Kinetic evaluations of chemical degradation data`
 
+- The main vignette `mkin` was converted to R markdown and updated
+
+- The function `add_err` was added to the package, making it easy to generate simulated data using an error model based on the normal distribution
+
+### Minor changes
+
+- Remove an outdated reference to the inline package in the `compiled_models` vignette
+
 - `mkinfit`: Do not error out in cases where the fit converges, but the Jacobian for the untransformed model cost can not be estimated. Give a warning instead and return NA for the t-test results.
 
 - `summary.mkinfit`: Give a warning message when the covariance matrix can not be obtained.
 
 - A test has been added to containing a corresponding edge case to check that the warnings are correctly issued and the fit does not terminate.
 
-### Minor changes
-
-- Remove an outdated reference to the inline package in the `compiled_models` vignette
-
 ### Bug fixes
 
 - `endpoints`: When the name of a substance degrading to a metabolite (e.g. a parent compound) used in the model formulation ended in the letter `f`, some rate parameters could be listed as formation fractions with mixed up names. These would also appear in the summary.
 
 - `mkinfit`: Check for all observed variables when checking if the user tried to fix formation fractions when fitting them using ilr transformation.
+
+- `plot.mmkin`: Removed some leftover code that set the plot margins wrongly in the case of a single fit to be plotted, so the main title was misplaced
 
 ## mkin 0.9.42 (2016-03-25)
 
