@@ -1,7 +1,7 @@
 \name{mkinpredict}
 \alias{mkinpredict}
 \title{
-  Produce predictions from a kinetic model using specifc parameters
+  Produce predictions from a kinetic model using specific parameters
 }
 \description{
   This function produces a time series for all the observed variables in a
