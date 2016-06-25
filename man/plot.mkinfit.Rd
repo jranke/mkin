@@ -14,10 +14,11 @@
   xlab = "Time", ylab = "Observed", 
   xlim = range(fit$data$time),
   ylim = "default",
-  col_obs = 1:length(fit$mkinmod$map), pch_obs = col_obs, 
-  lty_obs = rep(1, length(fit$mkinmod$map)),
+  col_obs = 1:length(obs_vars), pch_obs = col_obs, 
+  lty_obs = rep(1, length(obs_vars)),
   add = FALSE, legend = !add,
   show_residuals = FALSE, maxabs = "auto",
+  sep_vars = FALSE, rel.height.middle = 0.9,
   lpos = "topright", inset = c(0.05, 0.05), \dots)
 }
 \arguments{
@@ -25,7 +26,7 @@
     Alias for fit introduced for compatibility with the generic S3 method.  
   }
   \item{fit}{
-    an object of class \code{\link{mkinfit}}.
+    An object of class \code{\link{mkinfit}}.
   }
   \item{obs_vars}{
     A character vector of names of the observed variables for which the 
@@ -33,47 +34,54 @@
     in the model.
   }
   \item{xlab}{
-    label for the x axis.
+    Label for the x axis.
   }
   \item{ylab}{
-    label for the y axis.
+    Label for the y axis.
   }
   \item{xlim}{
-    plot range in x direction.
+    Plot range in x direction.
   }
   \item{ylim}{
-    plot range in y direction.
+    Plot range in y direction.
   }
   \item{col_obs}{
-    colors used for plotting the observed data and the corresponding model prediction lines.
+    Colors used for plotting the observed data and the corresponding model prediction lines.
   }
   \item{pch_obs}{
-    symbols to be used for plotting the data.
+    Symbols to be used for plotting the data.
   }
   \item{lty_obs}{
-    line types to be used for the model predictions.
+    Line types to be used for the model predictions.
   }
   \item{add}{
-    should the plot be added to an existing plot?
+    Should the plot be added to an existing plot?
   }
   \item{legend}{
-    should a legend be added to the plot?
+    Should a legend be added to the plot?
   }
   \item{show_residuals}{
-    should residuals be shown in the lower third of the plot?
+    Should residuals be shown in the lower third of the plot?
   }
   \item{maxabs}{
     Maximum absolute value of the residuals. This is used for the scaling of
     the y axis and defaults to "auto".
   }
+  \item{sep_obs}{
+    Should the observed variables be shown in separate subplots?
+  }
+  \item{rel.height.middle}{
+    The relative height of the middle plot, if more than two rows of plots are shown.
+  }
   \item{lpos}{
-    position of the legend. Passed to \code{\link{legend}} as the first argument.
+    Position(s) of the legend(s). Passed to \code{\link{legend}} as the first argument.
+    If not length one, this should be of the same length as the obs_var argument.
   }
   \item{inset}{
     Passed to \code{\link{legend}} if applicable.
   }
   \item{\dots}{
-   further arguments passed to \code{\link{plot}}.
+    Further arguments passed to \code{\link{plot}}.
   }
 }
 \value{
@@ -81,13 +89,18 @@
 }
 \examples{
 # One parent compound, one metabolite, both single first order, path from
-# parent to sink included
+# parent to sink included, use Levenberg-Marquardt for speed
 SFO_SFO <- mkinmod(parent = mkinsub("SFO", "m1", full = "Parent"),
                    m1 = mkinsub("SFO", full = "Metabolite M1" ))
-fit <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE)
+fit <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE, method.modFit = "Marq")
 plot(fit)
+
+# Show the observed variables separately
+plot(fit, sep_obs = TRUE)
+
+# Show the observed variables separately, with residuals
+plot(fit, sep_obs = TRUE, show_residuals = TRUE, lpos = c("topright", "bottomright"))
 }
 \author{
   Johannes Ranke
 }
-\keyword{ hplot }

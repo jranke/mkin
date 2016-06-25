@@ -32,7 +32,7 @@
     Passed to the plot functions and \code{\link{mtext}}.
 }
   \item{rel.height.middle}{
-    The relative height of the middle plot.
+    The relative height of the middle plot, if more than two rows of plots are shown.
 }
   \item{\dots}{
     Further arguments passed to \code{\link{plot.mkinfit}} and \code{\link{mkinresplot}}.

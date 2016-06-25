@@ -6,6 +6,10 @@
 
 - The title was changed to `Kinetic evaluations of chemical degradation data`
 
+- `plot.mkinfit`: If a residual plot is requested, show it next to the plot of the fit, not below. This may cause existing code to produce bad-looking plots, but was done to make the next feature possible without increasing code complexity too much.
+
+- `plot.mkinfit`: Add the possibility to show fits and residual plots separately for the observed variables
+
 - The main vignette `mkin` was converted to R markdown and updated
 
 - The function `add_err` was added to the package, making it easy to generate simulated data using an error model based on the normal distribution
@@ -26,7 +30,9 @@
 
 - `mkinfit`: Check for all observed variables when checking if the user tried to fix formation fractions when fitting them using ilr transformation.
 
-- `plot.mmkin`: Removed some leftover code that set the plot margins wrongly in the case of a single fit to be plotted, so the main title was misplaced
+- `plot.mmkin`: Removed some leftover code that set the plot margins wrongly in the case of a single fit to be plotted, so the main title was misplaced.
+
+- `plot.mkinfit`: Correct default values for `col_obs`, `pch_obs` and `lty_obs` for the case that `obs_vars` is specified.
 
 ## mkin 0.9.42 (2016-03-25)
 
