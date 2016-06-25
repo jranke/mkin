@@ -6,9 +6,7 @@
 
 - The title was changed to `Kinetic evaluations of chemical degradation data`
 
-- `plot.mkinfit`: If a residual plot is requested, show it next to the plot of the fit, not below. This may cause existing code to produce bad-looking plots, but was done to make the next feature possible without increasing code complexity too much.
-
-- `plot.mkinfit`: Add the possibility to show fits and residual plots separately for the observed variables
+- `plot.mkinfit`: Add the possibility to show fits (and residual plots if requested) separately for the observed variables
 
 - The main vignette `mkin` was converted to R markdown and updated
 

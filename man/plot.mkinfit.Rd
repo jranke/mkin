@@ -61,14 +61,18 @@
     Should a legend be added to the plot?
   }
   \item{show_residuals}{
-    Should residuals be shown in the lower third of the plot?
+    Should residuals be shown? If only one plot of the fits is shown, the
+    residual plot is in the lower third of the plot? Otherwise, i.e. if
+    "sep_obs" is given, the residual plots will be located to the right of 
+    the plots of the fitted curves.
   }
   \item{maxabs}{
     Maximum absolute value of the residuals. This is used for the scaling of
     the y axis and defaults to "auto".
   }
   \item{sep_obs}{
-    Should the observed variables be shown in separate subplots?
+    Should the observed variables be shown in separate subplots? If yes, residual plots
+    requested by "show_residuals" will be shown next to, not below the plot of the fits.
   }
   \item{rel.height.middle}{
     The relative height of the middle plot, if more than two rows of plots are shown.
@@ -94,9 +98,10 @@ SFO_SFO <- mkinmod(parent = mkinsub("SFO", "m1", full = "Parent"),
                    m1 = mkinsub("SFO", full = "Metabolite M1" ))
 fit <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE, method.modFit = "Marq")
 plot(fit)
+plot(fit, show_residuals = TRUE)
 
 # Show the observed variables separately
-plot(fit, sep_obs = TRUE)
+plot(fit, sep_obs = TRUE, lpos = c("topright", "bottomright"))
 
 # Show the observed variables separately, with residuals
 plot(fit, sep_obs = TRUE, show_residuals = TRUE, lpos = c("topright", "bottomright"))

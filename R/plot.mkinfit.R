@@ -68,16 +68,22 @@ plot.mkinfit <- function(x, fit = x,
     # Layout should be restored afterwards
     oldpar <- par(no.readonly = TRUE)
 
-    n_plot_cols = if (show_residuals) 2 else 1
-    n_plots = n_plot_rows * n_plot_cols
+    # If the observed variables are shown separately, do row layout
+    if (sep_obs) {
+      n_plot_cols = if (show_residuals) 2 else 1
+      n_plots = n_plot_rows * n_plot_cols
 
-    # Set relative plot heights, so the first and the last plot are the norm
-    # and the middle plots (if n_plot_rows >2) are smaller by rel.height.middle
-    rel.heights <- if (n_plot_rows > 2) c(1, rep(rel.height.middle, n_plot_rows - 2), 1)
-                   else rep(1, n_plot_rows)
-    layout_matrix = matrix(1:n_plots, 
-                           n_plot_rows, n_plot_cols, byrow = TRUE)
-    layout(layout_matrix, heights = rel.heights)
+      # Set relative plot heights, so the first and the last plot are the norm
+      # and the middle plots (if n_plot_rows >2) are smaller by rel.height.middle
+      rel.heights <- if (n_plot_rows > 2) c(1, rep(rel.height.middle, n_plot_rows - 2), 1)
+                     else rep(1, n_plot_rows)
+      layout_matrix = matrix(1:n_plots, 
+                             n_plot_rows, n_plot_cols, byrow = TRUE)
+      layout(layout_matrix, heights = rel.heights)
+    } else { # else show residuals in the lower third to keep compatibility
+      layout(matrix(c(1, 2), 2, 1), heights = c(2, 1.3))
+            par(mar = c(3, 4, 4, 2) + 0.1)
+    }
   }
 
   # Replicate legend position argument if necessary
@@ -129,6 +135,7 @@ plot.mkinfit <- function(x, fit = x,
     if (show_residuals) {
       residuals <- subset(fit$data, variable %in% row_obs_vars, residual)
       if (maxabs == "auto") maxabs = max(abs(residuals), na.rm = TRUE)
+      if (!sep_obs) par(mar = c(5, 4, 0, 2) + 0.1)
       plot(0, type="n", 
         xlim = xlim, 
         ylim = c(-1.2 * maxabs, 1.2 * maxabs),
