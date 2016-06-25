@@ -103,6 +103,27 @@ plot.mkinfit <- function(x, fit = x,
       ylim_row = ylim
     }
 
+    if (sep_obs) {
+      # Margins for top row of plots when we have more than one row
+      # Reduce bottom margin by 2.1 - hides x axis legend
+      if (plot_row == 1 & n_plot_rows > 1) {
+        par(mar = c(3.0, 4.1, 4.1, 2.1)) 
+      }
+
+      # Margins for middle rows of plots, if any
+      if (plot_row > 1 & plot_row < n_plot_rows) {
+        # Reduce top margin by 2 after the first plot as we have no main title, 
+        # reduced plot height, therefore we need rel.height.middle in the layout
+        par(mar = c(3.0, 4.1, 2.1, 2.1))
+      }
+
+      # Margins for bottom row of plots when we have more than one row
+      if (plot_row == n_plot_rows & n_plot_rows > 1) {
+        # Restore bottom margin for last plot to show x axis legend
+        par(mar = c(5.1, 4.1, 2.1, 2.1))
+      }
+    }
+
     # Set up the main plot if not to be added to an existing plot
     if (add == FALSE) {
       plot(0, type="n", 

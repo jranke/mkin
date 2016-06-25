@@ -46,15 +46,29 @@ plot.mmkin <- function(x, main = "auto", legends = 1, errmin_var = "All data", e
                  else rep(1, n.fits)
   layout(matrix(1:(2 * n.fits), n.fits, 2, byrow = TRUE), heights = rel.heights)
 
-  par(mar = c(3.0, 4.1, 4.1, 2.1)) # Reduce bottom margin by 2.1 - hides x axis legend
   par(cex = cex)
 
   for (i.fit in 1:n.fits) {
-    if (i.fit == 2) {
+
+    # Margins for top row of plots when we have more than one row
+    # Reduce bottom margin by 2.1 - hides x axis legend
+    if (i.fit == 1 & n.fits > 1) {
+      par(mar = c(3.0, 4.1, 4.1, 2.1)) 
+    }
+
+    # Margins for middle rows of plots, if any
+    if (i.fit > 1 & i.fit < n.fits) {
       # Reduce top margin by 2 after the first plot as we have no main title, 
       # reduced plot height, therefore we need rel.height.middle in the layout
       par(mar = c(3.0, 4.1, 2.1, 2.1))
     }
+
+    # Margins for bottom row of plots when we have more than one row
+    if (i.fit == n.fits & n.fits > 1) {
+      # Restore bottom margin for last plot to show x axis legend
+      par(mar = c(5.1, 4.1, 2.1, 2.1))
+    }
+
     fit <- x[[i.fit]]
     plot(fit, legend = legends == i.fit, ...)
 

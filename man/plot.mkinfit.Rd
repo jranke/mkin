@@ -18,7 +18,7 @@
   lty_obs = rep(1, length(obs_vars)),
   add = FALSE, legend = !add,
   show_residuals = FALSE, maxabs = "auto",
-  sep_vars = FALSE, rel.height.middle = 0.9,
+  sep_obs = FALSE, rel.height.middle = 0.9,
   lpos = "topright", inset = c(0.05, 0.05), \dots)
 }
 \arguments{
