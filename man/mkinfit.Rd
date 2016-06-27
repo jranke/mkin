@@ -51,9 +51,9 @@ mkinfit(mkinmod, observed,
     name of the observed variable for each data point. The second column must
     contain the times of observation, named "time".  The third column must be
     named "value" and contain the observed values. Optionally, a further column
-    can contain weights for each data point. If it is not named "err", its name
-    must be passed as a further argument named \code{err} which is then passed
-    on to \code{\link{modFit}}.
+    can contain weights for each data point. Its name must be passed as a
+    further argument named \code{err} which is then passed on to
+    \code{\link{modFit}}.
   }
   \item{parms.ini}{
     A named vector of initial values for the parameters, including parameters
@@ -303,9 +303,8 @@ f.irls <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, reweight.method = "obs")
 summary(f.irls)
 f.w.mean <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, weight = "mean")
 summary(f.w.mean)
-f.w.mean.irls <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, weight = "mean",
-                         reweight.method = "obs")
-summary(f.w.mean.irls)
+f.w.value <- mkinfit(SFO_SFO.ff, subset(FOCUS_2006_D, value != 0), err = "value")
+summary(f.w.value)
 }
 
 \dontrun{

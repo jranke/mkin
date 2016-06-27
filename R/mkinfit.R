@@ -513,13 +513,19 @@ mkinfit <- function(mkinmod, observed,
   data$name <- ordered(data$name, levels = obs_vars)
   data <- data[order(data$name, data$time), ]
 
+  # Add a column named "value" holding the observed values for the case
+  # that this column was selected for manual weighting, so it can be
+  # shown in the summary as "err"
+  data$value <- data$value.x
+
   fit$data <- data.frame(time = data$time,
                          variable = data$name,
                          observed = data$value.x,
                          predicted = data$value.y)
+
   fit$data$residual <- fit$data$observed - fit$data$predicted
   if (!is.null(data$err.ini)) fit$data$err.ini <- data$err.ini
-  if (!is.null(err)) fit$data[[err]] <- data[[err]]
+  if (!is.null(err)) fit$data[["err"]] <- data[[err]]
 
   fit$atol <- atol
   fit$rtol <- rtol

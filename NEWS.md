@@ -8,6 +8,8 @@
 
 - `plot.mkinfit`: Add the possibility to show fits (and residual plots if requested) separately for the observed variables
 
+- `plot.mkinfit`: Add the possibility to show the chi2 error levels in the plot, similar to the way they are shown in `plot.mmkin`
+
 - The main vignette `mkin` was converted to R markdown and updated
 
 - The function `add_err` was added to the package, making it easy to generate simulated data using an error model based on the normal distribution
@@ -22,13 +24,17 @@
 
 - A test has been added to containing a corresponding edge case to check that the warnings are correctly issued and the fit does not terminate.
 
+- `plot.mmkin`: Round the chi2 error value to three significant digits, instead of two decimal digits.
+
+- `mkinfit`: Return the `err` values used on weighted fits as a column named `err`. Also include these inverse weights when the column `value` in the observed data is used, which is returned as `observed` in the data component of the mkinfit object.
+
 ### Bug fixes
 
 - `endpoints`: When the name of a substance degrading to a metabolite (e.g. a parent compound) used in the model formulation ended in the letter `f`, some rate parameters could be listed as formation fractions with mixed up names. These would also appear in the summary.
 
 - `mkinfit`: Check for all observed variables when checking if the user tried to fix formation fractions when fitting them using ilr transformation.
 
-- `plot.mmkin`: Removed some leftover code that set the plot margins wrongly in the case of a single fit to be plotted, so the main title was misplaced.
+- `plot.mmkin`: Set the plot margins correctly, also in the case of a single fit to be plotted, so the main title is placed in a reasonable way.
 
 - `plot.mkinfit`: Correct default values for `col_obs`, `pch_obs` and `lty_obs` for the case that `obs_vars` is specified.
 
