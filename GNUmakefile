@@ -35,7 +35,7 @@ $(TGZ): $(pkgfiles) vignettes
 	cd ..;\
 		"$(RBIN)/R" CMD build $(PKGSRC) 2>&1 | tee $(PKGNAME)/build.log
 
-$(TGZVNR): $(pkgfiles) vignettes
+$(TGZVNR): $(pkgfiles) 
 	cd ..;\
 		"$(RBIN)/R" CMD build $(PKGSRC) --no-build-vignettes;\
 		cd $(PKGSRC);\
