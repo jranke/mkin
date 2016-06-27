@@ -6,6 +6,7 @@ output:
   html_document:
     toc: true
     toc_float: true
+    code_folding: hide
 bibliography: references.bib
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
@@ -31,6 +32,30 @@ recommended in this guidance from within R and calculates some statistical
 measures for data series within one or more compartments, for parent and
 metabolites.
 
+```{r, echo = TRUE, cache = TRUE, fig = TRUE, fig.width = 8, fig.height = 7}
+require(mkin)
+m_SFO_SFO_SFO <- mkinmod(parent = mkinsub("SFO", "M1"),
+                         M1 = mkinsub("SFO", "M2"),
+                         M2 = mkinsub("SFO"), 
+                         use_of_ff = "max", quiet = TRUE)
+
+sampling_times = c(0, 1, 3, 7, 14, 28, 60, 90, 120)
+
+d_SFO_SFO_SFO <- mkinpredict(m_SFO_SFO_SFO,
+  c(k_parent = 0.03, 
+    f_parent_to_M1 = 0.5, k_M1 = log(2)/100, 
+    f_M1_to_M2 = 0.9, k_M2 = log(2)/50),
+  c(parent = 100, M1 = 0, M2 = 0),
+  sampling_times)
+
+d_SFO_SFO_SFO_err <- add_err(d_SFO_SFO_SFO, function(x) 3, n = 1, seed = 123456789 )
+
+f_SFO_SFO_SFO <- mkinfit(m_SFO_SFO_SFO, d_SFO_SFO_SFO_err[[1]], quiet = TRUE)
+
+plot.mkinfit(f_SFO_SFO_SFO, sep_obs = TRUE, show_residuals = TRUE, show_errmin = TRUE,
+             lpos = c("topright", "bottomright", "bottomright"))
+```
+
 # Background
 
 Many approaches are possible regarding the evaluation of chemical degradation
@@ -39,7 +64,7 @@ data.
 The now deprecated `kinfit` package [@pkg:kinfit] in `R` [@rcore2016]
 implements the approach recommended in the kinetics report provided by the
 FOrum for Co-ordination of pesticide fate models and their USe [@FOCUS2006;
-FOCUSkinetics2014] for simple data series for one parent compound in one
+-@FOCUSkinetics2014] for simple data series for one parent compound in one
 compartment.
 
 The `mkin` package [@pkg:mkin] extends this approach to data series with
@@ -48,7 +73,7 @@ compartment. It is also possible to include back reactions, so equilibrium
 reactions and equilibrium partitioning can be specified, although this
 oftentimes leads to an overparameterisation of the model.
 
-When mkin was first published, the most commonly used tools for
+When the first `mkin` code was published in 2010, the most commonly used tools for
 fitting more complex kinetic degradation models to experimental data were
 KinGUI [@schaefer2007], a MATLAB based tool with a graphical user
 interface that was specifically tailored to the task and included some output
@@ -59,7 +84,7 @@ models based on differential equations to data.
 The code was first uploaded to the BerliOS platform. When this was taken down,
 the version control history was imported into the R-Forge site, where the code
 is still mirrored today (see *e.g.* 
-[the initial commit on 11 May 2010](http://cgit.jrwb.de/mkin/commit/?id=30cbb4092f6d2d3beff5800603374a0d009ad770).
+[the initial commit on 11 May 2010](http://cgit.jrwb.de/mkin/commit/?id=30cbb4092f6d2d3beff5800603374a0d009ad770)).
 
 At that time, the R package `FME` (Flexible Modelling Environment) 
 [@soetaert2010] was already available, and provided a good basis for
@@ -71,18 +96,18 @@ that has to be assumed for the residuals, such that the $\chi^2$
 goodness-of-fit test as defined by the FOCUS kinetics workgroup would pass
 using an significance level $\alpha$ of 0.05.
 
-Also, mkin introduced using analytical solutions for parent only kinetics for
+Also, `mkin` introduced using analytical solutions for parent only kinetics for
 improved optimization speed. Later, Eigenvalue based solutions were
-introduced to mkin for the case of linear differential equations (*i.e.*
+introduced to `mkin` for the case of linear differential equations (*i.e.*
 where the FOMC or DFOP models were not used for the parent compound), greatly
 improving the optimization speed for these cases.
 
 The possibility to specify back-reactions and a biphasic model (SFORB) for
-metabolites were present in mkin from the very beginning.
+metabolites were present in `mkin` from the very beginning.
 
 ## Derived software tools
 
-Soon after the publication of mkin, two derived tools were published, namely
+Soon after the publication of `mkin`, two derived tools were published, namely
 KinGUII (available from Bayer Crop Science) and CAKE (commissioned to Tessella
 by Syngenta), which added a graphical user interface (GUI), and added fitting by
 iteratively reweighted least squares (IRLS) and characterisation of likely
@@ -91,14 +116,14 @@ parameter distributions by Markov Chain Monte Carlo (MCMC) sampling.
 CAKE focuses on a smooth use experience, sacrificing some flexibility in the model
 definition, originally allowing only two primary metabolites in parallel.
 The current version 3.2 of CAKE release in March 2016 uses a basic scheme for
-up to six metabolites in a flexible arrangement.
+up to six metabolites in a flexible arrangement, but does not support
+back-reactions (non-instantaneous equilibria) or biphasic kinetics for metabolites.
 
-KinGUI offers quite an even more flexible widget for specifying complex kinetic
-models.  Back-reactions (non-instanteneous equilibria) were not present in the
-first version of KinGUII, and only simple first-order models could be specified
-for transformation products.  Later, starting from KinGUII version 2.1 published in ),
-back-reactions and biphasic modelling of metabolites were also available in
-KinGUII.
+KinGUI offers an even more flexible widget for specifying complex kinetic
+models.  Back-reactions (non-instanteneous equilibria) were supported early on,
+but until 2014,  only simple first-order models could be specified for
+transformation products.  Starting with KinGUII version 2.1, biphasic modelling
+of metabolites was also available in KinGUII.
 
 A further graphical user interface (GUI) that has recently been brought to a decent 
 degree of maturity is the browser based GUI named `gmkin`. Please see its 
@@ -133,14 +158,16 @@ CAKE uses penalties in the objective function in order to enforce this
 constraint.
 
 In 2012, an alternative reparameterisation of the formation fractions was
-proposed together with René Lehmann \citep{ranke2012}, based on isometric
+proposed together with René Lehmann [@ranke2012], based on isometric
 logratio transformation (ILR). The aim was to improve the validity of the
 linear approximation of the objective function during the parameter
 estimation procedure as well as in the subsequent calculation of parameter
 confidence intervals.
 
+## Confidence intervals based on transformed parameters
+
 In the first attempt at providing improved parameter confidence intervals
-introduced to \Rpackage{mkin} in 2013, confidence intervals obtained from 
+introduced to `mkin` in 2013, confidence intervals obtained from 
 FME on the transformed parameters were simply all backtransformed one by one
 to yield asymetric confidence intervals for the backtransformed parameters.
 
@@ -161,6 +188,27 @@ the author of this vignette to be more accurate than those obtained using a
 re-estimation of the Hessian matrix after backtransformation, as implemented 
 in the FME package.
 
+## Parameter t-test based on untransformed parameters
+
+The standard output of many nonlinear regression software packages includes
+the results from a test for significant difference from zero for all parameters.
+Such a test is also recommended to check the validity of rate constants in the
+FOCUS guidance [@FOCUSkinetics2014, p.  96ff].
+
+It has been argued that the precondition for this test, *i.e.* normal distribution
+of the estimator for the parameters, is not fulfilled in the case of nonlinear regression
+[@ranke2015]. However, this test is commonly used by industry, consultants and
+national authorities in order to decide on the reliability of parameter estimates, based
+on the FOCUS guidance mentioned above. Therefore, the results of this one-sided
+t-test are included in the summary output from `mkin`. 
+
+As it is not reasonable to test for significant difference of the transformed
+parameters (*e.g.* $log(k)$) from zero, the t-test is calculated based on the
+model definition before parameter transformation, *i.e.* in a similar way as in
+packages that do not apply such an internal parameter transformation.  A note
+is included in the `mkin` output, pointing to the fact that the t-test is based
+on the unjustified assumption of normal distribution of the parameter
+estimators.
 
 # References
 
