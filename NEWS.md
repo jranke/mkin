@@ -1,6 +1,6 @@
 # NEWS for package 'mkin'
 
-## mkin 0.9.42-9000
+## mkin 0.9.43 (2016-06-28)
 
 ### Major changes
 
@@ -12,7 +12,7 @@
 
 - `plot_sep`: Add this function as a convenience wrapper for plotting observed variables of mkinfit objects separately, with chi2 error values and residual plots.
 
-- Vignettes: The main vignette `mkin` was converted to R markdown and updated, vignette `FOCUS_L` was also updated to use current improved functionality.
+- Vignettes: The main vignette `mkin` was converted to R markdown and updated. The other vignettes were also updated to show current improved functionality.
 
 - The function `add_err` was added to the package, making it easy to generate simulated data using an error model based on the normal distribution
 
