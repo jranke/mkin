@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-<title>plot.mkinfit. mkin 0.9.42</title>
+<title>plot.mkinfit. mkin 0.9.43</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="
   Johannes Ranke
@@ -34,7 +34,7 @@
     <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="#">mkin 0.9.42</a>
+      <a class="brand" href="#">mkin 0.9.43</a>
       <div class="nav">
         <ul class="nav">
           <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
@@ -56,7 +56,8 @@
 <div class="row">
   <div class="span8">
     <h2>Usage</h2>
-    <pre><div>"plot"(x, fit&nbsp;=&nbsp;x, obs_vars&nbsp;=&nbsp;names(fit$mkinmod$map), xlab&nbsp;=&nbsp;"Time", ylab&nbsp;=&nbsp;"Observed",  xlim&nbsp;=&nbsp;range(fit$data$time), ylim&nbsp;=&nbsp;"default", col_obs&nbsp;=&nbsp;1:length(fit$mkinmod$map), pch_obs&nbsp;=&nbsp;col_obs,  lty_obs&nbsp;=&nbsp;rep(1, length(fit$mkinmod$map)), add&nbsp;=&nbsp;FALSE, legend&nbsp;=&nbsp;!add, show_residuals&nbsp;=&nbsp;FALSE, maxabs&nbsp;=&nbsp;"auto", lpos&nbsp;=&nbsp;"topright", inset&nbsp;=&nbsp;c(0.05, 0.05), ...)</div></pre>
+    <pre><div>"plot"(x, fit&nbsp;=&nbsp;x, obs_vars&nbsp;=&nbsp;names(fit$mkinmod$map), xlab&nbsp;=&nbsp;"Time", ylab&nbsp;=&nbsp;"Observed",  xlim&nbsp;=&nbsp;range(fit$data$time), ylim&nbsp;=&nbsp;"default", col_obs&nbsp;=&nbsp;1:length(obs_vars), pch_obs&nbsp;=&nbsp;col_obs,  lty_obs&nbsp;=&nbsp;rep(1, length(obs_vars)), add&nbsp;=&nbsp;FALSE, legend&nbsp;=&nbsp;!add, show_residuals&nbsp;=&nbsp;FALSE, maxabs&nbsp;=&nbsp;"auto", sep_obs&nbsp;=&nbsp;FALSE, rel.height.middle&nbsp;=&nbsp;0.9, lpos&nbsp;=&nbsp;"topright", inset&nbsp;=&nbsp;c(0.05, 0.05),  show_errmin&nbsp;=&nbsp;FALSE, errmin_digits&nbsp;=&nbsp;3, ...)
+plot_sep(fit, sep_obs&nbsp;=&nbsp;TRUE,  show_residuals&nbsp;=&nbsp;TRUE, show_errmin&nbsp;=&nbsp;TRUE, ...)</div></pre>
     
     <h2>Arguments</h2>
     <dl>
@@ -66,7 +67,7 @@
   </dd>
       <dt>fit</dt>
       <dd>
-    an object of class <code><a href='mkinfit.html'>mkinfit</a></code>.
+    An object of class <code><a href='mkinfit.html'>mkinfit</a></code>.
   </dd>
       <dt>obs_vars</dt>
       <dd>
@@ -76,60 +77,81 @@
   </dd>
       <dt>xlab</dt>
       <dd>
-    label for the x axis.
+    Label for the x axis.
   </dd>
       <dt>ylab</dt>
       <dd>
-    label for the y axis.
+    Label for the y axis.
   </dd>
       <dt>xlim</dt>
       <dd>
-    plot range in x direction.
+    Plot range in x direction.
   </dd>
       <dt>ylim</dt>
       <dd>
-    plot range in y direction.
+    Plot range in y direction.
   </dd>
       <dt>col_obs</dt>
       <dd>
-    colors used for plotting the observed data and the corresponding model prediction lines.
+    Colors used for plotting the observed data and the corresponding model prediction lines.
   </dd>
       <dt>pch_obs</dt>
       <dd>
-    symbols to be used for plotting the data.
+    Symbols to be used for plotting the data.
   </dd>
       <dt>lty_obs</dt>
       <dd>
-    line types to be used for the model predictions.
+    Line types to be used for the model predictions.
   </dd>
       <dt>add</dt>
       <dd>
-    should the plot be added to an existing plot?
+    Should the plot be added to an existing plot?
   </dd>
       <dt>legend</dt>
       <dd>
-    should a legend be added to the plot?
+    Should a legend be added to the plot?
   </dd>
       <dt>show_residuals</dt>
       <dd>
-    should residuals be shown in the lower third of the plot?
+    Should residuals be shown? If only one plot of the fits is shown, the
+    residual plot is in the lower third of the plot? Otherwise, i.e. if
+    "sep_obs" is given, the residual plots will be located to the right of 
+    the plots of the fitted curves.
   </dd>
       <dt>maxabs</dt>
       <dd>
     Maximum absolute value of the residuals. This is used for the scaling of
     the y axis and defaults to "auto".
   </dd>
+      <dt>sep_obs</dt>
+      <dd>
+    Should the observed variables be shown in separate subplots? If yes, residual plots
+    requested by "show_residuals" will be shown next to, not below the plot of the fits.
+  </dd>
+      <dt>rel.height.middle</dt>
+      <dd>
+    The relative height of the middle plot, if more than two rows of plots are shown.
+  </dd>
       <dt>lpos</dt>
       <dd>
-    position of the legend. Passed to <code><a href='http://www.inside-r.org/r-doc/graphics/legend'>legend</a></code> as the first argument.
+    Position(s) of the legend(s). Passed to <code><a href='http://www.inside-r.org/r-doc/graphics/legend'>legend</a></code> as the first argument.
+    If not length one, this should be of the same length as the obs_var argument.
   </dd>
       <dt>inset</dt>
       <dd>
     Passed to <code><a href='http://www.inside-r.org/r-doc/graphics/legend'>legend</a></code> if applicable.
   </dd>
+      <dt>show_errmin</dt>
+      <dd>
+    Should the FOCUS chi2 error value be shown in the upper margin of the plot?
+  </dd>
+      <dt>errmin_digits</dt>
+      <dd>
+    The number of significant digits for rounding the FOCUS chi2 error percentage.
+  </dd>
       <dt>...</dt>
       <dd>
-   further arguments passed to <code><a href='http://www.inside-r.org/r-doc/graphics/plot'>plot</a></code>.
+    Further arguments passed to <code><a href='http://www.inside-r.org/r-doc/graphics/plot'>plot</a></code>.
   </dd>
     </dl>
     
@@ -153,22 +175,40 @@
     
     <h2 id="examples">Examples</h2>
     <pre class="examples"><div class='input'># One parent compound, one metabolite, both single first order, path from
-# parent to sink included
+# parent to sink included, use Levenberg-Marquardt for speed
 SFO_SFO &lt;- mkinmod(parent = mkinsub(&quot;SFO&quot;, &quot;m1&quot;, full = &quot;Parent&quot;),
                    m1 = mkinsub(&quot;SFO&quot;, full = &quot;Metabolite M1&quot; ))
 </div>
 <strong class='message'>Successfully compiled differential equation model from auto-generated C code.</strong>
-<div class='input'>fit &lt;- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE)
+<div class='input'>fit &lt;- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE, method.modFit = &quot;Marq&quot;)
 plot(fit)
 </div>
-<p><img src='plot.mkinfit-4.png' alt='' width='540' height='400' /></p></pre>
+<p><img src='plot.mkinfit-4.png' alt='' width='540' height='400' /></p>
+<div class='input'>plot(fit, show_residuals = TRUE)
+</div>
+<p><img src='plot.mkinfit-6.png' alt='' width='540' height='400' /></p>
+<div class='input'>
+# Show the observed variables separately
+plot(fit, sep_obs = TRUE, lpos = c(&quot;topright&quot;, &quot;bottomright&quot;))
+</div>
+<p><img src='plot.mkinfit-8.png' alt='' width='540' height='400' /></p>
+<div class='input'>
+# Show the observed variables separately, with residuals
+plot(fit, sep_obs = TRUE, show_residuals = TRUE, lpos = c(&quot;topright&quot;, &quot;bottomright&quot;),
+     show_errmin = TRUE)
+</div>
+<p><img src='plot.mkinfit-10.png' alt='' width='540' height='400' /></p>
+<div class='input'>
+# The same can be obtained with less typing, using the convenience function plot_sep
+plot_sep(fit, lpos = c(&quot;topright&quot;, &quot;bottomright&quot;))
+</div></pre>
   </div>
   <div class="span4">
     <!-- <ul>
-      <li>plot.mkinfit</li>
+      <li>plot.mkinfit</li><li>plot_sep</li>
     </ul>
     <ul>
-      <li> hplot </li>
+      
     </ul> -->
       
     

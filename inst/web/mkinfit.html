@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-<title>mkinfit. mkin 0.9.42</title>
+<title>mkinfit. mkin 0.9.43</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="
   Johannes Ranke
@@ -34,7 +34,7 @@
     <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="#">mkin 0.9.42</a>
+      <a class="brand" href="#">mkin 0.9.43</a>
       <div class="nav">
         <ul class="nav">
           <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
@@ -75,9 +75,9 @@
     name of the observed variable for each data point. The second column must
     contain the times of observation, named "time".  The third column must be
     named "value" and contain the observed values. Optionally, a further column
-    can contain weights for each data point. If it is not named "err", its name
-    must be passed as a further argument named <code>err</code> which is then passed
-    on to <code><a href='http://www.inside-r.org/packages/cran/FME/docs/modFit'>modFit</a></code>.
+    can contain weights for each data point. Its name must be passed as a
+    further argument named <code>err</code> which is then passed on to
+    <code><a href='http://www.inside-r.org/packages/cran/FME/docs/modFit'>modFit</a></code>.
   </dd>
       <dt>parms.ini</dt>
       <dd>
@@ -323,17 +323,17 @@
 fit &lt;- mkinfit(&quot;FOMC&quot;, FOCUS_2006_C, quiet = TRUE)
 summary(fit)
 </div>
-<div class='output'>mkin version:    0.9.42 
-R version:       3.2.4 
-Date of fit:     Thu Mar 24 08:29:01 2016 
-Date of summary: Thu Mar 24 08:29:01 2016 
+<div class='output'>mkin version:    0.9.43 
+R version:       3.3.1 
+Date of fit:     Tue Jun 28 01:17:26 2016 
+Date of summary: Tue Jun 28 01:17:26 2016 
 
 Equations:
 d_parent = - (alpha/beta) * 1/((time/beta) + 1) * parent
 
 Model predictions using solution type analytical 
 
-Fitted with method Port using 64 model solutions performed in 0.195 s
+Fitted with method Port using 64 model solutions performed in 0.457 s
 
 Weighting: none
 
@@ -409,7 +409,7 @@ print(system.time(fit &lt;- mkinfit(SFO_SFO, FOCUS_2006_D,
                            solution_type = &quot;eigen&quot;, quiet = TRUE)))
 </div>
 <div class='output'>   user  system elapsed 
-  1.276   1.196   0.935 
+  2.868   2.284   2.301 
 </div>
 <div class='input'>coef(fit)
 </div>
@@ -473,9 +473,8 @@ m1     131.760712 437.69961
 # summary(f.irls)
 # f.w.mean &lt;- mkinfit(SFO_SFO.ff, FOCUS_2006_D, weight = &quot;mean&quot;)
 # summary(f.w.mean)
-# f.w.mean.irls &lt;- mkinfit(SFO_SFO.ff, FOCUS_2006_D, weight = &quot;mean&quot;,
-#                          reweight.method = &quot;obs&quot;)
-# summary(f.w.mean.irls)
+# f.w.value &lt;- mkinfit(SFO_SFO.ff, subset(FOCUS_2006_D, value != 0), err = &quot;value&quot;)
+# summary(f.w.value)
 # ## End(Not run)
 
 ## Not run: 
