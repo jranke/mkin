@@ -187,3 +187,9 @@ plot.mkinfit <- function(x, fit = x,
   }
   if (do_layout) par(oldpar, no.readonly = TRUE)
 }
+# Convenience function for switching on some features of mkinfit
+# that have not been made the default to keep compatibility
+plot_sep <- function(fit, sep_obs = TRUE, show_residuals = TRUE, show_errmin = TRUE, ...) {
+  plot.mkinfit(fit, sep_obs = TRUE, show_residuals = TRUE, 
+          show_errmin = TRUE, ...)
+}

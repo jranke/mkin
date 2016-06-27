@@ -1,5 +1,6 @@
 \name{plot.mkinfit}
 \alias{plot.mkinfit}
+\alias{plot_sep}
 \title{
   Plot the observed data and the fitted model of an mkinfit object
 }
@@ -21,6 +22,7 @@
   sep_obs = FALSE, rel.height.middle = 0.9,
   lpos = "topright", inset = c(0.05, 0.05), 
   show_errmin = FALSE, errmin_digits = 3, \dots)
+plot_sep(fit, sep_obs = TRUE,  show_residuals = TRUE, show_errmin = TRUE, \dots)
 }
 \arguments{
   \item{x}{
@@ -113,6 +115,9 @@ plot(fit, sep_obs = TRUE, lpos = c("topright", "bottomright"))
 # Show the observed variables separately, with residuals
 plot(fit, sep_obs = TRUE, show_residuals = TRUE, lpos = c("topright", "bottomright"),
      show_errmin = TRUE)
+
+# The same can be obtained with less typing, using the convenience function plot_sep
+plot_sep(fit, lpos = c("topright", "bottomright"))
 }
 \author{
   Johannes Ranke

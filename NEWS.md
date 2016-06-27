@@ -10,6 +10,8 @@
 
 - `plot.mkinfit`: Add the possibility to show the chi2 error levels in the plot, similar to the way they are shown in `plot.mmkin`
 
+- `plot_sep`: Add this function as a convenience wrapper for plotting observed variables of mkinfit objects separately, with chi2 error values and residual plots.
+
 - Vignettes: The main vignette `mkin` was converted to R markdown and updated, vignette `FOCUS_L` was also updated to use current improved functionality.
 
 - The function `add_err` was added to the package, making it easy to generate simulated data using an error model based on the normal distribution
