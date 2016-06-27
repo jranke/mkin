@@ -19,7 +19,8 @@
   add = FALSE, legend = !add,
   show_residuals = FALSE, maxabs = "auto",
   sep_obs = FALSE, rel.height.middle = 0.9,
-  lpos = "topright", inset = c(0.05, 0.05), \dots)
+  lpos = "topright", inset = c(0.05, 0.05), 
+  show_errmin = FALSE, errmin_digits = 3, \dots)
 }
 \arguments{
   \item{x}{
@@ -84,6 +85,12 @@
   \item{inset}{
     Passed to \code{\link{legend}} if applicable.
   }
+  \item{show_errmin}{
+    Should the FOCUS chi2 error value be shown in the upper margin of the plot?
+  }
+  \item{errmin_digits}{
+    The number of significant digits for rounding the FOCUS chi2 error percentage.
+  }
   \item{\dots}{
     Further arguments passed to \code{\link{plot}}.
   }
@@ -104,7 +111,8 @@ plot(fit, show_residuals = TRUE)
 plot(fit, sep_obs = TRUE, lpos = c("topright", "bottomright"))
 
 # Show the observed variables separately, with residuals
-plot(fit, sep_obs = TRUE, show_residuals = TRUE, lpos = c("topright", "bottomright"))
+plot(fit, sep_obs = TRUE, show_residuals = TRUE, lpos = c("topright", "bottomright"),
+     show_errmin = TRUE)
 }
 \author{
   Johannes Ranke

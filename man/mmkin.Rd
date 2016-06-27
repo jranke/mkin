@@ -67,10 +67,13 @@ endpoints(fits[["SFO_lin", 2]])
 
 # Plot.mkinfit handles rows or columns of mmkin result objects
 plot(fits.0[1, ])
+plot(fits.0[1, ], obs_var = c("M1", "M2"))
 plot(fits.0[, 1])
-# Double brackets to select a single mkinfit object, which will be
-# plotted by plot.mkinfit
-plot(fits.0[[1, 1]], sep_obs = TRUE, show_residuals = TRUE)
+# Use double brackets to extract a single mkinfit object, which will be plotted
+# by plot.mkinfit
+plot(fits.0[[1, 1]], sep_obs = TRUE, show_residuals = TRUE, show_errmin = TRUE)
+# Plotting with mmkin (single brackets, extracting an mmkin object) does not
+# allow to plot the observed variables separately
 plot(fits.0[1, 1])
 }
 }

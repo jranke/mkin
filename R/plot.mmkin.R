@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
 
-plot.mmkin <- function(x, main = "auto", legends = 1, errmin_var = "All data", errmin_digits = 2, 
+plot.mmkin <- function(x, main = "auto", legends = 1, errmin_var = "All data", errmin_digits = 3, 
                        cex = 0.7, rel.height.middle = 0.9, ...) {
   n.m <- nrow(x)
   n.d <- ncol(x)
@@ -79,10 +79,9 @@ plot.mmkin <- function(x, main = "auto", legends = 1, errmin_var = "All data", e
                        datasets = colnames(x)[i.fit],
                        none = "") 
 
-    if (!is.null(errmin_var)) {
-      chi2 <- paste0(round(100 * mkinerrmin(fit)[errmin_var, "err.min"], errmin_digits), "%")
-      mtext(bquote(.(fit_name) ~ chi^2 ~ "error level" == .(chi2)), cex = cex, line = 0.4)
-    }
+    chi2 <- paste0(signif(100 * mkinerrmin(fit)[errmin_var, "err.min"], errmin_digits), "%")
+    mtext(bquote(.(fit_name) ~ chi^2 ~ "error level" == .(chi2)), cex = cex, line = 0.4)
+
     mkinresplot(fit, legend = FALSE, ...)
     mtext(paste(fit_name, "residuals"), cex = cex, line = 0.4)
   }

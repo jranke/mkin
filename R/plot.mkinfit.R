@@ -28,7 +28,8 @@ plot.mkinfit <- function(x, fit = x,
   add = FALSE, legend = !add, 
   show_residuals = FALSE, maxabs = "auto",
   sep_obs = FALSE, rel.height.middle = 0.9,
-  lpos = "topright", inset = c(0.05, 0.05), ...)
+  lpos = "topright", inset = c(0.05, 0.05), 
+  show_errmin = FALSE, errmin_digits = 3, ...)
 {
   if (add && show_residuals) stop("If adding to an existing plot we can not show residuals")
   if (add && sep_obs) stop("If adding to an existing plot we can not show observed variables separately")
@@ -150,6 +151,22 @@ plot.mkinfit <- function(x, fit = x,
         })
       legend(lpos[plot_row], inset= inset, legend = legend_names,
         col = col_obs[row_obs_vars], pch = pch_obs[row_obs_vars], lty = lty_obs[row_obs_vars])
+    }
+
+    # Show chi2 error value if requested
+    if (show_errmin) {
+      if (length(row_obs_vars) == 1) {
+        errmin_var = row_obs_vars
+      } else {
+        errmin_var = "All data"
+        if (length(row_obs_vars) != length(fit$mkinmod$map)) {
+          warning("Showing chi2 error level for all data, but only ",
+                  row_obs_vars, " were selected for plotting")
+        }
+      }
+
+      chi2 <- paste0(signif(100 * mkinerrmin(fit)[errmin_var, "err.min"], errmin_digits), "%")
+      mtext(bquote(chi^2 ~ "error level" == .(chi2)), cex = 0.7, line = 0.4)
     }
 
     # Show residuals if requested
