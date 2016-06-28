@@ -73,8 +73,7 @@ clean:
 	$(RM) Rplots.pdf
 
 test: quickinstall
-	cd tests;\
-		"$(RBIN)/Rscript" testthat.R 2>&1 | tee ../test.log
+	"$(RBIN)/Rscript" -e 'library(devtools); devtools::test(".")' 2>&1 | tee test.log
 
 README.html: README.md
 	"$(RBIN)/Rscript" -e "rmarkdown::render('README.md', output_format = 'html_document', output_options = list(mathjax = NULL))"
