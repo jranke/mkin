@@ -53,8 +53,15 @@ plot.mkinfit <- function(x, fit = x,
     rownames(subset(fit$fixed, type == "deparm")))
   odeparms <- parms.all[odenames]
 
-  out <- mkinpredict(fit$mkinmod, odeparms, odeini, outtimes, 
-          solution_type = solution_type, atol = fit$atol, rtol = fit$rtol)
+  out <- try(mkinpredict(fit$mkinmod, odeparms, odeini, outtimes, 
+             solution_type = solution_type, atol = fit$atol, rtol = fit$rtol),
+             silent = TRUE)
+
+  if (inherits(out, "try-error")) {
+    out <- mkinpredict(fit$mkinmod, odeparms, odeini, outtimes, 
+             solution_type = solution_type, atol = fit$atol, rtol = fit$rtol,
+             use_compiled = FALSE)
+  }
 
   names(col_obs) <- names(pch_obs) <- names(lty_obs) <- obs_vars
 

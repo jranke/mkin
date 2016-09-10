@@ -1,5 +1,11 @@
 # NEWS for package 'mkin'
 
+## mkin 0.9.45 
+
+### Minor changes
+
+- `plot.mkinfit`: Plotting does not fail any more when the compiled model is not available, e.g. because it was removed from the temporary directory. In this case, the uncompiled model is now used for plotting
+
 ## mkin 0.9.44 (2016-06-29)
 
 ### Bug fixes
