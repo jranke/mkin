@@ -1,5 +1,11 @@
 # NEWS for package 'mkin'
 
+## mkin 0.9.44 (2016-06-29)
+
+### Bug fixes
+
+- The test `test_FOMC_ill-defined` failed on several architectures, so the test is now skipped
+
 ## mkin 0.9.43 (2016-06-28)
 
 ### Major changes
