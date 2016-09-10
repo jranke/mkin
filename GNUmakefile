@@ -87,9 +87,7 @@ vignettes/%.html: vignettes/mkin_vignettes.css vignettes/%.Rmd
 vignettes: vignettes/mkin.html vignettes/FOCUS_D.html vignettes/FOCUS_L.html vignettes/FOCUS_Z.pdf vignettes/compiled_models.html
 
 sd:
-	@echo Now execute
-	@echo "\n  staticdocs::build_site()\n"
-	$(RBIN)/R
+	"$(RBIN)/Rscript" -e "staticdocs::build_site()"
 	git add -A
 	git commit -m 'Static documentation rebuilt by staticdocs::build_site()' -e
 
