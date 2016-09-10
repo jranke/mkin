@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>mkinresplot. mkin 0.9.44.9000</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="
+  Johannes Ranke
+">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="index.html">mkin 0.9.44.9000</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="reference.html">Reference</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>
+  Function to plot residuals stored in an mkin object
+</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><span class="functioncall"><a href='mkinresplot.html'>mkinresplot</a></span><span class="keyword">(</span><span class="symbol">object</span><span class="keyword">,</span>
+    <span class="argument">obs_vars</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/names'>names</a></span><span class="keyword">(</span><span class="symbol">object</span><span class="keyword">$</span><span class="symbol">mkinmod</span><span class="keyword">$</span><span class="symbol">map</span><span class="keyword">)</span><span class="keyword">,</span>
+    <span class="argument">xlim</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="number">0</span><span class="keyword">,</span> <span class="number">1.1</span> <span class="keyword">*</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/Extremes'>max</a></span><span class="keyword">(</span><span class="symbol">object</span><span class="keyword">$</span><span class="symbol">data</span><span class="keyword">$</span><span class="symbol">time</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">,</span>
+    <span class="argument">xlab</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="string">"Time"</span><span class="keyword">,</span> <span class="argument">ylab</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="string">"Residual"</span><span class="keyword">,</span>
+    <span class="argument">maxabs</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="string">"auto"</span><span class="keyword">,</span> <span class="argument">legend</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="number">TRUE</span><span class="keyword">,</span> <span class="argument">lpos</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="string">"topright"</span><span class="keyword">,</span> <span class="symbol">...</span><span class="keyword">)</span></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>object</dt>
+      <dd>
+    A fit represented in an <code><a href='mkinfit.html'>mkinfit</a></code> object.
+</dd>
+      <dt>obs_vars</dt>
+      <dd>
+    A character vector of names of the observed variables for which residuals
+    should be plotted. Defaults to all observed variables in the model
+</dd>
+      <dt>xlim</dt>
+      <dd>
+    plot range in x direction.
+  </dd>
+      <dt>xlab</dt>
+      <dd>
+    Label for the x axis. Defaults to &quot;Time [days]&quot;.
+</dd>
+      <dt>ylab</dt>
+      <dd>
+    Label for the y axis. Defaults to &quot;Residual [% of applied radioactivity]&quot;.
+</dd>
+      <dt>maxabs</dt>
+      <dd>
+    Maximum absolute value of the residuals. This is used for the scaling of
+    the y axis and defaults to &quot;auto&quot;.
+</dd>
+      <dt>legend</dt>
+      <dd>
+    Should a legend be plotted? Defaults to &quot;TRUE&quot;.
+</dd>
+      <dt>lpos</dt>
+      <dd> 
+    Where should the legend be placed? Default is &quot;topright&quot;. Will be passed on to
+		<code><a href='http://www.rdocumentation.org/packages/graphics/topics/legend'>legend</a></code>. </dd>
+      <dt>...</dt>
+      <dd>
+   further arguments passed to <code><a href='http://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></code>.
+</dd>
+    </dl>
+    
+    <div class="Description">
+      <h2>Description</h2>
+
+      <p>This function plots the residuals for the specified subset of the 
+  observed variables from an mkinfit object. A combined plot of the fitted
+  model and the residuals can be obtained using <code><a href='plot.mkinfit.html'>plot.mkinfit</a></code>
+  using the argument <code>show_residuals = TRUE</code>.</p>
+
+    </div>
+
+    <div class="Value">
+      <h2>Value</h2>
+
+      <p><dl>
+  Nothing is returned by this function, as it is called for its side effect, namely to produce a plot.
+</dl></p>
+
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'><span class="symbol">model</span> <span class="assignement">&lt;-</span> <span class="functioncall"><a href='mkinmod.html'>mkinmod</a></span><span class="keyword">(</span><span class="argument">parent</span> <span class="argument">=</span> <span class="functioncall"><a href='mkinsub.html'>mkinsub</a></span><span class="keyword">(</span><span class="string">"SFO"</span><span class="keyword">,</span> <span class="string">"m1"</span><span class="keyword">)</span><span class="keyword">,</span> <span class="argument">m1</span> <span class="argument">=</span> <span class="functioncall"><a href='mkinsub.html'>mkinsub</a></span><span class="keyword">(</span><span class="string">"SFO"</span><span class="keyword">)</span><span class="keyword">)</span></div>
+<strong class='message'>Successfully compiled differential equation model from auto-generated C code.</strong>
+<div class='input'><span class="symbol">fit</span> <span class="assignement">&lt;-</span> <span class="functioncall"><a href='mkinfit.html'>mkinfit</a></span><span class="keyword">(</span><span class="symbol">model</span><span class="keyword">,</span> <span class="symbol">FOCUS_2006_D</span><span class="keyword">,</span> <span class="argument">quiet</span> <span class="argument">=</span> <span class="number">TRUE</span><span class="keyword">)</span>
+<span class="functioncall"><a href='mkinresplot.html'>mkinresplot</a></span><span class="keyword">(</span><span class="symbol">fit</span><span class="keyword">,</span> <span class="string">"m1"</span><span class="keyword">)</span></div>
+<p><img src='mkinresplot-4.png' alt='' width='540' height='400' /></p></pre>
+  </div>
+  <div class="span4 sidebar">
+    <!-- <ul>
+      <li>mkinresplot</li>
+    </ul>
+    <ul>
+      <li> hplot </li>
+    </ul> -->
+
+    <h2>See also</h2>
+      <p><code><a href='mkinplot.html'>mkinplot</a></code>, for a way to plot the data and the fitted lines of the
+ mkinfit object.</p>
+
+    
+
+    <h2>Author</h2>
+    
+  Johannes Ranke
+
+
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="https://getbootstrap.com/2.0.4/">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

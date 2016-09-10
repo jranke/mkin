@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>mkinpredict. mkin 0.9.44.9000</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="
+  Johannes Ranke
+">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="index.html">mkin 0.9.44.9000</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="reference.html">Reference</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>
+  Produce predictions from a kinetic model using specific parameters
+</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><span class="functioncall"><a href='mkinpredict.html'>mkinpredict</a></span><span class="keyword">(</span><span class="symbol">mkinmod</span><span class="keyword">,</span> <span class="symbol">odeparms</span><span class="keyword">,</span> <span class="symbol">odeini</span><span class="keyword">,</span> <span class="symbol">outtimes</span><span class="keyword">,</span> <span class="argument">solution_type</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="string">"deSolve"</span><span class="keyword">,</span>
+              <span class="argument">use_compiled</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="string">"auto"</span><span class="keyword">,</span> <span class="argument">method.ode</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="string">"lsoda"</span><span class="keyword">,</span> <span class="argument">atol</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="number">1e-08</span><span class="keyword">,</span> <span class="argument">rtol</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="number">1e-10</span><span class="keyword">,</span>
+        <span class="argument">map_output</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="number">TRUE</span><span class="keyword">,</span> <span class="symbol">...</span><span class="keyword">)</span></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>mkinmod</dt>
+      <dd>
+    A kinetic model as produced by <code><a href='mkinmod.html'>mkinmod</a></code>.
+  </dd>
+      <dt>odeparms</dt>
+      <dd>
+    A numeric vector specifying the parameters used in the kinetic model, which
+    is generally defined as a set of ordinary differential equations.
+  </dd>
+      <dt>odeini</dt>
+      <dd>
+    A numeric vectory containing the initial values of the state variables of
+    the model. Note that the state variables can differ from the observed
+    variables, for example in the case of the SFORB model.
+  </dd>
+      <dt>outtimes</dt>
+      <dd>
+    A numeric vector specifying the time points for which model predictions
+    should be generated.
+  </dd>
+      <dt>solution_type</dt>
+      <dd>
+    The method that should be used for producing the predictions. This should
+    generally be &quot;analytical&quot; if there is only one observed variable, and
+    usually &quot;deSolve&quot; in the case of several observed variables. The third
+    possibility &quot;eigen&quot; is faster but not applicable to some models e.g.
+    using FOMC for the parent compound.
+  </dd>
+      <dt>method.ode</dt>
+      <dd>
+    The solution method passed via <code><a href='mkinpredict.html'>mkinpredict</a></code> to
+    <code><a href='http://www.rdocumentation.org/packages/deSolve/topics/ode'>ode</a></code> in case the solution type is &quot;deSolve&quot;. The default
+    &quot;lsoda&quot; is performant, but sometimes fails to converge.
+  </dd>
+      <dt>use_compiled</dt>
+      <dd>
+    If set to <code>FALSE</code>, no compiled version of the <code><a href='mkinmod.html'>mkinmod</a></code> 
+    model is used, even if is present. 
+  </dd>
+      <dt>atol</dt>
+      <dd>
+    Absolute error tolerance, passed to <code><a href='http://www.rdocumentation.org/packages/deSolve/topics/ode'>ode</a></code>. Default is 1e-8,
+    lower than in <code><a href='http://www.rdocumentation.org/packages/deSolve/topics/lsoda'>lsoda</a></code>.
+  </dd>
+      <dt>rtol</dt>
+      <dd>
+    Absolute error tolerance, passed to <code><a href='http://www.rdocumentation.org/packages/deSolve/topics/ode'>ode</a></code>. Default is 1e-10,
+    much lower than in <code><a href='http://www.rdocumentation.org/packages/deSolve/topics/lsoda'>lsoda</a></code>.
+  </dd>
+      <dt>map_output</dt>
+      <dd>
+    Boolean to specify if the output should list values for the observed
+    variables (default) or for all state variables (if set to FALSE). 
+  </dd>
+      <dt>...</dt>
+      <dd>
+    Further arguments passed to the ode solver in case such a solver is used.
+  </dd>
+    </dl>
+    
+    <div class="Description">
+      <h2>Description</h2>
+
+      <p>This function produces a time series for all the observed variables in a
+  kinetic model as specified by <code><a href='mkinmod.html'>mkinmod</a></code>, using a specific set of
+  kinetic parameters and initial values for the state variables.</p>
+
+    </div>
+
+    <div class="Value">
+      <h2>Value</h2>
+
+      <p><dl>
+  A matrix in the same format as the output of <code><a href='http://www.rdocumentation.org/packages/deSolve/topics/ode'>ode</a></code>.
+</dl></p>
+
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>  <span class="symbol">SFO</span> <span class="assignement">&lt;-</span> <span class="functioncall"><a href='mkinmod.html'>mkinmod</a></span><span class="keyword">(</span><span class="argument">degradinol</span> <span class="argument">=</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/list'>list</a></span><span class="keyword">(</span><span class="argument">type</span> <span class="argument">=</span> <span class="string">"SFO"</span><span class="keyword">)</span><span class="keyword">)</span>
+  <span class="comment"># Compare solution types</span>
+  <span class="functioncall"><a href='mkinpredict.html'>mkinpredict</a></span><span class="keyword">(</span><span class="symbol">SFO</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="argument">k_degradinol_sink</span> <span class="argument">=</span> <span class="number">0.3</span><span class="keyword">)</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="argument">degradinol</span> <span class="argument">=</span> <span class="number">100</span><span class="keyword">)</span><span class="keyword">,</span> <span class="number">0</span><span class="keyword">:</span><span class="number">20</span><span class="keyword">,</span>
+              <span class="argument">solution_type</span> <span class="argument">=</span> <span class="string">"analytical"</span><span class="keyword">)</span></div>
+<div class='output'>   time  degradinol
+1     0 100.0000000
+2     1  74.0818221
+3     2  54.8811636
+4     3  40.6569660
+5     4  30.1194212
+6     5  22.3130160
+7     6  16.5298888
+8     7  12.2456428
+9     8   9.0717953
+10    9   6.7205513
+11   10   4.9787068
+12   11   3.6883167
+13   12   2.7323722
+14   13   2.0241911
+15   14   1.4995577
+16   15   1.1108997
+17   16   0.8229747
+18   17   0.6096747
+19   18   0.4516581
+20   19   0.3345965
+21   20   0.2478752
+</div>
+<div class='input'>  <span class="functioncall"><a href='mkinpredict.html'>mkinpredict</a></span><span class="keyword">(</span><span class="symbol">SFO</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="argument">k_degradinol_sink</span> <span class="argument">=</span> <span class="number">0.3</span><span class="keyword">)</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="argument">degradinol</span> <span class="argument">=</span> <span class="number">100</span><span class="keyword">)</span><span class="keyword">,</span> <span class="number">0</span><span class="keyword">:</span><span class="number">20</span><span class="keyword">,</span>
+              <span class="argument">solution_type</span> <span class="argument">=</span> <span class="string">"deSolve"</span><span class="keyword">)</span></div>
+<div class='output'>   time  degradinol
+1     0 100.0000000
+2     1  74.0818221
+3     2  54.8811636
+4     3  40.6569660
+5     4  30.1194212
+6     5  22.3130160
+7     6  16.5298888
+8     7  12.2456428
+9     8   9.0717953
+10    9   6.7205513
+11   10   4.9787068
+12   11   3.6883167
+13   12   2.7323722
+14   13   2.0241911
+15   14   1.4995577
+16   15   1.1108996
+17   16   0.8229747
+18   17   0.6096747
+19   18   0.4516581
+20   19   0.3345965
+21   20   0.2478752
+</div>
+<div class='input'>  <span class="functioncall"><a href='mkinpredict.html'>mkinpredict</a></span><span class="keyword">(</span><span class="symbol">SFO</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="argument">k_degradinol_sink</span> <span class="argument">=</span> <span class="number">0.3</span><span class="keyword">)</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="argument">degradinol</span> <span class="argument">=</span> <span class="number">100</span><span class="keyword">)</span><span class="keyword">,</span> <span class="number">0</span><span class="keyword">:</span><span class="number">20</span><span class="keyword">,</span>
+              <span class="argument">solution_type</span> <span class="argument">=</span> <span class="string">"deSolve"</span><span class="keyword">,</span> <span class="argument">use_compiled</span> <span class="argument">=</span> <span class="number">FALSE</span><span class="keyword">)</span></div>
+<div class='output'>   time  degradinol
+1     0 100.0000000
+2     1  74.0818221
+3     2  54.8811636
+4     3  40.6569660
+5     4  30.1194212
+6     5  22.3130160
+7     6  16.5298888
+8     7  12.2456428
+9     8   9.0717953
+10    9   6.7205513
+11   10   4.9787068
+12   11   3.6883167
+13   12   2.7323722
+14   13   2.0241911
+15   14   1.4995577
+16   15   1.1108996
+17   16   0.8229747
+18   17   0.6096747
+19   18   0.4516581
+20   19   0.3345965
+21   20   0.2478752
+</div>
+<div class='input'>  <span class="functioncall"><a href='mkinpredict.html'>mkinpredict</a></span><span class="keyword">(</span><span class="symbol">SFO</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="argument">k_degradinol_sink</span> <span class="argument">=</span> <span class="number">0.3</span><span class="keyword">)</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="argument">degradinol</span> <span class="argument">=</span> <span class="number">100</span><span class="keyword">)</span><span class="keyword">,</span> <span class="number">0</span><span class="keyword">:</span><span class="number">20</span><span class="keyword">,</span>
+              <span class="argument">solution_type</span> <span class="argument">=</span> <span class="string">"eigen"</span><span class="keyword">)</span></div>
+<div class='output'>   time  degradinol
+1     0 100.0000000
+2     1  74.0818221
+3     2  54.8811636
+4     3  40.6569660
+5     4  30.1194212
+6     5  22.3130160
+7     6  16.5298888
+8     7  12.2456428
+9     8   9.0717953
+10    9   6.7205513
+11   10   4.9787068
+12   11   3.6883167
+13   12   2.7323722
+14   13   2.0241911
+15   14   1.4995577
+16   15   1.1108997
+17   16   0.8229747
+18   17   0.6096747
+19   18   0.4516581
+20   19   0.3345965
+21   20   0.2478752
+</div>
+<div class='input'>
+
+  <span class="comment"># Compare integration methods to analytical solution</span>
+  <span class="functioncall"><a href='mkinpredict.html'>mkinpredict</a></span><span class="keyword">(</span><span class="symbol">SFO</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="argument">k_degradinol_sink</span> <span class="argument">=</span> <span class="number">0.3</span><span class="keyword">)</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="argument">degradinol</span> <span class="argument">=</span> <span class="number">100</span><span class="keyword">)</span><span class="keyword">,</span> <span class="number">0</span><span class="keyword">:</span><span class="number">20</span><span class="keyword">,</span>
+              <span class="argument">solution_type</span> <span class="argument">=</span> <span class="string">"analytical"</span><span class="keyword">)</span><span class="keyword">[</span><span class="number">21</span><span class="keyword">,</span><span class="keyword">]</span></div>
+<div class='output'>   time degradinol
+21   20  0.2478752
+</div>
+<div class='input'>  <span class="functioncall"><a href='mkinpredict.html'>mkinpredict</a></span><span class="keyword">(</span><span class="symbol">SFO</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="argument">k_degradinol_sink</span> <span class="argument">=</span> <span class="number">0.3</span><span class="keyword">)</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="argument">degradinol</span> <span class="argument">=</span> <span class="number">100</span><span class="keyword">)</span><span class="keyword">,</span> <span class="number">0</span><span class="keyword">:</span><span class="number">20</span><span class="keyword">,</span>
+              <span class="argument">method</span> <span class="argument">=</span> <span class="string">"lsoda"</span><span class="keyword">)</span><span class="keyword">[</span><span class="number">21</span><span class="keyword">,</span><span class="keyword">]</span></div>
+<div class='output'>   time degradinol
+21   20  0.2478752
+</div>
+<div class='input'>  <span class="functioncall"><a href='mkinpredict.html'>mkinpredict</a></span><span class="keyword">(</span><span class="symbol">SFO</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="argument">k_degradinol_sink</span> <span class="argument">=</span> <span class="number">0.3</span><span class="keyword">)</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="argument">degradinol</span> <span class="argument">=</span> <span class="number">100</span><span class="keyword">)</span><span class="keyword">,</span> <span class="number">0</span><span class="keyword">:</span><span class="number">20</span><span class="keyword">,</span>
+              <span class="argument">method</span> <span class="argument">=</span> <span class="string">"ode45"</span><span class="keyword">)</span><span class="keyword">[</span><span class="number">21</span><span class="keyword">,</span><span class="keyword">]</span></div>
+<div class='output'>   time degradinol
+21   20  0.2478752
+</div>
+<div class='input'>  <span class="functioncall"><a href='mkinpredict.html'>mkinpredict</a></span><span class="keyword">(</span><span class="symbol">SFO</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="argument">k_degradinol_sink</span> <span class="argument">=</span> <span class="number">0.3</span><span class="keyword">)</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="argument">degradinol</span> <span class="argument">=</span> <span class="number">100</span><span class="keyword">)</span><span class="keyword">,</span> <span class="number">0</span><span class="keyword">:</span><span class="number">20</span><span class="keyword">,</span>
+              <span class="argument">method</span> <span class="argument">=</span> <span class="string">"rk4"</span><span class="keyword">)</span><span class="keyword">[</span><span class="number">21</span><span class="keyword">,</span><span class="keyword">]</span></div>
+<div class='output'>   time degradinol
+21   20  0.2480043
+</div>
+<div class='input'> <span class="comment"># rk4 is not as precise here</span>
+
+  <span class="comment"># The number of output times used to make a lot of difference until the</span>
+  <span class="comment"># default for atol was adjusted</span>
+  <span class="functioncall"><a href='mkinpredict.html'>mkinpredict</a></span><span class="keyword">(</span><span class="symbol">SFO</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="argument">k_degradinol_sink</span> <span class="argument">=</span> <span class="number">0.3</span><span class="keyword">)</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="argument">degradinol</span> <span class="argument">=</span> <span class="number">100</span><span class="keyword">)</span><span class="keyword">,</span>
+              <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span><span class="keyword">(</span><span class="number">0</span><span class="keyword">,</span> <span class="number">20</span><span class="keyword">,</span> <span class="argument">by</span> <span class="argument">=</span> <span class="number">0.1</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">[</span><span class="number">201</span><span class="keyword">,</span><span class="keyword">]</span></div>
+<div class='output'>    time degradinol
+201   20  0.2478752
+</div>
+<div class='input'>  <span class="functioncall"><a href='mkinpredict.html'>mkinpredict</a></span><span class="keyword">(</span><span class="symbol">SFO</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="argument">k_degradinol_sink</span> <span class="argument">=</span> <span class="number">0.3</span><span class="keyword">)</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="argument">degradinol</span> <span class="argument">=</span> <span class="number">100</span><span class="keyword">)</span><span class="keyword">,</span>
+              <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span><span class="keyword">(</span><span class="number">0</span><span class="keyword">,</span> <span class="number">20</span><span class="keyword">,</span> <span class="argument">by</span> <span class="argument">=</span> <span class="number">0.01</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">[</span><span class="number">2001</span><span class="keyword">,</span><span class="keyword">]</span></div>
+<div class='output'>     time degradinol
+2001   20  0.2478752
+</div>
+<div class='input'>
+  <span class="comment"># Check compiled model versions - they are faster than the eigenvalue based solutions!</span>
+  <span class="symbol">SFO_SFO</span> <span class="assignement">=</span> <span class="functioncall"><a href='mkinmod.html'>mkinmod</a></span><span class="keyword">(</span><span class="argument">parent</span> <span class="argument">=</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/list'>list</a></span><span class="keyword">(</span><span class="argument">type</span> <span class="argument">=</span> <span class="string">"SFO"</span><span class="keyword">,</span> <span class="argument">to</span> <span class="argument">=</span> <span class="string">"m1"</span><span class="keyword">)</span><span class="keyword">,</span>
+                    <span class="argument">m1</span> <span class="argument">=</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/list'>list</a></span><span class="keyword">(</span><span class="argument">type</span> <span class="argument">=</span> <span class="string">"SFO"</span><span class="keyword">)</span><span class="keyword">)</span></div>
+<strong class='message'>Successfully compiled differential equation model from auto-generated C code.</strong>
+<div class='input'>  <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/system.time'>system.time</a></span><span class="keyword">(</span>
+    <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/print'>print</a></span><span class="keyword">(</span><span class="functioncall"><a href='mkinpredict.html'>mkinpredict</a></span><span class="keyword">(</span><span class="symbol">SFO_SFO</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="argument">k_parent_m1</span> <span class="argument">=</span> <span class="number">0.05</span><span class="keyword">,</span> <span class="argument">k_parent_sink</span> <span class="argument">=</span> <span class="number">0.1</span><span class="keyword">,</span> <span class="argument">k_m1_sink</span> <span class="argument">=</span> <span class="number">0.01</span><span class="keyword">)</span><span class="keyword">,</span>
+                <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="argument">parent</span> <span class="argument">=</span> <span class="number">100</span><span class="keyword">,</span> <span class="argument">m1</span> <span class="argument">=</span> <span class="number">0</span><span class="keyword">)</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span><span class="keyword">(</span><span class="number">0</span><span class="keyword">,</span> <span class="number">20</span><span class="keyword">,</span> <span class="argument">by</span> <span class="argument">=</span> <span class="number">0.1</span><span class="keyword">)</span><span class="keyword">,</span>
+                <span class="argument">solution_type</span> <span class="argument">=</span> <span class="string">"eigen"</span><span class="keyword">)</span><span class="keyword">[</span><span class="number">201</span><span class="keyword">,</span><span class="keyword">]</span><span class="keyword">)</span><span class="keyword">)</span></div>
+<div class='output'>    time   parent       m1
+201   20 4.978707 27.46227
+</div>
+<div class='output'>   user  system elapsed 
+  0.008   0.020   0.005 
+</div>
+<div class='input'>  <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/system.time'>system.time</a></span><span class="keyword">(</span>
+    <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/print'>print</a></span><span class="keyword">(</span><span class="functioncall"><a href='mkinpredict.html'>mkinpredict</a></span><span class="keyword">(</span><span class="symbol">SFO_SFO</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="argument">k_parent_m1</span> <span class="argument">=</span> <span class="number">0.05</span><span class="keyword">,</span> <span class="argument">k_parent_sink</span> <span class="argument">=</span> <span class="number">0.1</span><span class="keyword">,</span> <span class="argument">k_m1_sink</span> <span class="argument">=</span> <span class="number">0.01</span><span class="keyword">)</span><span class="keyword">,</span>
+                <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="argument">parent</span> <span class="argument">=</span> <span class="number">100</span><span class="keyword">,</span> <span class="argument">m1</span> <span class="argument">=</span> <span class="number">0</span><span class="keyword">)</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span><span class="keyword">(</span><span class="number">0</span><span class="keyword">,</span> <span class="number">20</span><span class="keyword">,</span> <span class="argument">by</span> <span class="argument">=</span> <span class="number">0.1</span><span class="keyword">)</span><span class="keyword">,</span>
+                <span class="argument">solution_type</span> <span class="argument">=</span> <span class="string">"deSolve"</span><span class="keyword">)</span><span class="keyword">[</span><span class="number">201</span><span class="keyword">,</span><span class="keyword">]</span><span class="keyword">)</span><span class="keyword">)</span></div>
+<div class='output'>    time   parent       m1
+201   20 4.978707 27.46227
+</div>
+<div class='output'>   user  system elapsed 
+  0.012   0.004   0.002 
+</div>
+<div class='input'>  <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/system.time'>system.time</a></span><span class="keyword">(</span>
+    <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/print'>print</a></span><span class="keyword">(</span><span class="functioncall"><a href='mkinpredict.html'>mkinpredict</a></span><span class="keyword">(</span><span class="symbol">SFO_SFO</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="argument">k_parent_m1</span> <span class="argument">=</span> <span class="number">0.05</span><span class="keyword">,</span> <span class="argument">k_parent_sink</span> <span class="argument">=</span> <span class="number">0.1</span><span class="keyword">,</span> <span class="argument">k_m1_sink</span> <span class="argument">=</span> <span class="number">0.01</span><span class="keyword">)</span><span class="keyword">,</span>
+                <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="argument">parent</span> <span class="argument">=</span> <span class="number">100</span><span class="keyword">,</span> <span class="argument">m1</span> <span class="argument">=</span> <span class="number">0</span><span class="keyword">)</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span><span class="keyword">(</span><span class="number">0</span><span class="keyword">,</span> <span class="number">20</span><span class="keyword">,</span> <span class="argument">by</span> <span class="argument">=</span> <span class="number">0.1</span><span class="keyword">)</span><span class="keyword">,</span>
+                <span class="argument">solution_type</span> <span class="argument">=</span> <span class="string">"deSolve"</span><span class="keyword">,</span> <span class="argument">use_compiled</span> <span class="argument">=</span> <span class="number">FALSE</span><span class="keyword">)</span><span class="keyword">[</span><span class="number">201</span><span class="keyword">,</span><span class="keyword">]</span><span class="keyword">)</span><span class="keyword">)</span></div>
+<div class='output'>    time   parent       m1
+201   20 4.978707 27.46227
+</div>
+<div class='output'>   user  system elapsed 
+  0.036   0.000   0.036 
+</div></pre>
+  </div>
+  <div class="span4 sidebar">
+    <!-- <ul>
+      <li>mkinpredict</li>
+    </ul>
+    <ul>
+      <li> manip </li>
+    </ul> -->
+
+
+
+    <h2>Author</h2>
+    
+  Johannes Ranke
+
+
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="https://getbootstrap.com/2.0.4/">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

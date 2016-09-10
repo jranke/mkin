@@ -34,15 +34,17 @@
     <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="#">mkin 0.9.44.9000</a>
+      <a class="brand" href="index.html">mkin 0.9.44.9000</a>
       <div class="nav">
         <ul class="nav">
-          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="reference.html">Reference</a></li>
         </ul>
       </div>
     </div>
   </div>
 </div>
+
 
     <div class="container">
       <header>
@@ -54,7 +56,8 @@
 <div class="row">
   <div class="span8">
     <h2>Usage</h2>
-    <pre><div>"["(x, i, j, ..., drop&nbsp;=&nbsp;FALSE)</div></pre>
+    <pre><div># S3 method for mmkin
+[(x, i, j, ..., drop&nbsp;=&nbsp;FALSE)</div></pre>
     
     <h2>Arguments</h2>
     <dl>
@@ -75,7 +78,7 @@
       <h2>Description</h2>
 
       <p>Subsetting method for mmkin objects.</p>
-  
+
     </div>
 
     <div class="Value">
@@ -84,23 +87,21 @@
       <p><dl>
   An object of class <code><a href='mmkin.html'>mmkin</a></code>.
 </dl></p>
-  
+
     </div>
     
     <h2 id="examples">Examples</h2>
-    <pre class="examples"><div class='input'>  # Only use one core, to pass R CMD check --as-cran
-  fits &lt;- mmkin(c(&quot;SFO&quot;, &quot;FOMC&quot;), list(B = FOCUS_2006_B, C = FOCUS_2006_C), 
-                cores = 1, quiet = TRUE)
-  fits[&quot;FOMC&quot;, ]
-</div>
+    <pre class="examples"><div class='input'>  <span class="comment"># Only use one core, to pass R CMD check --as-cran</span>
+  <span class="symbol">fits</span> <span class="assignement">&lt;-</span> <span class="functioncall"><a href='mmkin.html'>mmkin</a></span><span class="keyword">(</span><span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="string">"SFO"</span><span class="keyword">,</span> <span class="string">"FOMC"</span><span class="keyword">)</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/list'>list</a></span><span class="keyword">(</span><span class="argument">B</span> <span class="argument">=</span> <span class="symbol">FOCUS_2006_B</span><span class="keyword">,</span> <span class="argument">C</span> <span class="argument">=</span> <span class="symbol">FOCUS_2006_C</span><span class="keyword">)</span><span class="keyword">,</span>
+                <span class="argument">cores</span> <span class="argument">=</span> <span class="number">1</span><span class="keyword">,</span> <span class="argument">quiet</span> <span class="argument">=</span> <span class="number">TRUE</span><span class="keyword">)</span>
+  <span class="symbol">fits</span><span class="keyword">[</span><span class="string">"FOMC"</span><span class="keyword">,</span> <span class="keyword">]</span></div>
 <div class='output'>      dataset
 model  B       C      
   FOMC List,42 List,42
 attr(,&quot;class&quot;)
 [1] &quot;mmkin&quot;
 </div>
-<div class='input'>  fits[, &quot;B&quot;]
-</div>
+<div class='input'>  <span class="symbol">fits</span><span class="keyword">[</span><span class="keyword">,</span> <span class="string">"B"</span><span class="keyword">]</span></div>
 <div class='output'>      dataset
 model  B      
   SFO  List,42
@@ -108,8 +109,7 @@ model  B
 attr(,&quot;class&quot;)
 [1] &quot;mmkin&quot;
 </div>
-<div class='input'>  fits[, &quot;B&quot;, drop = TRUE]$FOMC
-</div>
+<div class='input'>  <span class="symbol">fits</span><span class="keyword">[</span><span class="keyword">,</span> <span class="string">"B"</span><span class="keyword">,</span> <span class="argument">drop</span> <span class="argument">=</span> <span class="number">TRUE</span><span class="keyword">]</span><span class="keyword">$</span><span class="symbol">FOMC</span></div>
 <div class='output'>$par
  parent_0 log_alpha  log_beta 
 99.666193  2.549849  5.050586 
@@ -183,7 +183,7 @@ $calls
 
 $time
    user  system elapsed 
-  0.252   0.000   0.252 
+  0.276   0.000   0.277 
 
 $mkinmod
 &lt;mkinmod&gt; model generated with
@@ -369,7 +369,7 @@ function (P)
     }
     return(mC)
 }
-&lt;environment: 0x33d3c70&gt;
+&lt;environment: 0x44a0b88&gt;
 
 $cost_notrans
 function (P) 
@@ -391,7 +391,7 @@ function (P)
         scaleVar = scaleVar)
     return(mC)
 }
-&lt;environment: 0x33d3c70&gt;
+&lt;environment: 0x44a0b88&gt;
 
 $hessian_notrans
            parent_0     alpha       beta
@@ -457,21 +457,19 @@ $bparms.state
 99.66619 
 
 $date
-[1] &quot;Sat Sep 10 05:19:30 2016&quot;
+[1] &quot;Sat Sep 10 05:52:53 2016&quot;
 
 attr(,&quot;class&quot;)
 [1] &quot;mkinfit&quot; &quot;modFit&quot; 
 </div>
-<div class='input'>  fits[&quot;SFO&quot;, &quot;B&quot;]
-</div>
+<div class='input'>  <span class="symbol">fits</span><span class="keyword">[</span><span class="string">"SFO"</span><span class="keyword">,</span> <span class="string">"B"</span><span class="keyword">]</span></div>
 <div class='output'>     dataset
 model B      
   SFO List,42
 attr(,&quot;class&quot;)
 [1] &quot;mmkin&quot;
 </div>
-<div class='input'>  fits[[&quot;SFO&quot;, &quot;B&quot;]] # This is equivalent to
-</div>
+<div class='input'>  <span class="symbol">fits</span><span class="keyword">[[</span><span class="string">"SFO"</span><span class="keyword">,</span> <span class="string">"B"</span><span class="keyword">]</span><span class="keyword">]</span> <span class="comment"># This is equivalent to</span></div>
 <div class='output'>$par
          parent_0 log_k_parent_sink 
         99.174072         -2.549028 
@@ -544,7 +542,7 @@ $calls
 
 $time
    user  system elapsed 
-  0.068   0.000   0.067 
+  0.108   0.000   0.106 
 
 $mkinmod
 &lt;mkinmod&gt; model generated with
@@ -731,7 +729,7 @@ function (P)
     }
     return(mC)
 }
-&lt;environment: 0x48bdf40&gt;
+&lt;environment: 0x43a7a48&gt;
 
 $cost_notrans
 function (P) 
@@ -753,7 +751,7 @@ function (P)
         scaleVar = scaleVar)
     return(mC)
 }
-&lt;environment: 0x48bdf40&gt;
+&lt;environment: 0x43a7a48&gt;
 
 $hessian_notrans
                   parent_0 k_parent_sink
@@ -816,13 +814,12 @@ $bparms.state
 99.17407 
 
 $date
-[1] &quot;Sat Sep 10 05:19:30 2016&quot;
+[1] &quot;Sat Sep 10 05:52:53 2016&quot;
 
 attr(,&quot;class&quot;)
 [1] &quot;mkinfit&quot; &quot;modFit&quot; 
 </div>
-<div class='input'>  fits[&quot;SFO&quot;, &quot;B&quot;, drop = TRUE]
-</div>
+<div class='input'>  <span class="symbol">fits</span><span class="keyword">[</span><span class="string">"SFO"</span><span class="keyword">,</span> <span class="string">"B"</span><span class="keyword">,</span> <span class="argument">drop</span> <span class="argument">=</span> <span class="number">TRUE</span><span class="keyword">]</span></div>
 <div class='output'>[[1]]
 $par
          parent_0 log_k_parent_sink 
@@ -896,7 +893,7 @@ $calls
 
 $time
    user  system elapsed 
-  0.068   0.000   0.067 
+  0.108   0.000   0.106 
 
 $mkinmod
 &lt;mkinmod&gt; model generated with
@@ -1083,7 +1080,7 @@ function (P)
     }
     return(mC)
 }
-&lt;environment: 0x48bdf40&gt;
+&lt;environment: 0x43a7a48&gt;
 
 $cost_notrans
 function (P) 
@@ -1105,7 +1102,7 @@ function (P)
         scaleVar = scaleVar)
     return(mC)
 }
-&lt;environment: 0x48bdf40&gt;
+&lt;environment: 0x43a7a48&gt;
 
 $hessian_notrans
                   parent_0 k_parent_sink
@@ -1168,33 +1165,34 @@ $bparms.state
 99.17407 
 
 $date
-[1] &quot;Sat Sep 10 05:19:30 2016&quot;
+[1] &quot;Sat Sep 10 05:52:53 2016&quot;
 
 attr(,&quot;class&quot;)
 [1] &quot;mkinfit&quot; &quot;modFit&quot; 
 
 </div></pre>
   </div>
-  <div class="span4">
+  <div class="span4 sidebar">
     <!-- <ul>
       <li>[.mmkin</li>
     </ul>
     <ul>
       
     </ul> -->
-      
-    
+
+
+
     <h2>Author</h2>
     
   Johannes Ranke
 
-    
+
   </div>
 </div>
       
       <footer>
       <p class="pull-right"><a href="#">Back to top</a></p>
-<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="https://getbootstrap.com/2.0.4/">bootstrap</a>.</p>
       </footer>
     </div>
   </body>

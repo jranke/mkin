@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>plot.mkinfit. mkin 0.9.44.9000</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="
+  Johannes Ranke
+">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="index.html">mkin 0.9.44.9000</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="reference.html">Reference</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>
+  Plot the observed data and the fitted model of an mkinfit object
+</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><span class="comment"># S3 method for mkinfit</span>
+<span class="functioncall"><a href='http://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span><span class="keyword">(</span><span class="symbol">x</span><span class="keyword">,</span> <span class="argument">fit</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="symbol">x</span><span class="keyword">,</span>
+  <span class="argument">obs_vars</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/names'>names</a></span><span class="keyword">(</span><span class="symbol">fit</span><span class="keyword">$</span><span class="symbol">mkinmod</span><span class="keyword">$</span><span class="symbol">map</span><span class="keyword">)</span><span class="keyword">,</span>
+  <span class="argument">xlab</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="string">"Time"</span><span class="keyword">,</span> <span class="argument">ylab</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="string">"Observed"</span><span class="keyword">,</span>
+  <span class="argument">xlim</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/range'>range</a></span><span class="keyword">(</span><span class="symbol">fit</span><span class="keyword">$</span><span class="symbol">data</span><span class="keyword">$</span><span class="symbol">time</span><span class="keyword">)</span><span class="keyword">,</span>
+  <span class="argument">ylim</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="string">"default"</span><span class="keyword">,</span>
+  <span class="argument">col_obs</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="number">1</span><span class="keyword">:</span><span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/length'>length</a></span><span class="keyword">(</span><span class="symbol">obs_vars</span><span class="keyword">)</span><span class="keyword">,</span> <span class="argument">pch_obs</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="symbol">col_obs</span><span class="keyword">,</span>
+  <span class="argument">lty_obs</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span><span class="keyword">(</span><span class="number">1</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/length'>length</a></span><span class="keyword">(</span><span class="symbol">obs_vars</span><span class="keyword">)</span><span class="keyword">)</span><span class="keyword">,</span>
+  <span class="argument">add</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="number">FALSE</span><span class="keyword">,</span> <span class="argument">legend</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="keyword">!</span><span class="symbol">add</span><span class="keyword">,</span>
+  <span class="argument">show_residuals</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="number">FALSE</span><span class="keyword">,</span> <span class="argument">maxabs</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="string">"auto"</span><span class="keyword">,</span>
+  <span class="argument">sep_obs</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="number">FALSE</span><span class="keyword">,</span> <span class="argument">rel.height.middle</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="number">0.9</span><span class="keyword">,</span>
+  <span class="argument">lpos</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="string">"topright"</span><span class="keyword">,</span> <span class="argument">inset</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="number">0.05</span><span class="keyword">,</span> <span class="number">0.05</span><span class="keyword">)</span><span class="keyword">,</span>
+  <span class="argument">show_errmin</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="number">FALSE</span><span class="keyword">,</span> <span class="argument">errmin_digits</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="number">3</span><span class="keyword">,</span> <span class="symbol">...</span><span class="keyword">)</span>
+<span class="functioncall"><a href='plot.mkinfit.html'>plot_sep</a></span><span class="keyword">(</span><span class="symbol">fit</span><span class="keyword">,</span> <span class="argument">sep_obs</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="number">TRUE</span><span class="keyword">,</span>  <span class="argument">show_residuals</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="number">TRUE</span><span class="keyword">,</span> <span class="argument">show_errmin</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="number">TRUE</span><span class="keyword">,</span> <span class="symbol">...</span><span class="keyword">)</span></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>x</dt>
+      <dd>
+    Alias for fit introduced for compatibility with the generic S3 method.  
+  </dd>
+      <dt>fit</dt>
+      <dd>
+    An object of class <code><a href='mkinfit.html'>mkinfit</a></code>.
+  </dd>
+      <dt>obs_vars</dt>
+      <dd>
+    A character vector of names of the observed variables for which the 
+    data and the model should be plotted. Defauls to all observed variables
+    in the model.
+  </dd>
+      <dt>xlab</dt>
+      <dd>
+    Label for the x axis.
+  </dd>
+      <dt>ylab</dt>
+      <dd>
+    Label for the y axis.
+  </dd>
+      <dt>xlim</dt>
+      <dd>
+    Plot range in x direction.
+  </dd>
+      <dt>ylim</dt>
+      <dd>
+    Plot range in y direction.
+  </dd>
+      <dt>col_obs</dt>
+      <dd>
+    Colors used for plotting the observed data and the corresponding model prediction lines.
+  </dd>
+      <dt>pch_obs</dt>
+      <dd>
+    Symbols to be used for plotting the data.
+  </dd>
+      <dt>lty_obs</dt>
+      <dd>
+    Line types to be used for the model predictions.
+  </dd>
+      <dt>add</dt>
+      <dd>
+    Should the plot be added to an existing plot?
+  </dd>
+      <dt>legend</dt>
+      <dd>
+    Should a legend be added to the plot?
+  </dd>
+      <dt>show_residuals</dt>
+      <dd>
+    Should residuals be shown? If only one plot of the fits is shown, the
+    residual plot is in the lower third of the plot? Otherwise, i.e. if
+    &quot;sep_obs&quot; is given, the residual plots will be located to the right of 
+    the plots of the fitted curves.
+  </dd>
+      <dt>maxabs</dt>
+      <dd>
+    Maximum absolute value of the residuals. This is used for the scaling of
+    the y axis and defaults to &quot;auto&quot;.
+  </dd>
+      <dt>sep_obs</dt>
+      <dd>
+    Should the observed variables be shown in separate subplots? If yes, residual plots
+    requested by &quot;show_residuals&quot; will be shown next to, not below the plot of the fits.
+  </dd>
+      <dt>rel.height.middle</dt>
+      <dd>
+    The relative height of the middle plot, if more than two rows of plots are shown.
+  </dd>
+      <dt>lpos</dt>
+      <dd>
+    Position(s) of the legend(s). Passed to <code><a href='http://www.rdocumentation.org/packages/graphics/topics/legend'>legend</a></code> as the first argument.
+    If not length one, this should be of the same length as the obs_var argument.
+  </dd>
+      <dt>inset</dt>
+      <dd>
+    Passed to <code><a href='http://www.rdocumentation.org/packages/graphics/topics/legend'>legend</a></code> if applicable.
+  </dd>
+      <dt>show_errmin</dt>
+      <dd>
+    Should the FOCUS chi2 error value be shown in the upper margin of the plot?
+  </dd>
+      <dt>errmin_digits</dt>
+      <dd>
+    The number of significant digits for rounding the FOCUS chi2 error percentage.
+  </dd>
+      <dt>...</dt>
+      <dd>
+    Further arguments passed to <code><a href='http://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></code>.
+  </dd>
+    </dl>
+    
+    <div class="Description">
+      <h2>Description</h2>
+
+      <p>Solves the differential equations with the optimised and fixed parameters
+  from a previous successful call to <code><a href='mkinfit.html'>mkinfit</a></code> and plots 
+  the observed data together with the solution of the fitted model.</p>
+
+    </div>
+
+    <div class="Value">
+      <h2>Value</h2>
+
+      <p><dl>
+  The function is called for its side effect.
+</dl></p>
+
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'><span class="comment"># One parent compound, one metabolite, both single first order, path from</span>
+<span class="comment"># parent to sink included, use Levenberg-Marquardt for speed</span>
+<span class="symbol">SFO_SFO</span> <span class="assignement">&lt;-</span> <span class="functioncall"><a href='mkinmod.html'>mkinmod</a></span><span class="keyword">(</span><span class="argument">parent</span> <span class="argument">=</span> <span class="functioncall"><a href='mkinsub.html'>mkinsub</a></span><span class="keyword">(</span><span class="string">"SFO"</span><span class="keyword">,</span> <span class="string">"m1"</span><span class="keyword">,</span> <span class="argument">full</span> <span class="argument">=</span> <span class="string">"Parent"</span><span class="keyword">)</span><span class="keyword">,</span>
+                   <span class="argument">m1</span> <span class="argument">=</span> <span class="functioncall"><a href='mkinsub.html'>mkinsub</a></span><span class="keyword">(</span><span class="string">"SFO"</span><span class="keyword">,</span> <span class="argument">full</span> <span class="argument">=</span> <span class="string">"Metabolite M1"</span> <span class="keyword">)</span><span class="keyword">)</span></div>
+<strong class='message'>Successfully compiled differential equation model from auto-generated C code.</strong>
+<div class='input'><span class="symbol">fit</span> <span class="assignement">&lt;-</span> <span class="functioncall"><a href='mkinfit.html'>mkinfit</a></span><span class="keyword">(</span><span class="symbol">SFO_SFO</span><span class="keyword">,</span> <span class="symbol">FOCUS_2006_D</span><span class="keyword">,</span> <span class="argument">quiet</span> <span class="argument">=</span> <span class="number">TRUE</span><span class="keyword">,</span> <span class="argument">method.modFit</span> <span class="argument">=</span> <span class="string">"Marq"</span><span class="keyword">)</span>
+<span class="functioncall"><a href='http://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span><span class="keyword">(</span><span class="symbol">fit</span><span class="keyword">)</span></div>
+<p><img src='plot.mkinfit-4.png' alt='' width='540' height='400' /></p>
+<div class='input'><span class="functioncall"><a href='http://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span><span class="keyword">(</span><span class="symbol">fit</span><span class="keyword">,</span> <span class="argument">show_residuals</span> <span class="argument">=</span> <span class="number">TRUE</span><span class="keyword">)</span></div>
+<p><img src='plot.mkinfit-6.png' alt='' width='540' height='400' /></p>
+<div class='input'>
+<span class="comment"># Show the observed variables separately</span>
+<span class="functioncall"><a href='http://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span><span class="keyword">(</span><span class="symbol">fit</span><span class="keyword">,</span> <span class="argument">sep_obs</span> <span class="argument">=</span> <span class="number">TRUE</span><span class="keyword">,</span> <span class="argument">lpos</span> <span class="argument">=</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="string">"topright"</span><span class="keyword">,</span> <span class="string">"bottomright"</span><span class="keyword">)</span><span class="keyword">)</span></div>
+<p><img src='plot.mkinfit-8.png' alt='' width='540' height='400' /></p>
+<div class='input'>
+<span class="comment"># Show the observed variables separately, with residuals</span>
+<span class="functioncall"><a href='http://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span><span class="keyword">(</span><span class="symbol">fit</span><span class="keyword">,</span> <span class="argument">sep_obs</span> <span class="argument">=</span> <span class="number">TRUE</span><span class="keyword">,</span> <span class="argument">show_residuals</span> <span class="argument">=</span> <span class="number">TRUE</span><span class="keyword">,</span> <span class="argument">lpos</span> <span class="argument">=</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="string">"topright"</span><span class="keyword">,</span> <span class="string">"bottomright"</span><span class="keyword">)</span><span class="keyword">,</span>
+     <span class="argument">show_errmin</span> <span class="argument">=</span> <span class="number">TRUE</span><span class="keyword">)</span></div>
+<p><img src='plot.mkinfit-10.png' alt='' width='540' height='400' /></p>
+<div class='input'>
+<span class="comment"># The same can be obtained with less typing, using the convenience function plot_sep</span>
+<span class="functioncall"><a href='plot.mkinfit.html'>plot_sep</a></span><span class="keyword">(</span><span class="symbol">fit</span><span class="keyword">,</span> <span class="argument">lpos</span> <span class="argument">=</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="string">"topright"</span><span class="keyword">,</span> <span class="string">"bottomright"</span><span class="keyword">)</span><span class="keyword">)</span></div></pre>
+  </div>
+  <div class="span4 sidebar">
+    <!-- <ul>
+      <li>plot.mkinfit</li><li>plot_sep</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+
+
+
+    <h2>Author</h2>
+    
+  Johannes Ranke
+
+
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="https://getbootstrap.com/2.0.4/">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

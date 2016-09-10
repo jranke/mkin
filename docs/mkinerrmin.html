@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>mkinerrmin. mkin 0.9.44.9000</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="index.html">mkin 0.9.44.9000</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="reference.html">Reference</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>
+Calculate the minimum error to assume in order to pass the variance test
+</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><span class="functioncall"><a href='mkinerrmin.html'>mkinerrmin</a></span><span class="keyword">(</span><span class="symbol">fit</span><span class="keyword">,</span> <span class="argument">alpha</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="number">0.05</span><span class="keyword">)</span></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>fit</dt>
+      <dd>
+    an object of class <code><a href='mkinfit.html'>mkinfit</a></code>.
+  </dd>
+      <dt>alpha</dt>
+      <dd>
+    The confidence level chosen for the chi-squared test.
+</dd>
+    </dl>
+    
+    <div class="Description">
+      <h2>Description</h2>
+
+      <p>This function uses <code><a href='http://www.rdocumentation.org/packages/stats/topics/optimize'>optimize</a></code> in order to iteratively find the
+smallest relative error still resulting in passing the chi-squared test
+as defined in the FOCUS kinetics report from 2006.</p>
+
+    </div>
+
+    <div class="Value">
+      <h2>Value</h2>
+
+      <p><dl>
+  A dataframe with the following components:
+  <dt>err.min</dt><dd>The relative error, expressed as a fraction.</dd></p>
+
+      <p><dt>n.optim</dt><dd>The number of optimised parameters attributed to the data series.</dd></p>
+
+      <p><dt>df</dt><dd>The number of remaining degrees of freedom for the chi2 error level
+    calculations.  Note that mean values are used for the chi2 statistic and
+    therefore every time point with observed values in the series only counts
+    one time.</dd></p>
+
+      <p>The dataframe has one row for the total dataset and one further row for
+  each observed state variable in the model.
+</dl></p>
+
+    </div>
+
+    <div class="Details">
+      <h2>Details</h2>
+
+      <p>This function is used internally by <code><a href='summary.mkinfit.html'>summary.mkinfit</a></code>.</p>
+
+    </div>
+
+    <div class="References">
+      <h2>References</h2>
+
+      <p>FOCUS (2006) &#147;Guidance Document on Estimating Persistence and
+  Degradation Kinetics from Environmental Fate Studies on Pesticides in EU
+  Registration&#148; Report of the FOCUS Work Group on Degradation Kinetics,
+  EC Document Reference Sanco/10058/2005 version 2.0, 434 pp,
+  <a href = 'http://focus.jrc.ec.europa.eu/dk'>http://focus.jrc.ec.europa.eu/dk</a></p>
+
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'><span class="symbol">SFO_SFO</span> <span class="assignement">=</span> <span class="functioncall"><a href='mkinmod.html'>mkinmod</a></span><span class="keyword">(</span><span class="argument">parent</span> <span class="argument">=</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/list'>list</a></span><span class="keyword">(</span><span class="argument">type</span> <span class="argument">=</span> <span class="string">"SFO"</span><span class="keyword">,</span> <span class="argument">to</span> <span class="argument">=</span> <span class="string">"m1"</span><span class="keyword">)</span><span class="keyword">,</span>
+                  <span class="argument">m1</span> <span class="argument">=</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/list'>list</a></span><span class="keyword">(</span><span class="argument">type</span> <span class="argument">=</span> <span class="string">"SFO"</span><span class="keyword">)</span><span class="keyword">,</span>
+                  <span class="argument">use_of_ff</span> <span class="argument">=</span> <span class="string">"max"</span><span class="keyword">)</span></div>
+<strong class='message'>Successfully compiled differential equation model from auto-generated C code.</strong>
+<div class='input'>
+<span class="symbol">fit_FOCUS_D</span> <span class="assignement">=</span> <span class="functioncall"><a href='mkinfit.html'>mkinfit</a></span><span class="keyword">(</span><span class="symbol">SFO_SFO</span><span class="keyword">,</span> <span class="symbol">FOCUS_2006_D</span><span class="keyword">,</span> <span class="argument">quiet</span> <span class="argument">=</span> <span class="number">TRUE</span><span class="keyword">)</span>
+<span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/Round'>round</a></span><span class="keyword">(</span><span class="functioncall"><a href='mkinerrmin.html'>mkinerrmin</a></span><span class="keyword">(</span><span class="symbol">fit_FOCUS_D</span><span class="keyword">)</span><span class="keyword">,</span> <span class="number">4</span><span class="keyword">)</span></div>
+<div class='output'>         err.min n.optim df
+All data  0.0640       4 15
+parent    0.0646       2  7
+m1        0.0469       2  8
+</div>
+<div class='input'><span class="symbol">fit_FOCUS_E</span> <span class="assignement">=</span> <span class="functioncall"><a href='mkinfit.html'>mkinfit</a></span><span class="keyword">(</span><span class="symbol">SFO_SFO</span><span class="keyword">,</span> <span class="symbol">FOCUS_2006_E</span><span class="keyword">,</span> <span class="argument">quiet</span> <span class="argument">=</span> <span class="number">TRUE</span><span class="keyword">)</span>
+<span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/Round'>round</a></span><span class="keyword">(</span><span class="functioncall"><a href='mkinerrmin.html'>mkinerrmin</a></span><span class="keyword">(</span><span class="symbol">fit_FOCUS_E</span><span class="keyword">)</span><span class="keyword">,</span> <span class="number">4</span><span class="keyword">)</span></div>
+<div class='output'>         err.min n.optim df
+All data  0.1544       4 13
+parent    0.1659       2  7
+m1        0.1095       2  6
+</div></pre>
+  </div>
+  <div class="span4 sidebar">
+    <!-- <ul>
+      <li>mkinerrmin</li>
+    </ul>
+    <ul>
+      <li> manip </li>
+    </ul> -->
+
+
+
+
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="https://getbootstrap.com/2.0.4/">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

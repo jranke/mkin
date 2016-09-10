@@ -32,15 +32,17 @@
     <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <a class="brand" href="#">mkin 0.9.44.9000</a>
+      <a class="brand" href="index.html">mkin 0.9.44.9000</a>
       <div class="nav">
         <ul class="nav">
-          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="reference.html">Reference</a></li>
         </ul>
       </div>
     </div>
   </div>
 </div>
+
 
     <div class="container">
       <header>
@@ -54,7 +56,7 @@
 <div class="row">
   <div class="span8">
     <h2>Usage</h2>
-    <pre><div>mccall81_245T</div></pre>
+    <pre><span class="symbol">mccall81_245T</span></pre>
         
     <div class="Description">
       <h2>Description</h2>
@@ -62,7 +64,7 @@
       <p>Time course of 2,4,5-trichlorophenoxyacetic acid, and the corresponding
  2,4,5-trichlorophenol and 2,4,5-trichloroanisole as recovered in diethylether
  extracts.</p>
-  
+
     </div>
 
     <div class="Format">
@@ -74,18 +76,18 @@
                        an acronym for 2,4,5-T. T245 is a legitimate object name
                        in R, which is necessary for specifying models using
                        <code><a href='mkinmod.html'>mkinmod</a></code>.</dd></p>
-  
+
       <p><dt><code>time</code></dt><dd>a numeric vector containing sampling times in days after
                        treatment</dd></p>
-  
+
       <p><dt><code>value</code></dt><dd>a numeric vector containing concentrations in percent of applied radioactivity</dd></p>
-  
+
       <p><dt><code>soil</code></dt><dd>a factor containing the name of the soil</dd></p>
-  
+
       <p></dl></p>
-  
+
       <p></p>
-  
+
     </div>
 
     <div class="Source">
@@ -93,29 +95,28 @@
 
       <p>McCall P, Vrona SA, Kelley SS (1981) Fate of uniformly carbon-14 ring labeled 2,4,5-Trichlorophenoxyacetic acid and 2,4-dichlorophenoxyacetic acid. J Agric Chem 29, 100-107
   <a href = 'http://dx.doi.org/10.1021/jf00103a026'>http://dx.doi.org/10.1021/jf00103a026</a></p>
-  
+
     </div>
     
     <h2 id="examples">Examples</h2>
-    <pre class="examples"><div class='input'>  SFO_SFO_SFO &lt;- mkinmod(T245 = list(type = &quot;SFO&quot;, to = &quot;phenol&quot;),
-                         phenol = list(type = &quot;SFO&quot;, to = &quot;anisole&quot;),
-                         anisole = list(type = &quot;SFO&quot;))
-</div>
+    <pre class="examples"><div class='input'>  <span class="symbol">SFO_SFO_SFO</span> <span class="assignement">&lt;-</span> <span class="functioncall"><a href='mkinmod.html'>mkinmod</a></span><span class="keyword">(</span><span class="argument">T245</span> <span class="argument">=</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/list'>list</a></span><span class="keyword">(</span><span class="argument">type</span> <span class="argument">=</span> <span class="string">"SFO"</span><span class="keyword">,</span> <span class="argument">to</span> <span class="argument">=</span> <span class="string">"phenol"</span><span class="keyword">)</span><span class="keyword">,</span>
+                         <span class="argument">phenol</span> <span class="argument">=</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/list'>list</a></span><span class="keyword">(</span><span class="argument">type</span> <span class="argument">=</span> <span class="string">"SFO"</span><span class="keyword">,</span> <span class="argument">to</span> <span class="argument">=</span> <span class="string">"anisole"</span><span class="keyword">)</span><span class="keyword">,</span>
+                         <span class="argument">anisole</span> <span class="argument">=</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/list'>list</a></span><span class="keyword">(</span><span class="argument">type</span> <span class="argument">=</span> <span class="string">"SFO"</span><span class="keyword">)</span><span class="keyword">)</span></div>
 <strong class='message'>Successfully compiled differential equation model from auto-generated C code.</strong>
-<div class='input'>  ## Not run: 
-#     fit.1 &lt;- mkinfit(SFO_SFO_SFO, subset(mccall81_245T, soil == &quot;Commerce&quot;))
-#     summary(fit.1, data = FALSE)
-#   ## End(Not run)
-  # No covariance matrix and k_phenol_sink is really small, therefore fix it to zero
-  fit.2 &lt;- mkinfit(SFO_SFO_SFO, subset(mccall81_245T, soil == &quot;Commerce&quot;),
-                 parms.ini = c(k_phenol_sink = 0),
-                 fixed_parms = &quot;k_phenol_sink&quot;, quiet = TRUE)
-  summary(fit.2, data = FALSE)
-</div>
+<div class='input'>  <span class="comment">## Not run: ------------------------------------</span>
+<span class="comment">#     fit.1 &lt;- mkinfit(SFO_SFO_SFO, subset(mccall81_245T, soil == "Commerce"))</span>
+<span class="comment">#     summary(fit.1, data = FALSE)</span>
+<span class="comment">#   </span>
+<span class="comment">## ---------------------------------------------</span>
+  <span class="comment"># No covariance matrix and k_phenol_sink is really small, therefore fix it to zero</span>
+  <span class="symbol">fit.2</span> <span class="assignement">&lt;-</span> <span class="functioncall"><a href='mkinfit.html'>mkinfit</a></span><span class="keyword">(</span><span class="symbol">SFO_SFO_SFO</span><span class="keyword">,</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/subset'>subset</a></span><span class="keyword">(</span><span class="symbol">mccall81_245T</span><span class="keyword">,</span> <span class="symbol">soil</span> == <span class="string">"Commerce"</span><span class="keyword">)</span><span class="keyword">,</span>
+                 <span class="argument">parms.ini</span> <span class="argument">=</span> <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/c'>c</a></span><span class="keyword">(</span><span class="argument">k_phenol_sink</span> <span class="argument">=</span> <span class="number">0</span><span class="keyword">)</span><span class="keyword">,</span>
+                 <span class="argument">fixed_parms</span> <span class="argument">=</span> <span class="string">"k_phenol_sink"</span><span class="keyword">,</span> <span class="argument">quiet</span> <span class="argument">=</span> <span class="number">TRUE</span><span class="keyword">)</span>
+  <span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span><span class="keyword">(</span><span class="symbol">fit.2</span><span class="keyword">,</span> <span class="argument">data</span> <span class="argument">=</span> <span class="number">FALSE</span><span class="keyword">)</span></div>
 <div class='output'>mkin version:    0.9.44.9000 
 R version:       3.3.1 
-Date of fit:     Sat Sep 10 05:19:35 2016 
-Date of summary: Sat Sep 10 05:19:35 2016 
+Date of fit:     Sat Sep 10 05:53:00 2016 
+Date of summary: Sat Sep 10 05:53:00 2016 
 
 Equations:
 d_T245 = - k_T245_sink * T245 - k_T245_phenol * T245
@@ -125,7 +126,7 @@ d_anisole = + k_phenol_anisole * phenol - k_anisole_sink * anisole
 
 Model predictions using solution type deSolve 
 
-Fitted with method Port using 246 model solutions performed in 1.434 s
+Fitted with method Port using 246 model solutions performed in 1.45 s
 
 Weighting: none
 
@@ -208,21 +209,23 @@ phenol    1.711   5.685
 anisole 103.784 344.763
 </div></pre>
   </div>
-  <div class="span4">
+  <div class="span4 sidebar">
     <!-- <ul>
       <li>mccall81_245T</li>
     </ul>
     <ul>
       <li>datasets</li>
     </ul> -->
-      
-        
+
+
+
+
   </div>
 </div>
       
       <footer>
       <p class="pull-right"><a href="#">Back to top</a></p>
-<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="https://getbootstrap.com/2.0.4/">bootstrap</a>.</p>
       </footer>
     </div>
   </body>

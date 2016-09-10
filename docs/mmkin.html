@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>mmkin. mkin 0.9.44.9000</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="
+  Johannes Ranke
+">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="index.html">mkin 0.9.44.9000</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="reference.html">Reference</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>
+  Fit one or more kinetic models with one or more state variables to one or more datasets
+</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><span class="functioncall"><a href='mmkin.html'>mmkin</a></span><span class="keyword">(</span><span class="symbol">models</span><span class="keyword">,</span> <span class="symbol">datasets</span><span class="keyword">,</span>
+      <span class="argument">cores</span>&nbsp;<span class="argument">=</span>&nbsp;<span class="functioncall"><a href='http://www.rdocumentation.org/packages/base/topics/Round'>round</a></span><span class="keyword">(</span><span class="functioncall"><a href='http://www.rdocumentation.org/packages/parallel/topics/detectCores'>detectCores</a></span><span class="keyword">(</span><span class="keyword">)</span><span class="keyword">/</span><span class="number">2</span><span class="keyword">)</span><span class="keyword">,</span> <span class="argument">cluster</span>&nbsp;<span class="argument">=</span>&nbsp;NULL<span class="keyword">,</span> <span class="symbol">...</span><span class="keyword">)</span></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>models</dt>
+      <dd>
+    Either a character vector of shorthand names (&quot;SFO&quot;, &quot;FOMC&quot;, &quot;DFOP&quot;,
+    &quot;HS&quot;, &quot;SFORB&quot;), or an optionally named list of <code><a href='mkinmod.html'>mkinmod</a></code>
+    objects.
+  </dd>
+      <dt>datasets</dt>
+      <dd>
+    An optionally named list of datasets suitable as observed data for
+    <code><a href='mkinfit.html'>mkinfit</a></code>.
+  </dd>
+      <dt>cores</dt>
+      <dd>
+    The number of cores to be used for multicore processing. This is only
+    used when the <code>cluster</code> argument is <code>NULL</code>.
+  </dd>
+      <dt>cluster</dt>
+      <dd>
+    A cluster as returned by <code><a href='http://www.rdocumentation.org/packages/parallel/topics/makeCluster'>makeCluster</a></code> to be used for parallel 
+    execution.
+  </dd>
+      <dt>...</dt>
+      <dd>
+    Further arguments that will be passed to <code><a href='mkinfit.html'>mkinfit</a></code>. 
+  </dd>
+    </dl>
+    
+    <div class="Description">
+      <h2>Description</h2>
+
+      <p>This function calls <code><a href='mkinfit.html'>mkinfit</a></code> on all combinations of models and datasets
+  specified in its first two arguments.</p>
+
+    </div>
+
+    <div class="Value">
+      <h2>Value</h2>
+
+      <p><dl>
+  A matrix of <code><a href='mkinfit.html'>mkinfit</a></code> objects that can be indexed using the model
+  and dataset names as row and column indices.
+</dl></p>
+
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'><span class="comment">## Not run: ------------------------------------</span>
+<span class="comment"># m_synth_SFO_lin &lt;- mkinmod(parent = mkinsub("SFO", "M1"),</span>
+<span class="comment">#                            M1 = mkinsub("SFO", "M2"),</span>
+<span class="comment">#                            M2 = mkinsub("SFO"), use_of_ff = "max")</span>
+<span class="comment"># </span>
+<span class="comment"># m_synth_FOMC_lin &lt;- mkinmod(parent = mkinsub("FOMC", "M1"),</span>
+<span class="comment">#                             M1 = mkinsub("SFO", "M2"),</span>
+<span class="comment">#                             M2 = mkinsub("SFO"), use_of_ff = "max")</span>
+<span class="comment"># </span>
+<span class="comment"># models &lt;- list(SFO_lin = m_synth_SFO_lin, FOMC_lin = m_synth_FOMC_lin)</span>
+<span class="comment"># datasets &lt;- lapply(synthetic_data_for_UBA_2014[1:3], function(x) x$data)</span>
+<span class="comment"># names(datasets) &lt;- paste("Dataset", 1:3)</span>
+<span class="comment"># </span>
+<span class="comment"># time_default &lt;- system.time(fits.0 &lt;- mmkin(models, datasets))</span>
+<span class="comment"># time_1 &lt;- system.time(fits.1 &lt;- mmkin(models, datasets, cores = 1))</span>
+<span class="comment"># </span>
+<span class="comment"># time_default</span>
+<span class="comment"># time_1</span>
+<span class="comment"># </span>
+<span class="comment"># endpoints(fits[["SFO_lin", 2]])</span>
+<span class="comment"># </span>
+<span class="comment"># # Plot.mkinfit handles rows or columns of mmkin result objects</span>
+<span class="comment"># plot(fits.0[1, ])</span>
+<span class="comment"># plot(fits.0[1, ], obs_var = c("M1", "M2"))</span>
+<span class="comment"># plot(fits.0[, 1])</span>
+<span class="comment"># # Use double brackets to extract a single mkinfit object, which will be plotted</span>
+<span class="comment"># # by plot.mkinfit</span>
+<span class="comment"># plot(fits.0[[1, 1]], sep_obs = TRUE, show_residuals = TRUE, show_errmin = TRUE)</span>
+<span class="comment"># # Plotting with mmkin (single brackets, extracting an mmkin object) does not</span>
+<span class="comment"># # allow to plot the observed variables separately</span>
+<span class="comment"># plot(fits.0[1, 1])</span>
+<span class="comment">## ---------------------------------------------</span></div></pre>
+  </div>
+  <div class="span4 sidebar">
+    <!-- <ul>
+      <li>mmkin</li>
+    </ul>
+    <ul>
+      <li> optimize </li>
+    </ul> -->
+
+    <h2>See also</h2>
+      <p><code><a href='Extract.mmkin.html'>[.mmkin</a></code> for subsetting, <code><a href='plot.mmkin.html'>plot.mmkin</a></code> for plotting.</p>
+
+    
+
+    <h2>Author</h2>
+    
+  Johannes Ranke
+
+
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="https://getbootstrap.com/2.0.4/">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>
