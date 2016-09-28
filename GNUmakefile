@@ -106,6 +106,9 @@ winbuilder: build
 	@echo "Uploading to R-devel on win-builder"
 	curl -T $(TGZ) ftp://anonymous@win-builder.r-project.org/R-devel/
 
+drat: build
+	"$(RBIN)/Rscript" -e "drat::insertPackage('$(TGZ)', commit = TRUE)"
+
 submit:
 	@echo "\nHow about make test, make check, make winbuilder"
 	@echo "\nIs the DESCRIPTION file up to date?"
