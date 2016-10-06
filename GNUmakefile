@@ -92,7 +92,7 @@ sd:
 	git commit -m 'Static documentation rebuilt by staticdocs::build_site()' -e
 
 pd:
-	"$(RBIN)/Rscript" -e "pkgdown::build_site()"
+	"$(RBIN)/Rscript" -e "pkgdown::build_site(articles = FALSE)"
 	git add -A
 	git commit -m 'Static documentation rebuilt by pkgdown::build_site()' -e
 
