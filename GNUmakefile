@@ -91,9 +91,14 @@ sd:
 	git add -A
 	git commit -m 'Static documentation rebuilt by staticdocs::build_site()' -e
 
+pd:
+	"$(RBIN)/Rscript" -e "pkgdown::build_site()"
+	git add -A
+	git commit -m 'Static documentation rebuilt by pkgdown::build_site()' -e
+
 r-forge: sd
 	rm -rf $(SDDIR)/*
-	cp -a inst/web/* $(SDDIR)
+	cp -a doc/* $(SDDIR)
 	cd $(SDDIR) && svn add --force .
 	git archive master > $(HOME)/mkin.tar;\
 	cd $(RFDIR) && rm -r `ls` && tar -xf $(HOME)/mkin.tar;\
