@@ -73,21 +73,21 @@ mb<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw">micr
 <span class="kw">print</span>(mb<span class="fl">.1</span>)</code></pre></div>
 <pre><code>## Unit: milliseconds
 ##                   expr       min        lq      mean    median        uq
-##  deSolve, not compiled 6407.0333 6420.1971 6434.6510 6433.3609 6448.4598
-##       Eigenvalue based  887.4338  891.8401  906.9270  896.2463  916.6735
-##      deSolve, compiled  720.2433  727.8793  733.2019  735.5152  739.6812
+##  deSolve, not compiled 6365.2773 6407.1609 6467.4083 6449.0446 6518.4738
+##       Eigenvalue based  872.0339  912.6754  926.7178  953.3169  954.0597
+##      deSolve, compiled  730.1252  740.7149  751.8881  751.3045  762.7695
 ##        max neval cld
-##  6463.5587     3   c
-##   937.1007     3  b 
-##   743.8472     3 a</code></pre>
+##  6587.9031     3   b
+##   954.8026     3  a 
+##   774.2345     3  a</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">autoplot</span>(mb<span class="fl">.1</span>)</code></pre></div>
 <p><img src="compiled_models_files/figure-html/benchmark_SFO_SFO-1.png" width="672"></p>
-<p>We see that using the compiled model is by a factor of 8.7 faster than using the R version with the default ode solver, and it is even faster than the Eigenvalue based solution implemented in R which does not need iterative solution of the ODEs:</p>
+<p>We see that using the compiled model is by a factor of 8.6 faster than using the R version with the default ode solver, and it is even faster than the Eigenvalue based solution implemented in R which does not need iterative solution of the ODEs:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rownames</span>(smb<span class="fl">.1</span>) &lt;-<span class="st"> </span>smb<span class="fl">.1</span>$expr
 smb<span class="fl">.1</span>[<span class="st">"median"</span>]/smb<span class="fl">.1</span>[<span class="st">"deSolve, compiled"</span>, <span class="st">"median"</span>]</code></pre></div>
 <pre><code>##                         median
-## deSolve, not compiled 8.746741
-## Eigenvalue based      1.218529
+## deSolve, not compiled 8.583796
+## Eigenvalue based      1.268882
 ## deSolve, compiled     1.000000</code></pre>
 </div>
 <div id="benchmark-for-a-model-that-can-not-be-solved-with-eigenvalues" class="section level2">
@@ -108,12 +108,12 @@ smb<span class="fl">.1</span>[<span class="st">"median"</span>]/smb<span class="
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">smb<span class="fl">.2</span> &lt;-<span class="st"> </span><span class="kw">summary</span>(mb<span class="fl">.2</span>)
 <span class="kw">print</span>(mb<span class="fl">.2</span>)</code></pre></div>
 <pre><code>## Unit: seconds
-##                   expr       min       lq      mean    median        uq
-##  deSolve, not compiled 13.501761 13.52142 13.697021 13.541086 13.794651
-##      deSolve, compiled  1.359921  1.35996  1.366796  1.359999  1.370233
+##                   expr       min        lq     mean    median        uq
+##  deSolve, not compiled 13.464194 13.498471 13.52712 13.532748 13.558577
+##      deSolve, compiled  1.328628  1.342168  1.35224  1.355707  1.364046
 ##        max neval cld
-##  14.048217     3   b
-##   1.380468     3  a</code></pre>
+##  13.584407     3   b
+##   1.372385     3  a</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">smb<span class="fl">.2</span>[<span class="st">"median"</span>]/smb<span class="fl">.2</span>[<span class="st">"deSolve, compiled"</span>, <span class="st">"median"</span>]</code></pre></div>
 <pre><code>##   median
 ## 1     NA
