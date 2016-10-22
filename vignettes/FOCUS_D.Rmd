@@ -10,7 +10,7 @@ output:
 vignette: >
   %\VignetteIndexEntry{Example evaluation of FOCUS Example Dataset D}
   %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
@@ -25,7 +25,7 @@ library we look a the data. We have observed concentrations in the column named
 named `parent` and `m1`.
 
 
-```{r}
+```{r data}
 library("mkin")
 print(FOCUS_2006_D)
 ```
@@ -38,7 +38,7 @@ R code can be found in the character vector `$diffs` of the `mkinmod` object. If
 a C compiler (gcc) is installed and functional, the differential equation model will
 be compiled from auto-generated C code.
 
-```{r}
+```{r model}
 SFO_SFO <- mkinmod(parent = mkinsub("SFO", "m1"), m1 = mkinsub("SFO"))
 print(SFO_SFO$diffs)
 ```
@@ -46,21 +46,21 @@ print(SFO_SFO$diffs)
 We do the fitting without progress report (`quiet = TRUE`).
 
 
-```{r}
+```{r fit}
 fit <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE)
 ```
 
 A plot of the fit including a residual plot for both observed variables is obtained
 using the `plot` method for `mkinfit` objects.
 
-```{r, fig.height = 5}
+```{r plot, fig.height = 5}
 plot(fit, show_residuals = TRUE)
 ```
 
 Confidence intervals for the parameter estimates are obtained using the `mkinparplot` function.
 
 
-```{r, fig.height = 4}
+```{r plot_2, fig.height = 4}
 mkinparplot(fit)
 ```
 
