@@ -6,14 +6,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>transform_odeparms. mkin</title>
+<title>
+ — transform_odeparms • mkin</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
-
 <!-- Bootstrap -->
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -22,6 +22,7 @@
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
+<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
 
 <!-- mathjax -->
@@ -34,10 +35,9 @@
   </head>
 
   <body>
-    <div class="container">
+    <div class="container template-reference-topic">
       <header>
-      
-<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -56,6 +56,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
+      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/jranke/mkin">
@@ -67,27 +68,28 @@
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
+
       
       </header>
 
-      <div class="page-header">
-  <h1>
+      <div class="row">
+  <div class="col-md-9 contents">
+    <div class="page-header">
+    <h1>
 </h1>
-</div>
+    </div>
 
-<div class="row">
-  <div class="col-md-9">
     
     <p>The transformations are intended to map parameters that should only take 
   on restricted values to the full scale of real numbers. For kinetic rate
   constants and other paramters that can only take on positive values, a
   simple log transformation is used. For compositional parameters, such as
   the formations fractions that should always sum up to 1 and can not be
-  negative, the <code>ilr</code> transformation is used.</p>
+  negative, the <code><a href='ilr.html'>ilr</a></code> transformation is used.</p>
 
     <p>The transformation of sets of formation fractions is fragile, as it supposes
   the same ordering of the components in forward and backward transformation.
-  This is no problem for the internal use in <code>mkinfit</code>.</p>
+  This is no problem for the internal use in <code><a href='mkinfit.html'>mkinfit</a></code>.</p>
     
 
     <pre><span class='fu'>transform_odeparms</span>(<span class='no'>parms</span>, <span class='no'>mkinmod</span>,
@@ -95,7 +97,7 @@
 <span class='fu'>backtransform_odeparms</span>(<span class='no'>transparms</span>, <span class='no'>mkinmod</span>,
                        <span class='kw'>transform_rates</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>transform_fractions</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
-    <h2>Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
       <dt>parms</dt>
       <dd>
@@ -107,9 +109,9 @@
   </dd>
       <dt>mkinmod</dt>
       <dd>
-    The kinetic model of class <code>mkinmod</code>, containing the names of
+    The kinetic model of class <code><a href='mkinmod.html'>mkinmod</a></code>, containing the names of
     the model variables that are needed for grouping the formation fractions
-    before <code>ilr</code> transformation, the parameter names and 
+    before <code><a href='ilr.html'>ilr</a></code> transformation, the parameter names and 
     the information if the pathway to sink is included in the model. 
   </dd>
       <dt>transform_rates</dt>
@@ -128,27 +130,29 @@
     assumption of normal distribution of the estimator. The default (TRUE) is 
     to do transformations. The g parameter of the DFOP and HS models are also 
     transformed, as they can also be seen as compositional data. The
-    transformation used for these transformations is the <code>ilr</code>
+    transformation used for these transformations is the <code><a href='ilr.html'>ilr</a></code>
     transformation.
   </dd>
     </dl>
     
-    <div class="Value">
-      <h2>Value</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-      <p>A vector of transformed or backtransformed parameters with the same names
+    <p>A vector of transformed or backtransformed parameters with the same names
   as the original parameters.</p>
-    </div>
     
-    <h2 id="examples">Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinmod</span>(
+
+    <h2 class="hasAnchor" id="examples">
+      <a class="anchor" href="#examples"></a>
+      Examples
+    </h2>
+    <pre class="examples"><div class='input'><span class='no'>SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(
   <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"m1"</span>, <span class='kw'>sink</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>),
   <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>))</div><div class='output'><strong class='text-info'>Successfully compiled differential equation model from auto-generated C code.</strong></div><div class='input'><span class='co'># Fit the model to the FOCUS example dataset D using defaults</span>
-<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='fu'>summary</span>(<span class='no'>fit</span>, <span class='kw'>data</span><span class='kw'>=</span><span class='fl'>FALSE</span>) <span class='co'># See transformed and backtransformed parameters</span></div><div class='output co'>#&gt; mkin version:    0.9.44.9000 
 #&gt; R version:       3.3.1 
-#&gt; Date of fit:     Thu Oct  6 10:47:45 2016 
-#&gt; Date of summary: Thu Oct  6 10:47:45 2016 
+#&gt; Date of fit:     Wed Oct 26 23:16:59 2016 
+#&gt; Date of summary: Wed Oct 26 23:16:59 2016 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent = - k_parent_sink * parent - k_parent_m1 * parent
@@ -156,7 +160,7 @@
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted with method Port using 153 model solutions performed in 0.638 s
+#&gt; Fitted with method Port using 153 model solutions performed in 0.721 s
 #&gt; 
 #&gt; Weighting: none
 #&gt; 
@@ -259,7 +263,16 @@
 <span class='co'># summary(fit.ff.2, data = FALSE)</span>
 <span class='co'>## ---------------------------------------------</span></div></pre>
   </div>
-  <div class="col-md-3">
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+    <h2>Contents</h2>
+    <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#value">Value</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
+
     <h2>Author</h2>
     
   Johannes Ranke
@@ -268,7 +281,14 @@
 </div>
 
       <footer>
-      <p>Built by <a href="http://hadley.github.io/pkgdown/">pkgdown</a>. Styled with <a href="http://getbootstrap.com">Bootstrap 3</a>.</p>
+      <div class="copyright">
+  <p>Developed by Johannes Ranke, Eurofins Regulatory AG.</p>
+</div>
+
+<div class="pkgdown">
+  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+</div>
+
       </footer>
    </div>
 

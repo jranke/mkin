@@ -6,14 +6,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>add_err. mkin</title>
+<title>
+ — add_err • mkin</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
-
 <!-- Bootstrap -->
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -22,6 +22,7 @@
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
+<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
 
 <!-- mathjax -->
@@ -34,10 +35,9 @@
   </head>
 
   <body>
-    <div class="container">
+    <div class="container template-reference-topic">
       <header>
-      
-<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -56,6 +56,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
+      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/jranke/mkin">
@@ -67,19 +68,20 @@
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
+
       
       </header>
 
-      <div class="page-header">
-  <h1>
+      <div class="row">
+  <div class="col-md-9 contents">
+    <div class="page-header">
+    <h1>
 </h1>
-</div>
+    </div>
 
-<div class="row">
-  <div class="col-md-9">
     
     <p>Normally distributed errors are added to data predicted for a specific
-  degradation model using <code>mkinpredict</code>. The variance of the error
+  degradation model using <code><a href='mkinpredict.html'>mkinpredict</a></code>. The variance of the error
   may depend on the predicted value and is specified as a standard deviation.</p>
     
 
@@ -87,11 +89,11 @@
           <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>LOD</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>reps</span> <span class='kw'>=</span> <span class='fl'>2</span>,
           <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>NA</span>)</pre>
     
-    <h2>Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
       <dt>prediction</dt>
       <dd>
-    A prediction from a kinetic model as produced by <code>mkinpredict</code>.
+    A prediction from a kinetic model as produced by <code><a href='mkinpredict.html'>mkinpredict</a></code>.
   </dd>
       <dt>sdfunc</dt>
       <dd>
@@ -123,31 +125,31 @@
   </dd>
     </dl>
     
-    <div class="Value">
-      <h2>Value</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-      <p>A list of datasets compatible with <code>mmkin</code>, i.e.
+    <p>A list of datasets compatible with <code><a href='mmkin.html'>mmkin</a></code>, i.e.
   the components of the list are datasets compatible with 
-  <code>mkinfit</code>.</p>
-    </div>
-
-    <div class="References">
-      <h2>References</h2>
-
-      <p>Ranke J and Lehmann R (2015) To t-test or not to t-test, that is the question. XV Symposium on Pesticide Chemistry 2-4 September 2015, Piacenza, Italy
-  http://chem.uft.uni-bremen.de/ranke/posters/piacenza_2015.pdf</p>
-    </div>
+  <code><a href='mkinfit.html'>mkinfit</a></code>.</p>
     
-    <h2 id="examples">Examples</h2>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Ranke J and Lehmann R (2015) To t-test or not to t-test, that is the question. XV Symposium on Pesticide Chemistry 2-4 September 2015, Piacenza, Italy
+  http://chem.uft.uni-bremen.de/ranke/posters/piacenza_2015.pdf</p>
+    
+
+    <h2 class="hasAnchor" id="examples">
+      <a class="anchor" href="#examples"></a>
+      Examples
+    </h2>
     <pre class="examples"><div class='input'><span class='co'># The kinetic model</span>
-<span class='no'>m_SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinmod</span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'>mkinsub</span>(<span class='st'>"SFO"</span>, <span class='st'>"M1"</span>),
-                     <span class='kw'>M1</span> <span class='kw'>=</span> <span class='fu'>mkinsub</span>(<span class='st'>"SFO"</span>), <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output'><strong class='text-info'>Successfully compiled differential equation model from auto-generated C code.</strong></div><div class='input'>
+<span class='no'>m_SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"M1"</span>),
+                     <span class='kw'>M1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output'><strong class='text-info'>Successfully compiled differential equation model from auto-generated C code.</strong></div><div class='input'>
 <span class='co'># Generate a prediction for a specific set of parameters</span>
 <span class='no'>sampling_times</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>7</span>, <span class='fl'>14</span>, <span class='fl'>28</span>, <span class='fl'>60</span>, <span class='fl'>90</span>, <span class='fl'>120</span>)
 
 <span class='co'># This is the prediction used for the "Type 2 datasets" on the Piacenza poster</span>
 <span class='co'># from 2015</span>
-<span class='no'>d_SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinpredict</span>(<span class='no'>m_SFO_SFO</span>,
+<span class='no'>d_SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinpredict.html'>mkinpredict</a></span>(<span class='no'>m_SFO_SFO</span>,
                          <span class='fu'>c</span>(<span class='kw'>k_parent</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>f_parent_to_M1</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
                            <span class='kw'>k_M1</span> <span class='kw'>=</span> <span class='fu'>log</span>(<span class='fl'>2</span>)/<span class='fl'>1000</span>),
                          <span class='fu'>c</span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>M1</span> <span class='kw'>=</span> <span class='fl'>0</span>),
@@ -165,21 +167,32 @@
 <span class='co'># Be quiet and use the faster Levenberg-Marquardt algorithm, as the datasets</span>
 <span class='co'># are easy and examples are run often. Use only one core not to offend CRAN</span>
 <span class='co'># checks</span>
-<span class='no'>f_SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mmkin</span>(<span class='fu'>list</span>(<span class='st'>"SFO-SFO"</span> <span class='kw'>=</span> <span class='no'>m_SFO_SFO</span>),
+<span class='no'>f_SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span>(<span class='fu'>list</span>(<span class='st'>"SFO-SFO"</span> <span class='kw'>=</span> <span class='no'>m_SFO_SFO</span>),
                    <span class='no'>d_SFO_SFO_err</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>,
                    <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>method.modFit</span> <span class='kw'>=</span> <span class='st'>"Marq"</span>)
 
-<span class='fu'>plot</span>(<span class='no'>f_SFO_SFO</span>)</div><img src='unknown-4.png' alt='' width='540' height='400' /><div class='input'>
+<span class='fu'>plot</span>(<span class='no'>f_SFO_SFO</span>)</div><img src='add_err-4.png' alt='' width='540' height='400' /><div class='input'>
 <span class='co'># We would like to inspect the fit for dataset 3 more closely</span>
 <span class='co'># Using double brackets makes the returned object an mkinfit object</span>
 <span class='co'># instead of a list of mkinfit objects, so plot.mkinfit is used</span>
-<span class='fu'>plot</span>(<span class='no'>f_SFO_SFO</span><span class='kw'>[[</span><span class='fl'>3</span>]], <span class='kw'>show_residuals</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><img src='unknown-6.png' alt='' width='540' height='400' /><div class='input'>
+<span class='fu'>plot</span>(<span class='no'>f_SFO_SFO</span><span class='kw'>[[</span><span class='fl'>3</span>]], <span class='kw'>show_residuals</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><img src='add_err-6.png' alt='' width='540' height='400' /><div class='input'>
 <span class='co'># If we use single brackets, we should give two indices (model and dataset),</span>
 <span class='co'># and plot.mmkin is used</span>
-<span class='fu'>plot</span>(<span class='no'>f_SFO_SFO</span>[<span class='fl'>1</span>, <span class='fl'>3</span>])</div><img src='unknown-8.png' alt='' width='540' height='400' /><div class='input'>
+<span class='fu'>plot</span>(<span class='no'>f_SFO_SFO</span>[<span class='fl'>1</span>, <span class='fl'>3</span>])</div><img src='add_err-8.png' alt='' width='540' height='400' /><div class='input'>
 </div></pre>
   </div>
-  <div class="col-md-3">
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+    <h2>Contents</h2>
+    <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#value">Value</a></li>
+
+      <li><a href="#references">References</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
+
     <h2>Author</h2>
     
   Johannes Ranke
@@ -188,7 +201,14 @@
 </div>
 
       <footer>
-      <p>Built by <a href="http://hadley.github.io/pkgdown/">pkgdown</a>. Styled with <a href="http://getbootstrap.com">Bootstrap 3</a>.</p>
+      <div class="copyright">
+  <p>Developed by Johannes Ranke, Eurofins Regulatory AG.</p>
+</div>
+
+<div class="pkgdown">
+  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+</div>
+
       </footer>
    </div>
 

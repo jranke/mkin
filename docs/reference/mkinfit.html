@@ -6,14 +6,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>mkinfit. mkin</title>
+<title>
+ — mkinfit • mkin</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
-
 <!-- Bootstrap -->
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -22,6 +22,7 @@
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
+<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
 
 <!-- mathjax -->
@@ -34,10 +35,9 @@
   </head>
 
   <body>
-    <div class="container">
+    <div class="container template-reference-topic">
       <header>
-      
-<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -56,6 +56,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
+      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/jranke/mkin">
@@ -67,16 +68,17 @@
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
+
       
       </header>
 
-      <div class="page-header">
-  <h1>
+      <div class="row">
+  <div class="col-md-9 contents">
+    <div class="page-header">
+    <h1>
 </h1>
-</div>
+    </div>
 
-<div class="row">
-  <div class="col-md-9">
     
     <p>This function uses the Flexible Modelling Environment package
   <code>FME</code> to create a function calculating the model cost, i.e. the 
@@ -86,7 +88,7 @@
   Per default, parameters in the kinetic models are internally transformed in order 
   to better satisfy the assumption of a normal distribution of their estimators.
   In each step of the optimsation, the kinetic model is solved using the
-  function <code>mkinpredict</code>. The variance of the residuals for each
+  function <code><a href='mkinpredict.html'>mkinpredict</a></code>. The variance of the residuals for each
   observed variable can optionally be iteratively reweighted until convergence
   using the argument <code>reweight.method = &quot;obs&quot;</code>.</p>
     
@@ -111,11 +113,11 @@
   <span class='kw'>reweight.tol</span> <span class='kw'>=</span> <span class='fl'>1e-8</span>, <span class='kw'>reweight.max.iter</span> <span class='kw'>=</span> <span class='fl'>10</span>,
   <span class='kw'>trace_parms</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
-    <h2>Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
       <dt>mkinmod</dt>
       <dd>
-    A list of class <code>mkinmod</code>, containing the kinetic model to be
+    A list of class <code><a href='mkinmod.html'>mkinmod</a></code>, containing the kinetic model to be
     fitted to the data, or one of the shorthand names (&quot;SFO&quot;, &quot;FOMC&quot;, &quot;DFOP&quot;,
     &quot;HS&quot;, &quot;SFORB&quot;). If a shorthand name is given, a parent only degradation
     model is generated for the variable with the highest value in
@@ -151,7 +153,7 @@
     A named vector of initial values for the state variables of the model. In
     case the observed variables are represented by more than one model
     variable, the names will differ from the names of the observed variables
-    (see <code>map</code> component of <code>mkinmod</code>). The default is to set
+    (see <code>map</code> component of <code><a href='mkinmod.html'>mkinmod</a></code>). The default is to set
     the initial value of the first model variable to the mean of the time zero
     values for the variable with the maximum observed value, and all others to 0.
     If this variable has no time zero observations, its initial value is set to 100.
@@ -187,18 +189,18 @@
     otherwise &quot;eigen&quot; if the model can be expressed using eigenvalues and
     eigenvectors, and finally &quot;deSolve&quot; for the remaining models (time
     dependence of degradation rates and metabolites). This argument is passed
-    on to the helper function <code>mkinpredict</code>.
+    on to the helper function <code><a href='mkinpredict.html'>mkinpredict</a></code>.
   </dd>
       <dt>method.ode</dt>
       <dd>
-    The solution method passed via <code>mkinpredict</code> to
+    The solution method passed via <code><a href='mkinpredict.html'>mkinpredict</a></code> to
     <code>ode</code> in case the solution type is &quot;deSolve&quot;. The default
     &quot;lsoda&quot; is performant, but sometimes fails to converge.
   </dd>
       <dt>use_compiled</dt>
       <dd>
-    If set to <code>FALSE</code>, no compiled version of the <code>mkinmod</code> 
-    model is used, in the calls to <code>mkinpredict</code> even if
+    If set to <code>FALSE</code>, no compiled version of the <code><a href='mkinmod.html'>mkinmod</a></code> 
+    model is used, in the calls to <code><a href='mkinpredict.html'>mkinpredict</a></code> even if
     a compiled verion is present. 
   </dd>
       <dt>method.modFit</dt>
@@ -251,7 +253,7 @@
     to do transformations. If TRUE, the g parameter of the DFOP and HS
     models are also transformed, as they can also be seen as compositional
     data. The transformation used for these transformations is the
-    <code>ilr</code> transformation.
+    <code><a href='ilr.html'>ilr</a></code> transformation.
   </dd>
       <dt>plot</dt>
       <dd>
@@ -290,7 +292,7 @@
       <dt>n.outtimes</dt>
       <dd>
     The length of the dataseries that is produced by the model prediction
-    function <code>mkinpredict</code>. This impacts the accuracy of
+    function <code><a href='mkinpredict.html'>mkinpredict</a></code>. This impacts the accuracy of
     the numerical solver if that is used (see <code>solution_type</code> argument. 
     The default value is 100.
   </dd>
@@ -324,54 +326,50 @@
   </dd>
     </dl>
     
-    <div class="Value">
-      <h2>Value</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-      <p>A list with &quot;mkinfit&quot; and &quot;modFit&quot; in the class attribute. 
-  A summary can be obtained by <code>summary.mkinfit</code>.</p>
-    </div>
+    <p>A list with &quot;mkinfit&quot; and &quot;modFit&quot; in the class attribute. 
+  A summary can be obtained by <code><a href='summary.mkinfit.html'>summary.mkinfit</a></code>.</p>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class="See also">
-      <h2>See also</h2>
+    <p>Plotting methods <code><a href='plot.mkinfit.html'>plot.mkinfit</a></code> and
+  <code><a href='mkinparplot.html'>mkinparplot</a></code>.</p>
+    <p>Fitting of several models to several datasets in a single call to 
+  <code><a href='mmkin.html'>mmkin</a></code>.</p>
+    
+    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
-      <p>Plotting methods <code>plot.mkinfit</code> and
-  <code>mkinparplot</code>.</p>
-      <p>Fitting of several models to several datasets in a single call to 
-  <code>mmkin</code>.</p>
-    </div>
-
-    <div class="Note">
-      <h2>Note</h2>
-
-      <p>The implementation of iteratively reweighted least squares is inspired by the
+    <p>The implementation of iteratively reweighted least squares is inspired by the
   work of the KinGUII team at Bayer Crop Science (Walter Schmitt and Zhenglei
   Gao). A similar implemention can also be found in CAKE 2.0, which is the
   other GUI derivative of mkin, sponsored by Syngenta.</p>
-    </div>
+    
+    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
-    <div class="Note">
-      <h2>Note</h2>
-
-      <p>When using the &quot;IORE&quot; submodel for metabolites, fitting with 
+    <p>When using the &quot;IORE&quot; submodel for metabolites, fitting with 
   &quot;transform_rates = TRUE&quot; (the default) often leads to failures of the
   numerical ODE solver. In this situation it may help to switch off the
   internal rate transformation.</p>
-    </div>
     
-    <h2 id="examples">Examples</h2>
+
+    <h2 class="hasAnchor" id="examples">
+      <a class="anchor" href="#examples"></a>
+      Examples
+    </h2>
     <pre class="examples"><div class='input'><span class='co'># Use shorthand notation for parent only degradation</span>
 <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='st'>"FOMC"</span>, <span class='no'>FOCUS_2006_C</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='fu'>summary</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; mkin version:    0.9.44.9000 
 #&gt; R version:       3.3.1 
-#&gt; Date of fit:     Thu Oct  6 10:47:36 2016 
-#&gt; Date of summary: Thu Oct  6 10:47:36 2016 
+#&gt; Date of fit:     Wed Oct 26 23:16:49 2016 
+#&gt; Date of summary: Wed Oct 26 23:16:49 2016 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent = - (alpha/beta) * 1/((time/beta) + 1) * parent
 #&gt; 
 #&gt; Model predictions using solution type analytical 
 #&gt; 
-#&gt; Fitted with method Port using 64 model solutions performed in 0.152 s
+#&gt; Fitted with method Port using 64 model solutions performed in 0.148 s
 #&gt; 
 #&gt; Weighting: none
 #&gt; 
@@ -436,15 +434,15 @@
 #&gt; </div><div class='input'>
 <span class='co'># One parent compound, one metabolite, both single first order.</span>
 <span class='co'># Use mkinsub for convenience in model formulation. Pathway to sink included per default.</span>
-<span class='no'>SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinmod</span>(
-  <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'>mkinsub</span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>),
-  <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'>mkinsub</span>(<span class='st'>"SFO"</span>))</div><div class='output'><strong class='text-info'>Successfully compiled differential equation model from auto-generated C code.</strong></div><div class='input'><span class='co'># Fit the model to the FOCUS example dataset D using defaults</span>
+<span class='no'>SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(
+  <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>),
+  <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))</div><div class='output'><strong class='text-info'>Successfully compiled differential equation model from auto-generated C code.</strong></div><div class='input'><span class='co'># Fit the model to the FOCUS example dataset D using defaults</span>
 <span class='fu'>print</span>(<span class='fu'>system.time</span>(<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>,
                            <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"eigen"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   1.240   1.280   0.973 
+#&gt;   1.224   1.196   0.913 
 #&gt; </div><div class='input'><span class='fu'>coef</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt;          parent_0 log_k_parent_sink   log_k_parent_m1     log_k_m1_sink 
 #&gt;          99.59848          -3.03822          -2.98030          -5.24750 
-#&gt; </div><div class='input'><span class='fu'>endpoints</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; $ff
+#&gt; </div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; $ff
 #&gt; parent_sink   parent_m1     m1_sink 
 #&gt;    0.485524    0.514476    1.000000 
 #&gt; 
@@ -514,7 +512,22 @@
 <span class='co'># summary(f.w.man.irls)</span>
 <span class='co'>## ---------------------------------------------</span></div></pre>
   </div>
-  <div class="col-md-3">
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+    <h2>Contents</h2>
+    <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#value">Value</a></li>
+
+      <li><a href="#see-also">See also</a></li>
+
+      <li><a href="#note">Note</a></li>
+
+      <li><a href="#note">Note</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
+
     <h2>Author</h2>
     
   Johannes Ranke
@@ -523,7 +536,14 @@
 </div>
 
       <footer>
-      <p>Built by <a href="http://hadley.github.io/pkgdown/">pkgdown</a>. Styled with <a href="http://getbootstrap.com">Bootstrap 3</a>.</p>
+      <div class="copyright">
+  <p>Developed by Johannes Ranke, Eurofins Regulatory AG.</p>
+</div>
+
+<div class="pkgdown">
+  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+</div>
+
       </footer>
    </div>
 

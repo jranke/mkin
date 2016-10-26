@@ -6,14 +6,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>mkinpredict. mkin</title>
+<title>
+ — mkinpredict • mkin</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
-
 <!-- Bootstrap -->
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -22,6 +22,7 @@
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
+<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
 
 <!-- mathjax -->
@@ -34,10 +35,9 @@
   </head>
 
   <body>
-    <div class="container">
+    <div class="container template-reference-topic">
       <header>
-      
-<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -56,6 +56,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
+      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/jranke/mkin">
@@ -67,19 +68,20 @@
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
+
       
       </header>
 
-      <div class="page-header">
-  <h1>
+      <div class="row">
+  <div class="col-md-9 contents">
+    <div class="page-header">
+    <h1>
 </h1>
-</div>
+    </div>
 
-<div class="row">
-  <div class="col-md-9">
     
     <p>This function produces a time series for all the observed variables in a
-  kinetic model as specified by <code>mkinmod</code>, using a specific set of
+  kinetic model as specified by <code><a href='mkinmod.html'>mkinmod</a></code>, using a specific set of
   kinetic parameters and initial values for the state variables.</p>
     
 
@@ -87,11 +89,11 @@
               <span class='kw'>use_compiled</span> <span class='kw'>=</span> <span class='st'>"auto"</span>, <span class='kw'>method.ode</span> <span class='kw'>=</span> <span class='st'>"lsoda"</span>, <span class='kw'>atol</span> <span class='kw'>=</span> <span class='fl'>1e-08</span>, <span class='kw'>rtol</span> <span class='kw'>=</span> <span class='fl'>1e-10</span>,
         <span class='kw'>map_output</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
     
-    <h2>Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
       <dt>mkinmod</dt>
       <dd>
-    A kinetic model as produced by <code>mkinmod</code>.
+    A kinetic model as produced by <code><a href='mkinmod.html'>mkinmod</a></code>.
   </dd>
       <dt>odeparms</dt>
       <dd>
@@ -125,7 +127,7 @@
   </dd>
       <dt>use_compiled</dt>
       <dd>
-    If set to <code>FALSE</code>, no compiled version of the <code>mkinmod</code> 
+    If set to <code>FALSE</code>, no compiled version of the <code><a href='mkinmod.html'>mkinmod</a></code> 
     model is used, even if is present. 
   </dd>
       <dt>atol</dt>
@@ -149,14 +151,16 @@
   </dd>
     </dl>
     
-    <div class="Value">
-      <h2>Value</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-      <p>A matrix in the same format as the output of <code>ode</code>.</p>
-    </div>
+    <p>A matrix in the same format as the output of <code>ode</code>.</p>
     
-    <h2 id="examples">Examples</h2>
-    <pre class="examples"><div class='input'>  <span class='no'>SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinmod</span>(<span class='kw'>degradinol</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>))
+
+    <h2 class="hasAnchor" id="examples">
+      <a class="anchor" href="#examples"></a>
+      Examples
+    </h2>
+    <pre class="examples"><div class='input'>  <span class='no'>SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>degradinol</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>))
   <span class='co'># Compare solution types</span>
   <span class='fu'>mkinpredict</span>(<span class='no'>SFO</span>, <span class='fu'>c</span>(<span class='kw'>k_degradinol_sink</span> <span class='kw'>=</span> <span class='fl'>0.3</span>), <span class='fu'>c</span>(<span class='kw'>degradinol</span> <span class='kw'>=</span> <span class='fl'>100</span>), <span class='fl'>0</span>:<span class='fl'>20</span>,
               <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"analytical"</span>)</div><div class='output co'>#&gt;    time  degradinol
@@ -277,31 +281,40 @@
 #&gt; 2001   20  0.2478752
 #&gt; </div><div class='input'>
   <span class='co'># Check compiled model versions - they are faster than the eigenvalue based solutions!</span>
-  <span class='no'>SFO_SFO</span> <span class='kw'>=</span> <span class='fu'>mkinmod</span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"m1"</span>),
+  <span class='no'>SFO_SFO</span> <span class='kw'>=</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"m1"</span>),
                     <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>))</div><div class='output'><strong class='text-info'>Successfully compiled differential equation model from auto-generated C code.</strong></div><div class='input'>  <span class='fu'>system.time</span>(
     <span class='fu'>print</span>(<span class='fu'>mkinpredict</span>(<span class='no'>SFO_SFO</span>, <span class='fu'>c</span>(<span class='kw'>k_parent_m1</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>k_parent_sink</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>k_m1_sink</span> <span class='kw'>=</span> <span class='fl'>0.01</span>),
                 <span class='fu'>c</span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fl'>0</span>), <span class='fu'>seq</span>(<span class='fl'>0</span>, <span class='fl'>20</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>0.1</span>),
                 <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"eigen"</span>)[<span class='fl'>201</span>,]))</div><div class='output co'>#&gt;     time   parent       m1
 #&gt; 201   20 4.978707 27.46227
 #&gt; </div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   0.008   0.020   0.004 
+#&gt;   0.008   0.024   0.004 
 #&gt; </div><div class='input'>  <span class='fu'>system.time</span>(
     <span class='fu'>print</span>(<span class='fu'>mkinpredict</span>(<span class='no'>SFO_SFO</span>, <span class='fu'>c</span>(<span class='kw'>k_parent_m1</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>k_parent_sink</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>k_m1_sink</span> <span class='kw'>=</span> <span class='fl'>0.01</span>),
                 <span class='fu'>c</span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fl'>0</span>), <span class='fu'>seq</span>(<span class='fl'>0</span>, <span class='fl'>20</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>0.1</span>),
                 <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"deSolve"</span>)[<span class='fl'>201</span>,]))</div><div class='output co'>#&gt;     time   parent       m1
 #&gt; 201   20 4.978707 27.46227
 #&gt; </div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   0.016   0.004   0.003 
+#&gt;   0.000   0.020   0.002 
 #&gt; </div><div class='input'>  <span class='fu'>system.time</span>(
     <span class='fu'>print</span>(<span class='fu'>mkinpredict</span>(<span class='no'>SFO_SFO</span>, <span class='fu'>c</span>(<span class='kw'>k_parent_m1</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>k_parent_sink</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>k_m1_sink</span> <span class='kw'>=</span> <span class='fl'>0.01</span>),
                 <span class='fu'>c</span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fl'>0</span>), <span class='fu'>seq</span>(<span class='fl'>0</span>, <span class='fl'>20</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>0.1</span>),
                 <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"deSolve"</span>, <span class='kw'>use_compiled</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)[<span class='fl'>201</span>,]))</div><div class='output co'>#&gt;     time   parent       m1
 #&gt; 201   20 4.978707 27.46227
 #&gt; </div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   0.032   0.000   0.034 
+#&gt;   0.036   0.000   0.035 
 #&gt; </div></pre>
   </div>
-  <div class="col-md-3">
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+    <h2>Contents</h2>
+    <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#value">Value</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
+
     <h2>Author</h2>
     
   Johannes Ranke
@@ -310,7 +323,14 @@
 </div>
 
       <footer>
-      <p>Built by <a href="http://hadley.github.io/pkgdown/">pkgdown</a>. Styled with <a href="http://getbootstrap.com">Bootstrap 3</a>.</p>
+      <div class="copyright">
+  <p>Developed by Johannes Ranke, Eurofins Regulatory AG.</p>
+</div>
+
+<div class="pkgdown">
+  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+</div>
+
       </footer>
    </div>
 
