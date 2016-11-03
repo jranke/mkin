@@ -36,8 +36,8 @@ at the package vignettes
 
 ## Documentation
 
-The [HTML documentation](http://kinfit.r-forge.r-project.org/mkin_static) is
-maintained at the R-Forge project site.
+The [HTML documentation](http://jranke.github.io/mkin) is
+maintained at the github project site.
 
 ## Features
 
