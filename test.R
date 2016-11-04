@@ -1,33 +1,45 @@
 library(pkgdown)
+library(testthat)
 
-debug(pkgdown:::as_pkgdown)
 debug(pkgdown:::topic_index)
-debug(pkgdown:::package_rd) # creates rd object (list of Rd file representations)
-
-
-undebug(pkgdown:::rd_file) # creates rd file representations
 
 build_reference_index(".")
 
 extract_tag(rd[[1]], "tag_title") # gives "\n"
 extract_tag(rd[[4]], "tag_title") # gives the title
 
+extract_tag(rd[[1]], "tag_alias") # one aliase
+extract_tag(rd[[13]], "tag_alias") # two aliases
+
 library(magrittr)
-library(stringr)
-extract_tag_local <- function(x, tag) {
+
+extract_tag_1 <- function(x, tag) {
   x %>%
     purrr::keep(inherits, tag) %>%
     unlist %>%
     paste(collapse = "") %>%
-    str_trim 
+    trimws
 }
 
-extract_tag_local(rd[[1]], "tag_title")
-extract_tag_local(rd[[4]], "tag_title")
+extract_tag <- function(x, tag) {
+  x %>%
+    purrr::keep(inherits, tag) %>%
+    purrr::map_chr(c(1, 1))
+}
 
+extract_tag_1 <- function(x, tag) {
+  x %>%
+    purrr::keep(inherits, tag) %>%
+    purrr::map_chr(function(x) trimws(paste(x, collapse = " ")))
+}
 
-titles <- purrr::map_chr(rd, extract_tag, "tag_title")
+subset(rd[[1]][[1]], 
 
-titles <- purrr::map_chr(rd, extract_tag_local, "tag_title")
+sapply(extract_tag_1(rd[[1]], "tag_title"), function(x) trimws(paste(x, collapse = " ")))
 
-rd[[2]]
+extract_tag_1(rd[[1]], "tag_title")
+extract_tag_1(rd[[4]], "tag_title")
+
+extract_tag_1(rd[[1]], "tag_alias") # one aliase
+extract_tag_1(rd[[13]], "tag_alias") # two aliases
+
