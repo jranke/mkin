@@ -86,19 +86,14 @@ vignettes/%.html: vignettes/mkin_vignettes.css vignettes/%.Rmd
 
 vignettes: vignettes/mkin.html vignettes/FOCUS_D.html vignettes/FOCUS_L.html vignettes/FOCUS_Z.pdf vignettes/compiled_models.html
 
-sd:
-	"$(RBIN)/Rscript" -e "staticdocs::build_site()"
-	git add -A
-	git commit -m 'Static documentation rebuilt by staticdocs::build_site()' -e
-
 pd:
 	"$(RBIN)/Rscript" -e "pkgdown::build_site()"
 	git add -A
 	git commit -m 'Static documentation rebuilt by pkgdown::build_site()' -e
 
-r-forge: sd
+r-forge: pd
 	rm -rf $(SDDIR)/*
-	cp -a doc/* $(SDDIR)
+	cp -a docs/* $(SDDIR)
 	cd $(SDDIR) && svn add --force .
 	git archive master > $(HOME)/mkin.tar;\
 	cd $(RFDIR) && rm -r `ls` && tar -xf $(HOME)/mkin.tar;\
