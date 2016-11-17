@@ -41,7 +41,7 @@
       <h1>Example evaluation of FOCUS Laboratory Data L1 to L3</h1>
                         <h4 class="author">Johannes Ranke</h4>
             
-            <h4 class="date">2016-11-04</h4>
+            <h4 class="date">2016-11-17</h4>
           </div>
 
     
@@ -53,7 +53,7 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"mkin"</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
 FOCUS_2006_L1 =<span class="st"> </span><span class="kw">data.frame</span>(
   <span class="dt">t =</span> <span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">7</span>, <span class="dv">14</span>, <span class="dv">21</span>, <span class="dv">30</span>), <span class="dt">each =</span> <span class="dv">2</span>),
-  <span class="dt">parent =</span> <span class="kw">c</span>(<span class="fl">88.3</span>, <span class="fl">91.4</span>, <span class="fl">85.6</span>, <span class="fl">84.5</span>, <span class="fl">78.9</span>, <span class="fl">77.6</span>, 
+  <span class="dt">parent =</span> <span class="kw">c</span>(<span class="fl">88.3</span>, <span class="fl">91.4</span>, <span class="fl">85.6</span>, <span class="fl">84.5</span>, <span class="fl">78.9</span>, <span class="fl">77.6</span>,
              <span class="fl">72.0</span>, <span class="fl">71.9</span>, <span class="fl">50.3</span>, <span class="fl">59.4</span>, <span class="fl">47.0</span>, <span class="fl">45.1</span>,
              <span class="fl">27.7</span>, <span class="fl">27.3</span>, <span class="fl">10.0</span>, <span class="fl">10.4</span>, <span class="fl">2.9</span>, <span class="fl">4.0</span>))
 FOCUS_2006_L1_mkin &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkin_wide_to_long.html">mkin_wide_to_long</a></span>(FOCUS_2006_L1)</code></pre></div>
@@ -63,15 +63,15 @@ FOCUS_2006_L1_mkin &lt;-<span class="st"> </span><span class="kw"><a href="../re
 <span class="kw">summary</span>(m.L1.SFO)</code></pre></div>
 <pre><code>## mkin version:    0.9.44.9000 
 ## R version:       3.3.2 
-## Date of fit:     Fri Nov  4 17:13:56 2016 
-## Date of summary: Fri Nov  4 17:13:56 2016 
+## Date of fit:     Thu Nov 17 22:58:18 2016 
+## Date of summary: Thu Nov 17 22:58:18 2016 
 ## 
 ## Equations:
-## d_parent = - k_parent_sink * parent
+## d_parent/dt = - k_parent_sink * parent
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted with method Port using 37 model solutions performed in 0.089 s
+## Fitted with method Port using 37 model solutions performed in 0.103 s
 ## 
 ## Weighting: none
 ## 
@@ -156,8 +156,8 @@ FOCUS_2006_L1_mkin &lt;-<span class="st"> </span><span class="kw"><a href="../re
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(m.L1.FOMC, <span class="dt">data =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <pre><code>## mkin version:    0.9.44.9000 
 ## R version:       3.3.2 
-## Date of fit:     Fri Nov  4 17:13:57 2016 
-## Date of summary: Fri Nov  4 17:13:57 2016 
+## Date of fit:     Thu Nov 17 22:58:19 2016 
+## Date of summary: Thu Nov 17 22:58:19 2016 
 ## 
 ## 
 ## Warning: Optimisation by method Port did not converge.
@@ -165,11 +165,11 @@ FOCUS_2006_L1_mkin &lt;-<span class="st"> </span><span class="kw"><a href="../re
 ## 
 ## 
 ## Equations:
-## d_parent = - (alpha/beta) * 1/((time/beta) + 1) * parent
+## d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted with method Port using 188 model solutions performed in 0.444 s
+## Fitted with method Port using 188 model solutions performed in 0.462 s
 ## 
 ## Weighting: none
 ## 
@@ -221,7 +221,7 @@ FOCUS_2006_L1_mkin &lt;-<span class="st"> </span><span class="kw"><a href="../re
 ## parent 7.25 24.08     7.25</code></pre>
 <p>We get a warning that the default optimisation algorithm <code>Port</code> did not converge, which is an indication that the model is overparameterised, <em>i.e.</em> contains too many parameters that are ill-defined as a consequence.</p>
 <p>And in fact, due to the higher number of parameters, and the lower number of degrees of freedom of the fit, the <span class="math inline">\(\chi^2\)</span> error level is actually higher for the FOMC model (3.6%) than for the SFO model (3.4%). Additionally, the parameters <code>log_alpha</code> and <code>log_beta</code> internally fitted in the model have excessive confidence intervals, that span more than 25 orders of magnitude (!) when backtransformed to the scale of <code>alpha</code> and <code>beta</code>. Also, the t-test for significant difference from zero does not indicate such a significant difference, with p-values greater than 0.1, and finally, the parameter correlation of <code>log_alpha</code> and <code>log_beta</code> is 1.000, clearly indicating that the model is overparameterised.</p>
-<p>The <span class="math inline">\(\chi^2\)</span> error levels reported in Appendix 3 and Appendix 7 to the FOCUS kinetics report are rounded to integer percentages and partly deviate by one percentage point from the results calculated by mkin. The reason for this is not known. However, mkin gives the same <span class="math inline">\(\chi^2\)</span> error levels as the kinfit package and the calculation routines of the kinfit package have been extensively compared to the results obtained by the KinGUI software, as documented in the kinfit package vignette. KinGUI was the first widely used standard package in this field. Also, the calculation of <span class="math inline">\(\chi^2\)</span> error levels was compared with KinGUII, CAKE and DegKin manager in a project sponsored by the German Umweltbundesamt <span class="citation">(Ranke, n.d.)</span>.</p>
+<p>The <span class="math inline">\(\chi^2\)</span> error levels reported in Appendix 3 and Appendix 7 to the FOCUS kinetics report are rounded to integer percentages and partly deviate by one percentage point from the results calculated by mkin. The reason for this is not known. However, mkin gives the same <span class="math inline">\(\chi^2\)</span> error levels as the kinfit package and the calculation routines of the kinfit package have been extensively compared to the results obtained by the KinGUI software, as documented in the kinfit package vignette. KinGUI was the first widely used standard package in this field. Also, the calculation of <span class="math inline">\(\chi^2\)</span> error levels was compared with KinGUII, CAKE and DegKin manager in a project sponsored by the German Umweltbundesamt <span class="citation">(Ranke 2014)</span>.</p>
 </div>
 <div id="laboratory-data-l2" class="section level1">
 <h1 class="hasAnchor"><html><body><a href="#laboratory-data-l2" class="anchor"> </a></body></html>Laboratory Data L2</h1>
@@ -236,7 +236,7 @@ FOCUS_2006_L2_mkin &lt;-<span class="st"> </span><span class="kw"><a href="../re
 <h2 class="hasAnchor"><html><body><a href="#sfo-fit-for-l2" class="anchor"> </a></body></html>SFO fit for L2</h2>
 <p>Again, the SFO model is fitted and the result is plotted. The residual plot can be obtained simply by adding the argument <code>show_residuals</code> to the plot command.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m.L2.SFO &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkinfit.html">mkinfit</a></span>(<span class="st">"SFO"</span>, FOCUS_2006_L2_mkin, <span class="dt">quiet=</span><span class="ot">TRUE</span>)
-<span class="kw">plot</span>(m.L2.SFO, <span class="dt">show_residuals =</span> <span class="ot">TRUE</span>, <span class="dt">show_errmin =</span> <span class="ot">TRUE</span>, 
+<span class="kw">plot</span>(m.L2.SFO, <span class="dt">show_residuals =</span> <span class="ot">TRUE</span>, <span class="dt">show_errmin =</span> <span class="ot">TRUE</span>,
      <span class="dt">main =</span> <span class="st">"FOCUS L2 - SFO"</span>)</code></pre></div>
 <p><img src="FOCUS_L_files/figure-html/unnamed-chunk-8-1.png" width="672"></p>
 <p>The <span class="math inline">\(\chi^2\)</span> error level of 14% suggests that the model does not fit very well. This is also obvious from the plots of the fit, in which we have included the residual plot.</p>
@@ -253,15 +253,15 @@ FOCUS_2006_L2_mkin &lt;-<span class="st"> </span><span class="kw"><a href="../re
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(m.L2.FOMC, <span class="dt">data =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <pre><code>## mkin version:    0.9.44.9000 
 ## R version:       3.3.2 
-## Date of fit:     Fri Nov  4 17:13:58 2016 
-## Date of summary: Fri Nov  4 17:13:58 2016 
+## Date of fit:     Thu Nov 17 22:58:20 2016 
+## Date of summary: Thu Nov 17 22:58:20 2016 
 ## 
 ## Equations:
-## d_parent = - (alpha/beta) * 1/((time/beta) + 1) * parent
+## d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted with method Port using 81 model solutions performed in 0.194 s
+## Fitted with method Port using 81 model solutions performed in 0.195 s
 ## 
 ## Weighting: none
 ## 
@@ -323,17 +323,17 @@ FOCUS_2006_L2_mkin &lt;-<span class="st"> </span><span class="kw"><a href="../re
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(m.L2.DFOP, <span class="dt">data =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <pre><code>## mkin version:    0.9.44.9000 
 ## R version:       3.3.2 
-## Date of fit:     Fri Nov  4 17:13:59 2016 
-## Date of summary: Fri Nov  4 17:13:59 2016 
+## Date of fit:     Thu Nov 17 22:58:21 2016 
+## Date of summary: Thu Nov 17 22:58:21 2016 
 ## 
 ## Equations:
-## d_parent = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *
-##            time)) / (g * exp(-k1 * time) + (1 - g) * exp(-k2 *
-##            time))) * parent
+## d_parent/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) *
+##            exp(-k2 * time)) / (g * exp(-k1 * time) + (1 - g) *
+##            exp(-k2 * time))) * parent
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted with method Port using 336 model solutions performed in 0.82 s
+## Fitted with method Port using 336 model solutions performed in 0.882 s
 ## 
 ## Weighting: none
 ## 
@@ -412,17 +412,17 @@ mm.L3 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mmkin
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(mm.L3[[<span class="st">"DFOP"</span>, <span class="dv">1</span>]])</code></pre></div>
 <pre><code>## mkin version:    0.9.44.9000 
 ## R version:       3.3.2 
-## Date of fit:     Fri Nov  4 17:14:00 2016 
-## Date of summary: Fri Nov  4 17:14:00 2016 
+## Date of fit:     Thu Nov 17 22:58:22 2016 
+## Date of summary: Thu Nov 17 22:58:22 2016 
 ## 
 ## Equations:
-## d_parent = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *
-##            time)) / (g * exp(-k1 * time) + (1 - g) * exp(-k2 *
-##            time))) * parent
+## d_parent/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) *
+##            exp(-k2 * time)) / (g * exp(-k1 * time) + (1 - g) *
+##            exp(-k2 * time))) * parent
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted with method Port using 137 model solutions performed in 0.336 s
+## Fitted with method Port using 137 model solutions performed in 0.338 s
 ## 
 ## Weighting: none
 ## 
@@ -504,7 +504,7 @@ FOCUS_2006_L4_mkin &lt;-<span class="st"> </span><span class="kw"><a href="../re
 <p>Fits of the SFO and FOMC models, plots and summaries are produced below:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Only use one core here, not to offend the CRAN checks</span>
 mm.L4 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mmkin.html">mmkin</a></span>(<span class="kw">c</span>(<span class="st">"SFO"</span>, <span class="st">"FOMC"</span>), <span class="dt">cores =</span> <span class="dv">1</span>,
-               <span class="kw">list</span>(<span class="st">"FOCUS L4"</span> =<span class="st"> </span>FOCUS_2006_L4_mkin), 
+               <span class="kw">list</span>(<span class="st">"FOCUS L4"</span> =<span class="st"> </span>FOCUS_2006_L4_mkin),
                <span class="dt">quiet =</span> <span class="ot">TRUE</span>)
 <span class="kw">plot</span>(mm.L4)</code></pre></div>
 <p><img src="FOCUS_L_files/figure-html/unnamed-chunk-15-1.png" width="672"></p>
@@ -512,11 +512,11 @@ mm.L4 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mmkin
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(mm.L4[[<span class="st">"SFO"</span>, <span class="dv">1</span>]], <span class="dt">data =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <pre><code>## mkin version:    0.9.44.9000 
 ## R version:       3.3.2 
-## Date of fit:     Fri Nov  4 17:14:01 2016 
-## Date of summary: Fri Nov  4 17:14:01 2016 
+## Date of fit:     Thu Nov 17 22:58:22 2016 
+## Date of summary: Thu Nov 17 22:58:23 2016 
 ## 
 ## Equations:
-## d_parent = - k_parent_sink * parent
+## d_parent/dt = - k_parent_sink * parent
 ## 
 ## Model predictions using solution type analytical 
 ## 
@@ -572,15 +572,15 @@ mm.L4 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mmkin
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(mm.L4[[<span class="st">"FOMC"</span>, <span class="dv">1</span>]], <span class="dt">data =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <pre><code>## mkin version:    0.9.44.9000 
 ## R version:       3.3.2 
-## Date of fit:     Fri Nov  4 17:14:01 2016 
-## Date of summary: Fri Nov  4 17:14:01 2016 
+## Date of fit:     Thu Nov 17 22:58:23 2016 
+## Date of summary: Thu Nov 17 22:58:23 2016 
 ## 
 ## Equations:
-## d_parent = - (alpha/beta) * 1/((time/beta) + 1) * parent
+## d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted with method Port using 66 model solutions performed in 0.162 s
+## Fitted with method Port using 66 model solutions performed in 0.151 s
 ## 
 ## Weighting: none
 ## 
@@ -635,7 +635,7 @@ mm.L4 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mmkin
 <h1 class="hasAnchor"><html><body><a href="#references" class="anchor"> </a></body></html>References</h1>
 <div id="refs" class="references">
 <div id="ref-ranke2014">
-<p>Ranke, Johannes. n.d. &ldquo;Pr&uuml;fung und Validierung von Modellierungssoftware als Alternative zu ModelMaker 4.0.&rdquo; Umweltbundesamt Projektnummer 27452.</p>
+<p>Ranke, Johannes. 2014. &ldquo;Pr&uuml;fung und Validierung von Modellierungssoftware als Alternative zu ModelMaker 4.0.&rdquo; Umweltbundesamt Projektnummer 27452.</p>
 </div>
 </div>
 </div>

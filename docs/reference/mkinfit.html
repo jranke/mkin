@@ -82,11 +82,11 @@
 
     
     <p>This function uses the Flexible Modelling Environment package
-  <code>FME</code> to create a function calculating the model cost, i.e. the 
+  <code>FME</code> to create a function calculating the model cost, i.e. the
   deviation between the kinetic model and the observed data. This model cost is
-  then minimised using the Port algorithm <code>nlminb</code>, 
+  then minimised using the Port algorithm <code>nlminb</code>,
   using the specified initial or fixed parameters and starting values.
-  Per default, parameters in the kinetic models are internally transformed in order 
+  Per default, parameters in the kinetic models are internally transformed in order
   to better satisfy the assumption of a normal distribution of their estimators.
   In each step of the optimsation, the kinetic model is solved using the
   function <code><a href='mkinpredict.html'>mkinpredict</a></code>. The variance of the residuals for each
@@ -200,13 +200,13 @@
   </dd>
       <dt>use_compiled</dt>
       <dd>
-    If set to <code>FALSE</code>, no compiled version of the <code><a href='mkinmod.html'>mkinmod</a></code> 
+    If set to <code>FALSE</code>, no compiled version of the <code><a href='mkinmod.html'>mkinmod</a></code>
     model is used, in the calls to <code><a href='mkinpredict.html'>mkinpredict</a></code> even if
-    a compiled verion is present. 
+    a compiled verion is present.
   </dd>
       <dt>method.modFit</dt>
       <dd>
-    The optimisation method passed to <code>modFit</code>.  
+    The optimisation method passed to <code>modFit</code>.
 
     In order to optimally deal with problems where local minima occur, the
     &quot;Port&quot; algorithm is now used per default as it is less prone to get trapped
@@ -228,20 +228,20 @@
       <dt>maxit.modFit</dt>
       <dd>
     Maximum number of iterations in the optimisation. If not &quot;auto&quot;, this will
-    be passed to the method called by <code>modFit</code>, overriding 
+    be passed to the method called by <code>modFit</code>, overriding
     what may be specified in the next argument <code>control.modFit</code>.
   </dd>
       <dt>control.modFit</dt>
       <dd>
     Additional arguments passed to the optimisation method used by
-    <code>modFit</code>. 
+    <code>modFit</code>.
   </dd>
       <dt>transform_rates</dt>
       <dd>
     Boolean specifying if kinetic rate constants should be transformed in the
     model specification used in the fitting for better compliance with the
-    assumption of normal distribution of the estimator. If TRUE, also 
-    alpha and beta parameters of the FOMC model are log-transformed, as well 
+    assumption of normal distribution of the estimator. If TRUE, also
+    alpha and beta parameters of the FOMC model are log-transformed, as well
     as k1 and k2 rate constants for the DFOP and HS models and the break point
     tb of the HS model.
     If FALSE, zero is used as a lower bound for the rates in the optimisation.
@@ -250,7 +250,7 @@
       <dd>
     Boolean specifying if formation fractions constants should be transformed in the
     model specification used in the fitting for better compliance with the
-    assumption of normal distribution of the estimator. The default (TRUE) is 
+    assumption of normal distribution of the estimator. The default (TRUE) is
     to do transformations. If TRUE, the g parameter of the DFOP and HS
     models are also transformed, as they can also be seen as compositional
     data. The transformation used for these transformations is the
@@ -294,7 +294,7 @@
       <dd>
     The length of the dataseries that is produced by the model prediction
     function <code><a href='mkinpredict.html'>mkinpredict</a></code>. This impacts the accuracy of
-    the numerical solver if that is used (see <code>solution_type</code> argument. 
+    the numerical solver if that is used (see <code>solution_type</code> argument.
     The default value is 100.
   </dd>
       <dt>reweight.method</dt>
@@ -302,9 +302,9 @@
     The method used for iteratively reweighting residuals, also known
     as iteratively reweighted least squares (IRLS). Default is NULL,
     the other method implemented is called &quot;obs&quot;, meaning that each
-    observed variable is assumed to have its own variance, this is 
+    observed variable is assumed to have its own variance, this is
     estimated from the fit and used for weighting the residuals
-    in each iteration until convergence of this estimate up to 
+    in each iteration until convergence of this estimate up to
     <code>reweight.tol</code> or up to the maximum number of iterations
     specified by <code>reweight.max.iter</code>.
   </dd>
@@ -323,20 +323,20 @@
   </dd>
       <dt>&amp;#8230;</dt>
       <dd>
-    Further arguments that will be passed to <code>modFit</code>. 
+    Further arguments that will be passed to <code>modFit</code>.
   </dd>
     </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list with &quot;mkinfit&quot; and &quot;modFit&quot; in the class attribute. 
+    <p>A list with &quot;mkinfit&quot; and &quot;modFit&quot; in the class attribute.
   A summary can be obtained by <code><a href='summary.mkinfit.html'>summary.mkinfit</a></code>.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <p>Plotting methods <code><a href='plot.mkinfit.html'>plot.mkinfit</a></code> and
   <code><a href='mkinparplot.html'>mkinparplot</a></code>.</p>
-    <p>Fitting of several models to several datasets in a single call to 
+    <p>Fitting of several models to several datasets in a single call to
   <code><a href='mmkin.html'>mmkin</a></code>.</p>
     
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
@@ -348,7 +348,7 @@
     
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
-    <p>When using the &quot;IORE&quot; submodel for metabolites, fitting with 
+    <p>When using the &quot;IORE&quot; submodel for metabolites, fitting with
   &quot;transform_rates = TRUE&quot; (the default) often leads to failures of the
   numerical ODE solver. In this situation it may help to switch off the
   internal rate transformation.</p>
@@ -359,15 +359,15 @@
 <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='st'>"FOMC"</span>, <span class='no'>FOCUS_2006_C</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='fu'>summary</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; mkin version:    0.9.44.9000 
 #&gt; R version:       3.3.2 
-#&gt; Date of fit:     Fri Nov  4 17:12:35 2016 
-#&gt; Date of summary: Fri Nov  4 17:12:35 2016 
+#&gt; Date of fit:     Thu Nov 17 22:56:57 2016 
+#&gt; Date of summary: Thu Nov 17 22:56:57 2016 
 #&gt; 
 #&gt; Equations:
-#&gt; d_parent = - (alpha/beta) * 1/((time/beta) + 1) * parent
+#&gt; d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent
 #&gt; 
 #&gt; Model predictions using solution type analytical 
 #&gt; 
-#&gt; Fitted with method Port using 64 model solutions performed in 0.147 s
+#&gt; Fitted with method Port using 64 model solutions performed in 0.158 s
 #&gt; 
 #&gt; Weighting: none
 #&gt; 
@@ -436,7 +436,7 @@
   <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='co'># Fit the model to the FOCUS example dataset D using defaults</span>
 <span class='fu'>print</span>(<span class='fu'>system.time</span>(<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>,
                            <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"eigen"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   1.208   1.256   0.935 </div><div class='input'><span class='fu'>coef</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt;          parent_0 log_k_parent_sink   log_k_parent_m1     log_k_m1_sink 
+#&gt;   1.168   1.260   0.924 </div><div class='input'><span class='fu'>coef</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt;          parent_0 log_k_parent_sink   log_k_parent_m1     log_k_m1_sink 
 #&gt;          99.59848          -3.03822          -2.98030          -5.24750 </div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; $ff
 #&gt; parent_sink   parent_m1     m1_sink 
 #&gt;    0.485524    0.514476    1.000000 
@@ -450,7 +450,7 @@
 #&gt; m1     131.760712 437.69961
 #&gt; </div><div class='input'><span class='co'>## Not run: ------------------------------------</span>
 <span class='co'># # deSolve is slower when no C compiler (gcc) was available during model generation</span>
-<span class='co'># print(system.time(fit.deSolve &lt;- mkinfit(SFO_SFO, FOCUS_2006_D, </span>
+<span class='co'># print(system.time(fit.deSolve &lt;- mkinfit(SFO_SFO, FOCUS_2006_D,</span>
 <span class='co'>#                            solution_type = "deSolve")))</span>
 <span class='co'># coef(fit.deSolve)</span>
 <span class='co'># endpoints(fit.deSolve)</span>
@@ -465,7 +465,7 @@
 <span class='co'># fit.FOMC_SFO &lt;- mkinfit(FOMC_SFO, FOCUS_2006_D)</span>
 <span class='co'># # Use starting parameters from parent only FOMC fit</span>
 <span class='co'># fit.FOMC = mkinfit("FOMC", FOCUS_2006_D, plot=TRUE)</span>
-<span class='co'># fit.FOMC_SFO &lt;- mkinfit(FOMC_SFO, FOCUS_2006_D, </span>
+<span class='co'># fit.FOMC_SFO &lt;- mkinfit(FOMC_SFO, FOCUS_2006_D,</span>
 <span class='co'>#   parms.ini = fit.FOMC$bparms.ode, plot=TRUE)</span>
 <span class='co'># </span>
 <span class='co'># # Use stepwise fitting, using optimised parameters from parent only fit, SFORB</span>

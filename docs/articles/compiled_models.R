@@ -15,12 +15,12 @@ SFO_SFO <- mkinmod(
 library("microbenchmark")
 library("ggplot2")
 mb.1 <- microbenchmark(
-  "deSolve, not compiled" = mkinfit(SFO_SFO, FOCUS_2006_D, 
-                                    solution_type = "deSolve", 
+  "deSolve, not compiled" = mkinfit(SFO_SFO, FOCUS_2006_D,
+                                    solution_type = "deSolve",
                                     use_compiled = FALSE, quiet = TRUE),
-  "Eigenvalue based" = mkinfit(SFO_SFO, FOCUS_2006_D, 
+  "Eigenvalue based" = mkinfit(SFO_SFO, FOCUS_2006_D,
                                solution_type = "eigen", quiet = TRUE),
-  "deSolve, compiled" = mkinfit(SFO_SFO, FOCUS_2006_D, 
+  "deSolve, compiled" = mkinfit(SFO_SFO, FOCUS_2006_D,
                                 solution_type = "deSolve", quiet = TRUE),
   times = 3, control = list(warmup = 0))
 
@@ -38,7 +38,7 @@ FOMC_SFO <- mkinmod(
   m1 = mkinsub( "SFO"))
 
 mb.2 <- microbenchmark(
-  "deSolve, not compiled" = mkinfit(FOMC_SFO, FOCUS_2006_D, 
+  "deSolve, not compiled" = mkinfit(FOMC_SFO, FOCUS_2006_D,
                                     use_compiled = FALSE, quiet = TRUE),
   "deSolve, compiled" = mkinfit(FOMC_SFO, FOCUS_2006_D, quiet = TRUE),
   times = 3, control = list(warmup = 0))

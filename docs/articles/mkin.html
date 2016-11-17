@@ -41,7 +41,7 @@
       <h1>mkin - Kinetic evaluation of chemical degradation data</h1>
                         <h4 class="author">Johannes Ranke</h4>
             
-            <h4 class="date">2016-11-04</h4>
+            <h4 class="date">2016-11-17</h4>
           </div>
 
     
@@ -51,25 +51,33 @@
 <div id="abstract" class="section level1">
 <h1 class="hasAnchor"><html><body><a href="#abstract" class="anchor"> </a></body></html>Abstract</h1>
 <p>In the regulatory evaluation of chemical substances like plant protection products (pesticides), biocides and other chemicals, degradation data play an important role. For the evaluation of pesticide degradation experiments, detailed guidance has been developed, based on nonlinear optimisation. The <code>R</code> add-on package <code>mkin</code> <span class="citation">(Ranke 2016)</span> implements fitting some of the models recommended in this guidance from within R and calculates some statistical measures for data series within one or more compartments, for parent and metabolites.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">require</span>(mkin)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(mkin)
+<span class="co"># Define the kinetic model</span>
 m_SFO_SFO_SFO &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkinmod.html">mkinmod</a></span>(<span class="dt">parent =</span> <span class="kw"><a href="../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"M1"</span>),
                          <span class="dt">M1 =</span> <span class="kw"><a href="../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"M2"</span>),
-                         <span class="dt">M2 =</span> <span class="kw"><a href="../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>), 
+                         <span class="dt">M2 =</span> <span class="kw"><a href="../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>),
                          <span class="dt">use_of_ff =</span> <span class="st">"max"</span>, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)
 
-sampling_times =<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">14</span>, <span class="dv">28</span>, <span class="dv">60</span>, <span class="dv">90</span>, <span class="dv">120</span>)
 
+<span class="co"># Produce model predictions using some arbitrary parameters</span>
+sampling_times =<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">14</span>, <span class="dv">28</span>, <span class="dv">60</span>, <span class="dv">90</span>, <span class="dv">120</span>)
 d_SFO_SFO_SFO &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkinpredict.html">mkinpredict</a></span>(m_SFO_SFO_SFO,
-  <span class="kw">c</span>(<span class="dt">k_parent =</span> <span class="fl">0.03</span>, 
-    <span class="dt">f_parent_to_M1 =</span> <span class="fl">0.5</span>, <span class="dt">k_M1 =</span> <span class="kw">log</span>(<span class="dv">2</span>)/<span class="dv">100</span>, 
+  <span class="kw">c</span>(<span class="dt">k_parent =</span> <span class="fl">0.03</span>,
+    <span class="dt">f_parent_to_M1 =</span> <span class="fl">0.5</span>, <span class="dt">k_M1 =</span> <span class="kw">log</span>(<span class="dv">2</span>)/<span class="dv">100</span>,
     <span class="dt">f_M1_to_M2 =</span> <span class="fl">0.9</span>, <span class="dt">k_M2 =</span> <span class="kw">log</span>(<span class="dv">2</span>)/<span class="dv">50</span>),
   <span class="kw">c</span>(<span class="dt">parent =</span> <span class="dv">100</span>, <span class="dt">M1 =</span> <span class="dv">0</span>, <span class="dt">M2 =</span> <span class="dv">0</span>),
   sampling_times)
 
-d_SFO_SFO_SFO_err &lt;-<span class="st"> </span><span class="kw"><a href="../reference/add_err.html">add_err</a></span>(d_SFO_SFO_SFO, function(x) <span class="dv">3</span>, <span class="dt">n =</span> <span class="dv">1</span>, <span class="dt">seed =</span> <span class="dv">123456789</span> )
+<span class="co"># Generate a dataset by adding normally distributed errors with</span>
+<span class="co"># standard deviation 3, for two replicates at each sampling time</span>
+d_SFO_SFO_SFO_err &lt;-<span class="st"> </span><span class="kw"><a href="../reference/add_err.html">add_err</a></span>(d_SFO_SFO_SFO, <span class="dt">reps =</span> <span class="dv">2</span>,
+                             <span class="dt">sdfunc =</span> function(x) <span class="dv">3</span>,
+                             <span class="dt">n =</span> <span class="dv">1</span>, <span class="dt">seed =</span> <span class="dv">123456789</span> )
 
+<span class="co"># Fit the model to the dataset</span>
 f_SFO_SFO_SFO &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkinfit.html">mkinfit</a></span>(m_SFO_SFO_SFO, d_SFO_SFO_SFO_err[[<span class="dv">1</span>]], <span class="dt">quiet =</span> <span class="ot">TRUE</span>)
 
+<span class="co"># Plot the results separately for parent and metabolites</span>
 <span class="kw"><a href="../reference/plot.mkinfit.html">plot_sep</a></span>(f_SFO_SFO_SFO, <span class="dt">lpos =</span> <span class="kw">c</span>(<span class="st">"topright"</span>, <span class="st">"bottomright"</span>, <span class="st">"bottomright"</span>))</code></pre></div>
 <p><img src="mkin_files/figure-html/unnamed-chunk-2-1.png" width="768"></p>
 </div>
@@ -129,13 +137,13 @@ f_SFO_SFO_SFO &lt;-<span class="st"> </span><span class="kw"><a href="../referen
 <p>&mdash;&mdash;&mdash;. 2014. <em>Generic Guidance for Estimating Persistence and Degradation Kinetics from Environmental Fate Studies on Pesticides in Eu Registration</em>. 1.1 ed. <a href="http://focus.jrc.ec.europa.eu/dk" class="uri">http://focus.jrc.ec.europa.eu/dk</a>.</p>
 </div>
 <div id="ref-rcore2016">
-<p>R Development Core Team. 2016. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="http://www.R-project.org" class="uri">http://www.R-project.org</a>.</p>
+<p>R Development Core Team. 2016. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org" class="uri">https://www.R-project.org</a>.</p>
 </div>
 <div id="ref-pkg:kinfit">
-<p>Ranke, J. 2015. <em>&lsquo;Kinfit&lsquo;: Routines for Fitting Simple Kinetic Models to Chemical Degradation Data</em>. <a href="http://CRAN.R-project.org/package=kinfit" class="uri">http://CRAN.R-project.org/package=kinfit</a>.</p>
+<p>Ranke, J. 2015. <em>&lsquo;Kinfit&lsquo;: Routines for Fitting Simple Kinetic Models to Chemical Degradation Data</em>. <a href="https://CRAN.R-project.org/package=kinfit" class="uri">https://CRAN.R-project.org/package=kinfit</a>.</p>
 </div>
 <div id="ref-pkg:mkin">
-<p>&mdash;&mdash;&mdash;. 2016. <em>&lsquo;Mkin&lsquo;: Kinetic Evaluation of Chemical Degradation Data</em>. <a href="http://CRAN.R-project.org/package=mkin" class="uri">http://CRAN.R-project.org/package=mkin</a>.</p>
+<p>&mdash;&mdash;&mdash;. 2016. <em>&lsquo;Mkin&lsquo;: Kinetic Evaluation of Chemical Degradation Data</em>. <a href="https://CRAN.R-project.org/package=mkin" class="uri">https://CRAN.R-project.org/package=mkin</a>.</p>
 </div>
 <div id="ref-ranke2012">
 <p>Ranke, J., and R. Lehmann. 2012. &ldquo;Parameter Reliability in Kinetic Evaluation of Environmental Metabolism Data - Assessment and the Influence of Model Specification.&rdquo; In <em>SETAC World 20-24 May</em>. Berlin.</p>
