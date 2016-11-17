@@ -1,6 +1,6 @@
 # mkin
 
-[![](http://www.r-pkg.org/badges/version/mkin)](http://cran.r-project.org/package=mkin)
+[![](http://www.r-pkg.org/badges/version/mkin)](https://cran.r-project.org/package=mkin)
 
 The R package **mkin** provides calculation routines for the analysis of
 chemical degradation data, including <b>m</b>ulticompartment <b>kin</b>etics as
@@ -10,7 +10,7 @@ if several compartments are involved.
 ## Installation
 
 You can install the latest released version from 
-[CRAN](http://cran.r-project.org/package=mkin) from within R:
+[CRAN](https://cran.r-project.org/package=mkin) from within R:
 
 ```r
 install.packages("mkin")
@@ -121,7 +121,7 @@ BayerCropScience, which is based on the MatLab runtime environment.
 The companion package 
 [kinfit](http://kinfit.r-forge.r-project.org/kinfit_static/index.html) (now deprecated) was 
 [started in 2008](https://r-forge.r-project.org/scm/viewvc.php?view=rev&root=kinfit&revision=2) and 
-[first published](http://cran.r-project.org/src/contrib/Archive/kinfit/) on
+[first published](https://cran.r-project.org/src/contrib/Archive/kinfit/) on
 CRAN on 01 May 2010.
 
 The first `mkin` code was 
@@ -140,7 +140,7 @@ Somewhat in parallel, Syngenta has sponsored the development of an `mkin` and
 KinGUII based GUI application called CAKE, which also adds IRLS and MCMC, is
 more limited in the model formulation, but puts more weight on usability.
 CAKE is available for download from the [CAKE
-website](http://projects.tessella.com/cake), where you can also
+website](http://showcase.tessella.com/products/cake), where you can also
 find a zip archive of the R scripts derived from `mkin`, published under the GPL
 license.
 
