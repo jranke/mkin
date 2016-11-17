@@ -5,7 +5,8 @@ date: "`r Sys.Date()`"
 output:
   html_document:
     toc: true
-    toc_float: true
+    toc_float:
+      collapsed: false
     mathjax: null
     fig_retina: null
 references:
@@ -16,7 +17,8 @@ references:
   - family: Ranke
     given: Johannes
   type: report
-  year: 2014
+  issued:
+    year: 2014
   number: "Umweltbundesamt Projektnummer 27452"
 vignette: >
   %\VignetteIndexEntry{Example evaluation of FOCUS Laboratory Data L1 to L3}
@@ -38,7 +40,7 @@ report, p. 284:
 library("mkin", quietly = TRUE)
 FOCUS_2006_L1 = data.frame(
   t = rep(c(0, 1, 2, 3, 5, 7, 14, 21, 30), each = 2),
-  parent = c(88.3, 91.4, 85.6, 84.5, 78.9, 77.6, 
+  parent = c(88.3, 91.4, 85.6, 84.5, 78.9, 77.6,
              72.0, 71.9, 50.3, 59.4, 47.0, 45.1,
              27.7, 27.3, 10.0, 10.4, 2.9, 4.0))
 FOCUS_2006_L1_mkin <- mkin_wide_to_long(FOCUS_2006_L1)
@@ -52,7 +54,7 @@ FOCUS kinetics report.
 Since mkin version 0.9-32 (July 2014), we can use shorthand notation like `"SFO"`
 for parent only degradation models. The following two lines fit the model and
 produce the summary report of the model fit. This covers the numerical analysis
-given in the FOCUS report. 
+given in the FOCUS report.
 
 ```{r}
 m.L1.SFO <- mkinfit("SFO", FOCUS_2006_L1_mkin, quiet = TRUE)
@@ -81,7 +83,7 @@ summary(m.L1.FOMC, data = FALSE)
 ```
 
 We get a warning that the default optimisation algorithm `Port` did not converge, which
-is an indication that the model is overparameterised, *i.e.* contains too many 
+is an indication that the model is overparameterised, *i.e.* contains too many
 parameters that are ill-defined as a consequence.
 
 And in fact, due to the higher number of parameters, and the lower number of
@@ -92,7 +94,7 @@ excessive confidence intervals, that span more than 25 orders of magnitude (!)
 when backtransformed to the scale of `alpha` and `beta`. Also, the t-test
 for significant difference from zero does not indicate such a significant difference,
 with p-values greater than 0.1, and finally, the parameter correlation of `log_alpha`
-and `log_beta` is 1.000, clearly indicating that the model is overparameterised. 
+and `log_beta` is 1.000, clearly indicating that the model is overparameterised.
 
 The $\chi^2$ error levels reported in Appendix 3 and Appendix 7 to the FOCUS
 kinetics report are rounded to integer percentages and partly deviate by one
@@ -102,7 +104,7 @@ as the kinfit package and the calculation routines of the kinfit package have
 been extensively compared to the results obtained by the KinGUI
 software, as documented in the kinfit package vignette. KinGUI was the first
 widely used standard package in this field. Also, the calculation of
-$\chi^2$ error levels was compared with KinGUII, CAKE and DegKin manager in 
+$\chi^2$ error levels was compared with KinGUII, CAKE and DegKin manager in
 a project sponsored by the German Umweltbundesamt [@ranke2014].
 
 # Laboratory Data L2
@@ -127,19 +129,19 @@ command.
 
 ```{r fig.width = 7, fig.height = 6}
 m.L2.SFO <- mkinfit("SFO", FOCUS_2006_L2_mkin, quiet=TRUE)
-plot(m.L2.SFO, show_residuals = TRUE, show_errmin = TRUE, 
+plot(m.L2.SFO, show_residuals = TRUE, show_errmin = TRUE,
      main = "FOCUS L2 - SFO")
 ```
 
 The $\chi^2$ error level of 14% suggests that the model does not fit very well.
-This is also obvious from the plots of the fit, in which we have included 
+This is also obvious from the plots of the fit, in which we have included
 the residual plot.
 
 In the FOCUS kinetics report, it is stated that there is no apparent systematic
 error observed from the residual plot up to the measured DT90 (approximately at
 day 5), and there is an underestimation beyond that point.
 
-We may add that it is difficult to judge the random nature of the residuals just 
+We may add that it is difficult to judge the random nature of the residuals just
 from the three samplings at days 0, 1 and 3. Also, it is not clear _a
 priori_ why a consistent underestimation after the approximate DT90 should be
 irrelevant. However, this can be rationalised by the fact that the FOCUS fate
@@ -163,7 +165,7 @@ experimental error has to be assumed in order to explain the data.
 
 ## DFOP fit for L2
 
-Fitting the four parameter DFOP model further reduces the $\chi^2$ error level. 
+Fitting the four parameter DFOP model further reduces the $\chi^2$ error level.
 
 ```{r fig.width = 7, fig.height = 6}
 m.L2.DFOP <- mkinfit("DFOP", FOCUS_2006_L2_mkin, quiet = TRUE)
@@ -172,7 +174,7 @@ plot(m.L2.DFOP, show_residuals = TRUE, show_errmin = TRUE,
 summary(m.L2.DFOP, data = FALSE)
 ```
 
-Here, the DFOP model is clearly the best-fit model for dataset L2 based on the 
+Here, the DFOP model is clearly the best-fit model for dataset L2 based on the
 chi^2 error level criterion. However, the failure to calculate the covariance
 matrix indicates that the parameter estimates correlate excessively. Therefore,
 the FOMC model may be preferred for this dataset.
@@ -191,7 +193,7 @@ FOCUS_2006_L3_mkin <- mkin_wide_to_long(FOCUS_2006_L3)
 
 ## Fit multiple models
 
-As of mkin version 0.9-39 (June 2015), we can fit several models to 
+As of mkin version 0.9-39 (June 2015), we can fit several models to
 one or more datasets in one call to the function `mmkin`. The datasets
 have to be passed in a list, in this case a named list holding only
 the L3 dataset prepared above.
@@ -211,7 +213,7 @@ considerably.
 
 ## Accessing mmkin objects
 
-The objects returned by mmkin are arranged like a matrix, with 
+The objects returned by mmkin are arranged like a matrix, with
 models as a row index and datasets as a column index.
 
 We can extract the summary and plot for *e.g.* the DFOP fit,
@@ -223,14 +225,14 @@ summary(mm.L3[["DFOP", 1]])
 plot(mm.L3[["DFOP", 1]], show_errmin = TRUE)
 ```
 
-Here, a look to the model plot, the confidence intervals of the parameters 
+Here, a look to the model plot, the confidence intervals of the parameters
 and the correlation matrix suggest that the parameter estimates are reliable, and
 the DFOP model can be used as the best-fit model based on the $\chi^2$ error
 level criterion for laboratory data L3.
 
 This is also an example where the standard t-test for the parameter `g_ilr` is
-misleading, as it tests for a significant difference from zero. In this case, 
-zero appears to be the correct value for this parameter, and the confidence 
+misleading, as it tests for a significant difference from zero. In this case,
+zero appears to be the correct value for this parameter, and the confidence
 interval for the backtransformed parameter `g` is quite narrow.
 
 # Laboratory Data L4
@@ -250,7 +252,7 @@ Fits of the SFO and FOMC models, plots and summaries are produced below:
 ```{r fig.height = 6}
 # Only use one core here, not to offend the CRAN checks
 mm.L4 <- mmkin(c("SFO", "FOMC"), cores = 1,
-               list("FOCUS L4" = FOCUS_2006_L4_mkin), 
+               list("FOCUS L4" = FOCUS_2006_L4_mkin),
                quiet = TRUE)
 plot(mm.L4)
 ```
