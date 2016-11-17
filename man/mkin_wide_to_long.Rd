@@ -7,12 +7,12 @@
 mkin_wide_to_long(wide_data, time = "t")
 }
 \description{
-  This function simply takes a dataframe with one independent variable and several 
+  This function simply takes a dataframe with one independent variable and several
   dependent variable and converts it into the long form as required by \code{\link{modCost}}.
 }
 \arguments{
   \item{wide_data}{
-  The dataframe must contain one variable with the time values specified by the 
+  The dataframe must contain one variable with the time values specified by the
   \code{time} argument and usually more than one column of observed values.
 }
   \item{time}{

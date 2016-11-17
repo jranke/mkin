@@ -6,33 +6,33 @@
 }
 \description{
   Solves the differential equations with the optimised and fixed parameters
-  from a previous successful call to \code{\link{mkinfit}} and plots 
+  from a previous successful call to \code{\link{mkinfit}} and plots
   the observed data together with the solution of the fitted model.
 }
 \usage{
 \method{plot}{mkinfit}(x, fit = x,
   obs_vars = names(fit$mkinmod$map),
-  xlab = "Time", ylab = "Observed", 
+  xlab = "Time", ylab = "Observed",
   xlim = range(fit$data$time),
   ylim = "default",
-  col_obs = 1:length(obs_vars), pch_obs = col_obs, 
+  col_obs = 1:length(obs_vars), pch_obs = col_obs,
   lty_obs = rep(1, length(obs_vars)),
   add = FALSE, legend = !add,
   show_residuals = FALSE, maxabs = "auto",
   sep_obs = FALSE, rel.height.middle = 0.9,
-  lpos = "topright", inset = c(0.05, 0.05), 
+  lpos = "topright", inset = c(0.05, 0.05),
   show_errmin = FALSE, errmin_digits = 3, \dots)
 plot_sep(fit, sep_obs = TRUE,  show_residuals = TRUE, show_errmin = TRUE, \dots)
 }
 \arguments{
   \item{x}{
-    Alias for fit introduced for compatibility with the generic S3 method.  
+    Alias for fit introduced for compatibility with the generic S3 method.
   }
   \item{fit}{
     An object of class \code{\link{mkinfit}}.
   }
   \item{obs_vars}{
-    A character vector of names of the observed variables for which the 
+    A character vector of names of the observed variables for which the
     data and the model should be plotted. Defauls to all observed variables
     in the model.
   }
@@ -66,7 +66,7 @@ plot_sep(fit, sep_obs = TRUE,  show_residuals = TRUE, show_errmin = TRUE, \dots)
   \item{show_residuals}{
     Should residuals be shown? If only one plot of the fits is shown, the
     residual plot is in the lower third of the plot? Otherwise, i.e. if
-    "sep_obs" is given, the residual plots will be located to the right of 
+    "sep_obs" is given, the residual plots will be located to the right of
     the plots of the fitted curves.
   }
   \item{maxabs}{

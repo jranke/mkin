@@ -16,8 +16,8 @@
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
 
-add_err = function(prediction, sdfunc, 
-                   n = 1000, LOD = 0.1, reps = 2, 
+add_err = function(prediction, sdfunc,
+                   n = 1000, LOD = 0.1, reps = 2,
                    digits = 1, seed = NA)
 {
   if (!is.na(seed)) set.seed(seed)
@@ -32,7 +32,7 @@ add_err = function(prediction, sdfunc,
   for (i in 1:n) {
     d_rep = data.frame(lapply(d_long, rep, each = 2))
     d_rep$value = rnorm(length(d_rep$value), d_rep$value, sdfunc(d_rep$value))
-         
+
     d_rep[d_rep$time == 0 & d_rep$name %in% c("M1", "M2"), "value"] <- 0
 
     # Set values below the LOD to NA

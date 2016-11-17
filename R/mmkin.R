@@ -19,10 +19,10 @@
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
 
-mmkin <- function(models = c("SFO", "FOMC", "DFOP"), datasets, 
-                  cores = round(detectCores()/2), cluster = NULL, ...) 
+mmkin <- function(models = c("SFO", "FOMC", "DFOP"), datasets,
+                  cores = round(detectCores()/2), cluster = NULL, ...)
 {
-  parent_models_available = c("SFO", "FOMC", "DFOP", "HS", "SFORB", "IORE") 
+  parent_models_available = c("SFO", "FOMC", "DFOP", "HS", "SFORB", "IORE")
   n.m <- length(models)
   n.d <- length(datasets)
   n.fits <- n.m * n.d
@@ -32,10 +32,10 @@ mmkin <- function(models = c("SFO", "FOMC", "DFOP"), datasets,
   if (!all(sapply(models, function(x) inherits(x, "mkinmod")))) {
     if (!all(models %in% parent_models_available)) {
       stop("Please supply models as a list of mkinmod objects or a vector combined of\n  ",
-           paste(parent_models_available, collapse = ", ")) 
+           paste(parent_models_available, collapse = ", "))
     } else {
       names(models) <- models
-    } 
+    }
   } else {
     if (is.null(names(models))) names(models) <- as.character(1:n.m)
   }

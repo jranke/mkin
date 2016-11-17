@@ -23,8 +23,8 @@ mkinparplot <- function(object) {
   if ("g" %in% deparms.optim) fractions.optim <- c("g", fractions.optim)
   rates.optim.unsorted = setdiff(deparms.optim, union(fractions.optim, N.optim))
   rates.optim <- rownames(object$start[rates.optim.unsorted, ])
-  n.plot <- c(state.optim = length(state.optim), 
-              rates.optim = length(rates.optim), 
+  n.plot <- c(state.optim = length(state.optim),
+              rates.optim = length(rates.optim),
 	      N.optim = length(N.optim),
               fractions.optim = length(fractions.optim))
   n.plot <- n.plot[n.plot > 0]
@@ -41,31 +41,31 @@ mkinparplot <- function(object) {
     values <- bpar[parnames]
     values_with_confints <- data.frame(t(subset(data.frame(t(values)), !is.na("Lower"))))
     xlim = switch(type,
-                  state.optim = range(c(0, unlist(values)), 
+                  state.optim = range(c(0, unlist(values)),
                                       na.rm = TRUE, finite = TRUE),
-                  rates.optim = range(c(0, unlist(values)), 
+                  rates.optim = range(c(0, unlist(values)),
                                       na.rm = TRUE, finite = TRUE),
-                  N.optim = range(c(0, 1, unlist(values)), 
+                  N.optim = range(c(0, 1, unlist(values)),
                                       na.rm = TRUE, finite = TRUE),
-                  fractions.optim = range(c(0, 1, unlist(values)), 
+                  fractions.optim = range(c(0, 1, unlist(values)),
                                           na.rm = TRUE, finite = TRUE))
     parname_index <- length(parnames):1 # Reverse order for strip chart
 
-    stripchart(values["Estimate", ][parname_index], 
+    stripchart(values["Estimate", ][parname_index],
                xlim = xlim,
                ylim = c(0.5, length(get(type)) + 0.5),
                yaxt = "n")
     if (type %in% c("rates.optim", "fractions.optim")) abline(v = 0, lty = 2)
     if (type %in% c("N.optim", "fractions.optim")) abline(v = 1, lty = 2)
     position <- ifelse(values["Estimate", ] < mean(xlim), "right", "left")
-    text(ifelse(position == "left", min(xlim), max(xlim)), 
-         parname_index, parnames, 
+    text(ifelse(position == "left", min(xlim), max(xlim)),
+         parname_index, parnames,
          pos = ifelse(position == "left", 4, 2))
 
     values.upper.nonInf <- ifelse(values["Upper", ] == Inf, 1.5 * xlim[[2]], values["Upper", ])
     # Suppress warnings for non-existing arrow lengths
-    suppressWarnings(arrows(as.numeric(values["Lower", ]), parname_index, 
-	   as.numeric(values.upper.nonInf), parname_index, 
+    suppressWarnings(arrows(as.numeric(values["Lower", ]), parname_index,
+	   as.numeric(values.upper.nonInf), parname_index,
 	   code = 3, angle = 90, length = 0.05))
   }
   par(oldpars)

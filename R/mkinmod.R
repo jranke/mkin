@@ -44,7 +44,7 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
 
   # Do not return a coefficient matrix mat when FOMC, IORE, DFOP or HS is used for the parent {{{
   if(spec[[1]]$type %in% c("FOMC", "IORE", "DFOP", "HS")) {
-    mat = FALSE 
+    mat = FALSE
   } else mat = TRUE
   #}}}
 
@@ -60,7 +60,7 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
     if(!spec[[varname]]$type %in% c("SFO", "FOMC", "IORE", "DFOP", "HS", "SFORB")) stop(
       "Available types are SFO, FOMC, IORE, DFOP, HS and SFORB only")
     if(spec[[varname]]$type %in% c("FOMC", "DFOP", "HS") & match(varname, obs_vars) != 1) {
-        stop(paste("Types FOMC, DFOP and HS are only implemented for the first compartment,", 
+        stop(paste("Types FOMC, DFOP and HS are only implemented for the first compartment,",
                    "which is assumed to be the source compartment"))
     }
     #}}}
@@ -109,7 +109,7 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
             decline_term <- paste0(decline_term, "^", N)
           }
         } else { # otherwise no decline term needed here
-          decline_term = "0" 
+          decline_term = "0"
         }
       } else {
         k_compound <- paste("k", box_1, sep = "_")
@@ -156,7 +156,7 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
       } else { # Use formation fractions also for the free compartment
         stop("The maximum use of formation fractions is not supported for SFORB models")
         # The problems were: Calculation of dissipation times did not work in this case
-        # and the coefficient matrix is not generated correctly by the code present 
+        # and the coefficient matrix is not generated correctly by the code present
         # in this file in this case
         f_free_bound <- paste("f", varname, "free", "bound", sep = "_")
         k_bound_free <- paste("k", varname, "bound", "free", sep = "_")
@@ -189,9 +189,9 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
         {
           k_from_to <- paste("k", origin_box, target_box, sep = "_")
           parms <- c(parms, k_from_to)
-          diffs[[origin_box]] <- paste(diffs[[origin_box]], "-", 
+          diffs[[origin_box]] <- paste(diffs[[origin_box]], "-",
             k_from_to, "*", origin_box)
-          diffs[[target_box]] <- paste(diffs[[target_box]], "+", 
+          diffs[[target_box]] <- paste(diffs[[target_box]], "+",
             k_from_to, "*", origin_box)
         } else {
           # Do not introduce a formation fraction if this is the only target
@@ -201,7 +201,7 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
           } else {
             fraction_to_target = paste("f", origin_box, "to", target, sep = "_")
             parms <- c(parms, fraction_to_target)
-            diffs[[target_box]] <- paste(diffs[[target_box]], "+", 
+            diffs[[target_box]] <- paste(diffs[[target_box]], "+",
                 fraction_to_target, "*", decline_term)
           }
         }
@@ -261,7 +261,7 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
             k.candidate = paste("k", from, to, sep = "_")
             # SFORB with maximum use of formation fractions not implemented, see above
             m[to, from] = ifelse(f.candidate %in% model$parms,
-              paste(f.candidate, " * k_", from, sep = ""), 
+              paste(f.candidate, " * k_", from, sep = ""),
               ifelse(k.candidate %in% model$parms, k.candidate, "0"))
             # Special case: singular pathway and no sink
             if (spec[[from]]$sink == FALSE && length(spec[[from]]$to) == 1 && to %in% spec[[from]]$to) {
@@ -317,7 +317,7 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
 
       derivs_sig <- signature(n = "integer", t = "numeric", y = "numeric",
                               f = "numeric", rpar = "numeric", ipar = "integer")
-      
+
       # Declare the time variable in the body of the function if it is used
       derivs_code <- if (spec[[1]]$type %in% c("FOMC", "DFOP", "HS")) {
         paste0("double time = *t;\n", diffs.C)
@@ -369,6 +369,6 @@ print.mkinmod <- function(x, ...) {
     cat("\n")
   }
   if (is.matrix(x$coefmat)) cat("Coefficient matrix $coefmat available\n")
-  if (!is.null(x$cf)) cat("Compiled model $cf available\n")  
+  if (!is.null(x$cf)) cat("Compiled model $cf available\n")
 }
 # vim: set foldmethod=marker ts=2 sw=2 expandtab:

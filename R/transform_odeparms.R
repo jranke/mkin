@@ -17,10 +17,10 @@
 # this program. If not, see <http://www.gnu.org/licenses/>
 
 transform_odeparms <- function(parms, mkinmod,
-                               transform_rates = TRUE, 
-                               transform_fractions = TRUE) 
+                               transform_rates = TRUE,
+                               transform_fractions = TRUE)
 {
-  # We need the model specification for the names of the model 
+  # We need the model specification for the names of the model
   # variables and the information on the sink
   spec = mkinmod$spec
 
@@ -79,7 +79,7 @@ transform_odeparms <- function(parms, mkinmod,
       } else {
         transparms[pname] <- parms[pname]
       }
-    } 
+    }
   }
 
   # DFOP parameter g is treated as a fraction
@@ -99,7 +99,7 @@ backtransform_odeparms <- function(transparms, mkinmod,
                                    transform_rates = TRUE,
                                    transform_fractions = TRUE)
 {
-  # We need the model specification for the names of the model 
+  # We need the model specification for the names of the model
   # variables and the information on the sink
   spec = mkinmod$spec
 

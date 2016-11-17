@@ -7,14 +7,14 @@
 mkin_long_to_wide(long_data, time = "time", outtime = "time")
 }
 \description{
-  This function takes a dataframe in the long form as required by \code{\link{modCost}} 
-  and converts it into a dataframe with one independent variable and several 
+  This function takes a dataframe in the long form as required by \code{\link{modCost}}
+  and converts it into a dataframe with one independent variable and several
   dependent variables as columns.
 }
 \arguments{
   \item{long_data}{
-  The dataframe must contain one variable called "time" with the time values specified by the 
-  \code{time} argument, one column called "name" with the grouping of the observed values, and 
+  The dataframe must contain one variable called "time" with the time values specified by the
+  \code{time} argument, one column called "name" with the grouping of the observed values, and
   finally one column of observed values called "value".
 }
   \item{time}{

@@ -31,7 +31,7 @@
 #' @field data A dataframe with at least the columns name, time and value
 #'   in order to be compatible with mkinfit
 #' @example inst/examples/mkinds.R
-mkinds <- R6Class("mkinds", 
+mkinds <- R6Class("mkinds",
   public = list(
     title = NULL,
     sampling_times = NULL,

@@ -16,12 +16,12 @@
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
 
-plot.mmkin <- function(x, main = "auto", legends = 1, errmin_var = "All data", errmin_digits = 3, 
+plot.mmkin <- function(x, main = "auto", legends = 1, errmin_var = "All data", errmin_digits = 3,
                        cex = 0.7, rel.height.middle = 0.9, ...) {
   n.m <- nrow(x)
   n.d <- ncol(x)
 
-  # We can handle either a row (different models, same dataset) 
+  # We can handle either a row (different models, same dataset)
   # or a column (same model, different datasets)
   if (n.m > 1 & n.d > 1) stop("Please select fits either for one model or for one dataset")
   if (n.m == 1 & n.d == 1) loop_over = "none"
@@ -53,12 +53,12 @@ plot.mmkin <- function(x, main = "auto", legends = 1, errmin_var = "All data", e
     # Margins for top row of plots when we have more than one row
     # Reduce bottom margin by 2.1 - hides x axis legend
     if (i.fit == 1 & n.fits > 1) {
-      par(mar = c(3.0, 4.1, 4.1, 2.1)) 
+      par(mar = c(3.0, 4.1, 4.1, 2.1))
     }
 
     # Margins for middle rows of plots, if any
     if (i.fit > 1 & i.fit < n.fits) {
-      # Reduce top margin by 2 after the first plot as we have no main title, 
+      # Reduce top margin by 2 after the first plot as we have no main title,
       # reduced plot height, therefore we need rel.height.middle in the layout
       par(mar = c(3.0, 4.1, 2.1, 2.1))
     }
@@ -77,7 +77,7 @@ plot.mmkin <- function(x, main = "auto", legends = 1, errmin_var = "All data", e
     fit_name <- switch(loop_over,
                        models = rownames(x)[i.fit],
                        datasets = colnames(x)[i.fit],
-                       none = "") 
+                       none = "")
 
     chi2 <- paste0(signif(100 * mkinerrmin(fit)[errmin_var, "err.min"], errmin_digits), "%")
     mtext(bquote(.(fit_name) ~ chi^2 ~ "error level" == .(chi2)), cex = cex, line = 0.4)

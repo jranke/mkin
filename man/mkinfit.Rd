@@ -5,11 +5,11 @@
 }
 \description{
   This function uses the Flexible Modelling Environment package
-  \code{\link{FME}} to create a function calculating the model cost, i.e. the 
+  \code{\link{FME}} to create a function calculating the model cost, i.e. the
   deviation between the kinetic model and the observed data. This model cost is
-  then minimised using the Port algorithm \code{\link{nlminb}}, 
+  then minimised using the Port algorithm \code{\link{nlminb}},
   using the specified initial or fixed parameters and starting values.
-  Per default, parameters in the kinetic models are internally transformed in order 
+  Per default, parameters in the kinetic models are internally transformed in order
   to better satisfy the assumption of a normal distribution of their estimators.
   In each step of the optimsation, the kinetic model is solved using the
   function \code{\link{mkinpredict}}. The variance of the residuals for each
@@ -17,10 +17,10 @@
   using the argument \code{reweight.method = "obs"}.
 }
 \usage{
-mkinfit(mkinmod, observed, 
+mkinfit(mkinmod, observed,
   parms.ini = "auto",
   state.ini = "auto",
-  fixed_parms = NULL, fixed_initials = names(mkinmod$diffs)[-1], 
+  fixed_parms = NULL, fixed_initials = names(mkinmod$diffs)[-1],
   from_max_mean = FALSE,
   solution_type = c("auto", "analytical", "eigen", "deSolve"),
   method.ode = "lsoda",
@@ -30,9 +30,9 @@ mkinfit(mkinmod, observed,
   control.modFit = list(),
   transform_rates = TRUE,
   transform_fractions = TRUE,
-  plot = FALSE, quiet = FALSE, err = NULL, weight = "none", 
-  scaleVar = FALSE, 
-  atol = 1e-8, rtol = 1e-10, n.outtimes = 100, 
+  plot = FALSE, quiet = FALSE, err = NULL, weight = "none",
+  scaleVar = FALSE,
+  atol = 1e-8, rtol = 1e-10, n.outtimes = 100,
   reweight.method = NULL,
   reweight.tol = 1e-8, reweight.max.iter = 10,
   trace_parms = FALSE, ...)
@@ -112,12 +112,12 @@ mkinfit(mkinmod, observed,
     "lsoda" is performant, but sometimes fails to converge.
   }
   \item{use_compiled}{
-    If set to \code{FALSE}, no compiled version of the \code{\link{mkinmod}} 
+    If set to \code{FALSE}, no compiled version of the \code{\link{mkinmod}}
     model is used, in the calls to \code{\link{mkinpredict}} even if
-    a compiled verion is present. 
+    a compiled verion is present.
   }
   \item{method.modFit}{
-    The optimisation method passed to \code{\link{modFit}}.  
+    The optimisation method passed to \code{\link{modFit}}.
 
     In order to optimally deal with problems where local minima occur, the
     "Port" algorithm is now used per default as it is less prone to get trapped
@@ -138,18 +138,18 @@ mkinfit(mkinmod, observed,
   }
   \item{maxit.modFit}{
     Maximum number of iterations in the optimisation. If not "auto", this will
-    be passed to the method called by \code{\link{modFit}}, overriding 
+    be passed to the method called by \code{\link{modFit}}, overriding
     what may be specified in the next argument \code{control.modFit}.
   }
   \item{control.modFit}{
     Additional arguments passed to the optimisation method used by
-    \code{\link{modFit}}. 
+    \code{\link{modFit}}.
   }
   \item{transform_rates}{
     Boolean specifying if kinetic rate constants should be transformed in the
     model specification used in the fitting for better compliance with the
-    assumption of normal distribution of the estimator. If TRUE, also 
-    alpha and beta parameters of the FOMC model are log-transformed, as well 
+    assumption of normal distribution of the estimator. If TRUE, also
+    alpha and beta parameters of the FOMC model are log-transformed, as well
     as k1 and k2 rate constants for the DFOP and HS models and the break point
     tb of the HS model.
     If FALSE, zero is used as a lower bound for the rates in the optimisation.
@@ -157,7 +157,7 @@ mkinfit(mkinmod, observed,
   \item{transform_fractions}{
     Boolean specifying if formation fractions constants should be transformed in the
     model specification used in the fitting for better compliance with the
-    assumption of normal distribution of the estimator. The default (TRUE) is 
+    assumption of normal distribution of the estimator. The default (TRUE) is
     to do transformations. If TRUE, the g parameter of the DFOP and HS
     models are also transformed, as they can also be seen as compositional
     data. The transformation used for these transformations is the
@@ -193,16 +193,16 @@ mkinfit(mkinmod, observed,
   \item{n.outtimes}{
     The length of the dataseries that is produced by the model prediction
     function \code{\link{mkinpredict}}. This impacts the accuracy of
-    the numerical solver if that is used (see \code{solution_type} argument. 
+    the numerical solver if that is used (see \code{solution_type} argument.
     The default value is 100.
   }
   \item{reweight.method}{
     The method used for iteratively reweighting residuals, also known
     as iteratively reweighted least squares (IRLS). Default is NULL,
     the other method implemented is called "obs", meaning that each
-    observed variable is assumed to have its own variance, this is 
+    observed variable is assumed to have its own variance, this is
     estimated from the fit and used for weighting the residuals
-    in each iteration until convergence of this estimate up to 
+    in each iteration until convergence of this estimate up to
     \code{reweight.tol} or up to the maximum number of iterations
     specified by \code{reweight.max.iter}.
   }
@@ -217,19 +217,19 @@ mkinfit(mkinmod, observed,
     Should a trace of the parameter values be listed?
   }
   \item{\dots}{
-    Further arguments that will be passed to \code{\link{modFit}}. 
+    Further arguments that will be passed to \code{\link{modFit}}.
   }
 }
 \value{
-  A list with "mkinfit" and "modFit" in the class attribute. 
-  A summary can be obtained by \code{\link{summary.mkinfit}}. 
+  A list with "mkinfit" and "modFit" in the class attribute.
+  A summary can be obtained by \code{\link{summary.mkinfit}}.
 }
 \seealso{
   Plotting methods \code{\link{plot.mkinfit}} and
-  \code{\link{mkinparplot}}. 
+  \code{\link{mkinparplot}}.
 
-  Fitting of several models to several datasets in a single call to 
-  \code{\link{mmkin}}. 
+  Fitting of several models to several datasets in a single call to
+  \code{\link{mmkin}}.
 }
 \note{
   The implementation of iteratively reweighted least squares is inspired by the
@@ -238,7 +238,7 @@ mkinfit(mkinmod, observed,
   other GUI derivative of mkin, sponsored by Syngenta.
 }
 \note{
-  When using the "IORE" submodel for metabolites, fitting with 
+  When using the "IORE" submodel for metabolites, fitting with
   "transform_rates = TRUE" (the default) often leads to failures of the
   numerical ODE solver. In this situation it may help to switch off the
   internal rate transformation.
@@ -257,13 +257,13 @@ SFO_SFO <- mkinmod(
   parent = mkinsub("SFO", "m1"),
   m1 = mkinsub("SFO"))
 # Fit the model to the FOCUS example dataset D using defaults
-print(system.time(fit <- mkinfit(SFO_SFO, FOCUS_2006_D, 
+print(system.time(fit <- mkinfit(SFO_SFO, FOCUS_2006_D,
                            solution_type = "eigen", quiet = TRUE)))
 coef(fit)
 endpoints(fit)
 \dontrun{
 # deSolve is slower when no C compiler (gcc) was available during model generation
-print(system.time(fit.deSolve <- mkinfit(SFO_SFO, FOCUS_2006_D, 
+print(system.time(fit.deSolve <- mkinfit(SFO_SFO, FOCUS_2006_D,
                            solution_type = "deSolve")))
 coef(fit.deSolve)
 endpoints(fit.deSolve)
@@ -278,7 +278,7 @@ FOMC_SFO <- mkinmod(
 fit.FOMC_SFO <- mkinfit(FOMC_SFO, FOCUS_2006_D)
 # Use starting parameters from parent only FOMC fit
 fit.FOMC = mkinfit("FOMC", FOCUS_2006_D, plot=TRUE)
-fit.FOMC_SFO <- mkinfit(FOMC_SFO, FOCUS_2006_D, 
+fit.FOMC_SFO <- mkinfit(FOMC_SFO, FOCUS_2006_D,
   parms.ini = fit.FOMC$bparms.ode, plot=TRUE)
 
 # Use stepwise fitting, using optimised parameters from parent only fit, SFORB

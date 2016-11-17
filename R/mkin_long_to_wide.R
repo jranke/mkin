@@ -1,7 +1,5 @@
-# $Id$
-
 # Copyright (C) 2010-2011 Johannes Ranke
-# Contact: mkin-devel@lists.berlios.de
+# Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
 

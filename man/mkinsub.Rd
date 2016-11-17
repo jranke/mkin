@@ -4,7 +4,7 @@
   Function to set up a kinetic submodel for one state variable
 }
 \description{
-  This is a convenience function to set up the lists used as arguments for 
+  This is a convenience function to set up the lists used as arguments for
   \code{\link{mkinmod}}.
 }
 \usage{
@@ -12,15 +12,15 @@ mkinsub(submodel, to = NULL, sink = TRUE, full_name = NA)
 }
 \arguments{
   \item{submodel}{
-    Character vector of length one to specify the submodel type. See 
+    Character vector of length one to specify the submodel type. See
     \code{\link{mkinmod}} for the list of allowed submodel names.
   }
   \item{to}{
-    Vector of the names of the state variable to which a transformation 
+    Vector of the names of the state variable to which a transformation
     shall be included in the model.
   }
   \item{sink}{
-    Should a pathway to sink be included in the model in addition to the 
+    Should a pathway to sink be included in the model in addition to the
     pathways to other state variables?
   }
   \item{full_name}{

@@ -17,8 +17,8 @@
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
 
-mkinpredict <- function(mkinmod, odeparms, odeini, 
-			outtimes, solution_type = "deSolve", 
+mkinpredict <- function(mkinmod, odeparms, odeini,
+			outtimes, solution_type = "deSolve",
       use_compiled = "auto",
 			method.ode = "lsoda", atol = 1e-8, rtol = 1e-10,
 			map_output = TRUE, ...) {
@@ -40,12 +40,12 @@ mkinpredict <- function(mkinmod, odeparms, odeini,
   # Create a function calculating the differentials specified by the model
   # if necessary
   if (solution_type == "analytical") {
-    parent.type = names(mkinmod$map[[1]])[1]  
+    parent.type = names(mkinmod$map[[1]])[1]
     parent.name = names(mkinmod$diffs)[[1]]
     o <- switch(parent.type,
-      SFO = SFO.solution(outtimes, 
+      SFO = SFO.solution(outtimes,
           evalparse(parent.name),
-          ifelse(mkinmod$use_of_ff == "min", 
+          ifelse(mkinmod$use_of_ff == "min",
 	    evalparse(paste("k", parent.name, "sink", sep="_")),
 	    evalparse(paste("k", parent.name, sep="_")))),
       FOMC = FOMC.solution(outtimes,
@@ -53,7 +53,7 @@ mkinpredict <- function(mkinmod, odeparms, odeini,
           evalparse("alpha"), evalparse("beta")),
       IORE = IORE.solution(outtimes,
           evalparse(parent.name),
-          ifelse(mkinmod$use_of_ff == "min", 
+          ifelse(mkinmod$use_of_ff == "min",
 	    evalparse(paste("k__iore", parent.name, "sink", sep="_")),
 	    evalparse(paste("k__iore", parent.name, sep="_"))),
             evalparse("N_parent")),
@@ -75,18 +75,18 @@ mkinpredict <- function(mkinmod, odeparms, odeini,
     names(out) <- c("time", sub("_free", "", parent.name))
   }
   if (solution_type == "eigen") {
-    coefmat.num <- matrix(sapply(as.vector(mkinmod$coefmat), evalparse), 
+    coefmat.num <- matrix(sapply(as.vector(mkinmod$coefmat), evalparse),
       nrow = length(mod_vars))
     e <- eigen(coefmat.num)
     c <- solve(e$vectors, odeini)
     f.out <- function(t) {
       e$vectors %*% diag(exp(e$values * t), nrow=length(mod_vars)) %*% c
     }
-    o <- matrix(mapply(f.out, outtimes), 
+    o <- matrix(mapply(f.out, outtimes),
       nrow = length(mod_vars), ncol = length(outtimes))
     out <- data.frame(outtimes, t(o))
     names(out) <- c("time", mod_vars)
-  } 
+  }
   if (solution_type == "deSolve") {
     if (!is.null(mkinmod$cf) & use_compiled[1] != FALSE) {
       out <- ode(
@@ -108,7 +108,7 @@ mkinpredict <- function(mkinmod, odeparms, odeini,
         diffs <- vector()
         for (box in names(mkinmod$diffs))
         {
-          diffname <- paste("d", box, sep="_")      
+          diffname <- paste("d", box, sep="_")
           diffs[diffname] <- with(as.list(c(time, state, parms)),
             eval(parse(text=mkinmod$diffs[[box]])))
         }
@@ -117,14 +117,14 @@ mkinpredict <- function(mkinmod, odeparms, odeini,
       out <- ode(
         y = odeini,
         times = outtimes,
-        func = mkindiff, 
+        func = mkindiff,
         parms = odeparms,
         method = method.ode,
         atol = atol,
         rtol = rtol,
         ...
       )
-    } 
+    }
     if (sum(is.na(out)) > 0) {
       stop("Differential equations were not integrated for all output times because\n",
 	   "NaN values occurred in output from ode()")
@@ -140,7 +140,7 @@ mkinpredict <- function(mkinmod, odeparms, odeini,
         out_mapped[var] <- rowSums(out[, mkinmod$map[[var]]])
       }
     }
-    return(out_mapped) 
+    return(out_mapped)
   } else {
     return(out)
   }

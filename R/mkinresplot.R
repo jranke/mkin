@@ -17,16 +17,16 @@
 # this program. If not, see <http://www.gnu.org/licenses/>
 if(getRversion() >= '2.15.1') utils::globalVariables(c("variable", "residual"))
 
-mkinresplot <- function (object, 
+mkinresplot <- function (object,
   obs_vars = names(object$mkinmod$map),
   xlim = c(0, 1.1 * max(object$data$time)),
   xlab = "Time", ylab = "Residual",
-  maxabs = "auto", legend= TRUE, lpos = "topright", ...) 
+  maxabs = "auto", legend= TRUE, lpos = "topright", ...)
 {
 	obs_vars_all <- as.character(unique(object$data$variable))
 
   if (length(obs_vars) > 0){
-      obs_vars <- intersect(obs_vars_all, obs_vars)	
+      obs_vars <- intersect(obs_vars_all, obs_vars)
   } else obs_vars <- obs_vars_all
 
   residuals <- subset(object$data, variable %in% obs_vars, residual)
@@ -37,7 +37,7 @@ mkinresplot <- function (object,
  	names(col_obs) <- names(pch_obs) <- obs_vars
 
   plot(0, type = "n",
-       xlab = xlab, ylab = ylab, 
+       xlab = xlab, ylab = ylab,
        xlim = xlim,
        ylim = c(-1.2 * maxabs, 1.2 * maxabs), ...)
 
@@ -49,7 +49,7 @@ mkinresplot <- function (object,
   abline(h = 0, lty = 2)
 
   if (legend == TRUE) {
-    legend(lpos, inset = c(0.05, 0.05), legend = obs_vars, 
+    legend(lpos, inset = c(0.05, 0.05), legend = obs_vars,
       col = col_obs[obs_vars], pch = pch_obs[obs_vars])
   }
 }

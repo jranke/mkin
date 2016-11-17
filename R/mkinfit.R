@@ -23,7 +23,7 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 
 mkinfit <- function(mkinmod, observed,
   parms.ini = "auto",
-  state.ini = "auto", 
+  state.ini = "auto",
   fixed_parms = NULL,
   fixed_initials = names(mkinmod$diffs)[-1],
   from_max_mean = FALSE,
@@ -45,7 +45,7 @@ mkinfit <- function(mkinmod, observed,
 {
   # Check mkinmod and generate a model for the variable whith the highest value
   # if a suitable string is given
-  parent_models_available = c("SFO", "FOMC", "DFOP", "HS", "SFORB", "IORE") 
+  parent_models_available = c("SFO", "FOMC", "DFOP", "HS", "SFORB", "IORE")
   if (class(mkinmod) != "mkinmod") {
     presumed_parent_name = observed[which.max(observed$value), "name"]
     if (mkinmod[[1]] %in% parent_models_available) {
@@ -55,7 +55,7 @@ mkinfit <- function(mkinmod, observed,
     } else {
       stop("Argument mkinmod must be of class mkinmod or a string containing one of\n  ",
            paste(parent_models_available, collapse = ", "))
-    } 
+    }
   }
 
   # Check optimisation method and set maximum number of iterations if specified
@@ -83,7 +83,7 @@ mkinfit <- function(mkinmod, observed,
   # Obtain data for decline from maximum mean value if requested
   if (from_max_mean) {
     # This is only used for simple decline models
-    if (length(obs_vars) > 1) 
+    if (length(obs_vars) > 1)
       stop("Decline from maximum is only implemented for models with a single observed variable")
 
     means <- aggregate(value ~ time, data = observed, mean, na.rm=TRUE)
@@ -138,7 +138,7 @@ mkinfit <- function(mkinmod, observed,
       k_salt = k_salt + 1e-4
     }
     # Default values for rate constants for reversible binding
-    if (grepl("free_bound$", parmname)) parms.ini[parmname] = 0.1 
+    if (grepl("free_bound$", parmname)) parms.ini[parmname] = 0.1
     if (grepl("bound_free$", parmname)) parms.ini[parmname] = 0.02
     # Default values for IORE exponents
     if (grepl("^N", parmname)) parms.ini[parmname] = 1
@@ -282,9 +282,9 @@ mkinfit <- function(mkinmod, observed,
                                     transform_fractions = transform_fractions)
 
     # Solve the system with current transformed parameter values
-    out <- mkinpredict(mkinmod, parms, 
-                       odeini, outtimes, 
-                       solution_type = solution_type, 
+    out <- mkinpredict(mkinmod, parms,
+                       odeini, outtimes,
+                       solution_type = solution_type,
                        use_compiled = use_compiled,
                        method.ode = method.ode,
                        atol = atol, rtol = rtol, ...)
@@ -303,27 +303,27 @@ mkinfit <- function(mkinmod, observed,
         outtimes_plot = seq(min(observed$time), max(observed$time), length.out=100)
 
         out_plot <- mkinpredict(mkinmod, parms,
-                                odeini, outtimes_plot, 
-                                solution_type = solution_type, 
+                                odeini, outtimes_plot,
+                                solution_type = solution_type,
                                 use_compiled = use_compiled,
                                 method.ode = method.ode,
                                 atol = atol, rtol = rtol, ...)
 
-        plot(0, type="n", 
+        plot(0, type="n",
           xlim = range(observed$time), ylim = c(0, max(observed$value, na.rm=TRUE)),
           xlab = "Time", ylab = "Observed")
         col_obs <- pch_obs <- 1:length(obs_vars)
         lty_obs <- rep(1, length(obs_vars))
         names(col_obs) <- names(pch_obs) <- names(lty_obs) <- obs_vars
         for (obs_var in obs_vars) {
-          points(subset(observed, name == obs_var, c(time, value)), 
+          points(subset(observed, name == obs_var, c(time, value)),
                  pch = pch_obs[obs_var], col = col_obs[obs_var])
         }
         matlines(out_plot$time, out_plot[-1], col = col_obs, lty = lty_obs)
-        legend("topright", inset=c(0.05, 0.05), legend=obs_vars, 
+        legend("topright", inset=c(0.05, 0.05), legend=obs_vars,
           col=col_obs, pch=pch_obs, lty=1:length(pch_obs))
       }
-    
+
       assign("cost.old", mC$model, inherits=TRUE)
     }
     return(mC)
@@ -343,9 +343,9 @@ mkinfit <- function(mkinmod, observed,
     odeparms <- c(P[(length(state.ini.optim) + 1):length(P)], parms.fixed)
 
     # Solve the system with current transformed parameter values
-    out <- mkinpredict(mkinmod, odeparms, 
-                       odeini, outtimes, 
-                       solution_type = solution_type, 
+    out <- mkinpredict(mkinmod, odeparms,
+                       odeini, outtimes,
+                       solution_type = solution_type,
                        use_compiled = use_compiled,
                        method.ode = method.ode,
                        atol = atol, rtol = rtol, ...)
@@ -381,8 +381,8 @@ mkinfit <- function(mkinmod, observed,
 
   # Do the fit and take the time
   fit_time <- system.time({
-    fit <- modFit(cost, c(state.ini.optim, transparms.optim), 
-                  method = method.modFit, control = control.modFit, 
+    fit <- modFit(cost, c(state.ini.optim, transparms.optim),
+                  method = method.modFit, control = control.modFit,
                   lower = lower, upper = upper, ...)
 
     # Reiterate the fit until convergence of the variance components (IRLS)
@@ -423,7 +423,7 @@ mkinfit <- function(mkinmod, observed,
   # Check for convergence
   if (method.modFit == "Marq") {
     if (!fit$info %in% c(1, 2, 3)) {
-      fit$warning = paste0("Optimisation by method ", method.modFit, 
+      fit$warning = paste0("Optimisation by method ", method.modFit,
                            " did not converge.\n",
                            "The message returned by nls.lm is:\n",
                                     fit$message)
@@ -435,10 +435,10 @@ mkinfit <- function(mkinmod, observed,
   }
   if (method.modFit %in% c("Port", "SANN", "Nelder-Mead", "BFGS", "CG", "L-BFGS-B")) {
     if (fit$convergence != 0) {
-      fit$warning = paste0("Optimisation by method ", method.modFit, 
+      fit$warning = paste0("Optimisation by method ", method.modFit,
                            " did not converge.\n",
                            "Convergence code is ", fit$convergence,
-                           ifelse(is.null(fit$message), "", 
+                           ifelse(is.null(fit$message), "",
                                   paste0("\nMessage is ", fit$message)))
       warning(fit$warning)
     } else {
@@ -483,7 +483,7 @@ mkinfit <- function(mkinmod, observed,
   # Estimate the Hessian for the model cost without parameter transformations
   # to make it possible to obtain the usual t-test
   # Code ported from FME::modFit
-  Jac_notrans <- try(gradient(function(p, ...) cost_notrans(p)$residuals$res, 
+  Jac_notrans <- try(gradient(function(p, ...) cost_notrans(p)$residuals$res,
                               bparms.optim, centered = TRUE), silent = TRUE)
   if (inherits(Jac_notrans, "try-error")) {
     warning("Calculation of the Jacobian failed for the cost function of the untransformed model.\n",
@@ -494,9 +494,9 @@ mkinfit <- function(mkinmod, observed,
   }
 
   # Collect initial parameter values in three dataframes
-  fit$start <- data.frame(value = c(state.ini.optim, 
+  fit$start <- data.frame(value = c(state.ini.optim,
                                     parms.optim))
-  fit$start$type = c(rep("state", length(state.ini.optim)), 
+  fit$start$type = c(rep("state", length(state.ini.optim)),
                      rep("deparm", length(parms.optim)))
 
   fit$start_transformed = data.frame(
@@ -505,7 +505,7 @@ mkinfit <- function(mkinmod, observed,
       upper = upper)
 
   fit$fixed <- data.frame(value = c(state.ini.fixed, parms.fixed))
-  fit$fixed$type = c(rep("state", length(state.ini.fixed)), 
+  fit$fixed$type = c(rep("state", length(state.ini.fixed)),
                      rep("deparm", length(parms.fixed)))
 
   # Collect observed, predicted, residuals and weighting
@@ -535,18 +535,18 @@ mkinfit <- function(mkinmod, observed,
   fit$reweight.max.iter <- reweight.max.iter
 
   # Return different sets of backtransformed parameters for summary and plotting
-  fit$bparms.optim <- bparms.optim 
+  fit$bparms.optim <- bparms.optim
   fit$bparms.fixed <- bparms.fixed
 
   # Return ode and state parameters for further fitting
-  fit$bparms.ode <- bparms.all[mkinmod$parms] 
+  fit$bparms.ode <- bparms.all[mkinmod$parms]
   fit$bparms.state <- c(bparms.all[setdiff(names(bparms.all), names(fit$bparms.ode))],
                         state.ini.fixed)
   names(fit$bparms.state) <- gsub("_0$", "", names(fit$bparms.state))
 
   fit$date <- date()
 
-  class(fit) <- c("mkinfit", "modFit") 
+  class(fit) <- c("mkinfit", "modFit")
   return(fit)
 }
 
@@ -602,36 +602,36 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
       par.lower <- param[pname, "Lower"]
       par.upper <- param[pname, "Upper"]
       names(par.lower) <- names(par.upper) <- pname
-      bpl <- backtransform_odeparms(par.lower, object$mkinmod, 
-                                            object$transform_rates, 
+      bpl <- backtransform_odeparms(par.lower, object$mkinmod,
+                                            object$transform_rates,
                                             object$transform_fractions)
       bpu <- backtransform_odeparms(par.upper, object$mkinmod,
-                                            object$transform_rates, 
+                                            object$transform_rates,
                                             object$transform_fractions)
       bparam[names(bpl), "Lower"] <- bpl
       bparam[names(bpu), "Upper"] <- bpu
-    } 
+    }
   }
 
   ans <- list(
     version = as.character(utils::packageVersion("mkin")),
     Rversion = paste(R.version$major, R.version$minor, sep="."),
-	  date.fit = object$date,
-	  date.summary = date(),
-	  solution_type = object$solution_type,
-	  method.modFit = object$method.modFit,
-	  warning = object$warning,
-	  use_of_ff = object$mkinmod$use_of_ff,
+    date.fit = object$date,
+    date.summary = date(),
+    solution_type = object$solution_type,
+    method.modFit = object$method.modFit,
+    warning = object$warning,
+    use_of_ff = object$mkinmod$use_of_ff,
     weight.ini = object$weight.ini,
     reweight.method = object$reweight.method,
     residuals = object$residuals,
     residualVariance = resvar,
     sigma = sqrt(resvar),
     modVariance = modVariance,
-    df = c(p, rdf), 
+    df = c(p, rdf),
     cov.unscaled = covar,
     cov.scaled = covar * resvar,
-    info = object$info, 
+    info = object$info,
     niter = object$iterations,
     calls = object$calls,
     time = object$time,
@@ -654,8 +654,8 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
     ans$ff <- ep$ff
   if(distimes) ans$distimes <- ep$distimes
   if(length(ep$SFORB) != 0) ans$SFORB <- ep$SFORB
-  class(ans) <- c("summary.mkinfit", "summary.modFit") 
-  return(ans)  
+  class(ans) <- c("summary.mkinfit", "summary.modFit")
+  return(ans)
 }
 
 # Expanded from print.summary.modFit
@@ -674,7 +674,7 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
 
   cat("\nModel predictions using solution type", x$solution_type, "\n")
 
-  cat("\nFitted with method", x$method.modFit, 
+  cat("\nFitted with method", x$method.modFit,
       "using", x$calls, "model solutions performed in", x$time[["elapsed"]],  "s\n")
 
   cat("\nWeighting:", x$weight.ini)
@@ -691,7 +691,7 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
   cat("\nFixed parameter values:\n")
   if(length(x$fixed$value) == 0) cat("None\n")
   else print(x$fixed)
-  
+
   cat("\nOptimised, transformed parameters with symmetric confidence intervals:\n")
   print(signif(x$par, digits = digits))
 

@@ -18,7 +18,7 @@
   }
 }
 \value{
-  The result of the forward or backward transformation. The returned components always 
+  The result of the forward or backward transformation. The returned components always
   sum to 1 for the case of the inverse log-ratio transformation.
 }
 \references{

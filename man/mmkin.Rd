@@ -26,11 +26,11 @@ mmkin(models, datasets,
     used when the \code{cluster} argument is \code{NULL}.
   }
   \item{cluster}{
-    A cluster as returned by \code{\link{makeCluster}} to be used for parallel 
+    A cluster as returned by \code{\link{makeCluster}} to be used for parallel
     execution.
   }
   \item{\dots}{
-    Further arguments that will be passed to \code{\link{mkinfit}}. 
+    Further arguments that will be passed to \code{\link{mkinfit}}.
   }
 }
 \value{

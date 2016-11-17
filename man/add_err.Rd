@@ -10,7 +10,7 @@
 }
 \usage{
   add_err(prediction, sdfunc,
-          n = 1000, LOD = 0.1, reps = 2, 
+          n = 1000, LOD = 0.1, reps = 2,
           digits = 1, seed = NA)
 }
 \arguments{
@@ -36,13 +36,13 @@
     The number of digits to which the values will be rounded.
   }
   \item{seed}{
-    The seed used for the generation of random numbers. If NA, the seed 
+    The seed used for the generation of random numbers. If NA, the seed
     is not set.
   }
 }
 \value{
   A list of datasets compatible with \code{\link{mmkin}}, i.e.
-  the components of the list are datasets compatible with 
+  the components of the list are datasets compatible with
   \code{\link{mkinfit}}.
 }
 \references{
@@ -80,7 +80,7 @@ names(d_SFO_SFO_err) <- paste("Dataset", 1:3)
 # Be quiet and use the faster Levenberg-Marquardt algorithm, as the datasets
 # are easy and examples are run often. Use only one core not to offend CRAN
 # checks
-f_SFO_SFO <- mmkin(list("SFO-SFO" = m_SFO_SFO), 
+f_SFO_SFO <- mmkin(list("SFO-SFO" = m_SFO_SFO),
                    d_SFO_SFO_err, cores = 1,
                    quiet = TRUE, method.modFit = "Marq")
 

@@ -8,19 +8,19 @@ endpoints <- function(fit) {
   parms.all <- c(fit$bparms.optim, fit$bparms.fixed)
   ep$ff <- vector()
   ep$SFORB <- vector()
-  ep$distimes <- data.frame(DT50 = rep(NA, length(obs_vars)), 
-			    DT90 = rep(NA, length(obs_vars)), 
+  ep$distimes <- data.frame(DT50 = rep(NA, length(obs_vars)),
+			    DT90 = rep(NA, length(obs_vars)),
     row.names = obs_vars)
   for (obs_var in obs_vars) {
-    type = names(fit$mkinmod$map[[obs_var]])[1]  
+    type = names(fit$mkinmod$map[[obs_var]])[1]
 
     # Get formation fractions if directly fitted, and calculate remaining fraction to sink
     f_names = grep(paste("^f", obs_var, sep = "_"), names(parms.all), value=TRUE)
     if (length(f_names) > 0) {
       f_values = parms.all[f_names]
       f_to_sink = 1 - sum(f_values)
-      names(f_to_sink) = ifelse(type == "SFORB", 
-                              paste(obs_var, "free", "sink", sep = "_"), 
+      names(f_to_sink) = ifelse(type == "SFORB",
+                              paste(obs_var, "free", "sink", sep = "_"),
                               paste(obs_var, "sink", sep = "_"))
       for (f_name in f_names) {
         ep$ff[[sub("f_", "", sub("_to_", "_", f_name))]] = f_values[[f_name]]
@@ -91,7 +91,7 @@ endpoints <- function(fit) {
                   silent = TRUE)
       if (inherits(DT50, "try-error")) DT50 = NA
       if (inherits(DT90, "try-error")) DT90 = NA
-      
+
       ep$distimes[obs_var, c("DT50_k1")] = DT50_k1
       ep$distimes[obs_var, c("DT50_k2")] = DT50_k2
     }

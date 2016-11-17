@@ -20,15 +20,15 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("type", "variable", "obse
 plot.mkinfit <- function(x, fit = x,
   obs_vars = names(fit$mkinmod$map),
   xlab = "Time", ylab = "Observed",
-  xlim = range(fit$data$time), 
+  xlim = range(fit$data$time),
   ylim = "default",
   col_obs = 1:length(obs_vars),
-  pch_obs = col_obs, 
+  pch_obs = col_obs,
   lty_obs = rep(1, length(obs_vars)),
-  add = FALSE, legend = !add, 
+  add = FALSE, legend = !add,
   show_residuals = FALSE, maxabs = "auto",
   sep_obs = FALSE, rel.height.middle = 0.9,
-  lpos = "topright", inset = c(0.05, 0.05), 
+  lpos = "topright", inset = c(0.05, 0.05),
   show_errmin = FALSE, errmin_digits = 3, ...)
 {
   if (add && show_residuals) stop("If adding to an existing plot we can not show residuals")
@@ -53,12 +53,12 @@ plot.mkinfit <- function(x, fit = x,
     rownames(subset(fit$fixed, type == "deparm")))
   odeparms <- parms.all[odenames]
 
-  out <- try(mkinpredict(fit$mkinmod, odeparms, odeini, outtimes, 
+  out <- try(mkinpredict(fit$mkinmod, odeparms, odeini, outtimes,
              solution_type = solution_type, atol = fit$atol, rtol = fit$rtol),
              silent = TRUE)
 
   if (inherits(out, "try-error")) {
-    out <- mkinpredict(fit$mkinmod, odeparms, odeini, outtimes, 
+    out <- mkinpredict(fit$mkinmod, odeparms, odeini, outtimes,
              solution_type = solution_type, atol = fit$atol, rtol = fit$rtol,
              use_compiled = FALSE)
   }
@@ -85,7 +85,7 @@ plot.mkinfit <- function(x, fit = x,
       # and the middle plots (if n_plot_rows >2) are smaller by rel.height.middle
       rel.heights <- if (n_plot_rows > 2) c(1, rep(rel.height.middle, n_plot_rows - 2), 1)
                      else rep(1, n_plot_rows)
-      layout_matrix = matrix(1:n_plots, 
+      layout_matrix = matrix(1:n_plots,
                              n_plot_rows, n_plot_cols, byrow = TRUE)
       layout(layout_matrix, heights = rel.heights)
     } else { # else show residuals in the lower third to keep compatibility
@@ -104,8 +104,8 @@ plot.mkinfit <- function(x, fit = x,
 
     # Set ylim to sensible default, or to the specified value
     if (ylim[[1]] == "default") {
-      ylim_row = c(0, max(c(subset(fit$data, variable %in% row_obs_vars)$observed, 
-                        subset(fit$data, variable %in% row_obs_vars)$fitted), 
+      ylim_row = c(0, max(c(subset(fit$data, variable %in% row_obs_vars)$observed,
+                        subset(fit$data, variable %in% row_obs_vars)$fitted),
                       na.rm = TRUE))
     } else {
       ylim_row = ylim
@@ -115,12 +115,12 @@ plot.mkinfit <- function(x, fit = x,
       # Margins for top row of plots when we have more than one row
       # Reduce bottom margin by 2.1 - hides x axis legend
       if (plot_row == 1 & n_plot_rows > 1) {
-        par(mar = c(3.0, 4.1, 4.1, 2.1)) 
+        par(mar = c(3.0, 4.1, 4.1, 2.1))
       }
 
       # Margins for middle rows of plots, if any
       if (plot_row > 1 & plot_row < n_plot_rows) {
-        # Reduce top margin by 2 after the first plot as we have no main title, 
+        # Reduce top margin by 2 after the first plot as we have no main title,
         # reduced plot height, therefore we need rel.height.middle in the layout
         par(mar = c(3.0, 4.1, 2.1, 2.1))
       }
@@ -134,14 +134,14 @@ plot.mkinfit <- function(x, fit = x,
 
     # Set up the main plot if not to be added to an existing plot
     if (add == FALSE) {
-      plot(0, type="n", 
+      plot(0, type="n",
         xlim = xlim, ylim = ylim_row,
         xlab = xlab, ylab = ylab, ...)
     }
 
     # Plot the data
     for (obs_var in row_obs_vars) {
-      points(subset(fit$data, variable == obs_var, c(time, observed)), 
+      points(subset(fit$data, variable == obs_var, c(time, observed)),
         pch = pch_obs[obs_var], col = col_obs[obs_var])
     }
 
@@ -181,8 +181,8 @@ plot.mkinfit <- function(x, fit = x,
       residuals <- subset(fit$data, variable %in% row_obs_vars, residual)
       if (maxabs == "auto") maxabs = max(abs(residuals), na.rm = TRUE)
       if (!sep_obs) par(mar = c(5, 4, 0, 2) + 0.1)
-      plot(0, type="n", 
-        xlim = xlim, 
+      plot(0, type="n",
+        xlim = xlim,
         ylim = c(-1.2 * maxabs, 1.2 * maxabs),
         xlab = xlab, ylab = "Residuals")
       for(obs_var in row_obs_vars){
@@ -197,6 +197,6 @@ plot.mkinfit <- function(x, fit = x,
 # Convenience function for switching on some features of mkinfit
 # that have not been made the default to keep compatibility
 plot_sep <- function(fit, sep_obs = TRUE, show_residuals = TRUE, show_errmin = TRUE, ...) {
-  plot.mkinfit(fit, sep_obs = TRUE, show_residuals = TRUE, 
+  plot.mkinfit(fit, sep_obs = TRUE, show_residuals = TRUE,
           show_errmin = TRUE, ...)
 }

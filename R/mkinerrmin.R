@@ -24,7 +24,7 @@ mkinerrmin <- function(fit, alpha = 0.05)
   kinerrmin <- function(errdata, n.parms) {
     means.mean <- mean(errdata$value_mean, na.rm = TRUE)
     df = length(errdata$value_mean) - n.parms
-  
+
     err.min <- sqrt((1 / qchisq(1 - alpha, df)) *
                sum((errdata$value_mean - errdata$value_pred)^2)/(means.mean^2))
 
@@ -32,12 +32,12 @@ mkinerrmin <- function(fit, alpha = 0.05)
   }
 
   means <- aggregate(value ~ time + name, data = fit$observed, mean, na.rm=TRUE)
-  errdata <- merge(means, fit$predicted, by = c("time", "name"), 
+  errdata <- merge(means, fit$predicted, by = c("time", "name"),
     suffixes = c("_mean", "_pred"))
   errdata <- errdata[order(errdata$time, errdata$name), ]
 
   # Remove values at time zero for variables whose value for state.ini is fixed,
-  # as these will not have any effect in the optimization and should therefore not 
+  # as these will not have any effect in the optimization and should therefore not
   # be counted as degrees of freedom.
   fixed_initials = gsub("_0$", "", rownames(subset(fit$fixed, type = "state")))
   errdata <- subset(errdata, !(time == 0 & name %in% fixed_initials))
@@ -59,10 +59,10 @@ mkinerrmin <- function(fit, alpha = 0.05)
 
     # Rate constants and IORE exponents are attributed to the source variable
     n.k.optim <- length(grep(paste("^k", obs_var, sep="_"), names(parms.optim)))
-    n.k.optim <- n.k.optim + length(grep(paste("^log_k", obs_var, sep="_"), 
+    n.k.optim <- n.k.optim + length(grep(paste("^log_k", obs_var, sep="_"),
                                          names(parms.optim)))
     n.k__iore.optim <- length(grep(paste("^k__iore", obs_var, sep="_"), names(parms.optim)))
-    n.k__iore.optim <- n.k__iore.optim + length(grep(paste("^log_k__iore", obs_var, 
+    n.k__iore.optim <- n.k__iore.optim + length(grep(paste("^log_k__iore", obs_var,
 							 sep = "_"),
 						   names(parms.optim)))
 
@@ -87,8 +87,8 @@ mkinerrmin <- function(fit, alpha = 0.05)
     # FOMC, DFOP and HS parameters are only counted if we are looking at the
     # first variable in the model which is always the source variable
     if (obs_var == fit$obs_vars[[1]]) {
-      special_parms = c("alpha", "log_alpha", "beta", "log_beta", 
-                        "k1", "log_k1", "k2", "log_k2", 
+      special_parms = c("alpha", "log_alpha", "beta", "log_beta",
+                        "k1", "log_k1", "k2", "log_k2",
                         "g", "g_ilr", "tb", "log_tb")
       n.optim <- n.optim + length(intersect(special_parms, names(parms.optim)))
     }

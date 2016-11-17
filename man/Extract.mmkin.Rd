@@ -5,7 +5,7 @@
 \method{[}{mmkin}(x, i, j, ..., drop = FALSE)
 }
 \description{
- Subsetting method for mmkin objects. 
+ Subsetting method for mmkin objects.
 }
 \arguments{
 \item{x}{An \code{\link{mmkin} object}}
@@ -16,7 +16,7 @@
 
 \item{...}{Not used, only there to satisfy the generic method definition}
 
-\item{drop}{If FALSE, the method always returns an mmkin object, otherwise either 
+\item{drop}{If FALSE, the method always returns an mmkin object, otherwise either
   a list of mkinfit objects or a single mkinfit object.}
 }
 \value{
@@ -27,7 +27,7 @@
 }
 \examples{
   # Only use one core, to pass R CMD check --as-cran
-  fits <- mmkin(c("SFO", "FOMC"), list(B = FOCUS_2006_B, C = FOCUS_2006_C), 
+  fits <- mmkin(c("SFO", "FOMC"), list(B = FOCUS_2006_B, C = FOCUS_2006_C),
                 cores = 1, quiet = TRUE)
   fits["FOMC", ]
   fits[, "B"]
