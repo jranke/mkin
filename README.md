@@ -1,6 +1,6 @@
 # mkin
 
-[![](https://www.r-pkg.org/badges/version/mkin)](https://cran.r-project.org/package=mkin)
+[![](http://www.r-pkg.org/badges/version/mkin)](https://cran.r-project.org/package=mkin)
 
 The R package **mkin** provides calculation routines for the analysis of
 chemical degradation data, including <b>m</b>ulticompartment <b>kin</b>etics as
@@ -98,14 +98,14 @@ for installation instructions and a manual.
   
 ## News
 
-Yes, there is a ChangeLog, for the latest [CRAN release](http://cran.r-project.org/web/packages/mkin/news.html)
+Yes, there is a ChangeLog, for the latest [CRAN release](https://cran.r-project.org/package=mkin/news.html)
 and one for the [github master branch](https://github.com/jranke/mkin/blob/master/NEWS.md).
 
 ## Credits and historical remarks
 
 `mkin` would not be possible without the underlying software stack consisting
-of R and the packages [deSolve](http://cran.r-project.org/package=deSolve)
-and [FME](http://cran.r-project.org/package=FME), to say the least.
+of R and the packages [deSolve](https://cran.r-project.org/package=deSolve)
+and [FME](https://cran.r-project.org/package=FME), to say the least.
 
 It could not have been written without me being introduced to regulatory fate
 modelling of pesticides by Adrian Gurney during my time at Harlan Laboratories
@@ -126,7 +126,7 @@ CRAN on 01 May 2010.
 
 The first `mkin` code was 
 [published on 11 May 2010](https://r-forge.r-project.org/scm/viewvc.php?view=rev&root=kinfit&revision=8) and the 
-[first CRAN version](http://cran.r-project.org/src/contrib/Archive/mkin)
+[first CRAN version](https://cran.r-project.org/src/contrib/Archive/mkin)
 on 18 May 2010.
 
 In 2011, Bayer Crop Science started to distribute an R based successor to KinGUI named 
