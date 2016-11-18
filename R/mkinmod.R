@@ -370,5 +370,8 @@ print.mkinmod <- function(x, ...) {
   }
   if (is.matrix(x$coefmat)) cat("Coefficient matrix $coefmat available\n")
   if (!is.null(x$cf)) cat("Compiled model $cf available\n")
+  cat("Differential equations:\n")
+  nice_diffs <- gsub("^(d.*) =", "\\1/dt =", x[["diffs"]])
+  writeLines(strwrap(nice_diffs, exdent = 11))
 }
 # vim: set foldmethod=marker ts=2 sw=2 expandtab:
