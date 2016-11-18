@@ -69,7 +69,7 @@ fit <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE)
 summary(fit, data=FALSE) # See transformed and backtransformed parameters
 
 \dontrun{
-fit.2 <- mkinfit(SFO_SFO, FOCUS_2006_D, transform_rates = FALSE)
+fit.2 <- mkinfit(SFO_SFO, FOCUS_2006_D, transform_rates = FALSE, quiet = TRUE)
 summary(fit.2, data=FALSE)
 }
 
@@ -87,7 +87,7 @@ SFO_SFO.ff <- mkinmod(
   m1 = list(type = "SFO"),
   use_of_ff = "max")
 
-fit.ff <- mkinfit(SFO_SFO.ff, FOCUS_2006_D)
+fit.ff <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, quiet = TRUE)
 summary(fit.ff, data = FALSE)
 initials <- c("f_parent_to_m1" = 0.5)
 transformed <- transform_odeparms(initials, SFO_SFO.ff)
@@ -100,7 +100,7 @@ SFO_SFO.ff.2 <- mkinmod(
   use_of_ff = "max")
 
 
-fit.ff.2 <- mkinfit(SFO_SFO.ff.2, FOCUS_2006_D)
+fit.ff.2 <- mkinfit(SFO_SFO.ff.2, FOCUS_2006_D, quiet = TRUE)
 summary(fit.ff.2, data = FALSE)
 }
 }

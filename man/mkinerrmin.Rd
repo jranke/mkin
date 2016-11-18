@@ -4,9 +4,8 @@
 Calculate the minimum error to assume in order to pass the variance test
 }
 \description{
-This function uses \code{\link{optimize}} in order to iteratively find the
-smallest relative error still resulting in passing the chi-squared test
-as defined in the FOCUS kinetics report from 2006.
+This function finds the smallest relative error still resulting in passing the
+chi-squared test as defined in the FOCUS kinetics report from 2006.
 }
 \usage{
 mkinerrmin(fit, alpha = 0.05)
@@ -34,8 +33,8 @@ mkinerrmin(fit, alpha = 0.05)
     This function is used internally by \code{\link{summary.mkinfit}}.
 }
 \examples{
-SFO_SFO = mkinmod(parent = list(type = "SFO", to = "m1"),
-                  m1 = list(type = "SFO"),
+SFO_SFO = mkinmod(parent = mkinsub("SFO", to = "m1"),
+                  m1 = mkinsub("SFO"),
                   use_of_ff = "max")
 
 fit_FOCUS_D = mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE)

@@ -36,6 +36,12 @@ model <- mkinmod(
   B1 = list(type = "SFO"),
   C1 = list(type = "SFO"),
   A2 = list(type = "SFO"), use_of_ff = "max")
-\dontrun{mkinfit(model, data)}
+  \dontrun{
+    fit <- mkinfit(model, data, quiet = TRUE)
+    plot(fit)
+    endpoints(fit)
+  }
+ # Compare with the results obtained in the original publication
+ print(schaefer07_complex_results)
 }
 \keyword{datasets}

@@ -31,8 +31,15 @@
                 cores = 1, quiet = TRUE)
   fits["FOMC", ]
   fits[, "B"]
-  fits[, "B", drop = TRUE]$FOMC
   fits["SFO", "B"]
-  fits[["SFO", "B"]] # This is equivalent to
-  fits["SFO", "B", drop = TRUE]
+
+  head(
+    # This extracts an mkinfit object with lots of components
+    fits[["FOMC", "B"]] 
+  )
+
+  head(
+  # The same can be achieved by
+    fits["SFO", "B", drop = TRUE]
+  )
 }

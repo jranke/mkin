@@ -57,21 +57,22 @@ models <- list(SFO_lin = m_synth_SFO_lin, FOMC_lin = m_synth_FOMC_lin)
 datasets <- lapply(synthetic_data_for_UBA_2014[1:3], function(x) x$data)
 names(datasets) <- paste("Dataset", 1:3)
 
-time_default <- system.time(fits.0 <- mmkin(models, datasets))
-time_1 <- system.time(fits.1 <- mmkin(models, datasets, cores = 1))
+time_default <- system.time(fits.0 <- mmkin(models, datasets, quiet = TRUE))
+time_1 <- system.time(fits.4 <- mmkin(models, datasets, cores = 1, quiet = TRUE))
 
 time_default
 time_1
 
-endpoints(fits[["SFO_lin", 2]])
+endpoints(fits.0[["SFO_lin", 2]])
 
-# Plot.mkinfit handles rows or columns of mmkin result objects
+# plot.mkinfit handles rows or columns of mmkin result objects
 plot(fits.0[1, ])
 plot(fits.0[1, ], obs_var = c("M1", "M2"))
 plot(fits.0[, 1])
 # Use double brackets to extract a single mkinfit object, which will be plotted
-# by plot.mkinfit
+# by plot.mkinfit and can be plotted using plot_sep
 plot(fits.0[[1, 1]], sep_obs = TRUE, show_residuals = TRUE, show_errmin = TRUE)
+plot_sep(fits.0[[1, 1]])
 # Plotting with mmkin (single brackets, extracting an mmkin object) does not
 # allow to plot the observed variables separately
 plot(fits.0[1, 1])

@@ -275,10 +275,10 @@ FOMC_SFO <- mkinmod(
   parent = mkinsub("FOMC", "m1"),
   m1 = mkinsub("SFO"))
 # Fit the model to the FOCUS example dataset D using defaults
-fit.FOMC_SFO <- mkinfit(FOMC_SFO, FOCUS_2006_D)
+fit.FOMC_SFO <- mkinfit(FOMC_SFO, FOCUS_2006_D, quiet = TRUE)
 # Use starting parameters from parent only FOMC fit
-fit.FOMC = mkinfit("FOMC", FOCUS_2006_D)
-fit.FOMC_SFO <- mkinfit(FOMC_SFO, FOCUS_2006_D,
+fit.FOMC = mkinfit("FOMC", FOCUS_2006_D, quiet = TRUE)
+fit.FOMC_SFO <- mkinfit(FOMC_SFO, FOCUS_2006_D, quiet = TRUE,
   parms.ini = fit.FOMC$bparms.ode)
 
 # Use stepwise fitting, using optimised parameters from parent only fit, SFORB
@@ -286,24 +286,26 @@ SFORB_SFO <- mkinmod(
   parent = list(type = "SFORB", to = "m1", sink = TRUE),
   m1 = list(type = "SFO"))
 # Fit the model to the FOCUS example dataset D using defaults
-fit.SFORB_SFO <- mkinfit(SFORB_SFO, FOCUS_2006_D)
-fit.SFORB_SFO.deSolve <- mkinfit(SFORB_SFO, FOCUS_2006_D, solution_type = "deSolve")
+fit.SFORB_SFO <- mkinfit(SFORB_SFO, FOCUS_2006_D, quiet = TRUE)
+fit.SFORB_SFO.deSolve <- mkinfit(SFORB_SFO, FOCUS_2006_D, solution_type = "deSolve",
+                                 quiet = TRUE)
 # Use starting parameters from parent only SFORB fit (not really needed in this case)
-fit.SFORB = mkinfit("SFORB", FOCUS_2006_D)
-fit.SFORB_SFO <- mkinfit(SFORB_SFO, FOCUS_2006_D, parms.ini = fit.SFORB$bparms.ode)
+fit.SFORB = mkinfit("SFORB", FOCUS_2006_D, quiet = TRUE)
+fit.SFORB_SFO <- mkinfit(SFORB_SFO, FOCUS_2006_D, parms.ini = fit.SFORB$bparms.ode, quiet = TRUE)
 }
 
 \dontrun{
 # Weighted fits, including IRLS
 SFO_SFO.ff <- mkinmod(parent = mkinsub("SFO", "m1"),
                       m1 = mkinsub("SFO"), use_of_ff = "max")
-f.noweight <- mkinfit(SFO_SFO.ff, FOCUS_2006_D)
+f.noweight <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, quiet = TRUE)
 summary(f.noweight)
-f.irls <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, reweight.method = "obs")
+f.irls <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, reweight.method = "obs", quiet = TRUE)
 summary(f.irls)
-f.w.mean <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, weight = "mean")
+f.w.mean <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, weight = "mean", quiet = TRUE)
 summary(f.w.mean)
-f.w.value <- mkinfit(SFO_SFO.ff, subset(FOCUS_2006_D, value != 0), err = "value")
+f.w.value <- mkinfit(SFO_SFO.ff, subset(FOCUS_2006_D, value != 0), err = "value", 
+                     quiet = TRUE)
 summary(f.w.value)
 }
 
@@ -312,9 +314,9 @@ summary(f.w.value)
 dw <- FOCUS_2006_D
 errors <- c(parent = 2, m1 = 1)
 dw$err.man <- errors[FOCUS_2006_D$name]
-f.w.man <- mkinfit(SFO_SFO.ff, dw, err = "err.man")
+f.w.man <- mkinfit(SFO_SFO.ff, dw, err = "err.man", quiet = TRUE)
 summary(f.w.man)
-f.w.man.irls <- mkinfit(SFO_SFO.ff, dw, err = "err.man",
+f.w.man.irls <- mkinfit(SFO_SFO.ff, dw, err = "err.man", quiet = TRUE,
                        reweight.method = "obs")
 summary(f.w.man.irls)
 }

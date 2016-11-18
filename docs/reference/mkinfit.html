@@ -359,15 +359,15 @@
 <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='st'>"FOMC"</span>, <span class='no'>FOCUS_2006_C</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='fu'>summary</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; mkin version:    0.9.44.9000 
 #&gt; R version:       3.3.2 
-#&gt; Date of fit:     Fri Nov 18 15:19:37 2016 
-#&gt; Date of summary: Fri Nov 18 15:19:37 2016 
+#&gt; Date of fit:     Fri Nov 18 15:36:12 2016 
+#&gt; Date of summary: Fri Nov 18 15:36:12 2016 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent
 #&gt; 
 #&gt; Model predictions using solution type analytical 
 #&gt; 
-#&gt; Fitted with method Port using 64 model solutions performed in 0.152 s
+#&gt; Fitted with method Port using 64 model solutions performed in 0.157 s
 #&gt; 
 #&gt; Weighting: none
 #&gt; 
@@ -436,7 +436,7 @@
   <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='co'># Fit the model to the FOCUS example dataset D using defaults</span>
 <span class='fu'>print</span>(<span class='fu'>system.time</span>(<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>,
                            <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"eigen"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   1.220   1.184   0.904 </div><div class='input'><span class='fu'>coef</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt;          parent_0 log_k_parent_sink   log_k_parent_m1     log_k_m1_sink 
+#&gt;   1.264   1.216   0.945 </div><div class='input'><span class='fu'>coef</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt;          parent_0 log_k_parent_sink   log_k_parent_m1     log_k_m1_sink 
 #&gt;          99.59848          -3.03822          -2.98030          -5.24750 </div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; $ff
 #&gt; parent_sink   parent_m1     m1_sink 
 #&gt;    0.485524    0.514476    1.000000 
@@ -513,7 +513,7 @@
 #&gt; Model cost at call  152 :  371.2134 
 #&gt; Optimisation by method Port successfully terminated.
 #&gt;    user  system elapsed 
-#&gt;   0.712   0.040   0.707 </div><div class='input'><span class='fu'>coef</span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt;          parent_0 log_k_parent_sink   log_k_parent_m1     log_k_m1_sink 
+#&gt;   0.712   0.036   0.702 </div><div class='input'><span class='fu'>coef</span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt;          parent_0 log_k_parent_sink   log_k_parent_m1     log_k_m1_sink 
 #&gt;          99.59848          -3.03822          -2.98030          -5.24750 </div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt; $ff
 #&gt; parent_sink   parent_m1     m1_sink 
 #&gt;    0.485524    0.514476    1.000000 
@@ -532,735 +532,32 @@
 <span class='no'>FOMC_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(
   <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"FOMC"</span>, <span class='st'>"m1"</span>),
   <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='co'># Fit the model to the FOCUS example dataset D using defaults</span>
-<span class='no'>fit.FOMC_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>FOMC_SFO</span>, <span class='no'>FOCUS_2006_D</span>)</div><div class='output co'>#&gt; Model cost at call  1 :  18857.28 
-#&gt; Model cost at call  4 :  18857.28 
-#&gt; Model cost at call  5 :  18857.28 
-#&gt; Model cost at call  8 :  15273.94 
-#&gt; Model cost at call  9 :  15273.93 
-#&gt; Model cost at call  12 :  15273.67 
-#&gt; Model cost at call  13 :  15273.64 
-#&gt; Model cost at call  14 :  12764.42 
-#&gt; Model cost at call  15 :  8382.7 
-#&gt; Model cost at call  20 :  8382.696 
-#&gt; Model cost at call  23 :  2729.177 
-#&gt; Model cost at call  24 :  2729.175 
-#&gt; Model cost at call  26 :  2729.164 
-#&gt; Model cost at call  30 :  2299.383 
-#&gt; Model cost at call  34 :  2299.379 
-#&gt; Model cost at call  35 :  2299.373 
-#&gt; Model cost at call  36 :  1944.782 
-#&gt; Model cost at call  40 :  1944.782 
-#&gt; Model cost at call  42 :  1328.087 
-#&gt; Model cost at call  43 :  908.661 
-#&gt; Model cost at call  44 :  908.6604 
-#&gt; Model cost at call  50 :  877.3556 
-#&gt; Model cost at call  51 :  877.3554 
-#&gt; Model cost at call  54 :  877.3546 
-#&gt; Model cost at call  56 :  769.5186 
-#&gt; Model cost at call  59 :  769.5157 
-#&gt; Model cost at call  62 :  690.3426 
-#&gt; Model cost at call  66 :  690.3425 
-#&gt; Model cost at call  68 :  608.4032 
-#&gt; Model cost at call  72 :  608.4031 
-#&gt; Model cost at call  73 :  608.4031 
-#&gt; Model cost at call  74 :  601.5178 
-#&gt; Model cost at call  78 :  601.5174 
-#&gt; Model cost at call  79 :  601.5174 
-#&gt; Model cost at call  80 :  459.9885 
-#&gt; Model cost at call  81 :  459.9883 
-#&gt; Model cost at call  83 :  459.9878 
-#&gt; Model cost at call  87 :  447.0145 
-#&gt; Model cost at call  91 :  447.0145 
-#&gt; Model cost at call  94 :  445.7322 
-#&gt; Model cost at call  97 :  445.7322 
-#&gt; Model cost at call  99 :  445.7322 
-#&gt; Model cost at call  100 :  444.6965 
-#&gt; Model cost at call  103 :  444.6965 
-#&gt; Model cost at call  106 :  442.9742 
-#&gt; Model cost at call  109 :  442.9742 
-#&gt; Model cost at call  112 :  439.9665 
-#&gt; Model cost at call  115 :  439.9665 
-#&gt; Model cost at call  116 :  439.9664 
-#&gt; Model cost at call  118 :  435.0752 
-#&gt; Model cost at call  121 :  435.0751 
-#&gt; Model cost at call  124 :  430.4718 
-#&gt; Model cost at call  127 :  430.4717 
-#&gt; Model cost at call  132 :  424.7004 
-#&gt; Model cost at call  134 :  424.7003 
-#&gt; Model cost at call  138 :  423.6102 
-#&gt; Model cost at call  141 :  423.6102 
-#&gt; Model cost at call  142 :  423.6102 
-#&gt; Model cost at call  144 :  421.1786 
-#&gt; Model cost at call  147 :  421.1786 
-#&gt; Model cost at call  148 :  421.1786 
-#&gt; Model cost at call  150 :  418.1431 
-#&gt; Model cost at call  151 :  412.8665 
-#&gt; Model cost at call  152 :  396.6067 
-#&gt; Model cost at call  154 :  396.6067 
-#&gt; Model cost at call  158 :  391.0492 
-#&gt; Model cost at call  160 :  391.0492 
-#&gt; Model cost at call  164 :  385.8205 
-#&gt; Model cost at call  165 :  385.8205 
-#&gt; Model cost at call  170 :  379.7674 
-#&gt; Model cost at call  171 :  379.7674 
-#&gt; Model cost at call  172 :  379.7674 
-#&gt; Model cost at call  176 :  374.9389 
-#&gt; Model cost at call  177 :  374.9389 
-#&gt; Model cost at call  182 :  372.727 
-#&gt; Model cost at call  185 :  372.727 
-#&gt; Model cost at call  188 :  371.5297 
-#&gt; Model cost at call  194 :  370.3738 
-#&gt; Model cost at call  195 :  370.3738 
-#&gt; Model cost at call  200 :  370.0182 
-#&gt; Model cost at call  206 :  369.8634 
-#&gt; Model cost at call  212 :  369.8188 
-#&gt; Model cost at call  213 :  369.8188 
-#&gt; Model cost at call  219 :  369.8114 
-#&gt; Model cost at call  221 :  369.8114 
-#&gt; Model cost at call  224 :  369.8114 
-#&gt; Model cost at call  226 :  369.8114 
-#&gt; Model cost at call  230 :  369.8105 
-#&gt; Model cost at call  231 :  369.8105 
-#&gt; Model cost at call  235 :  369.8105 
-#&gt; Model cost at call  236 :  369.8105 
-#&gt; Model cost at call  237 :  369.8105 
-#&gt; Model cost at call  238 :  369.8105 
-#&gt; Model cost at call  249 :  369.8105 
-#&gt; Model cost at call  260 :  369.8105 
-#&gt; Model cost at call  275 :  369.8105 
-#&gt; Model cost at call  276 :  369.8105 
-#&gt; Optimisation by method Port successfully terminated.</div><div class='input'><span class='co'># Use starting parameters from parent only FOMC fit</span>
-<span class='no'>fit.FOMC</span> <span class='kw'>=</span> <span class='fu'>mkinfit</span>(<span class='st'>"FOMC"</span>, <span class='no'>FOCUS_2006_D</span>)</div><div class='output co'>#&gt; Model cost at call  1 :  3237.008 
-#&gt; Model cost at call  3 :  3237.007 
-#&gt; Model cost at call  6 :  671.2571 
-#&gt; Model cost at call  7 :  671.2559 
-#&gt; Model cost at call  8 :  671.2301 
-#&gt; Model cost at call  9 :  671.2249 
-#&gt; Model cost at call  10 :  468.4899 
-#&gt; Model cost at call  12 :  468.4899 
-#&gt; Model cost at call  14 :  371.3486 
-#&gt; Model cost at call  16 :  371.3485 
-#&gt; Model cost at call  18 :  346.2972 
-#&gt; Model cost at call  19 :  346.2971 
-#&gt; Model cost at call  20 :  346.297 
-#&gt; Model cost at call  21 :  346.2969 
-#&gt; Model cost at call  22 :  269.7053 
-#&gt; Model cost at call  23 :  269.7053 
-#&gt; Model cost at call  26 :  243.9936 
-#&gt; Model cost at call  27 :  235.1625 
-#&gt; Model cost at call  28 :  235.1624 
-#&gt; Model cost at call  30 :  235.1624 
-#&gt; Model cost at call  31 :  224.2195 
-#&gt; Model cost at call  35 :  218.1922 
-#&gt; Model cost at call  36 :  218.1922 
-#&gt; Model cost at call  38 :  218.1922 
-#&gt; Model cost at call  39 :  211.5012 
-#&gt; Model cost at call  41 :  211.5012 
-#&gt; Model cost at call  43 :  207.9511 
-#&gt; Model cost at call  44 :  207.9511 
-#&gt; Model cost at call  47 :  206.5377 
-#&gt; Model cost at call  51 :  205.8736 
-#&gt; Model cost at call  55 :  205.5625 
-#&gt; Model cost at call  59 :  205.4704 
-#&gt; Model cost at call  63 :  205.4499 
-#&gt; Model cost at call  67 :  205.448 
-#&gt; Model cost at call  69 :  205.448 
-#&gt; Model cost at call  70 :  205.448 
-#&gt; Model cost at call  73 :  205.448 
-#&gt; Model cost at call  74 :  205.4478 
-#&gt; Model cost at call  75 :  205.4478 
-#&gt; Model cost at call  77 :  205.4478 
-#&gt; Model cost at call  79 :  205.4478 
-#&gt; Model cost at call  84 :  205.4478 
-#&gt; Model cost at call  95 :  205.4478 
-#&gt; Model cost at call  98 :  205.4478 
-#&gt; Optimisation by method Port successfully terminated.</div><div class='input'><span class='no'>fit.FOMC_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>FOMC_SFO</span>, <span class='no'>FOCUS_2006_D</span>,
-  <span class='kw'>parms.ini</span> <span class='kw'>=</span> <span class='no'>fit.FOMC</span>$<span class='no'>bparms.ode</span>)</div><div class='output co'>#&gt; Model cost at call  1 :  15169.96 
-#&gt; Model cost at call  2 :  15169.96 
-#&gt; Model cost at call  7 :  8247.462 
-#&gt; Model cost at call  14 :  6734.371 
-#&gt; Model cost at call  15 :  6734.339 
-#&gt; Model cost at call  16 :  6734.136 
-#&gt; Model cost at call  20 :  4855.056 
-#&gt; Model cost at call  24 :  4855.038 
-#&gt; Model cost at call  27 :  1239.986 
-#&gt; Model cost at call  29 :  1239.985 
-#&gt; Model cost at call  34 :  1030.523 
-#&gt; Model cost at call  38 :  1030.523 
-#&gt; Model cost at call  40 :  894.2766 
-#&gt; Model cost at call  43 :  894.275 
-#&gt; Model cost at call  46 :  750.3629 
-#&gt; Model cost at call  49 :  750.3623 
-#&gt; Model cost at call  52 :  627.6819 
-#&gt; Model cost at call  55 :  627.6818 
-#&gt; Model cost at call  58 :  546.2947 
-#&gt; Model cost at call  61 :  546.2944 
-#&gt; Model cost at call  65 :  502.5529 
-#&gt; Model cost at call  69 :  502.5525 
-#&gt; Model cost at call  70 :  502.5525 
-#&gt; Model cost at call  71 :  475.2423 
-#&gt; Model cost at call  72 :  465.5298 
-#&gt; Model cost at call  75 :  465.5298 
-#&gt; Model cost at call  76 :  465.5297 
-#&gt; Model cost at call  78 :  464.9476 
-#&gt; Model cost at call  81 :  464.9476 
-#&gt; Model cost at call  82 :  464.9473 
-#&gt; Model cost at call  84 :  426.9626 
-#&gt; Model cost at call  88 :  426.9626 
-#&gt; Model cost at call  90 :  414.5235 
-#&gt; Model cost at call  93 :  414.5234 
-#&gt; Model cost at call  96 :  412.1478 
-#&gt; Model cost at call  99 :  412.1477 
-#&gt; Model cost at call  100 :  412.1477 
-#&gt; Model cost at call  101 :  412.1477 
-#&gt; Model cost at call  102 :  394.146 
-#&gt; Model cost at call  105 :  394.146 
-#&gt; Model cost at call  106 :  394.146 
-#&gt; Model cost at call  107 :  394.146 
-#&gt; Model cost at call  108 :  384.2002 
-#&gt; Model cost at call  112 :  384.2001 
-#&gt; Model cost at call  113 :  384.2001 
-#&gt; Model cost at call  115 :  380.5495 
-#&gt; Model cost at call  119 :  380.5494 
-#&gt; Model cost at call  120 :  380.5494 
-#&gt; Model cost at call  121 :  378.4803 
-#&gt; Model cost at call  123 :  378.4802 
-#&gt; Model cost at call  124 :  378.4792 
-#&gt; Model cost at call  127 :  374.8432 
-#&gt; Model cost at call  129 :  374.8431 
-#&gt; Model cost at call  133 :  372.8364 
-#&gt; Model cost at call  136 :  372.8364 
-#&gt; Model cost at call  137 :  372.8363 
-#&gt; Model cost at call  138 :  372.8363 
-#&gt; Model cost at call  141 :  372.668 
-#&gt; Model cost at call  145 :  372.6679 
-#&gt; Model cost at call  147 :  372.5882 
-#&gt; Model cost at call  150 :  372.5882 
-#&gt; Model cost at call  153 :  372.4828 
-#&gt; Model cost at call  156 :  372.4828 
-#&gt; Model cost at call  159 :  372.3639 
-#&gt; Model cost at call  162 :  372.3639 
-#&gt; Model cost at call  163 :  372.3639 
-#&gt; Model cost at call  164 :  372.3639 
-#&gt; Model cost at call  165 :  372.1959 
-#&gt; Model cost at call  168 :  372.1959 
-#&gt; Model cost at call  171 :  371.9627 
-#&gt; Model cost at call  172 :  371.7467 
-#&gt; Model cost at call  173 :  371.1161 
-#&gt; Model cost at call  174 :  370.3326 
-#&gt; Model cost at call  177 :  370.3326 
-#&gt; Model cost at call  178 :  370.3326 
-#&gt; Model cost at call  180 :  370.3267 
-#&gt; Model cost at call  186 :  370.0471 
-#&gt; Model cost at call  187 :  370.0471 
-#&gt; Model cost at call  193 :  369.9649 
-#&gt; Model cost at call  194 :  369.9649 
-#&gt; Model cost at call  196 :  369.9649 
-#&gt; Model cost at call  199 :  369.8684 
-#&gt; Model cost at call  200 :  369.8684 
-#&gt; Model cost at call  204 :  369.8684 
-#&gt; Model cost at call  206 :  369.8349 
-#&gt; Model cost at call  207 :  369.8349 
-#&gt; Model cost at call  209 :  369.8349 
-#&gt; Model cost at call  210 :  369.8349 
-#&gt; Model cost at call  211 :  369.8349 
-#&gt; Model cost at call  212 :  369.8105 
-#&gt; Model cost at call  214 :  369.8105 
-#&gt; Model cost at call  218 :  369.8105 
-#&gt; Model cost at call  220 :  369.8105 
-#&gt; Model cost at call  225 :  369.8105 
-#&gt; Model cost at call  229 :  369.8105 
-#&gt; Model cost at call  231 :  369.8105 
-#&gt; Model cost at call  232 :  369.8105 
-#&gt; Model cost at call  236 :  369.8105 
-#&gt; Model cost at call  239 :  369.8105 
-#&gt; Model cost at call  240 :  369.8105 
-#&gt; Model cost at call  255 :  369.8105 
-#&gt; Model cost at call  258 :  369.8105 
-#&gt; Optimisation by method Port successfully terminated.</div><div class='input'>
+<span class='no'>fit.FOMC_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>FOMC_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='co'># Use starting parameters from parent only FOMC fit</span>
+<span class='no'>fit.FOMC</span> <span class='kw'>=</span> <span class='fu'>mkinfit</span>(<span class='st'>"FOMC"</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>fit.FOMC_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>FOMC_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>parms.ini</span> <span class='kw'>=</span> <span class='no'>fit.FOMC</span>$<span class='no'>bparms.ode</span>)
+
 <span class='co'># Use stepwise fitting, using optimised parameters from parent only fit, SFORB</span>
 <span class='no'>SFORB_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(
   <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFORB"</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"m1"</span>, <span class='kw'>sink</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>),
   <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='co'># Fit the model to the FOCUS example dataset D using defaults</span>
-<span class='no'>fit.SFORB_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFORB_SFO</span>, <span class='no'>FOCUS_2006_D</span>)</div><div class='output co'>#&gt; Model cost at call  1 :  19233.21 
-#&gt; Model cost at call  2 :  19233.21 
-#&gt; Model cost at call  5 :  19233.21 
-#&gt; Model cost at call  8 :  14482.65 
-#&gt; Model cost at call  11 :  14482.51 
-#&gt; Model cost at call  13 :  14482.17 
-#&gt; Model cost at call  15 :  6973.814 
-#&gt; Model cost at call  16 :  5161.041 
-#&gt; Model cost at call  17 :  5161.029 
-#&gt; Model cost at call  22 :  5161.026 
-#&gt; Model cost at call  24 :  3249.595 
-#&gt; Model cost at call  26 :  3249.595 
-#&gt; Model cost at call  27 :  3249.519 
-#&gt; Model cost at call  31 :  2615.891 
-#&gt; Model cost at call  32 :  2615.888 
-#&gt; Model cost at call  39 :  989.1788 
-#&gt; Model cost at call  44 :  989.1772 
-#&gt; Model cost at call  45 :  989.1771 
-#&gt; Model cost at call  47 :  647.4307 
-#&gt; Model cost at call  50 :  647.4302 
-#&gt; Model cost at call  51 :  647.4261 
-#&gt; Model cost at call  54 :  626.7937 
-#&gt; Model cost at call  55 :  626.7935 
-#&gt; Model cost at call  56 :  626.7931 
-#&gt; Model cost at call  61 :  527.9042 
-#&gt; Model cost at call  62 :  527.9041 
-#&gt; Model cost at call  68 :  505.8828 
-#&gt; Model cost at call  70 :  505.8828 
-#&gt; Model cost at call  73 :  505.8827 
-#&gt; Model cost at call  75 :  452.8932 
-#&gt; Model cost at call  77 :  452.893 
-#&gt; Model cost at call  82 :  414.4918 
-#&gt; Model cost at call  83 :  414.4918 
-#&gt; Model cost at call  84 :  414.4918 
-#&gt; Model cost at call  88 :  414.4917 
-#&gt; Model cost at call  89 :  408.2617 
-#&gt; Model cost at call  90 :  408.2616 
-#&gt; Model cost at call  91 :  408.2616 
-#&gt; Model cost at call  95 :  408.2615 
-#&gt; Model cost at call  96 :  384.4461 
-#&gt; Model cost at call  102 :  384.4461 
-#&gt; Model cost at call  104 :  383.4905 
-#&gt; Model cost at call  105 :  383.4905 
-#&gt; Model cost at call  106 :  383.4905 
-#&gt; Model cost at call  109 :  383.4904 
-#&gt; Model cost at call  111 :  381.8828 
-#&gt; Model cost at call  112 :  381.8827 
-#&gt; Model cost at call  118 :  380.8499 
-#&gt; Model cost at call  120 :  380.8499 
-#&gt; Model cost at call  123 :  380.8499 
-#&gt; Model cost at call  125 :  379.1403 
-#&gt; Model cost at call  127 :  379.1402 
-#&gt; Model cost at call  132 :  376.4962 
-#&gt; Model cost at call  133 :  373.0958 
-#&gt; Model cost at call  134 :  365.247 
-#&gt; Model cost at call  137 :  365.2469 
-#&gt; Model cost at call  142 :  360.8231 
-#&gt; Model cost at call  143 :  360.8231 
-#&gt; Model cost at call  146 :  360.8231 
-#&gt; Model cost at call  148 :  360.8231 
-#&gt; Model cost at call  149 :  358.3976 
-#&gt; Model cost at call  152 :  358.3976 
-#&gt; Model cost at call  154 :  358.3976 
-#&gt; Model cost at call  156 :  355.9066 
-#&gt; Model cost at call  157 :  355.9066 
-#&gt; Model cost at call  163 :  354.3386 
-#&gt; Model cost at call  164 :  353.6335 
-#&gt; Model cost at call  172 :  353.2094 
-#&gt; Model cost at call  173 :  353.2094 
-#&gt; Model cost at call  174 :  353.2093 
-#&gt; Model cost at call  177 :  353.2093 
-#&gt; Model cost at call  178 :  353.2093 
-#&gt; Model cost at call  179 :  352.6641 
-#&gt; Model cost at call  182 :  352.6641 
-#&gt; Model cost at call  183 :  352.6641 
-#&gt; Model cost at call  186 :  352.4908 
-#&gt; Model cost at call  187 :  352.4429 
-#&gt; Model cost at call  195 :  352.3246 
-#&gt; Model cost at call  203 :  352.2858 
-#&gt; Model cost at call  204 :  352.2858 
-#&gt; Model cost at call  205 :  352.2858 
-#&gt; Model cost at call  206 :  352.2858 
-#&gt; Model cost at call  207 :  352.2858 
-#&gt; Model cost at call  210 :  352.2332 
-#&gt; Model cost at call  211 :  352.2081 
-#&gt; Model cost at call  214 :  352.2081 
-#&gt; Model cost at call  216 :  352.2081 
-#&gt; Model cost at call  218 :  352.2049 
-#&gt; Model cost at call  219 :  352.2049 
-#&gt; Model cost at call  220 :  352.2049 
-#&gt; Model cost at call  226 :  352.2048 
-#&gt; Model cost at call  228 :  352.2048 
-#&gt; Model cost at call  231 :  352.2048 
-#&gt; Model cost at call  232 :  352.2048 
-#&gt; Model cost at call  238 :  352.2048 
-#&gt; Model cost at call  239 :  352.2048 
-#&gt; Model cost at call  251 :  352.2048 
-#&gt; Model cost at call  264 :  352.2048 
-#&gt; Model cost at call  283 :  352.2048 
-#&gt; Model cost at call  284 :  352.2048 
-#&gt; Model cost at call  285 :  352.2048 
-#&gt; Model cost at call  286 :  352.2048 
-#&gt; Optimisation by method Port successfully terminated.</div><div class='input'><span class='no'>fit.SFORB_SFO.deSolve</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFORB_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"deSolve"</span>)</div><div class='output co'>#&gt; Model cost at call  1 :  19233.21 
-#&gt; Model cost at call  2 :  19233.21 
-#&gt; Model cost at call  5 :  19233.21 
-#&gt; Model cost at call  8 :  14482.65 
-#&gt; Model cost at call  11 :  14482.51 
-#&gt; Model cost at call  13 :  14482.17 
-#&gt; Model cost at call  15 :  6973.814 
-#&gt; Model cost at call  16 :  5161.041 
-#&gt; Model cost at call  17 :  5161.029 
-#&gt; Model cost at call  22 :  5161.026 
-#&gt; Model cost at call  24 :  3249.595 
-#&gt; Model cost at call  26 :  3249.595 
-#&gt; Model cost at call  27 :  3249.519 
-#&gt; Model cost at call  31 :  2615.891 
-#&gt; Model cost at call  32 :  2615.888 
-#&gt; Model cost at call  39 :  989.1788 
-#&gt; Model cost at call  44 :  989.1772 
-#&gt; Model cost at call  45 :  989.1771 
-#&gt; Model cost at call  47 :  647.4307 
-#&gt; Model cost at call  50 :  647.4302 
-#&gt; Model cost at call  51 :  647.4261 
-#&gt; Model cost at call  54 :  626.7937 
-#&gt; Model cost at call  55 :  626.7935 
-#&gt; Model cost at call  56 :  626.7931 
-#&gt; Model cost at call  61 :  527.9042 
-#&gt; Model cost at call  62 :  527.9041 
-#&gt; Model cost at call  68 :  505.8828 
-#&gt; Model cost at call  70 :  505.8828 
-#&gt; Model cost at call  73 :  505.8827 
-#&gt; Model cost at call  75 :  452.8932 
-#&gt; Model cost at call  77 :  452.893 
-#&gt; Model cost at call  82 :  414.4918 
-#&gt; Model cost at call  83 :  414.4918 
-#&gt; Model cost at call  84 :  414.4918 
-#&gt; Model cost at call  88 :  414.4917 
-#&gt; Model cost at call  89 :  408.2617 
-#&gt; Model cost at call  90 :  408.2616 
-#&gt; Model cost at call  91 :  408.2616 
-#&gt; Model cost at call  95 :  408.2615 
-#&gt; Model cost at call  96 :  384.4461 
-#&gt; Model cost at call  102 :  384.4461 
-#&gt; Model cost at call  104 :  383.4905 
-#&gt; Model cost at call  105 :  383.4905 
-#&gt; Model cost at call  106 :  383.4905 
-#&gt; Model cost at call  109 :  383.4904 
-#&gt; Model cost at call  111 :  381.8828 
-#&gt; Model cost at call  112 :  381.8827 
-#&gt; Model cost at call  118 :  380.8499 
-#&gt; Model cost at call  120 :  380.8499 
-#&gt; Model cost at call  123 :  380.8499 
-#&gt; Model cost at call  125 :  379.1403 
-#&gt; Model cost at call  127 :  379.1402 
-#&gt; Model cost at call  132 :  376.4962 
-#&gt; Model cost at call  133 :  373.0958 
-#&gt; Model cost at call  134 :  365.247 
-#&gt; Model cost at call  137 :  365.2469 
-#&gt; Model cost at call  142 :  360.8231 
-#&gt; Model cost at call  143 :  360.8231 
-#&gt; Model cost at call  146 :  360.8231 
-#&gt; Model cost at call  148 :  360.8231 
-#&gt; Model cost at call  149 :  358.3976 
-#&gt; Model cost at call  152 :  358.3976 
-#&gt; Model cost at call  154 :  358.3976 
-#&gt; Model cost at call  156 :  355.9066 
-#&gt; Model cost at call  157 :  355.9066 
-#&gt; Model cost at call  163 :  354.3386 
-#&gt; Model cost at call  164 :  353.6335 
-#&gt; Model cost at call  172 :  353.2094 
-#&gt; Model cost at call  173 :  353.2094 
-#&gt; Model cost at call  174 :  353.2093 
-#&gt; Model cost at call  177 :  353.2093 
-#&gt; Model cost at call  178 :  353.2093 
-#&gt; Model cost at call  179 :  352.6641 
-#&gt; Model cost at call  182 :  352.6641 
-#&gt; Model cost at call  183 :  352.6641 
-#&gt; Model cost at call  186 :  352.4908 
-#&gt; Model cost at call  187 :  352.4429 
-#&gt; Model cost at call  195 :  352.3246 
-#&gt; Model cost at call  203 :  352.2858 
-#&gt; Model cost at call  204 :  352.2858 
-#&gt; Model cost at call  205 :  352.2858 
-#&gt; Model cost at call  206 :  352.2858 
-#&gt; Model cost at call  207 :  352.2858 
-#&gt; Model cost at call  210 :  352.2332 
-#&gt; Model cost at call  211 :  352.2081 
-#&gt; Model cost at call  214 :  352.2081 
-#&gt; Model cost at call  216 :  352.2081 
-#&gt; Model cost at call  218 :  352.2049 
-#&gt; Model cost at call  219 :  352.2049 
-#&gt; Model cost at call  220 :  352.2049 
-#&gt; Model cost at call  226 :  352.2048 
-#&gt; Model cost at call  228 :  352.2048 
-#&gt; Model cost at call  231 :  352.2048 
-#&gt; Model cost at call  232 :  352.2048 
-#&gt; Model cost at call  238 :  352.2048 
-#&gt; Model cost at call  239 :  352.2048 
-#&gt; Model cost at call  251 :  352.2048 
-#&gt; Model cost at call  264 :  352.2048 
-#&gt; Model cost at call  283 :  352.2048 
-#&gt; Model cost at call  284 :  352.2048 
-#&gt; Model cost at call  285 :  352.2048 
-#&gt; Model cost at call  286 :  352.2048 
-#&gt; Optimisation by method Port successfully terminated.</div><div class='input'><span class='co'># Use starting parameters from parent only SFORB fit (not really needed in this case)</span>
-<span class='no'>fit.SFORB</span> <span class='kw'>=</span> <span class='fu'>mkinfit</span>(<span class='st'>"SFORB"</span>, <span class='no'>FOCUS_2006_D</span>)</div><div class='output co'>#&gt; Model cost at call  1 :  10426.65 
-#&gt; Model cost at call  3 :  10426.65 
-#&gt; Model cost at call  6 :  1995.326 
-#&gt; Model cost at call  7 :  1995.322 
-#&gt; Model cost at call  8 :  1995.14 
-#&gt; Model cost at call  11 :  718.5568 
-#&gt; Model cost at call  12 :  718.5566 
-#&gt; Model cost at call  13 :  718.5563 
-#&gt; Model cost at call  16 :  408.9208 
-#&gt; Model cost at call  17 :  408.9204 
-#&gt; Model cost at call  18 :  408.9204 
-#&gt; Model cost at call  20 :  408.9203 
-#&gt; Model cost at call  21 :  402.7935 
-#&gt; Model cost at call  22 :  402.793 
-#&gt; Model cost at call  26 :  202.0443 
-#&gt; Model cost at call  28 :  202.0443 
-#&gt; Model cost at call  30 :  202.0443 
-#&gt; Model cost at call  31 :  196.438 
-#&gt; Model cost at call  36 :  196.1947 
-#&gt; Model cost at call  37 :  196.1947 
-#&gt; Model cost at call  41 :  192.9338 
-#&gt; Model cost at call  43 :  192.9338 
-#&gt; Model cost at call  45 :  192.9338 
-#&gt; Model cost at call  46 :  191.6452 
-#&gt; Model cost at call  47 :  191.6452 
-#&gt; Model cost at call  51 :  188.9328 
-#&gt; Model cost at call  54 :  188.9328 
-#&gt; Model cost at call  55 :  188.9328 
-#&gt; Model cost at call  56 :  183.6499 
-#&gt; Model cost at call  59 :  183.6499 
-#&gt; Model cost at call  62 :  181.9039 
-#&gt; Model cost at call  67 :  179.0543 
-#&gt; Model cost at call  68 :  179.0543 
-#&gt; Model cost at call  69 :  179.0543 
-#&gt; Model cost at call  70 :  179.0543 
-#&gt; Model cost at call  72 :  176.749 
-#&gt; Model cost at call  73 :  176.2321 
-#&gt; Model cost at call  74 :  176.232 
-#&gt; Model cost at call  75 :  176.232 
-#&gt; Model cost at call  76 :  176.232 
-#&gt; Model cost at call  78 :  175.3914 
-#&gt; Model cost at call  79 :  175.3914 
-#&gt; Model cost at call  81 :  175.3913 
-#&gt; Model cost at call  83 :  174.6257 
-#&gt; Model cost at call  84 :  174.6257 
-#&gt; Model cost at call  89 :  174.1476 
-#&gt; Model cost at call  92 :  174.1476 
-#&gt; Model cost at call  93 :  174.1476 
-#&gt; Model cost at call  94 :  173.8512 
-#&gt; Model cost at call  99 :  173.6987 
-#&gt; Model cost at call  104 :  173.6813 
-#&gt; Model cost at call  105 :  173.6813 
-#&gt; Model cost at call  106 :  173.6813 
-#&gt; Model cost at call  107 :  173.6813 
-#&gt; Model cost at call  108 :  173.6813 
-#&gt; Model cost at call  109 :  173.6802 
-#&gt; Model cost at call  110 :  173.6802 
-#&gt; Model cost at call  111 :  173.6802 
-#&gt; Model cost at call  112 :  173.6802 
-#&gt; Model cost at call  113 :  173.6802 
-#&gt; Model cost at call  114 :  173.6799 
-#&gt; Model cost at call  116 :  173.6799 
-#&gt; Model cost at call  118 :  173.6799 
-#&gt; Model cost at call  119 :  173.6799 
-#&gt; Model cost at call  120 :  173.6799 
-#&gt; Model cost at call  129 :  173.6799 
-#&gt; Model cost at call  141 :  173.6799 
-#&gt; Optimisation by method Port successfully terminated.</div><div class='input'><span class='no'>fit.SFORB_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFORB_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>parms.ini</span> <span class='kw'>=</span> <span class='no'>fit.SFORB</span>$<span class='no'>bparms.ode</span>)</div><div class='output co'>#&gt; Model cost at call  1 :  18365.33 
-#&gt; Model cost at call  2 :  18365.33 
-#&gt; Model cost at call  8 :  11666.4 
-#&gt; Model cost at call  9 :  10992.15 
-#&gt; Model cost at call  10 :  10992.13 
-#&gt; Model cost at call  11 :  10991.95 
-#&gt; Model cost at call  12 :  10991.17 
-#&gt; Model cost at call  14 :  10990.65 
-#&gt; Model cost at call  17 :  3940.801 
-#&gt; Model cost at call  20 :  3940.8 
-#&gt; Model cost at call  22 :  3940.798 
-#&gt; Model cost at call  24 :  3241.199 
-#&gt; Model cost at call  27 :  3241.198 
-#&gt; Model cost at call  30 :  3241.192 
-#&gt; Model cost at call  31 :  1518.749 
-#&gt; Model cost at call  37 :  1518.747 
-#&gt; Model cost at call  39 :  1091.836 
-#&gt; Model cost at call  42 :  1091.835 
-#&gt; Model cost at call  43 :  1091.835 
-#&gt; Model cost at call  44 :  1091.804 
-#&gt; Model cost at call  46 :  927.8538 
-#&gt; Model cost at call  49 :  927.8529 
-#&gt; Model cost at call  53 :  638.102 
-#&gt; Model cost at call  56 :  638.1019 
-#&gt; Model cost at call  58 :  638.1018 
-#&gt; Model cost at call  61 :  560.4352 
-#&gt; Model cost at call  62 :  560.435 
-#&gt; Model cost at call  63 :  560.4327 
-#&gt; Model cost at call  68 :  423.9629 
-#&gt; Model cost at call  69 :  423.9629 
-#&gt; Model cost at call  70 :  423.9629 
-#&gt; Model cost at call  71 :  423.9628 
-#&gt; Model cost at call  73 :  423.9628 
-#&gt; Model cost at call  75 :  395.8015 
-#&gt; Model cost at call  78 :  395.8013 
-#&gt; Model cost at call  79 :  395.8013 
-#&gt; Model cost at call  83 :  365.6975 
-#&gt; Model cost at call  84 :  365.6975 
-#&gt; Model cost at call  88 :  365.6975 
-#&gt; Model cost at call  91 :  362.9843 
-#&gt; Model cost at call  93 :  362.9843 
-#&gt; Model cost at call  98 :  361.5506 
-#&gt; Model cost at call  99 :  361.5506 
-#&gt; Model cost at call  100 :  361.5505 
-#&gt; Model cost at call  105 :  359.0492 
-#&gt; Model cost at call  106 :  359.0492 
-#&gt; Model cost at call  112 :  357.6574 
-#&gt; Model cost at call  113 :  357.6574 
-#&gt; Model cost at call  114 :  357.6574 
-#&gt; Model cost at call  115 :  357.6574 
-#&gt; Model cost at call  119 :  355.4518 
-#&gt; Model cost at call  120 :  355.4518 
-#&gt; Model cost at call  127 :  354.9045 
-#&gt; Model cost at call  129 :  354.9045 
-#&gt; Model cost at call  131 :  354.9045 
-#&gt; Model cost at call  134 :  354.4168 
-#&gt; Model cost at call  135 :  354.4168 
-#&gt; Model cost at call  137 :  354.4167 
-#&gt; Model cost at call  141 :  353.7901 
-#&gt; Model cost at call  142 :  353.7901 
-#&gt; Model cost at call  143 :  353.7899 
-#&gt; Model cost at call  149 :  353.3233 
-#&gt; Model cost at call  151 :  353.3233 
-#&gt; Model cost at call  154 :  353.3233 
-#&gt; Model cost at call  156 :  353.2939 
-#&gt; Model cost at call  158 :  353.2938 
-#&gt; Model cost at call  159 :  353.2938 
-#&gt; Model cost at call  160 :  353.2938 
-#&gt; Model cost at call  163 :  353.0571 
-#&gt; Model cost at call  165 :  353.0571 
-#&gt; Model cost at call  170 :  352.9457 
-#&gt; Model cost at call  171 :  352.7458 
-#&gt; Model cost at call  173 :  352.7457 
-#&gt; Model cost at call  178 :  352.6377 
-#&gt; Model cost at call  180 :  352.6377 
-#&gt; Model cost at call  183 :  352.6377 
-#&gt; Model cost at call  185 :  352.5377 
-#&gt; Model cost at call  187 :  352.5377 
-#&gt; Model cost at call  188 :  352.5377 
-#&gt; Model cost at call  191 :  352.5377 
-#&gt; Model cost at call  193 :  352.4479 
-#&gt; Model cost at call  195 :  352.4479 
-#&gt; Model cost at call  198 :  352.4479 
-#&gt; Model cost at call  200 :  352.4021 
-#&gt; Model cost at call  202 :  352.4021 
-#&gt; Model cost at call  205 :  352.4021 
-#&gt; Model cost at call  207 :  352.3465 
-#&gt; Model cost at call  210 :  352.3465 
-#&gt; Model cost at call  214 :  352.3031 
-#&gt; Model cost at call  216 :  352.3031 
-#&gt; Model cost at call  221 :  352.2632 
-#&gt; Model cost at call  223 :  352.2632 
-#&gt; Model cost at call  228 :  352.2367 
-#&gt; Model cost at call  230 :  352.2367 
-#&gt; Model cost at call  231 :  352.2367 
-#&gt; Model cost at call  233 :  352.2367 
-#&gt; Model cost at call  235 :  352.215 
-#&gt; Model cost at call  238 :  352.215 
-#&gt; Model cost at call  239 :  352.215 
-#&gt; Model cost at call  242 :  352.207 
-#&gt; Model cost at call  245 :  352.207 
-#&gt; Model cost at call  250 :  352.2053 
-#&gt; Model cost at call  251 :  352.2053 
-#&gt; Model cost at call  253 :  352.2053 
-#&gt; Model cost at call  256 :  352.2053 
-#&gt; Model cost at call  258 :  352.2053 
-#&gt; Model cost at call  259 :  352.2052 
-#&gt; Model cost at call  260 :  352.2052 
-#&gt; Model cost at call  263 :  352.2052 
-#&gt; Model cost at call  271 :  352.2048 
-#&gt; Model cost at call  273 :  352.2048 
-#&gt; Model cost at call  274 :  352.2048 
-#&gt; Model cost at call  281 :  352.2048 
-#&gt; Model cost at call  282 :  352.2048 
-#&gt; Model cost at call  286 :  352.2048 
-#&gt; Model cost at call  289 :  352.2048 
-#&gt; Model cost at call  294 :  352.2048 
-#&gt; Model cost at call  296 :  352.2048 
-#&gt; Model cost at call  300 :  352.2048 
-#&gt; Model cost at call  307 :  352.2048 
-#&gt; Model cost at call  325 :  352.2048 
-#&gt; Model cost at call  331 :  352.2048 
-#&gt; Model cost at call  333 :  352.2048 
-#&gt; Optimisation by method Port successfully terminated.</div><div class='input'>
+<span class='no'>fit.SFORB_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFORB_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>fit.SFORB_SFO.deSolve</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFORB_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"deSolve"</span>,
+                                 <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='co'># Use starting parameters from parent only SFORB fit (not really needed in this case)</span>
+<span class='no'>fit.SFORB</span> <span class='kw'>=</span> <span class='fu'>mkinfit</span>(<span class='st'>"SFORB"</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>fit.SFORB_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFORB_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>parms.ini</span> <span class='kw'>=</span> <span class='no'>fit.SFORB</span>$<span class='no'>bparms.ode</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+
 
 
 <span class='co'># Weighted fits, including IRLS</span>
 <span class='no'>SFO_SFO.ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>),
-                      <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='no'>f.noweight</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>)</div><div class='output co'>#&gt; Model cost at call  1 :  15156.12 
-#&gt; Model cost at call  2 :  15156.12 
-#&gt; Model cost at call  6 :  8243.644 
-#&gt; Model cost at call  12 :  6290.714 
-#&gt; Model cost at call  13 :  6290.684 
-#&gt; Model cost at call  15 :  6290.453 
-#&gt; Model cost at call  18 :  1700.75 
-#&gt; Model cost at call  20 :  1700.612 
-#&gt; Model cost at call  24 :  1190.923 
-#&gt; Model cost at call  26 :  1190.922 
-#&gt; Model cost at call  29 :  1017.417 
-#&gt; Model cost at call  31 :  1017.417 
-#&gt; Model cost at call  33 :  1017.416 
-#&gt; Model cost at call  34 :  644.0471 
-#&gt; Model cost at call  36 :  644.0469 
-#&gt; Model cost at call  38 :  644.0468 
-#&gt; Model cost at call  39 :  590.5024 
-#&gt; Model cost at call  41 :  590.5021 
-#&gt; Model cost at call  43 :  590.5015 
-#&gt; Model cost at call  44 :  543.2187 
-#&gt; Model cost at call  45 :  543.2183 
-#&gt; Model cost at call  46 :  543.2182 
-#&gt; Model cost at call  50 :  391.348 
-#&gt; Model cost at call  51 :  391.3479 
-#&gt; Model cost at call  56 :  386.4789 
-#&gt; Model cost at call  58 :  386.4789 
-#&gt; Model cost at call  60 :  386.4779 
-#&gt; Model cost at call  61 :  384.0686 
-#&gt; Model cost at call  63 :  384.0686 
-#&gt; Model cost at call  66 :  382.7812 
-#&gt; Model cost at call  68 :  382.7812 
-#&gt; Model cost at call  70 :  382.7812 
-#&gt; Model cost at call  71 :  378.9272 
-#&gt; Model cost at call  73 :  378.9272 
-#&gt; Model cost at call  75 :  378.9272 
-#&gt; Model cost at call  76 :  377.4846 
-#&gt; Model cost at call  78 :  377.4846 
-#&gt; Model cost at call  81 :  375.9738 
-#&gt; Model cost at call  83 :  375.9738 
-#&gt; Model cost at call  86 :  375.3387 
-#&gt; Model cost at call  88 :  375.3387 
-#&gt; Model cost at call  91 :  374.5774 
-#&gt; Model cost at call  93 :  374.5774 
-#&gt; Model cost at call  95 :  374.5774 
-#&gt; Model cost at call  96 :  373.5447 
-#&gt; Model cost at call  100 :  373.5446 
-#&gt; Model cost at call  102 :  373.2643 
-#&gt; Model cost at call  104 :  373.2643 
-#&gt; Model cost at call  107 :  372.6799 
-#&gt; Model cost at call  111 :  372.6798 
-#&gt; Model cost at call  114 :  372.6325 
-#&gt; Model cost at call  116 :  372.6325 
-#&gt; Model cost at call  119 :  372.6159 
-#&gt; Model cost at call  121 :  372.6159 
-#&gt; Model cost at call  123 :  372.6159 
-#&gt; Model cost at call  124 :  372.5845 
-#&gt; Model cost at call  126 :  372.5845 
-#&gt; Model cost at call  129 :  372.5375 
-#&gt; Model cost at call  130 :  372.4771 
-#&gt; Model cost at call  131 :  372.2008 
-#&gt; Model cost at call  132 :  371.4923 
-#&gt; Model cost at call  134 :  371.4923 
-#&gt; Model cost at call  137 :  371.3022 
-#&gt; Model cost at call  139 :  371.3022 
-#&gt; Model cost at call  143 :  371.2271 
-#&gt; Model cost at call  144 :  371.2271 
-#&gt; Model cost at call  148 :  371.2202 
-#&gt; Model cost at call  149 :  371.215 
-#&gt; Model cost at call  152 :  371.215 
-#&gt; Model cost at call  154 :  371.2136 
-#&gt; Model cost at call  155 :  371.2136 
-#&gt; Model cost at call  156 :  371.2136 
-#&gt; Model cost at call  160 :  371.2134 
-#&gt; Model cost at call  164 :  371.2134 
-#&gt; Model cost at call  167 :  371.2134 
-#&gt; Optimisation by method Port successfully terminated.</div><div class='input'><span class='fu'>summary</span>(<span class='no'>f.noweight</span>)</div><div class='output co'>#&gt; mkin version:    0.9.44.9000 
+                      <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='no'>f.noweight</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>summary</span>(<span class='no'>f.noweight</span>)</div><div class='output co'>#&gt; mkin version:    0.9.44.9000 
 #&gt; R version:       3.3.2 
-#&gt; Date of fit:     Fri Nov 18 15:19:47 2016 
-#&gt; Date of summary: Fri Nov 18 15:19:47 2016 
+#&gt; Date of fit:     Fri Nov 18 15:36:22 2016 
+#&gt; Date of summary: Fri Nov 18 15:36:22 2016 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -1268,7 +565,7 @@
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted with method Port using 185 model solutions performed in 0.748 s
+#&gt; Fitted with method Port using 185 model solutions performed in 0.752 s
 #&gt; 
 #&gt; Weighting: none
 #&gt; 
@@ -1377,146 +674,11 @@
 #&gt;   100       m1    31.04 3.198e+01 -9.416e-01
 #&gt;   100       m1    33.13 3.198e+01  1.148e+00
 #&gt;   120       m1    25.15 2.879e+01 -3.640e+00
-#&gt;   120       m1    33.31 2.879e+01  4.520e+00</div><div class='input'><span class='no'>f.irls</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>reweight.method</span> <span class='kw'>=</span> <span class='st'>"obs"</span>)</div><div class='output co'>#&gt; Model cost at call  1 :  15156.12 
-#&gt; Model cost at call  2 :  15156.12 
-#&gt; Model cost at call  6 :  8243.644 
-#&gt; Model cost at call  12 :  6290.714 
-#&gt; Model cost at call  13 :  6290.684 
-#&gt; Model cost at call  15 :  6290.453 
-#&gt; Model cost at call  18 :  1700.75 
-#&gt; Model cost at call  20 :  1700.612 
-#&gt; Model cost at call  24 :  1190.923 
-#&gt; Model cost at call  26 :  1190.922 
-#&gt; Model cost at call  29 :  1017.417 
-#&gt; Model cost at call  31 :  1017.417 
-#&gt; Model cost at call  33 :  1017.416 
-#&gt; Model cost at call  34 :  644.0471 
-#&gt; Model cost at call  36 :  644.0469 
-#&gt; Model cost at call  38 :  644.0468 
-#&gt; Model cost at call  39 :  590.5024 
-#&gt; Model cost at call  41 :  590.5021 
-#&gt; Model cost at call  43 :  590.5015 
-#&gt; Model cost at call  44 :  543.2187 
-#&gt; Model cost at call  45 :  543.2183 
-#&gt; Model cost at call  46 :  543.2182 
-#&gt; Model cost at call  50 :  391.348 
-#&gt; Model cost at call  51 :  391.3479 
-#&gt; Model cost at call  56 :  386.4789 
-#&gt; Model cost at call  58 :  386.4789 
-#&gt; Model cost at call  60 :  386.4779 
-#&gt; Model cost at call  61 :  384.0686 
-#&gt; Model cost at call  63 :  384.0686 
-#&gt; Model cost at call  66 :  382.7812 
-#&gt; Model cost at call  68 :  382.7812 
-#&gt; Model cost at call  70 :  382.7812 
-#&gt; Model cost at call  71 :  378.9272 
-#&gt; Model cost at call  73 :  378.9272 
-#&gt; Model cost at call  75 :  378.9272 
-#&gt; Model cost at call  76 :  377.4846 
-#&gt; Model cost at call  78 :  377.4846 
-#&gt; Model cost at call  81 :  375.9738 
-#&gt; Model cost at call  83 :  375.9738 
-#&gt; Model cost at call  86 :  375.3387 
-#&gt; Model cost at call  88 :  375.3387 
-#&gt; Model cost at call  91 :  374.5774 
-#&gt; Model cost at call  93 :  374.5774 
-#&gt; Model cost at call  95 :  374.5774 
-#&gt; Model cost at call  96 :  373.5447 
-#&gt; Model cost at call  100 :  373.5446 
-#&gt; Model cost at call  102 :  373.2643 
-#&gt; Model cost at call  104 :  373.2643 
-#&gt; Model cost at call  107 :  372.6799 
-#&gt; Model cost at call  111 :  372.6798 
-#&gt; Model cost at call  114 :  372.6325 
-#&gt; Model cost at call  116 :  372.6325 
-#&gt; Model cost at call  119 :  372.6159 
-#&gt; Model cost at call  121 :  372.6159 
-#&gt; Model cost at call  123 :  372.6159 
-#&gt; Model cost at call  124 :  372.5845 
-#&gt; Model cost at call  126 :  372.5845 
-#&gt; Model cost at call  129 :  372.5375 
-#&gt; Model cost at call  130 :  372.4771 
-#&gt; Model cost at call  131 :  372.2008 
-#&gt; Model cost at call  132 :  371.4923 
-#&gt; Model cost at call  134 :  371.4923 
-#&gt; Model cost at call  137 :  371.3022 
-#&gt; Model cost at call  139 :  371.3022 
-#&gt; Model cost at call  143 :  371.2271 
-#&gt; Model cost at call  144 :  371.2271 
-#&gt; Model cost at call  148 :  371.2202 
-#&gt; Model cost at call  149 :  371.215 
-#&gt; Model cost at call  152 :  371.215 
-#&gt; Model cost at call  154 :  371.2136 
-#&gt; Model cost at call  155 :  371.2136 
-#&gt; Model cost at call  156 :  371.2136 
-#&gt; Model cost at call  160 :  371.2134 
-#&gt; Model cost at call  164 :  371.2134 
-#&gt; Model cost at call  167 :  371.2134 
-#&gt; IRLS based on variance estimates for each observed variable
-#&gt; Initial variance estimates are:
-#&gt;    parent        m1 
-#&gt; 11.552581  7.421226 
-#&gt; Model cost at call  186 :  40 
-#&gt; Model cost at call  188 :  40 
-#&gt; Model cost at call  194 :  39.99562 
-#&gt; Model cost at call  195 :  39.99562 
-#&gt; Model cost at call  201 :  39.9956 
-#&gt; Model cost at call  203 :  39.99528 
-#&gt; Model cost at call  205 :  39.99528 
-#&gt; Model cost at call  207 :  39.99528 
-#&gt; Model cost at call  209 :  39.99515 
-#&gt; Model cost at call  211 :  39.99515 
-#&gt; Model cost at call  214 :  39.99515 
-#&gt; Model cost at call  215 :  39.99505 
-#&gt; Model cost at call  217 :  39.99505 
-#&gt; Model cost at call  219 :  39.99505 
-#&gt; Model cost at call  220 :  39.99489 
-#&gt; Model cost at call  222 :  39.99489 
-#&gt; Model cost at call  224 :  39.99489 
-#&gt; Model cost at call  225 :  39.99479 
-#&gt; Model cost at call  227 :  39.99479 
-#&gt; Model cost at call  231 :  39.99467 
-#&gt; Model cost at call  234 :  39.99467 
-#&gt; Model cost at call  235 :  39.99467 
-#&gt; Model cost at call  236 :  39.99458 
-#&gt; Model cost at call  238 :  39.99458 
-#&gt; Model cost at call  239 :  39.99458 
-#&gt; Model cost at call  241 :  39.99452 
-#&gt; Model cost at call  242 :  39.99444 
-#&gt; Model cost at call  243 :  39.99433 
-#&gt; Model cost at call  245 :  39.99433 
-#&gt; Model cost at call  248 :  39.99383 
-#&gt; Model cost at call  250 :  39.99383 
-#&gt; Model cost at call  251 :  39.99383 
-#&gt; Model cost at call  252 :  39.99383 
-#&gt; Model cost at call  253 :  39.9935 
-#&gt; Model cost at call  254 :  39.99309 
-#&gt; Model cost at call  256 :  39.99309 
-#&gt; Model cost at call  261 :  39.99295 
-#&gt; Model cost at call  264 :  39.99295 
-#&gt; Model cost at call  267 :  39.99281 
-#&gt; Model cost at call  272 :  39.99281 
-#&gt; Model cost at call  273 :  39.99278 
-#&gt; Model cost at call  276 :  39.99278 
-#&gt; Model cost at call  278 :  39.99278 
-#&gt; Model cost at call  279 :  39.99278 
-#&gt; Model cost at call  281 :  39.99278 
-#&gt; Model cost at call  283 :  39.99278 
-#&gt; Model cost at call  286 :  39.99278 
-#&gt; Model cost at call  289 :  39.99278 
-#&gt; Model cost at call  290 :  39.99278 
-#&gt; Iteration 1 yields variance estimates:
-#&gt;    parent        m1 
-#&gt; 11.573172  7.407968 
-#&gt; Sum of squared differences to last variance estimates: 1.5e-05 
-#&gt; Iteration 2 yields variance estimates:
-#&gt;    parent        m1 
-#&gt; 11.573405  7.407846 
-#&gt; Sum of squared differences to last variance estimates: 1.7e-09 
-#&gt; Optimisation by method Port successfully terminated.</div><div class='input'><span class='fu'>summary</span>(<span class='no'>f.irls</span>)</div><div class='output co'>#&gt; mkin version:    0.9.44.9000 
+#&gt;   120       m1    33.31 2.879e+01  4.520e+00</div><div class='input'><span class='no'>f.irls</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>reweight.method</span> <span class='kw'>=</span> <span class='st'>"obs"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>summary</span>(<span class='no'>f.irls</span>)</div><div class='output co'>#&gt; mkin version:    0.9.44.9000 
 #&gt; R version:       3.3.2 
-#&gt; Date of fit:     Fri Nov 18 15:19:50 2016 
-#&gt; Date of summary: Fri Nov 18 15:19:50 2016 
+#&gt; Date of fit:     Fri Nov 18 15:36:24 2016 
+#&gt; Date of summary: Fri Nov 18 15:36:24 2016 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -1524,7 +686,7 @@
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted with method Port using 486 model solutions performed in 2.052 s
+#&gt; Fitted with method Port using 486 model solutions performed in 2.047 s
 #&gt; 
 #&gt; Weighting: none then iterative reweighting method obs
 #&gt; 
@@ -1633,62 +795,11 @@
 #&gt;   100       m1    31.04 3.199e+01 -9.497e-01 2.722
 #&gt;   100       m1    33.13 3.199e+01  1.140e+00 2.722
 #&gt;   120       m1    25.15 2.881e+01 -3.659e+00 2.722
-#&gt;   120       m1    33.31 2.881e+01  4.501e+00 2.722</div><div class='input'><span class='no'>f.w.mean</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>weight</span> <span class='kw'>=</span> <span class='st'>"mean"</span>)</div><div class='output co'>#&gt; Model cost at call  1 :  19.80132 
-#&gt; Model cost at call  2 :  19.80132 
-#&gt; Model cost at call  6 :  10.68776 
-#&gt; Model cost at call  12 :  7.14353 
-#&gt; Model cost at call  13 :  7.143529 
-#&gt; Model cost at call  15 :  7.143511 
-#&gt; Model cost at call  18 :  2.189024 
-#&gt; Model cost at call  20 :  2.189019 
-#&gt; Model cost at call  23 :  1.587262 
-#&gt; Model cost at call  25 :  1.587261 
-#&gt; Model cost at call  26 :  1.58726 
-#&gt; Model cost at call  28 :  1.036794 
-#&gt; Model cost at call  29 :  1.036794 
-#&gt; Model cost at call  30 :  1.036793 
-#&gt; Model cost at call  34 :  0.4939937 
-#&gt; Model cost at call  35 :  0.4939937 
-#&gt; Model cost at call  38 :  0.4939936 
-#&gt; Model cost at call  39 :  0.4018506 
-#&gt; Model cost at call  43 :  0.4018505 
-#&gt; Model cost at call  45 :  0.3797853 
-#&gt; Model cost at call  51 :  0.3669779 
-#&gt; Model cost at call  55 :  0.3669778 
-#&gt; Model cost at call  56 :  0.3585654 
-#&gt; Model cost at call  57 :  0.3533252 
-#&gt; Model cost at call  62 :  0.3502505 
-#&gt; Model cost at call  64 :  0.3502505 
-#&gt; Model cost at call  66 :  0.3502505 
-#&gt; Model cost at call  67 :  0.3501535 
-#&gt; Model cost at call  72 :  0.3501187 
-#&gt; Model cost at call  74 :  0.3501187 
-#&gt; Model cost at call  75 :  0.3501187 
-#&gt; Model cost at call  77 :  0.3500378 
-#&gt; Model cost at call  79 :  0.3500378 
-#&gt; Model cost at call  83 :  0.349831 
-#&gt; Model cost at call  88 :  0.3494286 
-#&gt; Model cost at call  93 :  0.3488101 
-#&gt; Model cost at call  98 :  0.3481444 
-#&gt; Model cost at call  103 :  0.3478528 
-#&gt; Model cost at call  108 :  0.3478092 
-#&gt; Model cost at call  109 :  0.3478092 
-#&gt; Model cost at call  113 :  0.347807 
-#&gt; Model cost at call  116 :  0.347807 
-#&gt; Model cost at call  117 :  0.347807 
-#&gt; Model cost at call  119 :  0.347807 
-#&gt; Model cost at call  120 :  0.347807 
-#&gt; Model cost at call  125 :  0.347807 
-#&gt; Model cost at call  126 :  0.347807 
-#&gt; Model cost at call  128 :  0.347807 
-#&gt; Model cost at call  137 :  0.347807 
-#&gt; Model cost at call  148 :  0.347807 
-#&gt; Model cost at call  152 :  0.347807 
-#&gt; Model cost at call  154 :  0.347807 
-#&gt; Optimisation by method Port successfully terminated.</div><div class='input'><span class='fu'>summary</span>(<span class='no'>f.w.mean</span>)</div><div class='output co'>#&gt; mkin version:    0.9.44.9000 
+#&gt;   120       m1    33.31 2.881e+01  4.501e+00 2.722</div><div class='input'><span class='no'>f.w.mean</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>weight</span> <span class='kw'>=</span> <span class='st'>"mean"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>summary</span>(<span class='no'>f.w.mean</span>)</div><div class='output co'>#&gt; mkin version:    0.9.44.9000 
 #&gt; R version:       3.3.2 
-#&gt; Date of fit:     Fri Nov 18 15:19:50 2016 
-#&gt; Date of summary: Fri Nov 18 15:19:50 2016 
+#&gt; Date of fit:     Fri Nov 18 15:36:25 2016 
+#&gt; Date of summary: Fri Nov 18 15:36:25 2016 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -1696,7 +807,7 @@
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted with method Port using 155 model solutions performed in 0.636 s
+#&gt; Fitted with method Port using 155 model solutions performed in 0.653 s
 #&gt; 
 #&gt; Weighting: mean
 #&gt; 
@@ -1805,68 +916,12 @@
 #&gt;   100       m1    31.04 31.996124  -0.956124
 #&gt;   100       m1    33.13 31.996124   1.133876
 #&gt;   120       m1    25.15 28.824128  -3.674128
-#&gt;   120       m1    33.31 28.824128   4.485872</div><div class='input'><span class='no'>f.w.value</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='fu'>subset</span>(<span class='no'>FOCUS_2006_D</span>, <span class='no'>value</span> <span class='kw'>!=</span> <span class='fl'>0</span>), <span class='kw'>err</span> <span class='kw'>=</span> <span class='st'>"value"</span>)</div><div class='output co'>#&gt; Model cost at call  1 :  11.21571 
-#&gt; Model cost at call  2 :  11.21571 
-#&gt; Model cost at call  3 :  11.21571 
-#&gt; Model cost at call  8 :  11.12803 
-#&gt; Model cost at call  10 :  11.128 
-#&gt; Model cost at call  13 :  10.88016 
-#&gt; Model cost at call  15 :  10.88016 
-#&gt; Model cost at call  18 :  10.58819 
-#&gt; Model cost at call  20 :  10.58819 
-#&gt; Model cost at call  23 :  9.71699 
-#&gt; Model cost at call  24 :  7.794026 
-#&gt; Model cost at call  26 :  7.794026 
-#&gt; Model cost at call  31 :  6.89734 
-#&gt; Model cost at call  33 :  6.897337 
-#&gt; Model cost at call  36 :  5.2239 
-#&gt; Model cost at call  37 :  3.357735 
-#&gt; Model cost at call  41 :  3.357733 
-#&gt; Model cost at call  44 :  2.982323 
-#&gt; Model cost at call  46 :  2.982322 
-#&gt; Model cost at call  49 :  2.703946 
-#&gt; Model cost at call  50 :  2.080395 
-#&gt; Model cost at call  55 :  0.5307591 
-#&gt; Model cost at call  56 :  0.5307591 
-#&gt; Model cost at call  57 :  0.5307591 
-#&gt; Model cost at call  59 :  0.5307584 
-#&gt; Model cost at call  60 :  0.3240066 
-#&gt; Model cost at call  61 :  0.3240066 
-#&gt; Model cost at call  64 :  0.3240066 
-#&gt; Model cost at call  65 :  0.2601108 
-#&gt; Model cost at call  70 :  0.2414055 
-#&gt; Model cost at call  74 :  0.2414055 
-#&gt; Model cost at call  75 :  0.2404251 
-#&gt; Model cost at call  80 :  0.2404087 
-#&gt; Model cost at call  82 :  0.2404087 
-#&gt; Model cost at call  85 :  0.2404054 
-#&gt; Model cost at call  88 :  0.2404054 
-#&gt; Model cost at call  92 :  0.2403931 
-#&gt; Model cost at call  93 :  0.2403784 
-#&gt; Model cost at call  98 :  0.2403784 
-#&gt; Model cost at call  99 :  0.2403322 
-#&gt; Model cost at call  104 :  0.2402188 
-#&gt; Model cost at call  109 :  0.2400275 
-#&gt; Model cost at call  114 :  0.239844 
-#&gt; Model cost at call  119 :  0.2397153 
-#&gt; Model cost at call  120 :  0.2397153 
-#&gt; Model cost at call  124 :  0.2396978 
-#&gt; Model cost at call  126 :  0.2396978 
-#&gt; Model cost at call  130 :  0.239697 
-#&gt; Model cost at call  131 :  0.2396963 
-#&gt; Model cost at call  133 :  0.2396963 
-#&gt; Model cost at call  138 :  0.2396962 
-#&gt; Model cost at call  139 :  0.2396962 
-#&gt; Model cost at call  141 :  0.2396962 
-#&gt; Model cost at call  144 :  0.2396962 
-#&gt; Model cost at call  147 :  0.2396962 
-#&gt; Model cost at call  156 :  0.2396962 
-#&gt; Model cost at call  167 :  0.2396962 
-#&gt; Model cost at call  169 :  0.2396962 
-#&gt; Optimisation by method Port successfully terminated.</div><div class='input'><span class='fu'>summary</span>(<span class='no'>f.w.value</span>)</div><div class='output co'>#&gt; mkin version:    0.9.44.9000 
+#&gt;   120       m1    33.31 28.824128   4.485872</div><div class='input'><span class='no'>f.w.value</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='fu'>subset</span>(<span class='no'>FOCUS_2006_D</span>, <span class='no'>value</span> <span class='kw'>!=</span> <span class='fl'>0</span>), <span class='kw'>err</span> <span class='kw'>=</span> <span class='st'>"value"</span>,
+                     <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>summary</span>(<span class='no'>f.w.value</span>)</div><div class='output co'>#&gt; mkin version:    0.9.44.9000 
 #&gt; R version:       3.3.2 
-#&gt; Date of fit:     Fri Nov 18 15:19:51 2016 
-#&gt; Date of summary: Fri Nov 18 15:19:51 2016 
+#&gt; Date of fit:     Fri Nov 18 15:36:26 2016 
+#&gt; Date of summary: Fri Nov 18 15:36:26 2016 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -1874,7 +929,7 @@
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted with method Port using 174 model solutions performed in 0.789 s
+#&gt; Fitted with method Port using 174 model solutions performed in 0.708 s
 #&gt; 
 #&gt; Weighting: manual
 #&gt; 
@@ -1984,139 +1039,11 @@
 <span class='no'>dw</span> <span class='kw'>&lt;-</span> <span class='no'>FOCUS_2006_D</span>
 <span class='no'>errors</span> <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fl'>1</span>)
 <span class='no'>dw</span>$<span class='no'>err.man</span> <span class='kw'>&lt;-</span> <span class='no'>errors</span>[<span class='no'>FOCUS_2006_D</span>$<span class='no'>name</span>]
-<span class='no'>f.w.man</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>dw</span>, <span class='kw'>err</span> <span class='kw'>=</span> <span class='st'>"err.man"</span>)</div><div class='output co'>#&gt; Model cost at call  1 :  3949.676 
-#&gt; Model cost at call  2 :  3949.676 
-#&gt; Model cost at call  5 :  3949.676 
-#&gt; Model cost at call  6 :  2252.859 
-#&gt; Model cost at call  8 :  2252.858 
-#&gt; Model cost at call  9 :  2252.826 
-#&gt; Model cost at call  13 :  1567.343 
-#&gt; Model cost at call  14 :  1567.342 
-#&gt; Model cost at call  15 :  1567.333 
-#&gt; Model cost at call  18 :  1041.524 
-#&gt; Model cost at call  19 :  1041.522 
-#&gt; Model cost at call  24 :  840.4649 
-#&gt; Model cost at call  26 :  840.4646 
-#&gt; Model cost at call  29 :  782.303 
-#&gt; Model cost at call  31 :  782.3028 
-#&gt; Model cost at call  34 :  664.539 
-#&gt; Model cost at call  36 :  664.5389 
-#&gt; Model cost at call  40 :  615.7908 
-#&gt; Model cost at call  42 :  615.7907 
-#&gt; Model cost at call  45 :  569.5971 
-#&gt; Model cost at call  47 :  569.597 
-#&gt; Model cost at call  50 :  517.3175 
-#&gt; Model cost at call  52 :  517.3173 
-#&gt; Model cost at call  56 :  464.8158 
-#&gt; Model cost at call  58 :  464.8157 
-#&gt; Model cost at call  62 :  433.0031 
-#&gt; Model cost at call  64 :  433.003 
-#&gt; Model cost at call  67 :  423.7407 
-#&gt; Model cost at call  69 :  423.7406 
-#&gt; Model cost at call  70 :  423.7392 
-#&gt; Model cost at call  72 :  346.2781 
-#&gt; Model cost at call  74 :  346.278 
-#&gt; Model cost at call  75 :  346.2779 
-#&gt; Model cost at call  78 :  334.5399 
-#&gt; Model cost at call  80 :  334.5398 
-#&gt; Model cost at call  83 :  324.139 
-#&gt; Model cost at call  85 :  324.1389 
-#&gt; Model cost at call  88 :  319.7514 
-#&gt; Model cost at call  90 :  319.7514 
-#&gt; Model cost at call  94 :  300.9426 
-#&gt; Model cost at call  96 :  300.9425 
-#&gt; Model cost at call  100 :  295.8803 
-#&gt; Model cost at call  102 :  295.8803 
-#&gt; Model cost at call  105 :  290.3288 
-#&gt; Model cost at call  107 :  290.3287 
-#&gt; Model cost at call  111 :  284.3257 
-#&gt; Model cost at call  113 :  284.3257 
-#&gt; Model cost at call  116 :  282.3972 
-#&gt; Model cost at call  118 :  282.3972 
-#&gt; Model cost at call  122 :  273.7385 
-#&gt; Model cost at call  124 :  273.7385 
-#&gt; Model cost at call  128 :  271.8379 
-#&gt; Model cost at call  130 :  271.8379 
-#&gt; Model cost at call  133 :  270.064 
-#&gt; Model cost at call  135 :  270.064 
-#&gt; Model cost at call  138 :  268.0107 
-#&gt; Model cost at call  140 :  268.0107 
-#&gt; Model cost at call  144 :  265.6194 
-#&gt; Model cost at call  146 :  265.6194 
-#&gt; Model cost at call  148 :  265.6194 
-#&gt; Model cost at call  149 :  263.4825 
-#&gt; Model cost at call  151 :  263.4825 
-#&gt; Model cost at call  153 :  263.4824 
-#&gt; Model cost at call  154 :  262.0988 
-#&gt; Model cost at call  156 :  262.0988 
-#&gt; Model cost at call  160 :  260.7078 
-#&gt; Model cost at call  162 :  260.7078 
-#&gt; Model cost at call  165 :  259.9453 
-#&gt; Model cost at call  167 :  259.9453 
-#&gt; Model cost at call  170 :  258.9623 
-#&gt; Model cost at call  172 :  258.9623 
-#&gt; Model cost at call  174 :  258.962 
-#&gt; Model cost at call  176 :  258.0119 
-#&gt; Model cost at call  178 :  258.0119 
-#&gt; Model cost at call  180 :  258.0119 
-#&gt; Model cost at call  181 :  257.8698 
-#&gt; Model cost at call  183 :  257.8698 
-#&gt; Model cost at call  186 :  256.8608 
-#&gt; Model cost at call  188 :  256.8608 
-#&gt; Model cost at call  190 :  256.8608 
-#&gt; Model cost at call  191 :  256.2306 
-#&gt; Model cost at call  193 :  256.2306 
-#&gt; Model cost at call  195 :  256.2305 
-#&gt; Model cost at call  196 :  255.7119 
-#&gt; Model cost at call  198 :  255.7118 
-#&gt; Model cost at call  201 :  255.3323 
-#&gt; Model cost at call  203 :  255.3323 
-#&gt; Model cost at call  205 :  255.3323 
-#&gt; Model cost at call  206 :  254.6653 
-#&gt; Model cost at call  208 :  254.6653 
-#&gt; Model cost at call  211 :  254.3984 
-#&gt; Model cost at call  213 :  254.3984 
-#&gt; Model cost at call  216 :  253.3199 
-#&gt; Model cost at call  218 :  253.3199 
-#&gt; Model cost at call  220 :  253.3198 
-#&gt; Model cost at call  221 :  252.4845 
-#&gt; Model cost at call  223 :  252.4845 
-#&gt; Model cost at call  225 :  252.4845 
-#&gt; Model cost at call  226 :  251.6917 
-#&gt; Model cost at call  229 :  251.6917 
-#&gt; Model cost at call  230 :  251.6917 
-#&gt; Model cost at call  233 :  251.0189 
-#&gt; Model cost at call  235 :  251.0189 
-#&gt; Model cost at call  238 :  250.6912 
-#&gt; Model cost at call  240 :  250.6912 
-#&gt; Model cost at call  243 :  250.5546 
-#&gt; Model cost at call  245 :  250.5546 
-#&gt; Model cost at call  248 :  250.466 
-#&gt; Model cost at call  249 :  250.3744 
-#&gt; Model cost at call  250 :  249.9681 
-#&gt; Model cost at call  251 :  249.2215 
-#&gt; Model cost at call  260 :  248.919 
-#&gt; Model cost at call  264 :  248.919 
-#&gt; Model cost at call  265 :  248.8876 
-#&gt; Model cost at call  267 :  248.8876 
-#&gt; Model cost at call  270 :  248.8521 
-#&gt; Model cost at call  271 :  248.8178 
-#&gt; Model cost at call  272 :  248.6837 
-#&gt; Model cost at call  273 :  248.5989 
-#&gt; Model cost at call  276 :  248.5989 
-#&gt; Model cost at call  278 :  248.5935 
-#&gt; Model cost at call  280 :  248.5935 
-#&gt; Model cost at call  282 :  248.5935 
-#&gt; Model cost at call  283 :  248.5902 
-#&gt; Model cost at call  284 :  248.5902 
-#&gt; Model cost at call  289 :  248.5902 
-#&gt; Model cost at call  298 :  248.5902 
-#&gt; Model cost at call  309 :  248.5902 
-#&gt; Model cost at call  311 :  248.5902 
-#&gt; Optimisation by method Port successfully terminated.</div><div class='input'><span class='fu'>summary</span>(<span class='no'>f.w.man</span>)</div><div class='output co'>#&gt; mkin version:    0.9.44.9000 
+<span class='no'>f.w.man</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>dw</span>, <span class='kw'>err</span> <span class='kw'>=</span> <span class='st'>"err.man"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>summary</span>(<span class='no'>f.w.man</span>)</div><div class='output co'>#&gt; mkin version:    0.9.44.9000 
 #&gt; R version:       3.3.2 
-#&gt; Date of fit:     Fri Nov 18 15:19:53 2016 
-#&gt; Date of summary: Fri Nov 18 15:19:53 2016 
+#&gt; Date of fit:     Fri Nov 18 15:36:27 2016 
+#&gt; Date of summary: Fri Nov 18 15:36:27 2016 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -2124,7 +1051,7 @@
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted with method Port using 316 model solutions performed in 1.337 s
+#&gt; Fitted with method Port using 316 model solutions performed in 1.288 s
 #&gt; 
 #&gt; Weighting: manual
 #&gt; 
@@ -2233,211 +1160,12 @@
 #&gt;   100       m1    31.04 31.969288  -0.929288   2
 #&gt;   100       m1    33.13 31.969288   1.160712   2
 #&gt;   120       m1    25.15 28.760615  -3.610615   2
-#&gt;   120       m1    33.31 28.760615   4.549385   2</div><div class='input'><span class='no'>f.w.man.irls</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>dw</span>, <span class='kw'>err</span> <span class='kw'>=</span> <span class='st'>"err.man"</span>,
-                       <span class='kw'>reweight.method</span> <span class='kw'>=</span> <span class='st'>"obs"</span>)</div><div class='output co'>#&gt; Model cost at call  1 :  3949.676 
-#&gt; Model cost at call  2 :  3949.676 
-#&gt; Model cost at call  5 :  3949.676 
-#&gt; Model cost at call  6 :  2252.859 
-#&gt; Model cost at call  8 :  2252.858 
-#&gt; Model cost at call  9 :  2252.826 
-#&gt; Model cost at call  13 :  1567.343 
-#&gt; Model cost at call  14 :  1567.342 
-#&gt; Model cost at call  15 :  1567.333 
-#&gt; Model cost at call  18 :  1041.524 
-#&gt; Model cost at call  19 :  1041.522 
-#&gt; Model cost at call  24 :  840.4649 
-#&gt; Model cost at call  26 :  840.4646 
-#&gt; Model cost at call  29 :  782.303 
-#&gt; Model cost at call  31 :  782.3028 
-#&gt; Model cost at call  34 :  664.539 
-#&gt; Model cost at call  36 :  664.5389 
-#&gt; Model cost at call  40 :  615.7908 
-#&gt; Model cost at call  42 :  615.7907 
-#&gt; Model cost at call  45 :  569.5971 
-#&gt; Model cost at call  47 :  569.597 
-#&gt; Model cost at call  50 :  517.3175 
-#&gt; Model cost at call  52 :  517.3173 
-#&gt; Model cost at call  56 :  464.8158 
-#&gt; Model cost at call  58 :  464.8157 
-#&gt; Model cost at call  62 :  433.0031 
-#&gt; Model cost at call  64 :  433.003 
-#&gt; Model cost at call  67 :  423.7407 
-#&gt; Model cost at call  69 :  423.7406 
-#&gt; Model cost at call  70 :  423.7392 
-#&gt; Model cost at call  72 :  346.2781 
-#&gt; Model cost at call  74 :  346.278 
-#&gt; Model cost at call  75 :  346.2779 
-#&gt; Model cost at call  78 :  334.5399 
-#&gt; Model cost at call  80 :  334.5398 
-#&gt; Model cost at call  83 :  324.139 
-#&gt; Model cost at call  85 :  324.1389 
-#&gt; Model cost at call  88 :  319.7514 
-#&gt; Model cost at call  90 :  319.7514 
-#&gt; Model cost at call  94 :  300.9426 
-#&gt; Model cost at call  96 :  300.9425 
-#&gt; Model cost at call  100 :  295.8803 
-#&gt; Model cost at call  102 :  295.8803 
-#&gt; Model cost at call  105 :  290.3288 
-#&gt; Model cost at call  107 :  290.3287 
-#&gt; Model cost at call  111 :  284.3257 
-#&gt; Model cost at call  113 :  284.3257 
-#&gt; Model cost at call  116 :  282.3972 
-#&gt; Model cost at call  118 :  282.3972 
-#&gt; Model cost at call  122 :  273.7385 
-#&gt; Model cost at call  124 :  273.7385 
-#&gt; Model cost at call  128 :  271.8379 
-#&gt; Model cost at call  130 :  271.8379 
-#&gt; Model cost at call  133 :  270.064 
-#&gt; Model cost at call  135 :  270.064 
-#&gt; Model cost at call  138 :  268.0107 
-#&gt; Model cost at call  140 :  268.0107 
-#&gt; Model cost at call  144 :  265.6194 
-#&gt; Model cost at call  146 :  265.6194 
-#&gt; Model cost at call  148 :  265.6194 
-#&gt; Model cost at call  149 :  263.4825 
-#&gt; Model cost at call  151 :  263.4825 
-#&gt; Model cost at call  153 :  263.4824 
-#&gt; Model cost at call  154 :  262.0988 
-#&gt; Model cost at call  156 :  262.0988 
-#&gt; Model cost at call  160 :  260.7078 
-#&gt; Model cost at call  162 :  260.7078 
-#&gt; Model cost at call  165 :  259.9453 
-#&gt; Model cost at call  167 :  259.9453 
-#&gt; Model cost at call  170 :  258.9623 
-#&gt; Model cost at call  172 :  258.9623 
-#&gt; Model cost at call  174 :  258.962 
-#&gt; Model cost at call  176 :  258.0119 
-#&gt; Model cost at call  178 :  258.0119 
-#&gt; Model cost at call  180 :  258.0119 
-#&gt; Model cost at call  181 :  257.8698 
-#&gt; Model cost at call  183 :  257.8698 
-#&gt; Model cost at call  186 :  256.8608 
-#&gt; Model cost at call  188 :  256.8608 
-#&gt; Model cost at call  190 :  256.8608 
-#&gt; Model cost at call  191 :  256.2306 
-#&gt; Model cost at call  193 :  256.2306 
-#&gt; Model cost at call  195 :  256.2305 
-#&gt; Model cost at call  196 :  255.7119 
-#&gt; Model cost at call  198 :  255.7118 
-#&gt; Model cost at call  201 :  255.3323 
-#&gt; Model cost at call  203 :  255.3323 
-#&gt; Model cost at call  205 :  255.3323 
-#&gt; Model cost at call  206 :  254.6653 
-#&gt; Model cost at call  208 :  254.6653 
-#&gt; Model cost at call  211 :  254.3984 
-#&gt; Model cost at call  213 :  254.3984 
-#&gt; Model cost at call  216 :  253.3199 
-#&gt; Model cost at call  218 :  253.3199 
-#&gt; Model cost at call  220 :  253.3198 
-#&gt; Model cost at call  221 :  252.4845 
-#&gt; Model cost at call  223 :  252.4845 
-#&gt; Model cost at call  225 :  252.4845 
-#&gt; Model cost at call  226 :  251.6917 
-#&gt; Model cost at call  229 :  251.6917 
-#&gt; Model cost at call  230 :  251.6917 
-#&gt; Model cost at call  233 :  251.0189 
-#&gt; Model cost at call  235 :  251.0189 
-#&gt; Model cost at call  238 :  250.6912 
-#&gt; Model cost at call  240 :  250.6912 
-#&gt; Model cost at call  243 :  250.5546 
-#&gt; Model cost at call  245 :  250.5546 
-#&gt; Model cost at call  248 :  250.466 
-#&gt; Model cost at call  249 :  250.3744 
-#&gt; Model cost at call  250 :  249.9681 
-#&gt; Model cost at call  251 :  249.2215 
-#&gt; Model cost at call  260 :  248.919 
-#&gt; Model cost at call  264 :  248.919 
-#&gt; Model cost at call  265 :  248.8876 
-#&gt; Model cost at call  267 :  248.8876 
-#&gt; Model cost at call  270 :  248.8521 
-#&gt; Model cost at call  271 :  248.8178 
-#&gt; Model cost at call  272 :  248.6837 
-#&gt; Model cost at call  273 :  248.5989 
-#&gt; Model cost at call  276 :  248.5989 
-#&gt; Model cost at call  278 :  248.5935 
-#&gt; Model cost at call  280 :  248.5935 
-#&gt; Model cost at call  282 :  248.5935 
-#&gt; Model cost at call  283 :  248.5902 
-#&gt; Model cost at call  284 :  248.5902 
-#&gt; Model cost at call  289 :  248.5902 
-#&gt; Model cost at call  298 :  248.5902 
-#&gt; Model cost at call  309 :  248.5902 
-#&gt; Model cost at call  311 :  248.5902 
-#&gt; IRLS based on variance estimates for each observed variable
-#&gt; Initial variance estimates are:
-#&gt;    parent        m1 
-#&gt; 11.536305  7.443046 
-#&gt; Model cost at call  317 :  40 
-#&gt; Model cost at call  319 :  40 
-#&gt; Model cost at call  324 :  39.98891 
-#&gt; Model cost at call  325 :  39.9889 
-#&gt; Model cost at call  327 :  39.98886 
-#&gt; Model cost at call  331 :  39.98871 
-#&gt; Model cost at call  333 :  39.97254 
-#&gt; Model cost at call  336 :  39.97253 
-#&gt; Model cost at call  338 :  39.96929 
-#&gt; Model cost at call  340 :  39.96929 
-#&gt; Model cost at call  344 :  39.96849 
-#&gt; Model cost at call  346 :  39.96849 
-#&gt; Model cost at call  348 :  39.96849 
-#&gt; Model cost at call  349 :  39.96774 
-#&gt; Model cost at call  351 :  39.96774 
-#&gt; Model cost at call  353 :  39.96774 
-#&gt; Model cost at call  354 :  39.96714 
-#&gt; Model cost at call  356 :  39.96714 
-#&gt; Model cost at call  359 :  39.96617 
-#&gt; Model cost at call  361 :  39.96617 
-#&gt; Model cost at call  364 :  39.96606 
-#&gt; Model cost at call  366 :  39.96606 
-#&gt; Model cost at call  369 :  39.96551 
-#&gt; Model cost at call  371 :  39.96551 
-#&gt; Model cost at call  372 :  39.96551 
-#&gt; Model cost at call  375 :  39.96527 
-#&gt; Model cost at call  378 :  39.96527 
-#&gt; Model cost at call  379 :  39.96527 
-#&gt; Model cost at call  380 :  39.96525 
-#&gt; Model cost at call  382 :  39.96525 
-#&gt; Model cost at call  385 :  39.9651 
-#&gt; Model cost at call  387 :  39.9651 
-#&gt; Model cost at call  388 :  39.9651 
-#&gt; Model cost at call  390 :  39.96502 
-#&gt; Model cost at call  393 :  39.96502 
-#&gt; Model cost at call  396 :  39.96502 
-#&gt; Model cost at call  397 :  39.96467 
-#&gt; Model cost at call  398 :  39.96422 
-#&gt; Model cost at call  399 :  39.9624 
-#&gt; Model cost at call  400 :  39.95909 
-#&gt; Model cost at call  402 :  39.95909 
-#&gt; Model cost at call  405 :  39.9571 
-#&gt; Model cost at call  407 :  39.95709 
-#&gt; Model cost at call  413 :  39.95479 
-#&gt; Model cost at call  414 :  39.95479 
-#&gt; Model cost at call  415 :  39.95479 
-#&gt; Model cost at call  417 :  39.95479 
-#&gt; Model cost at call  419 :  39.95398 
-#&gt; Model cost at call  422 :  39.95398 
-#&gt; Model cost at call  424 :  39.95387 
-#&gt; Model cost at call  429 :  39.95384 
-#&gt; Model cost at call  432 :  39.95384 
-#&gt; Model cost at call  435 :  39.95384 
-#&gt; Model cost at call  437 :  39.95384 
-#&gt; Model cost at call  438 :  39.95384 
-#&gt; Model cost at call  446 :  39.95384 
-#&gt; Model cost at call  455 :  39.95384 
-#&gt; Model cost at call  469 :  39.95384 
-#&gt; Model cost at call  473 :  39.95384 
-#&gt; Iteration 1 yields variance estimates:
-#&gt;    parent        m1 
-#&gt; 11.572891  7.408116 
-#&gt; Sum of squared differences to last variance estimates: 7e-05 
-#&gt; Iteration 2 yields variance estimates:
-#&gt;    parent        m1 
-#&gt; 11.573402  7.407847 
-#&gt; Sum of squared differences to last variance estimates: 8.1e-09 
-#&gt; Optimisation by method Port successfully terminated.</div><div class='input'><span class='fu'>summary</span>(<span class='no'>f.w.man.irls</span>)</div><div class='output co'>#&gt; mkin version:    0.9.44.9000 
+#&gt;   120       m1    33.31 28.760615   4.549385   2</div><div class='input'><span class='no'>f.w.man.irls</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>dw</span>, <span class='kw'>err</span> <span class='kw'>=</span> <span class='st'>"err.man"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+                       <span class='kw'>reweight.method</span> <span class='kw'>=</span> <span class='st'>"obs"</span>)
+<span class='fu'>summary</span>(<span class='no'>f.w.man.irls</span>)</div><div class='output co'>#&gt; mkin version:    0.9.44.9000 
 #&gt; R version:       3.3.2 
-#&gt; Date of fit:     Fri Nov 18 15:19:55 2016 
-#&gt; Date of summary: Fri Nov 18 15:19:55 2016 
+#&gt; Date of fit:     Fri Nov 18 15:36:30 2016 
+#&gt; Date of summary: Fri Nov 18 15:36:30 2016 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -2445,7 +1173,7 @@
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted with method Port using 648 model solutions performed in 2.716 s
+#&gt; Fitted with method Port using 648 model solutions performed in 2.694 s
 #&gt; 
 #&gt; Weighting: manual then iterative reweighting method obs
 #&gt; 

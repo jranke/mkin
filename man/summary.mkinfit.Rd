@@ -70,6 +70,6 @@
   Johannes Ranke
 }
 \examples{
-  summary(mkinfit(mkinmod(parent = list(type = "SFO")), FOCUS_2006_A, quiet = TRUE))
+  summary(mkinfit(mkinmod(parent = mkinsub("SFO")), FOCUS_2006_A, quiet = TRUE))
 }
 \keyword{ utilities }

@@ -61,7 +61,9 @@ m_synth_DFOP_par <- mkinmod(parent = list(type = "DFOP", to = c("M1", "M2"),
                             M1 = list(type = "SFO"),
                             M2 = list(type = "SFO"), use_of_ff = "max")
 
-mkinfit(m_synth_SFO_lin, synthetic_data_for_UBA_2014[[1]]$data)
+fit <- mkinfit(m_synth_SFO_lin, synthetic_data_for_UBA_2014[[1]]$data, quiet = TRUE)
+plot_sep(fit)
+summary(fit)
 }
 }
 \keyword{datasets}

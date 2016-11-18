@@ -23,6 +23,10 @@ endpoints(fit)
 \value{
   A list with the components mentioned above.
 }
+\examples{
+  fit <- mkinfit("FOMC", FOCUS_2006_C, quiet = TRUE)
+  endpoints(fit)  
+}
 \author{
   Johannes Ranke
 }
