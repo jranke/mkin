@@ -91,7 +91,7 @@ pd:
 	git add -A
 	git commit -m 'Static documentation rebuilt by pkgdown::build_site(run_dont_run = TRUE)' -e
 
-r-forge: pd
+r-forge: 
 	rm -rf $(SDDIR)/*
 	cp -a docs/* $(SDDIR)
 	cd $(SDDIR) && svn add --force .
