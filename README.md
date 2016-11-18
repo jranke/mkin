@@ -27,17 +27,17 @@ detailed guidance and helpful tools have been developed as detailed in
 ## Usage
 
 For a start, have a look a the code examples provided for
-[`plot.mkinfit`](http://kinfit.r-forge.r-project.org/mkin_static/plot.mkinfit.html)
+[`plot.mkinfit`](http://kinfit.r-forge.r-project.org/mkin_static/reference/plot.mkinfit.html)
 and 
-[`plot.mmkin`](http://kinfit.r-forge.r-project.org/mkin_static/plot.mmkin.html), and 
+[`plot.mmkin`](http://kinfit.r-forge.r-project.org/mkin_static/reference/plot.mmkin.html), and 
 at the package vignettes
-[`FOCUS L`](http://kinfit.r-forge.r-project.org/mkin_static/vignettes/FOCUS_L.html) and
-[`FOCUS D`](http://kinfit.r-forge.r-project.org/mkin_static/vignettes/FOCUS_D.html).
+[`FOCUS L`](http://kinfit.r-forge.r-project.org/mkin_static/articles/FOCUS_L.html) and
+[`FOCUS D`](http://kinfit.r-forge.r-project.org/mkin_static/articles/FOCUS_D.html).
 
 ## Documentation
 
-The [HTML documentation](http://jranke.github.io/mkin) is
-maintained at the github project site.
+The HTML documentation is available at [github](http://jranke.github.io/mkin) 
+and at [R-Forge](http://kinfit.r-forge.r-project.org/mkin_static/index.html).
 
 ## Features
 
@@ -57,13 +57,13 @@ maintained at the github project site.
   using a numeric solver from the `deSolve` package (default is `lsoda`).
 * If a C compiler is installed, the kinetic models are compiled from automatically
   generated C code, see  
-  [vignette `compiled_models`](http://kinfit.r-forge.r-project.org/mkin_static/vignettes/compiled_models.html).
+  [vignette `compiled_models`](http://kinfit.r-forge.r-project.org/mkin_static/articles/compiled_models.html).
   The autogeneration of C code was
   inspired by the [`ccSolve`](https://github.com/karlines/ccSolve) package. Thanks
   to Karline Soetaert for her work on that.
 * By default, kinetic rate constants and kinetic formation fractions are
   transformed internally using
-  [`transform_odeparms`](http://kinfit.r-forge.r-project.org/mkin_static/transform_odeparms.html)
+  [`transform_odeparms`](http://kinfit.r-forge.r-project.org/mkin_static/reference/transform_odeparms.html)
   so their estimators can more reasonably be expected to follow
   a normal distribution. This has the side effect that no constraints
   are needed in the optimisation. Thanks to René Lehmann for the nice
