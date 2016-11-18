@@ -277,9 +277,9 @@ FOMC_SFO <- mkinmod(
 # Fit the model to the FOCUS example dataset D using defaults
 fit.FOMC_SFO <- mkinfit(FOMC_SFO, FOCUS_2006_D)
 # Use starting parameters from parent only FOMC fit
-fit.FOMC = mkinfit("FOMC", FOCUS_2006_D, plot=TRUE)
+fit.FOMC = mkinfit("FOMC", FOCUS_2006_D)
 fit.FOMC_SFO <- mkinfit(FOMC_SFO, FOCUS_2006_D,
-  parms.ini = fit.FOMC$bparms.ode, plot=TRUE)
+  parms.ini = fit.FOMC$bparms.ode)
 
 # Use stepwise fitting, using optimised parameters from parent only fit, SFORB
 SFORB_SFO <- mkinmod(

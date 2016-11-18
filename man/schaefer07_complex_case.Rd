@@ -36,6 +36,6 @@ model <- mkinmod(
   B1 = list(type = "SFO"),
   C1 = list(type = "SFO"),
   A2 = list(type = "SFO"), use_of_ff = "max")
-\dontrun{mkinfit(model, data, plot=TRUE)}
+\dontrun{mkinfit(model, data)}
 }
 \keyword{datasets}
