@@ -172,8 +172,15 @@ plot.mkinfit <- function(x, fit = x,
         }
       }
 
-      chi2 <- paste0(signif(100 * mkinerrmin(fit)[errmin_var, "err.min"], errmin_digits), "%")
-      mtext(bquote(chi^2 ~ "error level" == .(chi2)), cex = 0.7, line = 0.4)
+      chi2 <- signif(100 * mkinerrmin(fit)[errmin_var, "err.min"], errmin_digits)
+      # Use LateX if the current plotting device is tikz
+      if (names(dev.cur()) == "tikz output") {
+        chi2_text <- paste0("$\\chi^2$ error level = ", chi2, "\\%")
+      } else {
+        chi2_perc <- paste0(chi2, "%")
+        chi2_text <- bquote(chi^2 ~ "error level" == .(chi2_perc))
+      }
+      mtext(chi2_text, cex = 0.7, line = 0.4)
     }
 
     # Show residuals if requested

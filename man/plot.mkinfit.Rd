@@ -8,6 +8,10 @@
   Solves the differential equations with the optimised and fixed parameters
   from a previous successful call to \code{\link{mkinfit}} and plots
   the observed data together with the solution of the fitted model.
+
+  If the current plot device is a \code{\link[tikzDevice]{tikz}} device,
+  then latex is being used for the formatting of the chi2 error level, 
+  if \code{show_errmin = TRUE}.
 }
 \usage{
 \method{plot}{mkinfit}(x, fit = x,

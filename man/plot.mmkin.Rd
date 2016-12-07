@@ -7,6 +7,9 @@
   When x is a row selected from an mmkin object (\code{\link{[.mmkin}}), the same model
   fitted for at least one dataset is shown. When it is a column, the fit of at least one model
   to the same dataset is shown.
+
+  If the current plot device is a \code{\link[tikzDevice]{tikz}} device,
+  then latex is being used for the formatting of the chi2 error level.
 }
 \usage{
 \method{plot}{mmkin}(x, main = "auto", legends = 1, errmin_var = "All data", errmin_digits = 3,

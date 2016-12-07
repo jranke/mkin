@@ -79,8 +79,16 @@ plot.mmkin <- function(x, main = "auto", legends = 1, errmin_var = "All data", e
                        datasets = colnames(x)[i.fit],
                        none = "")
 
-    chi2 <- paste0(signif(100 * mkinerrmin(fit)[errmin_var, "err.min"], errmin_digits), "%")
-    mtext(bquote(.(fit_name) ~ chi^2 ~ "error level" == .(chi2)), cex = cex, line = 0.4)
+    chi2 <- signif(100 * mkinerrmin(fit)[errmin_var, "err.min"], errmin_digits)
+
+    # Use LateX if the current plotting device is tikz
+    if (names(dev.cur()) == "tikz output") {
+      chi2_text <- paste0(fit_name, " $\\chi^2$ error level = ", chi2, "\\%")
+    } else {
+      chi2_perc <- paste0(chi2, "%")
+      chi2_text <- bquote(.(fit_name) ~ chi^2 ~ "error level" == .(chi2_perc))
+    }
+    mtext(chi2_text, cex = cex, line = 0.4)
 
     mkinresplot(fit, legend = FALSE, ...)
     mtext(paste(fit_name, "residuals"), cex = cex, line = 0.4)
