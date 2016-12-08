@@ -99,21 +99,21 @@ mb<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw">micr
 <span class="kw">print</span>(mb<span class="fl">.1</span>)</code></pre></div>
 <pre><code>## Unit: milliseconds
 ##                   expr       min        lq      mean    median        uq
-##  deSolve, not compiled 5006.3815 5014.4629 5112.7115 5022.5443 5165.8765
-##       Eigenvalue based  840.3027  874.3549  892.0593  908.4071  917.9376
-##      deSolve, compiled  706.9909  712.8031  723.4380  718.6154  731.6615
+##  deSolve, not compiled 5185.0893 5231.5690 5266.8769 5278.0487 5307.7706
+##       Eigenvalue based  843.3153  847.1503  876.5398  850.9853  893.1520
+##      deSolve, compiled  723.0636  740.5682  755.9995  758.0729  772.4674
 ##        max neval cld
-##  5309.2087     3   b
-##   927.4680     3  a 
-##   744.7077     3  a</code></pre>
+##  5337.4926     3   b
+##   935.3187     3  a 
+##   786.8620     3  a</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">autoplot</span>(mb<span class="fl">.1</span>)</code></pre></div>
 <p><img src="compiled_models_files/figure-html/benchmark_SFO_SFO-1.png" width="672"></p>
 <p>We see that using the compiled model is by a factor of 7 faster than using the R version with the default ode solver, and it is even faster than the Eigenvalue based solution implemented in R which does not need iterative solution of the ODEs:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rownames</span>(smb<span class="fl">.1</span>) &lt;-<span class="st"> </span>smb<span class="fl">.1</span>$expr
 smb<span class="fl">.1</span>[<span class="st">"median"</span>]/smb<span class="fl">.1</span>[<span class="st">"deSolve, compiled"</span>, <span class="st">"median"</span>]</code></pre></div>
 <pre><code>##                         median
-## deSolve, not compiled 6.989197
-## Eigenvalue based      1.264108
+## deSolve, not compiled 6.962456
+## Eigenvalue based      1.122564
 ## deSolve, compiled     1.000000</code></pre>
 </div>
 <div id="model-that-can-not-be-solved-with-eigenvalues" class="section level2">
@@ -134,19 +134,19 @@ smb<span class="fl">.1</span>[<span class="st">"median"</span>]/smb<span class="
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">smb<span class="fl">.2</span> &lt;-<span class="st"> </span><span class="kw">summary</span>(mb<span class="fl">.2</span>)
 <span class="kw">print</span>(mb<span class="fl">.2</span>)</code></pre></div>
 <pre><code>## Unit: seconds
-##                   expr       min       lq     mean    median        uq
-##  deSolve, not compiled 11.015990 11.17783 11.24827 11.339674 11.364403
-##      deSolve, compiled  1.285264  1.29794  1.32988  1.310616  1.352189
+##                   expr       min        lq      mean   median        uq
+##  deSolve, not compiled 10.963655 10.992677 11.033360 11.02170 11.068212
+##      deSolve, compiled  1.287898  1.309754  1.322972  1.33161  1.340509
 ##        max neval cld
-##  11.389132     3   b
-##   1.393762     3  a</code></pre>
+##  11.114726     3   b
+##   1.349408     3  a</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">smb<span class="fl">.2</span>[<span class="st">"median"</span>]/smb<span class="fl">.2</span>[<span class="st">"deSolve, compiled"</span>, <span class="st">"median"</span>]</code></pre></div>
 <pre><code>##   median
 ## 1     NA
 ## 2     NA</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">autoplot</span>(mb<span class="fl">.2</span>)</code></pre></div>
 <p><img src="compiled_models_files/figure-html/benchmark_FOMC_SFO-1.png" width="672"></p>
-<p>Here we get a performance benefit of a factor of 8.7 using the version of the differential equation model compiled from C code!</p>
+<p>Here we get a performance benefit of a factor of 8.3 using the version of the differential equation model compiled from C code!</p>
 <p>This vignette was built with mkin 0.9.45 on</p>
 <pre><code>## R version 3.3.2 (2016-10-31)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
