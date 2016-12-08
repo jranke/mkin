@@ -1,6 +1,10 @@
-# mkin 0.9.45 
+# mkin 0.9.45 (2016-12-08)
 
 ## Minor changes
+
+- `plot.mkinfit` and `plot.mmkin`: If the plotting device is `tikz`, LaTeX markup is being used for the chi2 error in the graphs.
+
+- Use `pkgdown`, the successor of `staticdocs` for generating static HTML documentation. Include example output and graphs also for `dontrun` sections.
 
 - `plot.mkinfit`: Plotting does not fail any more when the compiled model is not available, e.g. because it was removed from the temporary directory. In this case, the uncompiled model is now used for plotting
 
