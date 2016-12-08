@@ -54,7 +54,7 @@
       <h1>Performance benefit by using compiled model definitions in mkin</h1>
                         <h4 class="author">Johannes Ranke</h4>
             
-            <h4 class="date">2016-11-18</h4>
+            <h4 class="date">2016-12-08</h4>
           </div>
 
     
@@ -91,21 +91,21 @@ mb<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw">micr
 <span class="kw">print</span>(mb<span class="fl">.1</span>)</code></pre></div>
 <pre><code>## Unit: milliseconds
 ##                   expr       min        lq      mean    median        uq
-##  deSolve, not compiled 6126.4954 6152.1764 6170.8152 6177.8573 6192.9751
-##       Eigenvalue based  864.8441  891.7069  902.0212  918.5697  920.6098
-##      deSolve, compiled  706.9115  711.1015  714.9195  715.2915  718.9235
+##  deSolve, not compiled 6263.2932 6273.5107 6286.8574 6283.7283 6298.6394
+##       Eigenvalue based  865.5257  872.4146  892.2705  879.3036  905.6429
+##      deSolve, compiled  716.7534  717.9075  724.6869  719.0617  728.6537
 ##        max neval cld
-##  6208.0929     3   c
-##   922.6498     3  b 
-##   722.5556     3 a</code></pre>
+##  6313.5506     3   c
+##   931.9821     3  b 
+##   738.2457     3 a</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">autoplot</span>(mb<span class="fl">.1</span>)</code></pre></div>
 <p><img src="compiled_models_files/figure-html/benchmark_SFO_SFO-1.png" width="672"></p>
-<p>We see that using the compiled model is by a factor of 8.6 faster than using the R version with the default ode solver, and it is even faster than the Eigenvalue based solution implemented in R which does not need iterative solution of the ODEs:</p>
+<p>We see that using the compiled model is by a factor of 8.7 faster than using the R version with the default ode solver, and it is even faster than the Eigenvalue based solution implemented in R which does not need iterative solution of the ODEs:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rownames</span>(smb<span class="fl">.1</span>) &lt;-<span class="st"> </span>smb<span class="fl">.1</span>$expr
 smb<span class="fl">.1</span>[<span class="st">"median"</span>]/smb<span class="fl">.1</span>[<span class="st">"deSolve, compiled"</span>, <span class="st">"median"</span>]</code></pre></div>
 <pre><code>##                         median
-## deSolve, not compiled 8.636839
-## Eigenvalue based      1.284189
+## deSolve, not compiled 8.738789
+## Eigenvalue based      1.222849
 ## deSolve, compiled     1.000000</code></pre>
 </div>
 <div id="model-that-can-not-be-solved-with-eigenvalues" class="section level2">
@@ -127,18 +127,18 @@ smb<span class="fl">.1</span>[<span class="st">"median"</span>]/smb<span class="
 <span class="kw">print</span>(mb<span class="fl">.2</span>)</code></pre></div>
 <pre><code>## Unit: seconds
 ##                   expr       min        lq      mean    median        uq
-##  deSolve, not compiled 13.163796 13.205491 13.478255 13.247187 13.635484
-##      deSolve, compiled  1.267154  1.268198  1.272722  1.269242  1.275506
+##  deSolve, not compiled 13.487097 13.492149 13.528060 13.497201 13.548541
+##      deSolve, compiled  1.307845  1.318979  1.322967  1.330114  1.330528
 ##        max neval cld
-##  14.023782     3   b
-##   1.281771     3  a</code></pre>
+##  13.599881     3   b
+##   1.330941     3  a</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">smb<span class="fl">.2</span>[<span class="st">"median"</span>]/smb<span class="fl">.2</span>[<span class="st">"deSolve, compiled"</span>, <span class="st">"median"</span>]</code></pre></div>
 <pre><code>##   median
 ## 1     NA
 ## 2     NA</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">autoplot</span>(mb<span class="fl">.2</span>)</code></pre></div>
 <p><img src="compiled_models_files/figure-html/benchmark_FOMC_SFO-1.png" width="672"></p>
-<p>Here we get a performance benefit of a factor of 10.4 using the version of the differential equation model compiled from C code!</p>
+<p>Here we get a performance benefit of a factor of 10.1 using the version of the differential equation model compiled from C code!</p>
 <p>This vignette was built with mkin 0.9.44.9000 on</p>
 <pre><code>## R version 3.3.2 (2016-10-31)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
