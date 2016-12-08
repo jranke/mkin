@@ -13,7 +13,6 @@ RBIN ?= $(shell dirname "`which R`")
 # Specify package and static documentation directories for subversion on r-forge
 RFSVN ?= $(HOME)/svn/kinfit
 RFDIR ?= $(RFSVN)/pkg/mkin
-SDDIR ?= $(RFSVN)/www/mkin_static
 
 # Vignettes are listed in the build target
 pkgfiles = \
@@ -96,10 +95,6 @@ pd_articles:
 	git commit -m 'Static documentation articles rebuilt by pkgdown::build_articles()' -e
 
 r-forge: 
-	rm -r $(SDDIR)/*
-	cp -a docs/* $(SDDIR)
-	rm -r $(SDDIR)/articles/cache
-	cd $(SDDIR) && svn add --force .
 	git archive master > $(HOME)/mkin.tar;\
 	cd $(RFDIR) && rm -r `ls` && tar -xf $(HOME)/mkin.tar;\
 	svn add --force .; svn rm --force `svn status | grep "\!" | cut -d " " -f 8`; cd $(RFSVN) && svn commit -m 'sync with git'
