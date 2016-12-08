@@ -42,15 +42,15 @@ and at [R-Forge](http://kinfit.r-forge.r-project.org/mkin_static/index.html).
 ## Features
 
 * Highly flexible model specification using
-  [`mkinmod`](http://kinfit.r-forge.r-project.org/mkin_static/mkinmod.html),
+  [`mkinmod`](http://kinfit.r-forge.r-project.org/mkin_static/reference/mkinmod.html),
   including equilibrium reactions and using the single first-order 
   reversible binding (SFORB) model, which will automatically create
   two latent state variables for the observed variable.
 * As of version 0.9-39, fitting of several models to several datasets, optionally in 
   parallel, is supported, see for example
-  [`plot.mmkin`](http://kinfit.r-forge.r-project.org/mkin_static/plot.mmkin.html).
+  [`plot.mmkin`](http://kinfit.r-forge.r-project.org/mkin_static/reference/plot.mmkin.html).
 * Model solution (forward modelling) in the function
-  [`mkinpredict`](http://kinfit.r-forge.r-project.org/mkin_static/mkinpredict.html) 
+  [`mkinpredict`](http://kinfit.r-forge.r-project.org/mkin_static/reference/mkinpredict.html) 
   is performed either using the analytical solution for the case of 
   parent only degradation, an eigenvalue based solution if only simple
   first-order (SFO) or SFORB kinetics are used in the model, or

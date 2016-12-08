@@ -1,8 +1,8 @@
 PKGNAME := $(shell sed -n "s/Package: *\([^ ]*\)/\1/p" DESCRIPTION)
 PKGVERS := $(shell sed -n "s/Version: *\([^ ]*\)/\1/p" DESCRIPTION)
 PKGSRC  := $(shell basename $(PWD))
-TGZ     := ../$(PKGSRC)_$(PKGVERS).tar.gz
-TGZVNR  := ../$(PKGSRC)_$(PKGVERS)-vignettes-not-rebuilt.tar.gz
+TGZ     := $(PKGSRC)_$(PKGVERS).tar.gz
+TGZVNR  := $(PKGSRC)_$(PKGVERS)-vignettes-not-rebuilt.tar.gz
 
 # Specify the directory holding R binaries. To use an alternate R build (say a
 # pre-prelease version) use `make RBIN=/path/to/other/R/` or `export RBIN=...`
@@ -32,13 +32,10 @@ pkgfiles = \
 all: build
 
 $(TGZ): $(pkgfiles) vignettes
-	cd ..;\
-		"$(RBIN)/R" CMD build $(PKGSRC) 2>&1 | tee $(PKGNAME)/build.log
+	"$(RBIN)/R" CMD build . 2>&1 | tee build.log
 
 $(TGZVNR): $(pkgfiles) 
-	cd ..;\
-		"$(RBIN)/R" CMD build $(PKGSRC) --no-build-vignettes;\
-		cd $(PKGSRC);\
+	"$(RBIN)/R" CMD build . --no-build-vignettes;\
 	mv $(TGZ) $(TGZVNR)
                 
 build: $(TGZ)
@@ -52,7 +49,7 @@ quickinstall: build-no-vignettes
 	"$(RBIN)/R" CMD INSTALL $(TGZVNR)
 
 check: build
-	"$(RBIN)/R" CMD check --as-cran --no-tests $(TGZ)
+	"$(RBIN)/R" CMD check --as-cran --no-tests $(TGZ) 2>&1 | tee check.log
 
 quickcheck: build-no-vignettes
 	mv $(TGZVNR) $(TGZ)
@@ -117,7 +114,7 @@ drat: build
 	"$(RBIN)/Rscript" -e "drat::insertPackage('$(TGZ)', commit = TRUE)"
 
 submit:
-	@echo "\nHow about make test, make check, make winbuilder"
+	@echo "\nHow about make test, make check, make pd, make winbuilder"
 	@echo "\nIs the DESCRIPTION file up to date?"
 	@echo "\nIs the NEWS.md file up to date?"
 	@echo "\nAre you sure you want to release to CRAN?"
