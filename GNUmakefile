@@ -96,8 +96,9 @@ pd_articles:
 	git commit -m 'Static documentation articles rebuilt by pkgdown::build_articles()' -e
 
 r-forge: 
-	rm -rf $(SDDIR)/*
+	rm -r $(SDDIR)/*
 	cp -a docs/* $(SDDIR)
+	rm -r $(SDDIR)/articles/cache
 	cd $(SDDIR) && svn add --force .
 	git archive master > $(HOME)/mkin.tar;\
 	cd $(RFDIR) && rm -r `ls` && tar -xf $(HOME)/mkin.tar;\
