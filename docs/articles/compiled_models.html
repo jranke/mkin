@@ -67,8 +67,13 @@
 <pre><code>##            gcc 
 ## "/usr/bin/gcc"</code></pre>
 <p>First, we build a simple degradation model for a parent compound with one metabolite.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"mkin"</span>)
-SFO_SFO &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkinmod.html">mkinmod</a></span>(
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"mkin"</span>)</code></pre></div>
+<pre><code>## Loading required package: minpack.lm</code></pre>
+<pre><code>## Loading required package: rootSolve</code></pre>
+<pre><code>## Loading required package: inline</code></pre>
+<pre><code>## Loading required package: methods</code></pre>
+<pre><code>## Loading required package: parallel</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">SFO_SFO &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkinmod.html">mkinmod</a></span>(
   <span class="dt">parent =</span> <span class="kw"><a href="../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"m1"</span>),
   <span class="dt">m1 =</span> <span class="kw"><a href="../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>))</code></pre></div>
 <pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
@@ -91,21 +96,21 @@ mb<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw">micr
 <span class="kw">print</span>(mb<span class="fl">.1</span>)</code></pre></div>
 <pre><code>## Unit: milliseconds
 ##                   expr       min        lq      mean    median        uq
-##  deSolve, not compiled 6263.2932 6273.5107 6286.8574 6283.7283 6298.6394
-##       Eigenvalue based  865.5257  872.4146  892.2705  879.3036  905.6429
-##      deSolve, compiled  716.7534  717.9075  724.6869  719.0617  728.6537
+##  deSolve, not compiled 4973.8901 4975.2320 5000.4065 4976.5739 5013.6648
+##       Eigenvalue based  848.4335  859.7111  886.9766  870.9887  906.2481
+##      deSolve, compiled  702.8916  705.1930  706.2696  707.4944  707.9587
 ##        max neval cld
-##  6313.5506     3   c
-##   931.9821     3  b 
-##   738.2457     3 a</code></pre>
+##  5050.7556     3   c
+##   941.5075     3  b 
+##   708.4229     3 a</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">autoplot</span>(mb<span class="fl">.1</span>)</code></pre></div>
 <p><img src="compiled_models_files/figure-html/benchmark_SFO_SFO-1.png" width="672"></p>
-<p>We see that using the compiled model is by a factor of 8.7 faster than using the R version with the default ode solver, and it is even faster than the Eigenvalue based solution implemented in R which does not need iterative solution of the ODEs:</p>
+<p>We see that using the compiled model is by a factor of 7 faster than using the R version with the default ode solver, and it is even faster than the Eigenvalue based solution implemented in R which does not need iterative solution of the ODEs:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rownames</span>(smb<span class="fl">.1</span>) &lt;-<span class="st"> </span>smb<span class="fl">.1</span>$expr
 smb<span class="fl">.1</span>[<span class="st">"median"</span>]/smb<span class="fl">.1</span>[<span class="st">"deSolve, compiled"</span>, <span class="st">"median"</span>]</code></pre></div>
 <pre><code>##                         median
-## deSolve, not compiled 8.738789
-## Eigenvalue based      1.222849
+## deSolve, not compiled 7.034082
+## Eigenvalue based      1.231089
 ## deSolve, compiled     1.000000</code></pre>
 </div>
 <div id="model-that-can-not-be-solved-with-eigenvalues" class="section level2">
@@ -127,18 +132,18 @@ smb<span class="fl">.1</span>[<span class="st">"median"</span>]/smb<span class="
 <span class="kw">print</span>(mb<span class="fl">.2</span>)</code></pre></div>
 <pre><code>## Unit: seconds
 ##                   expr       min        lq      mean    median        uq
-##  deSolve, not compiled 13.487097 13.492149 13.528060 13.497201 13.548541
-##      deSolve, compiled  1.307845  1.318979  1.322967  1.330114  1.330528
+##  deSolve, not compiled 10.819486 10.846433 10.863732 10.873381 10.885855
+##      deSolve, compiled  1.300192  1.301168  1.304769  1.302144  1.307058
 ##        max neval cld
-##  13.599881     3   b
-##   1.330941     3  a</code></pre>
+##  10.898330     3   b
+##   1.311972     3  a</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">smb<span class="fl">.2</span>[<span class="st">"median"</span>]/smb<span class="fl">.2</span>[<span class="st">"deSolve, compiled"</span>, <span class="st">"median"</span>]</code></pre></div>
 <pre><code>##   median
 ## 1     NA
 ## 2     NA</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">autoplot</span>(mb<span class="fl">.2</span>)</code></pre></div>
 <p><img src="compiled_models_files/figure-html/benchmark_FOMC_SFO-1.png" width="672"></p>
-<p>Here we get a performance benefit of a factor of 10.1 using the version of the differential equation model compiled from C code!</p>
+<p>Here we get a performance benefit of a factor of 8.4 using the version of the differential equation model compiled from C code!</p>
 <p>This vignette was built with mkin 0.9.44.9000 on</p>
 <pre><code>## R version 3.3.2 (2016-10-31)
 ## Platform: x86_64-pc-linux-gnu (64-bit)

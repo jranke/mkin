@@ -87,9 +87,16 @@ vignettes/%.html: vignettes/mkin_vignettes.css vignettes/%.Rmd
 vignettes: vignettes/mkin.html vignettes/FOCUS_D.html vignettes/FOCUS_L.html vignettes/FOCUS_Z.pdf vignettes/compiled_models.html
 
 pd:
-	"$(RBIN)/Rscript" -e "pkgdown::build_site(run_dont_run = TRUE)"
+	"$(RBIN)/Rscript" -e "pkgdown::build_news()"
+	"$(RBIN)/Rscript" -e "pkgdown::build_reference(run_dont_run = TRUE)"
+	"$(RBIN)/Rscript" -e "pkgdown::build_home()"
 	git add -A
-	git commit -m 'Static documentation rebuilt by pkgdown::build_site(run_dont_run = TRUE)' -e
+	git commit -m 'Static documentation except articles rebuilt by pkgdown' -e
+
+pd_articles:
+	"$(RBIN)/Rscript" -e "pkgdown::build_articles()"
+	git add -A
+	git commit -m 'Static documentation articles rebuilt by pkgdown::build_articles()' -e
 
 r-forge: 
 	rm -rf $(SDDIR)/*
