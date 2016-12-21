@@ -1,3 +1,9 @@
+# mkin 0.9.45.1 (2016-12-20)
+
+## New features
+
+- A `twa` function, calculating maximum time weighted average concentrations for the parent (SFO, FOMC and DFOP).
+
 # mkin 0.9.45 (2016-12-08)
 
 ## Minor changes
