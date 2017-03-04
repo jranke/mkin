@@ -36,7 +36,9 @@ at the package vignettes
 
 ## Documentation
 
-The HTML documentation is available at [github](http://jranke.github.io/mkin) 
+The HTML documentation is available at 
+[jrwb.de](http://pkgdown.jrwb.de/mkin), at
+[github](http://jranke.github.io/mkin) 
 and at [R-Forge](http://kinfit.r-forge.r-project.org/mkin_static/index.html).
 
 ## Features
