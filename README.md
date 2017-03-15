@@ -1,6 +1,6 @@
 # mkin
 
-[![](http://www.r-pkg.org/badges/version/mkin)](https://cran.r-project.org/package=mkin)
+[![](https://www.r-pkg.org/badges/version/mkin)](https://cran.r-project.org/package=mkin)
 
 The R package **mkin** provides calculation routines for the analysis of
 chemical degradation data, including <b>m</b>ulticompartment <b>kin</b>etics as
@@ -37,7 +37,7 @@ at the package vignettes
 ## Documentation
 
 The HTML documentation is available at 
-[jrwb.de](http://pkgdown.jrwb.de/mkin), at
+[jrwb.de](https://pkgdown.jrwb.de/mkin), at
 [github](http://jranke.github.io/mkin) 
 and at [R-Forge](http://kinfit.r-forge.r-project.org/mkin_static/index.html).
 
