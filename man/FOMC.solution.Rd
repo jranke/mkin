@@ -36,7 +36,7 @@ FOMC.solution(t, parent.0, alpha, beta)
   Degradation Kinetics from Environmental Fate Studies on Pesticides in EU
   Registration} Report of the FOCUS Work Group on Degradation Kinetics,
   EC Document Reference Sanco/10058/2005 version 2.0, 434 pp,
-  \url{http://focus.jrc.ec.europa.eu/dk} 
+  \url{http://esdac.jrc.europa.eu/projects/degradation-kinetics} 
 
   Gustafson DI and Holden LR (1990) Nonlinear pesticide dissipation in soil: A
   new model based on spatial variability. \emph{Environmental Science and 

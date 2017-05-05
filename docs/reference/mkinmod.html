@@ -6,8 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>
- — mkinmod • mkin</title>
+<title>Function to set up a kinetic model with one or more state variables — mkinmod • mkin</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -26,12 +25,14 @@
 <script src="../pkgdown.js"></script>
 
 <!-- mathjax -->
-<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+<script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
 <!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
   </head>
 
   <body>
@@ -71,6 +72,9 @@
     <li>
       <a href="../articles/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
     </li>
+    <li>
+      <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -96,8 +100,7 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>
-</h1>
+    <h1>Function to set up a kinetic model with one or more state variables</h1>
     </div>
 
     
@@ -105,58 +108,67 @@
   a list, specifying the kinetic model type and reaction or transfer to other
   observed compartments. Instead of specifying several expressions, a list
   of lists can be given in the speclist argument.</p>
-
-    <p>For the definition of model types and their parameters, the equations given
+<p>For the definition of model types and their parameters, the equations given
   in the FOCUS and NAFTA guidance documents are used.</p>
     
 
-    <pre><span class='fu'>mkinmod</span>(<span class='no'>...</span>, <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"min"</span>, <span class='kw'>speclist</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>mkinmod</span>(<span class='no'>...</span>, <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"min"</span>, <span class='kw'>speclist</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
-    <dl class="dl-horizontal">
-      <dt>...</dt>
-      <dd>
-    For each observed variable, a list has to be specified as an argument, containing
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>...</th>
+      <td><p>For each observed variable, a list has to be specified as an argument, containing
     at least a component <code>type</code>, specifying the type of kinetics to use
-    for the variable. Currently, single first order kinetics &quot;SFO&quot;, 
-    indeterminate order rate equation kinetics &quot;IORE&quot;, or
-    single first order with reversible binding &quot;SFORB&quot; are implemented for all
+    for the variable. Currently, single first order kinetics "SFO", 
+    indeterminate order rate equation kinetics "IORE", or
+    single first order with reversible binding "SFORB" are implemented for all
     variables, while 
-    &quot;FOMC&quot;, &quot;DFOP&quot; and &quot;HS&quot; can additionally be chosen for the first
+    "FOMC", "DFOP" and "HS" can additionally be chosen for the first
     variable which is assumed to be the source compartment.
     Additionally, each component of the list can include a character vector <code>to</code>,
     specifying names of variables to which a transfer is to be assumed in the
     model.
-    If the argument <code>use_of_ff</code> is set to &quot;min&quot; (default) and the model for 
-    the compartment is &quot;SFO&quot; or &quot;SFORB&quot;, an additional component of the list
-    can be &quot;sink=FALSE&quot; effectively fixing the flux to sink to zero.
-  </dd>
-      <dt>use_of_ff</dt>
-      <dd>
-    Specification of the use of formation fractions in the model equations and, if 
-    applicable, the coefficient matrix. If &quot;min&quot;, a minimum use of formation 
+    If the argument <code>use_of_ff</code> is set to "min" (default) and the model for 
+    the compartment is "SFO" or "SFORB", an additional component of the list
+    can be "sink=FALSE" effectively fixing the flux to sink to zero.</p></td>
+    </tr>
+    <tr>
+      <th>use_of_ff</th>
+      <td><p>Specification of the use of formation fractions in the model equations and, if 
+    applicable, the coefficient matrix. If "min", a minimum use of formation 
     fractions is made in order to avoid fitting the product of formation fractions 
-    and rate constants. If &quot;max&quot;, formation fractions are always used.
-  </dd>
-      <dt>speclist</dt>
-      <dd>
-    The specification of the observed variables and their submodel types and 
-    pathways can be given as a single list using this argument. Default is NULL.
-  </dd>
-      <dt>quiet</dt>
-      <dd>
-    Should messages be suppressed?
-  </dd>
-      <dt>verbose</dt>
-      <dd>
-    If <code>TRUE</code>, passed to <code>cfunction</code> if applicable to give
-    detailed information about the C function being built.
-  </dd>
-    </dl>
+    and rate constants. If "max", formation fractions are always used.</p></td>
+    </tr>
+    <tr>
+      <th>speclist</th>
+      <td><p>The specification of the observed variables and their submodel types and 
+    pathways can be given as a single list using this argument. Default is NULL.</p></td>
+    </tr>
+    <tr>
+      <th>quiet</th>
+      <td><p>Should messages be suppressed?</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>If <code>TRUE</code>, passed to <code>cfunction</code> if applicable to give
+    detailed information about the C function being built.</p></td>
+    </tr>
+    </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A list of class <code>mkinmod</code> for use with <code><a href='mkinfit.html'>mkinfit</a></code>, containing</p>
+<dt>diffs</dt><dd><p>A vector of string representations of differential equations,
+      one for each modelling variable.</p></dd>
+    <dt>parms</dt><dd><p>A vector of parameter names occurring in the differential equations.</p></dd>
+    <dt>map</dt><dd><p>A list containing named character vectors for each observed variable, specifying
+      the modelling variables by which it is represented.</p></dd>
+    <dt>use_of_ff</dt><dd><p>The content of <code>use_of_ff</code> is passed on in this list component.</p></dd>
+    <dt>coefmat</dt><dd><p>The coefficient matrix, if the system of differential equations can be
+      represented by one.</p></dd>
+
     
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
@@ -170,8 +182,8 @@
   Degradation Kinetics from Environmental Fate Studies on Pesticides in EU
   Registration&#8221; Report of the FOCUS Work Group on Degradation Kinetics,
   EC Document Reference Sanco/10058/2005 version 2.0, 434 pp,
-  <a href = 'http://focus.jrc.ec.europa.eu/dk'>http://focus.jrc.ec.europa.eu/dk</a></p>
-    <p>NAFTA Technical Working Group on Pesticides (not dated) Guidance for
+  <a href = 'http://esdac.jrc.europa.eu/projects/degradation-kinetics'>http://esdac.jrc.europa.eu/projects/degradation-kinetics</a></p>
+<p>NAFTA Technical Working Group on Pesticides (not dated) Guidance for
   Evaluating and Calculating Degradation Kinetics in Environmental 
   Media</p>
     
@@ -193,7 +205,7 @@
 <span class='no'>SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinmod</span>(
   <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>),
   <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; Compilation argument:
-#&gt;  /usr/lib/R/bin/R CMD SHLIB file2ac5b2884c1.c 2&gt; file2ac5b2884c1.c.err.txt 
+#&gt;  /usr/lib/R/bin/R CMD SHLIB file70ea30edf42a.c 2&gt; file70ea30edf42a.c.err.txt 
 #&gt; Program source:
 #&gt;   1: #include &lt;R.h&gt;
 #&gt;   2: 

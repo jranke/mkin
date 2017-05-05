@@ -25,12 +25,14 @@
 <script src="../pkgdown.js"></script>
 
 <!-- mathjax -->
-<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+<script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
 <!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
   </head>
 
   <body>
@@ -70,7 +72,13 @@
     <li>
       <a href="../articles/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
     </li>
+    <li>
+      <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
+    </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">News</a>
 </li>
       </ul>
       
@@ -102,48 +110,66 @@
   and residual values.</p>
     
 
-    <pre><span class='co'># S3 method for mkinfit</span>
+    <pre class="usage"><span class='co'># S3 method for mkinfit</span>
 <span class='fu'>summary</span>(<span class='no'>object</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>distimes</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='no'>...</span>)
 <span class='co'># S3 method for summary.mkinfit</span>
 <span class='fu'>print</span>(<span class='no'>x</span>, <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fu'>max</span>(<span class='fl'>3</span>, <span class='fu'>getOption</span>(<span class='st'>"digits"</span>) - <span class='fl'>3</span>), <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
-    <dl class="dl-horizontal">
-      <dt>object</dt>
-      <dd>
-  an object of class <code><a href='mkinfit.html'>mkinfit</a></code>.
-</dd>
-      <dt>x</dt>
-      <dd>
-  an object of class <code>summary.mkinfit</code>.
-</dd>
-      <dt>data</dt>
-      <dd>
-  logical, indicating whether the data should be included in the summary. 
-</dd>
-      <dt>distimes</dt>
-      <dd>
-  logical, indicating whether DT50 and DT90 values should be included.
-</dd>
-      <dt>alpha</dt>
-      <dd>
-  error level for confidence interval estimation from t distribution
-</dd>
-      <dt>digits</dt>
-      <dd>
-  Number of digits to use for printing
-</dd>
-      <dt>&#8230;</dt>
-      <dd>
-  optional arguments passed to methods like <code>print</code>.
-</dd>
-    </dl>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>object</th>
+      <td><p>an object of class <code><a href='mkinfit.html'>mkinfit</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>x</th>
+      <td><p>an object of class <code>summary.mkinfit</code>.</p></td>
+    </tr>
+    <tr>
+      <th>data</th>
+      <td><p>logical, indicating whether the data should be included in the summary.</p></td>
+    </tr>
+    <tr>
+      <th>distimes</th>
+      <td><p>logical, indicating whether DT50 and DT90 values should be included.</p></td>
+    </tr>
+    <tr>
+      <th>alpha</th>
+      <td><p>error level for confidence interval estimation from t distribution</p></td>
+    </tr>
+    <tr>
+      <th>digits</th>
+      <td><p>Number of digits to use for printing</p></td>
+    </tr>
+    <tr>
+      <th>&#8230;</th>
+      <td><p>optional arguments passed to methods like <code>print</code>.</p></td>
+    </tr>
+    </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>The summary function returns a list derived from
   <code>summary.modFit</code>, with components, among others</p>
-    <p>The print method is called for its side effect, i.e. printing the summary.</p>
+<dt>version, Rversion</dt><dd><p>The mkin and R versions used</p></dd>
+  <dt>date.fit, date.summary</dt><dd><p>The dates where the fit and the summary were produced</p></dd>
+  <dt>use_of_ff</dt><dd><p>Was maximum or minimum use made of formation fractions</p></dd>
+  <dt>residuals, residualVariance, sigma, modVariance, df</dt><dd><p>As in summary.modFit</p></dd>
+  <dt>cov.unscaled, cov.scaled, info, niter, stopmess, par</dt><dd><p>As in summary.modFit</p></dd>
+  <dt>bpar</dt><dd><p>Optimised and backtransformed parameters</p></dd>
+  <dt>diffs </dt><dd><p>The differential equations used in the model</p></dd>
+  <dt>data </dt><dd><p>The data (see Description above).</p></dd>
+  <dt>start </dt><dd><p>The starting values and bounds, if applicable, for optimised parameters.</p></dd>
+  <dt>fixed </dt><dd><p>The values of fixed parameters.</p></dd>
+  <dt>errmin </dt><dd><p>The chi2 error levels for each observed variable.</p></dd>
+  <dt>bparms.ode </dt><dd><p>All backtransformed ODE parameters, for use as starting parameters for
+    related models.</p></dd>
+  <dt>ff </dt><dd><p>The estimated formation fractions derived from the fitted model.</p></dd>
+  <dt>distimes </dt><dd><p>The DT50 and DT90 values for each observed variable.</p></dd>
+  <dt>SFORB</dt><dd><p>If applicable, eigenvalues of SFORB components of the model.</p></dd>
+  The print method is called for its side effect, i.e. printing the summary.
+
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
@@ -151,21 +177,21 @@
   Degradation Kinetics from Environmental Fate Studies on Pesticides in EU
   Registration&#8221; Report of the FOCUS Work Group on Degradation Kinetics,
   EC Document Reference Sanco/10058/2005 version 2.0, 434 pp,
-  <a href = 'http://focus.jrc.ec.europa.eu/dk'>http://focus.jrc.ec.europa.eu/dk</a></p>
+  <a href = 'http://esdac.jrc.europa.eu/projects/degradation-kinetics'>http://esdac.jrc.europa.eu/projects/degradation-kinetics</a></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>  <span class='fu'>summary</span>(<span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>)), <span class='no'>FOCUS_2006_A</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt; mkin version:    0.9.44.9000 
-#&gt; R version:       3.3.2 
-#&gt; Date of fit:     Thu Dec  8 07:57:55 2016 
-#&gt; Date of summary: Thu Dec  8 07:57:55 2016 
+    <pre class="examples"><div class='input'>  <span class='fu'>summary</span>(<span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>)), <span class='no'>FOCUS_2006_A</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt; mkin version:    0.9.45.2 
+#&gt; R version:       3.4.0 
+#&gt; Date of fit:     Fri May  5 12:46:20 2017 
+#&gt; Date of summary: Fri May  5 12:46:20 2017 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent_sink * parent
 #&gt; 
 #&gt; Model predictions using solution type analytical 
 #&gt; 
-#&gt; Fitted with method Port using 35 model solutions performed in 0.079 s
+#&gt; Fitted with method Port using 35 model solutions performed in 0.082 s
 #&gt; 
 #&gt; Weighting: none
 #&gt; 

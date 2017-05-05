@@ -25,12 +25,14 @@
 <script src="../pkgdown.js"></script>
 
 <!-- mathjax -->
-<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+<script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
 <!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
   </head>
 
   <body>
@@ -70,6 +72,9 @@
     <li>
       <a href="../articles/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
     </li>
+    <li>
+      <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -102,23 +107,34 @@
     <p>Subsetting method for mmkin objects.</p>
     
 
-    <pre># S3 method for mmkin
+    <pre class="usage"># S3 method for mmkin
 [(x, i, j, ..., drop = FALSE)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
-    <dl class="dl-horizontal">
-      <dt>x</dt>
-      <dd>An <code><a href='mmkin.html'>mmkin</a> object</code></dd>
-      <dt>i</dt>
-      <dd>Row index selecting the fits for specific models</dd>
-      <dt>j</dt>
-      <dd>Column index selecting the fits to specific datasets</dd>
-      <dt>...</dt>
-      <dd>Not used, only there to satisfy the generic method definition</dd>
-      <dt>drop</dt>
-      <dd>If FALSE, the method always returns an mmkin object, otherwise either
-  a list of mkinfit objects or a single mkinfit object.</dd>
-    </dl>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>An <code><a href='mmkin.html'>mmkin</a> object</code></p></td>
+    </tr>
+    <tr>
+      <th>i</th>
+      <td><p>Row index selecting the fits for specific models</p></td>
+    </tr>
+    <tr>
+      <th>j</th>
+      <td><p>Column index selecting the fits to specific datasets</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Not used, only there to satisfy the generic method definition</p></td>
+    </tr>
+    <tr>
+      <th>drop</th>
+      <td><p>If FALSE, the method always returns an mmkin object, otherwise either
+  a list of mkinfit objects or a single mkinfit object.</p></td>
+    </tr>
+    </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
@@ -132,23 +148,23 @@
   <span class='no'>fits</span>[<span class='st'>"FOMC"</span>, ]</div><div class='output co'>#&gt;       dataset
 #&gt; model  B       C      
 #&gt;   FOMC List,42 List,42
-#&gt; attr(,&quot;class&quot;)
-#&gt; [1] &quot;mmkin&quot;</div><div class='input'>  <span class='no'>fits</span>[, <span class='st'>"B"</span>]</div><div class='output co'>#&gt;       dataset
+#&gt; attr(,"class")
+#&gt; [1] "mmkin"</div><div class='input'>  <span class='no'>fits</span>[, <span class='st'>"B"</span>]</div><div class='output co'>#&gt;       dataset
 #&gt; model  B      
 #&gt;   SFO  List,42
 #&gt;   FOMC List,42
-#&gt; attr(,&quot;class&quot;)
-#&gt; [1] &quot;mmkin&quot;</div><div class='input'>  <span class='no'>fits</span>[<span class='st'>"SFO"</span>, <span class='st'>"B"</span>]</div><div class='output co'>#&gt;      dataset
+#&gt; attr(,"class")
+#&gt; [1] "mmkin"</div><div class='input'>  <span class='no'>fits</span>[<span class='st'>"SFO"</span>, <span class='st'>"B"</span>]</div><div class='output co'>#&gt;      dataset
 #&gt; model B      
 #&gt;   SFO List,42
-#&gt; attr(,&quot;class&quot;)
-#&gt; [1] &quot;mmkin&quot;</div><div class='input'>
+#&gt; attr(,"class")
+#&gt; [1] "mmkin"</div><div class='input'>
   <span class='fu'>head</span>(
     <span class='co'># This extracts an mkinfit object with lots of components</span>
     <span class='no'>fits</span><span class='kw'>[[</span><span class='st'>"FOMC"</span>, <span class='st'>"B"</span>]]
   )</div><div class='output co'>#&gt; $par
 #&gt;  parent_0 log_alpha  log_beta 
-#&gt; 99.666193  2.549849  5.050586 
+#&gt; 99.666192  2.549849  5.050586 
 #&gt; 
 #&gt; $ssr
 #&gt; [1] 28.58291
@@ -164,7 +180,7 @@
 #&gt;       25       78 
 #&gt; 
 #&gt; $counts
-#&gt; [1] &quot;both X-convergence and relative convergence (5)&quot;
+#&gt; [1] "both X-convergence and relative convergence (5)"
 #&gt; </div><div class='input'>
   <span class='fu'>head</span>(
   <span class='co'># The same can be achieved by</span>
@@ -188,7 +204,7 @@
 #&gt;        8       15 
 #&gt; 
 #&gt; $counts
-#&gt; [1] &quot;relative convergence (4)&quot;
+#&gt; [1] "relative convergence (4)"
 #&gt; 
 #&gt; $hessian
 #&gt;                     parent_0 log_k_parent_sink
@@ -223,7 +239,7 @@
 #&gt; [1] 6
 #&gt; 
 #&gt; $solution_type
-#&gt; [1] &quot;analytical&quot;
+#&gt; [1] "analytical"
 #&gt; 
 #&gt; $transform_rates
 #&gt; [1] TRUE
@@ -232,17 +248,17 @@
 #&gt; [1] TRUE
 #&gt; 
 #&gt; $method.modFit
-#&gt; [1] &quot;Port&quot;
+#&gt; [1] "Port"
 #&gt; 
 #&gt; $maxit.modFit
-#&gt; [1] &quot;auto&quot;
+#&gt; [1] "auto"
 #&gt; 
 #&gt; $calls
 #&gt; [1] 29
 #&gt; 
 #&gt; $time
 #&gt;    user  system elapsed 
-#&gt;   0.068   0.000   0.066 
+#&gt;   0.064   0.000   0.063 
 #&gt; 
 #&gt; $mkinmod
 #&gt; &lt;mkinmod&gt; model generated with
@@ -266,7 +282,7 @@
 #&gt; 8 parent  118  0.08
 #&gt; 
 #&gt; $obs_vars
-#&gt; [1] &quot;parent&quot;
+#&gt; [1] "parent"
 #&gt; 
 #&gt; $predicted
 #&gt;       name       time       value
@@ -380,9 +396,9 @@
 #&gt; $cost
 #&gt; function (P) 
 #&gt; {
-#&gt;     assign(&quot;calls&quot;, calls + 1, inherits = TRUE)
+#&gt;     assign("calls", calls + 1, inherits = TRUE)
 #&gt;     if (trace_parms) 
-#&gt;         cat(P, &quot;\n&quot;)
+#&gt;         cat(P, "\n")
 #&gt;     if (length(state.ini.optim) &gt; 0) {
 #&gt;         odeini &lt;- c(P[1:length(state.ini.optim)], state.ini.fixed)
 #&gt;         names(odeini) &lt;- c(state.ini.optim.boxnames, state.ini.fixed.boxnames)
@@ -398,13 +414,13 @@
 #&gt;     out &lt;- mkinpredict(mkinmod, parms, odeini, outtimes, solution_type = solution_type, 
 #&gt;         use_compiled = use_compiled, method.ode = method.ode, 
 #&gt;         atol = atol, rtol = rtol, ...)
-#&gt;     assign(&quot;out_predicted&quot;, out, inherits = TRUE)
-#&gt;     mC &lt;- modCost(out, observed, y = &quot;value&quot;, err = err, weight = weight, 
+#&gt;     assign("out_predicted", out, inherits = TRUE)
+#&gt;     mC &lt;- modCost(out, observed, y = "value", err = err, weight = weight, 
 #&gt;         scaleVar = scaleVar)
 #&gt;     if (mC$model &lt; cost.old) {
 #&gt;         if (!quiet) 
-#&gt;             cat(&quot;Model cost at call &quot;, calls, &quot;: &quot;, mC$model, 
-#&gt;                 &quot;\n&quot;)
+#&gt;             cat("Model cost at call ", calls, ": ", mC$model, 
+#&gt;                 "\n")
 #&gt;         if (plot) {
 #&gt;             outtimes_plot = seq(min(observed$time), max(observed$time), 
 #&gt;                 length.out = 100)
@@ -412,9 +428,9 @@
 #&gt;                 solution_type = solution_type, use_compiled = use_compiled, 
 #&gt;                 method.ode = method.ode, atol = atol, rtol = rtol, 
 #&gt;                 ...)
-#&gt;             plot(0, type = &quot;n&quot;, xlim = range(observed$time), 
+#&gt;             plot(0, type = "n", xlim = range(observed$time), 
 #&gt;                 ylim = c(0, max(observed$value, na.rm = TRUE)), 
-#&gt;                 xlab = &quot;Time&quot;, ylab = &quot;Observed&quot;)
+#&gt;                 xlab = "Time", ylab = "Observed")
 #&gt;             col_obs &lt;- pch_obs &lt;- 1:length(obs_vars)
 #&gt;             lty_obs &lt;- rep(1, length(obs_vars))
 #&gt;             names(col_obs) &lt;- names(pch_obs) &lt;- names(lty_obs) &lt;- obs_vars
@@ -424,14 +440,15 @@
 #&gt;             }
 #&gt;             matlines(out_plot$time, out_plot[-1], col = col_obs, 
 #&gt;                 lty = lty_obs)
-#&gt;             legend(&quot;topright&quot;, inset = c(0.05, 0.05), legend = obs_vars, 
+#&gt;             legend("topright", inset = c(0.05, 0.05), legend = obs_vars, 
 #&gt;                 col = col_obs, pch = pch_obs, lty = 1:length(pch_obs))
 #&gt;         }
-#&gt;         assign(&quot;cost.old&quot;, mC$model, inherits = TRUE)
+#&gt;         assign("cost.old", mC$model, inherits = TRUE)
 #&gt;     }
 #&gt;     return(mC)
 #&gt; }
-#&gt; &lt;environment: 0x3b9eeb8&gt;
+#&gt; &lt;bytecode: 0x5554250&gt;
+#&gt; &lt;environment: 0x4eb4b18&gt;
 #&gt; 
 #&gt; $cost_notrans
 #&gt; function (P) 
@@ -449,11 +466,12 @@
 #&gt;     out &lt;- mkinpredict(mkinmod, odeparms, odeini, outtimes, solution_type = solution_type, 
 #&gt;         use_compiled = use_compiled, method.ode = method.ode, 
 #&gt;         atol = atol, rtol = rtol, ...)
-#&gt;     mC &lt;- modCost(out, observed, y = &quot;value&quot;, err = err, weight = weight, 
+#&gt;     mC &lt;- modCost(out, observed, y = "value", err = err, weight = weight, 
 #&gt;         scaleVar = scaleVar)
 #&gt;     return(mC)
 #&gt; }
-#&gt; &lt;environment: 0x3b9eeb8&gt;
+#&gt; &lt;bytecode: 0x5073868&gt;
+#&gt; &lt;environment: 0x4eb4b18&gt;
 #&gt; 
 #&gt; $hessian_notrans
 #&gt;                   parent_0 k_parent_sink
@@ -492,7 +510,7 @@
 #&gt; [1] 1e-10
 #&gt; 
 #&gt; $weight.ini
-#&gt; [1] &quot;none&quot;
+#&gt; [1] "none"
 #&gt; 
 #&gt; $reweight.tol
 #&gt; [1] 1e-08
@@ -516,10 +534,10 @@
 #&gt; 99.17407 
 #&gt; 
 #&gt; $date
-#&gt; [1] &quot;Wed Mar 15 09:44:44 2017&quot;
+#&gt; [1] "Fri May  5 12:44:53 2017"
 #&gt; 
-#&gt; attr(,&quot;class&quot;)
-#&gt; [1] &quot;mkinfit&quot; &quot;modFit&quot; 
+#&gt; attr(,"class")
+#&gt; [1] "mkinfit" "modFit" 
 #&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

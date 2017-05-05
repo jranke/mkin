@@ -6,8 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>
- — mkinfit • mkin</title>
+<title>Fit a kinetic model to data with one or more state variables — mkinfit • mkin</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -26,12 +25,14 @@
 <script src="../pkgdown.js"></script>
 
 <!-- mathjax -->
-<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+<script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
 <!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
   </head>
 
   <body>
@@ -71,6 +72,9 @@
     <li>
       <a href="../articles/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
     </li>
+    <li>
+      <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -96,8 +100,7 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>
-</h1>
+    <h1>Fit a kinetic model to data with one or more state variables</h1>
     </div>
 
     
@@ -111,10 +114,10 @@
   In each step of the optimsation, the kinetic model is solved using the
   function <code><a href='mkinpredict.html'>mkinpredict</a></code>. The variance of the residuals for each
   observed variable can optionally be iteratively reweighted until convergence
-  using the argument <code>reweight.method = &quot;obs&quot;</code>.</p>
+  using the argument <code>reweight.method = "obs"</code>.</p>
     
 
-    <pre><span class='fu'>mkinfit</span>(<span class='no'>mkinmod</span>, <span class='no'>observed</span>,
+    <pre class="usage"><span class='fu'>mkinfit</span>(<span class='no'>mkinmod</span>, <span class='no'>observed</span>,
   <span class='kw'>parms.ini</span> <span class='kw'>=</span> <span class='st'>"auto"</span>,
   <span class='kw'>state.ini</span> <span class='kw'>=</span> <span class='st'>"auto"</span>,
   <span class='kw'>fixed_parms</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fixed_initials</span> <span class='kw'>=</span> <span class='fu'>names</span>(<span class='no'>mkinmod</span>$<span class='no'>diffs</span>)[-<span class='fl'>1</span>],
@@ -135,228 +138,225 @@
   <span class='kw'>trace_parms</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
-    <dl class="dl-horizontal">
-      <dt>mkinmod</dt>
-      <dd>
-    A list of class <code><a href='mkinmod.html'>mkinmod</a></code>, containing the kinetic model to be
-    fitted to the data, or one of the shorthand names (&quot;SFO&quot;, &quot;FOMC&quot;, &quot;DFOP&quot;,
-    &quot;HS&quot;, &quot;SFORB&quot;). If a shorthand name is given, a parent only degradation
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>mkinmod</th>
+      <td><p>A list of class <code><a href='mkinmod.html'>mkinmod</a></code>, containing the kinetic model to be
+    fitted to the data, or one of the shorthand names ("SFO", "FOMC", "DFOP",
+    "HS", "SFORB"). If a shorthand name is given, a parent only degradation
     model is generated for the variable with the highest value in
-    <code>observed</code>.
-  </dd>
-      <dt>observed</dt>
-      <dd>
-    The observed data. It has to be in the long format as described in
-    <code>modFit</code>, i.e. the first column called &quot;name&quot; must contain the
+    <code>observed</code>.</p></td>
+    </tr>
+    <tr>
+      <th>observed</th>
+      <td><p>The observed data. It has to be in the long format as described in
+    <code>modFit</code>, i.e. the first column called "name" must contain the
     name of the observed variable for each data point. The second column must
-    contain the times of observation, named &quot;time&quot;.  The third column must be
-    named &quot;value&quot; and contain the observed values. Optionally, a further column
+    contain the times of observation, named "time".  The third column must be
+    named "value" and contain the observed values. Optionally, a further column
     can contain weights for each data point. Its name must be passed as a
     further argument named <code>err</code> which is then passed on to
-    <code>modFit</code>.
-  </dd>
-      <dt>parms.ini</dt>
-      <dd>
-    A named vector of initial values for the parameters, including parameters
+    <code>modFit</code>.</p></td>
+    </tr>
+    <tr>
+      <th>parms.ini</th>
+      <td><p>A named vector of initial values for the parameters, including parameters
     to be optimised and potentially also fixed parameters as indicated by
-    <code>fixed_parms</code>.  If set to &quot;auto&quot;, initial values for rate constants
+    <code>fixed_parms</code>.  If set to "auto", initial values for rate constants
     are set to default values.  Using parameter names that are not in the model
-    gives an error.
-
-    It is possible to only specify a subset of the parameters that the model
-    needs. You can use the parameter lists &quot;bparms.ode&quot; from a previously
+    gives an error.</p>
+<p>It is possible to only specify a subset of the parameters that the model
+    needs. You can use the parameter lists "bparms.ode" from a previously
     fitted model, which contains the differential equation parameters from this
     model. This works nicely if the models are nested. An example is given
-    below.
-  </dd>
-      <dt>state.ini</dt>
-      <dd>
-    A named vector of initial values for the state variables of the model. In
+    below.</p></td>
+    </tr>
+    <tr>
+      <th>state.ini</th>
+      <td><p>A named vector of initial values for the state variables of the model. In
     case the observed variables are represented by more than one model
     variable, the names will differ from the names of the observed variables
     (see <code>map</code> component of <code><a href='mkinmod.html'>mkinmod</a></code>). The default is to set
     the initial value of the first model variable to the mean of the time zero
     values for the variable with the maximum observed value, and all others to 0.
-    If this variable has no time zero observations, its initial value is set to 100.
-  </dd>
-      <dt>fixed_parms</dt>
-      <dd>
-    The names of parameters that should not be optimised but rather kept at the
-    values specified in <code>parms.ini</code>.
-  </dd>
-      <dt>fixed_initials</dt>
-      <dd>
-    The names of model variables for which the initial state at time 0 should
+    If this variable has no time zero observations, its initial value is set to 100.</p></td>
+    </tr>
+    <tr>
+      <th>fixed_parms</th>
+      <td><p>The names of parameters that should not be optimised but rather kept at the
+    values specified in <code>parms.ini</code>.</p></td>
+    </tr>
+    <tr>
+      <th>fixed_initials</th>
+      <td><p>The names of model variables for which the initial state at time 0 should
     be excluded from the optimisation. Defaults to all state variables except
-    for the first one.
-  </dd>
-      <dt>from_max_mean</dt>
-      <dd>
-    If this is set to TRUE, and the model has only one observed variable, then
+    for the first one.</p></td>
+    </tr>
+    <tr>
+      <th>from_max_mean</th>
+      <td><p>If this is set to TRUE, and the model has only one observed variable, then
     data before the time of the maximum observed value (after averaging for each
     sampling time) are discarded, and this time is subtracted from all
     remaining time values, so the time of the maximum observed mean value is
-    the new time zero.
-  </dd>
-      <dt>solution_type</dt>
-      <dd>
-    If set to &quot;eigen&quot;, the solution of the system of differential equations is
+    the new time zero.</p></td>
+    </tr>
+    <tr>
+      <th>solution_type</th>
+      <td><p>If set to "eigen", the solution of the system of differential equations is
     based on the spectral decomposition of the coefficient matrix in cases that
-    this is possible. If set to &quot;deSolve&quot;, a numerical ode solver from package
-    <code>deSolve</code> is used. If set to &quot;analytical&quot;, an analytical
+    this is possible. If set to "deSolve", a numerical ode solver from package
+    <code>deSolve</code> is used. If set to "analytical", an analytical
     solution of the model is used. This is only implemented for simple
     degradation experiments with only one state variable, i.e. with no
-    metabolites. The default is &quot;auto&quot;, which uses &quot;analytical&quot; if possible,
-    otherwise &quot;eigen&quot; if the model can be expressed using eigenvalues and
-    eigenvectors, and finally &quot;deSolve&quot; for the remaining models (time
+    metabolites. The default is "auto", which uses "analytical" if possible,
+    otherwise "eigen" if the model can be expressed using eigenvalues and
+    eigenvectors, and finally "deSolve" for the remaining models (time
     dependence of degradation rates and metabolites). This argument is passed
-    on to the helper function <code><a href='mkinpredict.html'>mkinpredict</a></code>.
-  </dd>
-      <dt>method.ode</dt>
-      <dd>
-    The solution method passed via <code><a href='mkinpredict.html'>mkinpredict</a></code> to
-    <code>ode</code> in case the solution type is &quot;deSolve&quot;. The default
-    &quot;lsoda&quot; is performant, but sometimes fails to converge.
-  </dd>
-      <dt>use_compiled</dt>
-      <dd>
-    If set to <code>FALSE</code>, no compiled version of the <code><a href='mkinmod.html'>mkinmod</a></code>
+    on to the helper function <code><a href='mkinpredict.html'>mkinpredict</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>method.ode</th>
+      <td><p>The solution method passed via <code><a href='mkinpredict.html'>mkinpredict</a></code> to
+    <code>ode</code> in case the solution type is "deSolve". The default
+    "lsoda" is performant, but sometimes fails to converge.</p></td>
+    </tr>
+    <tr>
+      <th>use_compiled</th>
+      <td><p>If set to <code>FALSE</code>, no compiled version of the <code><a href='mkinmod.html'>mkinmod</a></code>
     model is used, in the calls to <code><a href='mkinpredict.html'>mkinpredict</a></code> even if
-    a compiled verion is present.
-  </dd>
-      <dt>method.modFit</dt>
-      <dd>
-    The optimisation method passed to <code>modFit</code>.
-
-    In order to optimally deal with problems where local minima occur, the
-    &quot;Port&quot; algorithm is now used per default as it is less prone to get trapped
+    a compiled verion is present.</p></td>
+    </tr>
+    <tr>
+      <th>method.modFit</th>
+      <td><p>The optimisation method passed to <code>modFit</code>.</p>
+<p>In order to optimally deal with problems where local minima occur, the
+    "Port" algorithm is now used per default as it is less prone to get trapped
     in local minima and depends less on starting values for parameters than
-    the Levenberg Marquardt variant selected by &quot;Marq&quot;.  However, &quot;Port&quot; needs
-    more iterations.
-
-    The former default &quot;Marq&quot; is the Levenberg Marquardt algorithm
+    the Levenberg Marquardt variant selected by "Marq".  However, "Port" needs
+    more iterations.</p>
+<p>The former default "Marq" is the Levenberg Marquardt algorithm
     <code>nls.lm</code> from the package <code>minpack.lm</code> and usually needs
-    the least number of iterations.
-
-    The &quot;Pseudo&quot; algorithm is not included because it needs finite parameter bounds
-    which are currently not supported.
-
-    The &quot;Newton&quot; algorithm is not included because its number of iterations
+    the least number of iterations.</p>
+<p>The "Pseudo" algorithm is not included because it needs finite parameter bounds
+    which are currently not supported.</p>
+<p>The "Newton" algorithm is not included because its number of iterations
     can not be controlled by <code>control.modFit</code> and it does not appear
-    to provide advantages over the other algorithms.
-  </dd>
-      <dt>maxit.modFit</dt>
-      <dd>
-    Maximum number of iterations in the optimisation. If not &quot;auto&quot;, this will
+    to provide advantages over the other algorithms.</p></td>
+    </tr>
+    <tr>
+      <th>maxit.modFit</th>
+      <td><p>Maximum number of iterations in the optimisation. If not "auto", this will
     be passed to the method called by <code>modFit</code>, overriding
-    what may be specified in the next argument <code>control.modFit</code>.
-  </dd>
-      <dt>control.modFit</dt>
-      <dd>
-    Additional arguments passed to the optimisation method used by
-    <code>modFit</code>.
-  </dd>
-      <dt>transform_rates</dt>
-      <dd>
-    Boolean specifying if kinetic rate constants should be transformed in the
+    what may be specified in the next argument <code>control.modFit</code>.</p></td>
+    </tr>
+    <tr>
+      <th>control.modFit</th>
+      <td><p>Additional arguments passed to the optimisation method used by
+    <code>modFit</code>.</p></td>
+    </tr>
+    <tr>
+      <th>transform_rates</th>
+      <td><p>Boolean specifying if kinetic rate constants should be transformed in the
     model specification used in the fitting for better compliance with the
     assumption of normal distribution of the estimator. If TRUE, also
     alpha and beta parameters of the FOMC model are log-transformed, as well
     as k1 and k2 rate constants for the DFOP and HS models and the break point
     tb of the HS model.
-    If FALSE, zero is used as a lower bound for the rates in the optimisation.
-  </dd>
-      <dt>transform_fractions</dt>
-      <dd>
-    Boolean specifying if formation fractions constants should be transformed in the
+    If FALSE, zero is used as a lower bound for the rates in the optimisation.</p></td>
+    </tr>
+    <tr>
+      <th>transform_fractions</th>
+      <td><p>Boolean specifying if formation fractions constants should be transformed in the
     model specification used in the fitting for better compliance with the
     assumption of normal distribution of the estimator. The default (TRUE) is
     to do transformations. If TRUE, the g parameter of the DFOP and HS
     models are also transformed, as they can also be seen as compositional
     data. The transformation used for these transformations is the
-    <code><a href='ilr.html'>ilr</a></code> transformation.
-  </dd>
-      <dt>plot</dt>
-      <dd>
-    Should the observed values and the numerical solutions be plotted at each
-    stage of the optimisation?
-  </dd>
-      <dt>quiet</dt>
-      <dd>
-    Suppress printing out the current model cost after each improvement?
-  </dd>
-      <dt>err </dt>
-      <dd>either <code>NULL</code>, or the name of the column with the
+    <code><a href='ilr.html'>ilr</a></code> transformation.</p></td>
+    </tr>
+    <tr>
+      <th>plot</th>
+      <td><p>Should the observed values and the numerical solutions be plotted at each
+    stage of the optimisation?</p></td>
+    </tr>
+    <tr>
+      <th>quiet</th>
+      <td><p>Suppress printing out the current model cost after each improvement?</p></td>
+    </tr>
+    <tr>
+      <th>err </th>
+      <td><p>either <code>NULL</code>, or the name of the column with the
     <em>error</em> estimates, used to weigh the residuals (see details of
-    <code>modCost</code>); if <code>NULL</code>, then the residuals are not weighed.
-  </dd>
-      <dt>weight</dt>
-      <dd>
-    only if <code>err</code>=<code>NULL</code>: how to weight the residuals, one of &quot;none&quot;,
-    &quot;std&quot;, &quot;mean&quot;, see details of <code>modCost</code>.
-  </dd>
-      <dt>scaleVar</dt>
-      <dd>
-    Will be passed to <code>modCost</code>. Default is not to scale Variables
-    according to the number of observations.
-  </dd>
-      <dt>atol</dt>
-      <dd>
-    Absolute error tolerance, passed to <code>ode</code>. Default is 1e-8,
-    lower than in <code>lsoda</code>.
-  </dd>
-      <dt>rtol</dt>
-      <dd>
-    Absolute error tolerance, passed to <code>ode</code>. Default is 1e-10,
-    much lower than in <code>lsoda</code>.
-  </dd>
-      <dt>n.outtimes</dt>
-      <dd>
-    The length of the dataseries that is produced by the model prediction
+    <code>modCost</code>); if <code>NULL</code>, then the residuals are not weighed.</p></td>
+    </tr>
+    <tr>
+      <th>weight</th>
+      <td><p>only if <code>err</code>=<code>NULL</code>: how to weight the residuals, one of "none",
+    "std", "mean", see details of <code>modCost</code>.</p></td>
+    </tr>
+    <tr>
+      <th>scaleVar</th>
+      <td><p>Will be passed to <code>modCost</code>. Default is not to scale Variables
+    according to the number of observations.</p></td>
+    </tr>
+    <tr>
+      <th>atol</th>
+      <td><p>Absolute error tolerance, passed to <code>ode</code>. Default is 1e-8,
+    lower than in <code>lsoda</code>.</p></td>
+    </tr>
+    <tr>
+      <th>rtol</th>
+      <td><p>Absolute error tolerance, passed to <code>ode</code>. Default is 1e-10,
+    much lower than in <code>lsoda</code>.</p></td>
+    </tr>
+    <tr>
+      <th>n.outtimes</th>
+      <td><p>The length of the dataseries that is produced by the model prediction
     function <code><a href='mkinpredict.html'>mkinpredict</a></code>. This impacts the accuracy of
     the numerical solver if that is used (see <code>solution_type</code> argument.
-    The default value is 100.
-  </dd>
-      <dt>reweight.method</dt>
-      <dd>
-    The method used for iteratively reweighting residuals, also known
+    The default value is 100.</p></td>
+    </tr>
+    <tr>
+      <th>reweight.method</th>
+      <td><p>The method used for iteratively reweighting residuals, also known
     as iteratively reweighted least squares (IRLS). Default is NULL,
-    the other method implemented is called &quot;obs&quot;, meaning that each
+    the other method implemented is called "obs", meaning that each
     observed variable is assumed to have its own variance, this is
     estimated from the fit and used for weighting the residuals
     in each iteration until convergence of this estimate up to
     <code>reweight.tol</code> or up to the maximum number of iterations
-    specified by <code>reweight.max.iter</code>.
-  </dd>
-      <dt>reweight.tol</dt>
-      <dd>
-    Tolerance for convergence criterion for the variance components
-    in IRLS fits.
-  </dd>
-      <dt>reweight.max.iter</dt>
-      <dd>
-    Maximum iterations in IRLS fits.
-  </dd>
-      <dt>trace_parms</dt>
-      <dd>
-    Should a trace of the parameter values be listed?
-  </dd>
-      <dt>&#8230;</dt>
-      <dd>
-    Further arguments that will be passed to <code>modFit</code>.
-  </dd>
-    </dl>
+    specified by <code>reweight.max.iter</code>.</p></td>
+    </tr>
+    <tr>
+      <th>reweight.tol</th>
+      <td><p>Tolerance for convergence criterion for the variance components
+    in IRLS fits.</p></td>
+    </tr>
+    <tr>
+      <th>reweight.max.iter</th>
+      <td><p>Maximum iterations in IRLS fits.</p></td>
+    </tr>
+    <tr>
+      <th>trace_parms</th>
+      <td><p>Should a trace of the parameter values be listed?</p></td>
+    </tr>
+    <tr>
+      <th>&#8230;</th>
+      <td><p>Further arguments that will be passed to <code>modFit</code>.</p></td>
+    </tr>
+    </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list with &quot;mkinfit&quot; and &quot;modFit&quot; in the class attribute.
+    <p>A list with "mkinfit" and "modFit" in the class attribute.
   A summary can be obtained by <code><a href='summary.mkinfit.html'>summary.mkinfit</a></code>.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <p>Plotting methods <code><a href='plot.mkinfit.html'>plot.mkinfit</a></code> and
   <code><a href='mkinparplot.html'>mkinparplot</a></code>.</p>
-    <p>Fitting of several models to several datasets in a single call to
+<p>Fitting of several models to several datasets in a single call to
   <code><a href='mmkin.html'>mmkin</a></code>.</p>
     
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
@@ -368,8 +368,8 @@
     
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
-    <p>When using the &quot;IORE&quot; submodel for metabolites, fitting with
-  &quot;transform_rates = TRUE&quot; (the default) often leads to failures of the
+    <p>When using the "IORE" submodel for metabolites, fitting with
+  "transform_rates = TRUE" (the default) often leads to failures of the
   numerical ODE solver. In this situation it may help to switch off the
   internal rate transformation.</p>
     
@@ -377,17 +377,17 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Use shorthand notation for parent only degradation</span>
 <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='st'>"FOMC"</span>, <span class='no'>FOCUS_2006_C</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>summary</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; mkin version:    0.9.45.1 
-#&gt; R version:       3.3.3 
-#&gt; Date of fit:     Wed Mar 15 09:44:56 2017 
-#&gt; Date of summary: Wed Mar 15 09:44:56 2017 
+<span class='fu'>summary</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; mkin version:    0.9.45.2 
+#&gt; R version:       3.4.0 
+#&gt; Date of fit:     Fri May  5 12:45:06 2017 
+#&gt; Date of summary: Fri May  5 12:45:06 2017 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent
 #&gt; 
 #&gt; Model predictions using solution type analytical 
 #&gt; 
-#&gt; Fitted with method Port using 64 model solutions performed in 0.146 s
+#&gt; Fitted with method Port using 64 model solutions performed in 0.206 s
 #&gt; 
 #&gt; Weighting: none
 #&gt; 
@@ -456,7 +456,7 @@
   <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='co'># Fit the model to the FOCUS example dataset D using defaults</span>
 <span class='fu'>print</span>(<span class='fu'>system.time</span>(<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>,
                            <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"eigen"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   1.216   1.268   0.942 </div><div class='input'><span class='fu'>coef</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt;          parent_0 log_k_parent_sink   log_k_parent_m1     log_k_m1_sink 
+#&gt;   0.912   0.000   0.915 </div><div class='input'><span class='fu'>coef</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt;          parent_0 log_k_parent_sink   log_k_parent_m1     log_k_m1_sink 
 #&gt;          99.59848          -3.03822          -2.98030          -5.24750 </div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; $ff
 #&gt; parent_sink   parent_m1     m1_sink 
 #&gt;    0.485524    0.514476    1.000000 
@@ -485,13 +485,13 @@
 #&gt; Model cost at call  33 :  874.2611 
 #&gt; Model cost at call  35 :  616.2379 
 #&gt; Model cost at call  37 :  616.2374 
-#&gt; Model cost at call  40 :  467.4388 
+#&gt; Model cost at call  40 :  467.4387 
 #&gt; Model cost at call  42 :  467.4382 
-#&gt; Model cost at call  46 :  398.2914 
-#&gt; Model cost at call  48 :  398.2914 
-#&gt; Model cost at call  49 :  398.2913 
-#&gt; Model cost at call  51 :  395.0712 
-#&gt; Model cost at call  54 :  395.0711 
+#&gt; Model cost at call  46 :  398.2913 
+#&gt; Model cost at call  48 :  398.2912 
+#&gt; Model cost at call  49 :  398.2911 
+#&gt; Model cost at call  51 :  395.0711 
+#&gt; Model cost at call  54 :  395.071 
 #&gt; Model cost at call  56 :  378.3298 
 #&gt; Model cost at call  59 :  378.3298 
 #&gt; Model cost at call  62 :  376.9812 
@@ -514,9 +514,9 @@
 #&gt; Model cost at call  94 :  371.6464 
 #&gt; Model cost at call  99 :  371.4299 
 #&gt; Model cost at call  101 :  371.4299 
-#&gt; Model cost at call  104 :  371.407 
-#&gt; Model cost at call  106 :  371.407 
-#&gt; Model cost at call  107 :  371.407 
+#&gt; Model cost at call  104 :  371.4071 
+#&gt; Model cost at call  106 :  371.4071 
+#&gt; Model cost at call  107 :  371.4071 
 #&gt; Model cost at call  109 :  371.2524 
 #&gt; Model cost at call  113 :  371.2524 
 #&gt; Model cost at call  114 :  371.2136 
@@ -530,10 +530,12 @@
 #&gt; Model cost at call  126 :  371.2134 
 #&gt; Model cost at call  135 :  371.2134 
 #&gt; Model cost at call  147 :  371.2134 
+#&gt; Model cost at call  151 :  371.2134 
 #&gt; Model cost at call  152 :  371.2134 
+#&gt; Model cost at call  153 :  371.2134 
 #&gt; Optimisation by method Port successfully terminated.
 #&gt;    user  system elapsed 
-#&gt;   0.712   0.040   0.703 </div><div class='input'><span class='fu'>coef</span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt;          parent_0 log_k_parent_sink   log_k_parent_m1     log_k_m1_sink 
+#&gt;   0.792   0.000   0.793 </div><div class='input'><span class='fu'>coef</span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt;          parent_0 log_k_parent_sink   log_k_parent_m1     log_k_m1_sink 
 #&gt;          99.59848          -3.03822          -2.98030          -5.24750 </div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt; $ff
 #&gt; parent_sink   parent_m1     m1_sink 
 #&gt;    0.485524    0.514476    1.000000 
@@ -544,7 +546,7 @@
 #&gt; $distimes
 #&gt;              DT50      DT90
 #&gt; parent   7.022929  23.32967
-#&gt; m1     131.760713 437.69961
+#&gt; m1     131.760712 437.69961
 #&gt; </div><div class='input'>
 
 <span class='co'># Use stepwise fitting, using optimised parameters from parent only fit, FOMC</span>
@@ -574,10 +576,10 @@
 <span class='co'># Weighted fits, including IRLS</span>
 <span class='no'>SFO_SFO.ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>),
                       <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='no'>f.noweight</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>summary</span>(<span class='no'>f.noweight</span>)</div><div class='output co'>#&gt; mkin version:    0.9.45.1 
-#&gt; R version:       3.3.3 
-#&gt; Date of fit:     Wed Mar 15 09:45:07 2017 
-#&gt; Date of summary: Wed Mar 15 09:45:07 2017 
+<span class='fu'>summary</span>(<span class='no'>f.noweight</span>)</div><div class='output co'>#&gt; mkin version:    0.9.45.2 
+#&gt; R version:       3.4.0 
+#&gt; Date of fit:     Fri May  5 12:45:17 2017 
+#&gt; Date of summary: Fri May  5 12:45:17 2017 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -585,7 +587,7 @@
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted with method Port using 185 model solutions performed in 0.753 s
+#&gt; Fitted with method Port using 185 model solutions performed in 0.746 s
 #&gt; 
 #&gt; Weighting: none
 #&gt; 
@@ -695,10 +697,10 @@
 #&gt;   100       m1    33.13 3.198e+01  1.148e+00
 #&gt;   120       m1    25.15 2.879e+01 -3.640e+00
 #&gt;   120       m1    33.31 2.879e+01  4.520e+00</div><div class='input'><span class='no'>f.irls</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>reweight.method</span> <span class='kw'>=</span> <span class='st'>"obs"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>summary</span>(<span class='no'>f.irls</span>)</div><div class='output co'>#&gt; mkin version:    0.9.45.1 
-#&gt; R version:       3.3.3 
-#&gt; Date of fit:     Wed Mar 15 09:45:09 2017 
-#&gt; Date of summary: Wed Mar 15 09:45:09 2017 
+<span class='fu'>summary</span>(<span class='no'>f.irls</span>)</div><div class='output co'>#&gt; mkin version:    0.9.45.2 
+#&gt; R version:       3.4.0 
+#&gt; Date of fit:     Fri May  5 12:45:19 2017 
+#&gt; Date of summary: Fri May  5 12:45:19 2017 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -706,7 +708,7 @@
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted with method Port using 486 model solutions performed in 2.091 s
+#&gt; Fitted with method Port using 468 model solutions performed in 1.925 s
 #&gt; 
 #&gt; Weighting: none then iterative reweighting method obs
 #&gt; 
@@ -731,16 +733,16 @@
 #&gt; Optimised, transformed parameters with symmetric confidence intervals:
 #&gt;                Estimate Std. Error    Lower   Upper
 #&gt; parent_0       99.67000    1.79200 96.04000 103.300
-#&gt; log_k_parent   -2.31200    0.04560 -2.40400  -2.220
+#&gt; log_k_parent   -2.31200    0.04560 -2.40400  -2.219
 #&gt; log_k_m1       -5.25100    0.12510 -5.50500  -4.998
 #&gt; f_parent_ilr_1  0.03785    0.06318 -0.09027   0.166
 #&gt; 
 #&gt; Parameter correlation:
 #&gt;                parent_0 log_k_parent log_k_m1 f_parent_ilr_1
-#&gt; parent_0         1.0000       0.5083  -0.1979        -0.6148
+#&gt; parent_0         1.0000       0.5083  -0.1979        -0.6147
 #&gt; log_k_parent     0.5083       1.0000  -0.3894        -0.6062
 #&gt; log_k_m1        -0.1979      -0.3894   1.0000         0.7417
-#&gt; f_parent_ilr_1  -0.6148      -0.6062   0.7417         1.0000
+#&gt; f_parent_ilr_1  -0.6147      -0.6062   0.7417         1.0000
 #&gt; 
 #&gt; Residual standard error: 1.054 on 36 degrees of freedom
 #&gt; 
@@ -749,10 +751,10 @@
 #&gt; t-test (unrealistically) based on the assumption of normal distribution
 #&gt; for estimators of untransformed parameters.
 #&gt;                Estimate t value    Pr(&gt;t)     Lower     Upper
-#&gt; parent_0       99.67000  55.630 8.183e-37 96.040000 1.033e+02
+#&gt; parent_0       99.67000  55.630 8.181e-37 96.040000 1.033e+02
 #&gt; k_parent        0.09906  21.930 1.016e-22  0.090310 1.087e-01
 #&gt; k_m1            0.00524   7.996 8.487e-10  0.004066 6.753e-03
-#&gt; f_parent_to_m1  0.51340  23.000 2.039e-23  0.468100 5.584e-01
+#&gt; f_parent_to_m1  0.51340  23.000 2.038e-23  0.468100 5.584e-01
 #&gt; 
 #&gt; Chi2 error levels in percent:
 #&gt;          err.min n.optim df
@@ -782,14 +784,14 @@
 #&gt;     7   parent    55.13 4.982e+01  5.309e+00 3.402
 #&gt;    14   parent    27.27 2.490e+01  2.367e+00 3.402
 #&gt;    14   parent    26.64 2.490e+01  1.737e+00 3.402
-#&gt;    21   parent    11.50 1.245e+01 -9.477e-01 3.402
-#&gt;    21   parent    11.64 1.245e+01 -8.077e-01 3.402
+#&gt;    21   parent    11.50 1.245e+01 -9.476e-01 3.402
+#&gt;    21   parent    11.64 1.245e+01 -8.076e-01 3.402
 #&gt;    35   parent     2.85 3.110e+00 -2.600e-01 3.402
 #&gt;    35   parent     2.91 3.110e+00 -2.000e-01 3.402
-#&gt;    50   parent     0.69 7.037e-01 -1.375e-02 3.402
-#&gt;    50   parent     0.63 7.037e-01 -7.375e-02 3.402
-#&gt;    75   parent     0.05 5.913e-02 -9.134e-03 3.402
-#&gt;    75   parent     0.06 5.913e-02  8.661e-04 3.402
+#&gt;    50   parent     0.69 7.037e-01 -1.374e-02 3.402
+#&gt;    50   parent     0.63 7.037e-01 -7.374e-02 3.402
+#&gt;    75   parent     0.05 5.913e-02 -9.133e-03 3.402
+#&gt;    75   parent     0.06 5.913e-02  8.666e-04 3.402
 #&gt;   100   parent       NA 4.969e-03         NA 3.402
 #&gt;   100   parent       NA 4.969e-03         NA 3.402
 #&gt;   120   parent       NA 6.852e-04         NA 3.402
@@ -801,14 +803,14 @@
 #&gt;     3       m1    12.91 1.305e+01 -1.378e-01 2.722
 #&gt;     3       m1    12.96 1.305e+01 -8.779e-02 2.722
 #&gt;     7       m1    22.97 2.508e+01 -2.106e+00 2.722
-#&gt;     7       m1    24.47 2.508e+01 -6.061e-01 2.722
+#&gt;     7       m1    24.47 2.508e+01 -6.062e-01 2.722
 #&gt;    14       m1    41.69 3.671e+01  4.983e+00 2.722
 #&gt;    14       m1    33.21 3.671e+01 -3.497e+00 2.722
-#&gt;    21       m1    44.37 4.165e+01  2.719e+00 2.722
-#&gt;    21       m1    46.44 4.165e+01  4.789e+00 2.722
+#&gt;    21       m1    44.37 4.165e+01  2.720e+00 2.722
+#&gt;    21       m1    46.44 4.165e+01  4.790e+00 2.722
 #&gt;    35       m1    41.22 4.329e+01 -2.069e+00 2.722
 #&gt;    35       m1    37.95 4.329e+01 -5.339e+00 2.722
-#&gt;    50       m1    41.19 4.119e+01 -3.388e-03 2.722
+#&gt;    50       m1    41.19 4.119e+01 -3.376e-03 2.722
 #&gt;    50       m1    40.01 4.119e+01 -1.183e+00 2.722
 #&gt;    75       m1    40.09 3.644e+01  3.652e+00 2.722
 #&gt;    75       m1    33.85 3.644e+01 -2.588e+00 2.722
@@ -816,10 +818,10 @@
 #&gt;   100       m1    33.13 3.199e+01  1.140e+00 2.722
 #&gt;   120       m1    25.15 2.881e+01 -3.659e+00 2.722
 #&gt;   120       m1    33.31 2.881e+01  4.501e+00 2.722</div><div class='input'><span class='no'>f.w.mean</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>weight</span> <span class='kw'>=</span> <span class='st'>"mean"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>summary</span>(<span class='no'>f.w.mean</span>)</div><div class='output co'>#&gt; mkin version:    0.9.45.1 
-#&gt; R version:       3.3.3 
-#&gt; Date of fit:     Wed Mar 15 09:45:10 2017 
-#&gt; Date of summary: Wed Mar 15 09:45:10 2017 
+<span class='fu'>summary</span>(<span class='no'>f.w.mean</span>)</div><div class='output co'>#&gt; mkin version:    0.9.45.2 
+#&gt; R version:       3.4.0 
+#&gt; Date of fit:     Fri May  5 12:45:20 2017 
+#&gt; Date of summary: Fri May  5 12:45:20 2017 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -827,7 +829,7 @@
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted with method Port using 155 model solutions performed in 0.661 s
+#&gt; Fitted with method Port using 155 model solutions performed in 0.699 s
 #&gt; 
 #&gt; Weighting: mean
 #&gt; 
@@ -871,7 +873,7 @@
 #&gt; for estimators of untransformed parameters.
 #&gt;                 Estimate t value    Pr(&gt;t)    Lower     Upper
 #&gt; parent_0       99.730000  51.630 1.166e-35 95.81000 1.036e+02
-#&gt; k_parent        0.099360  20.670 7.304e-22  0.09007 1.096e-01
+#&gt; k_parent        0.099360  20.670 7.303e-22  0.09007 1.096e-01
 #&gt; k_m1            0.005224   8.287 3.649e-10  0.00409 6.672e-03
 #&gt; f_parent_to_m1  0.512500  22.860 2.497e-23  0.46710 5.578e-01
 #&gt; 
@@ -938,10 +940,10 @@
 #&gt;   120       m1    25.15 28.824128  -3.674128
 #&gt;   120       m1    33.31 28.824128   4.485872</div><div class='input'><span class='no'>f.w.value</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='fu'>subset</span>(<span class='no'>FOCUS_2006_D</span>, <span class='no'>value</span> <span class='kw'>!=</span> <span class='fl'>0</span>), <span class='kw'>err</span> <span class='kw'>=</span> <span class='st'>"value"</span>,
                      <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>summary</span>(<span class='no'>f.w.value</span>)</div><div class='output co'>#&gt; mkin version:    0.9.45.1 
-#&gt; R version:       3.3.3 
-#&gt; Date of fit:     Wed Mar 15 09:45:11 2017 
-#&gt; Date of summary: Wed Mar 15 09:45:11 2017 
+<span class='fu'>summary</span>(<span class='no'>f.w.value</span>)</div><div class='output co'>#&gt; mkin version:    0.9.45.2 
+#&gt; R version:       3.4.0 
+#&gt; Date of fit:     Fri May  5 12:45:21 2017 
+#&gt; Date of summary: Fri May  5 12:45:21 2017 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -949,7 +951,7 @@
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted with method Port using 174 model solutions performed in 0.724 s
+#&gt; Fitted with method Port using 174 model solutions performed in 0.767 s
 #&gt; 
 #&gt; Weighting: manual
 #&gt; 
@@ -1060,10 +1062,10 @@
 <span class='no'>errors</span> <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fl'>1</span>)
 <span class='no'>dw</span>$<span class='no'>err.man</span> <span class='kw'>&lt;-</span> <span class='no'>errors</span>[<span class='no'>FOCUS_2006_D</span>$<span class='no'>name</span>]
 <span class='no'>f.w.man</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>dw</span>, <span class='kw'>err</span> <span class='kw'>=</span> <span class='st'>"err.man"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>summary</span>(<span class='no'>f.w.man</span>)</div><div class='output co'>#&gt; mkin version:    0.9.45.1 
-#&gt; R version:       3.3.3 
-#&gt; Date of fit:     Wed Mar 15 09:45:12 2017 
-#&gt; Date of summary: Wed Mar 15 09:45:12 2017 
+<span class='fu'>summary</span>(<span class='no'>f.w.man</span>)</div><div class='output co'>#&gt; mkin version:    0.9.45.2 
+#&gt; R version:       3.4.0 
+#&gt; Date of fit:     Fri May  5 12:45:22 2017 
+#&gt; Date of summary: Fri May  5 12:45:22 2017 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -1071,7 +1073,7 @@
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted with method Port using 316 model solutions performed in 1.31 s
+#&gt; Fitted with method Port using 297 model solutions performed in 1.276 s
 #&gt; 
 #&gt; Weighting: manual
 #&gt; 
@@ -1102,10 +1104,10 @@
 #&gt; 
 #&gt; Parameter correlation:
 #&gt;                parent_0 log_k_parent log_k_m1 f_parent_ilr_1
-#&gt; parent_0        1.00000       0.5312 -0.09455        -0.3351
+#&gt; parent_0        1.00000       0.5312 -0.09456        -0.3351
 #&gt; log_k_parent    0.53123       1.0000 -0.17800        -0.3360
-#&gt; log_k_m1       -0.09455      -0.1780  1.00000         0.7616
-#&gt; f_parent_ilr_1 -0.33513      -0.3360  0.76156         1.0000
+#&gt; log_k_m1       -0.09456      -0.1780  1.00000         0.7616
+#&gt; f_parent_ilr_1 -0.33514      -0.3360  0.76156         1.0000
 #&gt; 
 #&gt; Residual standard error: 2.628 on 36 degrees of freedom
 #&gt; 
@@ -1114,7 +1116,7 @@
 #&gt; t-test (unrealistically) based on the assumption of normal distribution
 #&gt; for estimators of untransformed parameters.
 #&gt;                 Estimate t value    Pr(&gt;t)     Lower     Upper
-#&gt; parent_0       99.490000   74.69 2.222e-41 96.780000 1.022e+02
+#&gt; parent_0       99.490000   74.69 2.221e-41 96.780000 1.022e+02
 #&gt; k_parent        0.098140   28.17 2.012e-26  0.091320 1.055e-01
 #&gt; k_m1            0.005292    4.70 1.873e-05  0.003437 8.148e-03
 #&gt; f_parent_to_m1  0.516200   16.30 1.686e-18  0.452000 5.798e-01
@@ -1137,10 +1139,10 @@
 #&gt; 
 #&gt; Data:
 #&gt;  time variable observed predicted   residual err
-#&gt;     0   parent    99.46 99.485977  -0.025977   1
-#&gt;     0   parent   102.04 99.485977   2.554023   1
-#&gt;     1   parent    93.50 90.186118   3.313882   1
-#&gt;     1   parent    92.50 90.186118   2.313882   1
+#&gt;     0   parent    99.46 99.485976  -0.025976   1
+#&gt;     0   parent   102.04 99.485976   2.554024   1
+#&gt;     1   parent    93.50 90.186117   3.313883   1
+#&gt;     1   parent    92.50 90.186117   2.313883   1
 #&gt;     3   parent    63.23 74.113162 -10.883162   1
 #&gt;     3   parent    68.99 74.113162  -5.123162   1
 #&gt;     7   parent    52.32 50.050295   2.269705   1
@@ -1169,23 +1171,23 @@
 #&gt;     7       m1    24.47 24.996945  -0.526945   2
 #&gt;    14       m1    41.69 36.663527   5.026473   2
 #&gt;    14       m1    33.21 36.663527  -3.453527   2
-#&gt;    21       m1    44.37 41.656812   2.713188   2
-#&gt;    21       m1    46.44 41.656812   4.783188   2
-#&gt;    35       m1    41.22 43.350311  -2.130311   2
-#&gt;    35       m1    37.95 43.350311  -5.400311   2
-#&gt;    50       m1    41.19 41.256364  -0.066364   2
-#&gt;    50       m1    40.01 41.256364  -1.246364   2
-#&gt;    75       m1    40.09 36.460566   3.629434   2
-#&gt;    75       m1    33.85 36.460566  -2.610566   2
+#&gt;    21       m1    44.37 41.656813   2.713187   2
+#&gt;    21       m1    46.44 41.656813   4.783187   2
+#&gt;    35       m1    41.22 43.350312  -2.130312   2
+#&gt;    35       m1    37.95 43.350312  -5.400312   2
+#&gt;    50       m1    41.19 41.256365  -0.066365   2
+#&gt;    50       m1    40.01 41.256365  -1.246365   2
+#&gt;    75       m1    40.09 36.460567   3.629433   2
+#&gt;    75       m1    33.85 36.460567  -2.610567   2
 #&gt;   100       m1    31.04 31.969288  -0.929288   2
 #&gt;   100       m1    33.13 31.969288   1.160712   2
-#&gt;   120       m1    25.15 28.760615  -3.610615   2
-#&gt;   120       m1    33.31 28.760615   4.549385   2</div><div class='input'><span class='no'>f.w.man.irls</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>dw</span>, <span class='kw'>err</span> <span class='kw'>=</span> <span class='st'>"err.man"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+#&gt;   120       m1    25.15 28.760616  -3.610616   2
+#&gt;   120       m1    33.31 28.760616   4.549384   2</div><div class='input'><span class='no'>f.w.man.irls</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>dw</span>, <span class='kw'>err</span> <span class='kw'>=</span> <span class='st'>"err.man"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
                        <span class='kw'>reweight.method</span> <span class='kw'>=</span> <span class='st'>"obs"</span>)
-<span class='fu'>summary</span>(<span class='no'>f.w.man.irls</span>)</div><div class='output co'>#&gt; mkin version:    0.9.45.1 
-#&gt; R version:       3.3.3 
-#&gt; Date of fit:     Wed Mar 15 09:45:15 2017 
-#&gt; Date of summary: Wed Mar 15 09:45:15 2017 
+<span class='fu'>summary</span>(<span class='no'>f.w.man.irls</span>)</div><div class='output co'>#&gt; mkin version:    0.9.45.2 
+#&gt; R version:       3.4.0 
+#&gt; Date of fit:     Fri May  5 12:45:25 2017 
+#&gt; Date of summary: Fri May  5 12:45:25 2017 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -1193,7 +1195,7 @@
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted with method Port using 648 model solutions performed in 2.766 s
+#&gt; Fitted with method Port using 628 model solutions performed in 2.626 s
 #&gt; 
 #&gt; Weighting: manual then iterative reweighting method obs
 #&gt; 
@@ -1236,10 +1238,10 @@
 #&gt; t-test (unrealistically) based on the assumption of normal distribution
 #&gt; for estimators of untransformed parameters.
 #&gt;                Estimate t value    Pr(&gt;t)     Lower     Upper
-#&gt; parent_0       99.67000  55.630 8.178e-37 96.040000 1.033e+02
+#&gt; parent_0       99.67000  55.630 8.179e-37 96.040000 1.033e+02
 #&gt; k_parent        0.09906  21.930 1.015e-22  0.090310 1.087e-01
 #&gt; k_m1            0.00524   7.996 8.488e-10  0.004066 6.753e-03
-#&gt; f_parent_to_m1  0.51340  23.000 2.038e-23  0.468100 5.584e-01
+#&gt; f_parent_to_m1  0.51340  23.000 2.039e-23  0.468100 5.584e-01
 #&gt; 
 #&gt; Chi2 error levels in percent:
 #&gt;          err.min n.optim df

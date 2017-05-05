@@ -6,8 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>
- — plot.mkinfit • mkin</title>
+<title>Plot the observed data and the fitted model of an mkinfit object — plot.mkinfit • mkin</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -26,12 +25,14 @@
 <script src="../pkgdown.js"></script>
 
 <!-- mathjax -->
-<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+<script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
 <!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
   </head>
 
   <body>
@@ -71,6 +72,9 @@
     <li>
       <a href="../articles/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
     </li>
+    <li>
+      <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -96,21 +100,19 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>
-</h1>
+    <h1>Plot the observed data and the fitted model of an mkinfit object</h1>
     </div>
 
     
     <p>Solves the differential equations with the optimised and fixed parameters
   from a previous successful call to <code><a href='mkinfit.html'>mkinfit</a></code> and plots
   the observed data together with the solution of the fitted model.</p>
-
-    <p>If the current plot device is a <code><a href='http://www.rdocumentation.org/packages/tikzDevice/topics/tikz'>tikz</a></code> device,
+<p>If the current plot device is a <code><a href='http://www.rdocumentation.org/packages/tikzDevice/topics/tikz'>tikz</a></code> device,
   then latex is being used for the formatting of the chi2 error level, 
   if <code>show_errmin = TRUE</code>.</p>
     
 
-    <pre># S3 method for mkinfit
+    <pre class="usage"># S3 method for mkinfit
 plot(x, fit = x,
   obs_vars = names(fit$mkinmod$map),
   xlab = "Time", ylab = "Observed",
@@ -126,100 +128,101 @@ plot(x, fit = x,
 plot_sep(fit, sep_obs = TRUE,  show_residuals = TRUE, show_errmin = TRUE, &#8230;)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
-    <dl class="dl-horizontal">
-      <dt>x</dt>
-      <dd>
-    Alias for fit introduced for compatibility with the generic S3 method.
-  </dd>
-      <dt>fit</dt>
-      <dd>
-    An object of class <code><a href='mkinfit.html'>mkinfit</a></code>.
-  </dd>
-      <dt>obs_vars</dt>
-      <dd>
-    A character vector of names of the observed variables for which the
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>Alias for fit introduced for compatibility with the generic S3 method.</p></td>
+    </tr>
+    <tr>
+      <th>fit</th>
+      <td><p>An object of class <code><a href='mkinfit.html'>mkinfit</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>obs_vars</th>
+      <td><p>A character vector of names of the observed variables for which the
     data and the model should be plotted. Defauls to all observed variables
-    in the model.
-  </dd>
-      <dt>xlab</dt>
-      <dd>
-    Label for the x axis.
-  </dd>
-      <dt>ylab</dt>
-      <dd>
-    Label for the y axis.
-  </dd>
-      <dt>xlim</dt>
-      <dd>
-    Plot range in x direction.
-  </dd>
-      <dt>ylim</dt>
-      <dd>
-    Plot range in y direction.
-  </dd>
-      <dt>col_obs</dt>
-      <dd>
-    Colors used for plotting the observed data and the corresponding model prediction lines.
-  </dd>
-      <dt>pch_obs</dt>
-      <dd>
-    Symbols to be used for plotting the data.
-  </dd>
-      <dt>lty_obs</dt>
-      <dd>
-    Line types to be used for the model predictions.
-  </dd>
-      <dt>add</dt>
-      <dd>
-    Should the plot be added to an existing plot?
-  </dd>
-      <dt>legend</dt>
-      <dd>
-    Should a legend be added to the plot?
-  </dd>
-      <dt>show_residuals</dt>
-      <dd>
-    Should residuals be shown? If only one plot of the fits is shown, the
+    in the model.</p></td>
+    </tr>
+    <tr>
+      <th>xlab</th>
+      <td><p>Label for the x axis.</p></td>
+    </tr>
+    <tr>
+      <th>ylab</th>
+      <td><p>Label for the y axis.</p></td>
+    </tr>
+    <tr>
+      <th>xlim</th>
+      <td><p>Plot range in x direction.</p></td>
+    </tr>
+    <tr>
+      <th>ylim</th>
+      <td><p>Plot range in y direction.</p></td>
+    </tr>
+    <tr>
+      <th>col_obs</th>
+      <td><p>Colors used for plotting the observed data and the corresponding model prediction lines.</p></td>
+    </tr>
+    <tr>
+      <th>pch_obs</th>
+      <td><p>Symbols to be used for plotting the data.</p></td>
+    </tr>
+    <tr>
+      <th>lty_obs</th>
+      <td><p>Line types to be used for the model predictions.</p></td>
+    </tr>
+    <tr>
+      <th>add</th>
+      <td><p>Should the plot be added to an existing plot?</p></td>
+    </tr>
+    <tr>
+      <th>legend</th>
+      <td><p>Should a legend be added to the plot?</p></td>
+    </tr>
+    <tr>
+      <th>show_residuals</th>
+      <td><p>Should residuals be shown? If only one plot of the fits is shown, the
     residual plot is in the lower third of the plot? Otherwise, i.e. if
-    &quot;sep_obs&quot; is given, the residual plots will be located to the right of
-    the plots of the fitted curves.
-  </dd>
-      <dt>maxabs</dt>
-      <dd>
-    Maximum absolute value of the residuals. This is used for the scaling of
-    the y axis and defaults to &quot;auto&quot;.
-  </dd>
-      <dt>sep_obs</dt>
-      <dd>
-    Should the observed variables be shown in separate subplots? If yes, residual plots
-    requested by &quot;show_residuals&quot; will be shown next to, not below the plot of the fits.
-  </dd>
-      <dt>rel.height.middle</dt>
-      <dd>
-    The relative height of the middle plot, if more than two rows of plots are shown.
-  </dd>
-      <dt>lpos</dt>
-      <dd>
-    Position(s) of the legend(s). Passed to <code>legend</code> as the first argument.
-    If not length one, this should be of the same length as the obs_var argument.
-  </dd>
-      <dt>inset</dt>
-      <dd>
-    Passed to <code>legend</code> if applicable.
-  </dd>
-      <dt>show_errmin</dt>
-      <dd>
-    Should the FOCUS chi2 error value be shown in the upper margin of the plot?
-  </dd>
-      <dt>errmin_digits</dt>
-      <dd>
-    The number of significant digits for rounding the FOCUS chi2 error percentage.
-  </dd>
-      <dt>&#8230;</dt>
-      <dd>
-    Further arguments passed to <code>plot</code>.
-  </dd>
-    </dl>
+    "sep_obs" is given, the residual plots will be located to the right of
+    the plots of the fitted curves.</p></td>
+    </tr>
+    <tr>
+      <th>maxabs</th>
+      <td><p>Maximum absolute value of the residuals. This is used for the scaling of
+    the y axis and defaults to "auto".</p></td>
+    </tr>
+    <tr>
+      <th>sep_obs</th>
+      <td><p>Should the observed variables be shown in separate subplots? If yes, residual plots
+    requested by "show_residuals" will be shown next to, not below the plot of the fits.</p></td>
+    </tr>
+    <tr>
+      <th>rel.height.middle</th>
+      <td><p>The relative height of the middle plot, if more than two rows of plots are shown.</p></td>
+    </tr>
+    <tr>
+      <th>lpos</th>
+      <td><p>Position(s) of the legend(s). Passed to <code>legend</code> as the first argument.
+    If not length one, this should be of the same length as the obs_var argument.</p></td>
+    </tr>
+    <tr>
+      <th>inset</th>
+      <td><p>Passed to <code>legend</code> if applicable.</p></td>
+    </tr>
+    <tr>
+      <th>show_errmin</th>
+      <td><p>Should the FOCUS chi2 error value be shown in the upper margin of the plot?</p></td>
+    </tr>
+    <tr>
+      <th>errmin_digits</th>
+      <td><p>The number of significant digits for rounding the FOCUS chi2 error percentage.</p></td>
+    </tr>
+    <tr>
+      <th>&#8230;</th>
+      <td><p>Further arguments passed to <code>plot</code>.</p></td>
+    </tr>
+    </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 

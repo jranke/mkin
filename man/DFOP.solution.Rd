@@ -27,7 +27,7 @@ DFOP.solution(t, parent.0, k1, k2, g)
   Degradation Kinetics from Environmental Fate Studies on Pesticides in EU
   Registration} Report of the FOCUS Work Group on Degradation Kinetics,
   EC Document Reference Sanco/10058/2005 version 2.0, 434 pp,
-  \url{http://focus.jrc.ec.europa.eu/dk}
+  \url{http://esdac.jrc.europa.eu/projects/degradation-kinetics}
 }
 \examples{
   plot(function(x) DFOP.solution(x, 100, 5, 0.5, 0.3), 0, 4, ylim=c(0,100))

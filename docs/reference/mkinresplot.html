@@ -6,8 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>
- — mkinresplot • mkin</title>
+<title>Function to plot residuals stored in an mkin object — mkinresplot • mkin</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -26,12 +25,14 @@
 <script src="../pkgdown.js"></script>
 
 <!-- mathjax -->
-<script src='https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
+<script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
 <!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
   </head>
 
   <body>
@@ -71,6 +72,9 @@
     <li>
       <a href="../articles/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
     </li>
+    <li>
+      <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -96,8 +100,7 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>
-</h1>
+    <h1>Function to plot residuals stored in an mkin object</h1>
     </div>
 
     
@@ -107,53 +110,55 @@
   using the argument <code>show_residuals = TRUE</code>.</p>
     
 
-    <pre><span class='fu'>mkinresplot</span>(<span class='no'>object</span>,
+    <pre class="usage"><span class='fu'>mkinresplot</span>(<span class='no'>object</span>,
     <span class='kw'>obs_vars</span> <span class='kw'>=</span> <span class='fu'>names</span>(<span class='no'>object</span>$<span class='no'>mkinmod</span>$<span class='no'>map</span>),
     <span class='kw'>xlim</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>0</span>, <span class='fl'>1.1</span> * <span class='fu'>max</span>(<span class='no'>object</span>$<span class='no'>data</span>$<span class='no'>time</span>)),
     <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='st'>"Time"</span>, <span class='kw'>ylab</span> <span class='kw'>=</span> <span class='st'>"Residual"</span>,
     <span class='kw'>maxabs</span> <span class='kw'>=</span> <span class='st'>"auto"</span>, <span class='kw'>legend</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>lpos</span> <span class='kw'>=</span> <span class='st'>"topright"</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
-    <dl class="dl-horizontal">
-      <dt>object</dt>
-      <dd>
-    A fit represented in an <code><a href='mkinfit.html'>mkinfit</a></code> object.
-</dd>
-      <dt>obs_vars</dt>
-      <dd>
-    A character vector of names of the observed variables for which residuals
-    should be plotted. Defaults to all observed variables in the model
-</dd>
-      <dt>xlim</dt>
-      <dd>
-    plot range in x direction.
-  </dd>
-      <dt>xlab</dt>
-      <dd>
-    Label for the x axis. Defaults to &quot;Time [days]&quot;.
-</dd>
-      <dt>ylab</dt>
-      <dd>
-    Label for the y axis. Defaults to &quot;Residual [% of applied radioactivity]&quot;.
-</dd>
-      <dt>maxabs</dt>
-      <dd>
-    Maximum absolute value of the residuals. This is used for the scaling of
-    the y axis and defaults to &quot;auto&quot;.
-</dd>
-      <dt>legend</dt>
-      <dd>
-    Should a legend be plotted? Defaults to &quot;TRUE&quot;.
-</dd>
-      <dt>lpos</dt>
-      <dd> 
-    Where should the legend be placed? Default is &quot;topright&quot;. Will be passed on to
-		<code>legend</code>. </dd>
-      <dt>&#8230;</dt>
-      <dd>
-   further arguments passed to <code>plot</code>.
-</dd>
-    </dl>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>object</th>
+      <td><p>A fit represented in an <code><a href='mkinfit.html'>mkinfit</a></code> object.</p></td>
+    </tr>
+    <tr>
+      <th>obs_vars</th>
+      <td><p>A character vector of names of the observed variables for which residuals
+    should be plotted. Defaults to all observed variables in the model</p></td>
+    </tr>
+    <tr>
+      <th>xlim</th>
+      <td><p>plot range in x direction.</p></td>
+    </tr>
+    <tr>
+      <th>xlab</th>
+      <td><p>Label for the x axis. Defaults to "Time [days]".</p></td>
+    </tr>
+    <tr>
+      <th>ylab</th>
+      <td><p>Label for the y axis. Defaults to "Residual [% of applied radioactivity]".</p></td>
+    </tr>
+    <tr>
+      <th>maxabs</th>
+      <td><p>Maximum absolute value of the residuals. This is used for the scaling of
+    the y axis and defaults to "auto".</p></td>
+    </tr>
+    <tr>
+      <th>legend</th>
+      <td><p>Should a legend be plotted? Defaults to "TRUE".</p></td>
+    </tr>
+    <tr>
+      <th>lpos</th>
+      <td><p>Where should the legend be placed? Default is "topright". Will be passed on to
+		<code>legend</code>.</p></td>
+    </tr>
+    <tr>
+      <th>&#8230;</th>
+      <td><p>further arguments passed to <code>plot</code>.</p></td>
+    </tr>
+    </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 

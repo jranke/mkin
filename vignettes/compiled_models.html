@@ -229,8 +229,13 @@ div.tocify {
 <pre><code>##            gcc 
 ## &quot;/usr/bin/gcc&quot;</code></pre>
 <p>First, we build a simple degradation model for a parent compound with one metabolite.</p>
-<pre class="r"><code>library(&quot;mkin&quot;)
-SFO_SFO &lt;- mkinmod(
+<pre class="r"><code>library(&quot;mkin&quot;)</code></pre>
+<pre><code>## Loading required package: minpack.lm</code></pre>
+<pre><code>## Loading required package: rootSolve</code></pre>
+<pre><code>## Loading required package: inline</code></pre>
+<pre><code>## Loading required package: methods</code></pre>
+<pre><code>## Loading required package: parallel</code></pre>
+<pre class="r"><code>SFO_SFO &lt;- mkinmod(
   parent = mkinsub(&quot;SFO&quot;, &quot;m1&quot;),
   m1 = mkinsub(&quot;SFO&quot;))</code></pre>
 <pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
@@ -251,15 +256,16 @@ SFO_SFO &lt;- mkinmod(
   factor_SFO_SFO &lt;- NA
   print(&quot;R package benchmark is not available&quot;)
 }</code></pre>
+<pre><code>## Loading required package: rbenchmark</code></pre>
 <pre><code>##                    test replications elapsed relative user.self sys.self
-## 3     deSolve, compiled            3   2.742    1.000     2.740    0.000
-## 1 deSolve, not compiled            3  24.467    8.923    24.344    0.124
-## 2      Eigenvalue based            3   3.050    1.112     3.044    0.004
+## 3     deSolve, compiled            3   2.040    1.000     2.040        0
+## 1 deSolve, not compiled            3  14.622    7.168    14.624        0
+## 2      Eigenvalue based            3   2.478    1.215     2.480        0
 ##   user.child sys.child
 ## 3          0         0
 ## 1          0         0
 ## 2          0         0</code></pre>
-<p>We see that using the compiled model is by a factor of around 9 faster than using the R version with the default ode solver, and it is even faster than the Eigenvalue based solution implemented in R which does not need iterative solution of the ODEs.</p>
+<p>We see that using the compiled model is by a factor of around 7 faster than using the R version with the default ode solver, and it is even faster than the Eigenvalue based solution implemented in R which does not need iterative solution of the ODEs.</p>
 </div>
 <div id="model-that-can-not-be-solved-with-eigenvalues" class="section level2">
 <h2>Model that can not be solved with Eigenvalues</h2>
@@ -282,12 +288,12 @@ SFO_SFO &lt;- mkinmod(
 }</code></pre>
 <pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
 <pre><code>##                    test replications elapsed relative user.self sys.self
-## 2     deSolve, compiled            3   4.038    1.000     4.036    0.000
-## 1 deSolve, not compiled            3  55.209   13.672    54.888    0.324
+## 2     deSolve, compiled            3   3.500    1.000     3.500        0
+## 1 deSolve, not compiled            3  29.932    8.552    29.932        0
 ##   user.child sys.child
 ## 2          0         0
 ## 1          0         0</code></pre>
-<p>Here we get a performance benefit of a factor of 14 using the version of the differential equation model compiled from C code!</p>
+<p>Here we get a performance benefit of a factor of 9 using the version of the differential equation model compiled from C code!</p>
 <p>This vignette was built with mkin 0.9.45 on</p>
 <pre><code>## R version 3.4.0 (2017-04-21)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
