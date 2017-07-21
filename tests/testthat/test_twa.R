@@ -20,7 +20,7 @@ context("Calculation of maximum time weighted average concentrations (TWAs)")
 
 twa_models <- c("SFO", "FOMC", "DFOP")
 fits <- mmkin(twa_models, list(FOCUS_D = FOCUS_2006_D), 
-              quiet = TRUE)
+              quiet = TRUE, mc.cores = 1)
 
 SFO_SFO <- mkinmod(parent = list(type = "SFO", to = "m1"),
                    m1 = list(type = "SFO"), quiet = TRUE)
