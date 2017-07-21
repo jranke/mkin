@@ -53,9 +53,9 @@ test_that("Fits for FOCUS A deviate less than 0.1% from median of values from FO
 
   # Fitting FOCUS A with FOMC is possible, but the correlation between
   # alpha and beta, when obtained, is 1.0000, and the fit does not
-  # converge using the Port algorithm, which yields a warning
-  expect_warning(
-    fit.A.FOMC <- try(list(mkinfit("FOMC", FOCUS_2006_A, quiet = TRUE))))
+  # always converge using the Port algorithm (platform dependent), so
+  # we need to suppress a potential warning
+  suppressWarnings(fit.A.FOMC <- try(list(mkinfit("FOMC", FOCUS_2006_A, quiet = TRUE))))
 
   if (!inherits(fit.A.FOMC, "try-error")) {
 
