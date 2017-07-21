@@ -1,5 +1,5 @@
-\name{twa}
-\alias{twa}
+\name{max_twa_parent}
+\alias{max_twa_parent}
 \title{
   Function to calculate maximum time weighted average concentrations from kinetic models fitted with mkinfit
 }
@@ -10,7 +10,7 @@ calculations for the parent are implemented for the SFO, FOMC and DFOP models,
 using the analytical formulas given in the PEC soil section of the FOCUS
 guidance.}
 \usage{
-  twa(fit, windows)
+  max_twa_parent(fit, windows)
 }
 \arguments{
   \item{fit}{
@@ -25,7 +25,7 @@ guidance.}
 }
 \examples{
   fit <- mkinfit("FOMC", FOCUS_2006_C, quiet = TRUE)
-  twa(fit, c(7, 21))  
+  max_twa_parent(fit, c(7, 21))  
 }
 \references{
   FOCUS (2006) \dQuote{Guidance Document on Estimating Persistence and

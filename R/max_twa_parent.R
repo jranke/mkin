@@ -1,4 +1,4 @@
-# Copyright (C) 2016 Johannes Ranke
+# Copyright (C) 2016,2017 Johannes Ranke
 # Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
 
-twa <- function(fit, windows) {
+max_twa_parent <- function(fit, windows) {
   parms.all <- c(fit$bparms.optim, fit$bparms.fixed)
   obs_vars <- fit$obs_vars
   if (length(obs_vars) > 1) {
