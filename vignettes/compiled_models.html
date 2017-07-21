@@ -85,6 +85,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <pre><code>## Loading required package: minpack.lm</code></pre>
 <pre><code>## Loading required package: rootSolve</code></pre>
 <pre><code>## Loading required package: inline</code></pre>
+<pre><code>## Loading required package: methods</code></pre>
 <pre><code>## Loading required package: parallel</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">SFO_SFO &lt;-<span class="st"> </span><span class="kw">mkinmod</span>(
   <span class="dt">parent =</span> <span class="kw">mkinsub</span>(<span class="st">&quot;SFO&quot;</span>, <span class="st">&quot;m1&quot;</span>),
@@ -109,14 +110,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 }</code></pre></div>
 <pre><code>## Loading required package: rbenchmark</code></pre>
 <pre><code>##                    test replications elapsed relative user.self sys.self
-## 3     deSolve, compiled            3   2.101    1.000     2.100    0.000
-## 1 deSolve, not compiled            3  25.685   12.225    25.600    0.088
-## 2      Eigenvalue based            3   2.729    1.299     2.728    0.000
+## 3     deSolve, compiled            3   2.140    1.000     2.140        0
+## 1 deSolve, not compiled            3  15.070    7.042    15.068        0
+## 2      Eigenvalue based            3   2.577    1.204     2.576        0
 ##   user.child sys.child
 ## 3          0         0
 ## 1          0         0
 ## 2          0         0</code></pre>
-<p>We see that using the compiled model is by a factor of around 12 faster than using the R version with the default ode solver, and it is even faster than the Eigenvalue based solution implemented in R which does not need iterative solution of the ODEs.</p>
+<p>We see that using the compiled model is by a factor of around 7 faster than using the R version with the default ode solver, and it is even faster than the Eigenvalue based solution implemented in R which does not need iterative solution of the ODEs.</p>
 </div>
 <div id="model-that-can-not-be-solved-with-eigenvalues" class="section level2">
 <h2>Model that can not be solved with Eigenvalues</h2>
@@ -139,12 +140,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 }</code></pre></div>
 <pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
 <pre><code>##                    test replications elapsed relative user.self sys.self
-## 2     deSolve, compiled            3   3.590    1.000     3.592    0.000
-## 1 deSolve, not compiled            3  51.219   14.267    51.028    0.192
+## 2     deSolve, compiled            3   3.646    1.000     3.644        0
+## 1 deSolve, not compiled            3  30.752    8.434    30.752        0
 ##   user.child sys.child
 ## 2          0         0
 ## 1          0         0</code></pre>
-<p>Here we get a performance benefit of a factor of 14 using the version of the differential equation model compiled from C code!</p>
+<p>Here we get a performance benefit of a factor of 8 using the version of the differential equation model compiled from C code!</p>
 <p>This vignette was built with mkin 0.9.45.2 on</p>
 <pre><code>## R version 3.4.1 (2017-06-30)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
