@@ -23,7 +23,7 @@ calc_dev.percent <- function(fitlist, reference, endpoints = TRUE, round_results
   for (i in 1:length(fitlist)) {
     fit <- fitlist[[i]]
     if (endpoints) {
-      results <- c(fit$bparms.optim, 
+      results <- c(fit$bparms.optim,
                    endpoints(fit)$distimes$DT50,
                    endpoints(fit)$distimes$DT90)
     } else {
@@ -44,21 +44,23 @@ SFORB <- mkinmod(parent = list(type = "SFORB"))
 test_that("Fits for FOCUS A deviate less than 0.1% from median of values from FOCUS report", {
   fit.A.SFO <- list(mkinfit("SFO", FOCUS_2006_A, quiet = TRUE))
 
-  median.A.SFO <- as.numeric(lapply(subset(FOCUS_2006_SFO_ref_A_to_F, 
-                                        dataset == "A", 
+  median.A.SFO <- as.numeric(lapply(subset(FOCUS_2006_SFO_ref_A_to_F,
+                                        dataset == "A",
                                         c(M0, k, DT50, DT90)), "median"))
 
   dev.percent.A.SFO <- calc_dev.percent(fit.A.SFO, median.A.SFO)
   expect_equivalent(dev.percent.A.SFO[[1]] < 0.1, rep(TRUE, 4))
 
   # Fitting FOCUS A with FOMC is possible, but the correlation between
-  # alpha and beta, when obtained, is 1.0000, and the fit sometimes failed on
-  # Windows, as the Port algorithm did not converge (winbuilder, 2015-05-15)
-  fit.A.FOMC <- try(list(mkinfit("FOMC", FOCUS_2006_A, quiet = TRUE)))
+  # alpha and beta, when obtained, is 1.0000, and the fit does not
+  # converge using the Port algorithm, which yields a warning
+  expect_warning(
+    fit.A.FOMC <- try(list(mkinfit("FOMC", FOCUS_2006_A, quiet = TRUE))))
+
   if (!inherits(fit.A.FOMC, "try-error")) {
 
-    median.A.FOMC <- as.numeric(lapply(subset(FOCUS_2006_FOMC_ref_A_to_F, 
-                                          dataset == "A", 
+    median.A.FOMC <- as.numeric(lapply(subset(FOCUS_2006_FOMC_ref_A_to_F,
+                                          dataset == "A",
                                           c(M0, alpha, beta, DT50, DT90)), "median"))
 
     dev.percent.A.FOMC <- calc_dev.percent(fit.A.FOMC, median.A.FOMC)
@@ -68,8 +70,8 @@ test_that("Fits for FOCUS A deviate less than 0.1% from median of values from FO
 
   fit.A.DFOP <- list(mkinfit("DFOP", FOCUS_2006_A, quiet = TRUE))
 
-  median.A.DFOP <- as.numeric(lapply(subset(FOCUS_2006_DFOP_ref_A_to_B, 
-                                        dataset == "A", 
+  median.A.DFOP <- as.numeric(lapply(subset(FOCUS_2006_DFOP_ref_A_to_B,
+                                        dataset == "A",
                                         c(M0, k1, k2, f, DT50, DT90)), "median"))
 
   dev.percent.A.DFOP <- calc_dev.percent(fit.A.DFOP, median.A.DFOP)
@@ -78,8 +80,8 @@ test_that("Fits for FOCUS A deviate less than 0.1% from median of values from FO
 
   fit.A.HS <- list(mkinfit("HS", FOCUS_2006_A, quiet = TRUE))
 
-  median.A.HS <- as.numeric(lapply(subset(FOCUS_2006_HS_ref_A_to_F, 
-                                        dataset == "A", 
+  median.A.HS <- as.numeric(lapply(subset(FOCUS_2006_HS_ref_A_to_F,
+                                        dataset == "A",
                                         c(M0, k1, k2, tb, DT50, DT90)), "median"))
 
   dev.percent.A.HS <- calc_dev.percent(fit.A.HS, median.A.HS)
@@ -89,8 +91,8 @@ test_that("Fits for FOCUS A deviate less than 0.1% from median of values from FO
 test_that("Fits for FOCUS B deviate less than 0.1% from median of values from FOCUS report", {
   fit.B.SFO <- list(mkinfit("SFO", FOCUS_2006_B, quiet = TRUE))
 
-  median.B.SFO <- as.numeric(lapply(subset(FOCUS_2006_SFO_ref_A_to_F, 
-                                        dataset == "B", 
+  median.B.SFO <- as.numeric(lapply(subset(FOCUS_2006_SFO_ref_A_to_F,
+                                        dataset == "B",
                                         c(M0, k, DT50, DT90)), "median"))
 
   dev.percent.B.SFO <- calc_dev.percent(fit.B.SFO, median.B.SFO)
@@ -98,8 +100,8 @@ test_that("Fits for FOCUS B deviate less than 0.1% from median of values from FO
 
   fit.B.FOMC <- list(mkinfit("FOMC", FOCUS_2006_B, quiet = TRUE))
 
-  median.B.FOMC <- as.numeric(lapply(subset(FOCUS_2006_FOMC_ref_A_to_F, 
-                                        dataset == "B", 
+  median.B.FOMC <- as.numeric(lapply(subset(FOCUS_2006_FOMC_ref_A_to_F,
+                                        dataset == "B",
                                         c(M0, alpha, beta, DT50, DT90)), "median"))
 
   dev.percent.B.FOMC <- calc_dev.percent(fit.B.FOMC, median.B.FOMC)
@@ -107,8 +109,8 @@ test_that("Fits for FOCUS B deviate less than 0.1% from median of values from FO
 
   fit.B.DFOP <- list(mkinfit("DFOP", FOCUS_2006_B, quiet = TRUE))
 
-  median.B.DFOP <- as.numeric(lapply(subset(FOCUS_2006_DFOP_ref_A_to_B, 
-                                        dataset == "B", 
+  median.B.DFOP <- as.numeric(lapply(subset(FOCUS_2006_DFOP_ref_A_to_B,
+                                        dataset == "B",
                                         c(M0, k1, k2, f, DT50, DT90)), "median"))
 
   dev.percent.B.DFOP <- calc_dev.percent(fit.B.DFOP, median.B.DFOP)
@@ -117,9 +119,9 @@ test_that("Fits for FOCUS B deviate less than 0.1% from median of values from FO
 
   fit.B.HS <- list(mkinfit("HS", FOCUS_2006_B, quiet = TRUE))
 
-  median.B.HS <- as.numeric(lapply(subset(FOCUS_2006_HS_ref_A_to_F, 
-                                        dataset == "B", 
-                                        c(M0, k1, k2, tb, DT50, DT90)), 
+  median.B.HS <- as.numeric(lapply(subset(FOCUS_2006_HS_ref_A_to_F,
+                                        dataset == "B",
+                                        c(M0, k1, k2, tb, DT50, DT90)),
                                    "median", na.rm = TRUE))
 
   dev.percent.B.HS <- calc_dev.percent(fit.B.HS, median.B.HS)
@@ -133,8 +135,8 @@ test_that("Fits for FOCUS B deviate less than 0.1% from median of values from FO
 test_that("Fits for FOCUS C deviate less than 0.1% from median of values from FOCUS report", {
   fit.C.SFO <- list(mkinfit("SFO", FOCUS_2006_C, quiet = TRUE))
 
-  median.C.SFO <- as.numeric(lapply(subset(FOCUS_2006_SFO_ref_A_to_F, 
-                                        dataset == "C", 
+  median.C.SFO <- as.numeric(lapply(subset(FOCUS_2006_SFO_ref_A_to_F,
+                                        dataset == "C",
                                         c(M0, k, DT50, DT90)), "median"))
 
   dev.percent.C.SFO <- calc_dev.percent(fit.C.SFO, median.C.SFO)
@@ -142,18 +144,18 @@ test_that("Fits for FOCUS C deviate less than 0.1% from median of values from FO
 
   fit.C.FOMC <- list(mkinfit("FOMC", FOCUS_2006_C, quiet = TRUE))
 
-  median.C.FOMC <- as.numeric(lapply(subset(FOCUS_2006_FOMC_ref_A_to_F, 
-                                        dataset == "C", 
+  median.C.FOMC <- as.numeric(lapply(subset(FOCUS_2006_FOMC_ref_A_to_F,
+                                        dataset == "C",
                                         c(M0, alpha, beta, DT50, DT90)), "median"))
 
-  dev.percent.C.FOMC <- calc_dev.percent(fit.C.FOMC, median.C.FOMC, 
+  dev.percent.C.FOMC <- calc_dev.percent(fit.C.FOMC, median.C.FOMC,
                                          round_results = 2) # Not enough precision in FOCUS results
   expect_equivalent(dev.percent.C.FOMC[[1]] < 0.1, rep(TRUE, 5))
 
   fit.C.HS <- list(mkinfit("HS", FOCUS_2006_C, quiet = TRUE))
 
-  median.C.HS <- as.numeric(lapply(subset(FOCUS_2006_HS_ref_A_to_F, 
-                                        dataset == "C", 
+  median.C.HS <- as.numeric(lapply(subset(FOCUS_2006_HS_ref_A_to_F,
+                                        dataset == "C",
                                         c(M0, k1, k2, tb, DT50, DT90)), "median"))
 
   dev.percent.C.HS <- calc_dev.percent(fit.C.HS, median.C.HS, round_results = c(2, 4, 6, 2, 2))
@@ -202,7 +204,7 @@ test_that("DFOP fits give approximately (0.001%) equal results with different so
 test_that("SFORB fits give approximately (0.002%) equal results with different solution methods", {
   fit.B.SFORB.default <- mkinfit(SFORB, FOCUS_2006_B, quiet=TRUE)$bparms.optim
 
-  fits.B.SFORB <- list()          
+  fits.B.SFORB <- list()
   fits.B.SFORB[[1]] <- mkinfit(SFORB, FOCUS_2006_B, quiet=TRUE, solution_type = "eigen")
   fits.B.SFORB[[2]] <- mkinfit(SFORB, FOCUS_2006_B, quiet=TRUE, solution_type = "deSolve")
   dev.percent <- calc_dev.percent(fits.B.SFORB, fit.B.SFORB.default, endpoints = FALSE)

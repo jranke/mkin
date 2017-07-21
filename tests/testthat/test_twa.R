@@ -1,4 +1,4 @@
-# Copyright (C) 2016 Johannes Ranke
+# Copyright (C) 2016,2017 Johannes Ranke
 # Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
@@ -37,7 +37,7 @@ test_that("Time weighted average concentrations are correct", {
                 outtimes = outtimes_7)
     twa_num <- mean(pred_7$parent)
     names(twa_num) <- 7
-    twa_ana <- twa(fit, 7)
+    twa_ana <- max_twa_parent(fit, 7)
 
     # Test for absolute difference (scale = 1)
     expect_equal(twa_num, twa_ana, tolerance = 0.001, scale = 1)
