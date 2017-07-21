@@ -71,7 +71,7 @@ mkinmod(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verbose = FALSE)
   Degradation Kinetics from Environmental Fate Studies on Pesticides in EU
   Registration} Report of the FOCUS Work Group on Degradation Kinetics,
   EC Document Reference Sanco/10058/2005 version 2.0, 434 pp,
-  \url{http://esdac.jrc.europa.eu/projects/degradation-kinetics} 
+  \url{http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics} 
 
   NAFTA Technical Working Group on Pesticides (not dated) Guidance for
   Evaluating and Calculating Degradation Kinetics in Environmental 

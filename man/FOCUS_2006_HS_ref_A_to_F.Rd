@@ -30,7 +30,7 @@ in this fit.
   Degradation Kinetics from Environmental Fate Studies on Pesticides in EU
   Registration} Report of the FOCUS Work Group on Degradation Kinetics,
   EC Document Reference Sanco/10058/2005 version 2.0, 434 pp,
-  \url{http://esdac.jrc.europa.eu/projects/degradation-kinetics} 
+  \url{http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics} 
 }
 \examples{
 data(FOCUS_2006_HS_ref_A_to_F)

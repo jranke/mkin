@@ -25,7 +25,7 @@ HS.solution(t, parent.0, k1, k2, tb)
   Degradation Kinetics from Environmental Fate Studies on Pesticides in EU
   Registration} Report of the FOCUS Work Group on Degradation Kinetics,
   EC Document Reference Sanco/10058/2005 version 2.0, 434 pp,
-  \url{http://esdac.jrc.europa.eu/projects/degradation-kinetics} 
+  \url{http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics} 
 }
 \examples{
   plot(function(x) HS.solution(x, 100, 2, 0.3, 0.5), 0, 2, ylim=c(0,100))

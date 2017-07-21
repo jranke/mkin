@@ -26,7 +26,7 @@ Data taken from FOCUS (2006), p. 258.
   Degradation Kinetics from Environmental Fate Studies on Pesticides in EU
   Registration} Report of the FOCUS Work Group on Degradation Kinetics,
   EC Document Reference Sanco/10058/2005 version 2.0, 434 pp,
-  \url{http://esdac.jrc.europa.eu/projects/degradation-kinetics} 
+  \url{http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics} 
 }
 \examples{
 FOCUS_2006_C
