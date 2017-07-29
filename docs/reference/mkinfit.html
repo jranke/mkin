@@ -377,17 +377,17 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Use shorthand notation for parent only degradation</span>
 <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='st'>"FOMC"</span>, <span class='no'>FOCUS_2006_C</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>summary</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; mkin version:    0.9.45.2 
-#&gt; R version:       3.4.0 
-#&gt; Date of fit:     Fri May  5 12:45:06 2017 
-#&gt; Date of summary: Fri May  5 12:45:06 2017 
+<span class='fu'>summary</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; mkin version:    0.9.46 
+#&gt; R version:       3.4.1 
+#&gt; Date of fit:     Sat Jul 29 15:14:18 2017 
+#&gt; Date of summary: Sat Jul 29 15:14:18 2017 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent
 #&gt; 
 #&gt; Model predictions using solution type analytical 
 #&gt; 
-#&gt; Fitted with method Port using 64 model solutions performed in 0.206 s
+#&gt; Fitted with method Port using 64 model solutions performed in 0.141 s
 #&gt; 
 #&gt; Weighting: none
 #&gt; 
@@ -456,7 +456,7 @@
   <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='co'># Fit the model to the FOCUS example dataset D using defaults</span>
 <span class='fu'>print</span>(<span class='fu'>system.time</span>(<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>,
                            <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"eigen"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   0.912   0.000   0.915 </div><div class='input'><span class='fu'>coef</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt;          parent_0 log_k_parent_sink   log_k_parent_m1     log_k_m1_sink 
+#&gt;   0.888   0.000   0.890 </div><div class='input'><span class='fu'>coef</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt;          parent_0 log_k_parent_sink   log_k_parent_m1     log_k_m1_sink 
 #&gt;          99.59848          -3.03822          -2.98030          -5.24750 </div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; $ff
 #&gt; parent_sink   parent_m1     m1_sink 
 #&gt;    0.485524    0.514476    1.000000 
@@ -535,7 +535,7 @@
 #&gt; Model cost at call  153 :  371.2134 
 #&gt; Optimisation by method Port successfully terminated.
 #&gt;    user  system elapsed 
-#&gt;   0.792   0.000   0.793 </div><div class='input'><span class='fu'>coef</span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt;          parent_0 log_k_parent_sink   log_k_parent_m1     log_k_m1_sink 
+#&gt;   0.728   0.000   0.729 </div><div class='input'><span class='fu'>coef</span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt;          parent_0 log_k_parent_sink   log_k_parent_m1     log_k_m1_sink 
 #&gt;          99.59848          -3.03822          -2.98030          -5.24750 </div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt; $ff
 #&gt; parent_sink   parent_m1     m1_sink 
 #&gt;    0.485524    0.514476    1.000000 
@@ -576,10 +576,10 @@
 <span class='co'># Weighted fits, including IRLS</span>
 <span class='no'>SFO_SFO.ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>),
                       <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='no'>f.noweight</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>summary</span>(<span class='no'>f.noweight</span>)</div><div class='output co'>#&gt; mkin version:    0.9.45.2 
-#&gt; R version:       3.4.0 
-#&gt; Date of fit:     Fri May  5 12:45:17 2017 
-#&gt; Date of summary: Fri May  5 12:45:17 2017 
+<span class='fu'>summary</span>(<span class='no'>f.noweight</span>)</div><div class='output co'>#&gt; mkin version:    0.9.46 
+#&gt; R version:       3.4.1 
+#&gt; Date of fit:     Sat Jul 29 15:14:28 2017 
+#&gt; Date of summary: Sat Jul 29 15:14:28 2017 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -697,10 +697,10 @@
 #&gt;   100       m1    33.13 3.198e+01  1.148e+00
 #&gt;   120       m1    25.15 2.879e+01 -3.640e+00
 #&gt;   120       m1    33.31 2.879e+01  4.520e+00</div><div class='input'><span class='no'>f.irls</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>reweight.method</span> <span class='kw'>=</span> <span class='st'>"obs"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>summary</span>(<span class='no'>f.irls</span>)</div><div class='output co'>#&gt; mkin version:    0.9.45.2 
-#&gt; R version:       3.4.0 
-#&gt; Date of fit:     Fri May  5 12:45:19 2017 
-#&gt; Date of summary: Fri May  5 12:45:19 2017 
+<span class='fu'>summary</span>(<span class='no'>f.irls</span>)</div><div class='output co'>#&gt; mkin version:    0.9.46 
+#&gt; R version:       3.4.1 
+#&gt; Date of fit:     Sat Jul 29 15:14:30 2017 
+#&gt; Date of summary: Sat Jul 29 15:14:30 2017 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -708,7 +708,7 @@
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted with method Port using 468 model solutions performed in 1.925 s
+#&gt; Fitted with method Port using 468 model solutions performed in 1.914 s
 #&gt; 
 #&gt; Weighting: none then iterative reweighting method obs
 #&gt; 
@@ -818,10 +818,10 @@
 #&gt;   100       m1    33.13 3.199e+01  1.140e+00 2.722
 #&gt;   120       m1    25.15 2.881e+01 -3.659e+00 2.722
 #&gt;   120       m1    33.31 2.881e+01  4.501e+00 2.722</div><div class='input'><span class='no'>f.w.mean</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>weight</span> <span class='kw'>=</span> <span class='st'>"mean"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>summary</span>(<span class='no'>f.w.mean</span>)</div><div class='output co'>#&gt; mkin version:    0.9.45.2 
-#&gt; R version:       3.4.0 
-#&gt; Date of fit:     Fri May  5 12:45:20 2017 
-#&gt; Date of summary: Fri May  5 12:45:20 2017 
+<span class='fu'>summary</span>(<span class='no'>f.w.mean</span>)</div><div class='output co'>#&gt; mkin version:    0.9.46 
+#&gt; R version:       3.4.1 
+#&gt; Date of fit:     Sat Jul 29 15:14:31 2017 
+#&gt; Date of summary: Sat Jul 29 15:14:31 2017 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -829,7 +829,7 @@
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted with method Port using 155 model solutions performed in 0.699 s
+#&gt; Fitted with method Port using 155 model solutions performed in 0.692 s
 #&gt; 
 #&gt; Weighting: mean
 #&gt; 
@@ -940,10 +940,10 @@
 #&gt;   120       m1    25.15 28.824128  -3.674128
 #&gt;   120       m1    33.31 28.824128   4.485872</div><div class='input'><span class='no'>f.w.value</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='fu'>subset</span>(<span class='no'>FOCUS_2006_D</span>, <span class='no'>value</span> <span class='kw'>!=</span> <span class='fl'>0</span>), <span class='kw'>err</span> <span class='kw'>=</span> <span class='st'>"value"</span>,
                      <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>summary</span>(<span class='no'>f.w.value</span>)</div><div class='output co'>#&gt; mkin version:    0.9.45.2 
-#&gt; R version:       3.4.0 
-#&gt; Date of fit:     Fri May  5 12:45:21 2017 
-#&gt; Date of summary: Fri May  5 12:45:21 2017 
+<span class='fu'>summary</span>(<span class='no'>f.w.value</span>)</div><div class='output co'>#&gt; mkin version:    0.9.46 
+#&gt; R version:       3.4.1 
+#&gt; Date of fit:     Sat Jul 29 15:14:32 2017 
+#&gt; Date of summary: Sat Jul 29 15:14:32 2017 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -951,7 +951,7 @@
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted with method Port using 174 model solutions performed in 0.767 s
+#&gt; Fitted with method Port using 174 model solutions performed in 0.701 s
 #&gt; 
 #&gt; Weighting: manual
 #&gt; 
@@ -1062,10 +1062,10 @@
 <span class='no'>errors</span> <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fl'>1</span>)
 <span class='no'>dw</span>$<span class='no'>err.man</span> <span class='kw'>&lt;-</span> <span class='no'>errors</span>[<span class='no'>FOCUS_2006_D</span>$<span class='no'>name</span>]
 <span class='no'>f.w.man</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>dw</span>, <span class='kw'>err</span> <span class='kw'>=</span> <span class='st'>"err.man"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>summary</span>(<span class='no'>f.w.man</span>)</div><div class='output co'>#&gt; mkin version:    0.9.45.2 
-#&gt; R version:       3.4.0 
-#&gt; Date of fit:     Fri May  5 12:45:22 2017 
-#&gt; Date of summary: Fri May  5 12:45:22 2017 
+<span class='fu'>summary</span>(<span class='no'>f.w.man</span>)</div><div class='output co'>#&gt; mkin version:    0.9.46 
+#&gt; R version:       3.4.1 
+#&gt; Date of fit:     Sat Jul 29 15:14:33 2017 
+#&gt; Date of summary: Sat Jul 29 15:14:33 2017 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -1073,7 +1073,7 @@
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted with method Port using 297 model solutions performed in 1.276 s
+#&gt; Fitted with method Port using 297 model solutions performed in 1.223 s
 #&gt; 
 #&gt; Weighting: manual
 #&gt; 
@@ -1184,10 +1184,10 @@
 #&gt;   120       m1    25.15 28.760616  -3.610616   2
 #&gt;   120       m1    33.31 28.760616   4.549384   2</div><div class='input'><span class='no'>f.w.man.irls</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>dw</span>, <span class='kw'>err</span> <span class='kw'>=</span> <span class='st'>"err.man"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
                        <span class='kw'>reweight.method</span> <span class='kw'>=</span> <span class='st'>"obs"</span>)
-<span class='fu'>summary</span>(<span class='no'>f.w.man.irls</span>)</div><div class='output co'>#&gt; mkin version:    0.9.45.2 
-#&gt; R version:       3.4.0 
-#&gt; Date of fit:     Fri May  5 12:45:25 2017 
-#&gt; Date of summary: Fri May  5 12:45:25 2017 
+<span class='fu'>summary</span>(<span class='no'>f.w.man.irls</span>)</div><div class='output co'>#&gt; mkin version:    0.9.46 
+#&gt; R version:       3.4.1 
+#&gt; Date of fit:     Sat Jul 29 15:14:36 2017 
+#&gt; Date of summary: Sat Jul 29 15:14:36 2017 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -1195,7 +1195,7 @@
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted with method Port using 628 model solutions performed in 2.626 s
+#&gt; Fitted with method Port using 628 model solutions performed in 2.578 s
 #&gt; 
 #&gt; Weighting: manual then iterative reweighting method obs
 #&gt; 

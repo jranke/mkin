@@ -1,3 +1,17 @@
+# mkin 0.9.46 (2017-07-24)
+
+- Remove `test_FOMC_ill-defined.R` as it is too platform dependent
+
+# mkin 0.9.45.2 (2017-07-24)
+
+- Rename `twa` to `max_twa_parent` to avoid conflict with `twa` from my `pfm` package
+
+- Update URLs in documentation
+
+- Limit test code to one core to pass on windows
+
+- Switch from `microbenchmark` to `rbenchmark` as the former is not supported on all platforms
+
 # mkin 0.9.45.1 (2016-12-20)
 
 ## New features
