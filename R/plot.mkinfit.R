@@ -105,8 +105,7 @@ plot.mkinfit <- function(x, fit = x,
     # Set ylim to sensible default, or to the specified value
     if (ylim[[1]] == "default") {
       ylim_row = c(0, max(c(subset(fit$data, variable %in% row_obs_vars)$observed,
-                        subset(fit$data, variable %in% row_obs_vars)$fitted),
-                      na.rm = TRUE))
+                          unlist(out[row_obs_vars])), na.rm = TRUE))
     } else {
       ylim_row = ylim
     }
