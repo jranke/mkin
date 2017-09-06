@@ -342,7 +342,7 @@ mkinfit <- function(mkinmod, observed,
 
     odeparms <- c(P[(length(state.ini.optim) + 1):length(P)], parms.fixed)
 
-    # Solve the system with current transformed parameter values
+    # Solve the system with current parameter values
     out <- mkinpredict(mkinmod, odeparms,
                        odeini, outtimes,
                        solution_type = solution_type,
