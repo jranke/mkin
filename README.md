@@ -86,7 +86,7 @@ and at [R-Forge](http://kinfit.r-forge.r-project.org/mkin_static/index.html).
   (see below) is calculated for each observed variable.
 * Iteratively reweighted least squares fitting is implemented in a similar way
   as in KinGUII and CAKE (see below). Simply add the argument
-  `reweight = "obs"` to your call to `mkinfit` and a separate variance 
+  `reweight.method = "obs"` to your call to `mkinfit` and a separate variance 
   componenent for each of the observed variables will be optimised
   in a second stage after the primary optimisation algorithm has converged.
 * When a metabolite decline phase is not described well by SFO kinetics, 
