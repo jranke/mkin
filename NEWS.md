@@ -1,3 +1,11 @@
+# mkin 0.9.46.1 (2017-09-14)
+
+- `plot.mkinfit`: Fix scaling of residual plots for the case of separate plots for each observed variable
+
+- `plot.mkinfit`: Use all data points of the fitted curve for y axis scaling  for the case of separate plots for each observed variable
+
+- Documentation updates
+
 # mkin 0.9.46 (2017-07-24)
 
 - Remove `test_FOMC_ill-defined.R` as it is too platform dependent
