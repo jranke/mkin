@@ -1,3 +1,7 @@
+# mkin 0.9.46.2
+
+- Converted the vignette FOCUS_Z from tex/pdf to markdown/html
+
 # mkin 0.9.46.1 (2017-09-14)
 
 - `plot.mkinfit`: Fix scaling of residual plots for the case of separate plots for each observed variable

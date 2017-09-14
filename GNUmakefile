@@ -57,16 +57,8 @@ quickcheck: build-no-vignettes
 	mv $(TGZ) $(TGZVNR)
 
 clean:
-	$(RM) -r vignettes/*.bbl
-	$(RM) -r vignettes/*.blg
-	$(RM) -r vignettes/*.fls
-	$(RM) -r vignettes/*.fdb_latexmk
-	$(RM) -r vignettes/cache
-	$(RM) -r vignettes/figure
 	$(RM) -r vignettes/*_cache
 	$(RM) -r vignettes/*_files
-	$(RM) -r vignettes/*-concordance.tex
-	$(RM) -r vignettes/*.synctex.gz
 	$(RM) Rplots.pdf
 
 test: quickinstall
@@ -75,13 +67,10 @@ test: quickinstall
 README.html: README.md
 	"$(RBIN)/Rscript" -e "rmarkdown::render('README.md', output_format = 'html_document', output_options = list(mathjax = NULL))"
 
-vignettes/%.pdf: vignettes/header.tex vignettes/references.bib vignettes/%.Rnw
-	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/$*.Rnw', dir = 'vignettes')"
-
 vignettes/%.html: vignettes/mkin_vignettes.css vignettes/references.bib vignettes/%.Rmd
 	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/$*.Rmd', dir = 'vignettes')"
 
-vignettes: vignettes/mkin.html vignettes/FOCUS_D.html vignettes/FOCUS_L.html vignettes/FOCUS_Z.pdf vignettes/compiled_models.html
+vignettes: vignettes/mkin.html vignettes/FOCUS_D.html vignettes/FOCUS_L.html vignettes/FOCUS_Z.html vignettes/compiled_models.html
 
 pd:
 	"$(RBIN)/Rscript" -e "pkgdown::build_news()"
