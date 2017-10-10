@@ -1,4 +1,4 @@
-# mkin 0.9.46.2
+# mkin 0.9.46.2 (2017-10-10)
 
 - Converted the vignette FOCUS_Z from tex/pdf to markdown/html
 
