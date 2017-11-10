@@ -34,10 +34,10 @@ all: build
 $(TGZ): $(pkgfiles) vignettes
 	"$(RBIN)/R" CMD build . 2>&1 | tee build.log
 
-$(TGZVNR): $(pkgfiles) 
+$(TGZVNR): $(pkgfiles)
 	"$(RBIN)/R" CMD build . --no-build-vignettes;\
 	mv $(TGZ) $(TGZVNR)
-                
+
 build: $(TGZ)
 
 build-no-vignettes: $(TGZVNR)
@@ -84,7 +84,7 @@ pd_articles:
 	git add -A
 	git commit -m 'Static documentation articles rebuilt by pkgdown::build_articles()' -e
 
-r-forge: 
+r-forge:
 	git archive master > $(HOME)/mkin.tar;\
 	cd $(RFDIR) && rm -r `ls` && tar -xf $(HOME)/mkin.tar;\
 	rm -r $(SDDIR)/*;\
