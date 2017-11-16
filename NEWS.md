@@ -1,5 +1,7 @@
 # mkin 0.9.46.3 (2017-11-16)
 
+- `README.md`, `vignettes/mkin.Rmd`: URLs were updated
+
 - `synthetic_data_for_UBA`: Add the code used to generate the data in the interest of reproducibility
 
 # mkin 0.9.46.2 (2017-10-10)
