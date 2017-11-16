@@ -1,3 +1,7 @@
+# mkin 0.9.46.3 (2017-11-16)
+
+- `synthetic_data_for_UBA`: Add the code used to generate the data in the interest of reproducibility
+
 # mkin 0.9.46.2 (2017-10-10)
 
 - Converted the vignette FOCUS_Z from tex/pdf to markdown/html

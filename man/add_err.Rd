@@ -9,7 +9,7 @@
   may depend on the predicted value and is specified as a standard deviation.
 }
 \usage{
-  add_err(prediction, sdfunc,
+  add_err(prediction, sdfunc, secondary = c("M1", "M2"),
           n = 1000, LOD = 0.1, reps = 2,
           digits = 1, seed = NA)
 }
@@ -21,6 +21,9 @@
     A function taking the predicted value as its only argument and returning
     a standard deviation that should be used for generating the random error
     terms for this value.
+  }
+  \item{secondary}{
+    The names of state variables that should have an initial value of zero
   }
   \item{n}{
     The number of datasets to be generated.

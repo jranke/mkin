@@ -1,4 +1,4 @@
-# Copyright (C) 2015-2016 Johannes Ranke
+# Copyright (C) 2015-2017 Johannes Ranke
 # Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
 
-add_err = function(prediction, sdfunc,
+add_err = function(prediction, sdfunc, secondary = c("M1", "M2"),
                    n = 1000, LOD = 0.1, reps = 2,
                    digits = 1, seed = NA)
 {
@@ -33,7 +33,7 @@ add_err = function(prediction, sdfunc,
     d_rep = data.frame(lapply(d_long, rep, each = 2))
     d_rep$value = rnorm(length(d_rep$value), d_rep$value, sdfunc(d_rep$value))
 
-    d_rep[d_rep$time == 0 & d_rep$name %in% c("M1", "M2"), "value"] <- 0
+    d_rep[d_rep$time == 0 & d_rep$name %in% secondary, "value"] <- 0
 
     # Set values below the LOD to NA
     d_NA <- transform(d_rep, value = ifelse(value < LOD, NA, value))
