@@ -11,7 +11,7 @@ TGZVNR  := $(PKGSRC)_$(PKGVERS)-vignettes-not-rebuilt.tar.gz
 RBIN ?= $(shell dirname "`which R`")
 
 # Specify package and static documentation directories for subversion on r-forge
-RFSVN ?= $(HOME)/svn/kinfit
+RFSVN ?= $(HOME)/svn/kinfit.r-forge
 RFDIR ?= $(RFSVN)/pkg/mkin
 SDDIR ?= $(RFSVN)/www/mkin_static
 
