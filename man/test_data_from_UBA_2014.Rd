@@ -31,7 +31,7 @@
   m_ws <- mkinmod(parent_w = mkinsub("SFO", "parent_s"),
                   parent_s = mkinsub("SFO", "parent_w"))
   f_river <- mkinfit(m_ws, test_data_from_UBA_2014[[1]]$data)
-  plot(f_river)
+  plot_sep(f_river)
 
   summary(f_river)$bpar
   mkinerrmin(f_river)
@@ -45,7 +45,7 @@
                     use_of_ff = "max")
 
   f_soil <- mkinfit(m_soil, test_data_from_UBA_2014[[3]]$data)
-  plot(f_soil)
+  plot_sep(f_soil, lpos = c("topright", "topright", "topright", "bottomright"))
   summary(f_soil)$bpar
   mkinerrmin(f_soil)
 }

@@ -25,9 +25,8 @@
 }
 \usage{synthetic_data_for_UBA_2014}
 \format{
-  A list containing datasets in the form internally used by the 'gmkin' package.
-  The list has twelve components. Each of the components is one dataset that has,
-  among others, the following components
+  A list containing twelve datasets as an R6 class defined by \code{\link{mkinds}},
+  each containing, among others, the following components
   \describe{
     \item{\code{title}}{The name of the dataset, e.g. \code{SFO_lin_a}}
     \item{\code{data}}{A data frame with the data in the form expected by \code{\link{mkinfit}}}
