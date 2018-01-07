@@ -22,6 +22,7 @@
   zu ModelMaker 4.0, Umweltbundesamt Projektnummer 27452
 }
 \examples{
+  \dontrun{
   # This is a level P-II evaluation of the dataset according to the FOCUS kinetics
   # guidance. Due to the strong correlation of the parameter estimates, the
   # covariance matrix is not returned. Note that level P-II evaluations are
@@ -35,6 +36,7 @@
 
   summary(f_river)$bpar
   mkinerrmin(f_river)
+  }
 
   # This is the evaluation used for the validation of software packages
   # in the expertise from 2014
