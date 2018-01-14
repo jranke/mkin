@@ -6,7 +6,7 @@ opts_chunk$set(tidy = FALSE, cache = FALSE)
 Sys.which("gcc")
 
 ## ----create_SFO_SFO------------------------------------------------------
-library("mkin")
+library("mkin", quietly = TRUE)
 SFO_SFO <- mkinmod(
   parent = mkinsub("SFO", "m1"),
   m1 = mkinsub("SFO"))

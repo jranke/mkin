@@ -3,7 +3,7 @@ library(knitr)
 opts_chunk$set(tidy = FALSE, cache = TRUE)
 
 ## ----data----------------------------------------------------------------
-library("mkin")
+library("mkin", quietly = TRUE)
 print(FOCUS_2006_D)
 
 ## ----model---------------------------------------------------------------

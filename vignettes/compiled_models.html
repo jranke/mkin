@@ -12,7 +12,7 @@
 
 <meta name="author" content="Johannes Ranke" />
 
-<meta name="date" content="2017-07-21" />
+<meta name="date" content="2018-01-14" />
 
 <title>Performance benefit by using compiled model definitions in mkin</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Performance benefit by using compiled model definitions in mkin</h1>
 <h4 class="author"><em>Johannes Ranke</em></h4>
-<h4 class="date"><em>2017-07-21</em></h4>
+<h4 class="date"><em>2018-01-14</em></h4>
 
 
 
@@ -81,13 +81,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <pre><code>##            gcc 
 ## &quot;/usr/bin/gcc&quot;</code></pre>
 <p>First, we build a simple degradation model for a parent compound with one metabolite.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;mkin&quot;</span>)</code></pre></div>
-<pre><code>## Loading required package: minpack.lm</code></pre>
-<pre><code>## Loading required package: rootSolve</code></pre>
-<pre><code>## Loading required package: inline</code></pre>
-<pre><code>## Loading required package: methods</code></pre>
-<pre><code>## Loading required package: parallel</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">SFO_SFO &lt;-<span class="st"> </span><span class="kw">mkinmod</span>(
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;mkin&quot;</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
+SFO_SFO &lt;-<span class="st"> </span><span class="kw">mkinmod</span>(
   <span class="dt">parent =</span> <span class="kw">mkinsub</span>(<span class="st">&quot;SFO&quot;</span>, <span class="st">&quot;m1&quot;</span>),
   <span class="dt">m1 =</span> <span class="kw">mkinsub</span>(<span class="st">&quot;SFO&quot;</span>))</code></pre></div>
 <pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
@@ -110,9 +105,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 }</code></pre></div>
 <pre><code>## Loading required package: rbenchmark</code></pre>
 <pre><code>##                    test replications elapsed relative user.self sys.self
-## 3     deSolve, compiled            3   2.140    1.000     2.140        0
-## 1 deSolve, not compiled            3  15.070    7.042    15.068        0
-## 2      Eigenvalue based            3   2.577    1.204     2.576        0
+## 3     deSolve, compiled            3   2.005    1.000     2.000    0.004
+## 1 deSolve, not compiled            3  14.202    7.083    14.196    0.000
+## 2      Eigenvalue based            3   2.427    1.210     2.428    0.000
 ##   user.child sys.child
 ## 3          0         0
 ## 1          0         0
@@ -140,14 +135,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 }</code></pre></div>
 <pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
 <pre><code>##                    test replications elapsed relative user.self sys.self
-## 2     deSolve, compiled            3   3.646    1.000     3.644        0
-## 1 deSolve, not compiled            3  30.752    8.434    30.752        0
+## 2     deSolve, compiled            3   3.489    1.000     3.488        0
+## 1 deSolve, not compiled            3  28.906    8.285    28.904        0
 ##   user.child sys.child
 ## 2          0         0
 ## 1          0         0</code></pre>
 <p>Here we get a performance benefit of a factor of 8 using the version of the differential equation model compiled from C code!</p>
-<p>This vignette was built with mkin 0.9.45.2 on</p>
-<pre><code>## R version 3.4.1 (2017-06-30)
+<p>This vignette was built with mkin 0.9.47.1 on</p>
+<pre><code>## R version 3.4.3 (2017-11-30)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
 ## Running under: Debian GNU/Linux 9 (stretch)</code></pre>
 <pre><code>## CPU model: Intel(R) Core(TM) i7-4710MQ CPU @ 2.50GHz</code></pre>
