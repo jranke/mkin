@@ -1,5 +1,6 @@
 ## ---- include = FALSE----------------------------------------------------
 require(knitr)
+options(digits = 5)
 opts_chunk$set(engine='R', tidy = FALSE)
 
 ## ---- echo = TRUE, fig = TRUE, fig.width = 8, fig.height = 7-------------

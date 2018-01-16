@@ -77,7 +77,7 @@
       <h1>Example evaluation of FOCUS dataset Z</h1>
                         <h4 class="author">Johannes Ranke</h4>
             
-            <h4 class="date">2018-01-14</h4>
+            <h4 class="date">2018-01-16</h4>
           </div>
 
     
@@ -115,17 +115,12 @@ FOCUS_2006_Z_mkin &lt;-<span class="st"> </span><span class="kw"><a href="../ref
 <span class="kw"><a href="../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z.2a)</code></pre></div>
 <p><img src="FOCUS_Z_files/figure-html/FOCUS_2006_Z_fits_1-1.png" width="672"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(m.Z.2a, <span class="dt">data =</span> <span class="ot">FALSE</span>)$bpar</code></pre></div>
-<pre><code>##               Estimate se_notrans      t value       Pr(&gt;t)      Lower
-## Z0_0      9.701488e+01 3.55313531 2.730402e+01 1.679194e-21 91.4013833
-## k_Z0_sink 6.213452e-10 0.22689429 2.738479e-09 5.000000e-01  0.0000000
-## k_Z0_Z1   2.236006e+00 0.16507349 1.354552e+01 7.393893e-14  1.8374087
-## k_Z1_sink 4.821248e-01 0.06585366 7.321154e+00 3.551981e-08  0.4005976
-##                 Upper
-## Z0_0      102.6283792
-## k_Z0_sink         Inf
-## k_Z0_Z1     2.7210739
-## k_Z1_sink   0.5802439</code></pre>
-<p>As obvious from the parameter summary (the  component of the summary), the kinetic rate constant from parent compound Z to sink is negligible. Accordingly, the exact magnitude of the fitted parameter  is ill-defined and the covariance matrix is not returned (not shown, would be visible in the complete summary). This suggests, in agreement with the analysis in the FOCUS kinetics report, to simplify the model by removing the pathway to sink.</p>
+<pre><code>##             Estimate se_notrans    t value     Pr(&gt;t)   Lower     Upper
+## Z0_0      9.7015e+01   3.553135 2.7304e+01 1.6792e-21 91.4014 102.62838
+## k_Z0_sink 6.2135e-10   0.226894 2.7385e-09 5.0000e-01  0.0000       Inf
+## k_Z0_Z1   2.2360e+00   0.165073 1.3546e+01 7.3939e-14  1.8374   2.72107
+## k_Z1_sink 4.8212e-01   0.065854 7.3212e+00 3.5520e-08  0.4006   0.58024</code></pre>
+<p>As obvious from the parameter summary (the  component of the summary), the kinetic rate constant from parent compound Z to sink is very small and the t-test for this parameter suggests that it is not significantly different from zero. This suggests, in agreement with the analysis in the FOCUS kinetics report, to simplify the model by removing the pathway to sink.</p>
 <p>A similar result can be obtained when formation fractions are used in the model formulation:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Z.2a.ff &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkinmod.html">mkinmod</a></span>(<span class="dt">Z0 =</span> <span class="kw"><a href="../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z1"</span>),
                    <span class="dt">Z1 =</span> <span class="kw"><a href="../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>),
@@ -135,13 +130,13 @@ FOCUS_2006_Z_mkin &lt;-<span class="st"> </span><span class="kw"><a href="../ref
 <span class="kw"><a href="../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z.2a.ff)</code></pre></div>
 <p><img src="FOCUS_Z_files/figure-html/FOCUS_2006_Z_fits_2-1.png" width="672"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(m.Z.2a.ff, <span class="dt">data =</span> <span class="ot">FALSE</span>)$bpar</code></pre></div>
-<pre><code>##              Estimate se_notrans   t value       Pr(&gt;t) Lower Upper
-## Z0_0       97.0148813 3.55314638 27.303936 1.679331e-21    NA    NA
-## k_Z0        2.2360064 0.21684717 10.311439 3.661734e-11    NA    NA
-## k_Z1        0.4821248 0.06585372  7.321147 3.552046e-08    NA    NA
-## f_Z0_to_Z1  1.0000000 0.10147344  9.854795 9.707117e-11    NA    NA</code></pre>
-<p>Here, the ilr transformed formation fraction fitted in the model takes a very large value, and the backtransformed formation fraction from parent Z to Z1 is practically unity. Again, the covariance matrix is not returned as the model is overparameterised.</p>
-<p>The simplified model is obtained by setting the list component  to .</p>
+<pre><code>##            Estimate se_notrans t value     Pr(&gt;t) Lower Upper
+## Z0_0       97.01488   3.553146 27.3039 1.6793e-21    NA    NA
+## k_Z0        2.23601   0.216847 10.3114 3.6617e-11    NA    NA
+## k_Z1        0.48212   0.065854  7.3211 3.5520e-08    NA    NA
+## f_Z0_to_Z1  1.00000   0.101473  9.8548 9.7071e-11    NA    NA</code></pre>
+<p>Here, the ilr transformed formation fraction fitted in the model takes a very large value, and the backtransformed formation fraction from parent Z to Z1 is practically unity. Here, the covariance matrix used for the calculation of confidence intervals is not returned as the model is overparameterised.</p>
+<p>A simplified model is obtained by removing the pathway to the sink. </p>
 <p>In the following, we use the parameterisation with formation fractions in order to be able to compare with the results in the FOCUS guidance, and as it makes it easier to use parameters obtained in a previous fit when adding a further metabolite.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Z<span class="fl">.3</span> &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkinmod.html">mkinmod</a></span>(<span class="dt">Z0 =</span> <span class="kw"><a href="../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z1"</span>, <span class="dt">sink =</span> <span class="ot">FALSE</span>),
                <span class="dt">Z1 =</span> <span class="kw"><a href="../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>), <span class="dt">use_of_ff =</span> <span class="st">"max"</span>)</code></pre></div>
@@ -150,10 +145,10 @@ FOCUS_2006_Z_mkin &lt;-<span class="st"> </span><span class="kw"><a href="../ref
 <span class="kw"><a href="../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z<span class="fl">.3</span>)</code></pre></div>
 <p><img src="FOCUS_Z_files/figure-html/FOCUS_2006_Z_fits_3-1.png" width="672"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(m.Z<span class="fl">.3</span>, <span class="dt">data =</span> <span class="ot">FALSE</span>)$bpar</code></pre></div>
-<pre><code>##        Estimate se_notrans  t value       Pr(&gt;t)      Lower       Upper
-## Z0_0 97.0148816 2.68177104 36.17568 2.363590e-25 91.5215232 102.5082401
-## k_Z0  2.2360064 0.14686238 15.22518 2.247007e-15  1.9545318   2.5580166
-## k_Z1  0.4821248 0.04268711 11.29439 3.068559e-12  0.4021552   0.5779966</code></pre>
+<pre><code>##      Estimate se_notrans t value     Pr(&gt;t)    Lower   Upper
+## Z0_0 97.01488   2.681771  36.176 2.3636e-25 91.52152 102.508
+## k_Z0  2.23601   0.146862  15.225 2.2470e-15  1.95453   2.558
+## k_Z1  0.48212   0.042687  11.294 3.0686e-12  0.40216   0.578</code></pre>
 <p>As there is only one transformation product for Z0 and no pathway to sink, the formation fraction is internally fixed to unity.</p>
 </div>
 <div id="metabolites-z2-and-z3" class="section level1">
@@ -182,34 +177,27 @@ FOCUS_2006_Z_mkin &lt;-<span class="st"> </span><span class="kw"><a href="../ref
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z.FOCUS)</code></pre></div>
 <p><img src="FOCUS_Z_files/figure-html/FOCUS_2006_Z_fits_6-1.png" width="672"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(m.Z.FOCUS, <span class="dt">data =</span> <span class="ot">FALSE</span>)$bpar</code></pre></div>
-<pre><code>##               Estimate se_notrans   t value       Pr(&gt;t)       Lower
-## Z0_0       96.84024413 2.05881366 47.036916 5.572278e-44 92.70685169
-## k_Z0        2.21540096 0.11812759 18.754306 7.736886e-25  1.99050408
-## k_Z1        0.47835870 0.02929353 16.329843 3.344317e-22  0.42303496
-## k_Z2        0.45166296 0.04418624 10.221801 3.036447e-14  0.37106537
-## k_Z3        0.05868971 0.01428961  4.107158 7.256030e-05  0.03598292
-## f_Z2_to_Z3  0.47147387 0.05702672  8.267596 2.779011e-11  0.36029541
-##                   Upper
-## Z0_0       100.97363656
-## k_Z0         2.46570780
-## k_Z1         0.54091758
-## k_Z2         0.54976682
-## k_Z3         0.09572548
-## f_Z2_to_Z3   0.58555627</code></pre>
+<pre><code>##            Estimate se_notrans t value     Pr(&gt;t)     Lower      Upper
+## Z0_0       96.84024   2.058814 47.0369 5.5723e-44 92.706852 100.973637
+## k_Z0        2.21540   0.118128 18.7543 7.7369e-25  1.990504   2.465708
+## k_Z1        0.47836   0.029294 16.3298 3.3443e-22  0.423035   0.540918
+## k_Z2        0.45166   0.044186 10.2218 3.0364e-14  0.371065   0.549767
+## k_Z3        0.05869   0.014290  4.1072 7.2560e-05  0.035983   0.095725
+## f_Z2_to_Z3  0.47147   0.057027  8.2676 2.7790e-11  0.360295   0.585556</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/endpoints.html">endpoints</a></span>(m.Z.FOCUS)</code></pre></div>
 <pre><code>## $ff
-##     Z2_Z3   Z2_sink 
-## 0.4714739 0.5285261 
+##   Z2_Z3 Z2_sink 
+## 0.47147 0.52853 
 ## 
 ## $SFORB
 ## logical(0)
 ## 
 ## $distimes
-##          DT50      DT90
-## Z0  0.3128766  1.039354
-## Z1  1.4490113  4.813512
-## Z2  1.5346558  5.098016
-## Z3 11.8103701 39.233200</code></pre>
+##        DT50    DT90
+## Z0  0.31288  1.0394
+## Z1  1.44901  4.8135
+## Z2  1.53466  5.0980
+## Z3 11.81037 39.2332</code></pre>
 <p>This fit corresponds to the final result chosen in Appendix 7 of the FOCUS report. Confidence intervals returned by mkin are based on internally transformed parameters, however.</p>
 </div>
 <div id="using-the-sforb-model" class="section level1">
@@ -274,18 +262,18 @@ FOCUS_2006_Z_mkin &lt;-<span class="st"> </span><span class="kw"><a href="../ref
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/endpoints.html">endpoints</a></span>(m.Z.mkin.5a)</code></pre></div>
 <pre><code>## $ff
 ##   Z0_free_Z1        Z1_Z2      Z2_sink   Z2_Z3_free Z3_free_sink 
-##    1.0000000    1.0000000    0.4634423    0.5365577    1.0000000 
+##      1.00000      1.00000      0.46344      0.53656      1.00000 
 ## 
 ## $SFORB
-##       Z0_b1       Z0_b2       Z3_b1       Z3_b2 
-## 2.447137325 0.007512576 0.080007563 0.000000000 
+##     Z0_b1     Z0_b2     Z3_b1     Z3_b2 
+## 2.4471373 0.0075126 0.0800076 0.0000000 
 ## 
 ## $distimes
-##         DT50     DT90 DT50_Z0_b1 DT50_Z0_b2 DT50_Z3_b1 DT50_Z3_b2
-## Z0 0.3042974 1.184810  0.2832482   92.26492         NA         NA
-## Z1 1.5147780 5.031984         NA         NA         NA         NA
-## Z2 1.6413852 5.452564         NA         NA         NA         NA
-## Z3        NA       NA         NA         NA   8.663521        Inf</code></pre>
+##      DT50   DT90 DT50_Z0_b1 DT50_Z0_b2 DT50_Z3_b1 DT50_Z3_b2
+## Z0 0.3043 1.1848    0.28325     92.265         NA         NA
+## Z1 1.5148 5.0320         NA         NA         NA         NA
+## Z2 1.6414 5.4526         NA         NA         NA         NA
+## Z3     NA     NA         NA         NA     8.6635        Inf</code></pre>
 <p>It is clear the degradation rate of Z3 towards the end of the experiment is very low as DT50_Z3_b2 (the second Eigenvalue of the system of two differential equations representing the SFORB system for Z3, corresponding to the slower rate constant of the DFOP model) is reported to be infinity. However, this appears to be a feature of the data.</p>
 </div>
 <div id="references" class="section level1">

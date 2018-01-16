@@ -20,6 +20,7 @@ vignette: >
 
 ```{r, include = FALSE}
 require(knitr)
+options(digits = 5)
 opts_chunk$set(engine='R', tidy = FALSE)
 ```
 
@@ -64,11 +65,10 @@ summary(m.Z.2a, data = FALSE)$bpar
 
 As obvious from the parameter summary (the \texttt{bpar} component of the
 summary), the kinetic rate constant from parent compound Z to sink
-is negligible. Accordingly, the exact magnitude of the fitted parameter
-\texttt{log k\_Z0\_sink} is ill-defined and the covariance matrix is not
-returned (not shown, would be visible in the complete summary).
-This suggests, in agreement with the analysis in the FOCUS kinetics report, to
-simplify the model by removing the pathway to sink.
+is very small and the t-test for this parameter suggests that it is
+not significantly different from zero. This suggests, in agreement with the
+analysis in the FOCUS kinetics report, to simplify the model by removing the
+pathway to sink.
 
 A similar result can be obtained when formation fractions are used in the model
 formulation:
@@ -85,11 +85,12 @@ summary(m.Z.2a.ff, data = FALSE)$bpar
 
 Here, the ilr transformed formation fraction fitted in the model takes a very
 large value, and the backtransformed formation fraction from parent Z to Z1 is
-practically unity. Again, the covariance matrix is not returned as the model is
+practically unity. Here, the covariance matrix used for the calculation
+of confidence intervals is not returned as the model is
 overparameterised.
 
-The simplified model is obtained by setting the list component \texttt{sink} to
-\texttt{FALSE}.\footnote{If the model formulation without formation fractions
+A simplified model is obtained by removing the pathway to the sink.
+\footnote{If the model formulation without formation fractions
 is used, the same effect can be obtained by fixing the parameter \texttt{k\_Z\_sink}
 to a value of zero.}
 
