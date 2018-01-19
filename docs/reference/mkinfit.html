@@ -70,6 +70,9 @@
       <a href="../articles/FOCUS_L.html">Example evaluation of FOCUS Laboratory Data L1 to L3</a>
     </li>
     <li>
+      <a href="../articles/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
+    </li>
+    <li>
       <a href="../articles/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
     </li>
     <li>
@@ -83,12 +86,7 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="http://github.com/jranke/mkin">
-    <span class="fa fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -130,7 +128,9 @@
   <span class='kw'>control.modFit</span> <span class='kw'>=</span> <span class='fu'>list</span>(),
   <span class='kw'>transform_rates</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>transform_fractions</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>err</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>weight</span> <span class='kw'>=</span> <span class='st'>"none"</span>,
+  <span class='kw'>plot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>err</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>weight</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"none"</span>, <span class='st'>"std"</span>, <span class='st'>"mean"</span>, <span class='st'>"tc"</span>),
+  <span class='kw'>tc</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='kw'>sigma_low</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>rsd_high</span> <span class='kw'>=</span> <span class='fl'>0.07</span>),
   <span class='kw'>scaleVar</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>atol</span> <span class='kw'>=</span> <span class='fl'>1e-8</span>, <span class='kw'>rtol</span> <span class='kw'>=</span> <span class='fl'>1e-10</span>, <span class='kw'>n.outtimes</span> <span class='kw'>=</span> <span class='fl'>100</span>,
   <span class='kw'>reweight.method</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
@@ -293,7 +293,13 @@
     <tr>
       <th>weight</th>
       <td><p>only if <code>err</code>=<code>NULL</code>: how to weight the residuals, one of "none",
-    "std", "mean", see details of <code>modCost</code>.</p></td>
+    "std", "mean", see details of <code>modCost</code>, or "tc" for the 
+    two component error model of Rocke and Lorenzato.</p></td>
+    </tr>
+    <tr>
+      <th>tc</th>
+      <td><p>The two components of the Rocke and Lorenzato error model as used
+    for (initial) weighting</p></td>
     </tr>
     <tr>
       <th>scaleVar</th>
@@ -321,12 +327,19 @@
       <th>reweight.method</th>
       <td><p>The method used for iteratively reweighting residuals, also known
     as iteratively reweighted least squares (IRLS). Default is NULL,
-    the other method implemented is called "obs", meaning that each
-    observed variable is assumed to have its own variance, this is
-    estimated from the fit and used for weighting the residuals
-    in each iteration until convergence of this estimate up to
+    i.e. no iterative weighting.
+    The first reweighting method is called "obs", meaning that each
+    observed variable is assumed to have its own variance. This variance
+    is estimated from the fit (mean squared residuals) and used for weighting
+    the residuals in each iteration until convergence of this estimate up to
     <code>reweight.tol</code> or up to the maximum number of iterations
-    specified by <code>reweight.max.iter</code>.</p></td>
+    specified by <code>reweight.max.iter</code>.
+    The second reweighting method is called "tc" (two-component error model).
+    When using this method, the two components of the error model according
+    to Rocke and Lorenzato (1995) are estimated from the fit and the resulting
+    variances are used for weighting the residuals in each iteration until
+    convergence of these components or up to the maximum number of iterations
+    specified.</p></td>
     </tr>
     <tr>
       <th>reweight.tol</th>
@@ -373,21 +386,26 @@
   numerical ODE solver. In this situation it may help to switch off the
   internal rate transformation.</p>
     
+    <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
+
+    <p>Rocke, David M. und Lorenzato, Stefan (1995) A two-component model for
+  measurement error in analytical chemistry. Technometrics 37(2), 176-184.</p>
+    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Use shorthand notation for parent only degradation</span>
 <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='st'>"FOMC"</span>, <span class='no'>FOCUS_2006_C</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>summary</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; mkin version:    0.9.46 
-#&gt; R version:       3.4.1 
-#&gt; Date of fit:     Sat Jul 29 15:14:18 2017 
-#&gt; Date of summary: Sat Jul 29 15:14:18 2017 
+<span class='fu'>summary</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; mkin version:    0.9.47.1 
+#&gt; R version:       3.4.3 
+#&gt; Date of fit:     Tue Jan 30 10:05:48 2018 
+#&gt; Date of summary: Tue Jan 30 10:05:48 2018 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent
 #&gt; 
 #&gt; Model predictions using solution type analytical 
 #&gt; 
-#&gt; Fitted with method Port using 64 model solutions performed in 0.141 s
+#&gt; Fitted with method Port using 64 model solutions performed in 0.31 s
 #&gt; 
 #&gt; Weighting: none
 #&gt; 
@@ -456,7 +474,7 @@
   <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='co'># Fit the model to the FOCUS example dataset D using defaults</span>
 <span class='fu'>print</span>(<span class='fu'>system.time</span>(<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>,
                            <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"eigen"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   0.888   0.000   0.890 </div><div class='input'><span class='fu'>coef</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt;          parent_0 log_k_parent_sink   log_k_parent_m1     log_k_m1_sink 
+#&gt;   1.196   0.000   1.195 </div><div class='input'><span class='fu'>coef</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt;          parent_0 log_k_parent_sink   log_k_parent_m1     log_k_m1_sink 
 #&gt;          99.59848          -3.03822          -2.98030          -5.24750 </div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; $ff
 #&gt; parent_sink   parent_m1     m1_sink 
 #&gt;    0.485524    0.514476    1.000000 
@@ -535,7 +553,7 @@
 #&gt; Model cost at call  153 :  371.2134 
 #&gt; Optimisation by method Port successfully terminated.
 #&gt;    user  system elapsed 
-#&gt;   0.728   0.000   0.729 </div><div class='input'><span class='fu'>coef</span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt;          parent_0 log_k_parent_sink   log_k_parent_m1     log_k_m1_sink 
+#&gt;   1.008   0.000   1.006 </div><div class='input'><span class='fu'>coef</span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt;          parent_0 log_k_parent_sink   log_k_parent_m1     log_k_m1_sink 
 #&gt;          99.59848          -3.03822          -2.98030          -5.24750 </div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt; $ff
 #&gt; parent_sink   parent_m1     m1_sink 
 #&gt;    0.485524    0.514476    1.000000 
@@ -576,10 +594,10 @@
 <span class='co'># Weighted fits, including IRLS</span>
 <span class='no'>SFO_SFO.ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>),
                       <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='no'>f.noweight</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>summary</span>(<span class='no'>f.noweight</span>)</div><div class='output co'>#&gt; mkin version:    0.9.46 
-#&gt; R version:       3.4.1 
-#&gt; Date of fit:     Sat Jul 29 15:14:28 2017 
-#&gt; Date of summary: Sat Jul 29 15:14:28 2017 
+<span class='fu'>summary</span>(<span class='no'>f.noweight</span>)</div><div class='output co'>#&gt; mkin version:    0.9.47.1 
+#&gt; R version:       3.4.3 
+#&gt; Date of fit:     Tue Jan 30 10:06:00 2018 
+#&gt; Date of summary: Tue Jan 30 10:06:00 2018 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -587,7 +605,7 @@
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted with method Port using 185 model solutions performed in 0.746 s
+#&gt; Fitted with method Port using 185 model solutions performed in 0.739 s
 #&gt; 
 #&gt; Weighting: none
 #&gt; 
@@ -653,54 +671,50 @@
 #&gt; 
 #&gt; Data:
 #&gt;  time variable observed predicted   residual
-#&gt;     0   parent    99.46 9.960e+01 -1.385e-01
-#&gt;     0   parent   102.04 9.960e+01  2.442e+00
-#&gt;     1   parent    93.50 9.024e+01  3.262e+00
-#&gt;     1   parent    92.50 9.024e+01  2.262e+00
-#&gt;     3   parent    63.23 7.407e+01 -1.084e+01
-#&gt;     3   parent    68.99 7.407e+01 -5.083e+00
-#&gt;     7   parent    52.32 4.991e+01  2.408e+00
-#&gt;     7   parent    55.13 4.991e+01  5.218e+00
-#&gt;    14   parent    27.27 2.501e+01  2.257e+00
-#&gt;    14   parent    26.64 2.501e+01  1.627e+00
-#&gt;    21   parent    11.50 1.253e+01 -1.035e+00
-#&gt;    21   parent    11.64 1.253e+01 -8.946e-01
-#&gt;    35   parent     2.85 3.148e+00 -2.979e-01
-#&gt;    35   parent     2.91 3.148e+00 -2.379e-01
-#&gt;    50   parent     0.69 7.162e-01 -2.624e-02
-#&gt;    50   parent     0.63 7.162e-01 -8.624e-02
-#&gt;    75   parent     0.05 6.074e-02 -1.074e-02
-#&gt;    75   parent     0.06 6.074e-02 -7.381e-04
-#&gt;   100   parent       NA 5.151e-03         NA
-#&gt;   100   parent       NA 5.151e-03         NA
-#&gt;   120   parent       NA 7.155e-04         NA
-#&gt;   120   parent       NA 7.155e-04         NA
-#&gt;     0       m1     0.00 0.000e+00  0.000e+00
-#&gt;     0       m1     0.00 0.000e+00  0.000e+00
-#&gt;     1       m1     4.84 4.803e+00  3.704e-02
-#&gt;     1       m1     5.64 4.803e+00  8.370e-01
-#&gt;     3       m1    12.91 1.302e+01 -1.140e-01
-#&gt;     3       m1    12.96 1.302e+01 -6.400e-02
-#&gt;     7       m1    22.97 2.504e+01 -2.075e+00
-#&gt;     7       m1    24.47 2.504e+01 -5.748e-01
-#&gt;    14       m1    41.69 3.669e+01  5.000e+00
-#&gt;    14       m1    33.21 3.669e+01 -3.480e+00
-#&gt;    21       m1    44.37 4.165e+01  2.717e+00
-#&gt;    21       m1    46.44 4.165e+01  4.787e+00
-#&gt;    35       m1    41.22 4.331e+01 -2.093e+00
-#&gt;    35       m1    37.95 4.331e+01 -5.363e+00
-#&gt;    50       m1    41.19 4.122e+01 -2.831e-02
-#&gt;    50       m1    40.01 4.122e+01 -1.208e+00
-#&gt;    75       m1    40.09 3.645e+01  3.643e+00
-#&gt;    75       m1    33.85 3.645e+01 -2.597e+00
-#&gt;   100       m1    31.04 3.198e+01 -9.416e-01
-#&gt;   100       m1    33.13 3.198e+01  1.148e+00
-#&gt;   120       m1    25.15 2.879e+01 -3.640e+00
-#&gt;   120       m1    33.31 2.879e+01  4.520e+00</div><div class='input'><span class='no'>f.irls</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>reweight.method</span> <span class='kw'>=</span> <span class='st'>"obs"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>summary</span>(<span class='no'>f.irls</span>)</div><div class='output co'>#&gt; mkin version:    0.9.46 
-#&gt; R version:       3.4.1 
-#&gt; Date of fit:     Sat Jul 29 15:14:30 2017 
-#&gt; Date of summary: Sat Jul 29 15:14:30 2017 
+#&gt;     0   parent    99.46  99.59848 -1.385e-01
+#&gt;     0   parent   102.04  99.59848  2.442e+00
+#&gt;     1   parent    93.50  90.23787  3.262e+00
+#&gt;     1   parent    92.50  90.23787  2.262e+00
+#&gt;     3   parent    63.23  74.07319 -1.084e+01
+#&gt;     3   parent    68.99  74.07319 -5.083e+00
+#&gt;     7   parent    52.32  49.91206  2.408e+00
+#&gt;     7   parent    55.13  49.91206  5.218e+00
+#&gt;    14   parent    27.27  25.01257  2.257e+00
+#&gt;    14   parent    26.64  25.01257  1.627e+00
+#&gt;    21   parent    11.50  12.53462 -1.035e+00
+#&gt;    21   parent    11.64  12.53462 -8.946e-01
+#&gt;    35   parent     2.85   3.14787 -2.979e-01
+#&gt;    35   parent     2.91   3.14787 -2.379e-01
+#&gt;    50   parent     0.69   0.71624 -2.624e-02
+#&gt;    50   parent     0.63   0.71624 -8.624e-02
+#&gt;    75   parent     0.05   0.06074 -1.074e-02
+#&gt;    75   parent     0.06   0.06074 -7.381e-04
+#&gt;     0       m1     0.00   0.00000  0.000e+00
+#&gt;     0       m1     0.00   0.00000  0.000e+00
+#&gt;     1       m1     4.84   4.80296  3.704e-02
+#&gt;     1       m1     5.64   4.80296  8.370e-01
+#&gt;     3       m1    12.91  13.02400 -1.140e-01
+#&gt;     3       m1    12.96  13.02400 -6.400e-02
+#&gt;     7       m1    22.97  25.04476 -2.075e+00
+#&gt;     7       m1    24.47  25.04476 -5.748e-01
+#&gt;    14       m1    41.69  36.69002  5.000e+00
+#&gt;    14       m1    33.21  36.69002 -3.480e+00
+#&gt;    21       m1    44.37  41.65310  2.717e+00
+#&gt;    21       m1    46.44  41.65310  4.787e+00
+#&gt;    35       m1    41.22  43.31312 -2.093e+00
+#&gt;    35       m1    37.95  43.31312 -5.363e+00
+#&gt;    50       m1    41.19  41.21831 -2.831e-02
+#&gt;    50       m1    40.01  41.21831 -1.208e+00
+#&gt;    75       m1    40.09  36.44703  3.643e+00
+#&gt;    75       m1    33.85  36.44703 -2.597e+00
+#&gt;   100       m1    31.04  31.98163 -9.416e-01
+#&gt;   100       m1    33.13  31.98163  1.148e+00
+#&gt;   120       m1    25.15  28.78984 -3.640e+00
+#&gt;   120       m1    33.31  28.78984  4.520e+00</div><div class='input'><span class='no'>f.irls</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>reweight.method</span> <span class='kw'>=</span> <span class='st'>"obs"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>summary</span>(<span class='no'>f.irls</span>)</div><div class='output co'>#&gt; mkin version:    0.9.47.1 
+#&gt; R version:       3.4.3 
+#&gt; Date of fit:     Tue Jan 30 10:06:02 2018 
+#&gt; Date of summary: Tue Jan 30 10:06:02 2018 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -708,9 +722,14 @@
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted with method Port using 468 model solutions performed in 1.914 s
+#&gt; Fitted with method Port using 523 model solutions performed in 2.151 s
 #&gt; 
-#&gt; Weighting: none then iterative reweighting method obs
+#&gt; Weighting: none
+#&gt; 
+#&gt; Iterative reweighting with method obs 
+#&gt; Final mean squared residuals of observed variables:
+#&gt;    parent        m1 
+#&gt; 11.573408  7.407845 
 #&gt; 
 #&gt; Starting values for parameters to be optimised:
 #&gt;                   value   type
@@ -739,10 +758,10 @@
 #&gt; 
 #&gt; Parameter correlation:
 #&gt;                parent_0 log_k_parent log_k_m1 f_parent_ilr_1
-#&gt; parent_0         1.0000       0.5083  -0.1979        -0.6147
+#&gt; parent_0         1.0000       0.5083  -0.1979        -0.6148
 #&gt; log_k_parent     0.5083       1.0000  -0.3894        -0.6062
 #&gt; log_k_m1        -0.1979      -0.3894   1.0000         0.7417
-#&gt; f_parent_ilr_1  -0.6147      -0.6062   0.7417         1.0000
+#&gt; f_parent_ilr_1  -0.6148      -0.6062   0.7417         1.0000
 #&gt; 
 #&gt; Residual standard error: 1.054 on 36 degrees of freedom
 #&gt; 
@@ -751,9 +770,9 @@
 #&gt; t-test (unrealistically) based on the assumption of normal distribution
 #&gt; for estimators of untransformed parameters.
 #&gt;                Estimate t value    Pr(&gt;t)     Lower     Upper
-#&gt; parent_0       99.67000  55.630 8.181e-37 96.040000 1.033e+02
+#&gt; parent_0       99.67000  55.630 8.184e-37 96.040000 1.033e+02
 #&gt; k_parent        0.09906  21.930 1.016e-22  0.090310 1.087e-01
-#&gt; k_m1            0.00524   7.996 8.487e-10  0.004066 6.753e-03
+#&gt; k_m1            0.00524   7.996 8.486e-10  0.004066 6.753e-03
 #&gt; f_parent_to_m1  0.51340  23.000 2.038e-23  0.468100 5.584e-01
 #&gt; 
 #&gt; Chi2 error levels in percent:
@@ -774,54 +793,50 @@
 #&gt; 
 #&gt; Data:
 #&gt;  time variable observed predicted   residual   err
-#&gt;     0   parent    99.46 9.967e+01 -2.122e-01 3.402
-#&gt;     0   parent   102.04 9.967e+01  2.368e+00 3.402
-#&gt;     1   parent    93.50 9.027e+01  3.228e+00 3.402
-#&gt;     1   parent    92.50 9.027e+01  2.228e+00 3.402
-#&gt;     3   parent    63.23 7.405e+01 -1.082e+01 3.402
-#&gt;     3   parent    68.99 7.405e+01 -5.056e+00 3.402
-#&gt;     7   parent    52.32 4.982e+01  2.499e+00 3.402
-#&gt;     7   parent    55.13 4.982e+01  5.309e+00 3.402
-#&gt;    14   parent    27.27 2.490e+01  2.367e+00 3.402
-#&gt;    14   parent    26.64 2.490e+01  1.737e+00 3.402
-#&gt;    21   parent    11.50 1.245e+01 -9.476e-01 3.402
-#&gt;    21   parent    11.64 1.245e+01 -8.076e-01 3.402
-#&gt;    35   parent     2.85 3.110e+00 -2.600e-01 3.402
-#&gt;    35   parent     2.91 3.110e+00 -2.000e-01 3.402
-#&gt;    50   parent     0.69 7.037e-01 -1.374e-02 3.402
-#&gt;    50   parent     0.63 7.037e-01 -7.374e-02 3.402
-#&gt;    75   parent     0.05 5.913e-02 -9.133e-03 3.402
-#&gt;    75   parent     0.06 5.913e-02  8.666e-04 3.402
-#&gt;   100   parent       NA 4.969e-03         NA 3.402
-#&gt;   100   parent       NA 4.969e-03         NA 3.402
-#&gt;   120   parent       NA 6.852e-04         NA 3.402
-#&gt;   120   parent       NA 6.852e-04         NA 3.402
-#&gt;     0       m1     0.00 0.000e+00  0.000e+00 2.722
-#&gt;     0       m1     0.00 0.000e+00  0.000e+00 2.722
-#&gt;     1       m1     4.84 4.813e+00  2.672e-02 2.722
-#&gt;     1       m1     5.64 4.813e+00  8.267e-01 2.722
-#&gt;     3       m1    12.91 1.305e+01 -1.378e-01 2.722
-#&gt;     3       m1    12.96 1.305e+01 -8.779e-02 2.722
-#&gt;     7       m1    22.97 2.508e+01 -2.106e+00 2.722
-#&gt;     7       m1    24.47 2.508e+01 -6.062e-01 2.722
-#&gt;    14       m1    41.69 3.671e+01  4.983e+00 2.722
-#&gt;    14       m1    33.21 3.671e+01 -3.497e+00 2.722
-#&gt;    21       m1    44.37 4.165e+01  2.720e+00 2.722
-#&gt;    21       m1    46.44 4.165e+01  4.790e+00 2.722
-#&gt;    35       m1    41.22 4.329e+01 -2.069e+00 2.722
-#&gt;    35       m1    37.95 4.329e+01 -5.339e+00 2.722
-#&gt;    50       m1    41.19 4.119e+01 -3.376e-03 2.722
-#&gt;    50       m1    40.01 4.119e+01 -1.183e+00 2.722
-#&gt;    75       m1    40.09 3.644e+01  3.652e+00 2.722
-#&gt;    75       m1    33.85 3.644e+01 -2.588e+00 2.722
-#&gt;   100       m1    31.04 3.199e+01 -9.497e-01 2.722
-#&gt;   100       m1    33.13 3.199e+01  1.140e+00 2.722
-#&gt;   120       m1    25.15 2.881e+01 -3.659e+00 2.722
-#&gt;   120       m1    33.31 2.881e+01  4.501e+00 2.722</div><div class='input'><span class='no'>f.w.mean</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>weight</span> <span class='kw'>=</span> <span class='st'>"mean"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>summary</span>(<span class='no'>f.w.mean</span>)</div><div class='output co'>#&gt; mkin version:    0.9.46 
-#&gt; R version:       3.4.1 
-#&gt; Date of fit:     Sat Jul 29 15:14:31 2017 
-#&gt; Date of summary: Sat Jul 29 15:14:31 2017 
+#&gt;     0   parent    99.46  99.67218 -2.122e-01 3.402
+#&gt;     0   parent   102.04  99.67218  2.368e+00 3.402
+#&gt;     1   parent    93.50  90.27153  3.228e+00 3.402
+#&gt;     1   parent    92.50  90.27153  2.228e+00 3.402
+#&gt;     3   parent    63.23  74.04648 -1.082e+01 3.402
+#&gt;     3   parent    68.99  74.04648 -5.056e+00 3.402
+#&gt;     7   parent    52.32  49.82092  2.499e+00 3.402
+#&gt;     7   parent    55.13  49.82092  5.309e+00 3.402
+#&gt;    14   parent    27.27  24.90287  2.367e+00 3.402
+#&gt;    14   parent    26.64  24.90287  1.737e+00 3.402
+#&gt;    21   parent    11.50  12.44764 -9.476e-01 3.402
+#&gt;    21   parent    11.64  12.44764 -8.076e-01 3.402
+#&gt;    35   parent     2.85   3.11002 -2.600e-01 3.402
+#&gt;    35   parent     2.91   3.11002 -2.000e-01 3.402
+#&gt;    50   parent     0.69   0.70374 -1.374e-02 3.402
+#&gt;    50   parent     0.63   0.70374 -7.374e-02 3.402
+#&gt;    75   parent     0.05   0.05913 -9.134e-03 3.402
+#&gt;    75   parent     0.06   0.05913  8.662e-04 3.402
+#&gt;     0       m1     0.00   0.00000  0.000e+00 2.722
+#&gt;     0       m1     0.00   0.00000  0.000e+00 2.722
+#&gt;     1       m1     4.84   4.81328  2.672e-02 2.722
+#&gt;     1       m1     5.64   4.81328  8.267e-01 2.722
+#&gt;     3       m1    12.91  13.04779 -1.378e-01 2.722
+#&gt;     3       m1    12.96  13.04779 -8.779e-02 2.722
+#&gt;     7       m1    22.97  25.07615 -2.106e+00 2.722
+#&gt;     7       m1    24.47  25.07615 -6.062e-01 2.722
+#&gt;    14       m1    41.69  36.70729  4.983e+00 2.722
+#&gt;    14       m1    33.21  36.70729 -3.497e+00 2.722
+#&gt;    21       m1    44.37  41.65050  2.720e+00 2.722
+#&gt;    21       m1    46.44  41.65050  4.790e+00 2.722
+#&gt;    35       m1    41.22  43.28866 -2.069e+00 2.722
+#&gt;    35       m1    37.95  43.28866 -5.339e+00 2.722
+#&gt;    50       m1    41.19  41.19338 -3.383e-03 2.722
+#&gt;    50       m1    40.01  41.19338 -1.183e+00 2.722
+#&gt;    75       m1    40.09  36.43820  3.652e+00 2.722
+#&gt;    75       m1    33.85  36.43820 -2.588e+00 2.722
+#&gt;   100       m1    31.04  31.98971 -9.497e-01 2.722
+#&gt;   100       m1    33.13  31.98971  1.140e+00 2.722
+#&gt;   120       m1    25.15  28.80897 -3.659e+00 2.722
+#&gt;   120       m1    33.31  28.80897  4.501e+00 2.722</div><div class='input'><span class='no'>f.w.mean</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>weight</span> <span class='kw'>=</span> <span class='st'>"mean"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>summary</span>(<span class='no'>f.w.mean</span>)</div><div class='output co'>#&gt; mkin version:    0.9.47.1 
+#&gt; R version:       3.4.3 
+#&gt; Date of fit:     Tue Jan 30 10:06:03 2018 
+#&gt; Date of summary: Tue Jan 30 10:06:03 2018 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -829,7 +844,7 @@
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted with method Port using 155 model solutions performed in 0.692 s
+#&gt; Fitted with method Port using 155 model solutions performed in 0.675 s
 #&gt; 
 #&gt; Weighting: mean
 #&gt; 
@@ -895,55 +910,51 @@
 #&gt; 
 #&gt; Data:
 #&gt;  time variable observed predicted   residual
-#&gt;     0   parent    99.46 99.730570  -0.270570
-#&gt;     0   parent   102.04 99.730570   2.309430
-#&gt;     1   parent    93.50 90.298055   3.201945
-#&gt;     1   parent    92.50 90.298055   2.201945
-#&gt;     3   parent    63.23 74.025028 -10.795028
-#&gt;     3   parent    68.99 74.025028  -5.035028
-#&gt;     7   parent    52.32 49.748382   2.571618
-#&gt;     7   parent    55.13 49.748382   5.381618
-#&gt;    14   parent    27.27 24.815876   2.454124
-#&gt;    14   parent    26.64 24.815876   1.824124
-#&gt;    21   parent    11.50 12.378849  -0.878849
-#&gt;    21   parent    11.64 12.378849  -0.738849
-#&gt;    35   parent     2.85  3.080219  -0.230219
-#&gt;    35   parent     2.91  3.080219  -0.170219
-#&gt;    50   parent     0.69  0.693958  -0.003958
-#&gt;    50   parent     0.63  0.693958  -0.063958
-#&gt;    75   parent     0.05  0.057888  -0.007888
-#&gt;    75   parent     0.06  0.057888   0.002112
-#&gt;   100   parent       NA  0.004829         NA
-#&gt;   100   parent       NA  0.004829         NA
-#&gt;   120   parent       NA  0.000662         NA
-#&gt;   120   parent       NA  0.000662         NA
-#&gt;     0       m1     0.00  0.000000   0.000000
-#&gt;     0       m1     0.00  0.000000   0.000000
-#&gt;     1       m1     4.84  4.821488   0.018512
-#&gt;     1       m1     5.64  4.821488   0.818512
-#&gt;     3       m1    12.91 13.066692  -0.156692
-#&gt;     3       m1    12.96 13.066692  -0.106692
-#&gt;     7       m1    22.97 25.101058  -2.131058
-#&gt;     7       m1    24.47 25.101058  -0.631058
-#&gt;    14       m1    41.69 36.720923   4.969077
-#&gt;    14       m1    33.21 36.720923  -3.510923
-#&gt;    21       m1    44.37 41.648353   2.721647
-#&gt;    21       m1    46.44 41.648353   4.791647
-#&gt;    35       m1    41.22 43.269225  -2.049225
-#&gt;    35       m1    37.95 43.269225  -5.319225
-#&gt;    50       m1    41.19 41.173639   0.016361
-#&gt;    50       m1    40.01 41.173639  -1.163639
-#&gt;    75       m1    40.09 36.431224   3.658776
-#&gt;    75       m1    33.85 36.431224  -2.581224
-#&gt;   100       m1    31.04 31.996124  -0.956124
-#&gt;   100       m1    33.13 31.996124   1.133876
-#&gt;   120       m1    25.15 28.824128  -3.674128
-#&gt;   120       m1    33.31 28.824128   4.485872</div><div class='input'><span class='no'>f.w.value</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='fu'>subset</span>(<span class='no'>FOCUS_2006_D</span>, <span class='no'>value</span> <span class='kw'>!=</span> <span class='fl'>0</span>), <span class='kw'>err</span> <span class='kw'>=</span> <span class='st'>"value"</span>,
+#&gt;     0   parent    99.46  99.73057  -0.270570
+#&gt;     0   parent   102.04  99.73057   2.309430
+#&gt;     1   parent    93.50  90.29805   3.201945
+#&gt;     1   parent    92.50  90.29805   2.201945
+#&gt;     3   parent    63.23  74.02503 -10.795028
+#&gt;     3   parent    68.99  74.02503  -5.035028
+#&gt;     7   parent    52.32  49.74838   2.571618
+#&gt;     7   parent    55.13  49.74838   5.381618
+#&gt;    14   parent    27.27  24.81588   2.454124
+#&gt;    14   parent    26.64  24.81588   1.824124
+#&gt;    21   parent    11.50  12.37885  -0.878849
+#&gt;    21   parent    11.64  12.37885  -0.738849
+#&gt;    35   parent     2.85   3.08022  -0.230219
+#&gt;    35   parent     2.91   3.08022  -0.170219
+#&gt;    50   parent     0.69   0.69396  -0.003958
+#&gt;    50   parent     0.63   0.69396  -0.063958
+#&gt;    75   parent     0.05   0.05789  -0.007888
+#&gt;    75   parent     0.06   0.05789   0.002112
+#&gt;     0       m1     0.00   0.00000   0.000000
+#&gt;     0       m1     0.00   0.00000   0.000000
+#&gt;     1       m1     4.84   4.82149   0.018512
+#&gt;     1       m1     5.64   4.82149   0.818512
+#&gt;     3       m1    12.91  13.06669  -0.156692
+#&gt;     3       m1    12.96  13.06669  -0.106692
+#&gt;     7       m1    22.97  25.10106  -2.131058
+#&gt;     7       m1    24.47  25.10106  -0.631058
+#&gt;    14       m1    41.69  36.72092   4.969077
+#&gt;    14       m1    33.21  36.72092  -3.510923
+#&gt;    21       m1    44.37  41.64835   2.721647
+#&gt;    21       m1    46.44  41.64835   4.791647
+#&gt;    35       m1    41.22  43.26923  -2.049225
+#&gt;    35       m1    37.95  43.26923  -5.319225
+#&gt;    50       m1    41.19  41.17364   0.016361
+#&gt;    50       m1    40.01  41.17364  -1.163639
+#&gt;    75       m1    40.09  36.43122   3.658776
+#&gt;    75       m1    33.85  36.43122  -2.581224
+#&gt;   100       m1    31.04  31.99612  -0.956124
+#&gt;   100       m1    33.13  31.99612   1.133876
+#&gt;   120       m1    25.15  28.82413  -3.674128
+#&gt;   120       m1    33.31  28.82413   4.485872</div><div class='input'><span class='no'>f.w.value</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='fu'>subset</span>(<span class='no'>FOCUS_2006_D</span>, <span class='no'>value</span> <span class='kw'>!=</span> <span class='fl'>0</span>), <span class='kw'>err</span> <span class='kw'>=</span> <span class='st'>"value"</span>,
                      <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>summary</span>(<span class='no'>f.w.value</span>)</div><div class='output co'>#&gt; mkin version:    0.9.46 
-#&gt; R version:       3.4.1 
-#&gt; Date of fit:     Sat Jul 29 15:14:32 2017 
-#&gt; Date of summary: Sat Jul 29 15:14:32 2017 
+<span class='fu'>summary</span>(<span class='no'>f.w.value</span>)</div><div class='output co'>#&gt; mkin version:    0.9.47.1 
+#&gt; R version:       3.4.3 
+#&gt; Date of fit:     Tue Jan 30 10:06:04 2018 
+#&gt; Date of summary: Tue Jan 30 10:06:04 2018 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -951,7 +962,7 @@
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted with method Port using 174 model solutions performed in 0.701 s
+#&gt; Fitted with method Port using 174 model solutions performed in 0.68 s
 #&gt; 
 #&gt; Weighting: manual
 #&gt; 
@@ -1062,10 +1073,10 @@
 <span class='no'>errors</span> <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fl'>1</span>)
 <span class='no'>dw</span>$<span class='no'>err.man</span> <span class='kw'>&lt;-</span> <span class='no'>errors</span>[<span class='no'>FOCUS_2006_D</span>$<span class='no'>name</span>]
 <span class='no'>f.w.man</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>dw</span>, <span class='kw'>err</span> <span class='kw'>=</span> <span class='st'>"err.man"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>summary</span>(<span class='no'>f.w.man</span>)</div><div class='output co'>#&gt; mkin version:    0.9.46 
-#&gt; R version:       3.4.1 
-#&gt; Date of fit:     Sat Jul 29 15:14:33 2017 
-#&gt; Date of summary: Sat Jul 29 15:14:33 2017 
+<span class='fu'>summary</span>(<span class='no'>f.w.man</span>)</div><div class='output co'>#&gt; mkin version:    0.9.47.1 
+#&gt; R version:       3.4.3 
+#&gt; Date of fit:     Tue Jan 30 10:06:05 2018 
+#&gt; Date of summary: Tue Jan 30 10:06:05 2018 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -1073,7 +1084,7 @@
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted with method Port using 297 model solutions performed in 1.223 s
+#&gt; Fitted with method Port using 297 model solutions performed in 1.178 s
 #&gt; 
 #&gt; Weighting: manual
 #&gt; 
@@ -1139,55 +1150,51 @@
 #&gt; 
 #&gt; Data:
 #&gt;  time variable observed predicted   residual err
-#&gt;     0   parent    99.46 99.485976  -0.025976   1
-#&gt;     0   parent   102.04 99.485976   2.554024   1
-#&gt;     1   parent    93.50 90.186117   3.313883   1
-#&gt;     1   parent    92.50 90.186117   2.313883   1
-#&gt;     3   parent    63.23 74.113162 -10.883162   1
-#&gt;     3   parent    68.99 74.113162  -5.123162   1
-#&gt;     7   parent    52.32 50.050295   2.269705   1
-#&gt;     7   parent    55.13 50.050295   5.079705   1
-#&gt;    14   parent    27.27 25.179750   2.090250   1
-#&gt;    14   parent    26.64 25.179750   1.460250   1
-#&gt;    21   parent    11.50 12.667654  -1.167654   1
-#&gt;    21   parent    11.64 12.667654  -1.027654   1
-#&gt;    35   parent     2.85  3.206164  -0.356164   1
-#&gt;    35   parent     2.91  3.206164  -0.296164   1
-#&gt;    50   parent     0.69  0.735619  -0.045619   1
-#&gt;    50   parent     0.63  0.735619  -0.105619   1
-#&gt;    75   parent     0.05  0.063256  -0.013256   1
-#&gt;    75   parent     0.06  0.063256  -0.003256   1
-#&gt;   100   parent       NA  0.005439         NA   1
-#&gt;   100   parent       NA  0.005439         NA   1
-#&gt;   120   parent       NA  0.000764         NA   1
-#&gt;   120   parent       NA  0.000764         NA   1
-#&gt;     0       m1     0.00  0.000000   0.000000   2
-#&gt;     0       m1     0.00  0.000000   0.000000   2
-#&gt;     1       m1     4.84  4.787287   0.052713   2
-#&gt;     1       m1     5.64  4.787287   0.852713   2
-#&gt;     3       m1    12.91 12.987848  -0.077848   2
-#&gt;     3       m1    12.96 12.987848  -0.027848   2
-#&gt;     7       m1    22.97 24.996945  -2.026945   2
-#&gt;     7       m1    24.47 24.996945  -0.526945   2
-#&gt;    14       m1    41.69 36.663527   5.026473   2
-#&gt;    14       m1    33.21 36.663527  -3.453527   2
-#&gt;    21       m1    44.37 41.656813   2.713187   2
-#&gt;    21       m1    46.44 41.656813   4.783187   2
-#&gt;    35       m1    41.22 43.350312  -2.130312   2
-#&gt;    35       m1    37.95 43.350312  -5.400312   2
-#&gt;    50       m1    41.19 41.256365  -0.066365   2
-#&gt;    50       m1    40.01 41.256365  -1.246365   2
-#&gt;    75       m1    40.09 36.460567   3.629433   2
-#&gt;    75       m1    33.85 36.460567  -2.610567   2
-#&gt;   100       m1    31.04 31.969288  -0.929288   2
-#&gt;   100       m1    33.13 31.969288   1.160712   2
-#&gt;   120       m1    25.15 28.760616  -3.610616   2
-#&gt;   120       m1    33.31 28.760616   4.549384   2</div><div class='input'><span class='no'>f.w.man.irls</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>dw</span>, <span class='kw'>err</span> <span class='kw'>=</span> <span class='st'>"err.man"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+#&gt;     0   parent    99.46  99.48598  -0.025976   1
+#&gt;     0   parent   102.04  99.48598   2.554024   1
+#&gt;     1   parent    93.50  90.18612   3.313883   1
+#&gt;     1   parent    92.50  90.18612   2.313883   1
+#&gt;     3   parent    63.23  74.11316 -10.883162   1
+#&gt;     3   parent    68.99  74.11316  -5.123162   1
+#&gt;     7   parent    52.32  50.05029   2.269705   1
+#&gt;     7   parent    55.13  50.05029   5.079705   1
+#&gt;    14   parent    27.27  25.17975   2.090250   1
+#&gt;    14   parent    26.64  25.17975   1.460250   1
+#&gt;    21   parent    11.50  12.66765  -1.167654   1
+#&gt;    21   parent    11.64  12.66765  -1.027654   1
+#&gt;    35   parent     2.85   3.20616  -0.356164   1
+#&gt;    35   parent     2.91   3.20616  -0.296164   1
+#&gt;    50   parent     0.69   0.73562  -0.045619   1
+#&gt;    50   parent     0.63   0.73562  -0.105619   1
+#&gt;    75   parent     0.05   0.06326  -0.013256   1
+#&gt;    75   parent     0.06   0.06326  -0.003256   1
+#&gt;     0       m1     0.00   0.00000   0.000000   2
+#&gt;     0       m1     0.00   0.00000   0.000000   2
+#&gt;     1       m1     4.84   4.78729   0.052713   2
+#&gt;     1       m1     5.64   4.78729   0.852713   2
+#&gt;     3       m1    12.91  12.98785  -0.077848   2
+#&gt;     3       m1    12.96  12.98785  -0.027848   2
+#&gt;     7       m1    22.97  24.99695  -2.026945   2
+#&gt;     7       m1    24.47  24.99695  -0.526945   2
+#&gt;    14       m1    41.69  36.66353   5.026473   2
+#&gt;    14       m1    33.21  36.66353  -3.453527   2
+#&gt;    21       m1    44.37  41.65681   2.713187   2
+#&gt;    21       m1    46.44  41.65681   4.783187   2
+#&gt;    35       m1    41.22  43.35031  -2.130312   2
+#&gt;    35       m1    37.95  43.35031  -5.400312   2
+#&gt;    50       m1    41.19  41.25637  -0.066365   2
+#&gt;    50       m1    40.01  41.25637  -1.246365   2
+#&gt;    75       m1    40.09  36.46057   3.629433   2
+#&gt;    75       m1    33.85  36.46057  -2.610567   2
+#&gt;   100       m1    31.04  31.96929  -0.929288   2
+#&gt;   100       m1    33.13  31.96929   1.160712   2
+#&gt;   120       m1    25.15  28.76062  -3.610616   2
+#&gt;   120       m1    33.31  28.76062   4.549384   2</div><div class='input'><span class='no'>f.w.man.irls</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>dw</span>, <span class='kw'>err</span> <span class='kw'>=</span> <span class='st'>"err.man"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
                        <span class='kw'>reweight.method</span> <span class='kw'>=</span> <span class='st'>"obs"</span>)
-<span class='fu'>summary</span>(<span class='no'>f.w.man.irls</span>)</div><div class='output co'>#&gt; mkin version:    0.9.46 
-#&gt; R version:       3.4.1 
-#&gt; Date of fit:     Sat Jul 29 15:14:36 2017 
-#&gt; Date of summary: Sat Jul 29 15:14:36 2017 
+<span class='fu'>summary</span>(<span class='no'>f.w.man.irls</span>)</div><div class='output co'>#&gt; mkin version:    0.9.47.1 
+#&gt; R version:       3.4.3 
+#&gt; Date of fit:     Tue Jan 30 10:06:08 2018 
+#&gt; Date of summary: Tue Jan 30 10:06:08 2018 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -1195,9 +1202,14 @@
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted with method Port using 628 model solutions performed in 2.578 s
+#&gt; Fitted with method Port using 692 model solutions performed in 2.733 s
 #&gt; 
-#&gt; Weighting: manual then iterative reweighting method obs
+#&gt; Weighting: manual
+#&gt; 
+#&gt; Iterative reweighting with method obs 
+#&gt; Final mean squared residuals of observed variables:
+#&gt;    parent        m1 
+#&gt; 11.573407  7.407845 
 #&gt; 
 #&gt; Starting values for parameters to be optimised:
 #&gt;                   value   type
@@ -1226,10 +1238,10 @@
 #&gt; 
 #&gt; Parameter correlation:
 #&gt;                parent_0 log_k_parent log_k_m1 f_parent_ilr_1
-#&gt; parent_0         1.0000       0.5083  -0.1979        -0.6147
+#&gt; parent_0         1.0000       0.5083  -0.1979        -0.6148
 #&gt; log_k_parent     0.5083       1.0000  -0.3894        -0.6062
 #&gt; log_k_m1        -0.1979      -0.3894   1.0000         0.7417
-#&gt; f_parent_ilr_1  -0.6147      -0.6062   0.7417         1.0000
+#&gt; f_parent_ilr_1  -0.6148      -0.6062   0.7417         1.0000
 #&gt; 
 #&gt; Residual standard error: 1.054 on 36 degrees of freedom
 #&gt; 
@@ -1238,10 +1250,10 @@
 #&gt; t-test (unrealistically) based on the assumption of normal distribution
 #&gt; for estimators of untransformed parameters.
 #&gt;                Estimate t value    Pr(&gt;t)     Lower     Upper
-#&gt; parent_0       99.67000  55.630 8.179e-37 96.040000 1.033e+02
-#&gt; k_parent        0.09906  21.930 1.015e-22  0.090310 1.087e-01
-#&gt; k_m1            0.00524   7.996 8.488e-10  0.004066 6.753e-03
-#&gt; f_parent_to_m1  0.51340  23.000 2.039e-23  0.468100 5.584e-01
+#&gt; parent_0       99.67000  55.630 8.184e-37 96.040000 1.033e+02
+#&gt; k_parent        0.09906  21.930 1.016e-22  0.090310 1.087e-01
+#&gt; k_m1            0.00524   7.996 8.486e-10  0.004066 6.753e-03
+#&gt; f_parent_to_m1  0.51340  23.000 2.038e-23  0.468100 5.584e-01
 #&gt; 
 #&gt; Chi2 error levels in percent:
 #&gt;          err.min n.optim df
@@ -1257,54 +1269,50 @@
 #&gt; Estimated disappearance times:
 #&gt;           DT50   DT90
 #&gt; parent   6.997  23.24
-#&gt; m1     132.281 439.43
+#&gt; m1     132.282 439.43
 #&gt; 
 #&gt; Data:
 #&gt;  time variable observed predicted   residual err.ini   err
-#&gt;     0   parent    99.46 9.967e+01 -2.122e-01       1 3.402
-#&gt;     0   parent   102.04 9.967e+01  2.368e+00       1 3.402
-#&gt;     1   parent    93.50 9.027e+01  3.228e+00       1 3.402
-#&gt;     1   parent    92.50 9.027e+01  2.228e+00       1 3.402
-#&gt;     3   parent    63.23 7.405e+01 -1.082e+01       1 3.402
-#&gt;     3   parent    68.99 7.405e+01 -5.056e+00       1 3.402
-#&gt;     7   parent    52.32 4.982e+01  2.499e+00       1 3.402
-#&gt;     7   parent    55.13 4.982e+01  5.309e+00       1 3.402
-#&gt;    14   parent    27.27 2.490e+01  2.367e+00       1 3.402
-#&gt;    14   parent    26.64 2.490e+01  1.737e+00       1 3.402
-#&gt;    21   parent    11.50 1.245e+01 -9.477e-01       1 3.402
-#&gt;    21   parent    11.64 1.245e+01 -8.077e-01       1 3.402
-#&gt;    35   parent     2.85 3.110e+00 -2.600e-01       1 3.402
-#&gt;    35   parent     2.91 3.110e+00 -2.000e-01       1 3.402
-#&gt;    50   parent     0.69 7.037e-01 -1.375e-02       1 3.402
-#&gt;    50   parent     0.63 7.037e-01 -7.375e-02       1 3.402
-#&gt;    75   parent     0.05 5.913e-02 -9.134e-03       1 3.402
-#&gt;    75   parent     0.06 5.913e-02  8.659e-04       1 3.402
-#&gt;   100   parent       NA 4.969e-03         NA       1 3.402
-#&gt;   100   parent       NA 4.969e-03         NA       1 3.402
-#&gt;   120   parent       NA 6.852e-04         NA       1 3.402
-#&gt;   120   parent       NA 6.852e-04         NA       1 3.402
-#&gt;     0       m1     0.00 0.000e+00  0.000e+00       2 2.722
-#&gt;     0       m1     0.00 0.000e+00  0.000e+00       2 2.722
-#&gt;     1       m1     4.84 4.813e+00  2.672e-02       2 2.722
-#&gt;     1       m1     5.64 4.813e+00  8.267e-01       2 2.722
-#&gt;     3       m1    12.91 1.305e+01 -1.378e-01       2 2.722
-#&gt;     3       m1    12.96 1.305e+01 -8.778e-02       2 2.722
-#&gt;     7       m1    22.97 2.508e+01 -2.106e+00       2 2.722
-#&gt;     7       m1    24.47 2.508e+01 -6.061e-01       2 2.722
-#&gt;    14       m1    41.69 3.671e+01  4.983e+00       2 2.722
-#&gt;    14       m1    33.21 3.671e+01 -3.497e+00       2 2.722
-#&gt;    21       m1    44.37 4.165e+01  2.719e+00       2 2.722
-#&gt;    21       m1    46.44 4.165e+01  4.789e+00       2 2.722
-#&gt;    35       m1    41.22 4.329e+01 -2.069e+00       2 2.722
-#&gt;    35       m1    37.95 4.329e+01 -5.339e+00       2 2.722
-#&gt;    50       m1    41.19 4.119e+01 -3.394e-03       2 2.722
-#&gt;    50       m1    40.01 4.119e+01 -1.183e+00       2 2.722
-#&gt;    75       m1    40.09 3.644e+01  3.652e+00       2 2.722
-#&gt;    75       m1    33.85 3.644e+01 -2.588e+00       2 2.722
-#&gt;   100       m1    31.04 3.199e+01 -9.497e-01       2 2.722
-#&gt;   100       m1    33.13 3.199e+01  1.140e+00       2 2.722
-#&gt;   120       m1    25.15 2.881e+01 -3.659e+00       2 2.722
-#&gt;   120       m1    33.31 2.881e+01  4.501e+00       2 2.722</div><div class='input'>
+#&gt;     0   parent    99.46  99.67218 -2.122e-01       1 3.402
+#&gt;     0   parent   102.04  99.67218  2.368e+00       1 3.402
+#&gt;     1   parent    93.50  90.27153  3.228e+00       1 3.402
+#&gt;     1   parent    92.50  90.27153  2.228e+00       1 3.402
+#&gt;     3   parent    63.23  74.04648 -1.082e+01       1 3.402
+#&gt;     3   parent    68.99  74.04648 -5.056e+00       1 3.402
+#&gt;     7   parent    52.32  49.82092  2.499e+00       1 3.402
+#&gt;     7   parent    55.13  49.82092  5.309e+00       1 3.402
+#&gt;    14   parent    27.27  24.90288  2.367e+00       1 3.402
+#&gt;    14   parent    26.64  24.90288  1.737e+00       1 3.402
+#&gt;    21   parent    11.50  12.44765 -9.476e-01       1 3.402
+#&gt;    21   parent    11.64  12.44765 -8.076e-01       1 3.402
+#&gt;    35   parent     2.85   3.11002 -2.600e-01       1 3.402
+#&gt;    35   parent     2.91   3.11002 -2.000e-01       1 3.402
+#&gt;    50   parent     0.69   0.70375 -1.375e-02       1 3.402
+#&gt;    50   parent     0.63   0.70375 -7.375e-02       1 3.402
+#&gt;    75   parent     0.05   0.05913 -9.134e-03       1 3.402
+#&gt;    75   parent     0.06   0.05913  8.662e-04       1 3.402
+#&gt;     0       m1     0.00   0.00000  0.000e+00       2 2.722
+#&gt;     0       m1     0.00   0.00000  0.000e+00       2 2.722
+#&gt;     1       m1     4.84   4.81328  2.672e-02       2 2.722
+#&gt;     1       m1     5.64   4.81328  8.267e-01       2 2.722
+#&gt;     3       m1    12.91  13.04779 -1.378e-01       2 2.722
+#&gt;     3       m1    12.96  13.04779 -8.779e-02       2 2.722
+#&gt;     7       m1    22.97  25.07615 -2.106e+00       2 2.722
+#&gt;     7       m1    24.47  25.07615 -6.062e-01       2 2.722
+#&gt;    14       m1    41.69  36.70729  4.983e+00       2 2.722
+#&gt;    14       m1    33.21  36.70729 -3.497e+00       2 2.722
+#&gt;    21       m1    44.37  41.65050  2.720e+00       2 2.722
+#&gt;    21       m1    46.44  41.65050  4.790e+00       2 2.722
+#&gt;    35       m1    41.22  43.28866 -2.069e+00       2 2.722
+#&gt;    35       m1    37.95  43.28866 -5.339e+00       2 2.722
+#&gt;    50       m1    41.19  41.19339 -3.386e-03       2 2.722
+#&gt;    50       m1    40.01  41.19339 -1.183e+00       2 2.722
+#&gt;    75       m1    40.09  36.43820  3.652e+00       2 2.722
+#&gt;    75       m1    33.85  36.43820 -2.588e+00       2 2.722
+#&gt;   100       m1    31.04  31.98971 -9.497e-01       2 2.722
+#&gt;   100       m1    33.13  31.98971  1.140e+00       2 2.722
+#&gt;   120       m1    25.15  28.80897 -3.659e+00       2 2.722
+#&gt;   120       m1    33.31  28.80897  4.501e+00       2 2.722</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -1319,6 +1327,8 @@
       <li><a href="#note">Note</a></li>
 
       <li><a href="#note">Note</a></li>
+
+      <li><a href="#source">Source</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

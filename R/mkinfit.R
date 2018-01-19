@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2016 Johannes Ranke
+# Copyright (C) 2010-2018 Johannes Ranke
 # Portions of this code are copyright (C) 2013 Eurofins Regulatory AG
 # Contact: jranke@uni-bremen.de
 # The summary function is an adapted and extended version of summary.modFit
@@ -36,7 +36,10 @@ mkinfit <- function(mkinmod, observed,
   transform_rates = TRUE,
   transform_fractions = TRUE,
   plot = FALSE, quiet = FALSE,
-  err = NULL, weight = "none", scaleVar = FALSE,
+  err = NULL, 
+  weight = c("none", "std", "mean", "tc"),
+  tc = c(sigma_low = 0.5, rsd_high = 0.07),
+  scaleVar = FALSE,
   atol = 1e-8, rtol = 1e-10, n.outtimes = 100,
   reweight.method = NULL,
   reweight.tol = 1e-8, reweight.max.iter = 10,
@@ -77,8 +80,9 @@ mkinfit <- function(mkinmod, observed,
   # Get the names of observed variables
   obs_vars <- names(mkinmod$spec)
 
-  # Subset observed data with names of observed data in the model
+  # Subset observed data with names of observed data in the model and remove NA values
   observed <- subset(observed, name %in% obs_vars)
+  observed <- subset(observed, !is.na(value))
 
   # Obtain data for decline from maximum mean value if requested
   if (from_max_mean) {
@@ -249,11 +253,17 @@ mkinfit <- function(mkinmod, observed,
 
   # Define outtimes for model solution.
   # Include time points at which observed data are available
-  # Make sure we include time 0, so initial values for state variables are for time 0
   outtimes = sort(unique(c(observed$time, seq(min(observed$time),
                                               max(observed$time),
                                               length.out = n.outtimes))))
 
+  weight.ini <- weight <- match.arg(weight)
+  if (weight.ini == "tc") {
+     observed$err = sigma_rl(observed$value, tc["sigma_low"], tc["rsd_high"])
+     err <- "err"
+  } else {
+    if (!is.null(err)) weight.ini = "manual"
+  }
 
   cost.old <- 1e100 # The first model cost should be smaller than this value
   calls <- 0 # Counter for number of model solutions
@@ -387,33 +397,73 @@ mkinfit <- function(mkinmod, observed,
 
     # Reiterate the fit until convergence of the variance components (IRLS)
     # if requested by the user
-    weight.ini = weight
-    if (!is.null(err)) weight.ini = "manual"
 
     if (!is.null(reweight.method)) {
-      if (reweight.method != "obs") stop("Only reweighting method 'obs' is implemented")
-      if(!quiet) {
-        cat("IRLS based on variance estimates for each observed variable\n")
+      if (! reweight.method %in% c("obs", "tc")) stop("Only reweighting methods 'obs' and 'tc' are implemented")
+
+      if (reweight.method  == "obs") {
+        if(!quiet) {
+          cat("IRLS based on variance estimates for each observed variable\n")
+          cat("Initial variance estimates are:\n")
+          print(signif(fit$var_ms_unweighted, 8))
+        }
       }
-      if (!quiet) {
-        cat("Initial variance estimates are:\n")
-        print(signif(fit$var_ms_unweighted, 8))
+      if (reweight.method  == "tc") {
+        # We need unweighted residuals to update the weighting
+        cost_tmp <- cost(fit$par)
+
+        tc_fit <- nls(abs(res.unweighted) ~ sigma_rl(obs, sigma_low, rsd_high),
+          start = list(sigma_low = tc["sigma_low"], rsd_high = tc["rsd_high"]),
+          data = cost_tmp$residuals,
+          algorithm = "port")
+
+        tc_fitted <- coef(tc_fit)
+        if(!quiet) {
+          cat("IRLS based on variance estimates according to the Rocke and Lorenzato model\n")
+          cat("Initial variance components are:\n")
+          print(signif(tc_fitted))
+        }
       }
       reweight.diff = 1
       n.iter <- 0
       if (!is.null(err)) observed$err.ini <- observed[[err]]
       err = "err.irls"
+
       while (reweight.diff > reweight.tol & n.iter < reweight.max.iter) {
         n.iter <- n.iter + 1
-        sigma.old <- sqrt(fit$var_ms_unweighted)
-        observed[err] <- sqrt(fit$var_ms_unweighted)[as.character(observed$name)]
+        # Store squared residual predictors used for weighting in sr_old and define new weights
+        if (reweight.method == "obs") {
+          sr_old <- fit$var_ms_unweighted
+          observed[err] <- sqrt(fit$var_ms_unweighted[as.character(observed$name)])
+        }
+        if (reweight.method == "tc") {
+          sr_old <- tc_fitted
+          observed[err] <- predict(tc_fit)
+                                        
+        }
         fit <- modFit(cost, fit$par, method = method.modFit,
                       control = control.modFit, lower = lower, upper = upper, ...)
-        reweight.diff = sum((sqrt(fit$var_ms_unweighted) - sigma.old)^2)
+
+        if (reweight.method == "obs") {
+          sr_new <- fit$var_ms_unweighted
+        }
+        if (reweight.method == "tc") {
+          cost_tmp <- cost(fit$par)
+
+          tc_fit <- nls(abs(res.unweighted) ~ sigma_rl(obs, sigma_low, rsd_high),
+            start = as.list(tc_fitted),
+            data = cost_tmp$residuals,
+            algorithm = "port")
+
+          tc_fitted <- coef(tc_fit)
+          sr_new <- tc_fitted
+        }
+
+        reweight.diff = sum((sr_new - sr_old)^2)
         if (!quiet) {
           cat("Iteration", n.iter, "yields variance estimates:\n")
-          print(signif(fit$var_ms_unweighted, 8))
-          cat("Sum of squared differences to last variance estimates:",
+          print(signif(sr_new, 8))
+          cat("Sum of squared differences to last variance (component) estimates:",
               signif(reweight.diff, 2), "\n")
         }
       }
@@ -530,9 +580,11 @@ mkinfit <- function(mkinmod, observed,
   fit$atol <- atol
   fit$rtol <- rtol
   fit$weight.ini <- weight.ini
+  fit$tc.ini <- tc
   fit$reweight.method <- reweight.method
   fit$reweight.tol <- reweight.tol
   fit$reweight.max.iter <- reweight.max.iter
+  if (exists("tc_fitted")) fit$tc_fitted <- tc_fitted
 
   # Return different sets of backtransformed parameters for summary and plotting
   fit$bparms.optim <- bparms.optim
@@ -624,6 +676,9 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
     use_of_ff = object$mkinmod$use_of_ff,
     weight.ini = object$weight.ini,
     reweight.method = object$reweight.method,
+    tc.ini = object$tc.ini,
+    var_ms_unweighted = object$var_ms_unweighted,
+    tc_fitted = object$tc_fitted,
     residuals = object$residuals,
     residualVariance = resvar,
     sigma = sqrt(resvar),
@@ -679,9 +734,23 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
       "using", x$calls, "model solutions performed in", x$time[["elapsed"]],  "s\n")
 
   cat("\nWeighting:", x$weight.ini)
-  if(!is.null(x$reweight.method)) cat(" then iterative reweighting method",
-                                      x$reweight.method)
-  cat("\n")
+  if (x$weight.ini == "tc")  {
+    cat(" with variance components\n")
+    print(x$tc.ini)
+  } else {
+    cat ("\n")
+  }
+  if(!is.null(x$reweight.method)) {
+    cat("\nIterative reweighting with method", x$reweight.method, "\n")
+    if (x$reweight.method == "obs") {
+      cat("Final mean squared residuals of observed variables:\n")
+      print(x$var_ms_unweighted)
+    }
+    if (x$reweight.method == "tc") {
+      cat("Final components of fitted standard deviation:\n")
+      print(x$tc_fitted)
+    }
+  }
 
   cat("\nStarting values for parameters to be optimised:\n")
   print(x$start)

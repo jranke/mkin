@@ -1,3 +1,11 @@
+# mkin 0.9.47.1 (2017-01-30)
+
+- 'test_data_from_UBA_2014': Added this list of datasets containing experimental data used in the expertise from 2014
+
+- 'mkinfit': Added the iterative reweighting method 'tc' using the two-component error model from Rocke and Lorenzato. NA values in the data are not returned any more.
+
+- 'summary.mkinfit': Improved output regarding weighting method. No predictions are returned for NA values in the model (see above).
+
 # mkin 0.9.46.3 (2017-11-16)
 
 - `README.md`, `vignettes/mkin.Rmd`: URLs were updated

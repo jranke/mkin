@@ -30,7 +30,9 @@ mkinfit(mkinmod, observed,
   control.modFit = list(),
   transform_rates = TRUE,
   transform_fractions = TRUE,
-  plot = FALSE, quiet = FALSE, err = NULL, weight = "none",
+  plot = FALSE, quiet = FALSE, err = NULL, 
+  weight = c("none", "std", "mean", "tc"),
+  tc = c(sigma_low = 0.5, rsd_high = 0.07),
   scaleVar = FALSE,
   atol = 1e-8, rtol = 1e-10, n.outtimes = 100,
   reweight.method = NULL,
@@ -176,8 +178,11 @@ mkinfit(mkinmod, observed,
   }
   \item{weight}{
     only if \code{err}=\code{NULL}: how to weight the residuals, one of "none",
-    "std", "mean", see details of \code{\link{modCost}}.
+    "std", "mean", see details of \code{\link{modCost}}, or "tc" for the 
+    two component error model of Rocke and Lorenzato.
   }
+  \item{tc}{The two components of the Rocke and Lorenzato error model as used
+    for (initial) weighting}.
   \item{scaleVar}{
     Will be passed to \code{\link{modCost}}. Default is not to scale Variables
     according to the number of observations.
@@ -199,12 +204,19 @@ mkinfit(mkinmod, observed,
   \item{reweight.method}{
     The method used for iteratively reweighting residuals, also known
     as iteratively reweighted least squares (IRLS). Default is NULL,
-    the other method implemented is called "obs", meaning that each
-    observed variable is assumed to have its own variance, this is
-    estimated from the fit and used for weighting the residuals
-    in each iteration until convergence of this estimate up to
+    i.e. no iterative weighting.
+    The first reweighting method is called "obs", meaning that each
+    observed variable is assumed to have its own variance. This variance
+    is estimated from the fit (mean squared residuals) and used for weighting
+    the residuals in each iteration until convergence of this estimate up to
     \code{reweight.tol} or up to the maximum number of iterations
     specified by \code{reweight.max.iter}.
+    The second reweighting method is called "tc" (two-component error model).
+    When using this method, the two components of the error model according
+    to Rocke and Lorenzato (1995) are estimated from the fit and the resulting
+    variances are used for weighting the residuals in each iteration until
+    convergence of these components or up to the maximum number of iterations
+    specified.
   }
   \item{reweight.tol}{
     Tolerance for convergence criterion for the variance components
@@ -242,6 +254,10 @@ mkinfit(mkinmod, observed,
   "transform_rates = TRUE" (the default) often leads to failures of the
   numerical ODE solver. In this situation it may help to switch off the
   internal rate transformation.
+}
+\source{
+  Rocke, David M. und Lorenzato, Stefan (1995) A two-component model for
+  measurement error in analytical chemistry. Technometrics 37(2), 176-184.
 }
 \author{
   Johannes Ranke
