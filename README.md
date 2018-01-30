@@ -89,6 +89,10 @@ and at [R-Forge](http://kinfit.r-forge.r-project.org/mkin_static/index.html).
   `reweight.method = "obs"` to your call to `mkinfit` and a separate variance
   componenent for each of the observed variables will be optimised
   in a second stage after the primary optimisation algorithm has converged.
+* Iterative reweighting is also possible using the two-component error model
+  for analytical data of 
+  [Rocke and Lorenzato](http://kinfit.r-forge.r-project.org/mkin_static/reference/sigma_rl.html)
+  using the argument `reweight.method = "tc"`.
 * When a metabolite decline phase is not described well by SFO kinetics,
   SFORB kinetics can be used for the metabolite.
 
