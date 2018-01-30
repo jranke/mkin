@@ -3,9 +3,10 @@
 \title{ Two component error model of Rocke and Lorenzato}
 \description{
   Function describing the standard deviation of the measurement error 
-  in dependence of the measured value:
+  in dependence of the measured value \eqn{y}:
 
-    \eqn{sigma = sqrt(sigma_low^2 + y^2 * rsd_high^2)}
+    \deqn{\sigma = \sqrt{ \sigma_{low}^2 + y^2 * {rsd}_{high}^2}}{%
+      sigma = sqrt(sigma_low^2 + y^2 * rsd_high^2)}
 }
 \usage{
 sigma_rl(y, sigma_low, rsd_high)
