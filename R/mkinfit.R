@@ -597,6 +597,8 @@ mkinfit <- function(mkinmod, observed,
   names(fit$bparms.state) <- gsub("_0$", "", names(fit$bparms.state))
 
   fit$date <- date()
+  fit$version <- as.character(utils::packageVersion("mkin"))
+  fit$Rversion <- paste(R.version$major, R.version$minor, sep=".")
 
   class(fit) <- c("mkinfit", "modFit")
   return(fit)
@@ -694,6 +696,11 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
     par = param,
     bpar = bparam)
 
+  if (!is.null(object$version)) {
+    ans$fit_version <- object$version
+    ans$fit_Rversion <- object$Rversion
+  }
+
   ans$diffs <- object$mkinmod$diffs
   if(data) ans$data <- object$data
   ans$start <- object$start
@@ -715,8 +722,14 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
 
 # Expanded from print.summary.modFit
 print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), ...) {
-  cat("mkin version:   ", x$version, "\n")
-  cat("R version:      ", x$Rversion, "\n")
+  if (is.null(x$fit_version)) {
+    cat("mkin version:   ", x$version, "\n")
+    cat("R version:      ", x$Rversion, "\n")
+  } else {
+    cat("mkin version used for fitting:   ", x$fit_version, "\n")
+    cat("R version used for fitting:      ", x$fit_Rversion, "\n")
+  }
+
   cat("Date of fit:    ", x$date.fit, "\n")
   cat("Date of summary:", x$date.summary, "\n")
 
