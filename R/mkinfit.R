@@ -36,7 +36,7 @@ mkinfit <- function(mkinmod, observed,
   transform_rates = TRUE,
   transform_fractions = TRUE,
   plot = FALSE, quiet = FALSE,
-  err = NULL, 
+  err = NULL,
   weight = c("none", "std", "mean", "tc"),
   tc = c(sigma_low = 0.5, rsd_high = 0.07),
   scaleVar = FALSE,
@@ -439,7 +439,7 @@ mkinfit <- function(mkinmod, observed,
         if (reweight.method == "tc") {
           sr_old <- tc_fitted
           observed[err] <- predict(tc_fit)
-                                        
+
         }
         fit <- modFit(cost, fit$par, method = method.modFit,
                       control = control.modFit, lower = lower, upper = upper, ...)
@@ -483,13 +483,22 @@ mkinfit <- function(mkinmod, observed,
       if(!quiet) cat("Optimisation by method", method.modFit, "successfully terminated.\n")
     }
   }
-  if (method.modFit %in% c("Port", "SANN", "Nelder-Mead", "BFGS", "CG", "L-BFGS-B")) {
+  if (method.modFit == "Port") {
+    if (fit$convergence != 0) {
+      fit$warning = paste0("Optimisation by method ", method.modFit,
+                           " did not converge:\n",
+                           if(is.character(fit$counts)) fit$counts # FME bug
+                           else fit$message)
+      warning(fit$warning)
+    } else {
+      if(!quiet) cat("Optimisation by method", method.modFit, "successfully terminated.\n")
+    }
+  }
+  if (method.modFit %in% c("SANN", "Nelder-Mead", "BFGS", "CG", "L-BFGS-B")) {
     if (fit$convergence != 0) {
       fit$warning = paste0("Optimisation by method ", method.modFit,
                            " did not converge.\n",
-                           "Convergence code is ", fit$convergence,
-                           ifelse(is.null(fit$message), "",
-                                  paste0("\nMessage is ", fit$message)))
+                           "Convergence code returned by optim() is", fit$convergence)
       warning(fit$warning)
     } else {
       if(!quiet) cat("Optimisation by method", method.modFit, "successfully terminated.\n")
