@@ -1,4 +1,4 @@
-# mkin 0.9.47.1 (2017-02-02)
+# mkin 0.9.47.1 (2017-02-06)
 
 - 'test_data_from_UBA_2014': Added this list of datasets containing experimental data used in the expertise from 2014
 
