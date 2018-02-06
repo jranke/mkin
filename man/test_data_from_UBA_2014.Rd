@@ -31,12 +31,11 @@
   # model).
   m_ws <- mkinmod(parent_w = mkinsub("SFO", "parent_s"),
                   parent_s = mkinsub("SFO", "parent_w"))
-  f_river <- mkinfit(m_ws, test_data_from_UBA_2014[[1]]$data)
+  f_river <- mkinfit(m_ws, test_data_from_UBA_2014[[1]]$data, quiet = TRUE)
   plot_sep(f_river)
 
   summary(f_river)$bpar
   mkinerrmin(f_river)
-  }
 
   # This is the evaluation used for the validation of software packages
   # in the expertise from 2014
@@ -46,9 +45,10 @@
                     M3 = mkinsub("SFO"),
                     use_of_ff = "max")
 
-  f_soil <- mkinfit(m_soil, test_data_from_UBA_2014[[3]]$data)
+  f_soil <- mkinfit(m_soil, test_data_from_UBA_2014[[3]]$data, quiet = TRUE)
   plot_sep(f_soil, lpos = c("topright", "topright", "topright", "bottomright"))
   summary(f_soil)$bpar
   mkinerrmin(f_soil)
+  }
 }
 \keyword{datasets}

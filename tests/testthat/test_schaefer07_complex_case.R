@@ -1,4 +1,4 @@
-# Copyright (C) 2014-2015 Johannes Ranke
+# Copyright (C) 2014-2015,2018 Johannes Ranke
 # Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
@@ -20,19 +20,20 @@
 
 context("Complex test case from Schaefer et al. (2007) Piacenza paper")
 
-schaefer07_complex_model <- mkinmod(
-  parent = list(type = "SFO", to = c("A1", "B1", "C1"), sink = FALSE),
-  A1 = list(type = "SFO", to = "A2"),
-  B1 = list(type = "SFO"),
-  C1 = list(type = "SFO"),
-  A2 = list(type = "SFO"), use_of_ff = "max", quiet = TRUE)
-
-schaefer07_long <- mkin_wide_to_long(schaefer07_complex_case, time = "time")
-
-fit.default <- mkinfit(schaefer07_complex_model, schaefer07_long, quiet = TRUE)
-
 test_that("Complex test case from Schaefer (2007) can be reproduced (10% tolerance)", {
   
+  skip_on_cran()         
+  schaefer07_complex_model <- mkinmod(
+    parent = list(type = "SFO", to = c("A1", "B1", "C1"), sink = FALSE),
+    A1 = list(type = "SFO", to = "A2"),
+    B1 = list(type = "SFO"),
+    C1 = list(type = "SFO"),
+    A2 = list(type = "SFO"), use_of_ff = "max", quiet = TRUE)
+
+  schaefer07_long <- mkin_wide_to_long(schaefer07_complex_case, time = "time")
+
+  fit.default <- mkinfit(schaefer07_complex_model, schaefer07_long, quiet = TRUE)
+
   s <- summary(fit.default)
   r <- schaefer07_complex_results
 
@@ -57,12 +58,11 @@ test_that("Complex test case from Schaefer (2007) can be reproduced (10% toleran
   r$means <- (r$KinGUI + r$ModelMaker)/2
   r$mkin.deviation <- abs(round(100 * ((r$mkin - r$means)/r$means), digits=1))
   expect_equal(r$mkin.deviation < 10, rep(TRUE, 14))
-})
 
-test_that("We avoid the local minumum with default settings", {
   # If we use optimisation algorithm 'Marq' we get a local minimum with a
   # sum of squared residuals of 273.3707
   # When using 'Marq', we need to give a good starting estimate e.g. for k_A2 in
   # order to get the optimum with sum of squared residuals 240.5686
   expect_equal(round(fit.default$ssr, 4), 240.5686)
 })
+

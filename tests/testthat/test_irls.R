@@ -34,12 +34,14 @@ SFO_lin_a <- synthetic_data_for_UBA_2014[[1]]$data
 DFOP_par_c <- synthetic_data_for_UBA_2014[[12]]$data
 
 test_that("Reweighting method 'obs' works", {
+  skip_on_cran()
   fit_irls_1 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, reweight.method = "obs", quiet = TRUE)
   parms_1 <- round(fit_irls_1$bparms.optim, c(1, 4, 4, 4, 4, 4))
   expect_equivalent(parms_1, c(102.1, 0.7389, 0.2982, 0.0203, 0.7677, 0.7246))
 })
 
 test_that("Reweighting method 'tc' works", {
+  skip_on_cran()
   fit_irls_2 <- mkinfit(m_synth_DFOP_par, DFOP_par_c, reweight.method = "tc", quiet = TRUE)
   parms_2 <- signif(fit_irls_2$bparms.optim, 3)
   expect_equivalent(parms_2, c(99.3, 0.041, 0.00962, 0.597, 0.393, 0.298, 0.0203, 0.707))
