@@ -27,12 +27,12 @@ detailed guidance and helpful tools have been developed as detailed in
 ## Usage
 
 For a start, have a look a the code examples provided for
-[`plot.mkinfit`](http://kinfit.r-forge.r-project.org/mkin_static/reference/plot.mkinfit.html)
+[`plot.mkinfit`](https://pkgdown.jrwb.de/mkin/reference/plot.mkinfit.html)
 and
-[`plot.mmkin`](http://kinfit.r-forge.r-project.org/mkin_static/reference/plot.mmkin.html), and
+[`plot.mmkin`](https://pkgdown.jrwb.de/mkin/reference/plot.mmkin.html), and
 at the package vignettes
-[`FOCUS L`](http://kinfit.r-forge.r-project.org/mkin_static/articles/FOCUS_L.html) and
-[`FOCUS D`](http://kinfit.r-forge.r-project.org/mkin_static/articles/FOCUS_D.html).
+[`FOCUS L`](https://pkgdown.jrwb.de/mkin/articles/FOCUS_L.html) and
+[`FOCUS D`](https://pkgdown.jrwb.de/mkin/articles/FOCUS_D.html).
 
 ## Documentation
 
@@ -44,28 +44,28 @@ and at [R-Forge](http://kinfit.r-forge.r-project.org/mkin_static/index.html).
 ## Features
 
 * Highly flexible model specification using
-  [`mkinmod`](http://kinfit.r-forge.r-project.org/mkin_static/reference/mkinmod.html),
+  [`mkinmod`](https://pkgdown.jrwb.de/mkin/reference/mkinmod.html),
   including equilibrium reactions and using the single first-order
   reversible binding (SFORB) model, which will automatically create
   two latent state variables for the observed variable.
 * As of version 0.9-39, fitting of several models to several datasets, optionally in
   parallel, is supported, see for example
-  [`plot.mmkin`](http://kinfit.r-forge.r-project.org/mkin_static/reference/plot.mmkin.html).
+  [`plot.mmkin`](https://pkgdown.jrwb.de/mkin/reference/plot.mmkin.html).
 * Model solution (forward modelling) in the function
-  [`mkinpredict`](http://kinfit.r-forge.r-project.org/mkin_static/reference/mkinpredict.html)
+  [`mkinpredict`](https://pkgdown.jrwb.de/mkin/reference/mkinpredict.html)
   is performed either using the analytical solution for the case of
   parent only degradation, an eigenvalue based solution if only simple
   first-order (SFO) or SFORB kinetics are used in the model, or
   using a numeric solver from the `deSolve` package (default is `lsoda`).
 * If a C compiler is installed, the kinetic models are compiled from automatically
   generated C code, see
-  [vignette `compiled_models`](http://kinfit.r-forge.r-project.org/mkin_static/articles/compiled_models.html).
+  [vignette `compiled_models`](https://pkgdown.jrwb.de/mkin/articles/compiled_models.html).
   The autogeneration of C code was
   inspired by the [`ccSolve`](https://github.com/karlines/ccSolve) package. Thanks
   to Karline Soetaert for her work on that.
 * By default, kinetic rate constants and kinetic formation fractions are
   transformed internally using
-  [`transform_odeparms`](http://kinfit.r-forge.r-project.org/mkin_static/reference/transform_odeparms.html)
+  [`transform_odeparms`](https://pkgdown.jrwb.de/mkin/reference/transform_odeparms.html)
   so their estimators can more reasonably be expected to follow
   a normal distribution. This has the side effect that no constraints
   are needed in the optimisation. Thanks to René Lehmann for the nice
@@ -90,8 +90,8 @@ and at [R-Forge](http://kinfit.r-forge.r-project.org/mkin_static/index.html).
   componenent for each of the observed variables will be optimised
   in a second stage after the primary optimisation algorithm has converged.
 * Iterative reweighting is also possible using the two-component error model
-  for analytical data of 
-  [Rocke and Lorenzato](http://kinfit.r-forge.r-project.org/mkin_static/reference/sigma_rl.html)
+  for analytical data of
+  [Rocke and Lorenzato](https://pkgdown.jrwb.de/mkin/reference/sigma_rl.html)
   using the argument `reweight.method = "tc"`.
 * When a metabolite decline phase is not described well by SFO kinetics,
   SFORB kinetics can be used for the metabolite.
