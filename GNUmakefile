@@ -85,8 +85,8 @@ pd_articles:
 	git commit -m 'Static documentation articles rebuilt by pkgdown::build_articles()' -e
 
 r-forge:
-	git archive master > $(HOME)/mkin.tar;\
-	cd $(RFDIR) && rm -r `ls` && tar -xf $(HOME)/mkin.tar;\
+	git archive master > $(HOME)/git/mkin/mkin.tar;\
+	cd $(RFDIR) && rm -r `ls` && tar -xf $(HOME)/git/mkin/mkin.tar;\
 	rm -r $(SDDIR)/*;\
 	cp -a docs/* $(SDDIR);\
 	svn add --force .; svn rm --force `svn status | grep "\!" | cut -d " " -f 8`; cd $(RFSVN) && svn commit -m 'sync with git'
