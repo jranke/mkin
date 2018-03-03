@@ -18,12 +18,20 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+  
+  
+<meta property="og:title" content="Three experimental datasets from two water sediment systems and one soil — test_data_from_UBA_2014" />
 
+<meta property="og:description" content="The datasets were used for the comparative validation of several kinetic evaluation
+ software packages (Ranke, 2014)." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -123,7 +131,7 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
+    <pre class="examples"><div class='input'>  </div><span class='co'># NOT RUN {</span>
   <span class='co'># This is a level P-II evaluation of the dataset according to the FOCUS kinetics</span>
   <span class='co'># guidance. Due to the strong correlation of the parameter estimates, the</span>
   <span class='co'># covariance matrix is not returned. Note that level P-II evaluations are</span>
@@ -131,57 +139,27 @@
   <span class='co'># large parameter correlations, among other reasons (e.g. the adequacy of the</span>
   <span class='co'># model).</span>
   <span class='no'>m_ws</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent_w</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"parent_s"</span>),
-                  <span class='kw'>parent_s</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"parent_w"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>  <span class='no'>f_river</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>m_ws</span>, <span class='no'>test_data_from_UBA_2014</span><span class='kw'>[[</span><span class='fl'>1</span>]]$<span class='no'>data</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-  <span class='fu'><a href='plot.mkinfit.html'>plot_sep</a></span>(<span class='no'>f_river</span>)</div><img src='test_data_from_UBA_2014-4.png' alt='' width='540' height='400' /><div class='input'>
-  <span class='fu'>summary</span>(<span class='no'>f_river</span>)$<span class='no'>bpar</span></div><div class='output co'>#&gt;                         Estimate se_notrans      t value       Pr(&gt;t) Lower
-#&gt; parent_w_0          9.598567e+01 2.33959810 4.102657e+01 9.568973e-19    NA
-#&gt; k_parent_w_sink     3.603743e-01 0.03497716 1.030313e+01 4.988281e-09    NA
-#&gt; k_parent_w_parent_s 6.031370e-02 0.01746026 3.454342e+00 1.514738e-03    NA
-#&gt; k_parent_s_sink     5.099834e-11 0.10381939 4.912217e-10 5.000000e-01    NA
-#&gt; k_parent_s_parent_w 7.419672e-02 0.11338174 6.543974e-01 2.608057e-01    NA
-#&gt;                     Upper
-#&gt; parent_w_0             NA
-#&gt; k_parent_w_sink        NA
-#&gt; k_parent_w_parent_s    NA
-#&gt; k_parent_s_sink        NA
-#&gt; k_parent_s_parent_w    NA</div><div class='input'>  <span class='fu'><a href='mkinerrmin.html'>mkinerrmin</a></span>(<span class='no'>f_river</span>)</div><div class='output co'>#&gt;             err.min n.optim df
-#&gt; All data 0.09246946       5  6
-#&gt; parent_w 0.06377096       3  3
-#&gt; parent_s 0.20882324       2  3</div><div class='input'>
+                  <span class='kw'>parent_s</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"parent_w"</span>))
+  <span class='no'>f_river</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>m_ws</span>, <span class='no'>test_data_from_UBA_2014</span><span class='kw'>[[</span><span class='fl'>1</span>]]$<span class='no'>data</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+  <span class='fu'><a href='plot.mkinfit.html'>plot_sep</a></span>(<span class='no'>f_river</span>)
+
+  <span class='fu'>summary</span>(<span class='no'>f_river</span>)$<span class='no'>bpar</span>
+  <span class='fu'><a href='mkinerrmin.html'>mkinerrmin</a></span>(<span class='no'>f_river</span>)
+
   <span class='co'># This is the evaluation used for the validation of software packages</span>
   <span class='co'># in the expertise from 2014</span>
   <span class='no'>m_soil</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='fu'>c</span>(<span class='st'>"M1"</span>, <span class='st'>"M2"</span>)),
                     <span class='kw'>M1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"M3"</span>),
                     <span class='kw'>M2</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"M3"</span>),
                     <span class='kw'>M3</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>),
-                    <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
+                    <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)
+
   <span class='no'>f_soil</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>m_soil</span>, <span class='no'>test_data_from_UBA_2014</span><span class='kw'>[[</span><span class='fl'>3</span>]]$<span class='no'>data</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-  <span class='fu'><a href='plot.mkinfit.html'>plot_sep</a></span>(<span class='no'>f_soil</span>, <span class='kw'>lpos</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"topright"</span>, <span class='st'>"topright"</span>, <span class='st'>"topright"</span>, <span class='st'>"bottomright"</span>))</div><img src='test_data_from_UBA_2014-12.png' alt='' width='540' height='400' /><div class='input'>  <span class='fu'>summary</span>(<span class='no'>f_soil</span>)$<span class='no'>bpar</span></div><div class='output co'>#&gt;                   Estimate  se_notrans    t value       Pr(&gt;t)        Lower
-#&gt; parent_0       76.55425583 0.943443834 81.1434164 4.422340e-30 74.602593306
-#&gt; k_parent        0.12081956 0.004815515 25.0896457 1.639665e-18  0.111257526
-#&gt; k_M1            0.84258650 0.930121206  0.9058889 1.871937e-01  0.085876305
-#&gt; k_M2            0.04210878 0.013729902  3.0669396 2.729137e-03  0.021450631
-#&gt; k_M3            0.01122919 0.008044866  1.3958205 8.804914e-02  0.002550985
-#&gt; f_parent_to_M1  0.32240199 0.278620411  1.1571370 1.295466e-01           NA
-#&gt; f_parent_to_M2  0.16099854 0.030548889  5.2701930 1.196191e-05           NA
-#&gt; f_M1_to_M3      0.27921500 0.314732717  0.8871496 1.920907e-01  0.015016888
-#&gt; f_M2_to_M3      0.55641332 0.650247079  0.8556952 2.004966e-01  0.005360551
-#&gt;                      Upper
-#&gt; parent_0       78.50591836
-#&gt; k_parent        0.13120340
-#&gt; k_M1            8.26714671
-#&gt; k_M2            0.08266187
-#&gt; k_M3            0.04942980
-#&gt; f_parent_to_M1          NA
-#&gt; f_parent_to_M2          NA
-#&gt; f_M1_to_M3      0.90777217
-#&gt; f_M2_to_M3      0.99658634</div><div class='input'>  <span class='fu'><a href='mkinerrmin.html'>mkinerrmin</a></span>(<span class='no'>f_soil</span>)</div><div class='output co'>#&gt;             err.min n.optim df
-#&gt; All data 0.09649963       9 20
-#&gt; parent   0.04721283       2  6
-#&gt; M1       0.26551209       2  5
-#&gt; M2       0.20327575       2  5
-#&gt; M3       0.05196549       3  4</div><div class='input'>  
-</div></pre>
+  <span class='fu'><a href='plot.mkinfit.html'>plot_sep</a></span>(<span class='no'>f_soil</span>, <span class='kw'>lpos</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"topright"</span>, <span class='st'>"topright"</span>, <span class='st'>"topright"</span>, <span class='st'>"bottomright"</span>))
+  <span class='fu'>summary</span>(<span class='no'>f_soil</span>)$<span class='no'>bpar</span>
+  <span class='fu'><a href='mkinerrmin.html'>mkinerrmin</a></span>(<span class='no'>f_soil</span>)
+
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -203,7 +181,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

@@ -18,12 +18,19 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+  
+  
+<meta property="og:title" content="Subsetting method for mmkin objects — [.mmkin" />
 
+<meta property="og:description" content="Subsetting method for mmkin objects." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -70,6 +77,9 @@
       <a href="../articles/FOCUS_L.html">Example evaluation of FOCUS Laboratory Data L1 to L3</a>
     </li>
     <li>
+      <a href="../articles/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
+    </li>
+    <li>
       <a href="../articles/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
     </li>
     <li>
@@ -83,12 +93,7 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="http://github.com/jranke/mkin">
-    <span class="fa fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -147,16 +152,16 @@
                 <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
   <span class='no'>fits</span>[<span class='st'>"FOMC"</span>, ]</div><div class='output co'>#&gt;       dataset
 #&gt; model  B       C      
-#&gt;   FOMC List,42 List,42
+#&gt;   FOMC List,45 List,45
 #&gt; attr(,"class")
 #&gt; [1] "mmkin"</div><div class='input'>  <span class='no'>fits</span>[, <span class='st'>"B"</span>]</div><div class='output co'>#&gt;       dataset
 #&gt; model  B      
-#&gt;   SFO  List,42
-#&gt;   FOMC List,42
+#&gt;   SFO  List,45
+#&gt;   FOMC List,45
 #&gt; attr(,"class")
 #&gt; [1] "mmkin"</div><div class='input'>  <span class='no'>fits</span>[<span class='st'>"SFO"</span>, <span class='st'>"B"</span>]</div><div class='output co'>#&gt;      dataset
 #&gt; model B      
-#&gt;   SFO List,42
+#&gt;   SFO List,45
 #&gt; attr(,"class")
 #&gt; [1] "mmkin"</div><div class='input'>
   <span class='fu'>head</span>(
@@ -164,7 +169,7 @@
     <span class='no'>fits</span><span class='kw'>[[</span><span class='st'>"FOMC"</span>, <span class='st'>"B"</span>]]
   )</div><div class='output co'>#&gt; $par
 #&gt;  parent_0 log_alpha  log_beta 
-#&gt; 99.666192  2.549849  5.050586 
+#&gt; 99.666193  2.549849  5.050586 
 #&gt; 
 #&gt; $ssr
 #&gt; [1] 28.58291
@@ -180,7 +185,7 @@
 #&gt;       25       78 
 #&gt; 
 #&gt; $counts
-#&gt; [1] "both X-convergence and relative convergence (5)"
+#&gt; [1] "relative convergence (4)"
 #&gt; </div><div class='input'>
   <span class='fu'>head</span>(
   <span class='co'># The same can be achieved by</span>
@@ -258,7 +263,7 @@
 #&gt; 
 #&gt; $time
 #&gt;    user  system elapsed 
-#&gt;   0.064   0.000   0.063 
+#&gt;   0.058   0.000   0.057 
 #&gt; 
 #&gt; $mkinmod
 #&gt; &lt;mkinmod&gt; model generated with
@@ -398,7 +403,7 @@
 #&gt; {
 #&gt;     assign("calls", calls + 1, inherits = TRUE)
 #&gt;     if (trace_parms) 
-#&gt;         cat(P, "\\n")
+#&gt;         cat(P, "\n")
 #&gt;     if (length(state.ini.optim) &gt; 0) {
 #&gt;         odeini &lt;- c(P[1:length(state.ini.optim)], state.ini.fixed)
 #&gt;         names(odeini) &lt;- c(state.ini.optim.boxnames, state.ini.fixed.boxnames)
@@ -420,7 +425,7 @@
 #&gt;     if (mC$model &lt; cost.old) {
 #&gt;         if (!quiet) 
 #&gt;             cat("Model cost at call ", calls, ": ", mC$model, 
-#&gt;                 "\\n")
+#&gt;                 "\n")
 #&gt;         if (plot) {
 #&gt;             outtimes_plot = seq(min(observed$time), max(observed$time), 
 #&gt;                 length.out = 100)
@@ -447,8 +452,8 @@
 #&gt;     }
 #&gt;     return(mC)
 #&gt; }
-#&gt; &lt;bytecode: 0x560110508c60&gt;
-#&gt; &lt;environment: 0x56010f8d8c30&gt;
+#&gt; &lt;bytecode: 0x55555ad80908&gt;
+#&gt; &lt;environment: 0x55555b1b4b90&gt;
 #&gt; 
 #&gt; $cost_notrans
 #&gt; function (P) 
@@ -470,8 +475,8 @@
 #&gt;         scaleVar = scaleVar)
 #&gt;     return(mC)
 #&gt; }
-#&gt; &lt;bytecode: 0x56010fede550&gt;
-#&gt; &lt;environment: 0x56010f8d8c30&gt;
+#&gt; &lt;bytecode: 0x55555b174428&gt;
+#&gt; &lt;environment: 0x55555b1b4b90&gt;
 #&gt; 
 #&gt; $hessian_notrans
 #&gt;                   parent_0 k_parent_sink
@@ -512,6 +517,10 @@
 #&gt; $weight.ini
 #&gt; [1] "none"
 #&gt; 
+#&gt; $tc.ini
+#&gt; sigma_low  rsd_high 
+#&gt;      0.50      0.07 
+#&gt; 
 #&gt; $reweight.tol
 #&gt; [1] 1e-08
 #&gt; 
@@ -534,7 +543,13 @@
 #&gt; 99.17407 
 #&gt; 
 #&gt; $date
-#&gt; [1] "Sat Jul 29 15:14:04 2017"
+#&gt; [1] "Thu Mar  1 14:26:09 2018"
+#&gt; 
+#&gt; $version
+#&gt; [1] "0.9.47.1"
+#&gt; 
+#&gt; $Rversion
+#&gt; [1] "3.4.3"
 #&gt; 
 #&gt; attr(,"class")
 #&gt; [1] "mkinfit" "modFit" 
@@ -563,7 +578,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

@@ -18,12 +18,31 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+  
+  
+<meta property="og:title" content="Synthetic datasets for one parent compound with two metabolites — synthetic_data_for_UBA_2014" />
 
+<meta property="og:description" content="The 12 datasets were generated using four different models and three different
+ variance components. The four models are either the SFO or the DFOP model with either
+ two sequential or two parallel metabolites.
+Variance component 'a' is based on a normal distribution with standard deviation of 3,
+ Variance component 'b' is also based on a normal distribution, but with a standard deviation of 7.
+ Variance component 'c' is based on the error model from Rocke and Lorenzato (1995), with the
+ minimum standard deviation (for small y values) of 0.5, and a proportionality constant of 0.07
+ for the increase of the standard deviation with y.
+Initial concentrations for metabolites and all values where adding the variance component resulted
+ in a value below the assumed limit of detection of 0.1 were set to NA.
+As an example, the first dataset has the title SFO_lin_a and is based on the SFO model
+ with two sequential metabolites (linear pathway), with added variance component 'a'.
+Compare also the code in the example section to see the degradation models." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -136,7 +155,7 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
+    <pre class="examples"># NOT RUN {
 # The data have been generated using the following kinetic models
 m_synth_SFO_lin <- mkinmod(parent = list(type = "SFO", to = "M1"),
                            M1 = list(type = "SFO", to = "M2"),
@@ -235,11 +254,8 @@ fit <- mkinfit(m_synth_SFO_lin, synthetic_data_for_UBA_2014[[1]]$data,
                quiet = TRUE)
 plot_sep(fit)
 summary(fit)
-
-</div><div class='output co'>#&gt; <span class='error'>Error: &lt;text&gt;:68:43: Unerwartete(s) SPECIAL</span>
-#&gt; <span class='error'>67: </span>
-#&gt; <span class='error'>68:   d_rep[d_rep$time == 0 &amp; d_rep$name &lt;!-- %in%</span>
-#&gt; <span class='error'>                                              ^</span></div></pre>
+# }
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -261,7 +277,7 @@ summary(fit)
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
