@@ -59,6 +59,7 @@ quickcheck: build-no-vignettes
 clean:
 	$(RM) -r vignettes/*_cache
 	$(RM) -r vignettes/*_files
+	$(RM) -r vignettes/*.R
 	$(RM) Rplots.pdf
 
 test: quickinstall
@@ -73,9 +74,7 @@ vignettes/%.html: vignettes/mkin_vignettes.css vignettes/references.bib vignette
 vignettes: vignettes/mkin.html vignettes/FOCUS_D.html vignettes/FOCUS_L.html vignettes/FOCUS_Z.html vignettes/compiled_models.html
 
 pd:
-	"$(RBIN)/Rscript" -e "pkgdown::build_news()"
-	"$(RBIN)/Rscript" -e "pkgdown::build_reference(run_dont_run = TRUE)"
-	"$(RBIN)/Rscript" -e "pkgdown::build_home()"
+	"$(RBIN)/Rscript" -e "pkgdown::build_site()"
 	git add -A
 	git commit -m 'Static documentation except articles rebuilt by pkgdown' -e
 
