@@ -10,7 +10,7 @@
   software quality of KinGUI in the original publication (Schäfer et al., 2007).
   The results from the fitting are also included.
 }
-\usage{data(schaefer07_complex_case)}
+\usage{schaefer07_complex_case}
 \format{
   The data set is a data frame with 8 observations on the following 6 variables.
   \describe{

@@ -11,7 +11,7 @@ The results from fitting the data with the Topfit software was removed, as
 the initial concentration of the parent compound was fixed to a value of 100
 in this fit.
 }
-\usage{data(FOCUS_2006_DFOP_ref_A_to_B)}
+\usage{FOCUS_2006_DFOP_ref_A_to_B}
 \format{
   A data frame containing the following variables.
   \describe{
