@@ -1,4 +1,4 @@
-# mkin 0.9.47.1 (2017-02-06)
+# mkin 0.9.47.1 (2018-02-06)
 
 - Skip some test on CRAN and winbuilder to avoid timeouts
 
