@@ -23,7 +23,9 @@ mmkin(models, datasets,
   }
   \item{cores}{
     The number of cores to be used for multicore processing. This is only
-    used when the \code{cluster} argument is \code{NULL}.
+    used when the \code{cluster} argument is \code{NULL}. On Windows machines,
+    cores > 1 is not supported, you need to use the \code{cluster} argument
+    to use multiple logical processors.
   }
   \item{cluster}{
     A cluster as returned by \code{\link{makeCluster}} to be used for parallel
