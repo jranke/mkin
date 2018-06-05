@@ -21,12 +21,15 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+
+
+
 <meta property="og:title" content="Plot model fits (observed and fitted) and the residuals for a row or column of an mmkin object — plot.mmkin" />
 
 <meta property="og:description" content="When x is a row selected from an mmkin object ([.mmkin), the same model
@@ -35,6 +38,9 @@
 If the current plot device is a tikz device,
   then latex is being used for the formatting of the chi2 error level." />
 <meta name="twitter:card" content="summary" />
+
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -57,8 +63,12 @@ If the current plot device is a tikz device,
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">mkin</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">mkin</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.47.1</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -99,6 +109,7 @@ If the current plot device is a tikz device,
       <ul class="nav navbar-nav navbar-right">
         
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -106,12 +117,15 @@ If the current plot device is a tikz device,
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Plot model fits (observed and fitted) and the residuals for a row or column of an mmkin object</h1>
+    
+    <div class="hidden name"><code>plot.mmkin.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>When x is a row selected from an mmkin object (<code><a href='Extract.mmkin.html'>[.mmkin</a></code>), the same model
   fitted for at least one dataset is shown. When it is a column, the fit of at least one model
@@ -119,12 +133,13 @@ If the current plot device is a tikz device,
 <p>If the current plot device is a <code><a href='http://www.rdocumentation.org/packages/tikzDevice/topics/tikz'>tikz</a></code> device,
   then latex is being used for the formatting of the chi2 error level.</p>
     
+    </div>
 
     <pre class="usage"><span class='co'># S3 method for mmkin</span>
 <span class='fu'>plot</span>(<span class='no'>x</span>, <span class='kw'>main</span> <span class='kw'>=</span> <span class='st'>"auto"</span>, <span class='kw'>legends</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>errmin_var</span> <span class='kw'>=</span> <span class='st'>"All data"</span>, <span class='kw'>errmin_digits</span> <span class='kw'>=</span> <span class='fl'>3</span>,
               <span class='kw'>cex</span> <span class='kw'>=</span> <span class='fl'>0.7</span>, <span class='kw'>rel.height.middle</span> <span class='kw'>=</span> <span class='fl'>0.9</span>, <span class='no'>...</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -171,11 +186,11 @@ If the current plot device is a tikz device,
   <span class='no'>fits</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span>(<span class='fu'>c</span>(<span class='st'>"FOMC"</span>, <span class='st'>"HS"</span>),
                 <span class='fu'>list</span>(<span class='st'>"FOCUS B"</span> <span class='kw'>=</span> <span class='no'>FOCUS_2006_B</span>, <span class='st'>"FOCUS C"</span> <span class='kw'>=</span> <span class='no'>FOCUS_2006_C</span>), <span class='co'># named list for titles</span>
                 <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>method.modFit</span> <span class='kw'>=</span> <span class='st'>"Marq"</span>)
-  <span class='fu'>plot</span>(<span class='no'>fits</span>[, <span class='st'>"FOCUS C"</span>])</div><div class='img'><img src='plot.mmkin-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>  <span class='fu'>plot</span>(<span class='no'>fits</span>[<span class='st'>"FOMC"</span>, ])</div><div class='img'><img src='plot.mmkin-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+  <span class='fu'>plot</span>(<span class='no'>fits</span>[, <span class='st'>"FOCUS C"</span>])</div><div class='img'><img src='plot.mmkin-1.png' alt='' width='700' height='433' /></div><div class='input'>  <span class='fu'>plot</span>(<span class='no'>fits</span>[<span class='st'>"FOMC"</span>, ])</div><div class='img'><img src='plot.mmkin-2.png' alt='' width='700' height='433' /></div><div class='input'>
   <span class='co'># We can also plot a single fit, if we like the way plot.mmkin works, but then the plot</span>
   <span class='co'># height should be smaller than the plot width (this is not possible for the html pages</span>
   <span class='co'># generated by pkgdown, as far as I know).</span>
-  <span class='fu'>plot</span>(<span class='no'>fits</span>[<span class='st'>"FOMC"</span>, <span class='st'>"FOCUS C"</span>]) <span class='co'># same as plot(fits[1, 2])</span></div><div class='img'><img src='plot.mmkin-3.png' alt='' width='700' height='432.632880098887' /></div></pre>
+  <span class='fu'>plot</span>(<span class='no'>fits</span>[<span class='st'>"FOMC"</span>, <span class='st'>"FOCUS C"</span>]) <span class='co'># same as plot(fits[1, 2])</span></div><div class='img'><img src='plot.mmkin-3.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -205,6 +220,8 @@ If the current plot device is a tikz device,
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

@@ -21,12 +21,15 @@
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
+<!-- sticky kit -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+
+
+
 <meta property="og:title" content="Plot the observed data and the fitted model of an mkinfit object — plot.mkinfit" />
 
 <meta property="og:description" content="Solves the differential equations with the optimised and fixed parameters
@@ -36,6 +39,9 @@ If the current plot device is a tikz device,
   then latex is being used for the formatting of the chi2 error level, 
   if show_errmin = TRUE." />
 <meta name="twitter:card" content="summary" />
+
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -58,8 +64,12 @@ If the current plot device is a tikz device,
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">mkin</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">mkin</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.47.1</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -100,6 +110,7 @@ If the current plot device is a tikz device,
       <ul class="nav navbar-nav navbar-right">
         
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -107,12 +118,15 @@ If the current plot device is a tikz device,
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Plot the observed data and the fitted model of an mkinfit object</h1>
+    
+    <div class="hidden name"><code>plot.mkinfit.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Solves the differential equations with the optimised and fixed parameters
   from a previous successful call to <code><a href='mkinfit.html'>mkinfit</a></code> and plots
@@ -121,6 +135,7 @@ If the current plot device is a tikz device,
   then latex is being used for the formatting of the chi2 error level, 
   if <code>show_errmin = TRUE</code>.</p>
     
+    </div>
 
     <pre class="usage"># S3 method for mkinfit
 plot(x, fit = x,
@@ -137,7 +152,7 @@ plot(x, fit = x,
   show_errmin = FALSE, errmin_digits = 3, &#8230;)
 plot_sep(fit, sep_obs = TRUE,  show_residuals = TRUE, show_errmin = TRUE, &#8230;)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -244,12 +259,12 @@ plot_sep(fit, sep_obs = TRUE,  show_residuals = TRUE, show_errmin = TRUE, &#8230
 <span class='co'># parent to sink included, use Levenberg-Marquardt for speed</span>
 <span class='no'>SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>, <span class='kw'>full</span> <span class='kw'>=</span> <span class='st'>"Parent"</span>),
                    <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='kw'>full</span> <span class='kw'>=</span> <span class='st'>"Metabolite M1"</span> ))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>method.modFit</span> <span class='kw'>=</span> <span class='st'>"Marq"</span>)
-<span class='fu'>plot</span>(<span class='no'>fit</span>)</div><div class='img'><img src='plot.mkinfit-1.png' alt='' width='700' height='432.632880098887' /></div><div class='input'><span class='fu'>plot</span>(<span class='no'>fit</span>, <span class='kw'>show_residuals</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='plot.mkinfit-2.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='fu'>plot</span>(<span class='no'>fit</span>)</div><div class='img'><img src='plot.mkinfit-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot</span>(<span class='no'>fit</span>, <span class='kw'>show_residuals</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='plot.mkinfit-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Show the observed variables separately</span>
-<span class='fu'>plot</span>(<span class='no'>fit</span>, <span class='kw'>sep_obs</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>lpos</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"topright"</span>, <span class='st'>"bottomright"</span>))</div><div class='img'><img src='plot.mkinfit-3.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+<span class='fu'>plot</span>(<span class='no'>fit</span>, <span class='kw'>sep_obs</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>lpos</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"topright"</span>, <span class='st'>"bottomright"</span>))</div><div class='img'><img src='plot.mkinfit-3.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Show the observed variables separately, with residuals</span>
 <span class='fu'>plot</span>(<span class='no'>fit</span>, <span class='kw'>sep_obs</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>show_residuals</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>lpos</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"topright"</span>, <span class='st'>"bottomright"</span>),
-     <span class='kw'>show_errmin</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='plot.mkinfit-4.png' alt='' width='700' height='432.632880098887' /></div><div class='input'>
+     <span class='kw'>show_errmin</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='plot.mkinfit-4.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># The same can be obtained with less typing, using the convenience function plot_sep</span>
 <span class='fu'>plot_sep</span>(<span class='no'>fit</span>, <span class='kw'>lpos</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"topright"</span>, <span class='st'>"bottomright"</span>))</div></pre>
   </div>
@@ -281,6 +296,8 @@ plot_sep(fit, sep_obs = TRUE,  show_residuals = TRUE, show_errmin = TRUE, &#8230
 
       </footer>
    </div>
+
+  
 
   </body>
 </html>

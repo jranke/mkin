@@ -8,8 +8,8 @@
 <title>Example evaluation of FOCUS Example Dataset D • mkin</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="Example evaluation of FOCUS Example Dataset D">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Example evaluation of FOCUS Example Dataset D">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
@@ -18,7 +18,7 @@
 <![endif]-->
 </head>
 <body>
-    <div class="container template-vignette">
+    <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -27,8 +27,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">mkin</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">mkin</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.47.1</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
@@ -75,17 +79,20 @@
 
       
       </header><div class="row">
-  <div class="col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Example evaluation of FOCUS Example Dataset D</h1>
                         <h4 class="author">Johannes Ranke</h4>
             
-            <h4 class="date">2018-03-21</h4>
-          </div>
+            <h4 class="date">2018-06-06</h4>
+      
+      
+      <div class="hidden name"><code>FOCUS_D.Rmd</code></div>
+
+    </div>
 
     
     
-<div class="contents">
 <p>This is just a very simple vignette showing how to fit a degradation model for a parent compound with one transformation product using <code>mkin</code>. After loading the library we look a the data. We have observed concentrations in the column named <code>value</code> at the times specified in column <code>time</code> for the two observed variables named <code>parent</code> and <code>m1</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"mkin"</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
 <span class="kw">print</span>(FOCUS_<span class="dv">2006</span>_D)</code></pre></div>
@@ -153,10 +160,10 @@
 <p><img src="FOCUS_D_files/figure-html/plot_2-1.png" width="768"></p>
 <p>A comprehensive report of the results is obtained using the <code>summary</code> method for <code>mkinfit</code> objects.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(fit)</code></pre></div>
-<pre><code>## mkin version:    0.9.46.3 
-## R version:       3.4.3 
-## Date of fit:     Sun Mar 11 22:11:56 2018 
-## Date of summary: Sun Mar 11 22:11:57 2018 
+<pre><code>## mkin version used for fitting:    0.9.47.1 
+## R version used for fitting:       3.5.0 
+## Date of fit:     Wed Jun  6 01:21:49 2018 
+## Date of summary: Wed Jun  6 01:21:50 2018 
 ## 
 ## Equations:
 ## d_parent/dt = - k_parent_sink * parent - k_parent_m1 * parent
@@ -164,7 +171,7 @@
 ## 
 ## Model predictions using solution type deSolve 
 ## 
-## Fitted with method Port using 153 model solutions performed in 0.984 s
+## Fitted with method Port using 153 model solutions performed in 0.633 s
 ## 
 ## Weighting: none
 ## 
@@ -231,51 +238,46 @@
 ## 
 ## Data:
 ##  time variable observed predicted   residual
-##     0   parent    99.46 9.960e+01 -1.385e-01
-##     0   parent   102.04 9.960e+01  2.442e+00
-##     1   parent    93.50 9.024e+01  3.262e+00
-##     1   parent    92.50 9.024e+01  2.262e+00
-##     3   parent    63.23 7.407e+01 -1.084e+01
-##     3   parent    68.99 7.407e+01 -5.083e+00
-##     7   parent    52.32 4.991e+01  2.408e+00
-##     7   parent    55.13 4.991e+01  5.218e+00
-##    14   parent    27.27 2.501e+01  2.257e+00
-##    14   parent    26.64 2.501e+01  1.627e+00
-##    21   parent    11.50 1.253e+01 -1.035e+00
-##    21   parent    11.64 1.253e+01 -8.946e-01
-##    35   parent     2.85 3.148e+00 -2.979e-01
-##    35   parent     2.91 3.148e+00 -2.379e-01
-##    50   parent     0.69 7.162e-01 -2.624e-02
-##    50   parent     0.63 7.162e-01 -8.624e-02
-##    75   parent     0.05 6.074e-02 -1.074e-02
-##    75   parent     0.06 6.074e-02 -7.382e-04
-##   100   parent       NA 5.151e-03         NA
-##   100   parent       NA 5.151e-03         NA
-##   120   parent       NA 7.155e-04         NA
-##   120   parent       NA 7.155e-04         NA
-##     0       m1     0.00 0.000e+00  0.000e+00
-##     0       m1     0.00 0.000e+00  0.000e+00
-##     1       m1     4.84 4.803e+00  3.704e-02
-##     1       m1     5.64 4.803e+00  8.370e-01
-##     3       m1    12.91 1.302e+01 -1.140e-01
-##     3       m1    12.96 1.302e+01 -6.400e-02
-##     7       m1    22.97 2.504e+01 -2.075e+00
-##     7       m1    24.47 2.504e+01 -5.748e-01
-##    14       m1    41.69 3.669e+01  5.000e+00
-##    14       m1    33.21 3.669e+01 -3.480e+00
-##    21       m1    44.37 4.165e+01  2.717e+00
-##    21       m1    46.44 4.165e+01  4.787e+00
-##    35       m1    41.22 4.331e+01 -2.093e+00
-##    35       m1    37.95 4.331e+01 -5.363e+00
-##    50       m1    41.19 4.122e+01 -2.831e-02
-##    50       m1    40.01 4.122e+01 -1.208e+00
-##    75       m1    40.09 3.645e+01  3.643e+00
-##    75       m1    33.85 3.645e+01 -2.597e+00
-##   100       m1    31.04 3.198e+01 -9.416e-01
-##   100       m1    33.13 3.198e+01  1.148e+00
-##   120       m1    25.15 2.879e+01 -3.640e+00
-##   120       m1    33.31 2.879e+01  4.520e+00</code></pre>
-</div>
+##     0   parent    99.46  99.59848 -1.385e-01
+##     0   parent   102.04  99.59848  2.442e+00
+##     1   parent    93.50  90.23787  3.262e+00
+##     1   parent    92.50  90.23787  2.262e+00
+##     3   parent    63.23  74.07320 -1.084e+01
+##     3   parent    68.99  74.07320 -5.083e+00
+##     7   parent    52.32  49.91207  2.408e+00
+##     7   parent    55.13  49.91207  5.218e+00
+##    14   parent    27.27  25.01257  2.257e+00
+##    14   parent    26.64  25.01257  1.627e+00
+##    21   parent    11.50  12.53462 -1.035e+00
+##    21   parent    11.64  12.53462 -8.946e-01
+##    35   parent     2.85   3.14787 -2.979e-01
+##    35   parent     2.91   3.14787 -2.379e-01
+##    50   parent     0.69   0.71624 -2.624e-02
+##    50   parent     0.63   0.71624 -8.624e-02
+##    75   parent     0.05   0.06074 -1.074e-02
+##    75   parent     0.06   0.06074 -7.382e-04
+##     0       m1     0.00   0.00000  0.000e+00
+##     0       m1     0.00   0.00000  0.000e+00
+##     1       m1     4.84   4.80296  3.704e-02
+##     1       m1     5.64   4.80296  8.370e-01
+##     3       m1    12.91  13.02400 -1.140e-01
+##     3       m1    12.96  13.02400 -6.400e-02
+##     7       m1    22.97  25.04476 -2.075e+00
+##     7       m1    24.47  25.04476 -5.748e-01
+##    14       m1    41.69  36.69002  5.000e+00
+##    14       m1    33.21  36.69002 -3.480e+00
+##    21       m1    44.37  41.65310  2.717e+00
+##    21       m1    46.44  41.65310  4.787e+00
+##    35       m1    41.22  43.31312 -2.093e+00
+##    35       m1    37.95  43.31312 -5.363e+00
+##    50       m1    41.19  41.21831 -2.831e-02
+##    50       m1    40.01  41.21831 -1.208e+00
+##    75       m1    40.09  36.44704  3.643e+00
+##    75       m1    33.85  36.44704 -2.597e+00
+##   100       m1    31.04  31.98163 -9.416e-01
+##   100       m1    33.13  31.98163  1.148e+00
+##   120       m1    25.15  28.78984 -3.640e+00
+##   120       m1    33.31  28.78984  4.520e+00</code></pre>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -294,6 +296,8 @@
 
       </footer>
 </div>
+
+  
 
   </body>
 </html>
