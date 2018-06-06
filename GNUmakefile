@@ -76,12 +76,7 @@ vignettes: vignettes/mkin.html vignettes/FOCUS_D.html vignettes/FOCUS_L.html vig
 pd:
 	"$(RBIN)/Rscript" -e "pkgdown::build_site()"
 	git add -A
-	git commit -m 'Static documentation except articles rebuilt by pkgdown' -e
-
-pd_articles:
-	"$(RBIN)/Rscript" -e "pkgdown::build_articles()"
-	git add -A
-	git commit -m 'Static documentation articles rebuilt by pkgdown::build_articles()' -e
+	git commit -m 'Static documentation rebuilt by pkgdown' -e
 
 r-forge:
 	git archive master > $(HOME)/git/mkin/mkin.tar;\
