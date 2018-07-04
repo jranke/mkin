@@ -1,3 +1,7 @@
+# mkin 0.9.47.2
+
+- 'mkinfit': Use 1.1 as starting value for N parameter of IORE models to obtain convergence in more difficult cases. Show parameter names when 'trace_parms' is 'TRUE'.
+
 # mkin 0.9.47.1 (2018-02-06)
 
 - Skip some test on CRAN and winbuilder to avoid timeouts

@@ -145,7 +145,7 @@ mkinfit <- function(mkinmod, observed,
     if (grepl("free_bound$", parmname)) parms.ini[parmname] = 0.1
     if (grepl("bound_free$", parmname)) parms.ini[parmname] = 0.02
     # Default values for IORE exponents
-    if (grepl("^N", parmname)) parms.ini[parmname] = 1
+    if (grepl("^N", parmname)) parms.ini[parmname] = 1.1
     # Default values for the FOMC, DFOP and HS models
     if (parmname == "alpha") parms.ini[parmname] = 1
     if (parmname == "beta") parms.ini[parmname] = 10
@@ -388,6 +388,9 @@ mkinfit <- function(mkinmod, observed,
     lower[other_fraction_parms] <- 0
     upper[other_fraction_parms] <- 1
   }
+
+  # Show parameter names if tracing is requested
+  if(trace_parms) cat(names(c(state.ini.optim, transparms.optim)), "\n")
 
   # Do the fit and take the time
   fit_time <- system.time({
