@@ -12,7 +12,7 @@
 
 <meta name="author" content="Johannes Ranke" />
 
-<meta name="date" content="2018-03-09" />
+<meta name="date" content="2018-07-17" />
 
 <title>Performance benefit by using compiled model definitions in mkin</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Performance benefit by using compiled model definitions in mkin</h1>
 <h4 class="author"><em>Johannes Ranke</em></h4>
-<h4 class="date"><em>2018-03-09</em></h4>
+<h4 class="date"><em>2018-07-17</em></h4>
 
 
 
@@ -105,14 +105,14 @@ SFO_SFO &lt;-<span class="st"> </span><span class="kw">mkinmod</span>(
 }</code></pre></div>
 <pre><code>## Loading required package: rbenchmark</code></pre>
 <pre><code>##                    test replications elapsed relative user.self sys.self
-## 3     deSolve, compiled            3   1.980    1.000     1.979        0
-## 1 deSolve, not compiled            3  13.926    7.033    13.914        0
-## 2      Eigenvalue based            3   2.362    1.193     2.360        0
+## 3     deSolve, compiled            3   2.116    1.000     2.115        0
+## 1 deSolve, not compiled            3  16.563    7.828    16.555        0
+## 2      Eigenvalue based            3   2.599    1.228     2.597        0
 ##   user.child sys.child
 ## 3          0         0
 ## 1          0         0
 ## 2          0         0</code></pre>
-<p>We see that using the compiled model is by a factor of around 7 faster than using the R version with the default ode solver, and it is even faster than the Eigenvalue based solution implemented in R which does not need iterative solution of the ODEs.</p>
+<p>We see that using the compiled model is by a factor of around 8 faster than using the R version with the default ode solver, and it is even faster than the Eigenvalue based solution implemented in R which does not need iterative solution of the ODEs.</p>
 </div>
 <div id="model-that-can-not-be-solved-with-eigenvalues" class="section level2">
 <h2>Model that can not be solved with Eigenvalues</h2>
@@ -135,14 +135,14 @@ SFO_SFO &lt;-<span class="st"> </span><span class="kw">mkinmod</span>(
 }</code></pre></div>
 <pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
 <pre><code>##                    test replications elapsed relative user.self sys.self
-## 2     deSolve, compiled            3   3.437    1.000     3.433        0
-## 1 deSolve, not compiled            3  30.406    8.847    30.380        0
+## 2     deSolve, compiled            3   3.809    1.000     3.806        0
+## 1 deSolve, not compiled            3  35.885    9.421    35.866        0
 ##   user.child sys.child
 ## 2          0         0
 ## 1          0         0</code></pre>
 <p>Here we get a performance benefit of a factor of 9 using the version of the differential equation model compiled from C code!</p>
-<p>This vignette was built with mkin 0.9.46.3 on</p>
-<pre><code>## R version 3.4.3 (2017-11-30)
+<p>This vignette was built with mkin 0.9.47.1 on</p>
+<pre><code>## R version 3.5.1 (2018-07-02)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
 ## Running under: Debian GNU/Linux 9 (stretch)</code></pre>
 <pre><code>## CPU model: AMD Ryzen 7 1700 Eight-Core Processor</code></pre>

@@ -1,15 +1,19 @@
-\name{sigma_rl}
-\alias{sigma_rl}
-\title{ Two component error model of Rocke and Lorenzato}
+\name{sigma_twocomp}
+\alias{sigma_twocomp}
+\title{Two component error model}
 \description{
   Function describing the standard deviation of the measurement error 
   in dependence of the measured value \eqn{y}:
 
     \deqn{\sigma = \sqrt{ \sigma_{low}^2 + y^2 * {rsd}_{high}^2}}{%
       sigma = sqrt(sigma_low^2 + y^2 * rsd_high^2)}
+
+  This is the error model used for example by Werner et al. (1978). The model
+  proposed by Rocke and Lorenzato (1995) can be written in this form as well,
+  but assumes approximate lognormal distribution of errors for high values of y.
 }
 \usage{
-sigma_rl(y, sigma_low, rsd_high)
+sigma_twocomp(y, sigma_low, rsd_high)
 }
 \arguments{
   \item{y}{ The magnitude of the observed value } 
@@ -21,6 +25,10 @@ sigma_rl(y, sigma_low, rsd_high)
   The standard deviation of the response variable.
 }
 \references{
-  Rocke, David M. und Lorenzato, Stefan (1995) A two-component model for
+  Werner, Mario, Brooks, Samuel H., and Knott, Lancaster B. (1978)
+  Additive, Multiplicative, and Mixed Analytical Errors. Clinical Chemistry
+  24(11), 1895-1898.
+
+  Rocke, David M. and Lorenzato, Stefan (1995) A two-component model for
   measurement error in analytical chemistry. Technometrics 37(2), 176-184.
 }

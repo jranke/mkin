@@ -212,11 +212,14 @@ mkinfit(mkinmod, observed,
     \code{reweight.tol} or up to the maximum number of iterations
     specified by \code{reweight.max.iter}.
     The second reweighting method is called "tc" (two-component error model).
-    When using this method, the two components of the error model according
-    to Rocke and Lorenzato (1995) are estimated from the fit and the resulting
+    When using this method, the two components an error model similar to
+    Rocke and Lorenzato (1995) are estimated from the fit and the resulting
     variances are used for weighting the residuals in each iteration until
     convergence of these components or up to the maximum number of iterations
-    specified.
+    specified. Note that this method deviates from the model by Rocke and
+    Lorenzato, as their model implies that the errors follow a lognormal
+    distribution for large values, not a normal distribution as assumed by this
+    method.
   }
   \item{reweight.tol}{
     Tolerance for convergence criterion for the variance components

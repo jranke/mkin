@@ -1,5 +1,7 @@
 # mkin 0.9.47.2
 
+- 'sigma_twocomp': Rename 'sigma_rl' to 'sigma_twocomp' as the Rocke and Lorenzato model assumes lognormal distribution for large y. Correct references to the Rocke and Lorenzato model accordingly.
+
 - 'mkinfit': Use 1.1 as starting value for N parameter of IORE models to obtain convergence in more difficult cases. Show parameter names when 'trace_parms' is 'TRUE'.
 
 # mkin 0.9.47.1 (2018-02-06)

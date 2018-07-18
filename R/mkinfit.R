@@ -259,7 +259,7 @@ mkinfit <- function(mkinmod, observed,
 
   weight.ini <- weight <- match.arg(weight)
   if (weight.ini == "tc") {
-     observed$err = sigma_rl(observed$value, tc["sigma_low"], tc["rsd_high"])
+     observed$err = sigma_twocomp(observed$value, tc["sigma_low"], tc["rsd_high"])
      err <- "err"
   } else {
     if (!is.null(err)) weight.ini = "manual"
@@ -415,7 +415,7 @@ mkinfit <- function(mkinmod, observed,
         # We need unweighted residuals to update the weighting
         cost_tmp <- cost(fit$par)
 
-        tc_fit <- nls(abs(res.unweighted) ~ sigma_rl(obs, sigma_low, rsd_high),
+        tc_fit <- nls(abs(res.unweighted) ~ sigma_twocomp(obs, sigma_low, rsd_high),
           start = list(sigma_low = tc["sigma_low"], rsd_high = tc["rsd_high"]),
           data = cost_tmp$residuals,
           algorithm = "port")
@@ -453,7 +453,7 @@ mkinfit <- function(mkinmod, observed,
         if (reweight.method == "tc") {
           cost_tmp <- cost(fit$par)
 
-          tc_fit <- nls(abs(res.unweighted) ~ sigma_rl(obs, sigma_low, rsd_high),
+          tc_fit <- nls(abs(res.unweighted) ~ sigma_twocomp(obs, sigma_low, rsd_high),
             start = as.list(tc_fitted),
             data = cost_tmp$residuals,
             algorithm = "port")

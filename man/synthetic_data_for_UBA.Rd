@@ -13,7 +13,10 @@
  Variance component 'b' is also based on a normal distribution, but with a standard deviation of 7.
  Variance component 'c' is based on the error model from Rocke and Lorenzato (1995), with the
  minimum standard deviation (for small y values) of 0.5, and a proportionality constant of 0.07
- for the increase of the standard deviation with y.
+ for the increase of the standard deviation with y. Note that this is a simplified version
+ of the error model proposed by Rocke and Lorenzato (1995), as in their model the error of the 
+ measured values approximates lognormal distribution for high values, whereas we are using
+ normally distributed error components all along.
 
  Initial concentrations for metabolites and all values where adding the variance component resulted
  in a value below the assumed limit of detection of 0.1 were set to \code{NA}.
