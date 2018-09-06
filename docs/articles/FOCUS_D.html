@@ -84,7 +84,7 @@
       <h1>Example evaluation of FOCUS Example Dataset D</h1>
                         <h4 class="author">Johannes Ranke</h4>
             
-            <h4 class="date">2018-07-18</h4>
+            <h4 class="date">2018-09-06</h4>
       
       
       <div class="hidden name"><code>FOCUS_D.Rmd</code></div>
@@ -94,8 +94,8 @@
     
     
 <p>This is just a very simple vignette showing how to fit a degradation model for a parent compound with one transformation product using <code>mkin</code>. After loading the library we look a the data. We have observed concentrations in the column named <code>value</code> at the times specified in column <code>time</code> for the two observed variables named <code>parent</code> and <code>m1</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">"mkin"</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
-<span class="kw">print</span>(FOCUS_<span class="dv">2006</span>_D)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(<span class="st">"mkin"</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">print</span>(FOCUS_<span class="dv">2006</span>_D)</a></code></pre></div>
 <pre><code>##      name time  value
 ## 1  parent    0  99.46
 ## 2  parent    0 102.04
@@ -143,23 +143,23 @@
 ## 44     m1  120  33.31</code></pre>
 <p>Next we specify the degradation model: The parent compound degrades with simple first-order kinetics (SFO) to one metabolite named m1, which also degrades with SFO kinetics.</p>
 <p>The call to mkinmod returns a degradation model. The differential equations represented in R code can be found in the character vector <code>$diffs</code> of the <code>mkinmod</code> object. If a C compiler (gcc) is installed and functional, the differential equation model will be compiled from auto-generated C code.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">SFO_SFO &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkinmod.html">mkinmod</a></span>(<span class="dt">parent =</span> <span class="kw"><a href="../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"m1"</span>), <span class="dt">m1 =</span> <span class="kw"><a href="../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>))</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">SFO_SFO &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkinmod.html">mkinmod</a></span>(<span class="dt">parent =</span> <span class="kw"><a href="../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"m1"</span>), <span class="dt">m1 =</span> <span class="kw"><a href="../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>))</a></code></pre></div>
 <pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(SFO_SFO<span class="op">$</span>diffs)</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">print</span>(SFO_SFO<span class="op">$</span>diffs)</a></code></pre></div>
 <pre><code>##                                                       parent 
 ## "d_parent = - k_parent_sink * parent - k_parent_m1 * parent" 
 ##                                                           m1 
 ##             "d_m1 = + k_parent_m1 * parent - k_m1_sink * m1"</code></pre>
 <p>We do the fitting without progress report (<code>quiet = TRUE</code>).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkinfit.html">mkinfit</a></span>(SFO_SFO, FOCUS_<span class="dv">2006</span>_D, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkinfit.html">mkinfit</a></span>(SFO_SFO, FOCUS_<span class="dv">2006</span>_D, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p>A plot of the fit including a residual plot for both observed variables is obtained using the <code>plot_sep</code> method for <code>mkinfit</code> objects, which shows separate graphs for all compounds and their residuals.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/plot.mkinfit.html">plot_sep</a></span>(fit, <span class="dt">lpos =</span> <span class="kw">c</span>(<span class="st">"topright"</span>, <span class="st">"bottomright"</span>))</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw"><a href="../reference/plot.mkinfit.html">plot_sep</a></span>(fit, <span class="dt">lpos =</span> <span class="kw">c</span>(<span class="st">"topright"</span>, <span class="st">"bottomright"</span>))</a></code></pre></div>
 <p><img src="FOCUS_D_files/figure-html/plot-1.png" width="768"></p>
 <p>Confidence intervals for the parameter estimates are obtained using the <code>mkinparplot</code> function.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/mkinparplot.html">mkinparplot</a></span>(fit)</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw"><a href="../reference/mkinparplot.html">mkinparplot</a></span>(fit)</a></code></pre></div>
 <p><img src="FOCUS_D_files/figure-html/plot_2-1.png" width="768"></p>
 <p>A comprehensive report of the results is obtained using the <code>summary</code> method for <code>mkinfit</code> objects.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(fit)</code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">summary</span>(fit)</a></code></pre></div>
 <pre><code>## mkin version used for fitting:    0.9.47.1 
 ## R version used for fitting:       3.5.1 
 ## Date of fit:     Wed Jul 18 14:52:30 2018 
