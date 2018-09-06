@@ -30,7 +30,7 @@ mkinfit(mkinmod, observed,
   control.modFit = list(),
   transform_rates = TRUE,
   transform_fractions = TRUE,
-  plot = FALSE, quiet = FALSE, err = NULL, 
+  plot = FALSE, quiet = FALSE, err = NULL,
   weight = c("none", "std", "mean", "tc"),
   tc = c(sigma_low = 0.5, rsd_high = 0.07),
   scaleVar = FALSE,
@@ -178,11 +178,11 @@ mkinfit(mkinmod, observed,
   }
   \item{weight}{
     only if \code{err}=\code{NULL}: how to weight the residuals, one of "none",
-    "std", "mean", see details of \code{\link{modCost}}, or "tc" for the 
-    two component error model of Rocke and Lorenzato.
+    "std", "mean", see details of \code{\link{modCost}}, or "tc" for the
+    two component error model.
   }
-  \item{tc}{The two components of the Rocke and Lorenzato error model as used
-    for (initial) weighting}.
+  \item{tc}{The two components of the error model as used for (initial)
+    weighting}.
   \item{scaleVar}{
     Will be passed to \code{\link{modCost}}. Default is not to scale Variables
     according to the number of observations.
@@ -212,7 +212,8 @@ mkinfit(mkinmod, observed,
     \code{reweight.tol} or up to the maximum number of iterations
     specified by \code{reweight.max.iter}.
     The second reweighting method is called "tc" (two-component error model).
-    When using this method, the two components an error model similar to
+    When using this method, the two components of an error model similar to
+    the one described by
     Rocke and Lorenzato (1995) are estimated from the fit and the resulting
     variances are used for weighting the residuals in each iteration until
     convergence of these components or up to the maximum number of iterations
@@ -323,7 +324,7 @@ f.irls <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, reweight.method = "obs", quiet = TRU
 summary(f.irls)
 f.w.mean <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, weight = "mean", quiet = TRUE)
 summary(f.w.mean)
-f.w.value <- mkinfit(SFO_SFO.ff, subset(FOCUS_2006_D, value != 0), err = "value", 
+f.w.value <- mkinfit(SFO_SFO.ff, subset(FOCUS_2006_D, value != 0), err = "value",
                      quiet = TRUE)
 summary(f.w.value)
 }
