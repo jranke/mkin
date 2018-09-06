@@ -1,4 +1,4 @@
-# mkin 0.9.47.2
+# mkin 0.9.47.2 (2018-07-09)
 
 - 'sigma_twocomp': Rename 'sigma_rl' to 'sigma_twocomp' as the Rocke and Lorenzato model assumes lognormal distribution for large y. Correct references to the Rocke and Lorenzato model accordingly.
 
