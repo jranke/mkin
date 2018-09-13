@@ -31,7 +31,7 @@ mkinfit(mkinmod, observed,
   transform_rates = TRUE,
   transform_fractions = TRUE,
   plot = FALSE, quiet = FALSE, err = NULL,
-  weight = c("none", "std", "mean", "tc"),
+  weight = c("none", "manual", "std", "mean", "tc"),
   tc = c(sigma_low = 0.5, rsd_high = 0.07),
   scaleVar = FALSE,
   atol = 1e-8, rtol = 1e-10, n.outtimes = 100,
@@ -179,7 +179,8 @@ mkinfit(mkinmod, observed,
   \item{weight}{
     only if \code{err}=\code{NULL}: how to weight the residuals, one of "none",
     "std", "mean", see details of \code{\link{modCost}}, or "tc" for the
-    two component error model.
+    two component error model. The option "manual" is available for 
+    the case that \code{err}!=\code{NULL}, but it is not necessary to specify it.
   }
   \item{tc}{The two components of the error model as used for (initial)
     weighting}.

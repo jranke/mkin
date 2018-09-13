@@ -1,3 +1,9 @@
+# mkin 0.9.47.3 (2018-09-13)
+
+- 'mkinfit': Improve fitting the error model for reweight.method = 'tc'
+
+- Test that FOCUS_2006_C can be evaluated with DFOP and reweight.method = 'tc'
+
 # mkin 0.9.47.2 (2018-07-19)
 
 - 'sigma_twocomp': Rename 'sigma_rl' to 'sigma_twocomp' as the Rocke and Lorenzato model assumes lognormal distribution for large y. Correct references to the Rocke and Lorenzato model accordingly.

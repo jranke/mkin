@@ -104,7 +104,7 @@ for installation instructions and a manual.
 
 ## News
 
-There is a ChangeLog, for the latest [CRAN release](https://cran.r-project.org/package=mkin/news.html)
+There is a ChangeLog, for the latest [CRAN release](https://cran.r-project.org/package=mkin/news/news.html)
 and one for the [github master branch](https://github.com/jranke/mkin/blob/master/NEWS.md).
 
 ## Credits and historical remarks
