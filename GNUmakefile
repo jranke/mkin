@@ -3,6 +3,7 @@ PKGVERS := $(shell sed -n "s/Version: *\([^ ]*\)/\1/p" DESCRIPTION)
 PKGSRC  := $(shell basename $(PWD))
 TGZ     := $(PKGSRC)_$(PKGVERS).tar.gz
 TGZVNR  := $(PKGSRC)_$(PKGVERS)-vignettes-not-rebuilt.tar.gz
+WINBIN  := $(PKGSRC)_$(PKGVERS).zip
 
 # Specify the directory holding R binaries. To use an alternate R build (say a
 # pre-prelease version) use `make RBIN=/path/to/other/R/` or `export RBIN=...`
@@ -94,6 +95,17 @@ winbuilder: build
 
 drat: build
 	"$(RBIN)/Rscript" -e "drat::insertPackage('$(TGZ)', commit = TRUE)"
+
+$(WINBIN): build
+	@echo "Building windows binary package..."
+	"$(RBIN)/R" CMD INSTALL $(TGZ) --build
+	@echo "DONE."
+
+winbin: $(WINBIN)
+
+dratwin: winbin
+	"$(RBIN)/Rscript" -e "drat::insertPackage('$(WINBIN)', '~/git/drat/', commit = TRUE)"
+
 
 submit:
 	@echo "\nHow about make test, make check, make pd, make winbuilder"
