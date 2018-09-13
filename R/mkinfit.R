@@ -37,7 +37,7 @@ mkinfit <- function(mkinmod, observed,
   transform_fractions = TRUE,
   plot = FALSE, quiet = FALSE,
   err = NULL,
-  weight = c("none", "std", "mean", "tc"),
+  weight = c("none", "manual", "std", "mean", "tc"),
   tc = c(sigma_low = 0.5, rsd_high = 0.07),
   scaleVar = FALSE,
   atol = 1e-8, rtol = 1e-10, n.outtimes = 100,
@@ -415,10 +415,17 @@ mkinfit <- function(mkinmod, observed,
         # We need unweighted residuals to update the weighting
         cost_tmp <- cost(fit$par)
 
-        tc_fit <- nls(abs(res.unweighted) ~ sigma_twocomp(obs, sigma_low, rsd_high),
-          start = list(sigma_low = tc["sigma_low"], rsd_high = tc["rsd_high"]),
-          data = cost_tmp$residuals,
-          algorithm = "port")
+        tc_fit <- try(
+          nls(abs(res.unweighted) ~ sigma_twocomp(obs, sigma_low, rsd_high),
+            start = list(sigma_low = tc["sigma_low"], rsd_high = tc["rsd_high"]),
+            data = cost_tmp$residuals,
+            lower = 0,
+            algorithm = "port"))
+
+        if (inherits(tc_fit, "try-error")) {
+          stop("Estimation of the two error model components failed for the initial fit.\n",
+               "Try without reweighting or with reweight.method = 'obs'.")
+        }
 
         tc_fitted <- coef(tc_fit)
         if(!quiet) {
@@ -453,10 +460,16 @@ mkinfit <- function(mkinmod, observed,
         if (reweight.method == "tc") {
           cost_tmp <- cost(fit$par)
 
-          tc_fit <- nls(abs(res.unweighted) ~ sigma_twocomp(obs, sigma_low, rsd_high),
+          tc_fit <- try(nls(abs(res.unweighted) ~ sigma_twocomp(obs, sigma_low, rsd_high),
             start = as.list(tc_fitted),
             data = cost_tmp$residuals,
-            algorithm = "port")
+            lower = 0,
+            algorithm = "port"))
+
+          if (inherits(tc_fit, "try-error")) {
+            stop("Estimation of the two error model components failed during reweighting.\n",
+                 "Try without reweighting or with reweight.method = 'obs'.")
+          }
 
           tc_fitted <- coef(tc_fit)
           sr_new <- tc_fitted

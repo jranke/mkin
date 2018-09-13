@@ -24,7 +24,6 @@ pkgfiles = \
 	man/* \
 	NAMESPACE \
 	NEWS.md \
-	README.html \
 	R/* \
 	tests/* \
 	tests/testthat* \
