@@ -34,12 +34,12 @@
   \dontrun{
     fit.1 <- mkinfit(SFO_SFO_SFO, subset(mccall81_245T, soil == "Commerce"), quiet = TRUE)
     summary(fit.1, data = FALSE)
+    # No convergence, no covariance matrix ...
+    # k_phenol_sink is really small, therefore fix it to zero
+    fit.2 <- mkinfit(SFO_SFO_SFO, subset(mccall81_245T, soil == "Commerce"),
+                   parms.ini = c(k_phenol_sink = 0),
+                   fixed_parms = "k_phenol_sink", quiet = TRUE)
+    summary(fit.2, data = FALSE)
   }
-  # No convergence, no covariance matrix ...
-  # k_phenol_sink is really small, therefore fix it to zero
-  fit.2 <- mkinfit(SFO_SFO_SFO, subset(mccall81_245T, soil == "Commerce"),
-                 parms.ini = c(k_phenol_sink = 0),
-                 fixed_parms = "k_phenol_sink", quiet = TRUE)
-  summary(fit.2, data = FALSE)
 }
 \keyword{datasets}

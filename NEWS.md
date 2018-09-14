@@ -1,6 +1,10 @@
-# mkin 0.9.47.3 (2018-09-13)
+# mkin 0.9.47.4 (2018-09-14)
 
-- 'mkinfit': Improve fitting the error model for reweight.method = 'tc'
+- Exclude more example code from testing on CRAN to avoid NOTES from long execution times
+
+# mkin 0.9.47.3 (not released to CRAN)
+
+- 'mkinfit': Improve fitting the error model for reweight.method = 'tc'. Add 'manual' to possible arguments for 'weight'
 
 - Test that FOCUS_2006_C can be evaluated with DFOP and reweight.method = 'tc'
 

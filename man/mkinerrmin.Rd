@@ -39,8 +39,10 @@ SFO_SFO = mkinmod(parent = mkinsub("SFO", to = "m1"),
 
 fit_FOCUS_D = mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE)
 round(mkinerrmin(fit_FOCUS_D), 4)
-fit_FOCUS_E = mkinfit(SFO_SFO, FOCUS_2006_E, quiet = TRUE)
-round(mkinerrmin(fit_FOCUS_E), 4)
+\dontrun{
+  fit_FOCUS_E = mkinfit(SFO_SFO, FOCUS_2006_E, quiet = TRUE)
+  round(mkinerrmin(fit_FOCUS_E), 4)
+}
 }
 \references{ 
   FOCUS (2006) \dQuote{Guidance Document on Estimating Persistence and

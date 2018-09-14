@@ -74,7 +74,7 @@ vignettes/%.html: vignettes/mkin_vignettes.css vignettes/references.bib vignette
 vignettes: vignettes/mkin.html vignettes/FOCUS_D.html vignettes/FOCUS_L.html vignettes/FOCUS_Z.html vignettes/compiled_models.html
 
 pd:
-	"$(RBIN)/Rscript" -e "pkgdown::build_site()"
+	"$(RBIN)/Rscript" -e "pkgdown::build_site(run_dont_run = TRUE)"
 	git add -A
 	git commit -m 'Static documentation rebuilt by pkgdown' -e
 

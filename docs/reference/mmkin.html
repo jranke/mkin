@@ -62,7 +62,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.47.3</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.47.4</span>
       </span>
     </div>
 
@@ -175,15 +175,12 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='no'>m_synth_SFO_lin</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"M1"</span>),
+    <pre class="examples"><div class='input'><span class='no'>m_synth_SFO_lin</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"M1"</span>),
                            <span class='kw'>M1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"M2"</span>),
-                           <span class='kw'>M2</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)
-
+                           <span class='kw'>M2</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
 <span class='no'>m_synth_FOMC_lin</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"FOMC"</span>, <span class='st'>"M1"</span>),
                             <span class='kw'>M1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"M2"</span>),
-                            <span class='kw'>M2</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)
-
+                            <span class='kw'>M2</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
 <span class='no'>models</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(<span class='kw'>SFO_lin</span> <span class='kw'>=</span> <span class='no'>m_synth_SFO_lin</span>, <span class='kw'>FOMC_lin</span> <span class='kw'>=</span> <span class='no'>m_synth_FOMC_lin</span>)
 <span class='no'>datasets</span> <span class='kw'>&lt;-</span> <span class='fu'>lapply</span>(<span class='no'>synthetic_data_for_UBA_2014</span>[<span class='fl'>1</span>:<span class='fl'>3</span>], <span class='kw'>function</span>(<span class='no'>x</span>) <span class='no'>x</span>$<span class='no'>data</span>)
 <span class='fu'>names</span>(<span class='no'>datasets</span>) <span class='kw'>&lt;-</span> <span class='fu'>paste</span>(<span class='st'>"Dataset"</span>, <span class='fl'>1</span>:<span class='fl'>3</span>)
@@ -191,23 +188,29 @@
 <span class='no'>time_default</span> <span class='kw'>&lt;-</span> <span class='fu'>system.time</span>(<span class='no'>fits.0</span> <span class='kw'>&lt;-</span> <span class='fu'>mmkin</span>(<span class='no'>models</span>, <span class='no'>datasets</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))
 <span class='no'>time_1</span> <span class='kw'>&lt;-</span> <span class='fu'>system.time</span>(<span class='no'>fits.4</span> <span class='kw'>&lt;-</span> <span class='fu'>mmkin</span>(<span class='no'>models</span>, <span class='no'>datasets</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))
 
-<span class='no'>time_default</span>
-<span class='no'>time_1</span>
-
-<span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fits.0</span><span class='kw'>[[</span><span class='st'>"SFO_lin"</span>, <span class='fl'>2</span>]])
-
+<span class='no'>time_default</span></div><div class='output co'>#&gt;        User      System verstrichen 
+#&gt;       0.046       0.033       6.654 </div><div class='input'><span class='no'>time_1</span></div><div class='output co'>#&gt;        User      System verstrichen 
+#&gt;      20.150       0.000      20.163 </div><div class='input'>
+<span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fits.0</span><span class='kw'>[[</span><span class='st'>"SFO_lin"</span>, <span class='fl'>2</span>]])</div><div class='output co'>#&gt; $ff
+#&gt;   parent_M1 parent_sink       M1_M2     M1_sink 
+#&gt;   0.7340480   0.2659520   0.7505686   0.2494314 
+#&gt; 
+#&gt; $SFORB
+#&gt; logical(0)
+#&gt; 
+#&gt; $distimes
+#&gt;              DT50       DT90
+#&gt; parent  0.8777689   2.915885
+#&gt; M1      2.3257453   7.725959
+#&gt; M2     33.7200874 112.015706
+#&gt; </div><div class='input'>
 <span class='co'># plot.mkinfit handles rows or columns of mmkin result objects</span>
-<span class='fu'>plot</span>(<span class='no'>fits.0</span>[<span class='fl'>1</span>, ])
-<span class='fu'>plot</span>(<span class='no'>fits.0</span>[<span class='fl'>1</span>, ], <span class='kw'>obs_var</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"M1"</span>, <span class='st'>"M2"</span>))
-<span class='fu'>plot</span>(<span class='no'>fits.0</span>[, <span class='fl'>1</span>])
-<span class='co'># Use double brackets to extract a single mkinfit object, which will be plotted</span>
+<span class='fu'>plot</span>(<span class='no'>fits.0</span>[<span class='fl'>1</span>, ])</div><div class='img'><img src='mmkin-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot</span>(<span class='no'>fits.0</span>[<span class='fl'>1</span>, ], <span class='kw'>obs_var</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"M1"</span>, <span class='st'>"M2"</span>))</div><div class='img'><img src='mmkin-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot</span>(<span class='no'>fits.0</span>[, <span class='fl'>1</span>])</div><div class='img'><img src='mmkin-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># Use double brackets to extract a single mkinfit object, which will be plotted</span>
 <span class='co'># by plot.mkinfit and can be plotted using plot_sep</span>
-<span class='fu'>plot</span>(<span class='no'>fits.0</span><span class='kw'>[[</span><span class='fl'>1</span>, <span class='fl'>1</span>]], <span class='kw'>sep_obs</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>show_residuals</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>show_errmin</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'><a href='plot.mkinfit.html'>plot_sep</a></span>(<span class='no'>fits.0</span><span class='kw'>[[</span><span class='fl'>1</span>, <span class='fl'>1</span>]])
+<span class='fu'>plot</span>(<span class='no'>fits.0</span><span class='kw'>[[</span><span class='fl'>1</span>, <span class='fl'>1</span>]], <span class='kw'>sep_obs</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>show_residuals</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>show_errmin</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='mmkin-4.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='plot.mkinfit.html'>plot_sep</a></span>(<span class='no'>fits.0</span><span class='kw'>[[</span><span class='fl'>1</span>, <span class='fl'>1</span>]])
 <span class='co'># Plotting with mmkin (single brackets, extracting an mmkin object) does not</span>
 <span class='co'># allow to plot the observed variables separately</span>
-<span class='fu'>plot</span>(<span class='no'>fits.0</span>[<span class='fl'>1</span>, <span class='fl'>1</span>])
-<span class='co'># }</span></pre>
+<span class='fu'>plot</span>(<span class='no'>fits.0</span>[<span class='fl'>1</span>, <span class='fl'>1</span>])</div><div class='img'><img src='mmkin-5.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

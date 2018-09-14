@@ -23,11 +23,12 @@
 }
 
 \examples{
+\dontrun{
 model <- mkinmod(
   T245 = mkinsub("SFO", to = c("phenol"), sink = FALSE),
   phenol = mkinsub("SFO", to = c("anisole")),
   anisole = mkinsub("SFO"), use_of_ff = "max")
 fit <- mkinfit(model, subset(mccall81_245T, soil == "Commerce"), quiet = TRUE)
 mkinparplot(fit)
-}
+}}
 \keyword{ hplot }
