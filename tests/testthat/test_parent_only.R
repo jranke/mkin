@@ -1,4 +1,4 @@
-# Copyright (C) 2015 Johannes Ranke
+# Copyright (C) 2015,2018 Johannes Ranke
 # Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
@@ -89,6 +89,7 @@ test_that("Fits for FOCUS A deviate less than 0.1% from median of values from FO
 })
 
 test_that("Fits for FOCUS B deviate less than 0.1% from median of values from FOCUS report", {
+  skip_on_cran()
   fit.B.SFO <- list(mkinfit("SFO", FOCUS_2006_B, quiet = TRUE))
 
   median.B.SFO <- as.numeric(lapply(subset(FOCUS_2006_SFO_ref_A_to_F,
@@ -202,6 +203,7 @@ test_that("DFOP fits give approximately (0.001%) equal results with different so
 })
 
 test_that("SFORB fits give approximately (0.002%) equal results with different solution methods", {
+  skip_on_cran()
   fit.B.SFORB.default <- mkinfit(SFORB, FOCUS_2006_B, quiet=TRUE)$bparms.optim
 
   fits.B.SFORB <- list()

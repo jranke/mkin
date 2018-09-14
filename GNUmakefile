@@ -63,8 +63,8 @@ clean:
 	$(RM) -r vignettes/web_only/*.R
 	$(RM) Rplots.pdf
 
-test: quickinstall
-	NOT_CRAN=true "$(RBIN)/Rscript" -e 'devtools::test()' 2>&1 | tee test.log
+test: install
+	"$(RBIN)/Rscript" -e 'devtools::test()' 2>&1 | tee test.log
 
 README.html: README.md
 	"$(RBIN)/Rscript" -e "rmarkdown::render('README.md', output_format = 'html_document', output_options = list(mathjax = NULL))"

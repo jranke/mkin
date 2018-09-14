@@ -1,4 +1,4 @@
-# Copyright (C) 2014-15 Johannes Ranke
+# Copyright (C) 2014,2015,2018 Johannes Ranke
 # Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
@@ -39,6 +39,7 @@ test_that("Chi2 error levels for FOCUS D are as in mkin 0.9-33", {
 })
 
 test_that("Chi2 error levels for FOCUS E are as in mkin 0.9-33", {
+  skip_on_cran()
 
   fit <- mkinfit(SFO_SFO.ff, FOCUS_2006_E, quiet = TRUE)
 
