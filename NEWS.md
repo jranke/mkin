@@ -4,8 +4,6 @@
 
 - Move two vignettes to a location where they will not be built on CRAN (to avoid more NOTES from long execution times)
 
-# mkin 0.9.47.4
-
 - Exclude more example code from testing on CRAN to avoid NOTES from long execution times
 
 # mkin 0.9.47.3

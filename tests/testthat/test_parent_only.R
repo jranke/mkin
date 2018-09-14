@@ -165,6 +165,7 @@ test_that("Fits for FOCUS C deviate less than 0.1% from median of values from FO
 })
 
 test_that("SFO fits give approximately (0.001%) equal results with different solution methods", {
+  skip_on_cran()
   fit.A.SFO.default <- mkinfit("SFO", FOCUS_2006_A, quiet = TRUE)$bparms.optim
 
   fits.A.SFO <- list()
@@ -179,6 +180,7 @@ test_that("SFO fits give approximately (0.001%) equal results with different sol
 })
 
 test_that("FOMC fits give approximately (0.001%) equal results with different solution methods", {
+  skip_on_cran()
   fit.C.FOMC.default <- mkinfit("FOMC", FOCUS_2006_C, quiet = TRUE)$bparms.optim
 
   fits.C.FOMC <- list()
@@ -191,6 +193,7 @@ test_that("FOMC fits give approximately (0.001%) equal results with different so
 })
 
 test_that("DFOP fits give approximately (0.001%) equal results with different solution methods", {
+  skip_on_cran()
   fit.C.DFOP.default <- mkinfit("DFOP", FOCUS_2006_C, quiet = TRUE)$bparms.optim
 
   fits.C.DFOP <- list()

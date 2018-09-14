@@ -20,6 +20,7 @@ context("Results for synthetic data established in expertise for UBA (Ranke 2014
 
 
 test_that("Results are correct for SFO_lin_a", {
+  skip_on_cran()
   m_synth_SFO_lin <- mkinmod(parent = mkinsub("SFO", "M1"),
                              M1 = mkinsub("SFO", "M2"),
                              M2 = mkinsub("SFO"),
