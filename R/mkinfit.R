@@ -415,6 +415,13 @@ mkinfit <- function(mkinmod, observed,
         # We need unweighted residuals to update the weighting
         cost_tmp <- cost(fit$par)
 
+        p_tmp <- cor.test(abs(cost_tmp$residuals$res.unweighted),
+                          cost_tmp$residuals$obs, method = "kendall")$p.value
+        if (p_tmp > 0.1) {
+          stop("No correlation of absolute residuals with observed values found.\n",
+               "Try without reweighting or with reweight.method = 'obs'.")
+        }
+
         tc_fit <- try(
           nls(abs(res.unweighted) ~ sigma_twocomp(obs, sigma_low, rsd_high),
             start = list(sigma_low = tc["sigma_low"], rsd_high = tc["rsd_high"]),
