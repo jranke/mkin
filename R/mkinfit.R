@@ -415,8 +415,10 @@ mkinfit <- function(mkinmod, observed,
         # We need unweighted residuals to update the weighting
         cost_tmp <- cost(fit$par)
 
-        p_tmp <- cor.test(abs(cost_tmp$residuals$res.unweighted),
-                          cost_tmp$residuals$obs, method = "kendall")$p.value
+        # We need to supress warnings as we may have ties
+        p_tmp <- suppressWarnings(cor.test(abs(cost_tmp$residuals$res.unweighted),
+                          cost_tmp$residuals$obs, method = "kendall")$p.value)
+
         if (p_tmp > 0.1) {
           stop("No correlation of absolute residuals with observed values found.\n",
                "Try without reweighting or with reweight.method = 'obs'.")

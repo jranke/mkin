@@ -1,8 +1,14 @@
-# mkin 0.9.47.4 (2018-09-14)
+# mkin 0.9.47.5 (2018-09-14)
+
+- Make the two-component error model stop in cases where it is inadequate to avoid nls crashes on windows
+
+- Move two vignettes to a location where they will not be built on CRAN (to avoid more NOTES from long execution times)
+
+# mkin 0.9.47.4
 
 - Exclude more example code from testing on CRAN to avoid NOTES from long execution times
 
-# mkin 0.9.47.3 (not released to CRAN)
+# mkin 0.9.47.3
 
 - 'mkinfit': Improve fitting the error model for reweight.method = 'tc'. Add 'manual' to possible arguments for 'weight'
 
