@@ -60,6 +60,7 @@ clean:
 	$(RM) -r vignettes/*_cache
 	$(RM) -r vignettes/*_files
 	$(RM) -r vignettes/*.R
+	$(RM) -r vignettes/web_only/*.R
 	$(RM) Rplots.pdf
 
 test: quickinstall
@@ -71,7 +72,12 @@ README.html: README.md
 vignettes/%.html: vignettes/mkin_vignettes.css vignettes/references.bib vignettes/%.Rmd
 	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/$*.Rmd', dir = 'vignettes')"
 
-vignettes: vignettes/mkin.html vignettes/FOCUS_D.html vignettes/FOCUS_L.html vignettes/FOCUS_Z.html vignettes/compiled_models.html
+vignettes: vignettes/mkin.html vignettes/FOCUS_D.html vignettes/FOCUS_L.html
+
+vignettes/web_only/%.html: vignettes/references.bib vignettes/web_only/%.Rmd
+	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/web_only/$*.Rmd', dir = 'vignettes/web_only')"
+
+articles: vignettes/web_only/FOCUS_Z.html vignettes/web_only/compiled_models.html
 
 pd:
 	"$(RBIN)/Rscript" -e "pkgdown::build_site(run_dont_run = TRUE)"
