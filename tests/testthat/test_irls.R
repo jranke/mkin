@@ -46,7 +46,7 @@ test_that("Reweighting method 'tc' works", {
   parms_2 <- signif(fit_irls_2$bparms.optim, 3)
   expect_equivalent(parms_2, c(99.3, 0.041, 0.00962, 0.597, 0.393, 0.298, 0.0203, 0.707))
 
-  # In the dataset FOCUS_2006_C, no correlation between absolute residuals and observed
-  # values is found
-  expect_error(mkinfit("DFOP", FOCUS_2006_C, reweight.method = "tc", quiet = TRUE), "No correlation")
+  fit_irls_3 <- mkinfit("DFOP", FOCUS_2006_C, reweight.method = "tc", quiet = TRUE)
+  parms_3 <- signif(fit_irls_3$bparms.optim, 3)
+  expect_equivalent(parms_3, c(85.0, 0.46, 0.0178, 0.854))
 })
