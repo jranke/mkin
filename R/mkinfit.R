@@ -413,21 +413,12 @@ mkinfit <- function(mkinmod, observed,
       }
       if (reweight.method  == "tc") {
         # We need unweighted residuals to update the weighting
-        cost_tmp <- cost(fit$par)
-
-        # We need to supress warnings as we may have ties
-        p_tmp <- suppressWarnings(cor.test(abs(cost_tmp$residuals$res.unweighted),
-                          cost_tmp$residuals$obs, method = "kendall")$p.value)
-
-        if (p_tmp > 0.1) {
-          stop("No correlation of absolute residuals with observed values found.\n",
-               "Try without reweighting or with reweight.method = 'obs'.")
-        }
+        tmp_res <- cost(fit$par)$residuals
 
         tc_fit <- try(
           nls(abs(res.unweighted) ~ sigma_twocomp(obs, sigma_low, rsd_high),
             start = list(sigma_low = tc["sigma_low"], rsd_high = tc["rsd_high"]),
-            data = cost_tmp$residuals,
+            data = tmp_res,
             lower = 0,
             algorithm = "port"))
 
@@ -467,13 +458,14 @@ mkinfit <- function(mkinmod, observed,
           sr_new <- fit$var_ms_unweighted
         }
         if (reweight.method == "tc") {
-          cost_tmp <- cost(fit$par)
+          tmp_res <- cost(fit$par)$residuals
 
-          tc_fit <- try(nls(abs(res.unweighted) ~ sigma_twocomp(obs, sigma_low, rsd_high),
-            start = as.list(tc_fitted),
-            data = cost_tmp$residuals,
-            lower = 0,
-            algorithm = "port"))
+          tc_fit <- try(
+            nls(abs(res.unweighted) ~ sigma_twocomp(obs, sigma_low, rsd_high),
+              start = list(sigma_low = tc["sigma_low"], rsd_high = tc["rsd_high"]),
+              data = tmp_res,
+              lower = 0,
+              algorithm = "port"))
 
           if (inherits(tc_fit, "try-error")) {
             stop("Estimation of the two error model components failed during reweighting.\n",
