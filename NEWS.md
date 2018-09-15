@@ -1,3 +1,7 @@
+# mkin 0.9.47.6 (2018-09-15)
+
+- 'add_err': Respect the argument giving the number of replicates in the synthetic dataset
+
 # mkin 0.9.47.5 (2018-09-14)
 
 - Make the two-component error model stop in cases where it is inadequate to avoid nls crashes on windows

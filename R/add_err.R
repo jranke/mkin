@@ -1,4 +1,4 @@
-# Copyright (C) 2015-2017 Johannes Ranke
+# Copyright (C) 2015-2018 Johannes Ranke
 # Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
@@ -30,7 +30,7 @@ add_err = function(prediction, sdfunc, secondary = c("M1", "M2"),
 
   # Generate datasets one by one in a loop
   for (i in 1:n) {
-    d_rep = data.frame(lapply(d_long, rep, each = 2))
+    d_rep = data.frame(lapply(d_long, rep, each = reps))
     d_rep$value = rnorm(length(d_rep$value), d_rep$value, sdfunc(d_rep$value))
 
     d_rep[d_rep$time == 0 & d_rep$name %in% secondary, "value"] <- 0
