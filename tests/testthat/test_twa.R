@@ -22,9 +22,10 @@ context("Calculation of maximum time weighted average concentrations (TWAs)")
 test_that("Time weighted average concentrations are correct", {
   skip_on_cran()
   twa_models <- c("SFO", "FOMC", "DFOP", "HS")
+  travis <- Sys.getenv("TRAVIS")
   fits <- mmkin(twa_models,
                 list(FOCUS_C = FOCUS_2006_C, FOCUS_D = FOCUS_2006_D),
-                quiet = TRUE, cores = 8)
+                quiet = TRUE, cores = if (travis) 1 else 8)
 
   outtimes_10 <- seq(0, 10, length.out = 10000)
 
