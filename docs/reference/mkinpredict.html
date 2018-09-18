@@ -131,16 +131,18 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>mkinpredict</span>(<span class='no'>mkinmod</span>, <span class='no'>odeparms</span>, <span class='no'>odeini</span>, <span class='no'>outtimes</span>, <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"deSolve"</span>,
-              <span class='kw'>use_compiled</span> <span class='kw'>=</span> <span class='st'>"auto"</span>, <span class='kw'>method.ode</span> <span class='kw'>=</span> <span class='st'>"lsoda"</span>, <span class='kw'>atol</span> <span class='kw'>=</span> <span class='fl'>1e-08</span>, <span class='kw'>rtol</span> <span class='kw'>=</span> <span class='fl'>1e-10</span>,
-        <span class='kw'>map_output</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>mkinpredict</span>(<span class='no'>x</span>, <span class='no'>odeparms</span>, <span class='no'>odeini</span>, <span class='kw'>outtimes</span> <span class='kw'>=</span> <span class='fu'>seq</span>(<span class='fl'>0</span>, <span class='fl'>120</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>0.1</span>),
+    <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"deSolve"</span>, <span class='kw'>use_compiled</span> <span class='kw'>=</span> <span class='st'>"auto"</span>, <span class='kw'>method.ode</span> <span class='kw'>=</span> <span class='st'>"lsoda"</span>,
+    <span class='kw'>atol</span> <span class='kw'>=</span> <span class='fl'>1e-08</span>, <span class='kw'>rtol</span> <span class='kw'>=</span> <span class='fl'>1e-10</span>, <span class='kw'>map_output</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>mkinmod</th>
-      <td><p>A kinetic model as produced by <code><a href='mkinmod.html'>mkinmod</a></code>.</p></td>
+      <th>x</th>
+      <td><p>A kinetic model as produced by <code><a href='mkinmod.html'>mkinmod</a></code>, or a kinetic
+    fit as fitted by <code><a href='mkinfit.html'>mkinfit</a></code>. In the latter case, the fitted
+    parameters are used for the prediction.</p></td>
     </tr>
     <tr>
       <th>odeparms</th>
@@ -204,10 +206,10 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>  <span class='no'>SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>degradinol</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>))
+    <pre class="examples"><div class='input'>  <span class='no'>SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>degradinol</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))
   <span class='co'># Compare solution types</span>
   <span class='fu'>mkinpredict</span>(<span class='no'>SFO</span>, <span class='fu'>c</span>(<span class='kw'>k_degradinol_sink</span> <span class='kw'>=</span> <span class='fl'>0.3</span>), <span class='fu'>c</span>(<span class='kw'>degradinol</span> <span class='kw'>=</span> <span class='fl'>100</span>), <span class='fl'>0</span>:<span class='fl'>20</span>,
-              <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"analytical"</span>)</div><div class='output co'>#&gt;    time  degradinol
+        <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"analytical"</span>)</div><div class='output co'>#&gt;    time  degradinol
 #&gt; 1     0 100.0000000
 #&gt; 2     1  74.0818221
 #&gt; 3     2  54.8811636
@@ -229,7 +231,7 @@
 #&gt; 19   18   0.4516581
 #&gt; 20   19   0.3345965
 #&gt; 21   20   0.2478752</div><div class='input'>  <span class='fu'>mkinpredict</span>(<span class='no'>SFO</span>, <span class='fu'>c</span>(<span class='kw'>k_degradinol_sink</span> <span class='kw'>=</span> <span class='fl'>0.3</span>), <span class='fu'>c</span>(<span class='kw'>degradinol</span> <span class='kw'>=</span> <span class='fl'>100</span>), <span class='fl'>0</span>:<span class='fl'>20</span>,
-              <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"deSolve"</span>)</div><div class='output co'>#&gt;    time  degradinol
+        <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"deSolve"</span>)</div><div class='output co'>#&gt;    time  degradinol
 #&gt; 1     0 100.0000000
 #&gt; 2     1  74.0818221
 #&gt; 3     2  54.8811636
@@ -251,7 +253,7 @@
 #&gt; 19   18   0.4516581
 #&gt; 20   19   0.3345965
 #&gt; 21   20   0.2478752</div><div class='input'>  <span class='fu'>mkinpredict</span>(<span class='no'>SFO</span>, <span class='fu'>c</span>(<span class='kw'>k_degradinol_sink</span> <span class='kw'>=</span> <span class='fl'>0.3</span>), <span class='fu'>c</span>(<span class='kw'>degradinol</span> <span class='kw'>=</span> <span class='fl'>100</span>), <span class='fl'>0</span>:<span class='fl'>20</span>,
-              <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"deSolve"</span>, <span class='kw'>use_compiled</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt;    time  degradinol
+        <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"deSolve"</span>, <span class='kw'>use_compiled</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt;    time  degradinol
 #&gt; 1     0 100.0000000
 #&gt; 2     1  74.0818221
 #&gt; 3     2  54.8811636
@@ -273,7 +275,7 @@
 #&gt; 19   18   0.4516581
 #&gt; 20   19   0.3345965
 #&gt; 21   20   0.2478752</div><div class='input'>  <span class='fu'>mkinpredict</span>(<span class='no'>SFO</span>, <span class='fu'>c</span>(<span class='kw'>k_degradinol_sink</span> <span class='kw'>=</span> <span class='fl'>0.3</span>), <span class='fu'>c</span>(<span class='kw'>degradinol</span> <span class='kw'>=</span> <span class='fl'>100</span>), <span class='fl'>0</span>:<span class='fl'>20</span>,
-              <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"eigen"</span>)</div><div class='output co'>#&gt;    time  degradinol
+        <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"eigen"</span>)</div><div class='output co'>#&gt;    time  degradinol
 #&gt; 1     0 100.0000000
 #&gt; 2     1  74.0818221
 #&gt; 3     2  54.8811636
@@ -298,21 +300,21 @@
 
   <span class='co'># Compare integration methods to analytical solution</span>
   <span class='fu'>mkinpredict</span>(<span class='no'>SFO</span>, <span class='fu'>c</span>(<span class='kw'>k_degradinol_sink</span> <span class='kw'>=</span> <span class='fl'>0.3</span>), <span class='fu'>c</span>(<span class='kw'>degradinol</span> <span class='kw'>=</span> <span class='fl'>100</span>), <span class='fl'>0</span>:<span class='fl'>20</span>,
-              <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"analytical"</span>)[<span class='fl'>21</span>,]</div><div class='output co'>#&gt;    time degradinol
+        <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"analytical"</span>)[<span class='fl'>21</span>,]</div><div class='output co'>#&gt;    time degradinol
 #&gt; 21   20  0.2478752</div><div class='input'>  <span class='fu'>mkinpredict</span>(<span class='no'>SFO</span>, <span class='fu'>c</span>(<span class='kw'>k_degradinol_sink</span> <span class='kw'>=</span> <span class='fl'>0.3</span>), <span class='fu'>c</span>(<span class='kw'>degradinol</span> <span class='kw'>=</span> <span class='fl'>100</span>), <span class='fl'>0</span>:<span class='fl'>20</span>,
-              <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"lsoda"</span>)[<span class='fl'>21</span>,]</div><div class='output co'>#&gt;    time degradinol
+        <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"lsoda"</span>)[<span class='fl'>21</span>,]</div><div class='output co'>#&gt;    time degradinol
 #&gt; 21   20  0.2478752</div><div class='input'>  <span class='fu'>mkinpredict</span>(<span class='no'>SFO</span>, <span class='fu'>c</span>(<span class='kw'>k_degradinol_sink</span> <span class='kw'>=</span> <span class='fl'>0.3</span>), <span class='fu'>c</span>(<span class='kw'>degradinol</span> <span class='kw'>=</span> <span class='fl'>100</span>), <span class='fl'>0</span>:<span class='fl'>20</span>,
-              <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"ode45"</span>)[<span class='fl'>21</span>,]</div><div class='output co'>#&gt;    time degradinol
+        <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"ode45"</span>)[<span class='fl'>21</span>,]</div><div class='output co'>#&gt;    time degradinol
 #&gt; 21   20  0.2478752</div><div class='input'>  <span class='fu'>mkinpredict</span>(<span class='no'>SFO</span>, <span class='fu'>c</span>(<span class='kw'>k_degradinol_sink</span> <span class='kw'>=</span> <span class='fl'>0.3</span>), <span class='fu'>c</span>(<span class='kw'>degradinol</span> <span class='kw'>=</span> <span class='fl'>100</span>), <span class='fl'>0</span>:<span class='fl'>20</span>,
-              <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"rk4"</span>)[<span class='fl'>21</span>,]</div><div class='output co'>#&gt;    time degradinol
+        <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"rk4"</span>)[<span class='fl'>21</span>,]</div><div class='output co'>#&gt;    time degradinol
 #&gt; 21   20  0.2480043</div><div class='input'> <span class='co'># rk4 is not as precise here</span>
 
   <span class='co'># The number of output times used to make a lot of difference until the</span>
   <span class='co'># default for atol was adjusted</span>
   <span class='fu'>mkinpredict</span>(<span class='no'>SFO</span>, <span class='fu'>c</span>(<span class='kw'>k_degradinol_sink</span> <span class='kw'>=</span> <span class='fl'>0.3</span>), <span class='fu'>c</span>(<span class='kw'>degradinol</span> <span class='kw'>=</span> <span class='fl'>100</span>),
-              <span class='fu'>seq</span>(<span class='fl'>0</span>, <span class='fl'>20</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>0.1</span>))[<span class='fl'>201</span>,]</div><div class='output co'>#&gt;     time degradinol
+        <span class='fu'>seq</span>(<span class='fl'>0</span>, <span class='fl'>20</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>0.1</span>))[<span class='fl'>201</span>,]</div><div class='output co'>#&gt;     time degradinol
 #&gt; 201   20  0.2478752</div><div class='input'>  <span class='fu'>mkinpredict</span>(<span class='no'>SFO</span>, <span class='fu'>c</span>(<span class='kw'>k_degradinol_sink</span> <span class='kw'>=</span> <span class='fl'>0.3</span>), <span class='fu'>c</span>(<span class='kw'>degradinol</span> <span class='kw'>=</span> <span class='fl'>100</span>),
-              <span class='fu'>seq</span>(<span class='fl'>0</span>, <span class='fl'>20</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>0.01</span>))[<span class='fl'>2001</span>,]</div><div class='output co'>#&gt;      time degradinol
+        <span class='fu'>seq</span>(<span class='fl'>0</span>, <span class='fl'>20</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>0.01</span>))[<span class='fl'>2001</span>,]</div><div class='output co'>#&gt;      time degradinol
 #&gt; 2001   20  0.2478752</div><div class='input'>
   <span class='co'># Check compiled model versions - they are faster than the eigenvalue based solutions!</span>
   <span class='no'>SFO_SFO</span> <span class='kw'>=</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"m1"</span>),
@@ -321,7 +323,7 @@
                 <span class='fu'>c</span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fl'>0</span>), <span class='fu'>seq</span>(<span class='fl'>0</span>, <span class='fl'>20</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>0.1</span>),
                 <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"eigen"</span>)[<span class='fl'>201</span>,]))</div><div class='output co'>#&gt;     time   parent       m1
 #&gt; 201   20 4.978707 27.46227</div><div class='output co'>#&gt;        User      System verstrichen 
-#&gt;       0.003       0.000       0.003 </div><div class='input'>  <span class='fu'>system.time</span>(
+#&gt;       0.003       0.000       0.004 </div><div class='input'>  <span class='fu'>system.time</span>(
     <span class='fu'>print</span>(<span class='fu'>mkinpredict</span>(<span class='no'>SFO_SFO</span>, <span class='fu'>c</span>(<span class='kw'>k_parent_m1</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>k_parent_sink</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>k_m1_sink</span> <span class='kw'>=</span> <span class='fl'>0.01</span>),
                 <span class='fu'>c</span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fl'>0</span>), <span class='fu'>seq</span>(<span class='fl'>0</span>, <span class='fl'>20</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>0.1</span>),
                 <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"deSolve"</span>)[<span class='fl'>201</span>,]))</div><div class='output co'>#&gt;     time   parent       m1
@@ -331,7 +333,45 @@
                 <span class='fu'>c</span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fl'>0</span>), <span class='fu'>seq</span>(<span class='fl'>0</span>, <span class='fl'>20</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>0.1</span>),
                 <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"deSolve"</span>, <span class='kw'>use_compiled</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)[<span class='fl'>201</span>,]))</div><div class='output co'>#&gt;     time   parent       m1
 #&gt; 201   20 4.978707 27.46227</div><div class='output co'>#&gt;        User      System verstrichen 
-#&gt;       0.033       0.000       0.034 </div></pre>
+#&gt;       0.034       0.000       0.034 </div><div class='input'>
+  </div><div class='input'>    <span class='co'># Predict from a fitted model</span>
+    <span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_C</span>)</div><div class='output co'>#&gt; Model cost at call  1 :  552.5739 
+#&gt; Model cost at call  3 :  552.5739 
+#&gt; Model cost at call  4 :  552.5739 
+#&gt; Model cost at call  6 :  279.9345 
+#&gt; Model cost at call  7 :  279.9344 
+#&gt; Model cost at call  8 :  279.9294 
+#&gt; Model cost at call  9 :  279.9294 
+#&gt; Model cost at call  12 :  200.3629 
+#&gt; Model cost at call  13 :  200.3629 
+#&gt; Model cost at call  18 :  197.9039 
+#&gt; Model cost at call  23 :  197.9039 
+#&gt; Model cost at call  25 :  196.6754 
+#&gt; Model cost at call  27 :  196.6754 
+#&gt; Model cost at call  32 :  196.5742 
+#&gt; Model cost at call  33 :  196.5742 
+#&gt; Model cost at call  34 :  196.5742 
+#&gt; Model cost at call  38 :  196.5361 
+#&gt; Model cost at call  40 :  196.5361 
+#&gt; Model cost at call  44 :  196.5336 
+#&gt; Model cost at call  45 :  196.5336 
+#&gt; Model cost at call  50 :  196.5334 
+#&gt; Model cost at call  51 :  196.5334 
+#&gt; Model cost at call  52 :  196.5334 
+#&gt; Model cost at call  56 :  196.5334 
+#&gt; Model cost at call  58 :  196.5334 
+#&gt; Model cost at call  59 :  196.5334 
+#&gt; Model cost at call  65 :  196.5334 
+#&gt; Model cost at call  73 :  196.5334 
+#&gt; Model cost at call  78 :  196.5334 
+#&gt; Model cost at call  80 :  196.5334 
+#&gt; Optimisation by method Port successfully terminated.</div><div class='input'>    <span class='fu'>head</span>(<span class='fu'>mkinpredict</span>(<span class='no'>f</span>))</div><div class='output co'>#&gt;   time   parent       m1
+#&gt; 1  0.0 82.49216 0.000000
+#&gt; 2  0.1 80.00563 1.179955
+#&gt; 3  0.2 77.59404 2.312580
+#&gt; 4  0.3 75.25515 3.399419
+#&gt; 5  0.4 72.98675 4.441969
+#&gt; 6  0.5 70.78673 5.441679</div><div class='input'>  </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
