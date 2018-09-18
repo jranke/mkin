@@ -1,4 +1,4 @@
-# Copyright (C) 2016,2017 Johannes Ranke
+# Copyright (C) 2016,2017,2018 Johannes Ranke
 # Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
@@ -55,7 +55,21 @@ max_twa_parent <- function(fit, windows) {
       M0/t * ((g/k1) * (1 - exp(- k1 * t)) + ((1 - g)/k2) * (1 - exp(- k2 * t)))
     }
   }
-  if (type %in% c("HS", "IORE", "SFORB")) {
+  if (type == "HS") {
+    k1 <- parms.all["k1"]
+    k2 <- parms.all["k2"]
+    tb <- parms.all["tb"]
+    twafunc <- function(t) {
+      ifelse(t <= tb,
+        M0 * (1 - exp(- k1 * t)) / (k1 * t),
+        (M0 / t) * (
+          (1/k1) * (1 - exp(- k1 * tb)) +
+          (exp(- k1 * tb) / k2) * (1 - exp(- k2 * (t - tb)))
+        )
+      )
+    }
+  }
+  if (type %in% c("IORE", "SFORB")) {
     stop("Calculation of maximum time weighted average concentrations is currently ",
          "not implemented for the ", type, " model.")
   }

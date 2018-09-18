@@ -1,6 +1,8 @@
-# mkin 0.9.47.6 (2018-09-15)
+# mkin 0.9.47.6 (2018-09-18)
 
 - 'add_err': Respect the argument giving the number of replicates in the synthetic dataset
+
+- 'max_twa_parent': Support maximum time weighted average concentration calculations for the hockey stick (HS) model
 
 # mkin 0.9.47.5 (2018-09-14)
 

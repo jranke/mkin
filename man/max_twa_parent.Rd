@@ -6,7 +6,7 @@
 \description{
 This function calculates maximum moving window time weighted average concentrations
 (TWAs) for kinetic models fitted with \code{\link{mkinfit}}. Currently, only
-calculations for the parent are implemented for the SFO, FOMC and DFOP models,
+calculations for the parent are implemented for the SFO, FOMC, DFOP and HS models,
 using the analytical formulas given in the PEC soil section of the FOCUS
 guidance.}
 \usage{

@@ -21,23 +21,29 @@ context("Calculation of maximum time weighted average concentrations (TWAs)")
 
 test_that("Time weighted average concentrations are correct", {
   skip_on_cran()
-  twa_models <- c("SFO", "FOMC", "DFOP")
-  fits <- mmkin(twa_models, list(FOCUS_D = FOCUS_2006_D), 
-                quiet = TRUE, cores = 1)
+  twa_models <- c("SFO", "FOMC", "DFOP", "HS")
+  fits <- mmkin(twa_models,
+                list(FOCUS_C = FOCUS_2006_C, FOCUS_D = FOCUS_2006_D),
+                quiet = TRUE, cores = 8)
 
-  outtimes_7 <- seq(0, 7, length.out = 10000)
-  for (model in twa_models) {
-    fit <- fits[[model, 1]]
-    bpar <- summary(fit)$bpar[, "Estimate"]
-    pred_7 <- mkinpredict(fit$mkinmod,
-                odeparms = bpar[2:length(bpar)],
-                odeini = c(parent = bpar[[1]]),
-                outtimes = outtimes_7)
-    twa_num <- mean(pred_7$parent)
-    names(twa_num) <- 7
-    twa_ana <- max_twa_parent(fit, 7)
+  outtimes_10 <- seq(0, 10, length.out = 10000)
 
-    # Test for absolute difference (scale = 1)
-    expect_equal(twa_num, twa_ana, tolerance = 0.001, scale = 1)
+  for (ds in c("FOCUS_C", "FOCUS_D")) {
+    for (model in twa_models) {
+      fit <- fits[[model, ds]]
+      bpar <- summary(fit)$bpar[, "Estimate"]
+      pred_10 <- mkinpredict(fit$mkinmod,
+                  odeparms = bpar[2:length(bpar)],
+                  odeini = c(parent = bpar[[1]]),
+                  outtimes = outtimes_10)
+      twa_num <- mean(pred_10$parent)
+      names(twa_num) <- 10
+      twa_ana <- max_twa_parent(fit, 10)
+
+      # Test for absolute difference (scale = 1)
+      # The tolerance can be reduced if the length of outtimes is increased,
+      # but this needs more computing time so we stay with lenght.out = 10k
+      expect_equal(twa_num, twa_ana, tolerance = 0.003, scale = 1)
+    }
   }
 })
