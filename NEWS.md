@@ -4,6 +4,8 @@
 
 - 'max_twa_parent': Support maximum time weighted average concentration calculations for the hockey stick (HS) model
 
+- 'mkinpredict': Make the function generic and create a method for mkinfit objects
+
 # mkin 0.9.47.5 (2018-09-14)
 
 - Make the two-component error model stop in cases where it is inadequate to avoid nls crashes on windows

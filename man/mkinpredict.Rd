@@ -1,5 +1,7 @@
 \name{mkinpredict}
 \alias{mkinpredict}
+\alias{mkinpredict.mkinmod}
+\alias{mkinpredict.mkinfit}
 \title{
   Produce predictions from a kinetic model using specific parameters
 }
@@ -9,13 +11,15 @@
   kinetic parameters and initial values for the state variables.
 }
 \usage{
-  mkinpredict(mkinmod, odeparms, odeini, outtimes, solution_type = "deSolve",
-	      use_compiled = "auto", method.ode = "lsoda", atol = 1e-08, rtol = 1e-10,
-        map_output = TRUE, ...)
+  mkinpredict(x, odeparms, odeini, outtimes = seq(0, 120, by = 0.1),
+    solution_type = "deSolve", use_compiled = "auto", method.ode = "lsoda",
+    atol = 1e-08, rtol = 1e-10, map_output = TRUE, ...)
 }
 \arguments{
-  \item{mkinmod}{
-    A kinetic model as produced by \code{\link{mkinmod}}.
+  \item{x}{
+    A kinetic model as produced by \code{\link{mkinmod}}, or a kinetic
+    fit as fitted by \code{\link{mkinfit}}. In the latter case, the fitted
+    parameters are used for the prediction.
   }
   \item{odeparms}{
     A numeric vector specifying the parameters used in the kinetic model, which
@@ -69,35 +73,35 @@
   Johannes Ranke
 }
 \examples{
-  SFO <- mkinmod(degradinol = list(type = "SFO"))
+  SFO <- mkinmod(degradinol = mkinsub("SFO"))
   # Compare solution types
   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20,
-	      solution_type = "analytical")
+        solution_type = "analytical")
   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20,
-	      solution_type = "deSolve")
+        solution_type = "deSolve")
   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20,
-	      solution_type = "deSolve", use_compiled = FALSE)
+        solution_type = "deSolve", use_compiled = FALSE)
   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20,
-	      solution_type = "eigen")
+        solution_type = "eigen")
 
 
   # Compare integration methods to analytical solution
   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20,
-	      solution_type = "analytical")[21,]
+        solution_type = "analytical")[21,]
   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20,
-	      method = "lsoda")[21,]
+        method = "lsoda")[21,]
   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20,
-	      method = "ode45")[21,]
+        method = "ode45")[21,]
   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20,
-	      method = "rk4")[21,]
+        method = "rk4")[21,]
  # rk4 is not as precise here
 
   # The number of output times used to make a lot of difference until the
   # default for atol was adjusted
   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100),
-	      seq(0, 20, by = 0.1))[201,]
+        seq(0, 20, by = 0.1))[201,]
   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100),
-	      seq(0, 20, by = 0.01))[2001,]
+        seq(0, 20, by = 0.01))[2001,]
 
   # Check compiled model versions - they are faster than the eigenvalue based solutions!
   SFO_SFO = mkinmod(parent = list(type = "SFO", to = "m1"),
@@ -114,5 +118,11 @@
     print(mkinpredict(SFO_SFO, c(k_parent_m1 = 0.05, k_parent_sink = 0.1, k_m1_sink = 0.01),
                 c(parent = 100, m1 = 0), seq(0, 20, by = 0.1),
                 solution_type = "deSolve", use_compiled = FALSE)[201,]))
+
+  \dontrun{
+    # Predict from a fitted model
+    f <- mkinfit(SFO_SFO, FOCUS_2006_C)
+    head(mkinpredict(f))
+  }
 }
 \keyword{ manip }
