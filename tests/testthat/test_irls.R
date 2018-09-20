@@ -43,6 +43,56 @@ test_that("Reweighting method 'obs' works", {
 test_that("Reweighting method 'tc' works", {
   skip_on_cran()
   skip("IRLS reweighting with method 'tc' is currently under construction")
+
+  DFOP <- mkinmod(parent = mkinsub("DFOP"))
+  sampling_times = c(0, 1, 3, 7, 14, 28, 60, 90, 120)
+  d_DFOP <- mkinpredict(DFOP,
+     c(k1 = 0.2, k2 = 0.02, g = 0.5),
+     c(parent = 100),
+     sampling_times)
+  d_100 <- add_err(d_DFOP,
+    sdfunc = function(x) sigma_twocomp(x, 0.5, 0.07),
+    n = 1, reps = 100, digits = 5, LOD = -Inf)
+  d_1000 <- add_err(d_DFOP,
+    sdfunc = function(x) sigma_twocomp(x, 0.5, 0.07),
+    n = 1, reps = 1000, digits = 5, LOD = -Inf)
+
+  f_100 <- mkinfit(DFOP, d_100[[1]])
+  f_100$bparms.optim
+  f_tc_100 <- mkinfit(DFOP, d_100[[1]], reweight.method = "tc")
+  f_tc_100$bparms.optim
+  f_tc_100$tc_fitted
+
+  f_tc_1000 <- mkinfit(DFOP, d_1000[[1]], reweight.method = "tc")
+  f_tc_1000$bparms.optim
+  f_tc_1000$tc_fitted
+
+  m_synth_DFOP_lin <- mkinmod(parent = list(type = "DFOP", to = "M1"),
+                             M1 = list(type = "SFO", to = "M2"),
+                             M2 = list(type = "SFO"), use_of_ff = "max",
+                             quiet = TRUE)
+  sampling_times = c(0, 1, 3, 7, 14, 28, 60, 90, 120)
+  d_synth_DFOP_lin <- mkinpredict(m_synth_DFOP_lin,
+     c(k1 = 0.2, k2 = 0.02, g = 0.5,
+     f_parent_to_M1 = 0.5, k_M1 = 0.3,
+     f_M1_to_M2 = 0.7, k_M2 = 0.02),
+     c(parent = 100, M1 = 0, M2 = 0),
+     sampling_times)
+
+  d_met_100 <- add_err(d_synth_DFOP_lin,
+    sdfunc = function(x) sigma_twocomp(x, 0.5, 0.07),
+    n = 1, reps = 100, digits = 5, LOD = -Inf)
+  d_met_1000 <- add_err(d_synth_DFOP_lin,
+    sdfunc = function(x) sigma_twocomp(x, 0.5, 0.07),
+    n = 1, reps = 1000, digits = 5, LOD = -Inf)
+
+  f_met_100 <- mkinfit(m_synth_DFOP_lin, d_met_100[[1]])
+  summary(f_met_100)$bpar
+
+  f_met_100 <- mkinfit(m_synth_DFOP_lin, d_met_100[[1]], reweight.method = "tc")
+  summary(f.100)$bpar
+
+
   fit_irls_2 <- mkinfit(m_synth_DFOP_par, DFOP_par_c, reweight.method = "tc", quiet = TRUE)
   parms_2 <- signif(fit_irls_2$bparms.optim, 3)
   expect_equivalent(parms_2, c(99.3, 0.041, 0.00962, 0.597, 0.393, 0.298, 0.0203, 0.707))
