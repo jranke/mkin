@@ -415,10 +415,16 @@ mkinfit <- function(mkinmod, observed,
         # We need unweighted residuals to update the weighting
         tmp_res <- cost(fit$par)$residuals
 
+        mad_agg <- aggregate(tmp_res$res.unweighted,
+                             by = list(name = tmp_res$name, x_res = tmp_res$x),
+                             FUN = function(x) mad(x, center = 0))
+        names(mad_agg) <- c("name", "x", "mad")
+        tmp_res_mad <- merge(tmp_res, mad_agg)
+
         tc_fit <- try(
-          nls(abs(res.unweighted) ~ sigma_twocomp(obs, sigma_low, rsd_high),
+          nls(mad ~ sigma_twocomp(mod, sigma_low, rsd_high),
             start = list(sigma_low = tc["sigma_low"], rsd_high = tc["rsd_high"]),
-            data = tmp_res,
+            data = tmp_res_mad,
             lower = 0,
             algorithm = "port"))
 
@@ -429,7 +435,7 @@ mkinfit <- function(mkinmod, observed,
 
         tc_fitted <- coef(tc_fit)
         if(!quiet) {
-          cat("IRLS based on variance estimates according to the Rocke and Lorenzato model\n")
+          cat("IRLS based on variance estimates according to the two component error model\n")
           cat("Initial variance components are:\n")
           print(signif(tc_fitted))
         }
@@ -459,11 +465,16 @@ mkinfit <- function(mkinmod, observed,
         }
         if (reweight.method == "tc") {
           tmp_res <- cost(fit$par)$residuals
+          mad_agg <- aggregate(tmp_res$res.unweighted,
+                               by = list(name = tmp_res$name, x_res = tmp_res$x),
+                               FUN = function(x) mad(x, center = 0))
+          names(mad_agg) <- c("name", "x", "mad")
+          tmp_res_mad <- merge(tmp_res, mad_agg)
 
           tc_fit <- try(
-            nls(abs(res.unweighted) ~ sigma_twocomp(obs, sigma_low, rsd_high),
+            nls(mad ~ sigma_twocomp(mod, sigma_low, rsd_high),
               start = list(sigma_low = tc["sigma_low"], rsd_high = tc["rsd_high"]),
-              data = tmp_res,
+              data = tmp_res_mad,
               lower = 0,
               algorithm = "port"))
 
