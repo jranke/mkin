@@ -42,6 +42,7 @@ test_that("Reweighting method 'obs' works", {
 
 test_that("Reweighting method 'tc' works", {
   skip_on_cran()
+  skip()
   fit_irls_2 <- mkinfit(m_synth_DFOP_par, DFOP_par_c, reweight.method = "tc", quiet = TRUE)
   parms_2 <- signif(fit_irls_2$bparms.optim, 3)
   expect_equivalent(parms_2, c(99.3, 0.041, 0.00962, 0.597, 0.393, 0.298, 0.0203, 0.707))
