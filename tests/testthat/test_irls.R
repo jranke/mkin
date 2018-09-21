@@ -42,62 +42,88 @@ test_that("Reweighting method 'obs' works", {
 
 test_that("Reweighting method 'tc' works", {
   skip_on_cran()
-  skip("IRLS reweighting with method 'tc' is currently under construction")
 
+  # Check if we can approximately obtain the parameters and the error model
+  # components that were used in the data generation
+
+  # Parent only
   DFOP <- mkinmod(parent = mkinsub("DFOP"))
   sampling_times = c(0, 1, 3, 7, 14, 28, 60, 90, 120)
+  parms_DFOP <- c(k1 = 0.2, k2 = 0.02, g = 0.5)
+  parms_DFOP_optim <- c(parent_0 = 100, parms_DFOP)
   d_DFOP <- mkinpredict(DFOP,
-     c(k1 = 0.2, k2 = 0.02, g = 0.5),
-     c(parent = 100),
+     parms_DFOP, c(parent = 100),
      sampling_times)
-  d_100 <- add_err(d_DFOP,
+  d_2_100 <- add_err(d_DFOP,
+    sdfunc = function(x) sigma_twocomp(x, 0.5, 0.07),
+    n = 100, reps = 2, digits = 5, LOD = -Inf)
+  d_100_1 <- add_err(d_DFOP,
     sdfunc = function(x) sigma_twocomp(x, 0.5, 0.07),
     n = 1, reps = 100, digits = 5, LOD = -Inf)
-  d_1000 <- add_err(d_DFOP,
-    sdfunc = function(x) sigma_twocomp(x, 0.5, 0.07),
-    n = 1, reps = 1000, digits = 5, LOD = -Inf)
 
-  f_100 <- mkinfit(DFOP, d_100[[1]])
-  f_100$bparms.optim
-  f_tc_100 <- mkinfit(DFOP, d_100[[1]], reweight.method = "tc")
-  f_tc_100$bparms.optim
-  f_tc_100$tc_fitted
+  f_2_100 <- mmkin("DFOP", d_2_100, quiet = TRUE,
+    cores = if (Sys.getenv("TRAVIS") != "") 1 else 15)
+  parms_2_100 <- apply(sapply(f_2_100, function(x) x$bparms.optim), 1, mean)
+  parm_errors_2_100 <- (parms_2_100 - parms_DFOP_optim) / parms_DFOP_optim
+  expect_true(all(abs(parm_errors_2_100) < 0.2))
 
-  f_tc_1000 <- mkinfit(DFOP, d_1000[[1]], reweight.method = "tc")
-  f_tc_1000$bparms.optim
-  f_tc_1000$tc_fitted
+  f_2_100_tc <- mmkin("DFOP", d_2_100, reweight.method = "tc", quiet = TRUE,
+    cores = if (Sys.getenv("TRAVIS") != "") 1 else 15)
+  parms_2_100_tc <- apply(sapply(f_2_100_tc, function(x) x$bparms.optim), 1, mean)
+  parm_errors_2_100_tc <- (parms_2_100_tc - parms_DFOP_optim) / parms_DFOP_optim
+  expect_true(all(abs(parm_errors_2_100_tc) < 0.1))
 
+  tcf_2_100_tc <- apply(sapply(f_2_100_tc, function(x) x$tc_fitted), 1, mean, na.rm = TRUE)
+
+  tcf_2_100_error_model_errors <- (tcf_2_100_tc - c(0.5, 0.07)) / c(0.5, 0.07)
+  expect_true(all(abs(tcf_2_100_error_model_errors) < 0.2))
+
+  f_tc_100_1 <- suppressWarnings(mkinfit(DFOP, d_100_1[[1]], reweight.method = "tc", quiet = TRUE))
+  parm_errors_100_1 <- (f_tc_100_1$bparms.optim - parms_DFOP_optim) / parms_DFOP_optim
+  expect_true(all(abs(parm_errors_100_1) < 0.05))
+
+  tcf_100_1_error_model_errors <- (f_tc_100_1$tc_fitted - c(0.5, 0.07)) /
+    c(0.5, 0.07)
+  # Even with 100 (or even 1000, not shown) replicates at each observation time
+  # we only get a precision of 20% for the error model components
+  expect_true(all(abs(tcf_100_1_error_model_errors) < 0.2))
+
+  # Parent and two metabolites
   m_synth_DFOP_lin <- mkinmod(parent = list(type = "DFOP", to = "M1"),
                              M1 = list(type = "SFO", to = "M2"),
                              M2 = list(type = "SFO"), use_of_ff = "max",
                              quiet = TRUE)
   sampling_times = c(0, 1, 3, 7, 14, 28, 60, 90, 120)
-  d_synth_DFOP_lin <- mkinpredict(m_synth_DFOP_lin,
-     c(k1 = 0.2, k2 = 0.02, g = 0.5,
+  parms_DFOP_lin <- c(k1 = 0.2, k2 = 0.02, g = 0.5,
      f_parent_to_M1 = 0.5, k_M1 = 0.3,
-     f_M1_to_M2 = 0.7, k_M2 = 0.02),
+     f_M1_to_M2 = 0.7, k_M2 = 0.02)
+  d_synth_DFOP_lin <- mkinpredict(m_synth_DFOP_lin,
+     parms_DFOP_lin,
      c(parent = 100, M1 = 0, M2 = 0),
      sampling_times)
+  parms_DFOP_lin_optim = c(parent_0 = 100, parms_DFOP_lin)
 
-  d_met_100 <- add_err(d_synth_DFOP_lin,
+  d_met_2_15 <- add_err(d_synth_DFOP_lin,
     sdfunc = function(x) sigma_twocomp(x, 0.5, 0.07),
-    n = 1, reps = 100, digits = 5, LOD = -Inf)
-  d_met_1000 <- add_err(d_synth_DFOP_lin,
-    sdfunc = function(x) sigma_twocomp(x, 0.5, 0.07),
-    n = 1, reps = 1000, digits = 5, LOD = -Inf)
+    n = 15, reps = 1000, digits = 5, LOD = -Inf)
 
-  f_met_100 <- mkinfit(m_synth_DFOP_lin, d_met_100[[1]])
-  summary(f_met_100)$bpar
+  time_met_2_15_tc_15 <- system.time(
+    f_met_2_15_tc_e4 <- mmkin(list(m_synth_DFOP_lin), d_met_2_15, quiet = TRUE,
+                              reweight.method = "tc", reweight.tol = 1e-4,
+                              cores = if (Sys.getenv("TRAVIS") != "") 1 else 15)
+  )
 
-  f_met_100 <- mkinfit(m_synth_DFOP_lin, d_met_100[[1]], reweight.method = "tc")
-  summary(f.100)$bpar
+  parms_met_2_15_tc_e4 <- apply(sapply(f_met_2_15_tc_e4, function(x) x$bparms.optim), 1, mean)
+  parm_errors_met_2_15_tc_e4 <- (parms_met_2_15_tc_e4[names(parms_DFOP_lin_optim)] -
+                                 parms_DFOP_lin_optim) / parms_DFOP_lin_optim
+  expect_true(all(abs(parm_errors_met_2_15_tc_e4) < 0.01))
 
+  tcf_met_2_15_tc <- apply(sapply(f_met_2_15_tc_e4, function(x) x$tc_fitted), 1, mean, na.rm = TRUE)
 
-  fit_irls_2 <- mkinfit(m_synth_DFOP_par, DFOP_par_c, reweight.method = "tc", quiet = TRUE)
-  parms_2 <- signif(fit_irls_2$bparms.optim, 3)
-  expect_equivalent(parms_2, c(99.3, 0.041, 0.00962, 0.597, 0.393, 0.298, 0.0203, 0.707))
+  tcf_met_2_15_tc_error_model_errors <- (tcf_met_2_15_tc - c(0.5, 0.07)) /
+    c(0.5, 0.07)
 
-  fit_irls_3 <- mkinfit("DFOP", FOCUS_2006_C, reweight.method = "tc", quiet = TRUE)
-  parms_3 <- signif(fit_irls_3$bparms.optim, 3)
-  expect_equivalent(parms_3, c(85.0, 0.46, 0.0178, 0.854))
+  # Here we only get a precision < 30% for retrieving the original error model components
+  # from 15 datasets
+  expect_true(all(abs(tcf_met_2_15_tc_error_model_errors) < 0.3))
 })

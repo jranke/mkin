@@ -1,10 +1,14 @@
-# mkin 0.9.47.6 (2018-09-18)
+# mkin 0.9.47.6 (2018-09-21)
 
 - 'add_err': Respect the argument giving the number of replicates in the synthetic dataset
 
 - 'max_twa_parent': Support maximum time weighted average concentration calculations for the hockey stick (HS) model
 
 - 'mkinpredict': Make the function generic and create a method for mkinfit objects
+
+- 'mkinfit': Improve the correctness of the fitted two component error model by fitting the mean absolute deviance at each observation against the observed values, weighting with the current two-component error model
+
+- 'tests/testthat/test_irls.R': Test if the components of the error model used to generate the data can be reproduced with moderate accuracy
 
 # mkin 0.9.47.5 (2018-09-14)
 
