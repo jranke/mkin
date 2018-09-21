@@ -107,11 +107,18 @@ test_that("Reweighting method 'tc' works", {
     sdfunc = function(x) sigma_twocomp(x, 0.5, 0.07),
     n = 15, reps = 1000, digits = 5, LOD = -Inf)
 
-  time_met_2_15_tc_15 <- system.time(
-    f_met_2_15_tc_e4 <- mmkin(list(m_synth_DFOP_lin), d_met_2_15, quiet = TRUE,
-                              reweight.method = "tc", reweight.tol = 1e-4,
-                              cores = if (Sys.getenv("TRAVIS") != "") 1 else 15)
-  )
+  # For a single fit, we get a relative error of less than 30%  in the error
+  # model components
+  f_met_2_tc_e4 <- mkinfit(m_synth_DFOP_lin, d_met_2_15[[1]], quiet = TRUE,
+                          reweight.method = "tc", reweight.tol = 1e-4)
+  parm_errors_met_2_tc_e4 <- (f_met_2_tc_e4$tc_fitted - c(0.5, 0.07)) / c(0.5, 0.07)
+  expect_true(all(abs(parm_errors_met_2_tc_e4) < 0.3))
+
+  # Doing more takes a lot of computing power
+  skip_on_travis()
+  f_met_2_15_tc_e4 <- mmkin(list(m_synth_DFOP_lin), d_met_2_15, quiet = TRUE,
+                            reweight.method = "tc", reweight.tol = 1e-4,
+                            cores = 14)
 
   parms_met_2_15_tc_e4 <- apply(sapply(f_met_2_15_tc_e4, function(x) x$bparms.optim), 1, mean)
   parm_errors_met_2_15_tc_e4 <- (parms_met_2_15_tc_e4[names(parms_DFOP_lin_optim)] -
