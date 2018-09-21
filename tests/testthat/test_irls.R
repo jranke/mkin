@@ -54,29 +54,29 @@ test_that("Reweighting method 'tc' works", {
   d_DFOP <- mkinpredict(DFOP,
      parms_DFOP, c(parent = 100),
      sampling_times)
-  d_2_100 <- add_err(d_DFOP,
+  d_2_10 <- add_err(d_DFOP,
     sdfunc = function(x) sigma_twocomp(x, 0.5, 0.07),
-    n = 100, reps = 2, digits = 5, LOD = -Inf)
+    n = 10, reps = 2, digits = 5, LOD = -Inf)
   d_100_1 <- add_err(d_DFOP,
     sdfunc = function(x) sigma_twocomp(x, 0.5, 0.07),
     n = 1, reps = 100, digits = 5, LOD = -Inf)
 
-  f_2_100 <- mmkin("DFOP", d_2_100, quiet = TRUE,
+  f_2_10 <- mmkin("DFOP", d_2_10, quiet = TRUE,
     cores = if (Sys.getenv("TRAVIS") != "") 1 else 15)
-  parms_2_100 <- apply(sapply(f_2_100, function(x) x$bparms.optim), 1, mean)
-  parm_errors_2_100 <- (parms_2_100 - parms_DFOP_optim) / parms_DFOP_optim
-  expect_true(all(abs(parm_errors_2_100) < 0.2))
+  parms_2_10 <- apply(sapply(f_2_10, function(x) x$bparms.optim), 1, mean)
+  parm_errors_2_10 <- (parms_2_10 - parms_DFOP_optim) / parms_DFOP_optim
+  expect_true(all(abs(parm_errors_2_10) < 0.2))
 
-  f_2_100_tc <- mmkin("DFOP", d_2_100, reweight.method = "tc", quiet = TRUE,
+  f_2_10_tc <- mmkin("DFOP", d_2_10, reweight.method = "tc", quiet = TRUE,
     cores = if (Sys.getenv("TRAVIS") != "") 1 else 15)
-  parms_2_100_tc <- apply(sapply(f_2_100_tc, function(x) x$bparms.optim), 1, mean)
-  parm_errors_2_100_tc <- (parms_2_100_tc - parms_DFOP_optim) / parms_DFOP_optim
-  expect_true(all(abs(parm_errors_2_100_tc) < 0.1))
+  parms_2_10_tc <- apply(sapply(f_2_10_tc, function(x) x$bparms.optim), 1, mean)
+  parm_errors_2_10_tc <- (parms_2_10_tc - parms_DFOP_optim) / parms_DFOP_optim
+  expect_true(all(abs(parm_errors_2_10_tc) < 0.1))
 
-  tcf_2_100_tc <- apply(sapply(f_2_100_tc, function(x) x$tc_fitted), 1, mean, na.rm = TRUE)
+  tcf_2_10_tc <- apply(sapply(f_2_10_tc, function(x) x$tc_fitted), 1, mean, na.rm = TRUE)
 
-  tcf_2_100_error_model_errors <- (tcf_2_100_tc - c(0.5, 0.07)) / c(0.5, 0.07)
-  expect_true(all(abs(tcf_2_100_error_model_errors) < 0.2))
+  tcf_2_10_error_model_errors <- (tcf_2_10_tc - c(0.5, 0.07)) / c(0.5, 0.07)
+  expect_true(all(abs(tcf_2_10_error_model_errors) < 0.2))
 
   f_tc_100_1 <- suppressWarnings(mkinfit(DFOP, d_100_1[[1]], reweight.method = "tc", quiet = TRUE))
   parm_errors_100_1 <- (f_tc_100_1$bparms.optim - parms_DFOP_optim) / parms_DFOP_optim
@@ -85,8 +85,8 @@ test_that("Reweighting method 'tc' works", {
   tcf_100_1_error_model_errors <- (f_tc_100_1$tc_fitted - c(0.5, 0.07)) /
     c(0.5, 0.07)
   # Even with 100 (or even 1000, not shown) replicates at each observation time
-  # we only get a precision of 20% for the error model components
-  expect_true(all(abs(tcf_100_1_error_model_errors) < 0.2))
+  # we only get a precision of 15% to 30% for the error model components
+  expect_true(all(abs(tcf_100_1_error_model_errors) < 0.3))
 
   # Parent and two metabolites
   m_synth_DFOP_lin <- mkinmod(parent = list(type = "DFOP", to = "M1"),
