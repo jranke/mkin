@@ -179,7 +179,7 @@ mkinfit(mkinmod, observed,
   \item{weight}{
     only if \code{err}=\code{NULL}: how to weight the residuals, one of "none",
     "std", "mean", see details of \code{\link{modCost}}, or "tc" for the
-    two component error model. The option "manual" is available for 
+    two component error model. The option "manual" is available for
     the case that \code{err}!=\code{NULL}, but it is not necessary to specify it.
   }
   \item{tc}{The two components of the error model as used for (initial)
@@ -244,6 +244,9 @@ mkinfit(mkinmod, observed,
 \seealso{
   Plotting methods \code{\link{plot.mkinfit}} and
   \code{\link{mkinparplot}}.
+
+  Comparisons of models fitted to the same data can be made using \code{\link{AIC}}
+  by virtue of the method \code{\link{logLik.mkinfit}}.
 
   Fitting of several models to several datasets in a single call to
   \code{\link{mmkin}}.

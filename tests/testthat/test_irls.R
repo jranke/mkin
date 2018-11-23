@@ -65,7 +65,7 @@ test_that("Reweighting method 'tc' works", {
     cores = if (Sys.getenv("TRAVIS") != "") 1 else 15)
   parms_2_10 <- apply(sapply(f_2_10, function(x) x$bparms.optim), 1, mean)
   parm_errors_2_10 <- (parms_2_10 - parms_DFOP_optim) / parms_DFOP_optim
-  expect_true(all(abs(parm_errors_2_10) < 0.2))
+  expect_true(all(abs(parm_errors_2_10) < 0.3))
 
   f_2_10_tc <- mmkin("DFOP", d_2_10, reweight.method = "tc", quiet = TRUE,
     cores = if (Sys.getenv("TRAVIS") != "") 1 else 15)
@@ -76,7 +76,7 @@ test_that("Reweighting method 'tc' works", {
   tcf_2_10_tc <- apply(sapply(f_2_10_tc, function(x) x$tc_fitted), 1, mean, na.rm = TRUE)
 
   tcf_2_10_error_model_errors <- (tcf_2_10_tc - c(0.5, 0.07)) / c(0.5, 0.07)
-  expect_true(all(abs(tcf_2_10_error_model_errors) < 0.2))
+  expect_true(all(abs(tcf_2_10_error_model_errors) < 0.3))
 
   f_tc_100_1 <- suppressWarnings(mkinfit(DFOP, d_100_1[[1]], reweight.method = "tc", quiet = TRUE))
   parm_errors_100_1 <- (f_tc_100_1$bparms.optim - parms_DFOP_optim) / parms_DFOP_optim

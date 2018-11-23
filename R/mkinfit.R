@@ -859,7 +859,7 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
   invisible(x)
 }
 
-# Fit the mean absolute deviance against the observed values,
+# Fit the median absolute deviation against the observed values,
 # using the current error model for weighting
 .fit_error_model_mad_obs <- function(tmp_res, tc, iteration) {
   mad_agg <- aggregate(tmp_res$res.unweighted,
