@@ -16,7 +16,9 @@
   and add one to the number of fitted degradation model parameters.
 
   For the case of manual weighting, we use the weight given for each
-  observation as standard deviation in calculating its likelihood.
+  observation as standard deviation in calculating its likelihood
+  and the total number of estimated parameters is equal to the 
+  number of fitted degradation model parameters.
 
   In the case of iterative reweighting, the variances obtained by this
   procedure are used in the likelihood calculations, and the number of
