@@ -19,12 +19,21 @@ logLik.mkinfit <- function(object, ...) {
   y_ij <- object$data$observed
   yhat_ij <- object$data$predicted
   if (is.null(object$data$err)) {
+    # For unweighted fits we estimate a single value for sigma from the residuals
     err <- sd(object$data$residual)
     n_var_comp <- 1 # Number of variance components estimated
   } else {
     err <- object$data$err
-    if (object$reweight.method == "obs") n_var_comp <- length(object$var_ms_unweighted)
-    else n_var_comp <- 2
+    # For weighted fits we check for variance models used in IRLS
+    # If the variance values (err) were given and were not
+    # reweighted, the number of variance components estimated is zero
+    if (is.null(object$reweight.method)) {
+      n_var_comp <- 0
+    } else {
+      n_var_comp <- switch(object$reweight.method,
+        obs = length(object$var_ms_unweighted),
+        tc = 2)
+    }
   }
   prob_dens <- dnorm(y_ij, yhat_ij, err)
   val <- log(prod(prob_dens))

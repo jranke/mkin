@@ -30,10 +30,12 @@
   )
   d_t <- FOCUS_2006_D
   d_t[23:24, "value"] <- c(NA, NA) # can't cope with zero values at the moment
-  f_nw <- mkinfit(sfo_sfo, d_t, quiet = TRUE)
+  f_nw <- mkinfit(sfo_sfo, d_t, quiet = TRUE) # no weighting (weights are unity)
   f_obs <- mkinfit(sfo_sfo, d_t, reweight.method = "obs", quiet = TRUE)
   f_tc <- mkinfit(sfo_sfo, d_t, reweight.method = "tc", quiet = TRUE)
-  AIC(f_nw, f_obs, f_tc)
+  d_t$err <- d_t$value # Manual weighting assuming sigma ~ y
+  f_man <- mkinfit(sfo_sfo, d_t, err = "err", quiet = TRUE)
+  AIC(f_nw, f_obs, f_tc, f_man)
 }
 \author{
   Johannes Ranke
