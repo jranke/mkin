@@ -7,8 +7,8 @@
   This function simply calculates the product of the likelihood densities
   calculated using \code{\link{dnorm}}, i.e. assuming normal distribution.
 
-  The total number of estimated parameters returned with the value 
-  of the likelihood is calculated as the sum of fitted degradation 
+  The total number of estimated parameters returned with the value
+  of the likelihood is calculated as the sum of fitted degradation
   model parameters and the fitted error model parameters.
 
   For the case of unweighted least squares fitting, we calculate one
@@ -17,7 +17,7 @@
 
   For the case of manual weighting, we use the weight given for each
   observation as standard deviation in calculating its likelihood
-  and the total number of estimated parameters is equal to the 
+  and the total number of estimated parameters is equal to the
   number of fitted degradation model parameters.
 
   In the case of iterative reweighting, the variances obtained by this
@@ -28,7 +28,7 @@
   reweighting method is "tc".
 }
 \usage{
-\method{logLik}{mkinfit}(object, ...)
+  \method{logLik}{mkinfit}(object, ...)
 }
 \arguments{
   \item{object}{
@@ -42,6 +42,10 @@
   An object of class \code{\link{logLik}} with the number of
   estimated parameters (degradation model parameters plus variance
   model parameters) as attribute.
+}
+\seealso{
+  Compare the AIC of columns of \code{\link{mmkin}} objects using
+  \code{\link{AIC.mmkin}}.
 }
 \examples{
   sfo_sfo <- mkinmod(

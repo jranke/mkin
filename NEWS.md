@@ -1,6 +1,8 @@
 # mkin 0.9.47.6 (2018-11-26)
 
-- Add the function 'logLik.mkinfit.R' which makes it possible to calculate an AIC for mkinfit objects
+- Add the function 'logLik.mkinfit' which makes it possible to calculate an AIC for mkinfit objects
+
+- Add the function 'AIC.mmkin' to makeqit easy to compare columns of mmkin objects
 
 - 'add_err': Respect the argument giving the number of replicates in the synthetic dataset
 
