@@ -5,7 +5,25 @@
 }
 \description{
   This function simply calculates the product of the likelihood densities
-  calc
+  calculated using \code{\link{dnorm}}, i.e. assuming normal distribution.
+
+  The total number of estimated parameters returned with the value 
+  of the likelihood is calculated as the sum of fitted degradation 
+  model parameters and the fitted error model parameters.
+
+  For the case of unweighted least squares fitting, we calculate one
+  constant standard deviation from the residuals using \code{\link{sd}}
+  and add one to the number of fitted degradation model parameters.
+
+  For the case of manual weighting, we use the weight given for each
+  observation as standard deviation in calculating its likelihood.
+
+  In the case of iterative reweighting, the variances obtained by this
+  procedure are used in the likelihood calculations, and the number of
+  estimated parameters is obtained by the number of degradation model
+  parameters plus the number of variance model parameters, i.e. the number of
+  observed variables if the reweighting method is "obs", and two if the
+  reweighting method is "tc".
 }
 \usage{
 \method{logLik}{mkinfit}(object, ...)
