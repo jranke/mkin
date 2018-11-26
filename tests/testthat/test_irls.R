@@ -65,7 +65,7 @@ test_that("Reweighting method 'tc' works", {
     cores = if (Sys.getenv("TRAVIS") != "") 1 else 15)
   parms_2_10 <- apply(sapply(f_2_10, function(x) x$bparms.optim), 1, mean)
   parm_errors_2_10 <- (parms_2_10 - parms_DFOP_optim) / parms_DFOP_optim
-  expect_true(all(abs(parm_errors_2_10) < 0.3))
+  expect_true(all(abs(parm_errors_2_10) < 0.4))
 
   f_2_10_tc <- mmkin("DFOP", d_2_10, reweight.method = "tc", quiet = TRUE,
     cores = if (Sys.getenv("TRAVIS") != "") 1 else 15)
