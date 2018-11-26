@@ -71,7 +71,7 @@ test_that("Reweighting method 'tc' works", {
     cores = if (Sys.getenv("TRAVIS") != "") 1 else 15)
   parms_2_10_tc <- apply(sapply(f_2_10_tc, function(x) x$bparms.optim), 1, mean)
   parm_errors_2_10_tc <- (parms_2_10_tc - parms_DFOP_optim) / parms_DFOP_optim
-  expect_true(all(abs(parm_errors_2_10_tc) < 0.15))
+  expect_true(all(abs(parm_errors_2_10_tc) < 0.2))
 
   tcf_2_10_tc <- apply(sapply(f_2_10_tc, function(x) x$tc_fitted), 1, mean, na.rm = TRUE)
 
