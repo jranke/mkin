@@ -1,0 +1,73 @@
+\name{CAKE_export}
+\alias{CAKE_export}
+\title{
+  Export a list of datasets in wide format to a CAKE study file
+}
+\description{
+  In addition to the datasets, the pathways in the degradation
+  model can be specified as well.
+}
+\usage{
+CAKE_export(ds, map = c(parent = "Parent"),
+  links = NA,
+  filename = "CAKE_export.csf", path = ".", overwrite = FALSE,
+  study = "Codlemone aerobic soil degradation",
+  description = "",
+  time_unit = "days",
+  res_unit = "\% AR",
+  comment = "Created using mkin::CAKE_export",
+  date = Sys.Date(),
+  optimiser = "IRLS")
+}
+\arguments{
+  \item{ds}{
+    A named list of datasets in long format as compatible with
+    \code{\link{mkinfit}}.
+  }
+  \item{map}{
+    A character vector with CAKE compartment names (Parent, A1, ...),
+    named with the names used in the list of datasets.
+  }
+  \item{links}{
+    An optional character vector of target compartments, named with
+    the names of the source compartments. In order to make this
+    easier, the names are used as in the datasets supplied.
+  }
+  \item{filename}{
+    Where to write the result. Should end in .csf in order to be compatible
+    with CAKE.
+  }
+  \item{path}{
+    An optional path to the output file.
+  }
+  \item{overwrite}{
+    If TRUE, existing files are overwritten.
+  }
+  \item{study}{
+    The name of the study.
+  }
+  \item{description}{
+    An optional description.
+  }
+  \item{time_unit}{
+    The time unit for the residue data.
+  }
+  \item{res_unit}{
+    The unit used for the residues.
+  }
+  \item{comment}{
+    An optional comment.
+  }
+  \item{date}{
+    The date of file creation.
+  }
+  \item{optimiser}{
+    Can be OLS or IRLS.
+  }
+}
+\value{
+  The function is called for its side effect.
+}
+\author{
+  Johannes Ranke
+}
