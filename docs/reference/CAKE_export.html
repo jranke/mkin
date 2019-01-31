@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Two component error model — sigma_twocomp • mkin</title>
+<title>Export a list of datasets in wide format to a CAKE study file — CAKE_export • mkin</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,14 +30,10 @@
 
 
 
-<meta property="og:title" content="Two component error model — sigma_twocomp" />
+<meta property="og:title" content="Export a list of datasets in wide format to a CAKE study file — CAKE_export" />
 
-<meta property="og:description" content="Function describing the standard deviation of the measurement error 
-  in dependence of the measured value \(y\):
-$$\sigma = \sqrt{ \sigma_{low}^2 + y^2 * {rsd}_{high}^2}$$
-This is the error model used for example by Werner et al. (1978). The model
-  proposed by Rocke and Lorenzato (1995) can be written in this form as well,
-  but assumes approximate lognormal distribution of errors for high values of y." />
+<meta property="og:description" content="In addition to the datasets, the pathways in the degradation
+  model can be specified as well." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -123,53 +119,94 @@ This is the error model used for example by Werner et al. (1978). The model
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Two component error model</h1>
+    <h1>Export a list of datasets in wide format to a CAKE study file</h1>
     
-    <div class="hidden name"><code>sigma_twocomp.Rd</code></div>
+    <div class="hidden name"><code>CAKE_export.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Function describing the standard deviation of the measurement error 
-  in dependence of the measured value \(y\):</p>
-<p>$$\sigma = \sqrt{ \sigma_{low}^2 + y^2 * {rsd}_{high}^2}$$</p>
-<p>This is the error model used for example by Werner et al. (1978). The model
-  proposed by Rocke and Lorenzato (1995) can be written in this form as well,
-  but assumes approximate lognormal distribution of errors for high values of y.</p>
+    <p>In addition to the datasets, the pathways in the degradation
+  model can be specified as well.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>sigma_twocomp</span>(<span class='no'>y</span>, <span class='no'>sigma_low</span>, <span class='no'>rsd_high</span>)</pre>
+    <pre class="usage"><span class='fu'>CAKE_export</span>(<span class='no'>ds</span>, <span class='kw'>map</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='st'>"Parent"</span>),
+  <span class='kw'>links</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>filename</span> <span class='kw'>=</span> <span class='st'>"CAKE_export.csf"</span>, <span class='kw'>path</span> <span class='kw'>=</span> <span class='st'>"."</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>study</span> <span class='kw'>=</span> <span class='st'>"Codlemone aerobic soil degradation"</span>,
+  <span class='kw'>description</span> <span class='kw'>=</span> <span class='st'>""</span>,
+  <span class='kw'>time_unit</span> <span class='kw'>=</span> <span class='st'>"days"</span>,
+  <span class='kw'>res_unit</span> <span class='kw'>=</span> <span class='st'>"% AR"</span>,
+  <span class='kw'>comment</span> <span class='kw'>=</span> <span class='st'>"Created using mkin::CAKE_export"</span>,
+  <span class='kw'>date</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Sys.time'>Sys.Date</a></span>(),
+  <span class='kw'>optimiser</span> <span class='kw'>=</span> <span class='st'>"IRLS"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>y</th>
-      <td><p>The magnitude of the observed value</p></td>
+      <th>ds</th>
+      <td><p>A named list of datasets in long format as compatible with
+    <code><a href='mkinfit.html'>mkinfit</a></code>.</p></td>
     </tr>
     <tr>
-      <th>sigma_low</th>
-      <td><p>The asymptotic minimum of the standard deviation for low observed values</p></td>
+      <th>map</th>
+      <td><p>A character vector with CAKE compartment names (Parent, A1, ...),
+    named with the names used in the list of datasets.</p></td>
     </tr>
     <tr>
-      <th>rsd_high</th>
-      <td><p>The coefficient describing the increase of the standard deviation with 
-    the magnitude of the observed value</p></td>
+      <th>links</th>
+      <td><p>An optional character vector of target compartments, named with
+    the names of the source compartments. In order to make this
+    easier, the names are used as in the datasets supplied.</p></td>
+    </tr>
+    <tr>
+      <th>filename</th>
+      <td><p>Where to write the result. Should end in .csf in order to be compatible
+    with CAKE.</p></td>
+    </tr>
+    <tr>
+      <th>path</th>
+      <td><p>An optional path to the output file.</p></td>
+    </tr>
+    <tr>
+      <th>overwrite</th>
+      <td><p>If TRUE, existing files are overwritten.</p></td>
+    </tr>
+    <tr>
+      <th>study</th>
+      <td><p>The name of the study.</p></td>
+    </tr>
+    <tr>
+      <th>description</th>
+      <td><p>An optional description.</p></td>
+    </tr>
+    <tr>
+      <th>time_unit</th>
+      <td><p>The time unit for the residue data.</p></td>
+    </tr>
+    <tr>
+      <th>res_unit</th>
+      <td><p>The unit used for the residues.</p></td>
+    </tr>
+    <tr>
+      <th>comment</th>
+      <td><p>An optional comment.</p></td>
+    </tr>
+    <tr>
+      <th>date</th>
+      <td><p>The date of file creation.</p></td>
+    </tr>
+    <tr>
+      <th>optimiser</th>
+      <td><p>Can be OLS or IRLS.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The standard deviation of the response variable.</p>
-    
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
-
-    <p>Werner, Mario, Brooks, Samuel H., and Knott, Lancaster B. (1978)
-  Additive, Multiplicative, and Mixed Analytical Errors. Clinical Chemistry
-  24(11), 1895-1898.</p>
-<p>Rocke, David M. and Lorenzato, Stefan (1995) A two-component model for
-  measurement error in analytical chemistry. Technometrics 37(2), 176-184.</p>
+    <p>The function is called for its side effect.</p>
     
 
   </div>
@@ -179,10 +216,10 @@ This is the error model used for example by Werner et al. (1978). The model
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#references">References</a></li>
           </ul>
 
+    <h2>Author</h2>
+    <p>Johannes Ranke</p>
   </div>
 </div>
 
