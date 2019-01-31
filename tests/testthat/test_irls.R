@@ -80,7 +80,7 @@ test_that("Reweighting method 'tc' works", {
 
   f_tc_100_1 <- suppressWarnings(mkinfit(DFOP, d_100_1[[1]], reweight.method = "tc", quiet = TRUE))
   parm_errors_100_1 <- (f_tc_100_1$bparms.optim - parms_DFOP_optim) / parms_DFOP_optim
-  expect_true(all(abs(parm_errors_100_1) < 0.08))
+  expect_true(all(abs(parm_errors_100_1) < 0.1))
 
   tcf_100_1_error_model_errors <- (f_tc_100_1$tc_fitted - c(0.5, 0.07)) /
     c(0.5, 0.07)
