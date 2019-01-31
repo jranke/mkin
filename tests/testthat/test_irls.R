@@ -41,7 +41,7 @@ test_that("Reweighting method 'obs' works", {
 })
 
 test_that("Reweighting method 'tc' works", {
-  skip() # Too much trouble with datasets that are randomly generated
+  skip("Too much trouble with datasets that are randomly generated")
   # I need to make the tc method more robust against that
   # skip_on_cran()
 
