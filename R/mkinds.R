@@ -1,4 +1,4 @@
-# Copyright (C) 2015,2018 Johannes Ranke
+# Copyright (C) 2015,2018,2019 Johannes Ranke
 # Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
@@ -16,21 +16,6 @@
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
 
-#' A dataset class for mkin
-#'
-#' @docType class
-#' @importFrom R6 R6Class
-#' @export
-#' @format An \code{\link{R6Class}} generator object.
-#' @field title A full title for the dataset
-#' @field sampling times The sampling times
-#' @field time_unit The time unit
-#' @field observed Names of the observed compounds
-#' @field unit The unit of the observations
-#' @field replicates The number of replicates
-#' @field data A dataframe with at least the columns name, time and value
-#'   in order to be compatible with mkinfit
-#' @example inst/examples/mkinds.R
 mkinds <- R6Class("mkinds",
   public = list(
     title = NULL,

@@ -217,28 +217,51 @@ For the definition of model types and their parameters, the equations given
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Specify the SFO model (this is not needed any more, as we can now mkinfit("SFO", ...)</span>
-<span class='no'>SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinmod</span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='error'>Error in mkinmod(parent = list(type = "SFO")): konnte Funktion "mkinmod" nicht finden</span></div><div class='input'>
+<span class='no'>SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinmod</span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>))
+
 <span class='co'># One parent compound, one metabolite, both single first order</span>
 <span class='no'>SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinmod</span>(
   <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>),
-  <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='error'>Error in mkinmod(parent = mkinsub("SFO", "m1"), m1 = mkinsub("SFO")): konnte Funktion "mkinmod" nicht finden</span></div><div class='input'>
+  <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
 </div><div class='input'><span class='co'># The above model used to be specified like this, before the advent of mkinsub()</span>
 <span class='no'>SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinmod</span>(
   <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"m1"</span>),
-  <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='error'>Error in mkinmod(parent = list(type = "SFO", to = "m1"), m1 = list(type = "SFO")): konnte Funktion "mkinmod" nicht finden</span></div><div class='input'>
+  <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
 <span class='co'># Show details of creating the C function</span>
 <span class='no'>SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinmod</span>(
   <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>),
-  <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in mkinmod(parent = mkinsub("SFO", "m1"), m1 = mkinsub("SFO"), verbose = TRUE): konnte Funktion "mkinmod" nicht finden</span></div><div class='input'>
+  <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; Compilation argument:
+#&gt;  /usr/lib/R/bin/R CMD SHLIB file165a4bc987b7.c 2&gt; file165a4bc987b7.c.err.txt 
+#&gt; Program source:
+#&gt;   1: #include &lt;R.h&gt;
+#&gt;   2: 
+#&gt;   3: 
+#&gt;   4: static double parms [3];
+#&gt;   5: #define k_parent_sink parms[0]
+#&gt;   6: #define k_parent_m1 parms[1]
+#&gt;   7: #define k_m1_sink parms[2]
+#&gt;   8: 
+#&gt;   9: void initpar(void (* odeparms)(int *, double *)) {
+#&gt;  10:     int N = 3;
+#&gt;  11:     odeparms(&amp;N, parms);
+#&gt;  12: }
+#&gt;  13: 
+#&gt;  14: 
+#&gt;  15: void func ( int * n, double * t, double * y, double * f, double * rpar, int * ipar ) {
+#&gt;  16: 
+#&gt;  17: f[0] = - k_parent_sink * y[0] - k_parent_m1 * y[0];
+#&gt;  18: f[1] = + k_parent_m1 * y[0] - k_m1_sink * y[1];
+#&gt;  19: }</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
 <span class='co'># If we have several parallel metabolites </span>
 <span class='co'># (compare tests/testthat/test_synthetic_data_for_UBA_2014.R)</span>
 <span class='no'>m_synth_DFOP_par</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinmod</span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"DFOP"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"M1"</span>, <span class='st'>"M2"</span>)),
                            <span class='kw'>M1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>),
                            <span class='kw'>M2</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>),
-                           <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in mkinmod(parent = mkinsub("DFOP", c("M1", "M2")), M1 = mkinsub("SFO"),     M2 = mkinsub("SFO"), use_of_ff = "max", quiet = TRUE): konnte Funktion "mkinmod" nicht finden</span></div><div class='input'>
+                           <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+
 <span class='no'>fit_DFOP_par_c</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>m_synth_DFOP_par</span>,
                           <span class='no'>synthetic_data_for_UBA_2014</span><span class='kw'>[[</span><span class='fl'>12</span>]]$<span class='no'>data</span>,
-                          <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in mkinfit(m_synth_DFOP_par, synthetic_data_for_UBA_2014[[12]]$data,     quiet = TRUE): konnte Funktion "mkinfit" nicht finden</span></div></pre>
+                          <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

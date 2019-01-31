@@ -193,7 +193,7 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># The kinetic model</span>
 <span class='no'>m_SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"M1"</span>),
-                     <span class='kw'>M1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in mkinmod(parent = mkinsub("SFO", "M1"), M1 = mkinsub("SFO"), use_of_ff = "max"): konnte Funktion "mkinmod" nicht finden</span></div><div class='input'>
+                     <span class='kw'>M1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
 <span class='co'># Generate a prediction for a specific set of parameters</span>
 <span class='no'>sampling_times</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>7</span>, <span class='fl'>14</span>, <span class='fl'>28</span>, <span class='fl'>60</span>, <span class='fl'>90</span>, <span class='fl'>120</span>)
 
@@ -203,12 +203,15 @@
                          <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='kw'>k_parent</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>f_parent_to_M1</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
                            <span class='kw'>k_M1</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Log'>log</a></span>(<span class='fl'>2</span>)/<span class='fl'>1000</span>),
                          <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>M1</span> <span class='kw'>=</span> <span class='fl'>0</span>),
-                         <span class='no'>sampling_times</span>)</div><div class='output co'>#&gt; <span class='error'>Error in mkinpredict(m_SFO_SFO, c(k_parent = 0.1, f_parent_to_M1 = 0.5,     k_M1 = log(2)/1000), c(parent = 100, M1 = 0), sampling_times): konnte Funktion "mkinpredict" nicht finden</span></div><div class='input'>
+                         <span class='no'>sampling_times</span>)
+
 <span class='co'># Add an error term with a constant (independent of the value) standard deviation</span>
 <span class='co'># of 10, and generate three datasets</span>
-<span class='no'>d_SFO_SFO_err</span> <span class='kw'>&lt;-</span> <span class='fu'>add_err</span>(<span class='no'>d_SFO_SFO</span>, <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fl'>10</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>123456789</span> )</div><div class='output co'>#&gt; <span class='error'>Error in add_err(d_SFO_SFO, function(x) 10, n = 3, seed = 123456789): konnte Funktion "add_err" nicht finden</span></div><div class='input'>
+<span class='no'>d_SFO_SFO_err</span> <span class='kw'>&lt;-</span> <span class='fu'>add_err</span>(<span class='no'>d_SFO_SFO</span>, <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fl'>10</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>123456789</span> )
+
 <span class='co'># Name the datasets for nicer plotting</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/names'>names</a></span>(<span class='no'>d_SFO_SFO_err</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste</a></span>(<span class='st'>"Dataset"</span>, <span class='fl'>1</span>:<span class='fl'>3</span>)</div><div class='output co'>#&gt; <span class='error'>Error in names(d_SFO_SFO_err) &lt;- paste("Dataset", 1:3): Objekt 'd_SFO_SFO_err' nicht gefunden</span></div><div class='input'>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/names'>names</a></span>(<span class='no'>d_SFO_SFO_err</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste</a></span>(<span class='st'>"Dataset"</span>, <span class='fl'>1</span>:<span class='fl'>3</span>)
+
 <span class='co'># Name the model in the list of models (with only one member in this case)</span>
 <span class='co'># for nicer plotting later on.</span>
 <span class='co'># Be quiet and use the faster Levenberg-Marquardt algorithm, as the datasets</span>
@@ -216,15 +219,16 @@
 <span class='co'># checks</span>
 <span class='no'>f_SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='st'>"SFO-SFO"</span> <span class='kw'>=</span> <span class='no'>m_SFO_SFO</span>),
                    <span class='no'>d_SFO_SFO_err</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-                   <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>method.modFit</span> <span class='kw'>=</span> <span class='st'>"Marq"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in mmkin(list(`SFO-SFO` = m_SFO_SFO), d_SFO_SFO_err, cores = 1,     quiet = TRUE, method.modFit = "Marq"): konnte Funktion "mmkin" nicht finden</span></div><div class='input'>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>f_SFO_SFO</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot(f_SFO_SFO): Objekt 'f_SFO_SFO' nicht gefunden</span></div><div class='input'>
+                   <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>method.modFit</span> <span class='kw'>=</span> <span class='st'>"Marq"</span>)
+
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>f_SFO_SFO</span>)</div><div class='img'><img src='add_err-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># We would like to inspect the fit for dataset 3 more closely</span>
 <span class='co'># Using double brackets makes the returned object an mkinfit object</span>
 <span class='co'># instead of a list of mkinfit objects, so plot.mkinfit is used</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>f_SFO_SFO</span><span class='kw'>[[</span><span class='fl'>3</span>]], <span class='kw'>show_residuals</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot(f_SFO_SFO[[3]], show_residuals = TRUE): Objekt 'f_SFO_SFO' nicht gefunden</span></div><div class='input'>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>f_SFO_SFO</span><span class='kw'>[[</span><span class='fl'>3</span>]], <span class='kw'>show_residuals</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='add_err-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># If we use single brackets, we should give two indices (model and dataset),</span>
 <span class='co'># and plot.mmkin is used</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>f_SFO_SFO</span>[<span class='fl'>1</span>, <span class='fl'>3</span>])</div><div class='output co'>#&gt; <span class='error'>Error in plot(f_SFO_SFO[1, 3]): Objekt 'f_SFO_SFO' nicht gefunden</span></div><div class='input'>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>f_SFO_SFO</span>[<span class='fl'>1</span>, <span class='fl'>3</span>])</div><div class='img'><img src='add_err-3.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

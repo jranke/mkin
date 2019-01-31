@@ -155,16 +155,56 @@
   <span class='co'># large parameter correlations, among other reasons (e.g. the adequacy of the</span>
   <span class='co'># model).</span>
   <span class='no'>m_ws</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent_w</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"parent_s"</span>),
-                  <span class='kw'>parent_s</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"parent_w"</span>))</div><div class='output co'>#&gt; <span class='error'>Error in mkinmod(parent_w = mkinsub("SFO", "parent_s"), parent_s = mkinsub("SFO",     "parent_w")): konnte Funktion "mkinmod" nicht finden</span></div><div class='input'>  <span class='no'>f_river</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>m_ws</span>, <span class='no'>test_data_from_UBA_2014</span><span class='kw'>[[</span><span class='fl'>1</span>]]$<span class='no'>data</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in mkinfit(m_ws, test_data_from_UBA_2014[[1]]$data, quiet = TRUE): konnte Funktion "mkinfit" nicht finden</span></div><div class='input'>  <span class='fu'><a href='plot.mkinfit.html'>plot_sep</a></span>(<span class='no'>f_river</span>)</div><div class='output co'>#&gt; <span class='error'>Error in plot_sep(f_river): konnte Funktion "plot_sep" nicht finden</span></div><div class='input'>
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>f_river</span>)$<span class='no'>bpar</span></div><div class='output co'>#&gt; <span class='error'>Error in summary(f_river): Objekt 'f_river' nicht gefunden</span></div><div class='input'>  <span class='fu'><a href='mkinerrmin.html'>mkinerrmin</a></span>(<span class='no'>f_river</span>)</div><div class='output co'>#&gt; <span class='error'>Error in mkinerrmin(f_river): konnte Funktion "mkinerrmin" nicht finden</span></div><div class='input'>
+                  <span class='kw'>parent_s</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"parent_w"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>  <span class='no'>f_river</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>m_ws</span>, <span class='no'>test_data_from_UBA_2014</span><span class='kw'>[[</span><span class='fl'>1</span>]]$<span class='no'>data</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+  <span class='fu'><a href='plot.mkinfit.html'>plot_sep</a></span>(<span class='no'>f_river</span>)</div><div class='img'><img src='test_data_from_UBA_2014-1.png' alt='' width='700' height='433' /></div><div class='input'>
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>f_river</span>)$<span class='no'>bpar</span></div><div class='output co'>#&gt;                         Estimate se_notrans      t value       Pr(&gt;t) Lower
+#&gt; parent_w_0          9.598567e+01 2.33959800 4.102657e+01 9.568967e-19    NA
+#&gt; k_parent_w_sink     3.603743e-01 0.03497750 1.030303e+01 4.989002e-09    NA
+#&gt; k_parent_w_parent_s 6.031371e-02 0.01746024 3.454346e+00 1.514723e-03    NA
+#&gt; k_parent_s_sink     5.108539e-11 0.10382001 4.920572e-10 5.000000e-01    NA
+#&gt; k_parent_s_parent_w 7.419672e-02 0.11338240 6.543936e-01 2.608069e-01    NA
+#&gt;                     Upper
+#&gt; parent_w_0             NA
+#&gt; k_parent_w_sink        NA
+#&gt; k_parent_w_parent_s    NA
+#&gt; k_parent_s_sink        NA
+#&gt; k_parent_s_parent_w    NA</div><div class='input'>  <span class='fu'><a href='mkinerrmin.html'>mkinerrmin</a></span>(<span class='no'>f_river</span>)</div><div class='output co'>#&gt;             err.min n.optim df
+#&gt; All data 0.09246946       5  6
+#&gt; parent_w 0.06377096       3  3
+#&gt; parent_s 0.20882324       2  3</div><div class='input'>
   <span class='co'># This is the evaluation used for the validation of software packages</span>
   <span class='co'># in the expertise from 2014</span>
   <span class='no'>m_soil</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"M1"</span>, <span class='st'>"M2"</span>)),
                     <span class='kw'>M1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"M3"</span>),
                     <span class='kw'>M2</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"M3"</span>),
                     <span class='kw'>M3</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>),
-                    <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in mkinmod(parent = mkinsub("SFO", c("M1", "M2")), M1 = mkinsub("SFO",     "M3"), M2 = mkinsub("SFO", "M3"), M3 = mkinsub("SFO"), use_of_ff = "max"): konnte Funktion "mkinmod" nicht finden</span></div><div class='input'>
-  <span class='no'>f_soil</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>m_soil</span>, <span class='no'>test_data_from_UBA_2014</span><span class='kw'>[[</span><span class='fl'>3</span>]]$<span class='no'>data</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in mkinfit(m_soil, test_data_from_UBA_2014[[3]]$data, quiet = TRUE): konnte Funktion "mkinfit" nicht finden</span></div><div class='input'>  <span class='fu'><a href='plot.mkinfit.html'>plot_sep</a></span>(<span class='no'>f_soil</span>, <span class='kw'>lpos</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"topright"</span>, <span class='st'>"topright"</span>, <span class='st'>"topright"</span>, <span class='st'>"bottomright"</span>))</div><div class='output co'>#&gt; <span class='error'>Error in plot_sep(f_soil, lpos = c("topright", "topright", "topright",     "bottomright")): konnte Funktion "plot_sep" nicht finden</span></div><div class='input'>  <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>f_soil</span>)$<span class='no'>bpar</span></div><div class='output co'>#&gt; <span class='error'>Error in summary(f_soil): Objekt 'f_soil' nicht gefunden</span></div><div class='input'>  <span class='fu'><a href='mkinerrmin.html'>mkinerrmin</a></span>(<span class='no'>f_soil</span>)</div><div class='output co'>#&gt; <span class='error'>Error in mkinerrmin(f_soil): konnte Funktion "mkinerrmin" nicht finden</span></div><div class='input'>  </div></pre>
+                    <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
+  <span class='no'>f_soil</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>m_soil</span>, <span class='no'>test_data_from_UBA_2014</span><span class='kw'>[[</span><span class='fl'>3</span>]]$<span class='no'>data</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+  <span class='fu'><a href='plot.mkinfit.html'>plot_sep</a></span>(<span class='no'>f_soil</span>, <span class='kw'>lpos</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"topright"</span>, <span class='st'>"topright"</span>, <span class='st'>"topright"</span>, <span class='st'>"bottomright"</span>))</div><div class='img'><img src='test_data_from_UBA_2014-2.png' alt='' width='700' height='433' /></div><div class='input'>  <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>f_soil</span>)$<span class='no'>bpar</span></div><div class='output co'>#&gt;                   Estimate  se_notrans    t value       Pr(&gt;t)        Lower
+#&gt; parent_0       76.55425584 0.943443794 81.1434198 4.422336e-30 74.602593773
+#&gt; k_parent        0.12081956 0.004815515 25.0896457 1.639665e-18  0.111257517
+#&gt; k_M1            0.84258651 0.930121548  0.9058886 1.871938e-01  0.085876516
+#&gt; k_M2            0.04210878 0.013729902  3.0669396 2.729137e-03  0.021450630
+#&gt; k_M3            0.01122919 0.008044865  1.3958206 8.804912e-02  0.002550984
+#&gt; f_parent_to_M1  0.32240199 0.278620579  1.1571363 1.295467e-01           NA
+#&gt; f_parent_to_M2  0.16099854 0.030548888  5.2701931 1.196190e-05           NA
+#&gt; f_M1_to_M3      0.27921500 0.314732842  0.8871492 1.920908e-01  0.015016983
+#&gt; f_M2_to_M3      0.55641333 0.650246995  0.8556954 2.004966e-01  0.005360555
+#&gt;                      Upper
+#&gt; parent_0       78.50591790
+#&gt; k_parent        0.13120341
+#&gt; k_M1            8.26712661
+#&gt; k_M2            0.08266188
+#&gt; k_M3            0.04942981
+#&gt; f_parent_to_M1          NA
+#&gt; f_parent_to_M2          NA
+#&gt; f_M1_to_M3      0.90777163
+#&gt; f_M2_to_M3      0.99658633</div><div class='input'>  <span class='fu'><a href='mkinerrmin.html'>mkinerrmin</a></span>(<span class='no'>f_soil</span>)</div><div class='output co'>#&gt;             err.min n.optim df
+#&gt; All data 0.09649963       9 20
+#&gt; parent   0.04721283       2  6
+#&gt; M1       0.26551209       2  5
+#&gt; M2       0.20327575       2  5
+#&gt; M3       0.05196549       3  4</div><div class='input'>  </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
