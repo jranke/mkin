@@ -1,7 +1,7 @@
 \name{CAKE_export}
 \alias{CAKE_export}
 \title{
-  Export a list of datasets in wide format to a CAKE study file
+  Export a list of datasets format to a CAKE study file
 }
 \description{
   In addition to the datasets, the pathways in the degradation
