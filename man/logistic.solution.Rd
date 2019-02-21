@@ -53,7 +53,6 @@ logistic.solution(t, parent.0, kmax, k0, r)
 
   sampling_times = c(0, 1, 3, 7, 14, 28, 60, 90, 120)
   parms_logistic <- c(kmax = 0.08, k0 = 0.0001, r = 0.2)
-  parms_logistic_optim <- c(parent_0 = 100, parms_logistic)
   d_logistic <- mkinpredict(logistic,
     parms_logistic, c(parent = 100),
     sampling_times)
