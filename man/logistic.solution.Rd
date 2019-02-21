@@ -61,7 +61,7 @@ logistic.solution(t, parent.0, kmax, k0, r)
     sdfunc = function(x) sigma_twocomp(x, 0.5, 0.07),
     n = 1, reps = 2, digits = 5, LOD = 0.1, seed = 123456)[[1]]
 
-  m <- mkinfit("logistic", d_2_1)
+  m <- mkinfit("logistic", d_2_1, quiet = TRUE)
   plot_sep(m)
   summary(m)$bpar
 }
