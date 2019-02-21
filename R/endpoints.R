@@ -159,6 +159,14 @@ endpoints <- function(fit) {
       ep$distimes[obs_var, c(paste("DT50", obs_var, "b1", sep = "_"))] = DT50_b1
       ep$distimes[obs_var, c(paste("DT50", obs_var, "b2", sep = "_"))] = DT50_b2
     }
+    if (type == "logistic") {
+      # FOCUS kinetics (2014) p. 67
+      kmax = parms.all["kmax"]
+      k0 = parms.all["k0"]
+      r = parms.all["r"]
+      DT50 = (1/r) * log(1 - ((kmax/k0) * (1 - 2^(r/kmax))))
+      DT90 = (1/r) * log(1 - ((kmax/k0) * (1 - 10^(r/kmax))))
+    }
     ep$distimes[obs_var, c("DT50", "DT90")] = c(DT50, DT90)
   }
   return(ep)

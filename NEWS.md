@@ -1,4 +1,4 @@
-# mkin 0.9.47.6 (2019-01-31)
+# mkin 0.9.48.1 (2019-02-21)
 
 - Add the function 'logLik.mkinfit' which makes it possible to calculate an AIC for mkinfit objects
 
@@ -15,6 +15,8 @@
 - 'tests/testthat/test_irls.R': Test if the components of the error model used to generate the data can be reproduced with moderate accuracy
 
 - Add the function 'CAKE_export' to facilitate cross-checking of results
+
+- Implement the logistic model (only tested for parent fits)
 
 # mkin 0.9.47.5 (2018-09-14)
 

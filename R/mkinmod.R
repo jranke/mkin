@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2015 Johannes Ranke {{{
+# Copyright (C) 2010-2015,2019 Johannes Ranke {{{
 # Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
@@ -42,8 +42,8 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
   parms <- vector()
   # }}}
 
-  # Do not return a coefficient matrix mat when FOMC, IORE, DFOP or HS is used for the parent {{{
-  if(spec[[1]]$type %in% c("FOMC", "IORE", "DFOP", "HS")) {
+  # Do not return a coefficient matrix mat when FOMC, IORE, DFOP, HS or logistic is used for the parent {{{
+  if(spec[[1]]$type %in% c("FOMC", "IORE", "DFOP", "HS", "logistic")) {
     mat = FALSE
   } else mat = TRUE
   #}}}
@@ -57,10 +57,10 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
     # Check the type component of the compartment specification {{{
     if(is.null(spec[[varname]]$type)) stop(
       "Every part of the model specification must be a list containing a type component")
-    if(!spec[[varname]]$type %in% c("SFO", "FOMC", "IORE", "DFOP", "HS", "SFORB")) stop(
-      "Available types are SFO, FOMC, IORE, DFOP, HS and SFORB only")
-    if(spec[[varname]]$type %in% c("FOMC", "DFOP", "HS") & match(varname, obs_vars) != 1) {
-        stop(paste("Types FOMC, DFOP and HS are only implemented for the first compartment,",
+    if(!spec[[varname]]$type %in% c("SFO", "FOMC", "IORE", "DFOP", "HS", "SFORB", "logistic")) stop(
+      "Available types are SFO, FOMC, IORE, DFOP, HS, SFORB and logistic only")
+    if(spec[[varname]]$type %in% c("FOMC", "DFOP", "HS", "logistic") & match(varname, obs_vars) != 1) {
+        stop(paste("Types FOMC, DFOP, HS and logistic are only implemented for the first compartment,",
                    "which is assumed to be the source compartment"))
     }
     #}}}
@@ -71,6 +71,7 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
       IORE = varname,
       DFOP = varname,
       HS = varname,
+      logistic = varname,
       SFORB = paste(varname, c("free", "bound"), sep = "_")
     )
     map[[varname]] <- new_boxes
@@ -140,6 +141,11 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
       # From p. 55 of the FOCUS kinetics report
       decline_term <- paste(HS_decline, "*", box_1)
       parms <- c(parms, "k1", "k2", "tb")
+    } #}}}
+    if(spec[[varname]]$type == "logistic") { # {{{ Add logistic decline term
+      # From p. 67 of the FOCUS kinetics report (2014)
+      decline_term <- paste("(k0 * kmax)/(k0 + (kmax - k0) * exp(-r * time)) *", box_1)
+      parms <- c(parms, "kmax", "k0", "r")
     } #}}}
     # Add origin decline term to box 1 (usually the only box, unless type is SFORB)#{{{
     diffs[[box_1]] <- paste(diffs[[box_1]], "-", decline_term)#}}}

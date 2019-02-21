@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2016,2018 Johannes Ranke
+# Copyright (C) 2010-2016,2018,2019 Johannes Ranke
 # Some lines in this code are copyright (C) 2013 Eurofins Regulatory AG
 # Contact: jranke@uni-bremen.de
 
@@ -83,7 +83,11 @@ mkinpredict.mkinmod <- function(x,
           evalparse(parent.name),
           evalparse(paste("k", parent.name, "bound", sep="_")),
           evalparse(paste("k", sub("free", "bound", parent.name), "free", sep="_")),
-          evalparse(paste("k", parent.name, "sink", sep="_")))
+          evalparse(paste("k", parent.name, "sink", sep="_"))),
+      logistic = logistic.solution(outtimes,
+          evalparse(parent.name),
+          evalparse("kmax"), evalparse("k0"),
+          evalparse("r"))
     )
     out <- data.frame(outtimes, o)
     names(out) <- c("time", sub("_free", "", parent.name))

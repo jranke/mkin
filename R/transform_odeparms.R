@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2014 Johannes Ranke
+# Copyright (C) 2010-2014,2019 Johannes Ranke
 # Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
@@ -71,8 +71,9 @@ transform_odeparms <- function(parms, mkinmod,
   }
 
   # Transform also FOMC parameters alpha and beta, DFOP and HS rates k1 and k2
-  # and HS parameter tb if transformation of rates is requested
-  for (pname in c("alpha", "beta", "k1", "k2", "tb")) {
+  # and HS parameter tb as well as logistic model parameters kmax, k0 and r if
+  # transformation of rates is requested
+  for (pname in c("alpha", "beta", "k1", "k2", "tb", "kmax", "k0", "r")) {
     if (!is.na(parms[pname])) {
       if (transform_rates) {
         transparms[paste0("log_", pname)] <- log(parms[pname])
@@ -151,8 +152,8 @@ backtransform_odeparms <- function(transparms, mkinmod,
     }
   }
 
-  # Transform parameters also for FOMC, DFOP and HS models
-  for (pname in c("alpha", "beta", "k1", "k2", "tb")) {
+  # Transform parameters also for FOMC, DFOP, HS and logistic models
+  for (pname in c("alpha", "beta", "k1", "k2", "tb", "kmax", "k0", "r")) {
     if (transform_rates) {
       pname_trans = paste0("log_", pname)
       if (!is.na(transparms[pname_trans])) {

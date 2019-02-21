@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2018 Johannes Ranke
+# Copyright (C) 2010-2019 Johannes Ranke
 # Portions of this code are copyright (C) 2013 Eurofins Regulatory AG
 # Contact: jranke@uni-bremen.de
 # The summary function is an adapted and extended version of summary.modFit
@@ -48,7 +48,7 @@ mkinfit <- function(mkinmod, observed,
 {
   # Check mkinmod and generate a model for the variable whith the highest value
   # if a suitable string is given
-  parent_models_available = c("SFO", "FOMC", "DFOP", "HS", "SFORB", "IORE")
+  parent_models_available = c("SFO", "FOMC", "DFOP", "HS", "SFORB", "IORE", "logistic")
   if (class(mkinmod) != "mkinmod") {
     presumed_parent_name = observed[which.max(observed$value), "name"]
     if (mkinmod[[1]] %in% parent_models_available) {
@@ -153,6 +153,9 @@ mkinfit <- function(mkinmod, observed,
     if (parmname == "k2") parms.ini[parmname] = 0.01
     if (parmname == "tb") parms.ini[parmname] = 5
     if (parmname == "g") parms.ini[parmname] = 0.5
+    if (parmname == "kmax") parms.ini[parmname] = 0.1
+    if (parmname == "k0") parms.ini[parmname] = 0.0001
+    if (parmname == "r") parms.ini[parmname] = 0.2
   }
   # Default values for formation fractions in case they are present
   for (box in mod_vars) {
@@ -376,7 +379,7 @@ mkinfit <- function(mkinmod, observed,
     lower[index_k] <- 0
     index_k__iore <- grep("^k__iore_", names(lower))
     lower[index_k__iore] <- 0
-    other_rate_parms <- intersect(c("alpha", "beta", "k1", "k2", "tb"), names(lower))
+    other_rate_parms <- intersect(c("alpha", "beta", "k1", "k2", "tb", "r"), names(lower))
     lower[other_rate_parms] <- 0
   }
 
