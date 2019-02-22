@@ -32,7 +32,7 @@ d_2_1 <- add_err(d_logistic,
 test_that("The logistic model fit is reproducible", {
   m <- mkinfit("logistic", d_2_1[[1]], quiet = TRUE)
   dtx <- endpoints(m)$distimes["parent", ]
-  expect_equivalent(dtx, c(36.86533, 62.41511), tolerance = 0.00001)
+  expect_equivalent(dtx, c(36.865, 62.415, 4297.854, 10.833), tolerance = 0.001)
 })
 
 test_that("The logistic fit can be done via differential equation", {
@@ -42,5 +42,5 @@ test_that("The logistic fit can be done via differential equation", {
   m_2 <- mkinfit("logistic", d_2_1[[1]], solution_type = "deSolve", 
                  quiet = TRUE)
   dtx_2 <- endpoints(m_2)$distimes["parent", ]
-  expect_equivalent(dtx_2, c(36.86533, 62.41511), tolerance = 0.00001)
+  expect_equivalent(dtx_2, c(36.865, 62.415, 4297.854, 10.833), tolerance = 0.001)
 })
