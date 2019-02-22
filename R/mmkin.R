@@ -1,4 +1,4 @@
-# Copyright (C) 2015 Johannes Ranke
+# Copyright (C) 2015,2019 Johannes Ranke
 # Contact: jranke@uni-bremen.de
 # The summary function is an adapted and extended version of summary.modFit
 # from the FME package, v 1.1 by Soetart and Petzoldt, which was in turn
@@ -22,7 +22,7 @@
 mmkin <- function(models = c("SFO", "FOMC", "DFOP"), datasets,
                   cores = round(detectCores()/2), cluster = NULL, ...)
 {
-  parent_models_available = c("SFO", "FOMC", "DFOP", "HS", "SFORB", "IORE")
+  parent_models_available = c("SFO", "FOMC", "DFOP", "HS", "SFORB", "IORE", "logistic")
   n.m <- length(models)
   n.d <- length(datasets)
   n.fits <- n.m * n.d

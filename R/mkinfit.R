@@ -99,10 +99,10 @@ mkinfit <- function(mkinmod, observed,
   # Define starting values for parameters where not specified by the user
   if (parms.ini[[1]] == "auto") parms.ini = vector()
 
-  # Prevent inital parameter specifications that are not in the model
+  # Warn for inital parameter specifications that are not in the model
   wrongpar.names <- setdiff(names(parms.ini), mkinmod$parms)
   if (length(wrongpar.names) > 0) {
-    stop("Initial parameter(s) ", paste(wrongpar.names, collapse = ", "),
+    warning("Initial parameter(s) ", paste(wrongpar.names, collapse = ", "),
          " not used in the model")
   }
 

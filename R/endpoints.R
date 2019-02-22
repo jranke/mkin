@@ -166,6 +166,11 @@ endpoints <- function(fit) {
       r = parms.all["r"]
       DT50 = (1/r) * log(1 - ((kmax/k0) * (1 - 2^(r/kmax))))
       DT90 = (1/r) * log(1 - ((kmax/k0) * (1 - 10^(r/kmax))))
+
+      DT50_k0 = log(2)/k0
+      DT50_kmax = log(2)/kmax
+      ep$distimes[obs_var, c("DT50_k0")] = DT50_k0
+      ep$distimes[obs_var, c("DT50_kmax")] = DT50_kmax
     }
     ep$distimes[obs_var, c("DT50", "DT90")] = c(DT50, DT90)
   }

@@ -2,7 +2,7 @@
 \alias{logistic.solution}
 \title{ Logistic kinetics }
 \description{
-  Function describing exponential decline from a defined starting value, with 
+  Function describing exponential decline from a defined starting value, with
   an increasing rate constant, supposedly caused by microbial growth
 }
 \usage{
@@ -28,11 +28,11 @@ logistic.solution(t, parent.0, kmax, k0, r)
   Degradation Kinetics from Environmental Fate Studies on Pesticides in EU
   Registration} Report of the FOCUS Work Group on Degradation Kinetics,
   Version 1.1, 18 December 2014
-  \url{http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics} 
+  \url{http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics}
 }
 \examples{
   # Reproduce the plot on page 57 of FOCUS (2014)
-  plot(function(x) logistic.solution(x, 100, 0.08, 0.0001, 0.2), 
+  plot(function(x) logistic.solution(x, 100, 0.08, 0.0001, 0.2),
        from = 0, to = 100, ylim = c(0, 100),
        xlab = "Time", ylab = "Residue")
   plot(function(x) logistic.solution(x, 100, 0.08, 0.0001, 0.4),
@@ -63,5 +63,6 @@ logistic.solution(t, parent.0, kmax, k0, r)
   m <- mkinfit("logistic", d_2_1, quiet = TRUE)
   plot_sep(m)
   summary(m)$bpar
+  endpoints(m)$distimes
 }
 \keyword{ manip }
