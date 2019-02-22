@@ -1,4 +1,4 @@
-# mkin 0.9.48.1 (2019-02-21)
+# mkin 0.9.48.1 (2019-02-22)
 
 - Add the function 'logLik.mkinfit' which makes it possible to calculate an AIC for mkinfit objects
 
@@ -17,6 +17,8 @@
 - Add the function 'CAKE_export' to facilitate cross-checking of results
 
 - Implement the logistic model (only tested for parent fits)
+
+- 'nafta': Add evaluations according to the NAFTA guidance
 
 # mkin 0.9.47.5 (2018-09-14)
 
