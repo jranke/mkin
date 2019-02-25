@@ -23,7 +23,7 @@
   an object of class \code{summary.mkinfit}.
 }
   \item{data}{
-  logical, indicating whether the data should be included in the summary. 
+  logical, indicating whether the data should be included in the summary.
 }
   \item{distimes}{
   logical, indicating whether DT50 and DT90 values should be included.
@@ -64,7 +64,7 @@
   Degradation Kinetics from Environmental Fate Studies on Pesticides in EU
   Registration} Report of the FOCUS Work Group on Degradation Kinetics,
   EC Document Reference Sanco/10058/2005 version 2.0, 434 pp,
-  \url{http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics} 
+  \url{http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics}
 }
 \author{
   Johannes Ranke
