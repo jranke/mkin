@@ -65,7 +65,10 @@ plot.nafta <- function(x, legend = FALSE, main = "auto", ...) {
 }
 
 print.nafta <- function(x, quiet = TRUE, ...) {
-  cat("Parameters:\n")
+  cat("Sums of squares:\n")
+  print(x$S)
+  print(x$S_c)
+  cat("\nParameters:\n")
   print(x$parameters)
   t_rep <- .evaluate_nafta_results(x$S, x$S_c, x$distimes, quiet = quiet)
   cat("\nDTx values:\n")
@@ -95,8 +98,9 @@ print.nafta <- function(x, quiet = TRUE, ...) {
       t_rep <- t_IORE
     } else {
       if (!quiet) {
-        message("The representative half-life of the IORE model is longer than the one corresponding to the terminal degradation rate found with the DFOP model.")
-        message("The reprentative half-life obtained from the DFOP model may be used")
+        message("The representative half-life of the IORE model is longer than the one corresponding")
+        message("to the terminal degradation rate found with the DFOP model.")
+        message("The representative half-life obtained from the DFOP model may be used")
       }
       t_rep <- t_DFOP2
     }
