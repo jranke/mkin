@@ -1,4 +1,4 @@
-# Copyright (C) 2016,2017,2018 Johannes Ranke
+# Copyright (C) 2016-2019 Johannes Ranke
 # Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
@@ -16,20 +16,20 @@
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
 
-context("Calculation of maximum time weighted average concentrations (TWAs)")
+models <- c("SFO", "FOMC", "DFOP", "HS")
+fits <- mmkin(models,
+  list(FOCUS_C = FOCUS_2006_C, FOCUS_D = FOCUS_2006_D),
+  quiet = TRUE, cores = if (Sys.getenv("TRAVIS") == "") 15 else 1)
 
+context("Calculation of maximum time weighted average concentrations (TWAs)")
 
 test_that("Time weighted average concentrations are correct", {
   skip_on_cran()
-  twa_models <- c("SFO", "FOMC", "DFOP", "HS")
-  fits <- mmkin(twa_models,
-                list(FOCUS_C = FOCUS_2006_C, FOCUS_D = FOCUS_2006_D),
-                quiet = TRUE, cores = if (Sys.getenv("TRAVIS") == "") 15 else 1)
 
   outtimes_10 <- seq(0, 10, length.out = 10000)
 
   for (ds in c("FOCUS_C", "FOCUS_D")) {
-    for (model in twa_models) {
+    for (model in models) {
       fit <- fits[[model, ds]]
       bpar <- summary(fit)$bpar[, "Estimate"]
       pred_10 <- mkinpredict(fit$mkinmod,
@@ -47,3 +47,15 @@ test_that("Time weighted average concentrations are correct", {
     }
   }
 })
+
+context("Plotting")
+
+test_that("Plotting mmkin objects is reproducible", {
+  skip_on_cran()
+  mmkin_FOCUS_C <- function() plot(fits[, "FOCUS_C"])
+  mmkin_SFO <- function() plot(fits["SFO",])
+
+  vdiffr::expect_doppelganger("mmkin plot for FOCUS C", mmkin_FOCUS_C)
+  vdiffr::expect_doppelganger("mmkin plot for SFO (FOCUS C and D)", mmkin_SFO)
+})
+
