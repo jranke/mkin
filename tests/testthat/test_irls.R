@@ -41,6 +41,10 @@ test_that("Reweighting method 'obs' works", {
 })
 
 test_that("Reweighting method 'tc' works", {
+  fit_irls_2 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, reweight.method = "tc", quiet = TRUE)
+  parms_2 <- round(fit_irls_2$bparms.optim, c(1, 4, 4, 4, 4, 4))
+  expect_equivalent(parms_2, c(102.1, 0.7393, 0.2992, 0.0202, 0.7687, 0.7229))
+
   skip("Too much trouble with datasets that are randomly generated")
   # I need to make the tc method more robust against that
   # skip_on_cran()
