@@ -53,11 +53,13 @@ context("Summary")
 test_that("The summary is reproducible", {
   skip_on_cran()
   fit <- fits[["DFOP", "FOCUS_C"]]
-  undebug(summary.mkinfit)
+  test_summary <- summary(fit)
   test_summary$fit_version <- "Dummy 0.0 for testing"
   test_summary$fit_Rversion <- "Dummy R version for testing"
   test_summary$date.fit <- "Dummy date for testing"
   test_summary$date.summary <- "Dummy date for testing"
+  test_summary$calls <- "test 0"
+  test_summary$time <- c(elapsed = "test time 0")
   expect_known_output(print(test_summary), "summary_DFOP_FOCUS_C.txt")
 })
 
