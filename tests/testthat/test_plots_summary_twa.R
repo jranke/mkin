@@ -68,10 +68,12 @@ context("Plotting")
 test_that("Plotting mmkin objects is reproducible", {
   skip_on_cran()
   plot_sep_FOCUS_C_SFO <- function() plot_sep(fits[["SFO", "FOCUS_C"]])
+  mkinparplot_FOCUS_C_SFO <- function() mkinparplot(fits[["SFO", "FOCUS_C"]])
   mmkin_FOCUS_C <- function() plot(fits[, "FOCUS_C"])
   mmkin_SFO <- function() plot(fits["SFO",])
 
   vdiffr::expect_doppelganger("mkinfit plot for FOCUS C with sep = TRUE", plot_sep_FOCUS_C_SFO)
+  vdiffr::expect_doppelganger("mkinparplot for FOCUS C SFO", mkinparplot_FOCUS_C_SFO)
   vdiffr::expect_doppelganger("mmkin plot for FOCUS C", mmkin_FOCUS_C)
   vdiffr::expect_doppelganger("mmkin plot for SFO (FOCUS C and D)", mmkin_SFO)
 })
