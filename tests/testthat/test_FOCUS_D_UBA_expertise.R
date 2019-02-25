@@ -51,6 +51,8 @@ test_that("Fits with formation fractions are correct for FOCUS D", {
                c(7.02, 23.33))
   expect_equal(round(as.numeric(endpoints(fit.ff)$distimes["m1", ]), 1),
                c(131.8, 437.7))
+  # The following value is not from the UBA expertise, only used here
+  # to check stability of the AIC calculation
   expect_equivalent(AIC(fit.ff), 212.6, scale = 1, tolerance = 0.1)
 })
 
