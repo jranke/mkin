@@ -52,7 +52,7 @@ context("Plotting")
 
 test_that("Plotting mmkin objects is reproducible", {
   skip_on_cran()
-  plot_sep_FOCUS_C_SFO <- function() plot_sep(fits[[, "FOCUS_C"]])
+  plot_sep_FOCUS_C_SFO <- function() plot_sep(fits[["SFO", "FOCUS_C"]])
   mmkin_FOCUS_C <- function() plot(fits[, "FOCUS_C"])
   mmkin_SFO <- function() plot(fits["SFO",])
 
