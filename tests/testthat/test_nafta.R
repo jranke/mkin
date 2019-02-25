@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
 
-context("Evaluations according to the NAFTA guidance from 2015")
+context("Evaluations according to 2015 NAFTA guidance")
 
 test_that("Data for more than one compound are rejected",
   expect_error(nafta(FOCUS_2006_D)))
@@ -40,5 +40,5 @@ test_that("Test data from Appendix D are correctly evaluated", {
   expect_known_output(print(res), "print_nafta_analysis.txt")
 
   plot_nafta <- function() plot(res)
-  vdiffr::expect_doppelganger("Plot NAFTA analysis SOP Appendix D", plot_nafta)
+  vdiffr::expect_doppelganger("Plot NAFTA analysis", plot_nafta)
 })
