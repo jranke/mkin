@@ -49,7 +49,7 @@ nafta <- function(ds, title = NA, quiet = FALSE) {
   result$S["IORE"]
   result$S_c <- result$S[["IORE"]] * (1 + p/(n - p) * qf(0.5, p, n - p))
 
-  result$t_rep <- .evaluate_nafta_results(result$S, result$S_c, 
+  result$t_rep <- .evaluate_nafta_results(result$S, result$S_c,
     result$distimes, quiet = quiet)
 
   class(result) <- "nafta"
@@ -67,6 +67,7 @@ plot.nafta <- function(x, legend = FALSE, main = "auto", ...) {
 print.nafta <- function(x, quiet = TRUE, ...) {
   cat("Sums of squares:\n")
   print(x$S)
+  cat("\nCritical sum of squares for checking the SFO model:\n")
   print(x$S_c)
   cat("\nParameters:\n")
   print(x$parameters)

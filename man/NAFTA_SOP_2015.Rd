@@ -1,15 +1,16 @@
-\name{NAFTA_2015_datasets}
-\alias{MRID_555555}
+\name{NAFTA_SOP_2015}
+\alias{NAFTA_SOP_Appendix_B}
+\alias{NAFTA_SOP_Appendix_D}
 \docType{data}
 \title{
-Example datasets from the NAFTA guidance published 2015
+Example datasets from the NAFTA SOP published 2015
 }
 \description{
-Data taken from US EPA (2015), p. 23.
+Data taken from US EPA (2015), p. 19 and 23.
 }
-\usage{NAFTA_2015_datasets}
+\usage{NAFTA_SOP_2015}
 \format{
-  1 dataset with observations on the following variables.
+  2 datasets with observations on the following variables.
   \describe{
     \item{\code{name}}{a factor containing the name of the observed variable}
     \item{\code{time}}{a numeric vector containing time points}
@@ -28,7 +29,7 @@ Data taken from US EPA (2015), p. 23.
   \url{https://www.epa.gov/pesticide-science-and-assessing-pesticide-risks/standard-operating-procedure-using-nafta-guidance}
 }
 \examples{
-  nafta_evaluation <- nafta(MRID_555555)
+  nafta_evaluation <- nafta(NAFTA_SOP_Appendix_D)
   print(nafta_evaluation)
   plot(nafta_evaluation)
 }

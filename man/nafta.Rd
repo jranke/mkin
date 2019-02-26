@@ -39,7 +39,7 @@ nafta(ds, title = NA, quiet = FALSE)
   \url{https://www.epa.gov/pesticide-science-and-assessing-pesticide-risks/standard-operating-procedure-using-nafta-guidance}
 }
 \examples{
-  nafta_evaluation <- nafta(MRID_555555)
+  nafta_evaluation <- nafta(NAFTA_SOP_Appendix_D)
   print(nafta_evaluation)
   plot(nafta_evaluation)
 }

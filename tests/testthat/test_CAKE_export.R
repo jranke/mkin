@@ -27,25 +27,3 @@ test_that("Exporting is reproducible", {
   csf <- readLines(con = "FOCUS_2006_D.csf")
   expect_known_output(csf, "FOCUS_2006_D.txt")
 })
-
-test_that("Test data from Appendix D are correctly evaluated", {
-  expect_message(res <- nafta(MRID_555555, "MRID 555555"))
-
-  # From Figure D.1
-  dtx_sop <- matrix(c(407, 541, 429, 1352, 5192066, 2383), nrow = 3, ncol = 2)
-  expect_equivalent(res$distimes[, 1:2], dtx_sop, tolerance = 1,
-                    scale = 1)
-
-  C0_sop <- c(SFO = 83.8, IORE = 96.9, DFOP = 97.6)
-  C0_mkin <- sapply(res$parameters, function(x) x["parent_0", "Estimate"])
-  expect_equivalent(C0_mkin, C0_sop, scale = 1, tolerance = 0.1)
-
-  expect_equal(round(res$S_c), 717)
-  expect_equal(signif(res$S[["SFO"]], 3), 1.38e+3)
-  expect_equal(round(res$t_rep), 841)
-
-  expect_known_output(print(res), "print_nafta_analysis.txt")
-
-  plot_nafta <- function() plot(res)
-  vdiffr::expect_doppelganger("Plot NAFTA analysis", plot_nafta)
-})
