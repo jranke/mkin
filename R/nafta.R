@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
 
-nafta <- function(ds, title = NA, quiet = FALSE) {
+nafta <- function(ds, title = NA, quiet = FALSE, ...) {
   if (length(levels(ds$name)) > 1) {
     stop("The NAFTA procedure is only defined for decline data for a single compound")
   }
@@ -24,7 +24,7 @@ nafta <- function(ds, title = NA, quiet = FALSE) {
   models <- c("SFO", "IORE", "DFOP")
 
   result <- list(title = title, data = ds)
-  result$mmkin <- mmkin(models, list(ds), quiet = TRUE)
+  result$mmkin <- mmkin(models, list(ds), quiet = TRUE, ...)
 
   distimes <- lapply(result$mmkin, function(x) as.numeric(endpoints(x)$distimes["parent", ]))
 
@@ -73,7 +73,7 @@ print.nafta <- function(x, quiet = TRUE, ...) {
   print(x$parameters)
   t_rep <- .evaluate_nafta_results(x$S, x$S_c, x$distimes, quiet = quiet)
   cat("\nDTx values:\n")
-  print(round((x$distimes), digits = 0))
+  print(signif((x$distimes), 3))
   cat("\nRepresentative half-life:\n")
   print(t_rep)
 }

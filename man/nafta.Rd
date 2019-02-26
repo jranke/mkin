@@ -4,7 +4,7 @@
 Evaluate parent kinetics using the NAFTA guidance
 }
 \usage{
-nafta(ds, title = NA, quiet = FALSE)
+nafta(ds, title = NA, quiet = FALSE, \dots)
 }
 \description{
   The function fits the SFO, IORE and DFOP models using
@@ -20,6 +20,10 @@ nafta(ds, title = NA, quiet = FALSE)
   }
   \item{title}{ Optional title of the dataset }
   \item{quiet}{ Should the evaluation text be shown? }
+  \item{\dots}{
+    Further arguments passed to \code{\link{mmkin}}.
+  }
+
 }
 \value{
   An list of class \code{nafta}. The list element named "mmkin" is the
@@ -39,7 +43,7 @@ nafta(ds, title = NA, quiet = FALSE)
   \url{https://www.epa.gov/pesticide-science-and-assessing-pesticide-risks/standard-operating-procedure-using-nafta-guidance}
 }
 \examples{
-  nafta_evaluation <- nafta(NAFTA_SOP_Appendix_D)
+  nafta_evaluation <- nafta(NAFTA_SOP_Appendix_D, cores = 1)
   print(nafta_evaluation)
   plot(nafta_evaluation)
 }

@@ -4,7 +4,9 @@
   Print nafta objects
 }
 \description{
-  Print nafta objects.
+  Print nafta objects. The results for the three models
+  are printed in the order of increasing model complexity,
+  i.e. SFO, then IORE, and finally DFOP.
 }
 \usage{
   \method{print}{nafta}(x, quiet = TRUE, ...)

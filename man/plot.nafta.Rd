@@ -1,7 +1,9 @@
 \name{plot.nafta}
 \alias{plot.nafta}
 \title{
-  Plot the results of the three models used in the NAFTA scheme
+  Plot the results of the three models used in the NAFTA scheme. The plots
+  are ordered with increasing complexity of the model in this function 
+  (SFO, then IORE, then DFOP).
 }
 \description{
   Calls \code{\link{plot.mmkin}}.

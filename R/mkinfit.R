@@ -374,6 +374,10 @@ mkinfit <- function(mkinmod, observed,
   lower <- rep(-Inf, length(c(state.ini.optim, transparms.optim)))
   upper <- rep(Inf, length(c(state.ini.optim, transparms.optim)))
   names(lower) <- names(upper) <- c(names(state.ini.optim), names(transparms.optim))
+
+  # IORE exponentes are not transformed, but need a lower bound of zero
+  index_N <- grep("^N", names(lower))
+  lower[index_N] <- 0
   if (!transform_rates) {
     index_k <- grep("^k_", names(lower))
     lower[index_k] <- 0

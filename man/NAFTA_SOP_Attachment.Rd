@@ -1,21 +1,16 @@
-\name{NAFTA_SOP_2015}
-\alias{NAFTA_SOP_Appendix_B}
-\alias{NAFTA_SOP_Appendix_D}
+\name{NAFTA_SOP_Attachment}
+\alias{NAFTA_SOP_Attachment}
 \docType{data}
 \title{
-Example datasets from the NAFTA SOP published 2015
+Example datasets from Attachment 1 to the NAFTA SOP published 2015
 }
 \description{
-Data taken from US EPA (2015), p. 19 and 23.
+Data taken from from Attachment 1 of the SOP.
 }
-\usage{NAFTA_SOP_2015}
+\usage{NAFTA_SOP_Attachment}
 \format{
-  2 datasets with observations on the following variables.
-  \describe{
-    \item{\code{name}}{a factor containing the name of the observed variable}
-    \item{\code{time}}{a numeric vector containing time points}
-    \item{\code{value}}{a numeric vector containing concentrations}
-  }
+  Additionally, a list (NAFTA_SOP_Attachment) containing 16 datasets suitable
+  for the evaluation with \code{\link{nafta}}
 }
 \source{
   NAFTA (2011) Guidance for evaluating and calculating degradation kinetics
@@ -29,8 +24,8 @@ Data taken from US EPA (2015), p. 19 and 23.
   \url{https://www.epa.gov/pesticide-science-and-assessing-pesticide-risks/standard-operating-procedure-using-nafta-guidance}
 }
 \examples{
-  nafta_evaluation <- nafta(NAFTA_SOP_Appendix_D, cores = 1)
-  print(nafta_evaluation)
-  plot(nafta_evaluation)
+  nafta_att_p5a <- nafta(NAFTA_SOP_Attachment[["p5a"]], cores = 1)
+  print(nafta_att_p5a)
+  plot(nafta_att_p5a)
 }
 \keyword{datasets}

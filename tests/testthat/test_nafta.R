@@ -47,7 +47,7 @@ test_that("Test data from Appendix D are correctly evaluated", {
 
   # From Figure D.1
   dtx_sop <- matrix(c(407, 541, 429, 1352, 5192066, 2383), nrow = 3, ncol = 2)
-  expect_equivalent(round(res$distimes[, 1:2]), dtx_sop)
+  expect_equivalent(round(res$distimes[, 1:2]), dtx_sop, tolerance = 0.00001)
 
   C0_sop <- c(SFO = 83.8, IORE = 96.9, DFOP = 97.6)
   C0_mkin <- sapply(res$parameters, function(x) x["parent_0", "Estimate"])

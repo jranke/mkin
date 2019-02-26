@@ -28,7 +28,7 @@
 \examples{
   f <- mmkin(c("SFO", "FOMC", "DFOP"),
     list("FOCUS A" = FOCUS_2006_A,
-         "FOCUS C" = FOCUS_2006_C))
+         "FOCUS C" = FOCUS_2006_C), cores = 1, quiet = TRUE)
   AIC(f[1, "FOCUS A"]) # We get a single number for a single fit
 
   # For FOCUS A, the models fit almost equally well, so the higher the number

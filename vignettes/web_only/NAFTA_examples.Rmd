@@ -1,0 +1,243 @@
+---
+title: "Evaluation of example datasets from Attachment 1 to the US EPA SOP for the NAFTA guidance"
+author: "Johannes Ranke"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+    mathjax: null
+    fig_retina: null
+references:
+- id: usepa2015
+  title: Standard Operating Procedure for Using the NAFTA
+    Guidance to Calculate Representative Half-life Values and Characterizing
+    Pesticide Degradation
+  author:
+    - family: US EPA
+  type: report
+  issued:
+    year: 2015
+  url: https://www.epa.gov/pesticide-science-and-assessing-pesticide-risks/standard-operating-procedure-using-nafta-guidance
+vignette: >
+  %\VignetteIndexEntry{Example evaluation of FOCUS Laboratory Data L1 to L3}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Introduction
+
+In this document, the example evaluations provided in Attachment 1 to the SOP
+of US EPA for using the NAFTA guidance [@usepa2015] are repeated using mkin.
+The original evaluations reported in the attachment were performed using PestDF
+in version 0.8.4. Note that PestDF 0.8.13 is the version distributed at the US
+EPA website today (2019-02-26).
+
+The datasets are now distributed with the mkin package.
+
+```{r, include = FALSE}
+library(knitr)
+opts_chunk$set(tidy = FALSE, cache = FALSE, fig.height = 7)
+library("mkin", quietly = TRUE)
+```
+
+# Examples where DFOP did not converge with PestDF 0.8.4
+
+In attachment 1, it is reported that the DFOP model does not converge for these
+datasets when PestDF 0.8.4 was used. For all four datasets, the DFOP model can
+be fitted with mkin (see below). The negative half-life given by PestDF 0.8.4
+for these fits appears to be the result of a bug. The results for the other
+two models (SFO and IORE) are the same.
+
+## Example on page 5, upper panel
+
+```{r p5a}
+p5a <- nafta(NAFTA_SOP_Attachment[["p5a"]])
+plot(p5a)
+print(p5a)
+```
+
+## Example on page 5, lower panel
+
+```{r p5b}
+p5b <- nafta(NAFTA_SOP_Attachment[["p5b"]])
+plot(p5b)
+print(p5b)
+```
+
+## Example on page 6
+
+```{r p6}
+p6 <- nafta(NAFTA_SOP_Attachment[["p6"]])
+plot(p6)
+print(p6)
+```
+
+## Example on page 7
+
+```{r p7}
+p7 <- nafta(NAFTA_SOP_Attachment[["p7"]])
+plot(p7)
+print(p7)
+```
+
+# Examples where the representative half-life deviates from the observed DT50
+
+## Example on page 8
+
+For this dataset, the IORE fit does not converge when the default starting values
+used by mkin for the IORE model are used. Therefore, a lower value for the rate
+constant is used here.
+
+```{r p8}
+p8 <- nafta(NAFTA_SOP_Attachment[["p8"]], parms.ini = c(k__iore_parent_sink = 1e-3))
+plot(p8)
+print(p8)
+```
+
+# Examples where SFO was not selected for an abiotic study
+
+## Example on page 9, upper panel
+
+```{r p9a}
+p9a <- nafta(NAFTA_SOP_Attachment[["p9a"]])
+plot(p9a)
+print(p9a)
+```
+
+In this example, the residuals of the SFO indicate a lack of fit of this model,
+so even if it was an abiotic experiment, the data do not suggest a simple
+exponential decline.
+
+## Example on page 9, lower panel
+
+```{r p9b}
+p9b <- nafta(NAFTA_SOP_Attachment[["p9b"]])
+plot(p9b)
+print(p9b)
+```
+
+Here, mkin gives a longer slow DT50 for the DFOP model (17.8 days) than
+PestDF (13.5 days). Presumably, this is related to the fact that
+PestDF gives a negative value for the proportion of the fast degradation
+which should be between 0 and 1, inclusive. This parameter is called
+f in PestDF and g in mkin. In mkin, it is restricted to the interval from
+0 to 1.
+
+## Example on page 10
+
+```{r p10}
+p10 <- nafta(NAFTA_SOP_Attachment[["p10"]])
+plot(p10)
+print(p10)
+```
+
+Here, a value below N is given for the IORE model, because the data
+suggests a faster decline towards the end of the experiment, which
+appears physically rather unlikely in the case of a photolysis study.
+It seems PestDF does not constrain N to values above zero, thus
+the slight difference in IORE model parameters between PestDF and
+mkin.
+
+# The DT50 was not observed during the study
+
+## Example on page 11
+
+```{r p11}
+p11 <- nafta(NAFTA_SOP_Attachment[["p11"]])
+plot(p11)
+print(p11)
+```
+
+In this case, the DFOP fit reported for PestDF resulted
+in a negative value for the slower rate constant, which is
+not possible in mkin. The other results are in agreement.
+
+# N is less than 1 and the DFOP rate constants are like the SFO rate constant
+
+In the following three examples, the same results are obtained with mkin as
+reported for PestDF. As in the case on page 10, the N values below 1 are deemed
+unrealistic and appear to be the result of an overparameterisation.
+
+
+## Example on page 12, upper panel
+
+```{r p12a}
+p12a <- nafta(NAFTA_SOP_Attachment[["p12a"]])
+plot(p12a)
+print(p12a)
+```
+
+## Example on page 12, lower panel
+
+```{r p12b}
+p12b <- nafta(NAFTA_SOP_Attachment[["p12b"]])
+plot(p12b)
+print(p12b)
+```
+
+## Example on page 13
+
+```{r p13}
+p13 <- nafta(NAFTA_SOP_Attachment[["p13"]])
+plot(p13)
+print(p13)
+```
+
+# DT50 not observed in the study and DFOP problems in PestDF
+
+```{r p14}
+p14 <- nafta(NAFTA_SOP_Attachment[["p14"]])
+plot(p14)
+print(p14)
+```
+
+The slower rate constant reported by PestDF is negative, which is not
+physically realistic, and not possible in mkin. The other fits give the same
+results in mkin and PestDF.
+
+# N is less than 1 and DFOP fraction parameter is below zero
+
+```{r p15a}
+p15a <- nafta(NAFTA_SOP_Attachment[["p15a"]])
+plot(p15a)
+print(p15a)
+```
+
+```{r p15b}
+p15b <- nafta(NAFTA_SOP_Attachment[["p15b"]])
+plot(p15b)
+print(p15b)
+```
+
+In mkin, only the IORE fit is affected (deemed unrealistic), as the fraction
+parameter of the DFOP model is restricted to the interval between 0 and 1 in
+mkin. The SFO fits give the same results for both mkin and PestDF.
+
+# The DFOP fraction parameter is greater than 1
+
+```{r p16}
+p16 <- nafta(NAFTA_SOP_Attachment[["p16"]])
+plot(p16)
+print(p16)
+```
+
+In PestDF, the DFOP fit seems to have stuck in a local minimum, as mkin finds
+a solution with a much lower $\chi^2$ error level. As the half-life from the
+slower rate constant of the DFOP model is larger than the IORE derived half-life,
+the NAFTA recommendation obtained with mkin is to use the DFOP representative
+half-life of 8.9 days.
+
+# Conclusions
+
+The results obtained with mkin deviate from the results obtained with PestDF
+either in cases where one of the interpretive rules would apply, i.e. the
+IORE parameter N is less than one or the DFOP k values obtained with PestDF are
+equal to the SFO k values, or in cases where the DFOP model did not converge,
+which often lead to negative rate constants returned by PestDF.
+
+Therefore, mkin appears to suitable for kinetic evaluations according to the
+NAFTA guidance.
+
+# References
