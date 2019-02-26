@@ -9,7 +9,7 @@ Data taken from from Attachment 1 of the SOP.
 }
 \usage{NAFTA_SOP_Attachment}
 \format{
-  Additionally, a list (NAFTA_SOP_Attachment) containing 16 datasets suitable
+  A list (NAFTA_SOP_Attachment) containing 16 datasets suitable
   for the evaluation with \code{\link{nafta}}
 }
 \source{
