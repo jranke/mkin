@@ -1,4 +1,4 @@
-# Copyright (C) 2014-2015,2018 Johannes Ranke
+# Copyright (C) 2014-2015,2018,2019 Johannes Ranke
 # Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
@@ -15,8 +15,6 @@
 
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
-
-# This test was migrated from a RUnit test inst/unitTests/runit.mkinfit.R
 
 context("Complex test case from Schaefer et al. (2007) Piacenza paper")
 
