@@ -526,10 +526,13 @@ mkinfit <- function(mkinmod, observed,
     }
   }
 
-  # Return number of iterations for SANN method
+  # Return number of iterations for SANN method and alert user to check if
+  # the approximation to the optimum is sufficient
   if (method.modFit == "SANN") {
     fit$iter = maxit.modFit
-    if(!quiet) cat("Termination of the SANN algorithm does not imply convergence.\n")
+    fit$warning <- paste0("Termination of the SANN algorithm does not imply convergence.\n",
+      "Make sure the approximation of the optimum is adequate.")
+    warning(fit$warning)
   }
 
   # We need to return some more data for summary and plotting
@@ -740,6 +743,16 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
 
   ans$errmin <- mkinerrmin(object, alpha = 0.05)
 
+  if (object$calls > 0) {
+    if (!is.null(ans$cov.unscaled)){
+      Corr <- cov2cor(ans$cov.unscaled)
+      rownames(Corr) <- colnames(Corr) <- rownames(ans$par)
+      ans$Corr <- Corr
+    } else {
+      warning("Could not estimate covariance matrix; singular system.")
+    }
+  }
+
   ans$bparms.ode <- object$bparms.ode
   ep <- endpoints(object)
   if (length(ep$ff) != 0)
@@ -811,13 +824,9 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
   if (x$calls > 0) {
     cat("\nParameter correlation:\n")
     if (!is.null(x$cov.unscaled)){
-      Corr <- cov2cor(x$cov.unscaled)
-      rownames(Corr) <- colnames(Corr) <- rownames(x$par)
-      print(Corr, digits = digits, ...)
+      print(x$Corr, digits = digits, ...)
     } else {
-      msg <- "Could not estimate covariance matrix; singular system:\n"
-      warning(msg)
-      cat(msg)
+      cat("Could not estimate covariance matrix; singular system.")
     }
   }
 
