@@ -903,25 +903,25 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
 }
 # Alternative way to fit the error model, fitting to modelled instead of
 # observed values
-.fit_error_model_mad_mod <- function(tmp_res, tc) {
-  mad_agg <- aggregate(tmp_res$res.unweighted,
-                       by = list(name = tmp_res$name, time = tmp_res$x),
-                       FUN = function(x) mad(x, center = 0))
-  names(mad_agg) <- c("name", "time", "mad")
-  mod_agg <- aggregate(tmp_res$mod,
-                       by = list(name = tmp_res$name, time = tmp_res$x),
-                       FUN = mean)
-  names(mod_agg) <- c("name", "time", "mod")
-  mod_mad <- merge(mod_agg, mad_agg)
-
-  tc_fit <- tryCatch(
-    nls(mad ~ sigma_twocomp(mod, sigma_low, rsd_high),
-      start = list(sigma_low = tc["sigma_low"], rsd_high = tc["rsd_high"]),
-      data = mod_mad,
-      weights = 1/mod_mad$mad,
-      lower = 0,
-      algorithm = "port"),
-    error = "Fitting the error model failed in iteration")
-  return(tc_fit)
-}
+# .fit_error_model_mad_mod <- function(tmp_res, tc) {
+#   mad_agg <- aggregate(tmp_res$res.unweighted,
+#                        by = list(name = tmp_res$name, time = tmp_res$x),
+#                        FUN = function(x) mad(x, center = 0))
+#   names(mad_agg) <- c("name", "time", "mad")
+#   mod_agg <- aggregate(tmp_res$mod,
+#                        by = list(name = tmp_res$name, time = tmp_res$x),
+#                        FUN = mean)
+#   names(mod_agg) <- c("name", "time", "mod")
+#   mod_mad <- merge(mod_agg, mad_agg)
+# 
+#   tc_fit <- tryCatch(
+#     nls(mad ~ sigma_twocomp(mod, sigma_low, rsd_high),
+#       start = list(sigma_low = tc["sigma_low"], rsd_high = tc["rsd_high"]),
+#       data = mod_mad,
+#       weights = 1/mod_mad$mad,
+#       lower = 0,
+#       algorithm = "port"),
+#     error = "Fitting the error model failed in iteration")
+#   return(tc_fit)
+# }
 # vim: set ts=2 sw=2 expandtab:

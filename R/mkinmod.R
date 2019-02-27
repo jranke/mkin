@@ -164,12 +164,12 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
         # The problems were: Calculation of dissipation times did not work in this case
         # and the coefficient matrix is not generated correctly by the code present
         # in this file in this case
-        f_free_bound <- paste("f", varname, "free", "bound", sep = "_")
-        k_bound_free <- paste("k", varname, "bound", "free", sep = "_")
-        parms <- c(parms, f_free_bound, k_bound_free)
-        reversible_binding_term_1 <- paste("+", k_bound_free, "*", box_2)
-        reversible_binding_term_2 <- paste("+", f_free_bound, "*", k_compound, "*", box_1, "-",
-          k_bound_free, "*", box_2)
+        #f_free_bound <- paste("f", varname, "free", "bound", sep = "_")
+        #k_bound_free <- paste("k", varname, "bound", "free", sep = "_")
+        #parms <- c(parms, f_free_bound, k_bound_free)
+        #reversible_binding_term_1 <- paste("+", k_bound_free, "*", box_2)
+        #reversible_binding_term_2 <- paste("+", f_free_bound, "*", k_compound, "*", box_1, "-",
+        #  k_bound_free, "*", box_2)
       }
       diffs[[box_1]] <- paste(diffs[[box_1]], reversible_binding_term_1)
       diffs[[box_2]] <- paste(diffs[[box_2]], reversible_binding_term_2)
