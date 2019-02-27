@@ -51,7 +51,6 @@ test_that("Time weighted average concentrations are correct", {
 context("Summary")
 
 test_that("The summary is reproducible", {
-  skip_on_cran()
   fit <- fits[["DFOP", "FOCUS_C"]]
   test_summary <- summary(fit)
   test_summary$fit_version <- "Dummy 0.0 for testing"
@@ -78,3 +77,11 @@ test_that("Plotting mmkin objects is reproducible", {
   vdiffr::expect_doppelganger("mmkin plot for SFO (FOCUS C and D)", mmkin_SFO)
 })
 
+context("AIC calculation")
+
+test_that("The AIC is reproducible", {
+  expect_equivalent(AIC(fits[["SFO", "FOCUS_C"]]), 59.8, scale = 1, tolerance = 0.1)
+  expect_equivalent(AIC(fits[, "FOCUS_C"]), 
+                    data.frame(df = c(3, 4, 5, 5), AIC = c(59.8, 44.7, 29.1, 39.3)), 
+                    scale = 1, tolerance = 0.1)
+})
