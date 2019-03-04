@@ -81,6 +81,7 @@ test_that("We get reproducible output if quiet = FALSE", {
 })
 
 test_that("We get warnings in case of overparameterisation", {
+  skip_on_cran() # On winbuilder the following fit does not give a warning
   expect_warning(f <- mkinfit("FOMC", FOCUS_2006_A, quiet = TRUE), "not converge")
   s2 <- expect_warning(summary(mkinfit("DFOP", FOCUS_2006_A, quiet = TRUE)), "singular system")
 })

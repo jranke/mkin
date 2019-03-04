@@ -88,7 +88,7 @@
       <h1>Introduction to mkin</h1>
                         <h4 class="author">Johannes Ranke</h4>
             
-            <h4 class="date">2019-02-26</h4>
+            <h4 class="date">2019-03-04</h4>
       
       
       <div class="hidden name"><code>mkin.Rmd</code></div>
@@ -102,41 +102,41 @@
 <h1 class="hasAnchor">
 <a href="#abstract" class="anchor"></a>Abstract</h1>
 <p>In the regulatory evaluation of chemical substances like plant protection products (pesticides), biocides and other chemicals, degradation data play an important role. For the evaluation of pesticide degradation experiments, detailed guidance has been developed, based on nonlinear optimisation. The <code>R</code> add-on package <code>mkin</code> <span class="citation">(Ranke 2016)</span> implements fitting some of the models recommended in this guidance from within R and calculates some statistical measures for data series within one or more compartments, for parent and metabolites.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"mkin"</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="co"># Define the kinetic model</span></a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">m_SFO_SFO_SFO &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkinmod.html">mkinmod</a></span>(<span class="dt">parent =</span> <span class="kw"><a href="../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"M1"</span>),</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4">                         <span class="dt">M1 =</span> <span class="kw"><a href="../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"M2"</span>),</a>
-<a class="sourceLine" id="cb1-5" data-line-number="5">                         <span class="dt">M2 =</span> <span class="kw"><a href="../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>),</a>
-<a class="sourceLine" id="cb1-6" data-line-number="6">                         <span class="dt">use_of_ff =</span> <span class="st">"max"</span>, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="co"># Produce model predictions using some arbitrary parameters</span></a>
-<a class="sourceLine" id="cb1-10" data-line-number="10">sampling_times =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">14</span>, <span class="dv">28</span>, <span class="dv">60</span>, <span class="dv">90</span>, <span class="dv">120</span>)</a>
-<a class="sourceLine" id="cb1-11" data-line-number="11">d_SFO_SFO_SFO &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkinpredict.html">mkinpredict</a></span>(m_SFO_SFO_SFO,</a>
-<a class="sourceLine" id="cb1-12" data-line-number="12">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dt">k_parent =</span> <span class="fl">0.03</span>,</a>
-<a class="sourceLine" id="cb1-13" data-line-number="13">    <span class="dt">f_parent_to_M1 =</span> <span class="fl">0.5</span>, <span class="dt">k_M1 =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log</a></span>(<span class="dv">2</span>)<span class="op">/</span><span class="dv">100</span>,</a>
-<a class="sourceLine" id="cb1-14" data-line-number="14">    <span class="dt">f_M1_to_M2 =</span> <span class="fl">0.9</span>, <span class="dt">k_M2 =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log</a></span>(<span class="dv">2</span>)<span class="op">/</span><span class="dv">50</span>),</a>
-<a class="sourceLine" id="cb1-15" data-line-number="15">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dt">parent =</span> <span class="dv">100</span>, <span class="dt">M1 =</span> <span class="dv">0</span>, <span class="dt">M2 =</span> <span class="dv">0</span>),</a>
-<a class="sourceLine" id="cb1-16" data-line-number="16">  sampling_times)</a>
-<a class="sourceLine" id="cb1-17" data-line-number="17"></a>
-<a class="sourceLine" id="cb1-18" data-line-number="18"><span class="co"># Generate a dataset by adding normally distributed errors with</span></a>
-<a class="sourceLine" id="cb1-19" data-line-number="19"><span class="co"># standard deviation 3, for two replicates at each sampling time</span></a>
-<a class="sourceLine" id="cb1-20" data-line-number="20">d_SFO_SFO_SFO_err &lt;-<span class="st"> </span><span class="kw"><a href="../reference/add_err.html">add_err</a></span>(d_SFO_SFO_SFO, <span class="dt">reps =</span> <span class="dv">2</span>,</a>
-<a class="sourceLine" id="cb1-21" data-line-number="21">                             <span class="dt">sdfunc =</span> <span class="cf">function</span>(x) <span class="dv">3</span>,</a>
-<a class="sourceLine" id="cb1-22" data-line-number="22">                             <span class="dt">n =</span> <span class="dv">1</span>, <span class="dt">seed =</span> <span class="dv">123456789</span> )</a>
-<a class="sourceLine" id="cb1-23" data-line-number="23"></a>
-<a class="sourceLine" id="cb1-24" data-line-number="24"><span class="co"># Fit the model to the dataset</span></a>
-<a class="sourceLine" id="cb1-25" data-line-number="25">f_SFO_SFO_SFO &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkinfit.html">mkinfit</a></span>(m_SFO_SFO_SFO, d_SFO_SFO_SFO_err[[<span class="dv">1</span>]], <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb1-26" data-line-number="26"></a>
-<a class="sourceLine" id="cb1-27" data-line-number="27"><span class="co"># Plot the results separately for parent and metabolites</span></a>
-<a class="sourceLine" id="cb1-28" data-line-number="28"><span class="kw"><a href="../reference/plot.mkinfit.html">plot_sep</a></span>(f_SFO_SFO_SFO, <span class="dt">lpos =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"topright"</span>, <span class="st">"bottomright"</span>, <span class="st">"bottomright"</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(<span class="st">"mkin"</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="co"># Define the kinetic model</span></a>
+<a class="sourceLine" id="cb1-3" title="3">m_SFO_SFO_SFO &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkinmod.html">mkinmod</a></span>(<span class="dt">parent =</span> <span class="kw"><a href="../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"M1"</span>),</a>
+<a class="sourceLine" id="cb1-4" title="4">                         <span class="dt">M1 =</span> <span class="kw"><a href="../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"M2"</span>),</a>
+<a class="sourceLine" id="cb1-5" title="5">                         <span class="dt">M2 =</span> <span class="kw"><a href="../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>),</a>
+<a class="sourceLine" id="cb1-6" title="6">                         <span class="dt">use_of_ff =</span> <span class="st">"max"</span>, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb1-7" title="7"></a>
+<a class="sourceLine" id="cb1-8" title="8"></a>
+<a class="sourceLine" id="cb1-9" title="9"><span class="co"># Produce model predictions using some arbitrary parameters</span></a>
+<a class="sourceLine" id="cb1-10" title="10">sampling_times =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">14</span>, <span class="dv">28</span>, <span class="dv">60</span>, <span class="dv">90</span>, <span class="dv">120</span>)</a>
+<a class="sourceLine" id="cb1-11" title="11">d_SFO_SFO_SFO &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkinpredict.html">mkinpredict</a></span>(m_SFO_SFO_SFO,</a>
+<a class="sourceLine" id="cb1-12" title="12">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dt">k_parent =</span> <span class="fl">0.03</span>,</a>
+<a class="sourceLine" id="cb1-13" title="13">    <span class="dt">f_parent_to_M1 =</span> <span class="fl">0.5</span>, <span class="dt">k_M1 =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log</a></span>(<span class="dv">2</span>)<span class="op">/</span><span class="dv">100</span>,</a>
+<a class="sourceLine" id="cb1-14" title="14">    <span class="dt">f_M1_to_M2 =</span> <span class="fl">0.9</span>, <span class="dt">k_M2 =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log</a></span>(<span class="dv">2</span>)<span class="op">/</span><span class="dv">50</span>),</a>
+<a class="sourceLine" id="cb1-15" title="15">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dt">parent =</span> <span class="dv">100</span>, <span class="dt">M1 =</span> <span class="dv">0</span>, <span class="dt">M2 =</span> <span class="dv">0</span>),</a>
+<a class="sourceLine" id="cb1-16" title="16">  sampling_times)</a>
+<a class="sourceLine" id="cb1-17" title="17"></a>
+<a class="sourceLine" id="cb1-18" title="18"><span class="co"># Generate a dataset by adding normally distributed errors with</span></a>
+<a class="sourceLine" id="cb1-19" title="19"><span class="co"># standard deviation 3, for two replicates at each sampling time</span></a>
+<a class="sourceLine" id="cb1-20" title="20">d_SFO_SFO_SFO_err &lt;-<span class="st"> </span><span class="kw"><a href="../reference/add_err.html">add_err</a></span>(d_SFO_SFO_SFO, <span class="dt">reps =</span> <span class="dv">2</span>,</a>
+<a class="sourceLine" id="cb1-21" title="21">                             <span class="dt">sdfunc =</span> <span class="cf">function</span>(x) <span class="dv">3</span>,</a>
+<a class="sourceLine" id="cb1-22" title="22">                             <span class="dt">n =</span> <span class="dv">1</span>, <span class="dt">seed =</span> <span class="dv">123456789</span> )</a>
+<a class="sourceLine" id="cb1-23" title="23"></a>
+<a class="sourceLine" id="cb1-24" title="24"><span class="co"># Fit the model to the dataset</span></a>
+<a class="sourceLine" id="cb1-25" title="25">f_SFO_SFO_SFO &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkinfit.html">mkinfit</a></span>(m_SFO_SFO_SFO, d_SFO_SFO_SFO_err[[<span class="dv">1</span>]], <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb1-26" title="26"></a>
+<a class="sourceLine" id="cb1-27" title="27"><span class="co"># Plot the results separately for parent and metabolites</span></a>
+<a class="sourceLine" id="cb1-28" title="28"><span class="kw"><a href="../reference/plot.mkinfit.html">plot_sep</a></span>(f_SFO_SFO_SFO, <span class="dt">lpos =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"topright"</span>, <span class="st">"bottomright"</span>, <span class="st">"bottomright"</span>))</a></code></pre></div>
 <p><img src="mkin_files/figure-html/unnamed-chunk-2-1.png" width="768"></p>
 </div>
 <div id="background" class="section level1">
 <h1 class="hasAnchor">
 <a href="#background" class="anchor"></a>Background</h1>
 <p>Many approaches are possible regarding the evaluation of chemical degradation data.</p>
-<p>The now deprecated <code>kinfit</code> package <span class="citation">(Ranke 2015)</span> in <code>R</code> <span class="citation">(R Development Core Team 2016)</span> implements the approach recommended in the kinetics report provided by the FOrum for Co-ordination of pesticide fate models and their USe <span class="citation">(FOCUS Work Group on Degradation Kinetics 2006; 2014)</span> for simple data series for one parent compound in one compartment.</p>
+<p>The now deprecated <code>kinfit</code> package <span class="citation">(Ranke 2015)</span> in <code>R</code> <span class="citation">(R Development Core Team 2016)</span> implements the approach recommended in the kinetics report provided by the FOrum for Co-ordination of pesticide fate models and their USe <span class="citation">(FOCUS Work Group on Degradation Kinetics 2006, 2014)</span> for simple data series for one parent compound in one compartment.</p>
 <p>The <code>mkin</code> package <span class="citation">(Ranke 2016)</span> extends this approach to data series with transformation products, commonly termed metabolites, and to more than one compartment. It is also possible to include back reactions, so equilibrium reactions and equilibrium partitioning can be specified, although this oftentimes leads to an overparameterisation of the model.</p>
 <p>When the first <code>mkin</code> code was published in 2010, the most commonly used tools for fitting more complex kinetic degradation models to experimental data were KinGUI <span class="citation">(Schäfer et al. 2007)</span>, a MATLAB based tool with a graphical user interface that was specifically tailored to the task and included some output as proposed by the FOCUS Kinetics Workgroup, and ModelMaker, a general purpose compartment based tool providing infrastructure for fitting dynamic simulation models based on differential equations to data.</p>
 <p>The code was first uploaded to the BerliOS platform. When this was taken down, the version control history was imported into the R-Forge site, where the code is still mirrored today (see <em>e.g.</em> <a href="http://cgit.jrwb.de/mkin/commit/?id=30cbb4092f6d2d3beff5800603374a0d009ad770">the initial commit on 11 May 2010</a>).</p>
@@ -194,9 +194,6 @@
 <div id="ref-FOCUSkinetics2014">
 <p>———. 2014. <em>Generic Guidance for Estimating Persistence and Degradation Kinetics from Environmental Fate Studies on Pesticides in Eu Registration</em>. 1.1 ed. <a href="http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics" class="uri">http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics</a>.</p>
 </div>
-<div id="ref-rcore2016">
-<p>R Development Core Team. 2016. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org" class="uri">https://www.R-project.org</a>.</p>
-</div>
 <div id="ref-pkg:kinfit">
 <p>Ranke, J. 2015. <em>‘Kinfit‘: Routines for Fitting Simple Kinetic Models to Chemical Degradation Data</em>. <a href="https://CRAN.R-project.org/package=kinfit" class="uri">https://CRAN.R-project.org/package=kinfit</a>.</p>
 </div>
@@ -208,6 +205,9 @@
 </div>
 <div id="ref-ranke2015">
 <p>———. 2015. “To T-Test or Not to T-Test, That Is the Question.” In <em>XV Symposium on Pesticide Chemistry 2-4 September 2015</em>. Piacenza. <a href="http://chem.uft.uni-bremen.de/ranke/posters/piacenza_2015.pdf" class="uri">http://chem.uft.uni-bremen.de/ranke/posters/piacenza_2015.pdf</a>.</p>
+</div>
+<div id="ref-rcore2016">
+<p>R Development Core Team. 2016. <em><span class="sans-serif">R</span>: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org" class="uri">https://www.R-project.org</a>.</p>
 </div>
 <div id="ref-schaefer2007">
 <p>Schäfer, D., B. Mikolasch, P. Rainbird, and B. Harvey. 2007. “KinGUI: A New Kinetic Software Tool for Evaluations According to FOCUS Degradation Kinetics.” In <em>Proceedings of the Xiii Symposium Pesticide Chemistry</em>, edited by Del Re A. A. M., Capri E., Fragoulis G., and Trevisan M., 916–23. Piacenza.</p>

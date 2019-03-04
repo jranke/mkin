@@ -45,8 +45,10 @@ test_that("mkinmod stops to prevent and/or explain user errors", {
 })
 
 test_that("Printing mkinmod models is reproducible", {
-  expect_known_output(print(mkinmod(parent = mkinsub("SFO", "m1"), 
-                                    m1 = mkinsub("SFO"),
-                                    quiet = TRUE)),
+  m_test <- mkinmod(parent = mkinsub("SFO", "m1"), 
+                    m1 = mkinsub("SFO"),
+                    quiet = TRUE)
+  m_test$cf <- NULL # Remove to make test robust against missing gcc
+  expect_known_output(print(m_test),
                       file = "SFO_SFO_printed.txt")
 })

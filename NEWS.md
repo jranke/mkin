@@ -1,4 +1,4 @@
-# mkin 0.9.48.1 (2019-02-22)
+# mkin 0.9.48.1 (2019-03-04)
 
 - Add the function 'logLik.mkinfit' which makes it possible to calculate an AIC for mkinfit objects
 

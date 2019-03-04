@@ -9,7 +9,7 @@
   i.e. SFO, then IORE, and finally DFOP.
 }
 \usage{
-  \method{print}{nafta}(x, quiet = TRUE, ...)
+  \method{print}{nafta}(x, quiet = TRUE, digits = 3, ...)
 }
 \arguments{
   \item{x}{
@@ -17,6 +17,9 @@
   }
   \item{quiet}{
     Should the evaluation text be shown?
+  }
+  \item{digits}{
+    Number of digits to be used for printing parameters and dissipation times.
   }
   \item{\dots}{
     Not used.

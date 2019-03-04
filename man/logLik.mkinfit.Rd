@@ -48,6 +48,7 @@
   \code{\link{AIC.mmkin}}.
 }
 \examples{
+  \dontrun{
   sfo_sfo <- mkinmod(
     parent = mkinsub("SFO", to = "m1"),
     m1 = mkinsub("SFO")
@@ -60,6 +61,7 @@
   d_t$err <- d_t$value # Manual weighting assuming sigma ~ y
   f_man <- mkinfit(sfo_sfo, d_t, err = "err", quiet = TRUE)
   AIC(f_nw, f_obs, f_tc, f_man)
+  }
 }
 \author{
   Johannes Ranke

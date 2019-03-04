@@ -32,6 +32,11 @@ pkgfiles = \
 all: build
 
 $(TGZ): $(pkgfiles) vignettes
+	$(RM) -r vignettes/*_cache
+	$(RM) -r vignettes/*_files
+	$(RM) -r vignettes/*.R
+	$(RM) -r vignettes/web_only/*.R
+	$(RM) Rplots.pdf
 	"$(RBIN)/R" CMD build . 2>&1 | tee build.log
 
 $(TGZVNR): $(pkgfiles)
@@ -65,6 +70,8 @@ clean:
 
 test: install
 	"$(RBIN)/Rscript" -e 'devtools::test()' 2>&1 | tee test.log
+
+testcheck: test check
 
 README.html: README.md
 	"$(RBIN)/Rscript" -e "rmarkdown::render('README.md', output_format = 'html_document', output_options = list(mathjax = NULL))"
