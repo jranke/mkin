@@ -19,7 +19,7 @@
 models <- c("SFO", "FOMC", "DFOP", "HS")
 fits <- mmkin(models,
   list(FOCUS_C = FOCUS_2006_C, FOCUS_D = FOCUS_2006_D),
-  quiet = TRUE, cores = if (Sys.getenv("TRAVIS") == "") 15 else 1)
+  quiet = TRUE, cores = 1)
 
 context("Calculation of maximum time weighted average concentrations (TWAs)")
 
