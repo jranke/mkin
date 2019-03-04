@@ -203,157 +203,29 @@ The transformation of sets of formation fractions is fragile, as it supposes
   <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"m1"</span>, <span class='kw'>sink</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>),
   <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='co'># Fit the model to the FOCUS example dataset D using defaults</span>
 <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>fit</span>, <span class='kw'>data</span><span class='kw'>=</span><span class='fl'>FALSE</span>) <span class='co'># See transformed and backtransformed parameters</span></div><div class='output co'>#&gt; mkin version used for fitting:    0.9.48.1 
-#&gt; R version used for fitting:       3.5.2 
-#&gt; Date of fit:     Mon Mar  4 10:09:27 2019 
-#&gt; Date of summary: Mon Mar  4 10:09:27 2019 
-#&gt; 
-#&gt; Equations:
-#&gt; d_parent/dt = - k_parent_sink * parent - k_parent_m1 * parent
-#&gt; d_m1/dt = + k_parent_m1 * parent - k_m1_sink * m1
-#&gt; 
-#&gt; Model predictions using solution type deSolve 
-#&gt; 
-#&gt; Fitted with method Port using 153 model solutions performed in 0.699 s
-#&gt; 
-#&gt; Weighting: none
-#&gt; 
-#&gt; Starting values for parameters to be optimised:
-#&gt;                  value   type
-#&gt; parent_0      100.7500  state
-#&gt; k_parent_sink   0.1000 deparm
-#&gt; k_parent_m1     0.1001 deparm
-#&gt; k_m1_sink       0.1002 deparm
-#&gt; 
-#&gt; Starting values for the transformed parameters actually optimised:
-#&gt;                        value lower upper
-#&gt; parent_0          100.750000  -Inf   Inf
-#&gt; log_k_parent_sink  -2.302585  -Inf   Inf
-#&gt; log_k_parent_m1    -2.301586  -Inf   Inf
-#&gt; log_k_m1_sink      -2.300587  -Inf   Inf
-#&gt; 
-#&gt; Fixed parameter values:
-#&gt;      value  type
-#&gt; m1_0     0 state
-#&gt; 
-#&gt; Optimised, transformed parameters with symmetric confidence intervals:
-#&gt;                   Estimate Std. Error  Lower   Upper
-#&gt; parent_0            99.600    1.61400 96.330 102.900
-#&gt; log_k_parent_sink   -3.038    0.07826 -3.197  -2.879
-#&gt; log_k_parent_m1     -2.980    0.04124 -3.064  -2.897
-#&gt; log_k_m1_sink       -5.248    0.13610 -5.523  -4.972
-#&gt; 
-#&gt; Parameter correlation:
-#&gt;                   parent_0 log_k_parent_sink log_k_parent_m1 log_k_m1_sink
-#&gt; parent_0           1.00000            0.6075        -0.06625       -0.1701
-#&gt; log_k_parent_sink  0.60752            1.0000        -0.08740       -0.6253
-#&gt; log_k_parent_m1   -0.06625           -0.0874         1.00000        0.4716
-#&gt; log_k_m1_sink     -0.17006           -0.6253         0.47164        1.0000
-#&gt; 
-#&gt; Residual standard error: 3.211 on 36 degrees of freedom
-#&gt; 
-#&gt; Backtransformed parameters:
-#&gt; Confidence intervals for internally transformed parameters are asymmetric.
-#&gt; t-test (unrealistically) based on the assumption of normal distribution
-#&gt; for estimators of untransformed parameters.
-#&gt;                Estimate t value    Pr(&gt;t)     Lower     Upper
-#&gt; parent_0      99.600000  61.720 2.024e-38 96.330000 1.029e+02
-#&gt; k_parent_sink  0.047920  12.780 3.050e-15  0.040890 5.616e-02
-#&gt; k_parent_m1    0.050780  24.250 3.407e-24  0.046700 5.521e-02
-#&gt; k_m1_sink      0.005261   7.349 5.758e-09  0.003992 6.933e-03
-#&gt; 
-#&gt; Chi2 error levels in percent:
-#&gt;          err.min n.optim df
-#&gt; All data   6.398       4 15
-#&gt; parent     6.827       3  6
-#&gt; m1         4.490       1  9
-#&gt; 
-#&gt; Resulting formation fractions:
-#&gt;                 ff
-#&gt; parent_sink 0.4855
-#&gt; parent_m1   0.5145
-#&gt; m1_sink     1.0000
-#&gt; 
-#&gt; Estimated disappearance times:
-#&gt;           DT50   DT90
-#&gt; parent   7.023  23.33
-#&gt; m1     131.761 437.70</div><div class='input'>
-</div><div class='input'><span class='no'>fit.2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>transform_rates</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>fit.2</span>, <span class='kw'>data</span><span class='kw'>=</span><span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.48.1 
-#&gt; R version used for fitting:       3.5.2 
-#&gt; Date of fit:     Mon Mar  4 10:09:29 2019 
-#&gt; Date of summary: Mon Mar  4 10:09:29 2019 
-#&gt; 
-#&gt; Equations:
-#&gt; d_parent/dt = - k_parent_sink * parent - k_parent_m1 * parent
-#&gt; d_m1/dt = + k_parent_m1 * parent - k_m1_sink * m1
-#&gt; 
-#&gt; Model predictions using solution type deSolve 
-#&gt; 
-#&gt; Fitted with method Port using 350 model solutions performed in 1.584 s
-#&gt; 
-#&gt; Weighting: none
-#&gt; 
-#&gt; Starting values for parameters to be optimised:
-#&gt;                  value   type
-#&gt; parent_0      100.7500  state
-#&gt; k_parent_sink   0.1000 deparm
-#&gt; k_parent_m1     0.1001 deparm
-#&gt; k_m1_sink       0.1002 deparm
-#&gt; 
-#&gt; Starting values for the transformed parameters actually optimised:
-#&gt;                  value lower upper
-#&gt; parent_0      100.7500  -Inf   Inf
-#&gt; k_parent_sink   0.1000     0   Inf
-#&gt; k_parent_m1     0.1001     0   Inf
-#&gt; k_m1_sink       0.1002     0   Inf
-#&gt; 
-#&gt; Fixed parameter values:
-#&gt;      value  type
-#&gt; m1_0     0 state
-#&gt; 
-#&gt; Optimised, transformed parameters with symmetric confidence intervals:
-#&gt;                Estimate Std. Error     Lower     Upper
-#&gt; parent_0      99.600000  1.6140000 96.330000 1.029e+02
-#&gt; k_parent_sink  0.047920  0.0037500  0.040310 5.553e-02
-#&gt; k_parent_m1    0.050780  0.0020940  0.046530 5.502e-02
-#&gt; k_m1_sink      0.005261  0.0007159  0.003809 6.713e-03
-#&gt; 
-#&gt; Parameter correlation:
-#&gt;               parent_0 k_parent_sink k_parent_m1 k_m1_sink
-#&gt; parent_0       1.00000        0.6075    -0.06625   -0.1701
-#&gt; k_parent_sink  0.60752        1.0000    -0.08740   -0.6253
-#&gt; k_parent_m1   -0.06625       -0.0874     1.00000    0.4716
-#&gt; k_m1_sink     -0.17006       -0.6253     0.47164    1.0000
-#&gt; 
-#&gt; Residual standard error: 3.211 on 36 degrees of freedom
-#&gt; 
-#&gt; Backtransformed parameters:
-#&gt; Confidence intervals for internally transformed parameters are asymmetric.
-#&gt; t-test (unrealistically) based on the assumption of normal distribution
-#&gt; for estimators of untransformed parameters.
-#&gt;                Estimate t value    Pr(&gt;t)     Lower     Upper
-#&gt; parent_0      99.600000  61.720 2.024e-38 96.330000 1.029e+02
-#&gt; k_parent_sink  0.047920  12.780 3.050e-15  0.040310 5.553e-02
-#&gt; k_parent_m1    0.050780  24.250 3.407e-24  0.046530 5.502e-02
-#&gt; k_m1_sink      0.005261   7.349 5.758e-09  0.003809 6.713e-03
-#&gt; 
-#&gt; Chi2 error levels in percent:
-#&gt;          err.min n.optim df
-#&gt; All data   6.398       4 15
-#&gt; parent     6.827       3  6
-#&gt; m1         4.490       1  9
-#&gt; 
-#&gt; Resulting formation fractions:
-#&gt;                 ff
-#&gt; parent_sink 0.4855
-#&gt; parent_m1   0.5145
-#&gt; m1_sink     1.0000
-#&gt; 
-#&gt; Estimated disappearance times:
-#&gt;           DT50   DT90
-#&gt; parent   7.023  23.33
-#&gt; m1     131.761 437.70</div><div class='input'>
+<span class='no'>fit.s</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>fit</span>)
+<span class='co'># Transformed and backtransformed parameters</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='no'>fit.s</span>$<span class='no'>par</span>, <span class='fl'>3</span>)</div><div class='output co'>#&gt;                   Estimate Std. Error Lower  Upper
+#&gt; parent_0             99.60     1.6137 96.33 102.87
+#&gt; log_k_parent_sink    -3.04     0.0783 -3.20  -2.88
+#&gt; log_k_parent_m1      -2.98     0.0412 -3.06  -2.90
+#&gt; log_k_m1_sink        -5.25     0.1361 -5.52  -4.97</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='no'>fit.s</span>$<span class='no'>bpar</span>, <span class='fl'>3</span>)</div><div class='output co'>#&gt;               Estimate se_notrans t value   Pr(&gt;t)    Lower    Upper
+#&gt; parent_0      99.59848   1.613712   61.72 2.02e-38 96.32572 1.03e+02
+#&gt; k_parent_sink  0.04792   0.003750   12.78 3.05e-15  0.04089 5.62e-02
+#&gt; k_parent_m1    0.05078   0.002094   24.25 3.41e-24  0.04670 5.52e-02
+#&gt; k_m1_sink      0.00526   0.000716    7.35 5.76e-09  0.00399 6.93e-03</div><div class='input'>
+</div><div class='input'><span class='co'># Compare to the version without transforming rate parameters</span>
+<span class='no'>fit.2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>transform_rates</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>fit.2.s</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>fit.2</span>)
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='no'>fit.2.s</span>$<span class='no'>par</span>, <span class='fl'>3</span>)</div><div class='output co'>#&gt;               Estimate Std. Error    Lower    Upper
+#&gt; parent_0      99.59848   1.613710 96.32573 1.03e+02
+#&gt; k_parent_sink  0.04792   0.003750  0.04031 5.55e-02
+#&gt; k_parent_m1    0.05078   0.002094  0.04653 5.50e-02
+#&gt; k_m1_sink      0.00526   0.000716  0.00381 6.71e-03</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='no'>fit.2.s</span>$<span class='no'>bpar</span>, <span class='fl'>3</span>)</div><div class='output co'>#&gt;               Estimate se_notrans t value   Pr(&gt;t)    Lower    Upper
+#&gt; parent_0      99.59848   1.613710   61.72 2.02e-38 96.32573 1.03e+02
+#&gt; k_parent_sink  0.04792   0.003750   12.78 3.05e-15  0.04031 5.55e-02
+#&gt; k_parent_m1    0.05078   0.002094   24.25 3.41e-24  0.04653 5.50e-02
+#&gt; k_m1_sink      0.00526   0.000716    7.35 5.76e-09  0.00381 6.71e-03</div><div class='input'>
 <span class='no'>initials</span> <span class='kw'>&lt;-</span> <span class='no'>fit</span>$<span class='no'>start</span>$<span class='no'>value</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/names'>names</a></span>(<span class='no'>initials</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/colnames'>rownames</a></span>(<span class='no'>fit</span>$<span class='no'>start</span>)
 <span class='no'>transformed</span> <span class='kw'>&lt;-</span> <span class='no'>fit</span>$<span class='no'>start_transformed</span>$<span class='no'>value</span>
@@ -367,80 +239,16 @@ The transformation of sets of formation fractions is fragile, as it supposes
   <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>),
   <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
 <span class='no'>fit.ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>fit.ff</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.48.1 
-#&gt; R version used for fitting:       3.5.2 
-#&gt; Date of fit:     Mon Mar  4 10:09:30 2019 
-#&gt; Date of summary: Mon Mar  4 10:09:30 2019 
-#&gt; 
-#&gt; Equations:
-#&gt; d_parent/dt = - k_parent * parent
-#&gt; d_m1/dt = + f_parent_to_m1 * k_parent * parent - k_m1 * m1
-#&gt; 
-#&gt; Model predictions using solution type deSolve 
-#&gt; 
-#&gt; Fitted with method Port using 186 model solutions performed in 0.86 s
-#&gt; 
-#&gt; Weighting: none
-#&gt; 
-#&gt; Starting values for parameters to be optimised:
-#&gt;                   value   type
-#&gt; parent_0       100.7500  state
-#&gt; k_parent         0.1000 deparm
-#&gt; k_m1             0.1001 deparm
-#&gt; f_parent_to_m1   0.5000 deparm
-#&gt; 
-#&gt; Starting values for the transformed parameters actually optimised:
-#&gt;                     value lower upper
-#&gt; parent_0       100.750000  -Inf   Inf
-#&gt; log_k_parent    -2.302585  -Inf   Inf
-#&gt; log_k_m1        -2.301586  -Inf   Inf
-#&gt; f_parent_ilr_1   0.000000  -Inf   Inf
-#&gt; 
-#&gt; Fixed parameter values:
-#&gt;      value  type
-#&gt; m1_0     0 state
-#&gt; 
-#&gt; Optimised, transformed parameters with symmetric confidence intervals:
-#&gt;                Estimate Std. Error   Lower    Upper
-#&gt; parent_0       99.60000    1.61400 96.3300 102.9000
-#&gt; log_k_parent   -2.31600    0.04187 -2.4010  -2.2310
-#&gt; log_k_m1       -5.24800    0.13610 -5.5230  -4.9720
-#&gt; f_parent_ilr_1  0.04096    0.06477 -0.0904   0.1723
-#&gt; 
-#&gt; Parameter correlation:
-#&gt;                parent_0 log_k_parent log_k_m1 f_parent_ilr_1
-#&gt; parent_0         1.0000       0.5178  -0.1701        -0.5489
-#&gt; log_k_parent     0.5178       1.0000  -0.3285        -0.5451
-#&gt; log_k_m1        -0.1701      -0.3285   1.0000         0.7466
-#&gt; f_parent_ilr_1  -0.5489      -0.5451   0.7466         1.0000
-#&gt; 
-#&gt; Residual standard error: 3.211 on 36 degrees of freedom
-#&gt; 
-#&gt; Backtransformed parameters:
-#&gt; Confidence intervals for internally transformed parameters are asymmetric.
-#&gt; t-test (unrealistically) based on the assumption of normal distribution
-#&gt; for estimators of untransformed parameters.
-#&gt;                 Estimate t value    Pr(&gt;t)     Lower     Upper
-#&gt; parent_0       99.600000  61.720 2.024e-38 96.330000 1.029e+02
-#&gt; k_parent        0.098700  23.880 5.700e-24  0.090660 1.074e-01
-#&gt; k_m1            0.005261   7.349 5.758e-09  0.003992 6.933e-03
-#&gt; f_parent_to_m1  0.514500  22.490 4.375e-23  0.468100 5.606e-01
-#&gt; 
-#&gt; Chi2 error levels in percent:
-#&gt;          err.min n.optim df
-#&gt; All data   6.398       4 15
-#&gt; parent     6.459       2  7
-#&gt; m1         4.690       2  8
-#&gt; 
-#&gt; Resulting formation fractions:
-#&gt;                 ff
-#&gt; parent_m1   0.5145
-#&gt; parent_sink 0.4855
-#&gt; 
-#&gt; Estimated disappearance times:
-#&gt;           DT50   DT90
-#&gt; parent   7.023  23.33
-#&gt; m1     131.761 437.70</div><div class='input'><span class='no'>initials</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"f_parent_to_m1"</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)
+<span class='no'>fit.ff.s</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>fit.ff</span>)
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='no'>fit.ff.s</span>$<span class='no'>par</span>, <span class='fl'>3</span>)</div><div class='output co'>#&gt;                Estimate Std. Error   Lower   Upper
+#&gt; parent_0         99.598     1.6137 96.3257 102.871
+#&gt; log_k_parent     -2.316     0.0419 -2.4006  -2.231
+#&gt; log_k_m1         -5.248     0.1361 -5.5235  -4.972
+#&gt; f_parent_ilr_1    0.041     0.0648 -0.0904   0.172</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='no'>fit.ff.s</span>$<span class='no'>bpar</span>, <span class='fl'>3</span>)</div><div class='output co'>#&gt;                Estimate se_notrans t value   Pr(&gt;t)    Lower    Upper
+#&gt; parent_0       99.59848   1.613712   61.72 2.02e-38 96.32574 1.03e+02
+#&gt; k_parent        0.09870   0.004132   23.88 5.70e-24  0.09066 1.07e-01
+#&gt; k_m1            0.00526   0.000716    7.35 5.76e-09  0.00399 6.93e-03
+#&gt; f_parent_to_m1  0.51448   0.022880   22.49 4.37e-23  0.46808 5.61e-01</div><div class='input'><span class='no'>initials</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"f_parent_to_m1"</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)
 <span class='no'>transformed</span> <span class='kw'>&lt;-</span> <span class='fu'>transform_odeparms</span>(<span class='no'>initials</span>, <span class='no'>SFO_SFO.ff</span>)
 <span class='fu'>backtransform_odeparms</span>(<span class='no'>transformed</span>, <span class='no'>SFO_SFO.ff</span>)</div><div class='output co'>#&gt; f_parent_to_m1 
 #&gt;            0.5 </div><div class='input'>
@@ -451,70 +259,14 @@ The transformation of sets of formation fractions is fragile, as it supposes
   <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
 
 <span class='no'>fit.ff.2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO.ff.2</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>fit.ff.2</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.48.1 
-#&gt; R version used for fitting:       3.5.2 
-#&gt; Date of fit:     Mon Mar  4 10:09:31 2019 
-#&gt; Date of summary: Mon Mar  4 10:09:31 2019 
-#&gt; 
-#&gt; Equations:
-#&gt; d_parent/dt = - k_parent * parent
-#&gt; d_m1/dt = + k_parent * parent - k_m1 * m1
-#&gt; 
-#&gt; Model predictions using solution type deSolve 
-#&gt; 
-#&gt; Fitted with method Port using 104 model solutions performed in 0.476 s
-#&gt; 
-#&gt; Weighting: none
-#&gt; 
-#&gt; Starting values for parameters to be optimised:
-#&gt;             value   type
-#&gt; parent_0 100.7500  state
-#&gt; k_parent   0.1000 deparm
-#&gt; k_m1       0.1001 deparm
-#&gt; 
-#&gt; Starting values for the transformed parameters actually optimised:
-#&gt;                   value lower upper
-#&gt; parent_0     100.750000  -Inf   Inf
-#&gt; log_k_parent  -2.302585  -Inf   Inf
-#&gt; log_k_m1      -2.301586  -Inf   Inf
-#&gt; 
-#&gt; Fixed parameter values:
-#&gt;      value  type
-#&gt; m1_0     0 state
-#&gt; 
-#&gt; Optimised, transformed parameters with symmetric confidence intervals:
-#&gt;              Estimate Std. Error Lower  Upper
-#&gt; parent_0       84.790    2.96500 78.78 90.800
-#&gt; log_k_parent   -2.756    0.08088 -2.92 -2.593
-#&gt; log_k_m1       -4.214    0.11150 -4.44 -3.988
-#&gt; 
-#&gt; Parameter correlation:
-#&gt;              parent_0 log_k_parent log_k_m1
-#&gt; parent_0       1.0000      0.11058  0.46156
-#&gt; log_k_parent   0.1106      1.00000  0.06274
-#&gt; log_k_m1       0.4616      0.06274  1.00000
-#&gt; 
-#&gt; Residual standard error: 8.333 on 37 degrees of freedom
-#&gt; 
-#&gt; Backtransformed parameters:
-#&gt; Confidence intervals for internally transformed parameters are asymmetric.
-#&gt; t-test (unrealistically) based on the assumption of normal distribution
-#&gt; for estimators of untransformed parameters.
-#&gt;          Estimate t value    Pr(&gt;t)    Lower    Upper
-#&gt; parent_0 84.79000  28.600 3.939e-27 78.78000 90.80000
-#&gt; k_parent  0.06352  12.360 5.237e-15  0.05392  0.07483
-#&gt; k_m1      0.01478   8.966 4.114e-11  0.01179  0.01853
-#&gt; 
-#&gt; Chi2 error levels in percent:
-#&gt;          err.min n.optim df
-#&gt; All data   19.66       3 16
-#&gt; parent     17.56       2  7
-#&gt; m1         18.71       1  9
-#&gt; 
-#&gt; Estimated disappearance times:
-#&gt;         DT50   DT90
-#&gt; parent 10.91  36.25
-#&gt; m1     46.89 155.75</div></pre>
+<span class='no'>fit.ff.2.s</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>fit.ff.2</span>)
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='no'>fit.ff.2.s</span>$<span class='no'>par</span>, <span class='fl'>3</span>)</div><div class='output co'>#&gt;              Estimate Std. Error Lower Upper
+#&gt; parent_0        84.79     2.9651 78.78 90.80
+#&gt; log_k_parent    -2.76     0.0809 -2.92 -2.59
+#&gt; log_k_m1        -4.21     0.1115 -4.44 -3.99</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='no'>fit.ff.2.s</span>$<span class='no'>bpar</span>, <span class='fl'>3</span>)</div><div class='output co'>#&gt;          Estimate se_notrans t value   Pr(&gt;t)   Lower   Upper
+#&gt; parent_0  84.7916    2.96505   28.60 3.94e-27 78.7838 90.7994
+#&gt; k_parent   0.0635    0.00514   12.36 5.24e-15  0.0539  0.0748
+#&gt; k_m1       0.0148    0.00165    8.97 4.11e-11  0.0118  0.0185</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

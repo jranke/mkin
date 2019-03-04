@@ -66,11 +66,17 @@ SFO_SFO <- mkinmod(
   m1 = list(type = "SFO"))
 # Fit the model to the FOCUS example dataset D using defaults
 fit <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE)
-summary(fit, data=FALSE) # See transformed and backtransformed parameters
+fit.s <- summary(fit)
+# Transformed and backtransformed parameters
+print(fit.s$par, 3)
+print(fit.s$bpar, 3)
 
 \dontrun{
+# Compare to the version without transforming rate parameters
 fit.2 <- mkinfit(SFO_SFO, FOCUS_2006_D, transform_rates = FALSE, quiet = TRUE)
-summary(fit.2, data=FALSE)
+fit.2.s <- summary(fit.2)
+print(fit.2.s$par, 3)
+print(fit.2.s$bpar, 3)
 }
 
 initials <- fit$start$value
@@ -88,7 +94,9 @@ SFO_SFO.ff <- mkinmod(
   use_of_ff = "max")
 
 fit.ff <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, quiet = TRUE)
-summary(fit.ff, data = FALSE)
+fit.ff.s <- summary(fit.ff)
+print(fit.ff.s$par, 3)
+print(fit.ff.s$bpar, 3)
 initials <- c("f_parent_to_m1" = 0.5)
 transformed <- transform_odeparms(initials, SFO_SFO.ff)
 backtransform_odeparms(transformed, SFO_SFO.ff)
@@ -101,7 +109,9 @@ SFO_SFO.ff.2 <- mkinmod(
 
 
 fit.ff.2 <- mkinfit(SFO_SFO.ff.2, FOCUS_2006_D, quiet = TRUE)
-summary(fit.ff.2, data = FALSE)
+fit.ff.2.s <- summary(fit.ff.2)
+print(fit.ff.2.s$par, 3)
+print(fit.ff.2.s$bpar, 3)
 }
 }
 \keyword{ manip }
