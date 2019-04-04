@@ -35,8 +35,7 @@ mkinfit(mkinmod, observed,
   tc = c(sigma_low = 0.5, rsd_high = 0.07),
   scaleVar = FALSE,
   atol = 1e-8, rtol = 1e-10, n.outtimes = 100,
-  reweight.method = NULL,
-  reweight.tol = 1e-8, reweight.max.iter = 10,
+  error_model = c("auto", "obs", "tc", "const"),
   trace_parms = FALSE, ...)
 }
 \arguments{
@@ -202,33 +201,22 @@ mkinfit(mkinmod, observed,
     the numerical solver if that is used (see \code{solution_type} argument.
     The default value is 100.
   }
-  \item{reweight.method}{
-    The method used for iteratively reweighting residuals, also known
-    as iteratively reweighted least squares (IRLS). Default is NULL,
-    i.e. no iterative weighting.
-    The first reweighting method is called "obs", meaning that each
-    observed variable is assumed to have its own variance. This variance
-    is estimated from the fit (mean squared residuals) and used for weighting
-    the residuals in each iteration until convergence of this estimate up to
-    \code{reweight.tol} or up to the maximum number of iterations
-    specified by \code{reweight.max.iter}.
-    The second reweighting method is called "tc" (two-component error model).
-    When using this method, the two components of an error model similar to
-    the one described by
-    Rocke and Lorenzato (1995) are estimated from the fit and the resulting
-    variances are used for weighting the residuals in each iteration until
-    convergence of these components or up to the maximum number of iterations
-    specified. Note that this method deviates from the model by Rocke and
-    Lorenzato, as their model implies that the errors follow a lognormal
-    distribution for large values, not a normal distribution as assumed by this
-    method.
-  }
-  \item{reweight.tol}{
-    Tolerance for convergence criterion for the variance components
-    in IRLS fits.
-  }
-  \item{reweight.max.iter}{
-    Maximum iterations in IRLS fits.
+  \item{error_model}{
+    If the error model is "auto", the generalised error model described by Ranke 
+    et al. (2019) is used for specifying the likelihood function. Simplications
+    of this error model are tested as well and the model yielding the lowest
+    AIC is returned.
+
+    If the error model is "obs", each observed variable is assumed to have its
+    own variance. 
+
+    If the error model is "tc" (two-component error model).
+    When using this method, a two component error model similar to the
+    one described by Rocke and Lorenzato (1995) is used for setting up
+    the likelihood function, as described in the abovementioned paper.
+    Note that this model deviates from the model by Rocke and Lorenzato, as
+    their model implies that the errors follow a lognormal distribution for
+    large values, not a normal distribution as assumed by this method.
   }
   \item{trace_parms}{
     Should a trace of the parameter values be listed?

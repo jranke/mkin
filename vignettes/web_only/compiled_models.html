@@ -11,7 +11,7 @@
 
 <meta name="author" content="Johannes Ranke" />
 
-<meta name="date" content="2018-09-14" />
+<meta name="date" content="2019-04-04" />
 
 <title>Performance benefit by using compiled model definitions in mkin</title>
 
@@ -1408,8 +1408,14 @@ img {
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
+}
+summary {
+  display: list-item;
 }
 </style>
 
@@ -1418,9 +1424,70 @@ button.code-folding-btn:focus {
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
 });
 </script>
 
@@ -1433,7 +1500,6 @@ $(document).ready(function () {
   window.initializeCodeFolding("show" === "show");
 });
 </script>
-
 
 
 
@@ -1548,7 +1614,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Performance benefit by using compiled model definitions in mkin</h1>
 <h4 class="author"><em>Johannes Ranke</em></h4>
-<h4 class="date"><em>2018-09-14</em></h4>
+<h4 class="date"><em>2019-04-04</em></h4>
 
 </div>
 
@@ -1580,18 +1646,18 @@ SFO_SFO &lt;- mkinmod(
   factor_SFO_SFO &lt;- round(b.1[&quot;1&quot;, &quot;relative&quot;])
 } else {
   factor_SFO_SFO &lt;- NA
-  print(&quot;R package benchmark is not available&quot;)
+  print(&quot;R package rbenchmark is not available&quot;)
 }</code></pre>
 <pre><code>## Loading required package: rbenchmark</code></pre>
 <pre><code>##                    test replications elapsed relative user.self sys.self
-## 3     deSolve, compiled            3   2.180    1.000     2.179        0
-## 1 deSolve, not compiled            3  16.710    7.665    16.702        0
-## 2      Eigenvalue based            3   2.721    1.248     2.719        0
+## 3     deSolve, compiled            3   3.533    1.000     3.531        0
+## 1 deSolve, not compiled            3  46.050   13.034    46.030        0
+## 2      Eigenvalue based            3   5.068    1.434     5.066        0
 ##   user.child sys.child
 ## 3          0         0
 ## 1          0         0
 ## 2          0         0</code></pre>
-<p>We see that using the compiled model is by a factor of around 8 faster than using the R version with the default ode solver, and it is even faster than the Eigenvalue based solution implemented in R which does not need iterative solution of the ODEs.</p>
+<p>We see that using the compiled model is by a factor of around 13 faster than using the R version with the default ode solver, and it is even faster than the Eigenvalue based solution implemented in R which does not need iterative solution of the ODEs.</p>
 </div>
 <div id="model-that-can-not-be-solved-with-eigenvalues" class="section level2">
 <h2>Model that can not be solved with Eigenvalues</h2>
@@ -1614,14 +1680,14 @@ SFO_SFO &lt;- mkinmod(
 }</code></pre>
 <pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
 <pre><code>##                    test replications elapsed relative user.self sys.self
-## 2     deSolve, compiled            3   3.703    1.000     3.700        0
-## 1 deSolve, not compiled            3  34.789    9.395    34.772        0
+## 2     deSolve, compiled            3   4.934    1.000     4.931        0
+## 1 deSolve, not compiled            3  72.993   14.794    72.961        0
 ##   user.child sys.child
 ## 2          0         0
 ## 1          0         0</code></pre>
-<p>Here we get a performance benefit of a factor of 9 using the version of the differential equation model compiled from C code!</p>
-<p>This vignette was built with mkin 0.9.47.5 on</p>
-<pre><code>## R version 3.5.1 (2018-07-02)
+<p>Here we get a performance benefit of a factor of 15 using the version of the differential equation model compiled from C code!</p>
+<p>This vignette was built with mkin 0.9.49.1 on</p>
+<pre><code>## R version 3.5.3 (2019-03-11)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
 ## Running under: Debian GNU/Linux 9 (stretch)</code></pre>
 <pre><code>## CPU model: AMD Ryzen 7 1700 Eight-Core Processor</code></pre>
