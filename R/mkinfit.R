@@ -261,9 +261,6 @@ mkinfit <- function(mkinmod, observed,
                                               max(observed$time),
                                               length.out = n.outtimes))))
 
-  calls <- 0 # Counter for number of model solutions
-  out_predicted <- NA
-
   # Define log-likelihood function for optimisation, including (back)transformations
   nlogLik <- function(P, trans = TRUE)
   {
@@ -330,6 +327,11 @@ mkinfit <- function(mkinmod, observed,
 
     nlogLik <- - with(data_log_lik,
       sum(dnorm(x = value.x, mean = value.y, sd = std, log = TRUE)))
+
+    if (nlogLik < nlogLik.current) {
+      assign("nlogLik.current", nlogLik, inherits = TRUE)
+      if (!quiet) cat("Negative log-likelihood at call ", calls, ": ", nlogLik.current, "\n", sep = "")
+    }
     return(nlogLik)
   }
 
@@ -383,6 +385,10 @@ mkinfit <- function(mkinmod, observed,
     lower[index_sigma] <- 0
     lower["a"] <- 0
   }
+
+  # Counter for likelihood evaluations
+  calls = 0
+  nlogLik.current <- Inf
 
   # Show parameter names if tracing is requested
   if(trace_parms) cat(names_optim, "\n")
@@ -502,7 +508,7 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
     lci    <- param + qt(alpha/2, rdf) * se
     uci    <- param + qt(1-alpha/2, rdf) * se
   }
-  
+
   beparms.optim <- c(object$bparms.optim, object$par[epnames])
   if (!is.numeric(covar_notrans) | is.na(covar_notrans[1])) {
     covar_notrans <- NULL
