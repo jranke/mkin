@@ -64,6 +64,12 @@ mkinfit <- function(mkinmod, observed,
   observed <- subset(observed, name %in% obs_vars)
   observed <- subset(observed, !is.na(value))
 
+  # Also remove zero values to avoid instabilities (e.g. of the 'tc' error model)
+  if (any(observed$value == 0)) {
+    warning("Observations with value of zero were removed from the data")
+    observed <- subset(observed, value != 0)
+  }
+
   # Obtain data for decline from maximum mean value if requested
   if (from_max_mean) {
     # This is only used for simple decline models
@@ -405,6 +411,7 @@ mkinfit <- function(mkinmod, observed,
   } else {
     if(!quiet) cat("Optimisation successfully terminated.\n")
   }
+  fit$logLik <- - nlogLik.current
 
   # We need to return some more data for summary and plotting
   fit$solution_type <- solution_type
