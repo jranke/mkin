@@ -75,6 +75,7 @@ test_that("We get reproducible output if quiet = FALSE", {
 
 test_that("We get warnings in case of overparameterisation", {
   skip_on_cran() # On winbuilder the following fit does not give a warning
+  skip_on_travis() # Neither on travis
   expect_warning(f <- mkinfit("FOMC", FOCUS_2006_A, quiet = TRUE), "not converge")
   # We do get Hessians and the related output after the switch to using numDeriv::hessian()
   #s2 <- expect_warning(summary(mkinfit("DFOP", FOCUS_2006_A, quiet = TRUE)), "singular system")

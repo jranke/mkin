@@ -75,7 +75,7 @@ print.nafta <- function(x, quiet = TRUE, digits = 3, ...) {
   cat("\nDTx values:\n")
   print(signif(x$distimes, digits = digits))
   cat("\nRepresentative half-life:\n")
-  print(t_rep)
+  print(round(t_rep, 2))
 }
 
 .evaluate_nafta_results <- function(S, S_c, distimes, quiet = FALSE) {
