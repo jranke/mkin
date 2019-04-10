@@ -30,6 +30,9 @@ test_that("mkinfit stops to prevent and/or explain user errors", {
   expect_error(mkinfit("foo", FOCUS_2006_A))
   expect_error(mkinfit(3, FOCUS_2006_A))
 
+  # We remove zero observations from FOCUS_2006_D beforehand in
+  # order to avoid another expect_warning in the code
+  FOCUS_2006_D <- subset(FOCUS_2006_D, value != 0)
   # We get a warning if we use transform_fractions = FALSE with formation fractions
   # and an error if any pathway to sink is turned off as well
   expect_warning(
@@ -50,26 +53,16 @@ test_that("mkinfit stops to prevent and/or explain user errors", {
   expect_error(mkinfit(SFO_SFO.ff, FOCUS_2006_D, solution_type = "analytical"), "not implemented")
 
   expect_error(mkinfit("FOMC", FOCUS_2006_A, solution_type = "eigen"), "coefficient matrix not present")
-
-  # We suppress a message stemming from the interrupted call to system.time()
-  expect_error(suppressMessages(mkinfit("SFO", FOCUS_2006_A, reweight.method =
-                                        "foo", quiet = TRUE), "implemented"))
-
 })
 
 test_that("mkinfit stops early when a low maximum number of iterations is specified", {
-  expect_warning(mkinfit("SFO", FOCUS_2006_A, maxit.modFit = 1, quiet = TRUE))
-  expect_warning(mkinfit("SFO", FOCUS_2006_A, maxit.modFit = 1, quiet = TRUE, method.modFit = "Marq"))
-})
-
-test_that("mkinfit warns if the user chooses the SANN method", {
-  expect_warning(mkinfit("SFO", FOCUS_2006_A, method.modFit = "SANN", maxit.modFit = 10, quiet = TRUE))
-  skip("The SANN algorithm takes very long with the default maximum number of iterations of 10000")
-  expect_warning(mkinfit("SFO", FOCUS_2006_A, method.modFit = "SANN"))
+  expect_warning(mkinfit("SFO", FOCUS_2006_A, control = list(iter.max = 1), quiet = TRUE),
+                 "iteration limit reached without convergence")
 })
 
 test_that("mkinfit warns if a specified initial parameter value is not in the model", {
-  expect_warning(mkinfit("SFO", FOCUS_2006_A, parms.ini = c(k_xy = 0.1), quiet = TRUE))
+  expect_warning(mkinfit("SFO", FOCUS_2006_A, parms.ini = c(k_xy = 0.1), quiet = TRUE),
+                 "not used in the model")
 })
 
 test_that("We get reproducible output if quiet = FALSE", {
@@ -83,5 +76,6 @@ test_that("We get reproducible output if quiet = FALSE", {
 test_that("We get warnings in case of overparameterisation", {
   skip_on_cran() # On winbuilder the following fit does not give a warning
   expect_warning(f <- mkinfit("FOMC", FOCUS_2006_A, quiet = TRUE), "not converge")
-  s2 <- expect_warning(summary(mkinfit("DFOP", FOCUS_2006_A, quiet = TRUE)), "singular system")
+  # We do get Hessians and the related output after the switch to using numDeriv::hessian()
+  #s2 <- expect_warning(summary(mkinfit("DFOP", FOCUS_2006_A, quiet = TRUE)), "singular system")
 })

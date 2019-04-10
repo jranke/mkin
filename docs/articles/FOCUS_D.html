@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.48.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.49.4</span>
       </span>
     </div>
 
@@ -88,7 +88,7 @@
       <h1>Example evaluation of FOCUS Example Dataset D</h1>
                         <h4 class="author">Johannes Ranke</h4>
             
-            <h4 class="date">2019-03-04</h4>
+            <h4 class="date">2019-04-10</h4>
       
       
       <div class="hidden name"><code>FOCUS_D.Rmd</code></div>
@@ -156,18 +156,20 @@
 ##             "d_m1 = + k_parent_m1 * parent - k_m1_sink * m1"</code></pre>
 <p>We do the fitting without progress report (<code>quiet = TRUE</code>).</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">fit &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkinfit.html">mkinfit</a></span>(SFO_SFO, FOCUS_<span class="dv">2006</span>_D, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<pre><code>## Warning in mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE): Observations with
+## value of zero were removed from the data</code></pre>
 <p>A plot of the fit including a residual plot for both observed variables is obtained using the <code>plot_sep</code> method for <code>mkinfit</code> objects, which shows separate graphs for all compounds and their residuals.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw"><a href="../reference/plot.mkinfit.html">plot_sep</a></span>(fit, <span class="dt">lpos =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"topright"</span>, <span class="st">"bottomright"</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw"><a href="../reference/plot.mkinfit.html">plot_sep</a></span>(fit, <span class="dt">lpos =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"topright"</span>, <span class="st">"bottomright"</span>))</a></code></pre></div>
 <p><img src="FOCUS_D_files/figure-html/plot-1.png" width="768"></p>
 <p>Confidence intervals for the parameter estimates are obtained using the <code>mkinparplot</code> function.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw"><a href="../reference/mkinparplot.html">mkinparplot</a></span>(fit)</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="kw"><a href="../reference/mkinparplot.html">mkinparplot</a></span>(fit)</a></code></pre></div>
 <p><img src="FOCUS_D_files/figure-html/plot_2-1.png" width="768"></p>
 <p>A comprehensive report of the results is obtained using the <code>summary</code> method for <code>mkinfit</code> objects.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(fit)</a></code></pre></div>
-<pre><code>## mkin version used for fitting:    0.9.48.1 
-## R version used for fitting:       3.5.2 
-## Date of fit:     Mon Mar  4 14:06:39 2019 
-## Date of summary: Mon Mar  4 14:06:39 2019 
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(fit)</a></code></pre></div>
+<pre><code>## mkin version used for fitting:    0.9.49.4 
+## R version used for fitting:       3.5.3 
+## Date of fit:     Wed Apr 10 10:11:31 2019 
+## Date of summary: Wed Apr 10 10:11:31 2019 
 ## 
 ## Equations:
 ## d_parent/dt = - k_parent_sink * parent - k_parent_m1 * parent
@@ -175,16 +177,18 @@
 ## 
 ## Model predictions using solution type deSolve 
 ## 
-## Fitted with method Port using 153 model solutions performed in 0.693 s
+## Fitted with method using 396 model solutions performed in 1.048 s
 ## 
-## Weighting: none
+## Error model:
+## NULL
 ## 
 ## Starting values for parameters to be optimised:
-##                  value   type
-## parent_0      100.7500  state
-## k_parent_sink   0.1000 deparm
-## k_parent_m1     0.1001 deparm
-## k_m1_sink       0.1002 deparm
+##                    value   type
+## parent_0      100.750000  state
+## k_parent_sink   0.100000 deparm
+## k_parent_m1     0.100100 deparm
+## k_m1_sink       0.100200 deparm
+## sigma           3.125504  error
 ## 
 ## Starting values for the transformed parameters actually optimised:
 ##                        value lower upper
@@ -192,6 +196,7 @@
 ## log_k_parent_sink  -2.302585  -Inf   Inf
 ## log_k_parent_m1    -2.301586  -Inf   Inf
 ## log_k_m1_sink      -2.300587  -Inf   Inf
+## sigma               3.125504     0   Inf
 ## 
 ## Fixed parameter values:
 ##      value  type
@@ -199,29 +204,36 @@
 ## 
 ## Optimised, transformed parameters with symmetric confidence intervals:
 ##                   Estimate Std. Error  Lower   Upper
-## parent_0            99.600    1.61400 96.330 102.900
-## log_k_parent_sink   -3.038    0.07826 -3.197  -2.879
-## log_k_parent_m1     -2.980    0.04124 -3.064  -2.897
-## log_k_m1_sink       -5.248    0.13610 -5.523  -4.972
+## parent_0            99.600    1.57000 96.400 102.800
+## log_k_parent_sink   -3.038    0.07626 -3.193  -2.883
+## log_k_parent_m1     -2.980    0.04033 -3.062  -2.898
+## log_k_m1_sink       -5.248    0.13320 -5.518  -4.977
+## sigma                3.126    0.35850  2.396   3.855
 ## 
 ## Parameter correlation:
-##                   parent_0 log_k_parent_sink log_k_parent_m1 log_k_m1_sink
-## parent_0           1.00000            0.6075        -0.06625       -0.1701
-## log_k_parent_sink  0.60752            1.0000        -0.08740       -0.6253
-## log_k_parent_m1   -0.06625           -0.0874         1.00000        0.4716
-## log_k_m1_sink     -0.17006           -0.6253         0.47164        1.0000
-## 
-## Residual standard error: 3.211 on 36 degrees of freedom
+##                     parent_0 log_k_parent_sink log_k_parent_m1
+## parent_0           1.000e+00         6.067e-01      -6.372e-02
+## log_k_parent_sink  6.067e-01         1.000e+00      -8.550e-02
+## log_k_parent_m1   -6.372e-02        -8.550e-02       1.000e+00
+## log_k_m1_sink     -1.688e-01        -6.252e-01       4.731e-01
+## sigma             -3.368e-07         3.365e-08       8.420e-07
+##                   log_k_m1_sink      sigma
+## parent_0             -1.688e-01 -3.368e-07
+## log_k_parent_sink    -6.252e-01  3.365e-08
+## log_k_parent_m1       4.731e-01  8.420e-07
+## log_k_m1_sink         1.000e+00  1.958e-08
+## sigma                 1.958e-08  1.000e+00
 ## 
 ## Backtransformed parameters:
 ## Confidence intervals for internally transformed parameters are asymmetric.
 ## t-test (unrealistically) based on the assumption of normal distribution
 ## for estimators of untransformed parameters.
 ##                Estimate t value    Pr(&gt;t)     Lower     Upper
-## parent_0      99.600000  61.720 2.024e-38 96.330000 1.029e+02
-## k_parent_sink  0.047920  12.780 3.050e-15  0.040890 5.616e-02
-## k_parent_m1    0.050780  24.250 3.407e-24  0.046700 5.521e-02
-## k_m1_sink      0.005261   7.349 5.758e-09  0.003992 6.933e-03
+## parent_0      99.600000  63.430 2.298e-36 96.400000 1.028e+02
+## k_parent_sink  0.047920  13.110 6.126e-15  0.041030 5.596e-02
+## k_parent_m1    0.050780  24.800 3.269e-23  0.046780 5.512e-02
+## k_m1_sink      0.005261   7.510 6.165e-09  0.004012 6.898e-03
+## sigma          3.126000   8.718 2.235e-10  2.396000 3.855e+00
 ## 
 ## Chi2 error levels in percent:
 ##          err.min n.optim df
@@ -246,10 +258,10 @@
 ##     0   parent   102.04  99.59848  2.442e+00
 ##     1   parent    93.50  90.23787  3.262e+00
 ##     1   parent    92.50  90.23787  2.262e+00
-##     3   parent    63.23  74.07320 -1.084e+01
-##     3   parent    68.99  74.07320 -5.083e+00
-##     7   parent    52.32  49.91207  2.408e+00
-##     7   parent    55.13  49.91207  5.218e+00
+##     3   parent    63.23  74.07319 -1.084e+01
+##     3   parent    68.99  74.07319 -5.083e+00
+##     7   parent    52.32  49.91206  2.408e+00
+##     7   parent    55.13  49.91206  5.218e+00
 ##    14   parent    27.27  25.01257  2.257e+00
 ##    14   parent    26.64  25.01257  1.627e+00
 ##    21   parent    11.50  12.53462 -1.035e+00
@@ -259,23 +271,21 @@
 ##    50   parent     0.69   0.71624 -2.624e-02
 ##    50   parent     0.63   0.71624 -8.624e-02
 ##    75   parent     0.05   0.06074 -1.074e-02
-##    75   parent     0.06   0.06074 -7.382e-04
-##     0       m1     0.00   0.00000  0.000e+00
-##     0       m1     0.00   0.00000  0.000e+00
+##    75   parent     0.06   0.06074 -7.381e-04
 ##     1       m1     4.84   4.80296  3.704e-02
 ##     1       m1     5.64   4.80296  8.370e-01
 ##     3       m1    12.91  13.02400 -1.140e-01
 ##     3       m1    12.96  13.02400 -6.400e-02
 ##     7       m1    22.97  25.04476 -2.075e+00
 ##     7       m1    24.47  25.04476 -5.748e-01
-##    14       m1    41.69  36.69002  5.000e+00
-##    14       m1    33.21  36.69002 -3.480e+00
+##    14       m1    41.69  36.69003  5.000e+00
+##    14       m1    33.21  36.69003 -3.480e+00
 ##    21       m1    44.37  41.65310  2.717e+00
 ##    21       m1    46.44  41.65310  4.787e+00
 ##    35       m1    41.22  43.31312 -2.093e+00
 ##    35       m1    37.95  43.31312 -5.363e+00
-##    50       m1    41.19  41.21831 -2.831e-02
-##    50       m1    40.01  41.21831 -1.208e+00
+##    50       m1    41.19  41.21832 -2.832e-02
+##    50       m1    40.01  41.21832 -1.208e+00
 ##    75       m1    40.09  36.44704  3.643e+00
 ##    75       m1    33.85  36.44704 -2.597e+00
 ##   100       m1    31.04  31.98163 -9.416e-01

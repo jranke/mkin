@@ -5,10 +5,10 @@
   Summary method for class "mkinfit"
 }
 \description{
-  Lists model equations, the summary as returned by \code{\link{summary.modFit}},
-  the chi2 error levels calculated according to FOCUS guidance (2006) as far
-  as defined therein, and optionally the data, consisting of observed, predicted
-  and residual values.
+  Lists model equations, initial parameter values, optimised parameters with some
+  uncertainty statistics, the chi2 error levels calculated according to FOCUS
+  guidance (2006) as defined therein, formation fractions, DT50 values and
+  optionally the data, consisting of observed, predicted and residual values.
 }
 \usage{
 \method{summary}{mkinfit}(object, data = TRUE, distimes = TRUE, alpha = 0.05, ...)
@@ -39,8 +39,7 @@
 }
 }
 \value{
-  The summary function returns a list derived from
-  \code{\link{summary.modFit}}, with components, among others
+  The summary function returns a list with components, among others
   \item{version, Rversion}{The mkin and R versions used}
   \item{date.fit, date.summary}{The dates where the fit and the summary were produced}
   \item{use_of_ff}{Was maximum or minimum use made of formation fractions}
@@ -54,6 +53,7 @@
   \item{errmin }{The chi2 error levels for each observed variable.}
   \item{bparms.ode }{All backtransformed ODE parameters, for use as starting parameters for
     related models.}
+  \item{errparms }{Error model parameters. }
   \item{ff }{The estimated formation fractions derived from the fitted model.}
   \item{distimes }{The DT50 and DT90 values for each observed variable.}
   \item{SFORB}{If applicable, eigenvalues of SFORB components of the model.}

@@ -106,10 +106,10 @@ plot_sep(fit, sep_obs = TRUE,  show_residuals = TRUE, show_errmin = TRUE, \dots)
 }
 \examples{
 # One parent compound, one metabolite, both single first order, path from
-# parent to sink included, use Levenberg-Marquardt for speed
+# parent to sink included
 SFO_SFO <- mkinmod(parent = mkinsub("SFO", "m1", full = "Parent"),
                    m1 = mkinsub("SFO", full = "Metabolite M1" ))
-fit <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE, method.modFit = "Marq")
+fit <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE)
 plot(fit)
 plot(fit, show_residuals = TRUE)
 

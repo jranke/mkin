@@ -42,7 +42,7 @@ mkinerrmin <- function(fit, alpha = 0.05)
   fixed_initials = gsub("_0$", "", rownames(subset(fit$fixed, type = "state")))
   errdata <- subset(errdata, !(time == 0 & name %in% fixed_initials))
 
-  n.optim.overall <- length(parms.optim)
+  n.optim.overall <- length(parms.optim) - length(fit$errparms)
 
   errmin.overall <- kinerrmin(errdata, n.optim.overall)
   errmin <- data.frame(err.min = errmin.overall$err.min,

@@ -7,9 +7,9 @@
 mkin_long_to_wide(long_data, time = "time", outtime = "time")
 }
 \description{
-  This function takes a dataframe in the long form as required by \code{\link{modCost}}
-  and converts it into a dataframe with one independent variable and several
-  dependent variables as columns.
+  This function takes a dataframe in the long form, i.e. with a row
+  for each observed value,   and converts it into a dataframe with one
+  independent variable and several dependent variables as columns.
 }
 \arguments{
   \item{long_data}{

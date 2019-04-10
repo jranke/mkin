@@ -1,9 +1,6 @@
 # Copyright (C) 2010-2019 Johannes Ranke
 # Portions of this code are copyright (C) 2013 Eurofins Regulatory AG
 # Contact: jranke@uni-bremen.de
-# The summary function is an adapted and extended version of summary.modFit
-# from the FME package, v 1.1 by Soetart and Petzoldt, which was in turn
-# inspired by summary.nls.lm
 
 # This file is part of the R package mkin
 
@@ -33,9 +30,9 @@ mkinfit <- function(mkinmod, observed,
   control = list(eval.max = 300, iter.max = 200),
   transform_rates = TRUE,
   transform_fractions = TRUE,
-  plot = FALSE, quiet = FALSE,
+  quiet = FALSE,
   atol = 1e-8, rtol = 1e-10, n.outtimes = 100,
-  error_model = c("const", "obs", "tc", "obs_tc"),
+  error_model = c("const", "obs", "tc"),
   trace_parms = FALSE,
   ...)
 {
@@ -243,23 +240,12 @@ mkinfit <- function(mkinmod, observed,
     }
   }
 
-  # Get the error model and specify starting values as well as fixed components
+  # Get the error model
   err_mod <- match.arg(error_model)
-  if (err_mod == "const") {
-    errparms = c(sigma = 1)
-  }
-  if (err_mod == "obs") {
-    errparms <- rep(1, length(obs_vars))
-    names(errparms) = paste0("sigma_", obs_vars)
-  }
-  if (err_mod == "tc") {
-    errparms <- c(sigma_low = 0.5, rsd_high = 0.07)
-  }
-  if (err_mod == "obs_tc") {
-    errparms <- rep(1, length(obs_vars))
-    names(errparms) = paste0("sigma_", obs_vars)
-    errparms <- c(errparms, a = 0.1)
-  }
+  errparm_names <- switch(err_mod,
+    "const" = "sigma",
+    "obs" = paste0("sigma_", obs_vars),
+    "tc" = c("sigma_low", "rsd_high"))
 
   # Define outtimes for model solution.
   # Include time points at which observed data are available
@@ -268,9 +254,9 @@ mkinfit <- function(mkinmod, observed,
                                               length.out = n.outtimes))))
 
   # Define log-likelihood function for optimisation, including (back)transformations
-  nlogLik <- function(P, trans = TRUE)
+  nlogLik <- function(P, trans = TRUE, OLS = FALSE, update_data = TRUE, ...)
   {
-    assign("calls", calls+1, inherits=TRUE) # Increase the model solution counter
+    assign("calls", calls + 1, inherits = TRUE) # Increase the model solution counter
 
     # Trace parameter values if requested
     if(trace_parms) cat(P, "\n")
@@ -284,7 +270,11 @@ mkinfit <- function(mkinmod, observed,
       names(odeini) <- state.ini.fixed.boxnames
     }
 
-    odeparms.optim <- P[(length(state.ini.optim) + 1):(length(P) - length(errparms))]
+    if (OLS) {
+      odeparms.optim <- P[(length(state.ini.optim) + 1):length(P)]
+    } else {
+      odeparms.optim <- P[(length(state.ini.optim) + 1):(length(P) - length(errparms))]
+    }
 
     if (trans == TRUE) {
       odeparms <- c(odeparms.optim, transparms.fixed)
@@ -305,8 +295,6 @@ mkinfit <- function(mkinmod, observed,
 
     out_long <- mkin_wide_to_long(out, time = "time")
 
-    assign("out_predicted", out_long, inherits=TRUE)
-
     if (err_mod == "const") {
       observed$std <- P["sigma"]
     }
@@ -320,19 +308,22 @@ mkinfit <- function(mkinmod, observed,
       tmp <- tmp[order(tmp$name, tmp$time), ]
       observed$std <- sqrt(P["sigma_low"]^2 + tmp$value.y^2 * P["rsd_high"]^2)
     }
-    if (err_mod == "obs_tc") {
-      tmp <- merge(observed, out_long, by = c("time", "name"))
-      tmp$name <- ordered(tmp$name, levels = obs_vars)
-      tmp <- tmp[order(tmp$name, tmp$time), ]
-      std_names <- paste0("sigma_", observed$name)
-      observed$std <- sqrt(P[std_names] * (1 + P["a"] * tmp$value.y^2))
-    }
 
     data_log_lik <- merge(observed[c("name", "time", "value", "std")], out_long,
-                         by = c("name", "time"))
+                         by = c("name", "time"), suffixes = c(".observed", ".predicted"))
 
-    nlogLik <- - with(data_log_lik,
-      sum(dnorm(x = value.x, mean = value.y, sd = std, log = TRUE)))
+    if (OLS) {
+      nlogLik <- with(data_log_lik, sum((value.observed - value.predicted)^2))
+    } else {
+      nlogLik <- - with(data_log_lik,
+        sum(dnorm(x = value.observed, mean = value.predicted, sd = std, log = TRUE)))
+    }
+
+    # We need the data at optimised parameters
+    if (update_data) {
+      assign("out_predicted", out_long, inherits = TRUE)
+      assign("data_errmod", data_log_lik, inherits = TRUE)
+    }
 
     if (nlogLik < nlogLik.current) {
       assign("nlogLik.current", nlogLik, inherits = TRUE)
@@ -341,10 +332,10 @@ mkinfit <- function(mkinmod, observed,
     return(nlogLik)
   }
 
-  n_optim <- length(c(state.ini.optim, transparms.optim, errparms))
+  n_optim <- length(c(state.ini.optim, transparms.optim, errparm_names))
   names_optim <- c(names(state.ini.optim),
                    names(transparms.optim),
-                   names(errparms))
+                   errparm_names)
 
   # Define lower and upper bounds other than -Inf and Inf for parameters
   # for which no internal transformation is requested in the call to mkinfit
@@ -353,7 +344,7 @@ mkinfit <- function(mkinmod, observed,
   upper <- rep(Inf, n_optim)
   names(lower) <- names(upper) <- names_optim
 
-  # IORE exponentes are not transformed, but need a lower bound of zero
+  # IORE exponents are not transformed, but need a lower bound
   index_N <- grep("^N", names(lower))
   lower[index_N] <- 0
 
@@ -386,24 +377,66 @@ mkinfit <- function(mkinmod, observed,
     lower["sigma_low"] <- 0
     lower["rsd_high"] <- 0
   }
-  if (err_mod == "obs_tc") {
-    index_sigma <- grep("^sigma_", names(lower))
-    lower[index_sigma] <- 0
-    lower["a"] <- 0
-  }
 
   # Counter for likelihood evaluations
   calls = 0
   nlogLik.current <- Inf
+  out_predicted <- NA
+  data_errmod <- NA
 
   # Show parameter names if tracing is requested
   if(trace_parms) cat(names_optim, "\n")
 
-  # Do the fit and take the time
+  # Do the fit and take the time until the hessians are calculated
   fit_time <- system.time({
-    fit <- nlminb(c(state.ini.optim, transparms.optim, errparms),
-                  nlogLik, control = control,
-                  lower = lower, upper = upper, ...)})
+    # For constant variance, we do not include sigma in the optimisation, as it
+    # is unnecessary and leads to instability of the fit which are most obvious
+    # when fitting the IORE model
+    if (err_mod == "const") {
+      fit.ols <- nlminb(c(state.ini.optim, transparms.optim),
+                    nlogLik, control = control,
+                    lower = lower, upper = upper, OLS = TRUE, ...)
+
+      # Get the maximum likelihood estimate for sigma at the optimum parameter values
+      # This is equivalent to including sigma in the optimisation, but more stable
+      data_errmod$residual <- data_errmod$value.observed - data_errmod$value.predicted
+      sigma_mle = sqrt(sum(data_errmod$residual^2)/nrow(data_errmod))
+
+      errparms = c(sigma = sigma_mle)
+      fit <- fit.ols
+      fit$logLik <- - nlogLik(c(fit$par, sigma = sigma_mle), OLS = FALSE)
+    } else {
+      if (err_mod == "obs") {
+        errparms = rep(3, length(obs_vars))
+      }
+      if (err_mod == "tc") {
+        errparms <- c(sigma_low = 0.5, rsd_high = 0.07)
+      }
+      names(errparms) <- errparm_names
+
+      fit <- nlminb(c(state.ini.optim, transparms.optim, errparms),
+                    nlogLik, control = control,
+                    lower = lower, upper = upper, ...)
+      fit$logLik <- - nlogLik.current
+    }
+
+    # We include the error model in the parameter uncertainty analysis, also
+    # for constant variance, to get a confidence interval for it
+    if (err_mod == "const") {
+      fit$par <- c(fit$par, sigma = sigma_mle)
+    }
+    fit$hessian <- try(hessian(nlogLik, fit$par, update_data = FALSE), silent = TRUE)
+
+    # Backtransform parameters
+    bparms.optim = backtransform_odeparms(fit$par, mkinmod,
+      transform_rates = transform_rates,
+      transform_fractions = transform_fractions)
+    bparms.fixed = c(state.ini.fixed, parms.fixed)
+    bparms.all = c(bparms.optim, parms.fixed)
+
+    fit$hessian_notrans <- try(hessian(nlogLik, c(bparms.optim, fit$par[names(errparms)]),
+                                       trans = FALSE, update_data = FALSE), silent = TRUE)
+  })
 
   if (fit$convergence != 0) {
     fit$warning = paste0("Optimisation did not converge:\n", fit$message)
@@ -411,7 +444,6 @@ mkinfit <- function(mkinmod, observed,
   } else {
     if(!quiet) cat("Optimisation successfully terminated.\n")
   }
-  fit$logLik <- - nlogLik.current
 
   # We need to return some more data for summary and plotting
   fit$solution_type <- solution_type
@@ -429,18 +461,8 @@ mkinfit <- function(mkinmod, observed,
   fit$obs_vars <- obs_vars
   fit$predicted <- out_predicted
 
-  # Backtransform parameters
-  bparms.optim = backtransform_odeparms(fit$par, fit$mkinmod,
-    transform_rates = transform_rates,
-    transform_fractions = transform_fractions)
-  bparms.fixed = c(state.ini.fixed, parms.fixed)
-  bparms.all = c(bparms.optim, parms.fixed)
-
   # Attach the negative log-likelihood function for post-hoc parameter uncertainty analysis
   fit$nlogLik <- nlogLik
-
-  fit$hessian <- hessian(nlogLik, fit$par)
-  fit$hessian_notrans <- hessian(nlogLik, c(bparms.optim, fit$par[names(errparms)]), trans = FALSE)
 
   # Collect initial parameter values in three dataframes
   fit$start <- data.frame(value = c(state.ini.optim,
@@ -458,15 +480,15 @@ mkinfit <- function(mkinmod, observed,
   fit$fixed$type = c(rep("state", length(state.ini.fixed)),
                      rep("deparm", length(parms.fixed)))
 
-  # Collect observed, predicted, residuals and weighting
-  data <- merge(fit$observed, fit$predicted, by = c("time", "name"))
-  data$name <- ordered(data$name, levels = obs_vars)
-  data <- data[order(data$name, data$time), ]
+  # Sort observed, predicted and residuals
+  data_errmod$name <- ordered(data_errmod$name, levels = obs_vars)
+
+  data <- data_errmod[order(data_errmod$name, data_errmod$time), ]
 
   fit$data <- data.frame(time = data$time,
                          variable = data$name,
-                         observed = data$value.x,
-                         predicted = data$value.y)
+                         observed = data$value.observed,
+                         predicted = data$value.predicted)
 
   fit$data$residual <- fit$data$observed - fit$data$predicted
 

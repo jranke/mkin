@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.48.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.49.4</span>
       </span>
     </div>
 
@@ -88,7 +88,7 @@
       <h1>Performance benefit by using compiled model definitions in mkin</h1>
                         <h4 class="author">Johannes Ranke</h4>
             
-            <h4 class="date">2019-03-04</h4>
+            <h4 class="date">2019-04-10</h4>
       
       
       <div class="hidden name"><code>compiled_models.Rmd</code></div>
@@ -125,49 +125,103 @@
 <a class="sourceLine" id="cb5-12" title="12">  factor_SFO_SFO &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Round">round</a></span>(b<span class="fl">.1</span>[<span class="st">"1"</span>, <span class="st">"relative"</span>])</a>
 <a class="sourceLine" id="cb5-13" title="13">} <span class="cf">else</span> {</a>
 <a class="sourceLine" id="cb5-14" title="14">  factor_SFO_SFO &lt;-<span class="st"> </span><span class="ot">NA</span></a>
-<a class="sourceLine" id="cb5-15" title="15">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="st">"R package benchmark is not available"</span>)</a>
+<a class="sourceLine" id="cb5-15" title="15">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="st">"R package rbenchmark is not available"</span>)</a>
 <a class="sourceLine" id="cb5-16" title="16">}</a></code></pre></div>
 <pre><code>## Lade nötiges Paket: rbenchmark</code></pre>
+<pre><code>## Warning in mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = "deSolve",
+## use_compiled = FALSE, : Observations with value of zero were removed from
+## the data</code></pre>
+<pre><code>## Warning in mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = "eigen", quiet =
+## TRUE): Observations with value of zero were removed from the data</code></pre>
+<pre><code>## Warning in mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = "deSolve", quiet
+## = TRUE): Observations with value of zero were removed from the data</code></pre>
+<pre><code>## Warning in mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = "deSolve",
+## use_compiled = FALSE, : Observations with value of zero were removed from
+## the data
+
+## Warning in mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = "deSolve",
+## use_compiled = FALSE, : Observations with value of zero were removed from
+## the data
+
+## Warning in mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = "deSolve",
+## use_compiled = FALSE, : Observations with value of zero were removed from
+## the data</code></pre>
+<pre><code>## Warning in mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = "eigen", quiet =
+## TRUE): Observations with value of zero were removed from the data
+
+## Warning in mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = "eigen", quiet =
+## TRUE): Observations with value of zero were removed from the data
+
+## Warning in mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = "eigen", quiet =
+## TRUE): Observations with value of zero were removed from the data</code></pre>
+<pre><code>## Warning in mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = "deSolve", quiet
+## = TRUE): Observations with value of zero were removed from the data
+
+## Warning in mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = "deSolve", quiet
+## = TRUE): Observations with value of zero were removed from the data
+
+## Warning in mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = "deSolve", quiet
+## = TRUE): Observations with value of zero were removed from the data</code></pre>
 <pre><code>##                    test replications elapsed relative user.self sys.self
-## 3     deSolve, compiled            3   2.310    1.000     2.308        0
-## 1 deSolve, not compiled            3  17.509    7.580    17.500        0
-## 2      Eigenvalue based            3   2.859    1.238     2.858        0
+## 3     deSolve, compiled            3   3.215    1.000     3.213        0
+## 1 deSolve, not compiled            3  42.468   13.209    42.445        0
+## 2      Eigenvalue based            3   4.666    1.451     4.663        0
 ##   user.child sys.child
 ## 3          0         0
 ## 1          0         0
 ## 2          0         0</code></pre>
-<p>We see that using the compiled model is by a factor of around 8 faster than using the R version with the default ode solver, and it is even faster than the Eigenvalue based solution implemented in R which does not need iterative solution of the ODEs.</p>
+<p>We see that using the compiled model is by a factor of around 13 faster than using the R version with the default ode solver, and it is even faster than the Eigenvalue based solution implemented in R which does not need iterative solution of the ODEs.</p>
 </div>
 <div id="model-that-can-not-be-solved-with-eigenvalues" class="section level2">
 <h2 class="hasAnchor">
 <a href="#model-that-can-not-be-solved-with-eigenvalues" class="anchor"></a>Model that can not be solved with Eigenvalues</h2>
 <p>This evaluation is also taken from the example section of mkinfit.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="cf">if</span> (<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">require</a></span>(rbenchmark)) {</a>
-<a class="sourceLine" id="cb8-2" title="2">  FOMC_SFO &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(</a>
-<a class="sourceLine" id="cb8-3" title="3">    <span class="dt">parent =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"FOMC"</span>, <span class="st">"m1"</span>),</a>
-<a class="sourceLine" id="cb8-4" title="4">    <span class="dt">m1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>( <span class="st">"SFO"</span>))</a>
-<a class="sourceLine" id="cb8-5" title="5"></a>
-<a class="sourceLine" id="cb8-6" title="6">  b<span class="fl">.2</span> &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/rbenchmark/topics/benchmark">benchmark</a></span>(</a>
-<a class="sourceLine" id="cb8-7" title="7">    <span class="st">"deSolve, not compiled"</span> =<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(FOMC_SFO, FOCUS_<span class="dv">2006</span>_D,</a>
-<a class="sourceLine" id="cb8-8" title="8">                                      <span class="dt">use_compiled =</span> <span class="ot">FALSE</span>, <span class="dt">quiet =</span> <span class="ot">TRUE</span>),</a>
-<a class="sourceLine" id="cb8-9" title="9">    <span class="st">"deSolve, compiled"</span> =<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(FOMC_SFO, FOCUS_<span class="dv">2006</span>_D, <span class="dt">quiet =</span> <span class="ot">TRUE</span>),</a>
-<a class="sourceLine" id="cb8-10" title="10">    <span class="dt">replications =</span> <span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb8-11" title="11">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(b<span class="fl">.2</span>)</a>
-<a class="sourceLine" id="cb8-12" title="12">  factor_FOMC_SFO &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Round">round</a></span>(b<span class="fl">.2</span>[<span class="st">"1"</span>, <span class="st">"relative"</span>])</a>
-<a class="sourceLine" id="cb8-13" title="13">} <span class="cf">else</span> {</a>
-<a class="sourceLine" id="cb8-14" title="14">  factor_FOMC_SFO &lt;-<span class="st"> </span><span class="ot">NA</span></a>
-<a class="sourceLine" id="cb8-15" title="15">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="st">"R package benchmark is not available"</span>)</a>
-<a class="sourceLine" id="cb8-16" title="16">}</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="cf">if</span> (<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">require</a></span>(rbenchmark)) {</a>
+<a class="sourceLine" id="cb14-2" title="2">  FOMC_SFO &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(</a>
+<a class="sourceLine" id="cb14-3" title="3">    <span class="dt">parent =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"FOMC"</span>, <span class="st">"m1"</span>),</a>
+<a class="sourceLine" id="cb14-4" title="4">    <span class="dt">m1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>( <span class="st">"SFO"</span>))</a>
+<a class="sourceLine" id="cb14-5" title="5"></a>
+<a class="sourceLine" id="cb14-6" title="6">  b<span class="fl">.2</span> &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/rbenchmark/topics/benchmark">benchmark</a></span>(</a>
+<a class="sourceLine" id="cb14-7" title="7">    <span class="st">"deSolve, not compiled"</span> =<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(FOMC_SFO, FOCUS_<span class="dv">2006</span>_D,</a>
+<a class="sourceLine" id="cb14-8" title="8">                                      <span class="dt">use_compiled =</span> <span class="ot">FALSE</span>, <span class="dt">quiet =</span> <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb14-9" title="9">    <span class="st">"deSolve, compiled"</span> =<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(FOMC_SFO, FOCUS_<span class="dv">2006</span>_D, <span class="dt">quiet =</span> <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb14-10" title="10">    <span class="dt">replications =</span> <span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb14-11" title="11">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(b<span class="fl">.2</span>)</a>
+<a class="sourceLine" id="cb14-12" title="12">  factor_FOMC_SFO &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Round">round</a></span>(b<span class="fl">.2</span>[<span class="st">"1"</span>, <span class="st">"relative"</span>])</a>
+<a class="sourceLine" id="cb14-13" title="13">} <span class="cf">else</span> {</a>
+<a class="sourceLine" id="cb14-14" title="14">  factor_FOMC_SFO &lt;-<span class="st"> </span><span class="ot">NA</span></a>
+<a class="sourceLine" id="cb14-15" title="15">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="st">"R package benchmark is not available"</span>)</a>
+<a class="sourceLine" id="cb14-16" title="16">}</a></code></pre></div>
 <pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
+<pre><code>## Warning in mkinfit(FOMC_SFO, FOCUS_2006_D, use_compiled = FALSE, quiet =
+## TRUE): Observations with value of zero were removed from the data</code></pre>
+<pre><code>## Warning in mkinfit(FOMC_SFO, FOCUS_2006_D, quiet = TRUE): Observations with
+## value of zero were removed from the data</code></pre>
+<pre><code>## Warning in mkinfit(FOMC_SFO, FOCUS_2006_D, use_compiled = FALSE, quiet =
+## TRUE): Observations with value of zero were removed from the data
+
+## Warning in mkinfit(FOMC_SFO, FOCUS_2006_D, use_compiled = FALSE, quiet =
+## TRUE): Observations with value of zero were removed from the data
+
+## Warning in mkinfit(FOMC_SFO, FOCUS_2006_D, use_compiled = FALSE, quiet =
+## TRUE): Observations with value of zero were removed from the data</code></pre>
+<pre><code>## Warning in mkinfit(FOMC_SFO, FOCUS_2006_D, quiet = TRUE): Observations with
+## value of zero were removed from the data
+
+## Warning in mkinfit(FOMC_SFO, FOCUS_2006_D, quiet = TRUE): Observations with
+## value of zero were removed from the data
+
+## Warning in mkinfit(FOMC_SFO, FOCUS_2006_D, quiet = TRUE): Observations with
+## value of zero were removed from the data</code></pre>
 <pre><code>##                    test replications elapsed relative user.self sys.self
-## 2     deSolve, compiled            3   4.074    1.000     4.072        0
-## 1 deSolve, not compiled            3  37.219    9.136    37.203        0
+## 2     deSolve, compiled            3   4.906    1.000     4.902        0
+## 1 deSolve, not compiled            3  70.459   14.362    70.421        0
 ##   user.child sys.child
 ## 2          0         0
 ## 1          0         0</code></pre>
-<p>Here we get a performance benefit of a factor of 9 using the version of the differential equation model compiled from C code!</p>
-<p>This vignette was built with mkin 0.9.48.1 on</p>
-<pre><code>## R version 3.5.2 (2018-12-20)
+<p>Here we get a performance benefit of a factor of 14 using the version of the differential equation model compiled from C code!</p>
+<p>This vignette was built with mkin 0.9.49.4 on</p>
+<pre><code>## R version 3.5.3 (2019-03-11)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
 ## Running under: Debian GNU/Linux 9 (stretch)</code></pre>
 <pre><code>## CPU model: AMD Ryzen 7 1700 Eight-Core Processor</code></pre>

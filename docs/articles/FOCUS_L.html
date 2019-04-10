@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.48.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.49.4</span>
       </span>
     </div>
 
@@ -88,7 +88,7 @@
       <h1>Example evaluation of FOCUS Laboratory Data L1 to L3</h1>
                         <h4 class="author">Johannes Ranke</h4>
             
-            <h4 class="date">2019-03-04</h4>
+            <h4 class="date">2019-04-10</h4>
       
       
       <div class="hidden name"><code>FOCUS_L.Rmd</code></div>
@@ -112,52 +112,56 @@
 <p>Since mkin version 0.9-32 (July 2014), we can use shorthand notation like <code>"SFO"</code> for parent only degradation models. The following two lines fit the model and produce the summary report of the model fit. This covers the numerical analysis given in the FOCUS report.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">m.L1.SFO &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkinfit.html">mkinfit</a></span>(<span class="st">"SFO"</span>, FOCUS_<span class="dv">2006</span>_L1_mkin, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb2-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(m.L1.SFO)</a></code></pre></div>
-<pre><code>## mkin version used for fitting:    0.9.48.1 
-## R version used for fitting:       3.5.2 
-## Date of fit:     Mon Mar  4 14:06:41 2019 
-## Date of summary: Mon Mar  4 14:06:41 2019 
+<pre><code>## mkin version used for fitting:    0.9.49.4 
+## R version used for fitting:       3.5.3 
+## Date of fit:     Wed Apr 10 10:11:33 2019 
+## Date of summary: Wed Apr 10 10:11:33 2019 
 ## 
 ## Equations:
 ## d_parent/dt = - k_parent_sink * parent
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted with method Port using 37 model solutions performed in 0.095 s
+## Fitted with method using 133 model solutions performed in 0.344 s
 ## 
-## Weighting: none
+## Error model:
+## NULL
 ## 
 ## Starting values for parameters to be optimised:
-##               value   type
-## parent_0      89.85  state
-## k_parent_sink  0.10 deparm
+##                   value   type
+## parent_0      89.850000  state
+## k_parent_sink  0.100000 deparm
+## sigma          2.779827  error
 ## 
 ## Starting values for the transformed parameters actually optimised:
 ##                       value lower upper
 ## parent_0          89.850000  -Inf   Inf
 ## log_k_parent_sink -2.302585  -Inf   Inf
+## sigma              2.779827     0   Inf
 ## 
 ## Fixed parameter values:
 ## None
 ## 
 ## Optimised, transformed parameters with symmetric confidence intervals:
 ##                   Estimate Std. Error  Lower  Upper
-## parent_0            92.470    1.36800 89.570 95.370
-## log_k_parent_sink   -2.347    0.04057 -2.433 -2.261
+## parent_0            92.470    1.28200 89.740 95.200
+## log_k_parent_sink   -2.347    0.03763 -2.428 -2.267
+## sigma                2.780    0.46330  1.792  3.767
 ## 
 ## Parameter correlation:
-##                   parent_0 log_k_parent_sink
-## parent_0            1.0000            0.6248
-## log_k_parent_sink   0.6248            1.0000
-## 
-## Residual standard error: 2.948 on 16 degrees of freedom
+##                     parent_0 log_k_parent_sink      sigma
+## parent_0           1.000e+00         6.186e-01 -1.712e-09
+## log_k_parent_sink  6.186e-01         1.000e+00 -3.237e-09
+## sigma             -1.712e-09        -3.237e-09  1.000e+00
 ## 
 ## Backtransformed parameters:
 ## Confidence intervals for internally transformed parameters are asymmetric.
 ## t-test (unrealistically) based on the assumption of normal distribution
 ## for estimators of untransformed parameters.
 ##               Estimate t value    Pr(&gt;t)    Lower   Upper
-## parent_0      92.47000   67.58 2.170e-21 89.57000 95.3700
-## k_parent_sink  0.09561   24.65 1.867e-14  0.08773  0.1042
+## parent_0      92.47000   72.13 8.824e-21 89.74000 95.2000
+## k_parent_sink  0.09561   26.57 2.487e-14  0.08824  0.1036
+## sigma          2.78000    6.00 1.216e-05  1.79200  3.7670
 ## 
 ## Chi2 error levels in percent:
 ##          err.min n.optim df
@@ -199,61 +203,76 @@
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw"><a href="../reference/mkinresplot.html">mkinresplot</a></span>(m.L1.SFO, <span class="dt">ylab =</span> <span class="st">"Observed"</span>, <span class="dt">xlab =</span> <span class="st">"Time"</span>)</a></code></pre></div>
 <p><img src="FOCUS_L_files/figure-html/unnamed-chunk-5-1.png" width="576"></p>
 <p>For comparison, the FOMC model is fitted as well, and the <span class="math inline">\(\chi^2\)</span> error level is checked.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">m.L1.FOMC &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkinfit.html">mkinfit</a></span>(<span class="st">"FOMC"</span>, FOCUS_<span class="dv">2006</span>_L1_mkin, <span class="dt">quiet=</span><span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb6-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(m.L1.FOMC, <span class="dt">show_errmin =</span> <span class="ot">TRUE</span>, <span class="dt">main =</span> <span class="st">"FOCUS L1 - FOMC"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">m.L1.FOMC &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkinfit.html">mkinfit</a></span>(<span class="st">"FOMC"</span>, FOCUS_<span class="dv">2006</span>_L1_mkin, <span class="dt">quiet=</span><span class="ot">TRUE</span>)</a></code></pre></div>
+<pre><code>## Warning in mkinfit("FOMC", FOCUS_2006_L1_mkin, quiet = TRUE): Optimisation did not converge:
+## false convergence (8)</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(m.L1.FOMC, <span class="dt">show_errmin =</span> <span class="ot">TRUE</span>, <span class="dt">main =</span> <span class="st">"FOCUS L1 - FOMC"</span>)</a></code></pre></div>
 <p><img src="FOCUS_L_files/figure-html/unnamed-chunk-6-1.png" width="576"></p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(m.L1.FOMC, <span class="dt">data =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
-<pre><code>## mkin version used for fitting:    0.9.48.1 
-## R version used for fitting:       3.5.2 
-## Date of fit:     Mon Mar  4 14:06:43 2019 
-## Date of summary: Mon Mar  4 14:06:43 2019 
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(m.L1.FOMC, <span class="dt">data =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<pre><code>## Warning in sqrt(diag(covar)): NaNs wurden erzeugt</code></pre>
+<pre><code>## Warning in sqrt(1/diag(V)): NaNs wurden erzeugt</code></pre>
+<pre><code>## Warning in cov2cor(ans$cov.unscaled): diag(.) had 0 or NA entries; non-
+## finite result is doubtful</code></pre>
+<pre><code>## mkin version used for fitting:    0.9.49.4 
+## R version used for fitting:       3.5.3 
+## Date of fit:     Wed Apr 10 10:11:34 2019 
+## Date of summary: Wed Apr 10 10:11:34 2019 
+## 
+## 
+## Warning: Optimisation did not converge:
+## false convergence (8) 
+## 
 ## 
 ## Equations:
 ## d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted with method Port using 611 model solutions performed in 1.502 s
+## Fitted with method using 344 model solutions performed in 0.778 s
 ## 
-## Weighting: none
+## Error model:
+## NULL
 ## 
 ## Starting values for parameters to be optimised:
-##          value   type
-## parent_0 89.85  state
-## alpha     1.00 deparm
-## beta     10.00 deparm
+##             value   type
+## parent_0 89.85000  state
+## alpha     1.00000 deparm
+## beta     10.00000 deparm
+## sigma     2.77987  error
 ## 
 ## Starting values for the transformed parameters actually optimised:
 ##               value lower upper
 ## parent_0  89.850000  -Inf   Inf
 ## log_alpha  0.000000  -Inf   Inf
 ## log_beta   2.302585  -Inf   Inf
+## sigma      2.779870     0   Inf
 ## 
 ## Fixed parameter values:
 ## None
 ## 
 ## Optimised, transformed parameters with symmetric confidence intervals:
-##           Estimate Std. Error    Lower   Upper
-## parent_0     92.47      1.482    89.31   95.63
-## log_alpha    11.25    598.200 -1264.00 1286.00
-## log_beta     13.60    598.200 -1261.00 1289.00
+##           Estimate Std. Error  Lower  Upper
+## parent_0     92.47     1.2810 89.720 95.220
+## log_alpha    10.60        NaN    NaN    NaN
+## log_beta     12.95        NaN    NaN    NaN
+## sigma         2.78     0.4554  1.803  3.757
 ## 
 ## Parameter correlation:
-##           parent_0 log_alpha log_beta
-## parent_0    1.0000   -0.3016  -0.3016
-## log_alpha  -0.3016    1.0000   1.0000
-## log_beta   -0.3016    1.0000   1.0000
-## 
-## Residual standard error: 3.045 on 15 degrees of freedom
+##           parent_0 log_alpha log_beta    sigma
+## parent_0  1.000000       NaN      NaN 0.008714
+## log_alpha      NaN         1      NaN      NaN
+## log_beta       NaN       NaN        1      NaN
+## sigma     0.008714       NaN      NaN 1.000000
 ## 
 ## Backtransformed parameters:
 ## Confidence intervals for internally transformed parameters are asymmetric.
 ## t-test (unrealistically) based on the assumption of normal distribution
 ## for estimators of untransformed parameters.
-##           Estimate  t value    Pr(&gt;t) Lower Upper
-## parent_0     92.47 64.45000 4.757e-20 89.31 95.63
-## alpha     76830.00  0.02852 4.888e-01  0.00   Inf
-## beta     803500.00  0.02852 4.888e-01  0.00   Inf
+##           Estimate  t value    Pr(&gt;t)  Lower  Upper
+## parent_0     92.47 72.13000 1.052e-19 89.720 95.220
+## alpha     40090.00  0.02388 4.906e-01     NA     NA
+## beta     419300.00  0.02388 4.906e-01     NA     NA
+## sigma         2.78  6.00000 1.628e-05  1.803  3.757
 ## 
 ## Chi2 error levels in percent:
 ##          err.min n.optim df
@@ -262,7 +281,7 @@
 ## 
 ## Estimated disappearance times:
 ##         DT50  DT90 DT50back
-## parent 7.249 24.08    7.249</code></pre>
+## parent 7.249 24.08     7.25</code></pre>
 <p>We get a warning that the default optimisation algorithm <code>Port</code> did not converge, which is an indication that the model is overparameterised, <em>i.e.</em> contains too many parameters that are ill-defined as a consequence.</p>
 <p>And in fact, due to the higher number of parameters, and the lower number of degrees of freedom of the fit, the <span class="math inline">\(\chi^2\)</span> error level is actually higher for the FOMC model (3.6%) than for the SFO model (3.4%). Additionally, the parameters <code>log_alpha</code> and <code>log_beta</code> internally fitted in the model have excessive confidence intervals, that span more than 25 orders of magnitude (!) when backtransformed to the scale of <code>alpha</code> and <code>beta</code>. Also, the t-test for significant difference from zero does not indicate such a significant difference, with p-values greater than 0.1, and finally, the parameter correlation of <code>log_alpha</code> and <code>log_beta</code> is 1.000, clearly indicating that the model is overparameterised.</p>
 <p>The <span class="math inline">\(\chi^2\)</span> error levels reported in Appendix 3 and Appendix 7 to the FOCUS kinetics report are rounded to integer percentages and partly deviate by one percentage point from the results calculated by mkin. The reason for this is not known. However, mkin gives the same <span class="math inline">\(\chi^2\)</span> error levels as the kinfit package and the calculation routines of the kinfit package have been extensively compared to the results obtained by the KinGUI software, as documented in the kinfit package vignette. KinGUI was the first widely used standard package in this field. Also, the calculation of <span class="math inline">\(\chi^2\)</span> error levels was compared with KinGUII, CAKE and DegKin manager in a project sponsored by the German Umweltbundesamt <span class="citation">(Ranke 2014)</span>.</p>
@@ -271,19 +290,19 @@
 <h1 class="hasAnchor">
 <a href="#laboratory-data-l2" class="anchor"></a>Laboratory Data L2</h1>
 <p>The following code defines example dataset L2 from the FOCUS kinetics report, p. 287:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">FOCUS_<span class="dv">2006</span>_L2 =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(</a>
-<a class="sourceLine" id="cb9-2" title="2">  <span class="dt">t =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">14</span>, <span class="dv">28</span>), <span class="dt">each =</span> <span class="dv">2</span>),</a>
-<a class="sourceLine" id="cb9-3" title="3">  <span class="dt">parent =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">96.1</span>, <span class="fl">91.8</span>, <span class="fl">41.4</span>, <span class="fl">38.7</span>,</a>
-<a class="sourceLine" id="cb9-4" title="4">             <span class="fl">19.3</span>, <span class="fl">22.3</span>, <span class="fl">4.6</span>, <span class="fl">4.6</span>,</a>
-<a class="sourceLine" id="cb9-5" title="5">             <span class="fl">2.6</span>, <span class="fl">1.2</span>, <span class="fl">0.3</span>, <span class="fl">0.6</span>))</a>
-<a class="sourceLine" id="cb9-6" title="6">FOCUS_<span class="dv">2006</span>_L2_mkin &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkin_wide_to_long.html">mkin_wide_to_long</a></span>(FOCUS_<span class="dv">2006</span>_L2)</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">FOCUS_<span class="dv">2006</span>_L2 =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(</a>
+<a class="sourceLine" id="cb14-2" title="2">  <span class="dt">t =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">14</span>, <span class="dv">28</span>), <span class="dt">each =</span> <span class="dv">2</span>),</a>
+<a class="sourceLine" id="cb14-3" title="3">  <span class="dt">parent =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">96.1</span>, <span class="fl">91.8</span>, <span class="fl">41.4</span>, <span class="fl">38.7</span>,</a>
+<a class="sourceLine" id="cb14-4" title="4">             <span class="fl">19.3</span>, <span class="fl">22.3</span>, <span class="fl">4.6</span>, <span class="fl">4.6</span>,</a>
+<a class="sourceLine" id="cb14-5" title="5">             <span class="fl">2.6</span>, <span class="fl">1.2</span>, <span class="fl">0.3</span>, <span class="fl">0.6</span>))</a>
+<a class="sourceLine" id="cb14-6" title="6">FOCUS_<span class="dv">2006</span>_L2_mkin &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkin_wide_to_long.html">mkin_wide_to_long</a></span>(FOCUS_<span class="dv">2006</span>_L2)</a></code></pre></div>
 <div id="sfo-fit-for-l2" class="section level2">
 <h2 class="hasAnchor">
 <a href="#sfo-fit-for-l2" class="anchor"></a>SFO fit for L2</h2>
 <p>Again, the SFO model is fitted and the result is plotted. The residual plot can be obtained simply by adding the argument <code>show_residuals</code> to the plot command.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">m.L2.SFO &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkinfit.html">mkinfit</a></span>(<span class="st">"SFO"</span>, FOCUS_<span class="dv">2006</span>_L2_mkin, <span class="dt">quiet=</span><span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb10-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(m.L2.SFO, <span class="dt">show_residuals =</span> <span class="ot">TRUE</span>, <span class="dt">show_errmin =</span> <span class="ot">TRUE</span>,</a>
-<a class="sourceLine" id="cb10-3" title="3">     <span class="dt">main =</span> <span class="st">"FOCUS L2 - SFO"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">m.L2.SFO &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkinfit.html">mkinfit</a></span>(<span class="st">"SFO"</span>, FOCUS_<span class="dv">2006</span>_L2_mkin, <span class="dt">quiet=</span><span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb15-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(m.L2.SFO, <span class="dt">show_residuals =</span> <span class="ot">TRUE</span>, <span class="dt">show_errmin =</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb15-3" title="3">     <span class="dt">main =</span> <span class="st">"FOCUS L2 - SFO"</span>)</a></code></pre></div>
 <p><img src="FOCUS_L_files/figure-html/unnamed-chunk-8-1.png" width="672"></p>
 <p>The <span class="math inline">\(\chi^2\)</span> error level of 14% suggests that the model does not fit very well. This is also obvious from the plots of the fit, in which we have included the residual plot.</p>
 <p>In the FOCUS kinetics report, it is stated that there is no apparent systematic error observed from the residual plot up to the measured DT90 (approximately at day 5), and there is an underestimation beyond that point.</p>
@@ -293,62 +312,66 @@
 <h2 class="hasAnchor">
 <a href="#fomc-fit-for-l2" class="anchor"></a>FOMC fit for L2</h2>
 <p>For comparison, the FOMC model is fitted as well, and the <span class="math inline">\(\chi^2\)</span> error level is checked.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">m.L2.FOMC &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkinfit.html">mkinfit</a></span>(<span class="st">"FOMC"</span>, FOCUS_<span class="dv">2006</span>_L2_mkin, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb11-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(m.L2.FOMC, <span class="dt">show_residuals =</span> <span class="ot">TRUE</span>,</a>
-<a class="sourceLine" id="cb11-3" title="3">     <span class="dt">main =</span> <span class="st">"FOCUS L2 - FOMC"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">m.L2.FOMC &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkinfit.html">mkinfit</a></span>(<span class="st">"FOMC"</span>, FOCUS_<span class="dv">2006</span>_L2_mkin, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb16-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(m.L2.FOMC, <span class="dt">show_residuals =</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb16-3" title="3">     <span class="dt">main =</span> <span class="st">"FOCUS L2 - FOMC"</span>)</a></code></pre></div>
 <p><img src="FOCUS_L_files/figure-html/unnamed-chunk-9-1.png" width="672"></p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(m.L2.FOMC, <span class="dt">data =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
-<pre><code>## mkin version used for fitting:    0.9.48.1 
-## R version used for fitting:       3.5.2 
-## Date of fit:     Mon Mar  4 14:06:43 2019 
-## Date of summary: Mon Mar  4 14:06:43 2019 
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(m.L2.FOMC, <span class="dt">data =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<pre><code>## mkin version used for fitting:    0.9.49.4 
+## R version used for fitting:       3.5.3 
+## Date of fit:     Wed Apr 10 10:11:35 2019 
+## Date of summary: Wed Apr 10 10:11:35 2019 
 ## 
 ## Equations:
 ## d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted with method Port using 81 model solutions performed in 0.196 s
+## Fitted with method using 240 model solutions performed in 0.564 s
 ## 
-## Weighting: none
+## Error model:
+## NULL
 ## 
 ## Starting values for parameters to be optimised:
-##          value   type
-## parent_0 93.95  state
-## alpha     1.00 deparm
-## beta     10.00 deparm
+##              value   type
+## parent_0 93.950000  state
+## alpha     1.000000 deparm
+## beta     10.000000 deparm
+## sigma     2.275722  error
 ## 
 ## Starting values for the transformed parameters actually optimised:
 ##               value lower upper
 ## parent_0  93.950000  -Inf   Inf
 ## log_alpha  0.000000  -Inf   Inf
 ## log_beta   2.302585  -Inf   Inf
+## sigma      2.275722     0   Inf
 ## 
 ## Fixed parameter values:
 ## None
 ## 
 ## Optimised, transformed parameters with symmetric confidence intervals:
-##           Estimate Std. Error   Lower   Upper
-## parent_0   93.7700     1.8560 89.5700 97.9700
-## log_alpha   0.3180     0.1867 -0.1044  0.7405
-## log_beta    0.2102     0.2943 -0.4555  0.8759
+##           Estimate Std. Error    Lower   Upper
+## parent_0   93.7700     1.6130 90.05000 97.4900
+## log_alpha   0.3180     0.1559 -0.04149  0.6776
+## log_beta    0.2102     0.2493 -0.36460  0.7850
+## sigma       2.2760     0.4645  1.20500  3.3470
 ## 
 ## Parameter correlation:
-##           parent_0 log_alpha log_beta
-## parent_0   1.00000  -0.09553  -0.1863
-## log_alpha -0.09553   1.00000   0.9757
-## log_beta  -0.18628   0.97567   1.0000
-## 
-## Residual standard error: 2.628 on 9 degrees of freedom
+##             parent_0  log_alpha   log_beta      sigma
+## parent_0   1.000e+00 -1.151e-01 -2.085e-01  1.606e-08
+## log_alpha -1.151e-01  1.000e+00  9.741e-01 -1.168e-07
+## log_beta  -2.085e-01  9.741e-01  1.000e+00 -1.029e-07
+## sigma      1.606e-08 -1.168e-07 -1.029e-07  1.000e+00
 ## 
 ## Backtransformed parameters:
 ## Confidence intervals for internally transformed parameters are asymmetric.
 ## t-test (unrealistically) based on the assumption of normal distribution
 ## for estimators of untransformed parameters.
 ##          Estimate t value    Pr(&gt;t)   Lower  Upper
-## parent_0   93.770  50.510 1.173e-12 89.5700 97.970
-## alpha       1.374   5.355 2.296e-04  0.9009  2.097
-## beta        1.234   3.398 3.949e-03  0.6341  2.401
+## parent_0   93.770  58.120 4.267e-12 90.0500 97.490
+## alpha       1.374   6.414 1.030e-04  0.9594  1.969
+## beta        1.234   4.012 1.942e-03  0.6945  2.192
+## sigma       2.276   4.899 5.977e-04  1.2050  3.347
 ## 
 ## Chi2 error levels in percent:
 ##          err.min n.optim df
@@ -364,17 +387,15 @@
 <h2 class="hasAnchor">
 <a href="#dfop-fit-for-l2" class="anchor"></a>DFOP fit for L2</h2>
 <p>Fitting the four parameter DFOP model further reduces the <span class="math inline">\(\chi^2\)</span> error level.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">m.L2.DFOP &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkinfit.html">mkinfit</a></span>(<span class="st">"DFOP"</span>, FOCUS_<span class="dv">2006</span>_L2_mkin, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb14-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(m.L2.DFOP, <span class="dt">show_residuals =</span> <span class="ot">TRUE</span>, <span class="dt">show_errmin =</span> <span class="ot">TRUE</span>,</a>
-<a class="sourceLine" id="cb14-3" title="3">     <span class="dt">main =</span> <span class="st">"FOCUS L2 - DFOP"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1">m.L2.DFOP &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkinfit.html">mkinfit</a></span>(<span class="st">"DFOP"</span>, FOCUS_<span class="dv">2006</span>_L2_mkin, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb19-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(m.L2.DFOP, <span class="dt">show_residuals =</span> <span class="ot">TRUE</span>, <span class="dt">show_errmin =</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb19-3" title="3">     <span class="dt">main =</span> <span class="st">"FOCUS L2 - DFOP"</span>)</a></code></pre></div>
 <p><img src="FOCUS_L_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(m.L2.DFOP, <span class="dt">data =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
-<pre><code>## Warning in summary.mkinfit(m.L2.DFOP, data = FALSE): Could not estimate
-## covariance matrix; singular system.</code></pre>
-<pre><code>## mkin version used for fitting:    0.9.48.1 
-## R version used for fitting:       3.5.2 
-## Date of fit:     Mon Mar  4 14:06:44 2019 
-## Date of summary: Mon Mar  4 14:06:44 2019 
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(m.L2.DFOP, <span class="dt">data =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<pre><code>## mkin version used for fitting:    0.9.49.4 
+## R version used for fitting:       3.5.3 
+## Date of fit:     Wed Apr 10 10:11:37 2019 
+## Date of summary: Wed Apr 10 10:11:37 2019 
 ## 
 ## Equations:
 ## d_parent/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) *
@@ -383,16 +404,18 @@
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted with method Port using 336 model solutions performed in 0.84 s
+## Fitted with method using 585 model solutions performed in 1.296 s
 ## 
-## Weighting: none
+## Error model:
+## NULL
 ## 
 ## Starting values for parameters to be optimised:
-##          value   type
-## parent_0 93.95  state
-## k1        0.10 deparm
-## k2        0.01 deparm
-## g         0.50 deparm
+##              value   type
+## parent_0 93.950000  state
+## k1        0.100000 deparm
+## k2        0.010000 deparm
+## g         0.500000 deparm
+## sigma     1.413899  error
 ## 
 ## Starting values for the transformed parameters actually optimised:
 ##              value lower upper
@@ -400,30 +423,37 @@
 ## log_k1   -2.302585  -Inf   Inf
 ## log_k2   -4.605170  -Inf   Inf
 ## g_ilr     0.000000  -Inf   Inf
+## sigma     1.413899     0   Inf
 ## 
 ## Fixed parameter values:
 ## None
 ## 
 ## Optimised, transformed parameters with symmetric confidence intervals:
-##          Estimate Std. Error Lower Upper
-## parent_0  93.9500         NA    NA    NA
-## log_k1     3.1370         NA    NA    NA
-## log_k2    -1.0880         NA    NA    NA
-## g_ilr     -0.2821         NA    NA    NA
+##          Estimate Std. Error      Lower     Upper
+## parent_0  93.9500  9.998e-01    91.5900   96.3100
+## log_k1     3.1350  2.336e+03 -5522.0000 5528.0000
+## log_k2    -1.0880  6.285e-02    -1.2370   -0.9394
+## g_ilr     -0.2821  7.033e-02    -0.4484   -0.1158
+## sigma      1.4140  2.886e-01     0.7314    2.0960
 ## 
 ## Parameter correlation:
-## Could not estimate covariance matrix; singular system.
-## Residual standard error: 1.732 on 8 degrees of freedom
+##            parent_0     log_k1     log_k2      g_ilr      sigma
+## parent_0  1.000e+00  5.247e-07 -1.026e-10  2.665e-01 -8.076e-11
+## log_k1    5.247e-07  1.000e+00  8.592e-05 -1.690e-04 -7.938e-06
+## log_k2   -1.026e-10  8.592e-05  1.000e+00 -7.903e-01  5.048e-10
+## g_ilr     2.665e-01 -1.690e-04 -7.903e-01  1.000e+00 -6.476e-10
+## sigma    -8.076e-11 -7.938e-06  5.048e-10 -6.476e-10  1.000e+00
 ## 
 ## Backtransformed parameters:
 ## Confidence intervals for internally transformed parameters are asymmetric.
 ## t-test (unrealistically) based on the assumption of normal distribution
 ## for estimators of untransformed parameters.
-##          Estimate t value Pr(&gt;t) Lower Upper
-## parent_0  93.9500      NA     NA    NA    NA
-## k1        23.0400      NA     NA    NA    NA
-## k2         0.3369      NA     NA    NA    NA
-## g          0.4016      NA     NA    NA    NA
+##          Estimate   t value    Pr(&gt;t)   Lower   Upper
+## parent_0  93.9500 9.397e+01 2.036e-12 91.5900 96.3100
+## k1        23.0000 4.377e-04 4.998e-01  0.0000     Inf
+## k2         0.3369 1.591e+01 4.697e-07  0.2904  0.3909
+## g          0.4016 1.680e+01 3.238e-07  0.3466  0.4591
+## sigma      1.4140 4.899e+00 8.776e-04  0.7314  2.0960
 ## 
 ## Chi2 error levels in percent:
 ##          err.min n.optim df
@@ -432,7 +462,7 @@
 ## 
 ## Estimated disappearance times:
 ##          DT50  DT90 DT50_k1 DT50_k2
-## parent 0.5335 5.311 0.03009   2.058</code></pre>
+## parent 0.5335 5.311 0.03014   2.058</code></pre>
 <p>Here, the DFOP model is clearly the best-fit model for dataset L2 based on the chi^2 error level criterion. However, the failure to calculate the covariance matrix indicates that the parameter estimates correlate excessively. Therefore, the FOMC model may be preferred for this dataset.</p>
 </div>
 </div>
@@ -440,18 +470,18 @@
 <h1 class="hasAnchor">
 <a href="#laboratory-data-l3" class="anchor"></a>Laboratory Data L3</h1>
 <p>The following code defines example dataset L3 from the FOCUS kinetics report, p. 290.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1">FOCUS_<span class="dv">2006</span>_L3 =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(</a>
-<a class="sourceLine" id="cb18-2" title="2">  <span class="dt">t =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">14</span>, <span class="dv">30</span>, <span class="dv">60</span>, <span class="dv">91</span>, <span class="dv">120</span>),</a>
-<a class="sourceLine" id="cb18-3" title="3">  <span class="dt">parent =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">97.8</span>, <span class="dv">60</span>, <span class="dv">51</span>, <span class="dv">43</span>, <span class="dv">35</span>, <span class="dv">22</span>, <span class="dv">15</span>, <span class="dv">12</span>))</a>
-<a class="sourceLine" id="cb18-4" title="4">FOCUS_<span class="dv">2006</span>_L3_mkin &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkin_wide_to_long.html">mkin_wide_to_long</a></span>(FOCUS_<span class="dv">2006</span>_L3)</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1">FOCUS_<span class="dv">2006</span>_L3 =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(</a>
+<a class="sourceLine" id="cb22-2" title="2">  <span class="dt">t =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">14</span>, <span class="dv">30</span>, <span class="dv">60</span>, <span class="dv">91</span>, <span class="dv">120</span>),</a>
+<a class="sourceLine" id="cb22-3" title="3">  <span class="dt">parent =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">97.8</span>, <span class="dv">60</span>, <span class="dv">51</span>, <span class="dv">43</span>, <span class="dv">35</span>, <span class="dv">22</span>, <span class="dv">15</span>, <span class="dv">12</span>))</a>
+<a class="sourceLine" id="cb22-4" title="4">FOCUS_<span class="dv">2006</span>_L3_mkin &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkin_wide_to_long.html">mkin_wide_to_long</a></span>(FOCUS_<span class="dv">2006</span>_L3)</a></code></pre></div>
 <div id="fit-multiple-models" class="section level2">
 <h2 class="hasAnchor">
 <a href="#fit-multiple-models" class="anchor"></a>Fit multiple models</h2>
 <p>As of mkin version 0.9-39 (June 2015), we can fit several models to one or more datasets in one call to the function <code>mmkin</code>. The datasets have to be passed in a list, in this case a named list holding only the L3 dataset prepared above.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="co"># Only use one core here, not to offend the CRAN checks</span></a>
-<a class="sourceLine" id="cb19-2" title="2">mm.L3 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mmkin.html">mmkin</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"SFO"</span>, <span class="st">"FOMC"</span>, <span class="st">"DFOP"</span>), <span class="dt">cores =</span> <span class="dv">1</span>,</a>
-<a class="sourceLine" id="cb19-3" title="3">               <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="st">"FOCUS L3"</span> =<span class="st"> </span>FOCUS_<span class="dv">2006</span>_L3_mkin), <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb19-4" title="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(mm.L3)</a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1"><span class="co"># Only use one core here, not to offend the CRAN checks</span></a>
+<a class="sourceLine" id="cb23-2" title="2">mm.L3 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mmkin.html">mmkin</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"SFO"</span>, <span class="st">"FOMC"</span>, <span class="st">"DFOP"</span>), <span class="dt">cores =</span> <span class="dv">1</span>,</a>
+<a class="sourceLine" id="cb23-3" title="3">               <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="st">"FOCUS L3"</span> =<span class="st"> </span>FOCUS_<span class="dv">2006</span>_L3_mkin), <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb23-4" title="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(mm.L3)</a></code></pre></div>
 <p><img src="FOCUS_L_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
 <p>The <span class="math inline">\(\chi^2\)</span> error level of 21% as well as the plot suggest that the SFO model does not fit very well. The FOMC model performs better, with an error level at which the <span class="math inline">\(\chi^2\)</span> test passes of 7%. Fitting the four parameter DFOP model further reduces the <span class="math inline">\(\chi^2\)</span> error level considerably.</p>
 </div>
@@ -460,11 +490,11 @@
 <a href="#accessing-mmkin-objects" class="anchor"></a>Accessing mmkin objects</h2>
 <p>The objects returned by mmkin are arranged like a matrix, with models as a row index and datasets as a column index.</p>
 <p>We can extract the summary and plot for <em>e.g.</em> the DFOP fit, using square brackets for indexing which will result in the use of the summary and plot functions working on mkinfit objects.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(mm.L3[[<span class="st">"DFOP"</span>, <span class="dv">1</span>]])</a></code></pre></div>
-<pre><code>## mkin version used for fitting:    0.9.48.1 
-## R version used for fitting:       3.5.2 
-## Date of fit:     Mon Mar  4 14:06:45 2019 
-## Date of summary: Mon Mar  4 14:06:46 2019 
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(mm.L3[[<span class="st">"DFOP"</span>, <span class="dv">1</span>]])</a></code></pre></div>
+<pre><code>## mkin version used for fitting:    0.9.49.4 
+## R version used for fitting:       3.5.3 
+## Date of fit:     Wed Apr 10 10:11:39 2019 
+## Date of summary: Wed Apr 10 10:11:39 2019 
 ## 
 ## Equations:
 ## d_parent/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) *
@@ -473,16 +503,18 @@
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted with method Port using 137 model solutions performed in 0.343 s
+## Fitted with method using 372 model solutions performed in 0.809 s
 ## 
-## Weighting: none
+## Error model:
+## NULL
 ## 
 ## Starting values for parameters to be optimised:
-##          value   type
-## parent_0 97.80  state
-## k1        0.10 deparm
-## k2        0.01 deparm
-## g         0.50 deparm
+##              value   type
+## parent_0 97.800000  state
+## k1        0.100000 deparm
+## k2        0.010000 deparm
+## g         0.500000 deparm
+## sigma     1.017292  error
 ## 
 ## Starting values for the transformed parameters actually optimised:
 ##              value lower upper
@@ -490,35 +522,37 @@
 ## log_k1   -2.302585  -Inf   Inf
 ## log_k2   -4.605170  -Inf   Inf
 ## g_ilr     0.000000  -Inf   Inf
+## sigma     1.017292     0   Inf
 ## 
 ## Fixed parameter values:
 ## None
 ## 
 ## Optimised, transformed parameters with symmetric confidence intervals:
-##          Estimate Std. Error   Lower     Upper
-## parent_0  97.7500    1.43800 93.7500 101.70000
-## log_k1    -0.6612    0.13340 -1.0310  -0.29100
-## log_k2    -4.2860    0.05902 -4.4500  -4.12200
-## g_ilr     -0.1229    0.05121 -0.2651   0.01925
+##          Estimate Std. Error   Lower      Upper
+## parent_0  97.7500    1.01900 94.5000 101.000000
+## log_k1    -0.6612    0.10050 -0.9812  -0.341300
+## log_k2    -4.2860    0.04322 -4.4230  -4.148000
+## g_ilr     -0.1229    0.03727 -0.2415  -0.004343
+## sigma      1.0170    0.25430  0.2079   1.827000
 ## 
 ## Parameter correlation:
-##          parent_0  log_k1   log_k2   g_ilr
-## parent_0  1.00000  0.1640  0.01315  0.4253
-## log_k1    0.16400  1.0000  0.46478 -0.5526
-## log_k2    0.01315  0.4648  1.00000 -0.6631
-## g_ilr     0.42526 -0.5526 -0.66310  1.0000
-## 
-## Residual standard error: 1.439 on 4 degrees of freedom
+##           parent_0     log_k1     log_k2      g_ilr      sigma
+## parent_0 1.000e+00  1.732e-01  2.282e-02  4.009e-01  1.656e-07
+## log_k1   1.732e-01  1.000e+00  4.945e-01 -5.809e-01  6.759e-08
+## log_k2   2.282e-02  4.945e-01  1.000e+00 -6.812e-01  3.867e-07
+## g_ilr    4.009e-01 -5.809e-01 -6.812e-01  1.000e+00 -3.839e-07
+## sigma    1.656e-07  6.759e-08  3.867e-07 -3.839e-07  1.000e+00
 ## 
 ## Backtransformed parameters:
 ## Confidence intervals for internally transformed parameters are asymmetric.
 ## t-test (unrealistically) based on the assumption of normal distribution
 ## for estimators of untransformed parameters.
 ##          Estimate t value    Pr(&gt;t)    Lower     Upper
-## parent_0 97.75000  67.970 1.404e-07 93.75000 101.70000
-## k1        0.51620   7.499 8.460e-04  0.35650   0.74750
-## k2        0.01376  16.940 3.557e-05  0.01168   0.01621
-## g         0.45660  25.410 7.121e-06  0.40730   0.50680
+## parent_0 97.75000  95.960 1.248e-06 94.50000 101.00000
+## k1        0.51620   9.947 1.081e-03  0.37490   0.71090
+## k2        0.01376  23.140 8.840e-05  0.01199   0.01579
+## g         0.45660  34.920 2.581e-05  0.41540   0.49850
+## sigma     1.01700   4.000 1.400e-02  0.20790   1.82700
 ## 
 ## Chi2 error levels in percent:
 ##          err.min n.optim df
@@ -539,7 +573,7 @@
 ##    60   parent     22.0     23.26 -1.25919
 ##    91   parent     15.0     15.18 -0.18181
 ##   120   parent     12.0     10.19  1.81395</code></pre>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(mm.L3[[<span class="st">"DFOP"</span>, <span class="dv">1</span>]], <span class="dt">show_errmin =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(mm.L3[[<span class="st">"DFOP"</span>, <span class="dv">1</span>]], <span class="dt">show_errmin =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p><img src="FOCUS_L_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
 <p>Here, a look to the model plot, the confidence intervals of the parameters and the correlation matrix suggest that the parameter estimates are reliable, and the DFOP model can be used as the best-fit model based on the <span class="math inline">\(\chi^2\)</span> error level criterion for laboratory data L3.</p>
 <p>This is also an example where the standard t-test for the parameter <code>g_ilr</code> is misleading, as it tests for a significant difference from zero. In this case, zero appears to be the correct value for this parameter, and the confidence interval for the backtransformed parameter <code>g</code> is quite narrow.</p>
@@ -549,65 +583,69 @@
 <h1 class="hasAnchor">
 <a href="#laboratory-data-l4" class="anchor"></a>Laboratory Data L4</h1>
 <p>The following code defines example dataset L4 from the FOCUS kinetics report, p. 293:</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1">FOCUS_<span class="dv">2006</span>_L4 =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(</a>
-<a class="sourceLine" id="cb23-2" title="2">  <span class="dt">t =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">14</span>, <span class="dv">30</span>, <span class="dv">60</span>, <span class="dv">91</span>, <span class="dv">120</span>),</a>
-<a class="sourceLine" id="cb23-3" title="3">  <span class="dt">parent =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">96.6</span>, <span class="fl">96.3</span>, <span class="fl">94.3</span>, <span class="fl">88.8</span>, <span class="fl">74.9</span>, <span class="fl">59.9</span>, <span class="fl">53.5</span>, <span class="fl">49.0</span>))</a>
-<a class="sourceLine" id="cb23-4" title="4">FOCUS_<span class="dv">2006</span>_L4_mkin &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkin_wide_to_long.html">mkin_wide_to_long</a></span>(FOCUS_<span class="dv">2006</span>_L4)</a></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1">FOCUS_<span class="dv">2006</span>_L4 =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(</a>
+<a class="sourceLine" id="cb27-2" title="2">  <span class="dt">t =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">14</span>, <span class="dv">30</span>, <span class="dv">60</span>, <span class="dv">91</span>, <span class="dv">120</span>),</a>
+<a class="sourceLine" id="cb27-3" title="3">  <span class="dt">parent =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">96.6</span>, <span class="fl">96.3</span>, <span class="fl">94.3</span>, <span class="fl">88.8</span>, <span class="fl">74.9</span>, <span class="fl">59.9</span>, <span class="fl">53.5</span>, <span class="fl">49.0</span>))</a>
+<a class="sourceLine" id="cb27-4" title="4">FOCUS_<span class="dv">2006</span>_L4_mkin &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mkin_wide_to_long.html">mkin_wide_to_long</a></span>(FOCUS_<span class="dv">2006</span>_L4)</a></code></pre></div>
 <p>Fits of the SFO and FOMC models, plots and summaries are produced below:</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1"><span class="co"># Only use one core here, not to offend the CRAN checks</span></a>
-<a class="sourceLine" id="cb24-2" title="2">mm.L4 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mmkin.html">mmkin</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"SFO"</span>, <span class="st">"FOMC"</span>), <span class="dt">cores =</span> <span class="dv">1</span>,</a>
-<a class="sourceLine" id="cb24-3" title="3">               <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="st">"FOCUS L4"</span> =<span class="st"> </span>FOCUS_<span class="dv">2006</span>_L4_mkin),</a>
-<a class="sourceLine" id="cb24-4" title="4">               <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb24-5" title="5"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(mm.L4)</a></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1"><span class="co"># Only use one core here, not to offend the CRAN checks</span></a>
+<a class="sourceLine" id="cb28-2" title="2">mm.L4 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/mmkin.html">mmkin</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"SFO"</span>, <span class="st">"FOMC"</span>), <span class="dt">cores =</span> <span class="dv">1</span>,</a>
+<a class="sourceLine" id="cb28-3" title="3">               <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="st">"FOCUS L4"</span> =<span class="st"> </span>FOCUS_<span class="dv">2006</span>_L4_mkin),</a>
+<a class="sourceLine" id="cb28-4" title="4">               <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb28-5" title="5"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(mm.L4)</a></code></pre></div>
 <p><img src="FOCUS_L_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
 <p>The <span class="math inline">\(\chi^2\)</span> error level of 3.3% as well as the plot suggest that the SFO model fits very well. The error level at which the <span class="math inline">\(\chi^2\)</span> test passes is slightly lower for the FOMC model. However, the difference appears negligible.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(mm.L4[[<span class="st">"SFO"</span>, <span class="dv">1</span>]], <span class="dt">data =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
-<pre><code>## mkin version used for fitting:    0.9.48.1 
-## R version used for fitting:       3.5.2 
-## Date of fit:     Mon Mar  4 14:06:46 2019 
-## Date of summary: Mon Mar  4 14:06:46 2019 
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(mm.L4[[<span class="st">"SFO"</span>, <span class="dv">1</span>]], <span class="dt">data =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<pre><code>## mkin version used for fitting:    0.9.49.4 
+## R version used for fitting:       3.5.3 
+## Date of fit:     Wed Apr 10 10:11:39 2019 
+## Date of summary: Wed Apr 10 10:11:40 2019 
 ## 
 ## Equations:
 ## d_parent/dt = - k_parent_sink * parent
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted with method Port using 46 model solutions performed in 0.111 s
+## Fitted with method using 146 model solutions performed in 0.306 s
 ## 
-## Weighting: none
+## Error model:
+## NULL
 ## 
 ## Starting values for parameters to be optimised:
-##               value   type
-## parent_0       96.6  state
-## k_parent_sink   0.1 deparm
+##                  value   type
+## parent_0      96.60000  state
+## k_parent_sink  0.10000 deparm
+## sigma          3.16181  error
 ## 
 ## Starting values for the transformed parameters actually optimised:
 ##                       value lower upper
 ## parent_0          96.600000  -Inf   Inf
 ## log_k_parent_sink -2.302585  -Inf   Inf
+## sigma              3.161810     0   Inf
 ## 
 ## Fixed parameter values:
 ## None
 ## 
 ## Optimised, transformed parameters with symmetric confidence intervals:
 ##                   Estimate Std. Error  Lower   Upper
-## parent_0             96.44    1.94900 91.670 101.200
-## log_k_parent_sink    -5.03    0.07999 -5.225  -4.834
+## parent_0            96.440    1.69900 92.070 100.800
+## log_k_parent_sink   -5.030    0.07059 -5.211  -4.848
+## sigma                3.162    0.79050  1.130   5.194
 ## 
 ## Parameter correlation:
-##                   parent_0 log_k_parent_sink
-## parent_0            1.0000            0.5865
-## log_k_parent_sink   0.5865            1.0000
-## 
-## Residual standard error: 3.651 on 6 degrees of freedom
+##                    parent_0 log_k_parent_sink      sigma
+## parent_0          1.000e+00         5.938e-01  5.612e-10
+## log_k_parent_sink 5.938e-01         1.000e+00 -4.994e-10
+## sigma             5.612e-10        -4.994e-10  1.000e+00
 ## 
 ## Backtransformed parameters:
 ## Confidence intervals for internally transformed parameters are asymmetric.
 ## t-test (unrealistically) based on the assumption of normal distribution
 ## for estimators of untransformed parameters.
 ##                Estimate t value    Pr(&gt;t)     Lower     Upper
-## parent_0      96.440000   49.49 2.283e-09 91.670000 1.012e+02
-## k_parent_sink  0.006541   12.50 8.008e-06  0.005378 7.955e-03
+## parent_0      96.440000   56.77 1.604e-08 92.070000 1.008e+02
+## k_parent_sink  0.006541   14.17 1.578e-05  0.005455 7.842e-03
+## sigma          3.162000    4.00 5.162e-03  1.130000 5.194e+00
 ## 
 ## Chi2 error levels in percent:
 ##          err.min n.optim df
@@ -621,58 +659,62 @@
 ## Estimated disappearance times:
 ##        DT50 DT90
 ## parent  106  352</code></pre>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(mm.L4[[<span class="st">"FOMC"</span>, <span class="dv">1</span>]], <span class="dt">data =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
-<pre><code>## mkin version used for fitting:    0.9.48.1 
-## R version used for fitting:       3.5.2 
-## Date of fit:     Mon Mar  4 14:06:46 2019 
-## Date of summary: Mon Mar  4 14:06:46 2019 
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(mm.L4[[<span class="st">"FOMC"</span>, <span class="dv">1</span>]], <span class="dt">data =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<pre><code>## mkin version used for fitting:    0.9.49.4 
+## R version used for fitting:       3.5.3 
+## Date of fit:     Wed Apr 10 10:11:40 2019 
+## Date of summary: Wed Apr 10 10:11:40 2019 
 ## 
 ## Equations:
 ## d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted with method Port using 66 model solutions performed in 0.173 s
+## Fitted with method using 224 model solutions performed in 0.478 s
 ## 
-## Weighting: none
+## Error model:
+## NULL
 ## 
 ## Starting values for parameters to be optimised:
-##          value   type
-## parent_0  96.6  state
-## alpha      1.0 deparm
-## beta      10.0 deparm
+##              value   type
+## parent_0 96.600000  state
+## alpha     1.000000 deparm
+## beta     10.000000 deparm
+## sigma     1.830055  error
 ## 
 ## Starting values for the transformed parameters actually optimised:
 ##               value lower upper
 ## parent_0  96.600000  -Inf   Inf
 ## log_alpha  0.000000  -Inf   Inf
 ## log_beta   2.302585  -Inf   Inf
+## sigma      1.830055     0   Inf
 ## 
 ## Fixed parameter values:
 ## None
 ## 
 ## Optimised, transformed parameters with symmetric confidence intervals:
-##           Estimate Std. Error  Lower    Upper
-## parent_0   99.1400     1.6800 94.820 103.5000
-## log_alpha  -0.3506     0.3725 -1.308   0.6068
-## log_beta    4.1740     0.5635  2.726   5.6230
+##           Estimate Std. Error   Lower    Upper
+## parent_0   99.1400     1.2670 95.6300 102.7000
+## log_alpha  -0.3506     0.2616 -1.0770   0.3756
+## log_beta    4.1740     0.3938  3.0810   5.2670
+## sigma       1.8300     0.4575  0.5598   3.1000
 ## 
 ## Parameter correlation:
-##           parent_0 log_alpha log_beta
-## parent_0    1.0000   -0.5365  -0.6083
-## log_alpha  -0.5365    1.0000   0.9913
-## log_beta   -0.6083    0.9913   1.0000
-## 
-## Residual standard error: 2.315 on 5 degrees of freedom
+##             parent_0  log_alpha   log_beta      sigma
+## parent_0   1.000e+00 -4.696e-01 -5.543e-01 -2.460e-07
+## log_alpha -4.696e-01  1.000e+00  9.889e-01  2.351e-08
+## log_beta  -5.543e-01  9.889e-01  1.000e+00  5.079e-08
+## sigma     -2.460e-07  2.351e-08  5.079e-08  1.000e+00
 ## 
 ## Backtransformed parameters:
 ## Confidence intervals for internally transformed parameters are asymmetric.
 ## t-test (unrealistically) based on the assumption of normal distribution
 ## for estimators of untransformed parameters.
 ##          Estimate t value    Pr(&gt;t)   Lower   Upper
-## parent_0  99.1400  59.020 1.322e-08 94.8200 103.500
-## alpha      0.7042   2.685 2.178e-02  0.2703   1.835
-## beta      64.9800   1.775 6.807e-02 15.2600 276.600
+## parent_0  99.1400  78.250 7.993e-08 95.6300 102.700
+## alpha      0.7042   3.823 9.365e-03  0.3407   1.456
+## beta      64.9800   2.540 3.201e-02 21.7800 193.900
+## sigma      1.8300   4.000 8.065e-03  0.5598   3.100
 ## 
 ## Chi2 error levels in percent:
 ##          err.min n.optim df

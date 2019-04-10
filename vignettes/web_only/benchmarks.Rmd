@@ -1,0 +1,90 @@
+---
+title: "Benchmark timings for mkin on various systems"
+author: "Johannes Ranke"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: show
+    fig_retina: null
+date: "`r Sys.Date()`"
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+library(knitr)
+opts_chunk$set(tidy = FALSE, cache = FALSE)
+library("mkin")
+```
+
+## Systems
+
+Each system is characterized by its CPU type, the operating system type and the
+mkin version.
+
+```{r}
+cpu_model <- benchmarkme::get_cpu()$model_name
+operating_system <- Sys.info()[["sysname"]]
+mkin_version <- as.character(packageVersion("mkin"))
+system_string <- paste0(operating_system, ", ", cpu_model, ", mkin version ", mkin_version)
+load("~/git/mkin/inst/benchmark_data/mkin_benchmarks.rda")
+mkin_benchmarks[system_string, c("CPU", "OS", "mkin")] <- c(cpu_model, operating_system, mkin_version)
+
+if (mkin_version > "0.9.48.1") {
+  mmkin_bench <- function(models, datasets, error_model = "const") mmkin(models, datasets, error_model = error_model, cores = 1, quiet = TRUE)
+} else {
+  mmkin_bench <- function(models, datasets, error_model = NULL) mmkin(models, datasets, reweight.method = error_model, cores = 1, quiet = TRUE)
+}
+```
+
+```{r timings}
+# Parent only
+t1 <- system.time(mmkin_bench(c("SFO", "FOMC", "DFOP", "HS"), list(FOCUS_2006_C, FOCUS_2006_D)))[["elapsed"]]
+t2 <- system.time(mmkin_bench(c("SFO", "FOMC", "DFOP", "HS"), list(FOCUS_2006_C, FOCUS_2006_D), error_model = "tc"))[["elapsed"]]
+
+# One metabolite
+SFO_SFO <- mkinmod(
+  parent = mkinsub("SFO", "m1"),
+  m1 = mkinsub("SFO"))
+FOMC_SFO <- mkinmod(
+  parent = mkinsub("FOMC", "m1"),
+  m1 = mkinsub("SFO"))
+DFOP_SFO <- mkinmod(
+  parent = mkinsub("FOMC", "m1"),
+  m1 = mkinsub("SFO"))
+t3 <- system.time(mmkin_bench(list(SFO_SFO, FOMC_SFO, DFOP_SFO), list(FOCUS_2006_D)))[["elapsed"]]
+t4 <- system.time(mmkin_bench(list(SFO_SFO, FOMC_SFO, DFOP_SFO), list(subset(FOCUS_2006_D, value != 0)), error_model = "tc"))[["elapsed"]]
+t5 <- system.time(mmkin_bench(list(SFO_SFO, FOMC_SFO, DFOP_SFO), list(FOCUS_2006_D), error_model = "obs"))[["elapsed"]]
+
+# Two metabolites, synthetic data
+m_synth_SFO_lin <- mkinmod(parent = mkinsub("SFO", "M1"),
+                           M1 = mkinsub("SFO", "M2"),
+                           M2 = mkinsub("SFO"),
+                           use_of_ff = "max", quiet = TRUE)
+
+m_synth_DFOP_par <- mkinmod(parent = mkinsub("DFOP", c("M1", "M2")),
+                           M1 = mkinsub("SFO"),
+                           M2 = mkinsub("SFO"),
+                           use_of_ff = "max", quiet = TRUE)
+
+SFO_lin_a <- synthetic_data_for_UBA_2014[[1]]$data
+
+DFOP_par_c <- synthetic_data_for_UBA_2014[[12]]$data
+
+t6 <- system.time(mmkin_bench(list(m_synth_SFO_lin), list(SFO_lin_a)))["elapsed"]
+t7 <- system.time(mmkin_bench(list(m_synth_DFOP_par), list(DFOP_par_c)))["elapsed"]
+
+t8 <- system.time(mmkin_bench(list(m_synth_SFO_lin), list(SFO_lin_a), error_model = "tc"))["elapsed"]
+t9 <- system.time(mmkin_bench(list(m_synth_DFOP_par), list(DFOP_par_c), error_model = "tc"))["elapsed"]
+
+t10 <- system.time(mmkin_bench(list(m_synth_SFO_lin), list(SFO_lin_a), error_model = "obs"))["elapsed"]
+t11 <- system.time(mmkin_bench(list(m_synth_DFOP_par), list(DFOP_par_c), error_model = "obs"))["elapsed"]
+
+mkin_benchmarks[system_string, paste0("t", 1:11)] <- c(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11)
+mkin_benchmarks
+
+
+save(mkin_benchmarks, file = "~/git/mkin/inst/benchmark_data/mkin_benchmarks.rda")
+```

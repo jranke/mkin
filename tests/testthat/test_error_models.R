@@ -1,4 +1,4 @@
-# Copyright (C) 2018 Johannes Ranke
+# Copyright (C) 2018,2019 Johannes Ranke
 # Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
@@ -68,13 +68,6 @@ test_that("Error model 'tc' works", {
   fit_tc_1 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, error_model = "tc", quiet = TRUE)
   parms_3 <- round(fit_tc_1$bparms.optim, c(1, 4, 4, 4, 4, 4))
   expect_equivalent(parms_3, c(102.1, 0.7393, 0.2992, 0.0202, 0.7687, 0.7229))
-})
-
-test_that("Error model 'obs_tc' works", {
-  skip_on_cran()
-  fit_obs_tc_1 <- expect_warning(mkinfit(m_synth_SFO_lin, SFO_lin_a, error_model = "obs_tc", quiet = TRUE), "NaN")
-  # Here the error model is overparameterised
-  expect_warning(summary(fit_obs_tc_1), "singular system")
 })
 
 test_that("Reweighting method 'tc' produces reasonable variance estimates", {
@@ -148,7 +141,7 @@ test_that("Reweighting method 'tc' produces reasonable variance estimates", {
 
   d_met_2_15 <- add_err(d_synth_DFOP_lin,
     sdfunc = function(x) sigma_twocomp(x, 0.5, 0.07),
-    n = 15, reps = 100, digits = 5, LOD = -Inf, seed = 123456)
+    n = 15, reps = 100, digits = 5, LOD = 0.01, seed = 123456)
 
   # For a single fit, we get a relative error of less than 10%  in the error
   # model components
@@ -165,14 +158,14 @@ test_that("Reweighting method 'tc' produces reasonable variance estimates", {
   parms_met_2_15_tc_e4 <- apply(sapply(f_met_2_15_tc_e4, function(x) x$bparms.optim), 1, mean)
   parm_errors_met_2_15_tc_e4 <- (parms_met_2_15_tc_e4[names(parms_DFOP_lin_optim)] -
                                  parms_DFOP_lin_optim) / parms_DFOP_lin_optim
-  expect_true(all(abs(parm_errors_met_2_15_tc_e4) < 0.01))
+  expect_true(all(abs(parm_errors_met_2_15_tc_e4) < 0.015))
 
   tcf_met_2_15_tc <- apply(sapply(f_met_2_15_tc_e4, function(x) x$errparms), 1, mean, na.rm = TRUE)
 
   tcf_met_2_15_tc_error_model_errors <- (tcf_met_2_15_tc - c(0.5, 0.07)) /
     c(0.5, 0.07)
 
-  # Here we get a precision < 15% for retrieving the original error model components
+  # Here we get a precision < 10% for retrieving the original error model components
   # from 15 datasets
-  expect_true(all(abs(tcf_met_2_15_tc_error_model_errors) < 0.15))
+  expect_true(all(abs(tcf_met_2_15_tc_error_model_errors) < 0.10))
 })

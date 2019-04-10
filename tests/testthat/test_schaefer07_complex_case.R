@@ -57,10 +57,11 @@ test_that("Complex test case from Schaefer (2007) can be reproduced (10% toleran
   r$mkin.deviation <- abs(round(100 * ((r$mkin - r$means)/r$means), digits=1))
   expect_equal(r$mkin.deviation < 10, rep(TRUE, 14))
 
-  # If we use optimisation algorithm 'Marq' we get a local minimum with a
-  # sum of squared residuals of 273.3707
-  # When using 'Marq', we need to give a good starting estimate e.g. for k_A2 in
+  # In previous versions of mkinfit, if we used optimisation algorithm 'Marq'
+  # we got a local minimum with a sum of squared residuals of 273.3707
+  # When using 'Marq', we needed to give a good starting estimate e.g. for k_A2 in
   # order to get the optimum with sum of squared residuals 240.5686
-  expect_equal(round(fit.default$ssr, 4), 240.5686)
+  ssr <- sum(fit.default$data$residual^2)
+  expect_equal(round(ssr, 4), 240.5686)
 })
 

@@ -1,3 +1,20 @@
+# mkin 0.9.49.4 (2019-04-09)
+- Direct minimization of the negative log-likelihood for non-constant error models (two-component and variance by variable). In the case the error model is constant variance, least squares is used as this is more stable
+
+- The argument 'reweight.method' to mkinfit and mmkin is now obsolete, use 'error_model' instead
+
+- Remove dependency on FME, only use nlminb for optimisation
+
+- Use the numDeriv package to calculate hessians
+
+- Add a benchmark vignette to document the impact on performance. For very simple fits, the new code is a bit slower, presumably because of the time it takes to calculate the hessian matrices with and without parameter transformation
+
+- The code for manual weighting was removed
+
+- The fitting time reported in the summary now includes the calculation of the hessians
+
+- Adapt tests
+
 # mkin 0.9.48.1 (2019-03-04)
 
 - Add the function 'logLik.mkinfit' which makes it possible to calculate an AIC for mkinfit objects

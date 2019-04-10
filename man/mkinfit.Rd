@@ -4,17 +4,16 @@
   Fit a kinetic model to data with one or more state variables
 }
 \description{
-  This function uses the Flexible Modelling Environment package
-  \code{\link{FME}} to create a function calculating the model cost, i.e. the
-  deviation between the kinetic model and the observed data. This model cost is
-  then minimised using the Port algorithm \code{\link{nlminb}},
-  using the specified initial or fixed parameters and starting values.
-  Per default, parameters in the kinetic models are internally transformed in order
-  to better satisfy the assumption of a normal distribution of their estimators.
-  In each step of the optimsation, the kinetic model is solved using the
-  function \code{\link{mkinpredict}}. The variance of the residuals for each
-  observed variable can optionally be iteratively reweighted until convergence
-  using the argument \code{reweight.method = "obs"}.
+  This function maximises the likelihood of the observed data using
+  the Port algorithm \code{\link{nlminb}}, and the specified initial or fixed
+  parameters and starting values.  In each step of the optimsation, the kinetic
+  model is solved using the function \code{\link{mkinpredict}}. The parameters
+  of the selected error model are fitted simultaneously with the degradation
+  model parameters, as both of them are arguments of the likelihood function.
+
+  Per default, parameters in the kinetic models are internally transformed in
+  order to better satisfy the assumption of a normal distribution of their
+  estimators.
 }
 \usage{
 mkinfit(mkinmod, observed,
@@ -25,36 +24,31 @@ mkinfit(mkinmod, observed,
   solution_type = c("auto", "analytical", "eigen", "deSolve"),
   method.ode = "lsoda",
   use_compiled = "auto",
-  method.modFit = c("Port", "Marq", "SANN", "Nelder-Mead", "BFGS", "CG", "L-BFGS-B"),
-  maxit.modFit = "auto",
-  control.modFit = list(),
+  control = list(eval.max = 300, iter.max = 200),
   transform_rates = TRUE,
   transform_fractions = TRUE,
-  plot = FALSE, quiet = FALSE, err = NULL,
-  weight = c("none", "manual", "std", "mean", "tc"),
-  tc = c(sigma_low = 0.5, rsd_high = 0.07),
-  scaleVar = FALSE,
+  quiet = FALSE,
   atol = 1e-8, rtol = 1e-10, n.outtimes = 100,
-  error_model = c("auto", "obs", "tc", "const"),
+  error_model = c("const", "obs", "tc"),
   trace_parms = FALSE, ...)
 }
 \arguments{
   \item{mkinmod}{
     A list of class \code{\link{mkinmod}}, containing the kinetic model to be
     fitted to the data, or one of the shorthand names ("SFO", "FOMC", "DFOP",
-    "HS", "SFORB"). If a shorthand name is given, a parent only degradation
+    "HS", "SFORB", "IORE"). If a shorthand name is given, a parent only degradation
     model is generated for the variable with the highest value in
     \code{observed}.
   }
   \item{observed}{
-    The observed data. It has to be in the long format as described in
-    \code{\link{modFit}}, i.e. the first column called "name" must contain the
-    name of the observed variable for each data point. The second column must
-    contain the times of observation, named "time".  The third column must be
-    named "value" and contain the observed values. Optionally, a further column
-    can contain weights for each data point. Its name must be passed as a
-    further argument named \code{err} which is then passed on to
-    \code{\link{modFit}}.
+    A dataframe with the observed data.  The first column called "name" must
+    contain the name of the observed variable for each data point. The second
+    column must contain the times of observation, named "time".  The third
+    column must be named "value" and contain the observed values. Zero values
+    in the "value" column will be removed, with a warning, in order to
+    avoid problems with fitting the two-component error model. This is not
+    expected to be a problem, because in general, values of zero are not
+    observed in degradation data, because there is a lower limit of detection.
   }
   \item{parms.ini}{
     A named vector of initial values for the parameters, including parameters
@@ -102,10 +96,10 @@ mkinfit(mkinmod, observed,
     solution of the model is used. This is only implemented for simple
     degradation experiments with only one state variable, i.e. with no
     metabolites. The default is "auto", which uses "analytical" if possible,
-    otherwise "eigen" if the model can be expressed using eigenvalues and
-    eigenvectors, and finally "deSolve" for the remaining models (time
-    dependence of degradation rates and metabolites). This argument is passed
-    on to the helper function \code{\link{mkinpredict}}.
+    otherwise "deSolve" if a compiler is present, and "eigen" if no
+    compiler is present and the model can be expressed using eigenvalues and
+    eigenvectors.  This argument is passed on to the helper function
+    \code{\link{mkinpredict}}.
   }
   \item{method.ode}{
     The solution method passed via \code{\link{mkinpredict}} to
@@ -114,37 +108,11 @@ mkinfit(mkinmod, observed,
   }
   \item{use_compiled}{
     If set to \code{FALSE}, no compiled version of the \code{\link{mkinmod}}
-    model is used, in the calls to \code{\link{mkinpredict}} even if
-    a compiled verion is present.
+    model is used in the calls to \code{\link{mkinpredict}} even if a compiled
+    version is present.
   }
-  \item{method.modFit}{
-    The optimisation method passed to \code{\link{modFit}}.
-
-    In order to optimally deal with problems where local minima occur, the
-    "Port" algorithm is now used per default as it is less prone to get trapped
-    in local minima and depends less on starting values for parameters than
-    the Levenberg Marquardt variant selected by "Marq".  However, "Port" needs
-    more iterations.
-
-    The former default "Marq" is the Levenberg Marquardt algorithm
-    \code{\link{nls.lm}} from the package \code{minpack.lm} and usually needs
-    the least number of iterations.
-
-    The "Pseudo" algorithm is not included because it needs finite parameter bounds
-    which are currently not supported.
-
-    The "Newton" algorithm is not included because its number of iterations
-    can not be controlled by \code{control.modFit} and it does not appear
-    to provide advantages over the other algorithms.
-  }
-  \item{maxit.modFit}{
-    Maximum number of iterations in the optimisation. If not "auto", this will
-    be passed to the method called by \code{\link{modFit}}, overriding
-    what may be specified in the next argument \code{control.modFit}.
-  }
-  \item{control.modFit}{
-    Additional arguments passed to the optimisation method used by
-    \code{\link{modFit}}.
+  \item{control}{
+    A list of control arguments passed to \code{\link{nlminb}}.
   }
   \item{transform_rates}{
     Boolean specifying if kinetic rate constants should be transformed in the
@@ -152,8 +120,8 @@ mkinfit(mkinmod, observed,
     assumption of normal distribution of the estimator. If TRUE, also
     alpha and beta parameters of the FOMC model are log-transformed, as well
     as k1 and k2 rate constants for the DFOP and HS models and the break point
-    tb of the HS model.
-    If FALSE, zero is used as a lower bound for the rates in the optimisation.
+    tb of the HS model.  If FALSE, zero is used as a lower bound for the rates
+    in the optimisation.
   }
   \item{transform_fractions}{
     Boolean specifying if formation fractions constants should be transformed in the
@@ -164,28 +132,9 @@ mkinfit(mkinmod, observed,
     data. The transformation used for these transformations is the
     \code{\link{ilr}} transformation.
   }
-  \item{plot}{
-    Should the observed values and the numerical solutions be plotted at each
-    stage of the optimisation?
-  }
   \item{quiet}{
-    Suppress printing out the current model cost after each improvement?
-  }
-  \item{err }{either \code{NULL}, or the name of the column with the
-    \emph{error} estimates, used to weigh the residuals (see details of
-    \code{\link{modCost}}); if \code{NULL}, then the residuals are not weighed.
-  }
-  \item{weight}{
-    only if \code{err}=\code{NULL}: how to weight the residuals, one of "none",
-    "std", "mean", see details of \code{\link{modCost}}, or "tc" for the
-    two component error model. The option "manual" is available for
-    the case that \code{err}!=\code{NULL}, but it is not necessary to specify it.
-  }
-  \item{tc}{The two components of the error model as used for (initial)
-    weighting}.
-  \item{scaleVar}{
-    Will be passed to \code{\link{modCost}}. Default is not to scale Variables
-    according to the number of observations.
+    Suppress printing out the current value of the negative log-likelihood
+    after each improvement?
   }
   \item{atol}{
     Absolute error tolerance, passed to \code{\link{ode}}. Default is 1e-8,
@@ -202,48 +151,38 @@ mkinfit(mkinmod, observed,
     The default value is 100.
   }
   \item{error_model}{
-    If the error model is "auto", the generalised error model described by Ranke 
-    et al. (2019) is used for specifying the likelihood function. Simplications
-    of this error model are tested as well and the model yielding the lowest
-    AIC is returned.
+    If the error model is "const", a constant standard deviation
+    is assumed.
 
     If the error model is "obs", each observed variable is assumed to have its
-    own variance. 
+    own variance.
 
-    If the error model is "tc" (two-component error model).
-    When using this method, a two component error model similar to the
-    one described by Rocke and Lorenzato (1995) is used for setting up
-    the likelihood function, as described in the abovementioned paper.
-    Note that this model deviates from the model by Rocke and Lorenzato, as
-    their model implies that the errors follow a lognormal distribution for
-    large values, not a normal distribution as assumed by this method.
+    If the error model is "tc" (two-component error model), a two component
+    error model similar to the one described by Rocke and Lorenzato (1995) is
+    used for setting up the likelihood function.  Note that this model deviates
+    from the model by Rocke and Lorenzato, as their model implies that the
+    errors follow a lognormal distribution for large values, not a normal
+    distribution as assumed by this method.
   }
   \item{trace_parms}{
     Should a trace of the parameter values be listed?
   }
   \item{\dots}{
-    Further arguments that will be passed to \code{\link{modFit}}.
+    Further arguments that will be passed on to \code{\link{deSolve}}.
   }
 }
 \value{
-  A list with "mkinfit" and "modFit" in the class attribute.
-  A summary can be obtained by \code{\link{summary.mkinfit}}.
+  A list with "mkinfit" in the class attribute.  A summary can be obtained by
+  \code{\link{summary.mkinfit}}.
 }
 \seealso{
-  Plotting methods \code{\link{plot.mkinfit}} and
-  \code{\link{mkinparplot}}.
+  Plotting methods \code{\link{plot.mkinfit}} and \code{\link{mkinparplot}}.
 
   Comparisons of models fitted to the same data can be made using \code{\link{AIC}}
   by virtue of the method \code{\link{logLik.mkinfit}}.
 
   Fitting of several models to several datasets in a single call to
   \code{\link{mmkin}}.
-}
-\note{
-  The implementation of iteratively reweighted least squares is inspired by the
-  work of the KinGUII team at Bayer Crop Science (Walter Schmitt and Zhenglei
-  Gao). A similar implemention can also be found in CAKE 2.0, which is the
-  other GUI derivative of mkin, sponsored by Syngenta.
 }
 \note{
   When using the "IORE" submodel for metabolites, fitting with
@@ -312,25 +251,11 @@ SFO_SFO.ff <- mkinmod(parent = mkinsub("SFO", "m1"),
                       m1 = mkinsub("SFO"), use_of_ff = "max")
 f.noweight <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, quiet = TRUE)
 summary(f.noweight)
-f.irls <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, reweight.method = "obs", quiet = TRUE)
-summary(f.irls)
-f.w.mean <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, weight = "mean", quiet = TRUE)
-summary(f.w.mean)
-f.w.value <- mkinfit(SFO_SFO.ff, subset(FOCUS_2006_D, value != 0), err = "value",
-                     quiet = TRUE)
-summary(f.w.value)
+f.obs <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, error_model = "obs", quiet = TRUE)
+summary(f.obs)
+f.tc <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, error_model = "tc", quiet = TRUE)
+summary(f.tc)
 }
 
-\dontrun{
-# Manual weighting
-dw <- FOCUS_2006_D
-errors <- c(parent = 2, m1 = 1)
-dw$err.man <- errors[FOCUS_2006_D$name]
-f.w.man <- mkinfit(SFO_SFO.ff, dw, err = "err.man", quiet = TRUE)
-summary(f.w.man)
-f.w.man.irls <- mkinfit(SFO_SFO.ff, dw, err = "err.man", quiet = TRUE,
-                       reweight.method = "obs")
-summary(f.w.man.irls)
-}
 }
 \keyword{ optimize }

@@ -48,10 +48,10 @@
   Johannes Ranke
 }
 \examples{
-  # Only use one core not to offend CRAN checks, use Levenberg-Marquardt for speed
-  fits <- mmkin(c("FOMC", "HS"), 
+  # Only use one core not to offend CRAN checks
+  fits <- mmkin(c("FOMC", "HS"),
                 list("FOCUS B" = FOCUS_2006_B, "FOCUS C" = FOCUS_2006_C), # named list for titles
-                cores = 1, quiet = TRUE, method.modFit = "Marq")
+                cores = 1, quiet = TRUE)
   plot(fits[, "FOCUS C"])
   plot(fits["FOMC", ])
 

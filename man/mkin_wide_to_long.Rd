@@ -8,7 +8,7 @@ mkin_wide_to_long(wide_data, time = "t")
 }
 \description{
   This function simply takes a dataframe with one independent variable and several
-  dependent variable and converts it into the long form as required by \code{\link{modCost}}.
+  dependent variable and converts it into the long form as required by \code{\link{mkinfit}}.
 }
 \arguments{
   \item{wide_data}{
@@ -20,7 +20,7 @@ mkin_wide_to_long(wide_data, time = "t")
 }
 }
 \value{
-  Dataframe in long format as needed for \code{\link{modCost}}.
+  Dataframe in long format as needed for \code{\link{mkinfit}}.
 }
 \author{
   Johannes Ranke

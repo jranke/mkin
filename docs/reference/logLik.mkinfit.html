@@ -33,23 +33,12 @@
 <meta property="og:title" content="Calculated the log-likelihood of a fitted mkinfit object — logLik.mkinfit" />
 
 <meta property="og:description" content="This function simply calculates the product of the likelihood densities
-  calculated using dnorm, i.e. assuming normal distribution.
+  calculated using dnorm, i.e. assuming normal distribution,
+  with of the mean predicted by the degradation model, and the
+  standard deviation predicted by the error model.
 The total number of estimated parameters returned with the value
   of the likelihood is calculated as the sum of fitted degradation
-  model parameters and the fitted error model parameters.
-For the case of unweighted least squares fitting, we calculate one
-  constant standard deviation from the residuals using sd
-  and add one to the number of fitted degradation model parameters.
-For the case of manual weighting, we use the weight given for each
-  observation as standard deviation in calculating its likelihood
-  and the total number of estimated parameters is equal to the
-  number of fitted degradation model parameters.
-In the case of iterative reweighting, the variances obtained by this
-  procedure are used in the likelihood calculations, and the number of
-  estimated parameters is obtained by the number of degradation model
-  parameters plus the number of variance model parameters, i.e. the number of
-  observed variables if the reweighting method is &quot;obs&quot;, and two if the
-  reweighting method is &quot;tc&quot;." />
+  model parameters and the fitted error model parameters." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -80,7 +69,7 @@ In the case of iterative reweighting, the variances obtained by this
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.48.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.49.4</span>
       </span>
     </div>
 
@@ -146,23 +135,12 @@ In the case of iterative reweighting, the variances obtained by this
     <div class="ref-description">
     
     <p>This function simply calculates the product of the likelihood densities
-  calculated using <code><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>dnorm</a></code>, i.e. assuming normal distribution.</p>
+  calculated using <code><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>dnorm</a></code>, i.e. assuming normal distribution,
+  with of the mean predicted by the degradation model, and the
+  standard deviation predicted by the error model.</p>
 <p>The total number of estimated parameters returned with the value
   of the likelihood is calculated as the sum of fitted degradation
   model parameters and the fitted error model parameters.</p>
-<p>For the case of unweighted least squares fitting, we calculate one
-  constant standard deviation from the residuals using <code><a href='https://www.rdocumentation.org/packages/stats/topics/sd'>sd</a></code>
-  and add one to the number of fitted degradation model parameters.</p>
-<p>For the case of manual weighting, we use the weight given for each
-  observation as standard deviation in calculating its likelihood
-  and the total number of estimated parameters is equal to the
-  number of fitted degradation model parameters.</p>
-<p>In the case of iterative reweighting, the variances obtained by this
-  procedure are used in the likelihood calculations, and the number of
-  estimated parameters is obtained by the number of degradation model
-  parameters plus the number of variance model parameters, i.e. the number of
-  observed variables if the reweighting method is "obs", and two if the
-  reweighting method is "tc".</p>
     
     </div>
 
@@ -199,17 +177,10 @@ In the case of iterative reweighting, the variances obtained by this
     <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"m1"</span>),
     <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>)
   )</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>  <span class='no'>d_t</span> <span class='kw'>&lt;-</span> <span class='no'>FOCUS_2006_D</span>
-  <span class='no'>d_t</span>[<span class='fl'>23</span>:<span class='fl'>24</span>, <span class='st'>"value"</span>] <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>NA</span>, <span class='fl'>NA</span>) <span class='co'># can't cope with zero values at the moment</span>
-  <span class='no'>f_nw</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>sfo_sfo</span>, <span class='no'>d_t</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='co'># no weighting (weights are unity)</span>
-  <span class='no'>f_obs</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>sfo_sfo</span>, <span class='no'>d_t</span>, <span class='kw'>reweight.method</span> <span class='kw'>=</span> <span class='st'>"obs"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-  <span class='no'>f_tc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>sfo_sfo</span>, <span class='no'>d_t</span>, <span class='kw'>reweight.method</span> <span class='kw'>=</span> <span class='st'>"tc"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-  <span class='no'>d_t</span>$<span class='no'>err</span> <span class='kw'>&lt;-</span> <span class='no'>d_t</span>$<span class='no'>value</span> <span class='co'># Manual weighting assuming sigma ~ y</span>
-  <span class='no'>f_man</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>sfo_sfo</span>, <span class='no'>d_t</span>, <span class='kw'>err</span> <span class='kw'>=</span> <span class='st'>"err"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/AIC'>AIC</a></span>(<span class='no'>f_nw</span>, <span class='no'>f_obs</span>, <span class='no'>f_tc</span>, <span class='no'>f_man</span>)</div><div class='output co'>#&gt;       df      AIC
-#&gt; f_nw   5 204.4619
+  <span class='no'>f_nw</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>sfo_sfo</span>, <span class='no'>d_t</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='co'># no weighting (weights are unity)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'>  <span class='no'>f_obs</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>sfo_sfo</span>, <span class='no'>d_t</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"obs"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'>  <span class='no'>f_tc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>sfo_sfo</span>, <span class='no'>d_t</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"tc"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'>  <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/AIC'>AIC</a></span>(<span class='no'>f_nw</span>, <span class='no'>f_obs</span>, <span class='no'>f_tc</span>)</div><div class='output co'>#&gt;       df      AIC
+#&gt; f_nw   5 204.4486
 #&gt; f_obs  6 205.8727
-#&gt; f_tc   6 143.8773
-#&gt; f_man  4 291.8000</div><div class='input'>  </div></pre>
+#&gt; f_tc   6 141.9656</div><div class='input'>  </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

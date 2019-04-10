@@ -26,7 +26,8 @@ SFO_SFO.ff <- mkinmod(parent = list(type = "SFO", to = "m1"),
 
 test_that("Chi2 error levels for FOCUS D are as in mkin 0.9-33", {
 
-  fit <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, quiet = TRUE)
+  fit <- expect_warning(mkinfit(SFO_SFO.ff, FOCUS_2006_D, quiet = TRUE), 
+                        "Observations with value of zero")
 
   errmin.FOCUS_2006_D_rounded = data.frame(
     err.min = c(0.0640, 0.0646, 0.0469),

@@ -78,14 +78,12 @@ d_SFO_SFO_err <- add_err(d_SFO_SFO, function(x) 10, n = 3, seed = 123456789 )
 # Name the datasets for nicer plotting
 names(d_SFO_SFO_err) <- paste("Dataset", 1:3)
 
-# Name the model in the list of models (with only one member in this case)
-# for nicer plotting later on.
-# Be quiet and use the faster Levenberg-Marquardt algorithm, as the datasets
-# are easy and examples are run often. Use only one core not to offend CRAN
+# Name the model in the list of models (with only one member in this case) for
+# nicer plotting later on.  Be quiet and use only one core not to offend CRAN
 # checks
 f_SFO_SFO <- mmkin(list("SFO-SFO" = m_SFO_SFO),
                    d_SFO_SFO_err, cores = 1,
-                   quiet = TRUE, method.modFit = "Marq")
+                   quiet = TRUE)
 
 plot(f_SFO_SFO)
 
