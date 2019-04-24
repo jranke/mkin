@@ -327,7 +327,8 @@ mkinfit <- function(mkinmod, observed,
 
     if (nlogLik < nlogLik.current) {
       assign("nlogLik.current", nlogLik, inherits = TRUE)
-      if (!quiet) cat("Negative log-likelihood at call ", calls, ": ", nlogLik.current, "\n", sep = "")
+      if (!quiet) cat(ifelse(OLS, "Sum of squared residuals", "Negative log-likelihood"),
+                      " at call ", calls, ": ", nlogLik.current, "\n", sep = "")
     }
     return(nlogLik)
   }
@@ -593,6 +594,7 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
     use_of_ff = object$mkinmod$use_of_ff,
     df = c(p, rdf),
     cov.unscaled = covar,
+    err_mod = object$err_mod,
     #cov.scaled = covar * resvar,
     niter = object$iterations,
     calls = object$calls,
@@ -657,11 +659,13 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
 
   cat("\nModel predictions using solution type", x$solution_type, "\n")
 
-  cat("\nFitted with method", x$method.modFit,
-      "using", x$calls, "model solutions performed in", x$time[["elapsed"]],  "s\n")
+  cat("\nFitted using", x$calls, "model solutions performed in", x$time[["elapsed"]],  "s\n")
 
   cat("\nError model:\n")
-  print(x$err_mod)
+  cat(switch(x$err_mod,
+             const = "Constant variance",
+             obs = "Variance unique to each observed variable",
+             tc = "Two-component variance function"), "\n")
 
   cat("\nStarting values for parameters to be optimised:\n")
   print(x$start)
@@ -696,7 +700,7 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
     print(signif(x$bpar[, c(1, 3, 4, 5, 6)], digits = digits))
   }
 
-  cat("\nChi2 error levels in percent:\n")
+  cat("\nFOCUS Chi2 error levels in percent:\n")
   x$errmin$err.min <- 100 * x$errmin$err.min
   print(x$errmin, digits=digits,...)
 

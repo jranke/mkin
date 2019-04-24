@@ -74,22 +74,3 @@ test_that("Fits without internal transformations are correct for FOCUS D", {
 # References:
 # Ranke (2014) Prüfung und Validierung von Modellierungssoftware als Alternative
 # zu ModelMaker 4.0, Umweltbundesamt Projektnummer 27452
-
-test_that("The t-value for fits using internal transformations corresponds with results from FME, synthetic data", {
-  skip_on_cran()
-  m_synth_DFOP_par.minff <- mkinmod(parent = mkinsub("DFOP", c("M1", "M2")),
-                             M1 = mkinsub("SFO"),
-                             M2 = mkinsub("SFO"),
-                             use_of_ff = "min", quiet = TRUE)
-
-  fit_DFOP_par_c_2 <- mkinfit(m_synth_DFOP_par.minff,
-                            synthetic_data_for_UBA_2014[[12]]$data,
-                            quiet = TRUE)
-
-  skip("Hessian matrices and df calculations differ from those in FME")
-  # Note that the k1 and k2 are exchanged in the untransformed fit evaluated with FME for this test
-  expect_equal(signif(summary(fit_DFOP_par_c_2)$bpar[1:7, "t value"], 5),
-               c(parent_0 = 80.054, k_M1_sink = 12.291, k_M2_sink = 10.588,
-                 f_parent_to_M1 = 21.4960, f_parent_to_M2 = 24.0890,
-                 k1 = 16.1450, k2 = 8.1747))
-})

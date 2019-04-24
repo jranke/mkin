@@ -34,13 +34,3 @@ test_that("The logistic model fit is reproducible", {
   dtx <- endpoints(m)$distimes["parent", ]
   expect_equivalent(dtx, c(36.865, 62.415, 4297.854, 10.833), tolerance = 0.001)
 })
-
-test_that("The logistic fit can be done via differential equation", {
-  # This is slow as we did not implement conversion to C
-  # because it is unlikely we will use the logistic model with metabolites
-  skip("Skip slow fit of logistic model using deSolve without compilation")
-  m_2 <- mkinfit("logistic", d_2_1[[1]], solution_type = "deSolve", 
-                 quiet = TRUE)
-  dtx_2 <- endpoints(m_2)$distimes["parent", ]
-  expect_equivalent(dtx_2, c(36.865, 62.415, 4297.854, 10.833), tolerance = 0.001)
-})
