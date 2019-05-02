@@ -72,9 +72,6 @@ test_that("Error model 'tc' works", {
 
 test_that("Reweighting method 'tc' produces reasonable variance estimates", {
 
-  # I need to make the tc method more robust against that
-  # skip_on_cran()
-
   # Check if we can approximately obtain the parameters and the error model
   # components that were used in the data generation
 
@@ -94,15 +91,25 @@ test_that("Reweighting method 'tc' produces reasonable variance estimates", {
     sdfunc = function(x) sigma_twocomp(x, 0.5, 0.07),
     n = 1, reps = 100, digits = 5, LOD = -Inf, seed = 123456)
 
+  # Per default (on my box) use all cores minus one
+  n_cores <- parallel::detectCores() - 1
+
+  # We are only allowed one core on travis
+  if (Sys.getenv("TRAVIS") != "") n_cores = 1
+
+  # Also on Windows we would need to make a cluster first,
+  # and I do not know how this would work on winbuilder or CRAN, so
+  if (Sys.info()["sysname"] == "Windows") n_cores = 1
+
   # Unweighted fits
   f_2_10 <- mmkin("DFOP", d_2_10, error_model = "const", quiet = TRUE,
-    cores = if (Sys.getenv("TRAVIS") != "") 1 else 15)
+    cores = n_cores)
   parms_2_10 <- apply(sapply(f_2_10, function(x) x$bparms.optim), 1, mean)
   parm_errors_2_10 <- (parms_2_10 - parms_DFOP_optim) / parms_DFOP_optim
   expect_true(all(abs(parm_errors_2_10) < 0.12))
 
   f_2_10_tc <- mmkin("DFOP", d_2_10, error_model = "tc", quiet = TRUE,
-    cores = if (Sys.getenv("TRAVIS") != "") 1 else 15)
+    cores = n_cores)
   parms_2_10_tc <- apply(sapply(f_2_10_tc, function(x) x$bparms.optim), 1, mean)
   parm_errors_2_10_tc <- (parms_2_10_tc - parms_DFOP_optim) / parms_DFOP_optim
   expect_true(all(abs(parm_errors_2_10_tc) < 0.05))
@@ -153,7 +160,7 @@ test_that("Reweighting method 'tc' produces reasonable variance estimates", {
   # Doing more takes a lot of computing power
   skip_on_travis()
   f_met_2_15_tc_e4 <- mmkin(list(m_synth_DFOP_lin), d_met_2_15, quiet = TRUE,
-                            error_model = "tc", cores = 15)
+                            error_model = "tc", cores = n_cores)
 
   parms_met_2_15_tc_e4 <- apply(sapply(f_met_2_15_tc_e4, function(x) x$bparms.optim), 1, mean)
   parm_errors_met_2_15_tc_e4 <- (parms_met_2_15_tc_e4[names(parms_DFOP_lin_optim)] -
