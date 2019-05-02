@@ -88,7 +88,7 @@
       <h1>Performance benefit by using compiled model definitions in mkin</h1>
                         <h4 class="author">Johannes Ranke</h4>
             
-            <h4 class="date">2019-04-10</h4>
+            <h4 class="date">2019-05-02</h4>
       
       
       <div class="hidden name"><code>compiled_models.Rmd</code></div>
@@ -163,14 +163,14 @@
 ## Warning in mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = "deSolve", quiet
 ## = TRUE): Observations with value of zero were removed from the data</code></pre>
 <pre><code>##                    test replications elapsed relative user.self sys.self
-## 3     deSolve, compiled            3   3.215    1.000     3.213        0
-## 1 deSolve, not compiled            3  42.468   13.209    42.445        0
-## 2      Eigenvalue based            3   4.666    1.451     4.663        0
+## 3     deSolve, compiled            3   3.178    1.000     3.176        0
+## 1 deSolve, not compiled            3  28.700    9.031    28.685        0
+## 2      Eigenvalue based            3   4.401    1.385     4.398        0
 ##   user.child sys.child
 ## 3          0         0
 ## 1          0         0
 ## 2          0         0</code></pre>
-<p>We see that using the compiled model is by a factor of around 13 faster than using the R version with the default ode solver, and it is even faster than the Eigenvalue based solution implemented in R which does not need iterative solution of the ODEs.</p>
+<p>We see that using the compiled model is by a factor of around 9 faster than using the R version with the default ode solver, and it is even faster than the Eigenvalue based solution implemented in R which does not need iterative solution of the ODEs.</p>
 </div>
 <div id="model-that-can-not-be-solved-with-eigenvalues" class="section level2">
 <h2 class="hasAnchor">
@@ -214,14 +214,14 @@
 ## Warning in mkinfit(FOMC_SFO, FOCUS_2006_D, quiet = TRUE): Observations with
 ## value of zero were removed from the data</code></pre>
 <pre><code>##                    test replications elapsed relative user.self sys.self
-## 2     deSolve, compiled            3   4.906    1.000     4.902        0
-## 1 deSolve, not compiled            3  70.459   14.362    70.421        0
+## 2     deSolve, compiled            3   4.549    1.000     4.547        0
+## 1 deSolve, not compiled            3  49.752   10.937    49.729        0
 ##   user.child sys.child
 ## 2          0         0
 ## 1          0         0</code></pre>
-<p>Here we get a performance benefit of a factor of 14 using the version of the differential equation model compiled from C code!</p>
+<p>Here we get a performance benefit of a factor of 11 using the version of the differential equation model compiled from C code!</p>
 <p>This vignette was built with mkin 0.9.49.4 on</p>
-<pre><code>## R version 3.5.3 (2019-03-11)
+<pre><code>## R version 3.6.0 (2019-04-26)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
 ## Running under: Debian GNU/Linux 9 (stretch)</code></pre>
 <pre><code>## CPU model: AMD Ryzen 7 1700 Eight-Core Processor</code></pre>

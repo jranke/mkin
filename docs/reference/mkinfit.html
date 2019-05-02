@@ -151,6 +151,7 @@ Per default, parameters in the kinetic models are internally transformed in
     <pre class="usage"><span class='fu'>mkinfit</span>(<span class='no'>mkinmod</span>, <span class='no'>observed</span>,
   <span class='kw'>parms.ini</span> <span class='kw'>=</span> <span class='st'>"auto"</span>,
   <span class='kw'>state.ini</span> <span class='kw'>=</span> <span class='st'>"auto"</span>,
+  <span class='kw'>err.ini</span> <span class='kw'>=</span> <span class='st'>"auto"</span>,
   <span class='kw'>fixed_parms</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fixed_initials</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/names'>names</a></span>(<span class='no'>mkinmod</span>$<span class='no'>diffs</span>)[-<span class='fl'>1</span>],
   <span class='kw'>from_max_mean</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"auto"</span>, <span class='st'>"analytical"</span>, <span class='st'>"eigen"</span>, <span class='st'>"deSolve"</span>),
@@ -208,6 +209,13 @@ Per default, parameters in the kinetic models are internally transformed in
     the initial value of the first model variable to the mean of the time zero
     values for the variable with the maximum observed value, and all others to 0.
     If this variable has no time zero observations, its initial value is set to 100.</p></td>
+    </tr>
+    <tr>
+      <th>err.ini</th>
+      <td><p>A named vector of initial values for the error model parameters to be
+    optimised.  If set to "auto", initial values are set to default values.
+    Otherwise, inital values for all error model parameters must be
+    given.</p></td>
     </tr>
     <tr>
       <th>fixed_parms</th>
@@ -353,19 +361,19 @@ Per default, parameters in the kinetic models are internally transformed in
     <pre class="examples"><div class='input'><span class='co'># Use shorthand notation for parent only degradation</span>
 <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='st'>"FOMC"</span>, <span class='no'>FOCUS_2006_C</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.49.4 
-#&gt; R version used for fitting:       3.5.3 
-#&gt; Date of fit:     Wed Apr 10 10:10:01 2019 
-#&gt; Date of summary: Wed Apr 10 10:10:01 2019 
+#&gt; R version used for fitting:       3.6.0 
+#&gt; Date of fit:     Thu May  2 12:38:56 2019 
+#&gt; Date of summary: Thu May  2 12:38:56 2019 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent
 #&gt; 
 #&gt; Model predictions using solution type analytical 
 #&gt; 
-#&gt; Fitted with method using 221 model solutions performed in 0.508 s
+#&gt; Fitted using 221 model solutions performed in 0.455 s
 #&gt; 
 #&gt; Error model:
-#&gt; NULL
+#&gt; Constant variance 
 #&gt; 
 #&gt; Starting values for parameters to be optimised:
 #&gt;              value   type
@@ -393,10 +401,10 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt; 
 #&gt; Parameter correlation:
 #&gt;             parent_0  log_alpha   log_beta      sigma
-#&gt; parent_0   1.000e+00 -1.565e-01 -3.142e-01 -1.313e-07
-#&gt; log_alpha -1.565e-01  1.000e+00  9.564e-01 -2.634e-07
-#&gt; log_beta  -3.142e-01  9.564e-01  1.000e+00 -2.200e-07
-#&gt; sigma     -1.313e-07 -2.634e-07 -2.200e-07  1.000e+00
+#&gt; parent_0   1.000e+00 -1.565e-01 -3.142e-01 -1.317e-07
+#&gt; log_alpha -1.565e-01  1.000e+00  9.564e-01 -2.640e-07
+#&gt; log_beta  -3.142e-01  9.564e-01  1.000e+00 -2.205e-07
+#&gt; sigma     -1.317e-07 -2.640e-07 -2.205e-07  1.000e+00
 #&gt; 
 #&gt; Backtransformed parameters:
 #&gt; Confidence intervals for internally transformed parameters are asymmetric.
@@ -408,7 +416,7 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt; beta        1.917   4.373 3.601e-03  1.0650  3.451
 #&gt; sigma       1.857   4.243 4.074e-03  0.7320  2.983
 #&gt; 
-#&gt; Chi2 error levels in percent:
+#&gt; FOCUS Chi2 error levels in percent:
 #&gt;          err.min n.optim df
 #&gt; All data   6.657       3  6
 #&gt; parent     6.657       3  6
@@ -435,7 +443,7 @@ Per default, parameters in the kinetic models are internally transformed in
   <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='co'># Fit the model to the FOCUS example dataset D using defaults</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.time'>system.time</a></span>(<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>,
                            <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"eigen"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)))</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='output co'>#&gt;        User      System verstrichen 
-#&gt;       1.653       0.000       1.653 </div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/coef'>coef</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; NULL</div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; $ff
+#&gt;       1.551       0.000       1.552 </div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/coef'>coef</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; NULL</div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; $ff
 #&gt; parent_sink   parent_m1     m1_sink 
 #&gt;    0.485524    0.514476    1.000000 
 #&gt; 
@@ -448,71 +456,71 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt; m1     131.760715 437.69962
 #&gt; </div><div class='input'><span class='co'># deSolve is slower when no C compiler (gcc) was available during model generation</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.time'>system.time</a></span>(<span class='no'>fit.deSolve</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>,
-                           <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"deSolve"</span>)))</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='output co'>#&gt; Negative log-likelihood at call 1: 18915.53
-#&gt; Negative log-likelihood at call 2: 18915.53
-#&gt; Negative log-likelihood at call 6: 11424.02
-#&gt; Negative log-likelihood at call 10: 11424
-#&gt; Negative log-likelihood at call 13: 2367.052
-#&gt; Negative log-likelihood at call 14: 2367.05
-#&gt; Negative log-likelihood at call 19: 1314.716
-#&gt; Negative log-likelihood at call 22: 1314.714
-#&gt; Negative log-likelihood at call 25: 991.8311
-#&gt; Negative log-likelihood at call 28: 991.8305
-#&gt; Negative log-likelihood at call 30: 893.6462
-#&gt; Negative log-likelihood at call 33: 893.6457
-#&gt; Negative log-likelihood at call 35: 569.4049
-#&gt; Negative log-likelihood at call 38: 569.4047
-#&gt; Negative log-likelihood at call 40: 565.0651
-#&gt; Negative log-likelihood at call 41: 565.065
-#&gt; Negative log-likelihood at call 42: 565.0637
-#&gt; Negative log-likelihood at call 45: 428.0188
-#&gt; Negative log-likelihood at call 46: 428.0185
-#&gt; Negative log-likelihood at call 50: 406.732
-#&gt; Negative log-likelihood at call 52: 406.732
-#&gt; Negative log-likelihood at call 55: 398.9115
-#&gt; Negative log-likelihood at call 57: 398.9113
-#&gt; Negative log-likelihood at call 60: 394.5943
-#&gt; Negative log-likelihood at call 62: 394.5943
-#&gt; Negative log-likelihood at call 66: 385.26
-#&gt; Negative log-likelihood at call 67: 385.2599
-#&gt; Negative log-likelihood at call 69: 385.2599
-#&gt; Negative log-likelihood at call 70: 385.2597
-#&gt; Negative log-likelihood at call 71: 374.7604
-#&gt; Negative log-likelihood at call 72: 374.7603
-#&gt; Negative log-likelihood at call 76: 373.199
-#&gt; Negative log-likelihood at call 79: 373.199
-#&gt; Negative log-likelihood at call 80: 373.199
-#&gt; Negative log-likelihood at call 81: 372.3772
-#&gt; Negative log-likelihood at call 84: 372.3772
-#&gt; Negative log-likelihood at call 86: 371.2615
-#&gt; Negative log-likelihood at call 89: 371.2615
-#&gt; Negative log-likelihood at call 90: 371.2615
-#&gt; Negative log-likelihood at call 92: 371.2439
-#&gt; Negative log-likelihood at call 93: 371.2439
-#&gt; Negative log-likelihood at call 94: 371.2439
-#&gt; Negative log-likelihood at call 97: 371.2198
-#&gt; Negative log-likelihood at call 98: 371.2198
-#&gt; Negative log-likelihood at call 102: 371.2174
-#&gt; Negative log-likelihood at call 104: 371.2174
-#&gt; Negative log-likelihood at call 107: 371.2147
-#&gt; Negative log-likelihood at call 110: 371.2147
-#&gt; Negative log-likelihood at call 111: 371.2147
-#&gt; Negative log-likelihood at call 112: 371.2145
-#&gt; Negative log-likelihood at call 113: 371.2145
-#&gt; Negative log-likelihood at call 116: 371.2145
-#&gt; Negative log-likelihood at call 119: 371.2135
-#&gt; Negative log-likelihood at call 121: 371.2135
-#&gt; Negative log-likelihood at call 124: 371.2135
-#&gt; Negative log-likelihood at call 126: 371.2135
-#&gt; Negative log-likelihood at call 127: 371.2135
-#&gt; Negative log-likelihood at call 133: 371.2134
-#&gt; Negative log-likelihood at call 135: 371.2134
-#&gt; Negative log-likelihood at call 138: 371.2134
-#&gt; Negative log-likelihood at call 142: 371.2134
+                           <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"deSolve"</span>)))</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='output co'>#&gt; Sum of squared residuals at call 1: 18915.53
+#&gt; Sum of squared residuals at call 2: 18915.53
+#&gt; Sum of squared residuals at call 6: 11424.02
+#&gt; Sum of squared residuals at call 10: 11424
+#&gt; Sum of squared residuals at call 13: 2367.052
+#&gt; Sum of squared residuals at call 14: 2367.05
+#&gt; Sum of squared residuals at call 19: 1314.716
+#&gt; Sum of squared residuals at call 22: 1314.714
+#&gt; Sum of squared residuals at call 25: 991.8311
+#&gt; Sum of squared residuals at call 28: 991.8305
+#&gt; Sum of squared residuals at call 30: 893.6462
+#&gt; Sum of squared residuals at call 33: 893.6457
+#&gt; Sum of squared residuals at call 35: 569.4049
+#&gt; Sum of squared residuals at call 38: 569.4047
+#&gt; Sum of squared residuals at call 40: 565.0651
+#&gt; Sum of squared residuals at call 41: 565.065
+#&gt; Sum of squared residuals at call 42: 565.0637
+#&gt; Sum of squared residuals at call 45: 428.0188
+#&gt; Sum of squared residuals at call 46: 428.0185
+#&gt; Sum of squared residuals at call 50: 406.732
+#&gt; Sum of squared residuals at call 52: 406.732
+#&gt; Sum of squared residuals at call 55: 398.9115
+#&gt; Sum of squared residuals at call 57: 398.9113
+#&gt; Sum of squared residuals at call 60: 394.5943
+#&gt; Sum of squared residuals at call 62: 394.5943
+#&gt; Sum of squared residuals at call 66: 385.26
+#&gt; Sum of squared residuals at call 67: 385.2599
+#&gt; Sum of squared residuals at call 69: 385.2599
+#&gt; Sum of squared residuals at call 70: 385.2597
+#&gt; Sum of squared residuals at call 71: 374.7604
+#&gt; Sum of squared residuals at call 72: 374.7603
+#&gt; Sum of squared residuals at call 76: 373.199
+#&gt; Sum of squared residuals at call 79: 373.199
+#&gt; Sum of squared residuals at call 80: 373.199
+#&gt; Sum of squared residuals at call 81: 372.3772
+#&gt; Sum of squared residuals at call 84: 372.3772
+#&gt; Sum of squared residuals at call 86: 371.2615
+#&gt; Sum of squared residuals at call 89: 371.2615
+#&gt; Sum of squared residuals at call 90: 371.2615
+#&gt; Sum of squared residuals at call 92: 371.2439
+#&gt; Sum of squared residuals at call 93: 371.2439
+#&gt; Sum of squared residuals at call 94: 371.2439
+#&gt; Sum of squared residuals at call 97: 371.2198
+#&gt; Sum of squared residuals at call 98: 371.2198
+#&gt; Sum of squared residuals at call 102: 371.2174
+#&gt; Sum of squared residuals at call 104: 371.2174
+#&gt; Sum of squared residuals at call 107: 371.2147
+#&gt; Sum of squared residuals at call 110: 371.2147
+#&gt; Sum of squared residuals at call 111: 371.2147
+#&gt; Sum of squared residuals at call 112: 371.2145
+#&gt; Sum of squared residuals at call 113: 371.2145
+#&gt; Sum of squared residuals at call 116: 371.2145
+#&gt; Sum of squared residuals at call 119: 371.2135
+#&gt; Sum of squared residuals at call 121: 371.2135
+#&gt; Sum of squared residuals at call 124: 371.2135
+#&gt; Sum of squared residuals at call 126: 371.2135
+#&gt; Sum of squared residuals at call 127: 371.2135
+#&gt; Sum of squared residuals at call 133: 371.2134
+#&gt; Sum of squared residuals at call 135: 371.2134
+#&gt; Sum of squared residuals at call 138: 371.2134
+#&gt; Sum of squared residuals at call 142: 371.2134
 #&gt; Negative log-likelihood at call 152: 97.22429
 #&gt; Optimisation successfully terminated.
 #&gt;        User      System verstrichen 
-#&gt;       1.136       0.000       1.135 </div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/coef'>coef</a></span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt; NULL</div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt; $ff
+#&gt;       1.152       0.000       1.153 </div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/coef'>coef</a></span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt; NULL</div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt; $ff
 #&gt; parent_sink   parent_m1     m1_sink 
 #&gt;    0.485524    0.514476    1.000000 
 #&gt; 
@@ -543,9 +551,9 @@ Per default, parameters in the kinetic models are internally transformed in
 </div><div class='input'><span class='co'># Weighted fits, including IRLS</span>
 <span class='no'>SFO_SFO.ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>),
                       <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='no'>f.noweight</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>f.noweight</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.49.4 
-#&gt; R version used for fitting:       3.5.3 
-#&gt; Date of fit:     Wed Apr 10 10:10:17 2019 
-#&gt; Date of summary: Wed Apr 10 10:10:17 2019 
+#&gt; R version used for fitting:       3.6.0 
+#&gt; Date of fit:     Thu May  2 12:39:13 2019 
+#&gt; Date of summary: Thu May  2 12:39:13 2019 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -553,10 +561,10 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted with method using 404 model solutions performed in 1.105 s
+#&gt; Fitted using 404 model solutions performed in 1.178 s
 #&gt; 
 #&gt; Error model:
-#&gt; NULL
+#&gt; Constant variance 
 #&gt; 
 #&gt; Starting values for parameters to be optimised:
 #&gt;                     value   type
@@ -605,7 +613,7 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt; f_parent_to_m1  0.514500  23.070 3.104e-22  0.469100 5.596e-01
 #&gt; sigma           3.126000   8.718 2.235e-10  2.396000 3.855e+00
 #&gt; 
-#&gt; Chi2 error levels in percent:
+#&gt; FOCUS Chi2 error levels in percent:
 #&gt;          err.min n.optim df
 #&gt; All data   6.398       4 15
 #&gt; parent     6.459       2  7
@@ -661,9 +669,9 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt;   100       m1    33.13  31.98163  1.148e+00
 #&gt;   120       m1    25.15  28.78984 -3.640e+00
 #&gt;   120       m1    33.31  28.78984  4.520e+00</div><div class='input'><span class='no'>f.obs</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"obs"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>f.obs</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.49.4 
-#&gt; R version used for fitting:       3.5.3 
-#&gt; Date of fit:     Wed Apr 10 10:10:19 2019 
-#&gt; Date of summary: Wed Apr 10 10:10:19 2019 
+#&gt; R version used for fitting:       3.6.0 
+#&gt; Date of fit:     Thu May  2 12:39:14 2019 
+#&gt; Date of summary: Thu May  2 12:39:14 2019 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -671,10 +679,10 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted with method using 558 model solutions performed in 1.602 s
+#&gt; Fitted using 558 model solutions performed in 1.518 s
 #&gt; 
 #&gt; Error model:
-#&gt; NULL
+#&gt; Variance unique to each observed variable 
 #&gt; 
 #&gt; Starting values for parameters to be optimised:
 #&gt;                   value   type
@@ -735,7 +743,7 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt; sigma_parent    3.401000   5.985 5.662e-07  2.244000 4.559e+00
 #&gt; sigma_m1        2.855000   6.311 2.215e-07  1.934000 3.777e+00
 #&gt; 
-#&gt; Chi2 error levels in percent:
+#&gt; FOCUS Chi2 error levels in percent:
 #&gt;          err.min n.optim df
 #&gt; All data   6.398       4 15
 #&gt; parent     6.464       2  7
@@ -791,9 +799,9 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt;   100       m1    33.13  31.98774  1.142e+00
 #&gt;   120       m1    25.15  28.80430 -3.654e+00
 #&gt;   120       m1    33.31  28.80430  4.506e+00</div><div class='input'><span class='no'>f.tc</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"tc"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>f.tc</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.49.4 
-#&gt; R version used for fitting:       3.5.3 
-#&gt; Date of fit:     Wed Apr 10 10:10:22 2019 
-#&gt; Date of summary: Wed Apr 10 10:10:22 2019 
+#&gt; R version used for fitting:       3.6.0 
+#&gt; Date of fit:     Thu May  2 12:39:18 2019 
+#&gt; Date of summary: Thu May  2 12:39:18 2019 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -801,10 +809,10 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted with method using 756 model solutions performed in 3.222 s
+#&gt; Fitted using 844 model solutions performed in 3.501 s
 #&gt; 
 #&gt; Error model:
-#&gt; NULL
+#&gt; Two-component variance function 
 #&gt; 
 #&gt; Starting values for parameters to be optimised:
 #&gt;                   value   type
@@ -812,8 +820,8 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt; k_parent         0.1000 deparm
 #&gt; k_m1             0.1001 deparm
 #&gt; f_parent_to_m1   0.5000 deparm
-#&gt; sigma_low        0.5000  error
-#&gt; rsd_high         0.0700  error
+#&gt; sigma_low        3.0000  error
+#&gt; rsd_high         0.0100  error
 #&gt; 
 #&gt; Starting values for the transformed parameters actually optimised:
 #&gt;                     value lower upper
@@ -821,8 +829,8 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt; log_k_parent    -2.302585  -Inf   Inf
 #&gt; log_k_m1        -2.301586  -Inf   Inf
 #&gt; f_parent_ilr_1   0.000000  -Inf   Inf
-#&gt; sigma_low        0.500000     0   Inf
-#&gt; rsd_high         0.070000     0   Inf
+#&gt; sigma_low        3.000000     0   Inf
+#&gt; rsd_high         0.010000     0   Inf
 #&gt; 
 #&gt; Fixed parameter values:
 #&gt;      value  type
@@ -858,7 +866,7 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt; sigma_low      3.050e-03   0.6314 2.661e-01 -0.006786 1.289e-02
 #&gt; rsd_high       7.928e-02   8.4170 6.418e-10  0.060100 9.847e-02
 #&gt; 
-#&gt; Chi2 error levels in percent:
+#&gt; FOCUS Chi2 error levels in percent:
 #&gt;          err.min n.optim df
 #&gt; All data   6.475       4 15
 #&gt; parent     6.573       2  7
@@ -876,18 +884,18 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt; 
 #&gt; Data:
 #&gt;  time variable observed predicted   residual
-#&gt;     0   parent    99.46 100.73434  -1.274340
-#&gt;     0   parent   102.04 100.73434   1.305660
+#&gt;     0   parent    99.46 100.73434  -1.274339
+#&gt;     0   parent   102.04 100.73434   1.305661
 #&gt;     1   parent    93.50  91.09751   2.402486
 #&gt;     1   parent    92.50  91.09751   1.402486
 #&gt;     3   parent    63.23  74.50141 -11.271410
 #&gt;     3   parent    68.99  74.50141  -5.511410
-#&gt;     7   parent    52.32  49.82880   2.491200
-#&gt;     7   parent    55.13  49.82880   5.301200
+#&gt;     7   parent    52.32  49.82880   2.491201
+#&gt;     7   parent    55.13  49.82880   5.301201
 #&gt;    14   parent    27.27  24.64809   2.621908
 #&gt;    14   parent    26.64  24.64809   1.991908
-#&gt;    21   parent    11.50  12.19232  -0.692316
-#&gt;    21   parent    11.64  12.19232  -0.552316
+#&gt;    21   parent    11.50  12.19232  -0.692315
+#&gt;    21   parent    11.64  12.19232  -0.552315
 #&gt;    35   parent     2.85   2.98327  -0.133266
 #&gt;    35   parent     2.91   2.98327  -0.073266
 #&gt;    50   parent     0.69   0.66013   0.029874
@@ -900,20 +908,20 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt;     3       m1    12.96  13.22867  -0.268669
 #&gt;     7       m1    22.97  25.36417  -2.394167
 #&gt;     7       m1    24.47  25.36417  -0.894167
-#&gt;    14       m1    41.69  37.00974   4.680262
-#&gt;    14       m1    33.21  37.00974  -3.799738
+#&gt;    14       m1    41.69  37.00974   4.680263
+#&gt;    14       m1    33.21  37.00974  -3.799737
 #&gt;    21       m1    44.37  41.90133   2.468668
 #&gt;    21       m1    46.44  41.90133   4.538668
 #&gt;    35       m1    41.22  43.45691  -2.236914
 #&gt;    35       m1    37.95  43.45691  -5.506914
 #&gt;    50       m1    41.19  41.34199  -0.151986
 #&gt;    50       m1    40.01  41.34199  -1.331986
-#&gt;    75       m1    40.09  36.61470   3.475295
-#&gt;    75       m1    33.85  36.61470  -2.764705
-#&gt;   100       m1    31.04  32.20082  -1.160823
-#&gt;   100       m1    33.13  32.20082   0.929177
-#&gt;   120       m1    25.15  29.04130  -3.891303
-#&gt;   120       m1    33.31  29.04130   4.268697</div><div class='input'>
+#&gt;    75       m1    40.09  36.61471   3.475294
+#&gt;    75       m1    33.85  36.61471  -2.764706
+#&gt;   100       m1    31.04  32.20082  -1.160824
+#&gt;   100       m1    33.13  32.20082   0.929176
+#&gt;   120       m1    25.15  29.04130  -3.891305
+#&gt;   120       m1    33.31  29.04130   4.268695</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

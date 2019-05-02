@@ -21,6 +21,7 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 mkinfit <- function(mkinmod, observed,
   parms.ini = "auto",
   state.ini = "auto",
+  err.ini = "auto",
   fixed_parms = NULL,
   fixed_initials = names(mkinmod$diffs)[-1],
   from_max_mean = FALSE,
@@ -247,6 +248,26 @@ mkinfit <- function(mkinmod, observed,
     "obs" = paste0("sigma_", obs_vars),
     "tc" = c("sigma_low", "rsd_high"))
 
+  # Define starting values for the error model
+  if (err.ini[1] != "auto") {
+    if (!identical(names(err.ini), errparm_names)) {
+      stop("Please supply initial values for error model components ", paste(errparm_names, collapse = ", "))
+    } else {
+      errparms = err.ini
+    }
+  } else {
+    if (err_mod == "const") {
+      errparms = 3
+    }
+    if (err_mod == "obs") {
+      errparms = rep(3, length(obs_vars))
+    }
+    if (err_mod == "tc") {
+      errparms <- c(sigma_low = 3, rsd_high = 0.01)
+    }
+    names(errparms) <- errparm_names
+  }
+
   # Define outtimes for model solution.
   # Include time points at which observed data are available
   outtimes = sort(unique(c(observed$time, seq(min(observed$time),
@@ -407,14 +428,6 @@ mkinfit <- function(mkinmod, observed,
       fit <- fit.ols
       fit$logLik <- - nlogLik(c(fit$par, sigma = sigma_mle), OLS = FALSE)
     } else {
-      if (err_mod == "obs") {
-        errparms = rep(3, length(obs_vars))
-      }
-      if (err_mod == "tc") {
-        errparms <- c(sigma_low = 0.5, rsd_high = 0.07)
-      }
-      names(errparms) <- errparm_names
-
       fit <- nlminb(c(state.ini.optim, transparms.optim, errparms),
                     nlogLik, control = control,
                     lower = lower, upper = upper, ...)

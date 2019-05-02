@@ -19,6 +19,7 @@
 mkinfit(mkinmod, observed,
   parms.ini = "auto",
   state.ini = "auto",
+  err.ini = "auto",
   fixed_parms = NULL, fixed_initials = names(mkinmod$diffs)[-1],
   from_max_mean = FALSE,
   solution_type = c("auto", "analytical", "eigen", "deSolve"),
@@ -71,6 +72,12 @@ mkinfit(mkinmod, observed,
     the initial value of the first model variable to the mean of the time zero
     values for the variable with the maximum observed value, and all others to 0.
     If this variable has no time zero observations, its initial value is set to 100.
+  }
+  \item{err.ini}{
+    A named vector of initial values for the error model parameters to be
+    optimised.  If set to "auto", initial values are set to default values.
+    Otherwise, inital values for all error model parameters must be
+    given.
   }
   \item{fixed_parms}{
     The names of parameters that should not be optimised but rather kept at the
