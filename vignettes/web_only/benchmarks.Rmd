@@ -29,7 +29,7 @@ cpu_model <- benchmarkme::get_cpu()$model_name
 operating_system <- Sys.info()[["sysname"]]
 mkin_version <- as.character(packageVersion("mkin"))
 system_string <- paste0(operating_system, ", ", cpu_model, ", mkin version ", mkin_version)
-load("~/git/mkin/inst/benchmark_data/mkin_benchmarks.rda")
+load("~/git/mkin/vignettes/web_only/mkin_benchmarks.rda")
 mkin_benchmarks[system_string, c("CPU", "OS", "mkin")] <- c(cpu_model, operating_system, mkin_version)
 
 if (mkin_version > "0.9.48.1") {
@@ -86,5 +86,5 @@ mkin_benchmarks[system_string, paste0("t", 1:11)] <- c(t1, t2, t3, t4, t5, t6, t
 mkin_benchmarks
 
 
-save(mkin_benchmarks, file = "~/git/mkin/inst/benchmark_data/mkin_benchmarks.rda")
+save(mkin_benchmarks, file = "~/git/mkin/vignettes/mkin_benchmarks.rda")
 ```

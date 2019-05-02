@@ -81,6 +81,7 @@ names(d_SFO_SFO_err) <- paste("Dataset", 1:3)
 # Name the model in the list of models (with only one member in this case) for
 # nicer plotting later on.  Be quiet and use only one core not to offend CRAN
 # checks
+\dontrun{
 f_SFO_SFO <- mmkin(list("SFO-SFO" = m_SFO_SFO),
                    d_SFO_SFO_err, cores = 1,
                    quiet = TRUE)
@@ -95,6 +96,6 @@ plot(f_SFO_SFO[[3]], show_residuals = TRUE)
 # If we use single brackets, we should give two indices (model and dataset),
 # and plot.mmkin is used
 plot(f_SFO_SFO[1, 3])
-
+}
 }
 \keyword{ manip }

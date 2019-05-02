@@ -159,6 +159,7 @@ test_that("Reweighting method 'tc' produces reasonable variance estimates", {
 
   # Doing more takes a lot of computing power
   skip_on_travis()
+  skip_on_cran()
   f_met_2_15_tc_e4 <- mmkin(list(m_synth_DFOP_lin), d_met_2_15, quiet = TRUE,
                             error_model = "tc", cores = n_cores)
 
