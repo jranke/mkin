@@ -136,10 +136,9 @@
 <h1 class="hasAnchor">
 <a href="#background" class="anchor"></a>Background</h1>
 <p>Many approaches are possible regarding the evaluation of chemical degradation data.</p>
-<p>The now deprecated <code>kinfit</code> package <span class="citation">(Ranke 2015)</span> in <code>R</code> <span class="citation">(R Development Core Team 2016)</span> implements the approach recommended in the kinetics report provided by the FOrum for Co-ordination of pesticide fate models and their USe <span class="citation">(FOCUS Work Group on Degradation Kinetics 2006, 2014)</span> for simple data series for one parent compound in one compartment.</p>
-<p>The <code>mkin</code> package <span class="citation">(Ranke 2016)</span> extends this approach to data series with transformation products, commonly termed metabolites, and to more than one compartment. It is also possible to include back reactions, so equilibrium reactions and equilibrium partitioning can be specified, although this oftentimes leads to an overparameterisation of the model.</p>
+<p>The <code>mkin</code> package <span class="citation">(Ranke 2016)</span> implements the approach recommended in the kinetics report provided by the FOrum for Co-ordination of pesticide fate models and their USe <span class="citation">(FOCUS Work Group on Degradation Kinetics 2006, 2014)</span> implements this approach for simple decline data series, data series with transformation products, commonly termed metabolites, data series for more than one compartment. It is also possible to include back reactions, so equilibrium reactions and equilibrium partitioning can be specified, although this oftentimes leads to an overparameterisation of the model.</p>
 <p>When the first <code>mkin</code> code was published in 2010, the most commonly used tools for fitting more complex kinetic degradation models to experimental data were KinGUI <span class="citation">(Schäfer et al. 2007)</span>, a MATLAB based tool with a graphical user interface that was specifically tailored to the task and included some output as proposed by the FOCUS Kinetics Workgroup, and ModelMaker, a general purpose compartment based tool providing infrastructure for fitting dynamic simulation models based on differential equations to data.</p>
-<p>The code was first uploaded to the BerliOS platform. When this was taken down, the version control history was imported into the R-Forge site, where the code is still mirrored today (see <em>e.g.</em> <a href="http://cgit.jrwb.de/mkin/commit/?id=30cbb4092f6d2d3beff5800603374a0d009ad770">the initial commit on 11 May 2010</a>).</p>
+<p>The code was first uploaded to the BerliOS platform. When this was taken down, the version control history was imported into the R-Forge site (see <em>e.g.</em> <a href="http://cgit.jrwb.de/mkin/commit/?id=30cbb4092f6d2d3beff5800603374a0d009ad770">the initial commit on 11 May 2010</a>), where the code is still occasionally updated.</p>
 <p>At that time, the R package <code>FME</code> (Flexible Modelling Environment) <span class="citation">(Soetaert and Petzoldt 2010)</span> was already available, and provided a good basis for developing a package specifically tailored to the task. The remaining challenge was to make it as easy as possible for the users (including the author of this vignette) to specify the system of differential equations and to include the output requested by the FOCUS guidance, such as the relative standard deviation that has to be assumed for the residuals, such that the <span class="math inline">\(\chi^2\)</span> goodness-of-fit test as defined by the FOCUS kinetics workgroup would pass using an significance level <span class="math inline">\(\alpha\)</span> of 0.05.</p>
 <p>Also, <code>mkin</code> introduced using analytical solutions for parent only kinetics for improved optimization speed. Later, Eigenvalue based solutions were introduced to <code>mkin</code> for the case of linear differential equations (<em>i.e.</em> where the FOMC or DFOP models were not used for the parent compound), greatly improving the optimization speed for these cases.</p>
 <p>The possibility to specify back-reactions and a biphasic model (SFORB) for metabolites were present in <code>mkin</code> from the very beginning.</p>
@@ -194,20 +193,14 @@
 <div id="ref-FOCUSkinetics2014">
 <p>———. 2014. <em>Generic Guidance for Estimating Persistence and Degradation Kinetics from Environmental Fate Studies on Pesticides in Eu Registration</em>. 1.1 ed. <a href="http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics" class="uri">http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics</a>.</p>
 </div>
-<div id="ref-pkg:kinfit">
-<p>Ranke, J. 2015. <em>‘Kinfit‘: Routines for Fitting Simple Kinetic Models to Chemical Degradation Data</em>. <a href="https://CRAN.R-project.org/package=kinfit" class="uri">https://CRAN.R-project.org/package=kinfit</a>.</p>
-</div>
 <div id="ref-pkg:mkin">
-<p>———. 2016. <em>‘Mkin‘: Kinetic Evaluation of Chemical Degradation Data</em>. <a href="https://CRAN.R-project.org/package=mkin" class="uri">https://CRAN.R-project.org/package=mkin</a>.</p>
+<p>Ranke, J. 2016. <em>‘Mkin‘: Kinetic Evaluation of Chemical Degradation Data</em>. <a href="https://CRAN.R-project.org/package=mkin" class="uri">https://CRAN.R-project.org/package=mkin</a>.</p>
 </div>
 <div id="ref-ranke2012">
 <p>Ranke, J., and R. Lehmann. 2012. “Parameter Reliability in Kinetic Evaluation of Environmental Metabolism Data - Assessment and the Influence of Model Specification.” In <em>SETAC World 20-24 May</em>. Berlin.</p>
 </div>
 <div id="ref-ranke2015">
 <p>———. 2015. “To T-Test or Not to T-Test, That Is the Question.” In <em>XV Symposium on Pesticide Chemistry 2-4 September 2015</em>. Piacenza. <a href="http://chem.uft.uni-bremen.de/ranke/posters/piacenza_2015.pdf" class="uri">http://chem.uft.uni-bremen.de/ranke/posters/piacenza_2015.pdf</a>.</p>
-</div>
-<div id="ref-rcore2016">
-<p>R Development Core Team. 2016. <em><span class="sans-serif">R</span>: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org" class="uri">https://www.R-project.org</a>.</p>
 </div>
 <div id="ref-schaefer2007">
 <p>Schäfer, D., B. Mikolasch, P. Rainbird, and B. Harvey. 2007. “KinGUI: A New Kinetic Software Tool for Evaluations According to FOCUS Degradation Kinetics.” In <em>Proceedings of the Xiii Symposium Pesticide Chemistry</em>, edited by Del Re A. A. M., Capri E., Fragoulis G., and Trevisan M., 916–23. Piacenza.</p>
