@@ -263,7 +263,7 @@ mkinfit <- function(mkinmod, observed,
       errparms = rep(3, length(obs_vars))
     }
     if (err_mod == "tc") {
-      errparms <- c(sigma_low = 3, rsd_high = 0.01)
+      errparms <- c(sigma_low = 0.1, rsd_high = 0.1)
     }
     names(errparms) <- errparm_names
   }
@@ -275,12 +275,19 @@ mkinfit <- function(mkinmod, observed,
                                               length.out = n.outtimes))))
 
   # Define log-likelihood function for optimisation, including (back)transformations
-  nlogLik <- function(P, trans = TRUE, OLS = FALSE, update_data = TRUE, ...)
+  nlogLik <- function(P, trans = TRUE, OLS = FALSE, local = FALSE, update_data = TRUE, ...)
   {
     assign("calls", calls + 1, inherits = TRUE) # Increase the model solution counter
+    P.orig <- P
 
     # Trace parameter values if requested
     if(trace_parms) cat(P, "\n")
+
+    # If we do a local optimisation of the error model, the initials
+    # for the state variabels and the parameters are given as 'local'
+    if (local[1] != FALSE) {
+      P <- local
+    }
 
     # Initial states for t0
     if(length(state.ini.optim) > 0) {
@@ -291,7 +298,7 @@ mkinfit <- function(mkinmod, observed,
       names(odeini) <- state.ini.fixed.boxnames
     }
 
-    if (OLS) {
+    if (OLS | identical(P, local)) {
       odeparms.optim <- P[(length(state.ini.optim) + 1):length(P)]
     } else {
       odeparms.optim <- P[(length(state.ini.optim) + 1):(length(P) - length(errparms))]
@@ -313,6 +320,9 @@ mkinfit <- function(mkinmod, observed,
                        use_compiled = use_compiled,
                        method.ode = method.ode,
                        atol = atol, rtol = rtol, ...)
+
+    # Get back the original parameter vector to get the error model parameters
+    P <- P.orig
 
     out_long <- mkin_wide_to_long(out, time = "time")
 
@@ -411,16 +421,17 @@ mkinfit <- function(mkinmod, observed,
 
   # Do the fit and take the time until the hessians are calculated
   fit_time <- system.time({
-    # For constant variance, we do not include sigma in the optimisation, as it
-    # is unnecessary and leads to instability of the fit which are most obvious
-    # when fitting the IORE model
-    if (err_mod == "const") {
-      fit.ols <- nlminb(c(state.ini.optim, transparms.optim),
-                    nlogLik, control = control,
-                    lower = lower, upper = upper, OLS = TRUE, ...)
+    # In the inital run, we assume a constant standard deviation and do
+    # not optimise it, as this is unnecessary and leads to instability of the
+    # fit (most obvious when fitting the IORE model)
+    if (!quiet) message("Ordinary least squares optimisation")
+    parms.start <- c(state.ini.optim, transparms.optim)
+    fit.ols <- nlminb(parms.start, nlogLik, control = control,
+      lower = lower[names(parms.start)], 
+      upper = upper[names(parms.start)], OLS = TRUE, ...)
 
+    if (err_mod == "const") {
       # Get the maximum likelihood estimate for sigma at the optimum parameter values
-      # This is equivalent to including sigma in the optimisation, but more stable
       data_errmod$residual <- data_errmod$value.observed - data_errmod$value.predicted
       sigma_mle = sqrt(sum(data_errmod$residual^2)/nrow(data_errmod))
 
@@ -428,9 +439,20 @@ mkinfit <- function(mkinmod, observed,
       fit <- fit.ols
       fit$logLik <- - nlogLik(c(fit$par, sigma = sigma_mle), OLS = FALSE)
     } else {
-      fit <- nlminb(c(state.ini.optim, transparms.optim, errparms),
-                    nlogLik, control = control,
-                    lower = lower, upper = upper, ...)
+      # After the OLS stop we fit the error model with fixed degradation model
+      # parameters
+      if (!quiet) message("Optimising the error model")
+      fit.err <- nlminb(errparms, nlogLik, control = control,
+        lower = lower[names(errparms)], 
+        upper = upper[names(errparms)],
+        local = fit.ols$par, ...)
+      errparms.tmp <- fit.err$par
+      if (!quiet) message("Optimising the complete model")
+      parms.start <- c(state.ini.optim, transparms.optim, errparms.tmp)
+      fit <- nlminb(parms.start, nlogLik,
+        lower = lower[names(parms.start)], 
+        upper = upper[names(parms.start)],
+        control = control, ...)
       fit$logLik <- - nlogLik.current
     }
 

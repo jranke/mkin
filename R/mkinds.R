@@ -42,7 +42,6 @@ mkinds <- R6Class("mkinds",
   )
 )
 
-#' @export
 print.mkinds <- function(x, ...) {
   cat("<mkinds> with $title: ",  x$title, "\n")
   cat("Observed compounds $observed: ", paste(x$observed, collapse = ", "), "\n")

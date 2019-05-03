@@ -88,7 +88,7 @@
       <h1>Benchmark timings for mkin on various systems</h1>
                         <h4 class="author">Johannes Ranke</h4>
             
-            <h4 class="date">2019-05-02</h4>
+            <h4 class="date">2019-05-03</h4>
       
       
       <div class="hidden name"><code>benchmarks.Rmd</code></div>
@@ -115,32 +115,22 @@
 <a class="sourceLine" id="cb1-12" title="12">}</a></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co"># Parent only</span></a>
 <a class="sourceLine" id="cb2-2" title="2">t1 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(<span class="kw">mmkin_bench</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"SFO"</span>, <span class="st">"FOMC"</span>, <span class="st">"DFOP"</span>, <span class="st">"HS"</span>), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(FOCUS_<span class="dv">2006</span>_C, FOCUS_<span class="dv">2006</span>_D)))[[<span class="st">"elapsed"</span>]]</a>
-<a class="sourceLine" id="cb2-3" title="3">t2 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(<span class="kw">mmkin_bench</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"SFO"</span>, <span class="st">"FOMC"</span>, <span class="st">"DFOP"</span>, <span class="st">"HS"</span>), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(FOCUS_<span class="dv">2006</span>_C, FOCUS_<span class="dv">2006</span>_D), <span class="dt">error_model =</span> <span class="st">"tc"</span>))[[<span class="st">"elapsed"</span>]]</a></code></pre></div>
-<pre><code>## Warning in mkinfit(models[[model_index]], datasets[[dataset_index]], ...): Optimisation did not converge:
-## false convergence (8)</code></pre>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="co"># One metabolite</span></a>
-<a class="sourceLine" id="cb4-2" title="2">SFO_SFO &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(</a>
-<a class="sourceLine" id="cb4-3" title="3">  <span class="dt">parent =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"m1"</span>),</a>
-<a class="sourceLine" id="cb4-4" title="4">  <span class="dt">m1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>))</a></code></pre></div>
+<a class="sourceLine" id="cb2-3" title="3">t2 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(<span class="kw">mmkin_bench</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"SFO"</span>, <span class="st">"FOMC"</span>, <span class="st">"DFOP"</span>, <span class="st">"HS"</span>), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(FOCUS_<span class="dv">2006</span>_C, FOCUS_<span class="dv">2006</span>_D), <span class="dt">error_model =</span> <span class="st">"tc"</span>))[[<span class="st">"elapsed"</span>]]</a>
+<a class="sourceLine" id="cb2-4" title="4"></a>
+<a class="sourceLine" id="cb2-5" title="5"><span class="co"># One metabolite</span></a>
+<a class="sourceLine" id="cb2-6" title="6">SFO_SFO &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(</a>
+<a class="sourceLine" id="cb2-7" title="7">  <span class="dt">parent =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"m1"</span>),</a>
+<a class="sourceLine" id="cb2-8" title="8">  <span class="dt">m1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>))</a></code></pre></div>
 <pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">FOMC_SFO &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(</a>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">FOMC_SFO &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(</a>
+<a class="sourceLine" id="cb4-2" title="2">  <span class="dt">parent =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"FOMC"</span>, <span class="st">"m1"</span>),</a>
+<a class="sourceLine" id="cb4-3" title="3">  <span class="dt">m1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>))</a></code></pre></div>
+<pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">DFOP_SFO &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(</a>
 <a class="sourceLine" id="cb6-2" title="2">  <span class="dt">parent =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"FOMC"</span>, <span class="st">"m1"</span>),</a>
 <a class="sourceLine" id="cb6-3" title="3">  <span class="dt">m1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>))</a></code></pre></div>
 <pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">DFOP_SFO &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(</a>
-<a class="sourceLine" id="cb8-2" title="2">  <span class="dt">parent =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"FOMC"</span>, <span class="st">"m1"</span>),</a>
-<a class="sourceLine" id="cb8-3" title="3">  <span class="dt">m1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>))</a></code></pre></div>
-<pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">t3 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(<span class="kw">mmkin_bench</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(SFO_SFO, FOMC_SFO, DFOP_SFO), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(FOCUS_<span class="dv">2006</span>_D)))[[<span class="st">"elapsed"</span>]]</a></code></pre></div>
-<pre><code>## Warning in mkinfit(models[[model_index]], datasets[[dataset_index]], ...):
-## Observations with value of zero were removed from the data</code></pre>
-<pre><code>## Warning in mkinfit(models[[model_index]], datasets[[dataset_index]], ...):
-## Observations with value of zero were removed from the data
-
-## Warning in mkinfit(models[[model_index]], datasets[[dataset_index]], ...):
-## Observations with value of zero were removed from the data</code></pre>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">t4 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(<span class="kw">mmkin_bench</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(SFO_SFO, FOMC_SFO, DFOP_SFO), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/subset">subset</a></span>(FOCUS_<span class="dv">2006</span>_D, value <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>)), <span class="dt">error_model =</span> <span class="st">"tc"</span>))[[<span class="st">"elapsed"</span>]]</a>
-<a class="sourceLine" id="cb13-2" title="2">t5 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(<span class="kw">mmkin_bench</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(SFO_SFO, FOMC_SFO, DFOP_SFO), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(FOCUS_<span class="dv">2006</span>_D), <span class="dt">error_model =</span> <span class="st">"obs"</span>))[[<span class="st">"elapsed"</span>]]</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">t3 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(<span class="kw">mmkin_bench</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(SFO_SFO, FOMC_SFO, DFOP_SFO), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(FOCUS_<span class="dv">2006</span>_D)))[[<span class="st">"elapsed"</span>]]</a></code></pre></div>
 <pre><code>## Warning in mkinfit(models[[model_index]], datasets[[dataset_index]], ...):
 ## Observations with value of zero were removed from the data
 
@@ -149,32 +139,42 @@
 
 ## Warning in mkinfit(models[[model_index]], datasets[[dataset_index]], ...):
 ## Observations with value of zero were removed from the data</code></pre>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="co"># Two metabolites, synthetic data</span></a>
-<a class="sourceLine" id="cb15-2" title="2">m_synth_SFO_lin &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(<span class="dt">parent =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"M1"</span>),</a>
-<a class="sourceLine" id="cb15-3" title="3">                           <span class="dt">M1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"M2"</span>),</a>
-<a class="sourceLine" id="cb15-4" title="4">                           <span class="dt">M2 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>),</a>
-<a class="sourceLine" id="cb15-5" title="5">                           <span class="dt">use_of_ff =</span> <span class="st">"max"</span>, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb15-6" title="6"></a>
-<a class="sourceLine" id="cb15-7" title="7">m_synth_DFOP_par &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(<span class="dt">parent =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"DFOP"</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"M1"</span>, <span class="st">"M2"</span>)),</a>
-<a class="sourceLine" id="cb15-8" title="8">                           <span class="dt">M1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>),</a>
-<a class="sourceLine" id="cb15-9" title="9">                           <span class="dt">M2 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>),</a>
-<a class="sourceLine" id="cb15-10" title="10">                           <span class="dt">use_of_ff =</span> <span class="st">"max"</span>, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb15-11" title="11"></a>
-<a class="sourceLine" id="cb15-12" title="12">SFO_lin_a &lt;-<span class="st"> </span>synthetic_data_for_UBA_<span class="dv">2014</span>[[<span class="dv">1</span>]]<span class="op">$</span>data</a>
-<a class="sourceLine" id="cb15-13" title="13"></a>
-<a class="sourceLine" id="cb15-14" title="14">DFOP_par_c &lt;-<span class="st"> </span>synthetic_data_for_UBA_<span class="dv">2014</span>[[<span class="dv">12</span>]]<span class="op">$</span>data</a>
-<a class="sourceLine" id="cb15-15" title="15"></a>
-<a class="sourceLine" id="cb15-16" title="16">t6 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(<span class="kw">mmkin_bench</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(m_synth_SFO_lin), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(SFO_lin_a)))[<span class="st">"elapsed"</span>]</a>
-<a class="sourceLine" id="cb15-17" title="17">t7 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(<span class="kw">mmkin_bench</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(m_synth_DFOP_par), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(DFOP_par_c)))[<span class="st">"elapsed"</span>]</a>
-<a class="sourceLine" id="cb15-18" title="18"></a>
-<a class="sourceLine" id="cb15-19" title="19">t8 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(<span class="kw">mmkin_bench</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(m_synth_SFO_lin), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(SFO_lin_a), <span class="dt">error_model =</span> <span class="st">"tc"</span>))[<span class="st">"elapsed"</span>]</a>
-<a class="sourceLine" id="cb15-20" title="20">t9 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(<span class="kw">mmkin_bench</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(m_synth_DFOP_par), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(DFOP_par_c), <span class="dt">error_model =</span> <span class="st">"tc"</span>))[<span class="st">"elapsed"</span>]</a>
-<a class="sourceLine" id="cb15-21" title="21"></a>
-<a class="sourceLine" id="cb15-22" title="22">t10 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(<span class="kw">mmkin_bench</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(m_synth_SFO_lin), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(SFO_lin_a), <span class="dt">error_model =</span> <span class="st">"obs"</span>))[<span class="st">"elapsed"</span>]</a>
-<a class="sourceLine" id="cb15-23" title="23">t11 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(<span class="kw">mmkin_bench</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(m_synth_DFOP_par), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(DFOP_par_c), <span class="dt">error_model =</span> <span class="st">"obs"</span>))[<span class="st">"elapsed"</span>]</a>
-<a class="sourceLine" id="cb15-24" title="24"></a>
-<a class="sourceLine" id="cb15-25" title="25">mkin_benchmarks[system_string, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="st">"t"</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">11</span>)] &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11)</a>
-<a class="sourceLine" id="cb15-26" title="26">mkin_benchmarks</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">t4 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(<span class="kw">mmkin_bench</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(SFO_SFO, FOMC_SFO, DFOP_SFO), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/subset">subset</a></span>(FOCUS_<span class="dv">2006</span>_D, value <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>)), <span class="dt">error_model =</span> <span class="st">"tc"</span>))[[<span class="st">"elapsed"</span>]]</a>
+<a class="sourceLine" id="cb10-2" title="2">t5 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(<span class="kw">mmkin_bench</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(SFO_SFO, FOMC_SFO, DFOP_SFO), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(FOCUS_<span class="dv">2006</span>_D), <span class="dt">error_model =</span> <span class="st">"obs"</span>))[[<span class="st">"elapsed"</span>]]</a></code></pre></div>
+<pre><code>## Warning in mkinfit(models[[model_index]], datasets[[dataset_index]], ...):
+## Observations with value of zero were removed from the data
+
+## Warning in mkinfit(models[[model_index]], datasets[[dataset_index]], ...):
+## Observations with value of zero were removed from the data
+
+## Warning in mkinfit(models[[model_index]], datasets[[dataset_index]], ...):
+## Observations with value of zero were removed from the data</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="co"># Two metabolites, synthetic data</span></a>
+<a class="sourceLine" id="cb12-2" title="2">m_synth_SFO_lin &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(<span class="dt">parent =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"M1"</span>),</a>
+<a class="sourceLine" id="cb12-3" title="3">                           <span class="dt">M1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"M2"</span>),</a>
+<a class="sourceLine" id="cb12-4" title="4">                           <span class="dt">M2 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>),</a>
+<a class="sourceLine" id="cb12-5" title="5">                           <span class="dt">use_of_ff =</span> <span class="st">"max"</span>, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb12-6" title="6"></a>
+<a class="sourceLine" id="cb12-7" title="7">m_synth_DFOP_par &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(<span class="dt">parent =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"DFOP"</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"M1"</span>, <span class="st">"M2"</span>)),</a>
+<a class="sourceLine" id="cb12-8" title="8">                           <span class="dt">M1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>),</a>
+<a class="sourceLine" id="cb12-9" title="9">                           <span class="dt">M2 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>),</a>
+<a class="sourceLine" id="cb12-10" title="10">                           <span class="dt">use_of_ff =</span> <span class="st">"max"</span>, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb12-11" title="11"></a>
+<a class="sourceLine" id="cb12-12" title="12">SFO_lin_a &lt;-<span class="st"> </span>synthetic_data_for_UBA_<span class="dv">2014</span>[[<span class="dv">1</span>]]<span class="op">$</span>data</a>
+<a class="sourceLine" id="cb12-13" title="13"></a>
+<a class="sourceLine" id="cb12-14" title="14">DFOP_par_c &lt;-<span class="st"> </span>synthetic_data_for_UBA_<span class="dv">2014</span>[[<span class="dv">12</span>]]<span class="op">$</span>data</a>
+<a class="sourceLine" id="cb12-15" title="15"></a>
+<a class="sourceLine" id="cb12-16" title="16">t6 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(<span class="kw">mmkin_bench</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(m_synth_SFO_lin), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(SFO_lin_a)))[<span class="st">"elapsed"</span>]</a>
+<a class="sourceLine" id="cb12-17" title="17">t7 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(<span class="kw">mmkin_bench</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(m_synth_DFOP_par), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(DFOP_par_c)))[<span class="st">"elapsed"</span>]</a>
+<a class="sourceLine" id="cb12-18" title="18"></a>
+<a class="sourceLine" id="cb12-19" title="19">t8 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(<span class="kw">mmkin_bench</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(m_synth_SFO_lin), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(SFO_lin_a), <span class="dt">error_model =</span> <span class="st">"tc"</span>))[<span class="st">"elapsed"</span>]</a>
+<a class="sourceLine" id="cb12-20" title="20">t9 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(<span class="kw">mmkin_bench</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(m_synth_DFOP_par), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(DFOP_par_c), <span class="dt">error_model =</span> <span class="st">"tc"</span>))[<span class="st">"elapsed"</span>]</a>
+<a class="sourceLine" id="cb12-21" title="21"></a>
+<a class="sourceLine" id="cb12-22" title="22">t10 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(<span class="kw">mmkin_bench</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(m_synth_SFO_lin), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(SFO_lin_a), <span class="dt">error_model =</span> <span class="st">"obs"</span>))[<span class="st">"elapsed"</span>]</a>
+<a class="sourceLine" id="cb12-23" title="23">t11 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.time">system.time</a></span>(<span class="kw">mmkin_bench</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(m_synth_DFOP_par), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(DFOP_par_c), <span class="dt">error_model =</span> <span class="st">"obs"</span>))[<span class="st">"elapsed"</span>]</a>
+<a class="sourceLine" id="cb12-24" title="24"></a>
+<a class="sourceLine" id="cb12-25" title="25">mkin_benchmarks[system_string, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="st">"t"</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">11</span>)] &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11)</a>
+<a class="sourceLine" id="cb12-26" title="26">mkin_benchmarks</a></code></pre></div>
 <pre><code>##                                                                                                       CPU
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1 AMD Ryzen 7 1700 Eight-Core Processor
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1 AMD Ryzen 7 1700 Eight-Core Processor
@@ -198,68 +198,68 @@
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1 8.184
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2 7.064
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3 7.296
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 5.850
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 5.864
 ##                                                                         t2
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1 11.019
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1 22.889
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2 12.558
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3 21.239
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 20.019
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 23.254
 ##                                                                        t3
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1 3.764
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1 4.649
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2 4.786
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3 4.510
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 4.293
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 4.544
 ##                                                                         t4
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1 14.347
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1 13.789
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2  8.461
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3 13.805
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 14.570
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 15.757
 ##                                                                        t5
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1 9.495
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1 6.395
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2 5.675
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3 7.386
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 5.772
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 7.870
 ##                                                                        t6
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1 2.623
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1 2.542
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2 2.723
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3 2.643
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 2.647
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 2.554
 ##                                                                        t7
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1 4.587
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1 4.128
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2 4.478
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3 4.374
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 4.257
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4  4.22
 ##                                                                        t8
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1 7.525
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1 4.632
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2 4.862
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3  7.02
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 4.703
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 6.479
 ##                                                                         t9
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1 16.621
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1  8.171
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2  7.618
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3 11.124
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4  7.742
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 11.236
 ##                                                                       t10
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1 8.576
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1 3.676
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2 3.579
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3 5.388
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 3.421
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 4.803
 ##                                                                        t11
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1 31.267
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1  5.636
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2  5.574
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3  7.365
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4  5.614</code></pre>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/save">save</a></span>(mkin_benchmarks, <span class="dt">file =</span> <span class="st">"~/git/mkin/vignettes/mkin_benchmarks.rda"</span>)</a></code></pre></div>
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4  7.688</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/save">save</a></span>(mkin_benchmarks, <span class="dt">file =</span> <span class="st">"~/git/mkin/vignettes/mkin_benchmarks.rda"</span>)</a></code></pre></div>
 </div>
   </div>
 
