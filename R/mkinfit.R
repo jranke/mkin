@@ -343,14 +343,15 @@ mkinfit <- function(mkinmod, observed,
     data_log_lik <- merge(observed[c("name", "time", "value", "std")], out_long,
                          by = c("name", "time"), suffixes = c(".observed", ".predicted"))
 
-    # We only update likelihood and data during the optimisation, not during hessian calculations
+    if (OLS) {
+      nlogLik <- with(data_log_lik, sum((value.observed - value.predicted)^2))
+    } else {
+      nlogLik <- - with(data_log_lik,
+        sum(dnorm(x = value.observed, mean = value.predicted, sd = std, log = TRUE)))
+    }
+
+    # We update the current likelihood and data during the optimisation, not during hessian calculations
     if (update_data) {
-      if (OLS) {
-        nlogLik <- with(data_log_lik, sum((value.observed - value.predicted)^2))
-      } else {
-        nlogLik <- - with(data_log_lik,
-          sum(dnorm(x = value.observed, mean = value.predicted, sd = std, log = TRUE)))
-      }
 
       assign("out_predicted", out_long, inherits = TRUE)
       assign("data_errmod", data_log_lik, inherits = TRUE)
