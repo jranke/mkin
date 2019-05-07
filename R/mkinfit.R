@@ -280,8 +280,8 @@ mkinfit <- function(mkinmod, observed,
     assign("calls", calls + 1, inherits = TRUE) # Increase the model solution counter
     P.orig <- P
 
-    # Trace parameter values if requested
-    if(trace_parms) cat(P, "\n")
+    # Trace parameter values if requested and if we are actually optimising
+    if(trace_parms & update_data) cat(P, "\n")
 
     # If we do a local optimisation of the error model, the initials
     # for the state variabels and the parameters are given as 'local'
@@ -343,23 +343,23 @@ mkinfit <- function(mkinmod, observed,
     data_log_lik <- merge(observed[c("name", "time", "value", "std")], out_long,
                          by = c("name", "time"), suffixes = c(".observed", ".predicted"))
 
-    if (OLS) {
-      nlogLik <- with(data_log_lik, sum((value.observed - value.predicted)^2))
-    } else {
-      nlogLik <- - with(data_log_lik,
-        sum(dnorm(x = value.observed, mean = value.predicted, sd = std, log = TRUE)))
-    }
-
-    # We need the data at optimised parameters
+    # We only update likelihood and data during the optimisation, not during hessian calculations
     if (update_data) {
+      if (OLS) {
+        nlogLik <- with(data_log_lik, sum((value.observed - value.predicted)^2))
+      } else {
+        nlogLik <- - with(data_log_lik,
+          sum(dnorm(x = value.observed, mean = value.predicted, sd = std, log = TRUE)))
+      }
+
       assign("out_predicted", out_long, inherits = TRUE)
       assign("data_errmod", data_log_lik, inherits = TRUE)
-    }
 
-    if (nlogLik < nlogLik.current) {
-      assign("nlogLik.current", nlogLik, inherits = TRUE)
-      if (!quiet) cat(ifelse(OLS, "Sum of squared residuals", "Negative log-likelihood"),
-                      " at call ", calls, ": ", nlogLik.current, "\n", sep = "")
+      if (nlogLik < nlogLik.current) {
+        assign("nlogLik.current", nlogLik, inherits = TRUE)
+        if (!quiet) cat(ifelse(OLS, "Sum of squared residuals", "Negative log-likelihood"),
+                        " at call ", calls, ": ", nlogLik.current, "\n", sep = "")
+      }
     }
     return(nlogLik)
   }
@@ -427,7 +427,7 @@ mkinfit <- function(mkinmod, observed,
     if (!quiet) message("Ordinary least squares optimisation")
     parms.start <- c(state.ini.optim, transparms.optim)
     fit.ols <- nlminb(parms.start, nlogLik, control = control,
-      lower = lower[names(parms.start)], 
+      lower = lower[names(parms.start)],
       upper = upper[names(parms.start)], OLS = TRUE, ...)
 
     if (err_mod == "const") {
@@ -443,14 +443,14 @@ mkinfit <- function(mkinmod, observed,
       # parameters
       if (!quiet) message("Optimising the error model")
       fit.err <- nlminb(errparms, nlogLik, control = control,
-        lower = lower[names(errparms)], 
+        lower = lower[names(errparms)],
         upper = upper[names(errparms)],
         local = fit.ols$par, ...)
       errparms.tmp <- fit.err$par
       if (!quiet) message("Optimising the complete model")
-      parms.start <- c(state.ini.optim, transparms.optim, errparms.tmp)
+      parms.start <- c(fit.ols$par, errparms.tmp)
       fit <- nlminb(parms.start, nlogLik,
-        lower = lower[names(parms.start)], 
+        lower = lower[names(parms.start)],
         upper = upper[names(parms.start)],
         control = control, ...)
       fit$logLik <- - nlogLik.current
@@ -461,7 +461,7 @@ mkinfit <- function(mkinmod, observed,
     if (err_mod == "const") {
       fit$par <- c(fit$par, sigma = sigma_mle)
     }
-    fit$hessian <- try(hessian(nlogLik, fit$par, update_data = FALSE), silent = TRUE)
+    fit$hessian <- try(numDeriv::hessian(nlogLik, fit$par, update_data = FALSE), silent = TRUE)
 
     # Backtransform parameters
     bparms.optim = backtransform_odeparms(fit$par, mkinmod,
@@ -470,7 +470,7 @@ mkinfit <- function(mkinmod, observed,
     bparms.fixed = c(state.ini.fixed, parms.fixed)
     bparms.all = c(bparms.optim, parms.fixed)
 
-    fit$hessian_notrans <- try(hessian(nlogLik, c(bparms.optim, fit$par[names(errparms)]),
+    fit$hessian_notrans <- try(numDeriv::hessian(nlogLik, c(bparms.optim, fit$par[names(errparms)]),
                                        trans = FALSE, update_data = FALSE), silent = TRUE)
   })
 
@@ -478,7 +478,7 @@ mkinfit <- function(mkinmod, observed,
     fit$warning = paste0("Optimisation did not converge:\n", fit$message)
     warning(fit$warning)
   } else {
-    if(!quiet) cat("Optimisation successfully terminated.\n")
+    if(!quiet) message("Optimisation successfully terminated.\n")
   }
 
   # We need to return some more data for summary and plotting
@@ -657,7 +657,7 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
       rownames(Corr) <- colnames(Corr) <- rownames(ans$par)
       ans$Corr <- Corr
     } else {
-      warning("Could not estimate covariance matrix; singular system.")
+      warning("Could not calculate correlation; no covariance matrix")
     }
   }
 
@@ -720,7 +720,7 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
     if (!is.null(x$cov.unscaled)){
       print(x$Corr, digits = digits, ...)
     } else {
-      cat("Could not estimate covariance matrix; singular system.")
+      cat("No covariance matrix")
     }
   }
 

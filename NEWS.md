@@ -1,4 +1,4 @@
-# mkin 0.9.49.4 (2019-04-09)
+# mkin 0.9.49.4 (2019-05-07)
 - Direct minimization of the negative log-likelihood for non-constant error models (two-component and variance by variable). In the case the error model is constant variance, least squares is used as this is more stable
 
 - The argument 'reweight.method' to mkinfit and mmkin is now obsolete, use 'error_model' instead
