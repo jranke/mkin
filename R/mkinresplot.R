@@ -23,7 +23,7 @@ mkinresplot <- function (object,
   xlab = "Time", ylab = "Residual",
   maxabs = "auto", legend= TRUE, lpos = "topright", ...)
 {
-	obs_vars_all <- as.character(unique(object$data$variable))
+  obs_vars_all <- as.character(unique(object$data$variable))
 
   if (length(obs_vars) > 0){
       obs_vars <- intersect(obs_vars_all, obs_vars)
@@ -33,18 +33,18 @@ mkinresplot <- function (object,
 
   if (maxabs == "auto") maxabs = max(abs(residuals), na.rm = TRUE)
 
-	col_obs <- pch_obs <- 1:length(obs_vars)
- 	names(col_obs) <- names(pch_obs) <- obs_vars
+  col_obs <- pch_obs <- 1:length(obs_vars)
+  names(col_obs) <- names(pch_obs) <- obs_vars
 
   plot(0, type = "n",
        xlab = xlab, ylab = ylab,
        xlim = xlim,
        ylim = c(-1.2 * maxabs, 1.2 * maxabs), ...)
 
-	for(obs_var in obs_vars){
-		residuals_plot <- subset(object$data, variable == obs_var, c("time", "residual"))
-		points(residuals_plot, pch = pch_obs[obs_var], col = col_obs[obs_var])
-	}
+  for(obs_var in obs_vars){
+    residuals_plot <- subset(object$data, variable == obs_var, c("time", "residual"))
+    points(residuals_plot, pch = pch_obs[obs_var], col = col_obs[obs_var])
+  }
 
   abline(h = 0, lty = 2)
 

@@ -1,7 +1,10 @@
-# mkin 0.9.49.4 (2019-05-07)
+# mkin 0.9.49.4 (2019-05-08)
+
 - Direct minimization of the negative log-likelihood for non-constant error models (two-component and variance by variable). In the case the error model is constant variance, least squares is used as this is more stable
 
 - The argument 'reweight.method' to mkinfit and mmkin is now obsolete, use 'error_model' instead
+
+- New function 'mkinerrplot'. This function is also used for residual plots in 'plot.mmkin' if the argument 'resplot = "errmod"' is given, and in 'plot.mkinfit' if 'show_errplot' is set to TRUE.
 
 - Remove dependency on FME, only use nlminb for optimisation
 

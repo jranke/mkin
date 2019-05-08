@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2016 Johannes Ranke
+# Copyright (C) 2010-2016,2019 Johannes Ranke
 # Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
@@ -26,12 +26,16 @@ plot.mkinfit <- function(x, fit = x,
   pch_obs = col_obs,
   lty_obs = rep(1, length(obs_vars)),
   add = FALSE, legend = !add,
-  show_residuals = FALSE, maxabs = "auto",
+  show_residuals = FALSE,
+  show_errplot = FALSE,
+  maxabs = "auto",
   sep_obs = FALSE, rel.height.middle = 0.9,
   lpos = "topright", inset = c(0.05, 0.05),
   show_errmin = FALSE, errmin_digits = 3, ...)
 {
   if (add && show_residuals) stop("If adding to an existing plot we can not show residuals")
+  if (add && show_errplot) stop("If adding to an existing plot we can not show the error model plot")
+  if (show_residuals && show_errplot) stop("We can either show residuals over time or the error model plot, not both")
   if (add && sep_obs) stop("If adding to an existing plot we can not show observed variables separately")
 
   solution_type = fit$solution_type
@@ -68,8 +72,7 @@ plot.mkinfit <- function(x, fit = x,
   # Create a plot layout only if not to be added to an existing plot
   # or only a single plot is requested (e.g. by plot.mmkin)
   do_layout = FALSE
-  if (show_residuals) do_layout = TRUE
-  if (sep_obs) do_layout = TRUE
+  if (show_residuals | sep_obs | show_errplot) do_layout = TRUE
   n_plot_rows = if (sep_obs) length(obs_vars) else 1
 
   if (do_layout) {
@@ -78,7 +81,7 @@ plot.mkinfit <- function(x, fit = x,
 
     # If the observed variables are shown separately, do row layout
     if (sep_obs) {
-      n_plot_cols = if (show_residuals) 2 else 1
+      n_plot_cols = if (show_residuals | show_errplot) 2 else 1
       n_plots = n_plot_rows * n_plot_cols
 
       # Set relative plot heights, so the first and the last plot are the norm
@@ -200,6 +203,12 @@ plot.mkinfit <- function(x, fit = x,
         points(residuals_plot, pch = pch_obs[obs_var], col = col_obs[obs_var])
       }
       abline(h = 0, lty = 2)
+    }
+
+    # Show error model plot if requested
+    if (show_errplot) {
+      mkinerrplot(fit, obs_vars = row_obs_vars, pch_obs = pch_obs[row_obs_vars], col_obs = col_obs[row_obs_vars],
+                  legend = FALSE)
     }
   }
   if (do_layout) par(oldpar, no.readonly = TRUE)

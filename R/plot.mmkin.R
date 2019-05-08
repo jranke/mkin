@@ -1,4 +1,4 @@
-# Copyright (C) 2015-2016 Johannes Ranke
+# Copyright (C) 2015-2016,2019 Johannes Ranke
 # Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
@@ -16,10 +16,14 @@
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
 
-plot.mmkin <- function(x, main = "auto", legends = 1, errmin_var = "All data", errmin_digits = 3,
+plot.mmkin <- function(x, main = "auto", legends = 1, 
+                       resplot = c("time", "errmod"),
+                       errmin_var = "All data", errmin_digits = 3,
                        cex = 0.7, rel.height.middle = 0.9, ...) {
   n.m <- nrow(x)
   n.d <- ncol(x)
+
+  resplot <- match.arg(resplot)
 
   # We can handle either a row (different models, same dataset)
   # or a column (same model, different datasets)
@@ -90,7 +94,11 @@ plot.mmkin <- function(x, main = "auto", legends = 1, errmin_var = "All data", e
     }
     mtext(chi2_text, cex = cex, line = 0.4)
 
-    mkinresplot(fit, legend = FALSE, ...)
+    if (resplot == "time") {
+      mkinresplot(fit, legend = FALSE, ...)
+    } else {
+      mkinerrplot(fit, legend = FALSE, ...)
+    }
     mtext(paste(fit_name, "residuals"), cex = cex, line = 0.4)
   }
 

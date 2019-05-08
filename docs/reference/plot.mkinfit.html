@@ -36,7 +36,7 @@
   from a previous successful call to mkinfit and plots
   the observed data together with the solution of the fitted model.
 If the current plot device is a tikz device,
-  then latex is being used for the formatting of the chi2 error level, 
+  then latex is being used for the formatting of the chi2 error level,
   if show_errmin = TRUE." />
 <meta name="twitter:card" content="summary" />
 
@@ -137,7 +137,7 @@ If the current plot device is a tikz device,
   from a previous successful call to <code><a href='mkinfit.html'>mkinfit</a></code> and plots
   the observed data together with the solution of the fitted model.</p>
 <p>If the current plot device is a <code><a href='https://www.rdocumentation.org/packages/tikzDevice/topics/tikz'>tikz</a></code> device,
-  then latex is being used for the formatting of the chi2 error level, 
+  then latex is being used for the formatting of the chi2 error level,
   if <code>show_errmin = TRUE</code>.</p>
     
     </div>
@@ -151,7 +151,9 @@ plot(x, fit = x,
   col_obs = 1:length(obs_vars), pch_obs = col_obs,
   lty_obs = rep(1, length(obs_vars)),
   add = FALSE, legend = !add,
-  show_residuals = FALSE, maxabs = "auto",
+  show_residuals = FALSE,
+  show_errplot = FALSE,
+  maxabs = "auto",
   sep_obs = FALSE, rel.height.middle = 0.9,
   lpos = "topright", inset = c(0.05, 0.05),
   show_errmin = FALSE, errmin_digits = 3, &#8230;)
@@ -213,9 +215,16 @@ plot_sep(fit, sep_obs = TRUE,  show_residuals = TRUE, show_errmin = TRUE, &#8230
     <tr>
       <th>show_residuals</th>
       <td><p>Should residuals be shown? If only one plot of the fits is shown, the
-    residual plot is in the lower third of the plot? Otherwise, i.e. if
+    residual plot is in the lower third of the plot. Otherwise, i.e. if
     "sep_obs" is given, the residual plots will be located to the right of
     the plots of the fitted curves.</p></td>
+    </tr>
+    <tr>
+      <th>show_errplot</th>
+      <td><p>Should squared residuals and the error model be shown? If only one plot of
+    the fits is shown, this plot is in the lower third of the plot.
+    Otherwise, i.e. if "sep_obs" is given, the residual plots will be located
+    to the right of the plots of the fitted curves.</p></td>
     </tr>
     <tr>
       <th>maxabs</th>
@@ -263,14 +272,18 @@ plot_sep(fit, sep_obs = TRUE,  show_residuals = TRUE, show_errmin = TRUE, &#8230
     <pre class="examples"><div class='input'><span class='co'># One parent compound, one metabolite, both single first order, path from</span>
 <span class='co'># parent to sink included</span>
 <span class='no'>SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>, <span class='kw'>full</span> <span class='kw'>=</span> <span class='st'>"Parent"</span>),
-                   <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='kw'>full</span> <span class='kw'>=</span> <span class='st'>"Metabolite M1"</span> ))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>fit</span>)</div><div class='img'><img src='plot.mkinfit-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>fit</span>, <span class='kw'>show_residuals</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='plot.mkinfit-2.png' alt='' width='700' height='433' /></div><div class='input'>
+                   <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='kw'>full</span> <span class='kw'>=</span> <span class='st'>"Metabolite M1"</span> ))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"tc"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>fit</span>)</div><div class='img'><img src='plot.mkinfit-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>fit</span>, <span class='kw'>show_residuals</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='plot.mkinfit-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>fit</span>, <span class='kw'>show_errplot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='plot.mkinfit-3.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Show the observed variables separately</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>fit</span>, <span class='kw'>sep_obs</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>lpos</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"topright"</span>, <span class='st'>"bottomright"</span>))</div><div class='img'><img src='plot.mkinfit-3.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>fit</span>, <span class='kw'>sep_obs</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>lpos</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"topright"</span>, <span class='st'>"bottomright"</span>))</div><div class='img'><img src='plot.mkinfit-4.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Show the observed variables separately, with residuals</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>fit</span>, <span class='kw'>sep_obs</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>show_residuals</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>lpos</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"topright"</span>, <span class='st'>"bottomright"</span>),
-     <span class='kw'>show_errmin</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='plot.mkinfit-4.png' alt='' width='700' height='433' /></div><div class='input'>
+     <span class='kw'>show_errmin</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='plot.mkinfit-5.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># The same can be obtained with less typing, using the convenience function plot_sep</span>
-<span class='fu'>plot_sep</span>(<span class='no'>fit</span>, <span class='kw'>lpos</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"topright"</span>, <span class='st'>"bottomright"</span>))</div></pre>
+<span class='fu'>plot_sep</span>(<span class='no'>fit</span>, <span class='kw'>lpos</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"topright"</span>, <span class='st'>"bottomright"</span>))
+
+<span class='co'># Show the observed variables separately, with the error model</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>fit</span>, <span class='kw'>sep_obs</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>show_errplot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>lpos</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"topright"</span>, <span class='st'>"bottomright"</span>),
+     <span class='kw'>show_errmin</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='plot.mkinfit-6.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

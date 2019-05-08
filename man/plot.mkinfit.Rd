@@ -10,7 +10,7 @@
   the observed data together with the solution of the fitted model.
 
   If the current plot device is a \code{\link[tikzDevice]{tikz}} device,
-  then latex is being used for the formatting of the chi2 error level, 
+  then latex is being used for the formatting of the chi2 error level,
   if \code{show_errmin = TRUE}.
 }
 \usage{
@@ -22,7 +22,9 @@
   col_obs = 1:length(obs_vars), pch_obs = col_obs,
   lty_obs = rep(1, length(obs_vars)),
   add = FALSE, legend = !add,
-  show_residuals = FALSE, maxabs = "auto",
+  show_residuals = FALSE,
+  show_errplot = FALSE,
+  maxabs = "auto",
   sep_obs = FALSE, rel.height.middle = 0.9,
   lpos = "topright", inset = c(0.05, 0.05),
   show_errmin = FALSE, errmin_digits = 3, \dots)
@@ -69,9 +71,15 @@ plot_sep(fit, sep_obs = TRUE,  show_residuals = TRUE, show_errmin = TRUE, \dots)
   }
   \item{show_residuals}{
     Should residuals be shown? If only one plot of the fits is shown, the
-    residual plot is in the lower third of the plot? Otherwise, i.e. if
+    residual plot is in the lower third of the plot. Otherwise, i.e. if
     "sep_obs" is given, the residual plots will be located to the right of
     the plots of the fitted curves.
+  }
+  \item{show_errplot}{
+    Should squared residuals and the error model be shown? If only one plot of
+    the fits is shown, this plot is in the lower third of the plot.
+    Otherwise, i.e. if "sep_obs" is given, the residual plots will be located
+    to the right of the plots of the fitted curves.
   }
   \item{maxabs}{
     Maximum absolute value of the residuals. This is used for the scaling of
@@ -109,9 +117,10 @@ plot_sep(fit, sep_obs = TRUE,  show_residuals = TRUE, show_errmin = TRUE, \dots)
 # parent to sink included
 SFO_SFO <- mkinmod(parent = mkinsub("SFO", "m1", full = "Parent"),
                    m1 = mkinsub("SFO", full = "Metabolite M1" ))
-fit <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE)
+fit <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE, error_model = "tc")
 plot(fit)
 plot(fit, show_residuals = TRUE)
+plot(fit, show_errplot = TRUE)
 
 # Show the observed variables separately
 plot(fit, sep_obs = TRUE, lpos = c("topright", "bottomright"))
@@ -122,6 +131,10 @@ plot(fit, sep_obs = TRUE, show_residuals = TRUE, lpos = c("topright", "bottomrig
 
 # The same can be obtained with less typing, using the convenience function plot_sep
 plot_sep(fit, lpos = c("topright", "bottomright"))
+
+# Show the observed variables separately, with the error model
+plot(fit, sep_obs = TRUE, show_errplot = TRUE, lpos = c("topright", "bottomright"),
+     show_errmin = TRUE)
 }
 \author{
   Johannes Ranke
