@@ -54,7 +54,7 @@ quickinstall: build-no-vignettes
 	"$(RBIN)/R" CMD INSTALL $(TGZVNR)
 
 check: build
-	"$(RBIN)/R" CMD check --as-cran --no-tests $(TGZ) 2>&1 | tee check.log
+	_R_CHECK_CRAN_INCOMING_REMOTE_=false "$(RBIN)/R" CMD check --as-cran --no-tests $(TGZ) 2>&1 | tee check.log
 
 quickcheck: build-no-vignettes
 	mv $(TGZVNR) $(TGZ)
