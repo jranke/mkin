@@ -21,7 +21,7 @@ mkinerrplot <- function (object,
   obs_vars = names(object$mkinmod$map),
   xlim = c(0, 1.1 * max(object$data$predicted)),
   xlab = "Predicted", ylab = "Squared residual",
-  maxy = "auto", legend= TRUE, lpos = "topright", 
+  maxy = "auto", legend= TRUE, lpos = "topright",
   col_obs = "auto", pch_obs = "auto",
   ...)
 {
@@ -58,7 +58,7 @@ mkinerrplot <- function (object,
   }
 
   if (object$err_mod == "const") {
-    abline(h = object$errparms^2, lty = 2, col = col_obs[obs_var])
+    abline(h = object$errparms^2, lty = 2, col = 1)
   }
   if (object$err_mod == "obs") {
     for (obs_var in obs_vars) {
@@ -74,7 +74,7 @@ mkinerrplot <- function (object,
                     rsd_high = object$errparms[2])^2
     }
     plot(sigma_plot, from = 0, to = max(object$data$predicted),
-         add = TRUE, lty = 2, col = col_obs[obs_var])
+         add = TRUE, lty = 2, col = 1)
   }
 
   if (legend == TRUE) {
