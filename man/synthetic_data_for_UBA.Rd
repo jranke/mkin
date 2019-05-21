@@ -14,7 +14,7 @@
  Variance component 'c' is based on the error model from Rocke and Lorenzato (1995), with the
  minimum standard deviation (for small y values) of 0.5, and a proportionality constant of 0.07
  for the increase of the standard deviation with y. Note that this is a simplified version
- of the error model proposed by Rocke and Lorenzato (1995), as in their model the error of the 
+ of the error model proposed by Rocke and Lorenzato (1995), as in their model the error of the
  measured values approximates lognormal distribution for high values, whereas we are using
  normally distributed error components all along.
 
@@ -116,7 +116,8 @@ add_err = function(d, sdfunc, LOD = 0.1, reps = 2, seed = 123456789)
   return(d_NA)
 }
 
-# The following is the two-component model of Rocke and Lorenzato (1995)
+# The following is the simplified version of the two-component model of Rocke
+# and Lorenzato (1995)
 sdfunc_twocomp = function(value, sd_low, rsd_high) {
   sqrt(sd_low^2 + value^2 * rsd_high^2)
 }
