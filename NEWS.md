@@ -1,4 +1,4 @@
-# mkin 0.9.49.4 (2019-05-08)
+# mkin 0.9.49.4 (2019-05-23)
 
 - Direct minimization of the negative log-likelihood for non-constant error models (two-component and variance by variable). In the case the error model is constant variance, least squares is used as this is more stable
 
@@ -17,6 +17,8 @@
 - The fitting time reported in the summary now includes the calculation of the hessians
 
 - Adapt tests
+
+- Fix an error in the FOCUS chi2 error level calculations that occurred if parameters were specified in parms.ini that were not in the model. A warning was already issued, but when fitting via mmkin this could easily go unnoticed.
 
 # mkin 0.9.48.1 (2019-03-04)
 

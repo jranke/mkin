@@ -91,6 +91,7 @@ mkinfit <- function(mkinmod, observed,
   if (length(wrongpar.names) > 0) {
     warning("Initial parameter(s) ", paste(wrongpar.names, collapse = ", "),
          " not used in the model")
+    parms.ini <- parms.ini[setdiff(names(parms.ini), wrongpar.names)] 
   }
 
   # Warn that the sum of formation fractions may exceed one if they are not
