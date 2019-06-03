@@ -177,3 +177,45 @@ test_that("Reweighting method 'tc' produces reasonable variance estimates", {
   # from 15 datasets
   expect_true(all(abs(tcf_met_2_15_tc_error_model_errors) < 0.10))
 })
+
+test_that("The two-component error model finds the best known AIC values for parent models", {
+  skip_on_cran()
+  experimental_data_for_UBA_2019
+  library(parallel)
+  source("~/git/mkin/R/mkinfit.R")
+  source("~/git/mkin/R/mmkin.R")
+  f_9 <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data)
+  f_9 <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
+                 error_model = "tc", error_model_algorithm = "direct")
+  f_9 <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
+                 error_model = "tc", error_model_algorithm = "twostep")
+  f_9 <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
+                 error_model = "tc", error_model_algorithm = "threestep")
+  f_9 <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
+                 error_model = "tc", error_model_algorithm = "fourstep")
+  f_9 <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
+                 error_model = "tc", error_model_algorithm = "IRLS")
+  AIC(f_9)
+  f_tc_exp <- mmkin(c("SFO"),
+    lapply(experimental_data_for_UBA_2019, function(x) x$data),
+    error_model = "tc",
+    error_model_algorithm = "direct",
+    quiet = TRUE)
+  f_tc_exp <- mmkin(c("SFO"),
+    lapply(experimental_data_for_UBA_2019, function(x) x$data),
+    error_model = "tc",
+    error_model_algorithm = "twostep",
+    quiet = TRUE)
+  f_tc_exp <- mmkin(c("SFO"),
+    lapply(experimental_data_for_UBA_2019, function(x) x$data),
+    error_model = "tc",
+    error_model_algorithm = "threestep",
+    quiet = TRUE)
+
+  AIC_exp <- lapply(f_tc_exp, AIC)
+  dim(AIC_exp) <- dim(f_tc_exp)
+  dimnames(AIC_exp) <- dimnames(f_tc_exp)
+  expect_equivalent(round(AIC_exp["SFO", c(9, 11, 12)], 1), c(134.9, 125.5, 82.0))
+})
+
+
