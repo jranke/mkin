@@ -181,7 +181,7 @@ test_that("Reweighting method 'tc' produces reasonable variance estimates", {
 test_that("The different error model fitting methods work for parent fits", {
   skip_on_cran()
 
-  f_9_OLS <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data, 
+  f_9_OLS <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
                      quiet = TRUE)
   expect_equivalent(round(AIC(f_9_OLS), 2), 137.43)
 
