@@ -505,8 +505,19 @@ mkinfit <- function(mkinmod, observed,
           upper = upper[names(parms.start)],
           control = control, ...)
         fit$logLik <- - nlogLik.current
-        if (error_model_algorithm == "d_3" && fit_direct$logLik > fit$logLik) {
-          fit <- fit_direct
+        if (error_model_algorithm == "d_3") {
+          if (abs((fit_direct$logLik - fit$logLik))/mean(c(fit_direct$logLik, fit$logLik)) < 0.001) {
+            if (!quiet) {
+              message("Direct fitting and three-step fitting yield approximately the same likelihood")
+            }
+          } else {
+            if (fit_direct$logLik < fit$logLik) {
+              if (!quiet) message("Three-step fitting yielded a higher likelihood than direct fitting")
+            } else {
+              if (!quiet) message("Direct fitting yielded a higher likelihood than three-step fitting")
+              fit <- fit_direct
+            }
+          }
         }
       }
       if (err_mod != "const" & error_model_algorithm == "IRLS") {
