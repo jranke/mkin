@@ -31,6 +31,8 @@ mkinfit(mkinmod, observed,
   quiet = FALSE,
   atol = 1e-8, rtol = 1e-10, n.outtimes = 100,
   error_model = c("const", "obs", "tc"),
+  error_model_algorithm = c("d_3", "direct", "twostep", "threestep", "fourstep", "IRLS"),
+  reweight.tol = 1e-8, reweight.max.iter = 10,
   trace_parms = FALSE, ...)
 }
 \arguments{
@@ -170,6 +172,44 @@ mkinfit(mkinmod, observed,
     from the model by Rocke and Lorenzato, as their model implies that the
     errors follow a lognormal distribution for large values, not a normal
     distribution as assumed by this method.
+  }
+  \item{error_model_algorithm}{
+    If the error model is "const", the error model algorithm is ignored,
+    because no special algorithm is needed and unweighted (also known as
+    ordinary) least squares fitting can be applied.
+
+    The default algorithm "d_3" will directly minimize the negative
+    log-likelihood and - independently - also use the three step algorithm
+    described below. The fit with the higher likelihood is returned.
+
+    The algorithm "direct" will directly minimize the negative
+    log-likelihood.
+
+    The algorithm "twostep" will minimize the negative log-likelihood
+    after an initial unweighted leas squares optimisation step.
+
+    The algorithm "threestep" starts with unweighted least squares,
+    then optimizes only the error model using the degradation model
+    parameters found, and then minimizes the negative log-likelihood
+    with free degradation and error model parameters.
+
+    The algorithm "fourstep" starts with unweighted least squares,
+    then optimizes only the error model using the degradation model
+    parameters found, then optimizes the degradation model again
+    with fixed error model parameters, and finally minimizes the negative
+    log-likelihood with free degradation and error model parameters.
+
+    The algorithm "IRLS" starts with unweighted least squares,
+    and then iterates optimization of the error model parameters and subsequent
+    optimization of the degradation model using those error model parameters,
+    until the error model parameters converge.
+  }
+  \item{reweight.tol}{
+    Tolerance for the convergence criterion calculated from the error model
+    parameters in IRLS fits.
+  }
+  \item{reweight.max.iter}{
+    Maximum number of iterations in IRLS fits.
   }
   \item{trace_parms}{
     Should a trace of the parameter values be listed?

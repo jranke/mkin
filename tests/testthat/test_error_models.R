@@ -178,84 +178,49 @@ test_that("Reweighting method 'tc' produces reasonable variance estimates", {
   expect_true(all(abs(tcf_met_2_15_tc_error_model_errors) < 0.10))
 })
 
-test_that("The two-component error model finds the best known AIC values for parent models", {
+test_that("The different error model fitting methods work for parent fits", {
   skip_on_cran()
-  library(parallel)
-  source("~/git/mkin/R/mkinfit.R")
-  source("~/git/mkin/R/mmkin.R")
-  f_9 <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data)
-  f_9 <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
-                 error_model = "tc", error_model_algorithm = "direct")
-  f_9 <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
-                 error_model = "tc", error_model_algorithm = "twostep")
-  f_9 <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
-                 error_model = "tc", error_model_algorithm = "threestep")
-  f_9 <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
-                 error_model = "tc", error_model_algorithm = "fourstep")
-  f_9 <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
-                 error_model = "tc", error_model_algorithm = "IRLS")
-  f_9 <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
-                 error_model = "tc", error_model_algorithm = "d_3")
-  AIC(f_9)
-  f_10 <- mkinfit("DFOP", experimental_data_for_UBA_2019[[10]]$data,
-                 error_model = "tc", error_model_algorithm = "IRLS")
-  f_tc_exp_direct <- mmkin(c("SFO", "DFOP", "HS"),
-    lapply(experimental_data_for_UBA_2019, function(x) x$data),
-    error_model = "tc",
-    error_model_algorithm = "direct",
-    quiet = TRUE)
-  f_tc_exp_twostep <- mmkin(c("SFO", "DFOP", "HS"),
-    lapply(experimental_data_for_UBA_2019, function(x) x$data),
-    error_model = "tc",
-    error_model_algorithm = "twostep",
-    quiet = TRUE)
-  f_tc_exp_threestep <- mmkin(c("SFO", "DFOP", "HS"),
-    lapply(experimental_data_for_UBA_2019, function(x) x$data),
-    error_model = "tc",
-    error_model_algorithm = "threestep",
-    quiet = TRUE)
-  f_tc_exp_fourstep <- mmkin(c("SFO", "DFOP", "HS"),
-    lapply(experimental_data_for_UBA_2019, function(x) x$data),
-    error_model = "tc",
-    error_model_algorithm = "fourstep",
-    quiet = TRUE)
-  f_tc_exp_IRLS <- mmkin(c("SFO", "DFOP", "HS"),
-    lapply(experimental_data_for_UBA_2019, function(x) x$data),
-    error_model = "tc",
-    error_model_algorithm = "IRLS",
-    quiet = TRUE)
 
-  AIC_exp_direct <- lapply(f_tc_exp_direct, AIC)
-  AIC_exp_direct <- lapply(AIC_exp_direct, round, 1)
-  dim(AIC_exp_direct) <- dim(f_tc_exp_direct)
-  dimnames(AIC_exp_direct) <- dimnames(f_tc_exp_direct)
+  f_9_OLS <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data, 
+                     quiet = TRUE)
+  expect_equivalent(round(AIC(f_9_OLS), 2), 137.43)
 
-  AIC_exp_twostep <- lapply(f_tc_exp_twostep, AIC)
-  AIC_exp_twostep <- lapply(AIC_exp_twostep, round, 1)
-  dim(AIC_exp_twostep) <- dim(f_tc_exp_twostep)
-  dimnames(AIC_exp_twostep) <- dimnames(f_tc_exp_twostep)
+  f_9_direct <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
+    error_model = "tc", error_model_algorithm = "direct", quiet = TRUE)
+  expect_equivalent(round(AIC(f_9_direct), 2), 134.94)
 
-  AIC_exp_threestep <- lapply(f_tc_exp_threestep, AIC)
-  AIC_exp_threestep <- lapply(AIC_exp_threestep, round, 1)
-  dim(AIC_exp_threestep) <- dim(f_tc_exp_threestep)
-  dimnames(AIC_exp_threestep) <- dimnames(f_tc_exp_threestep)
+  f_9_twostep <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
+    error_model = "tc", error_model_algorithm = "twostep", quiet = TRUE)
+  expect_equivalent(round(AIC(f_9_twostep), 2), 134.94)
 
-  AIC_exp_fourstep <- lapply(f_tc_exp_fourstep, AIC)
-  AIC_exp_fourstep <- lapply(AIC_exp_fourstep, round, 1)
-  dim(AIC_exp_fourstep) <- dim(f_tc_exp_fourstep)
-  dimnames(AIC_exp_fourstep) <- dimnames(f_tc_exp_fourstep)
+  f_9_threestep <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
+    error_model = "tc", error_model_algorithm = "threestep", quiet = TRUE)
+  expect_equivalent(round(AIC(f_9_threestep), 2), 139.43)
 
-  AIC_exp_IRLS <- lapply(f_tc_exp_IRLS, AIC)
-  AIC_exp_IRLS <- lapply(AIC_exp_IRLS, round, 1)
-  dim(AIC_exp_IRLS) <- dim(f_tc_exp_IRLS)
-  dimnames(AIC_exp_IRLS) <- dimnames(f_tc_exp_IRLS)
+  f_9_fourstep <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
+    error_model = "tc", error_model_algorithm = "fourstep", quiet = TRUE)
+  expect_equivalent(round(AIC(f_9_fourstep), 2), 139.43)
 
-  AIC_exp <- lapply(f_tc_exp, AIC)
-  dim(AIC_exp) <- dim(f_tc_exp)
-  dimnames(AIC_exp) <- dimnames(f_tc_exp)
-  unlist(AIC_exp["SFO", c(9, 11, 12)])
-  expect_equivalent(round(unlist(AIC_exp["SFO", c(9, 11, 12)]), 1),
-                    c(134.9, 125.5, 82.0))
+  f_9_IRLS <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
+    error_model = "tc", error_model_algorithm = "IRLS", quiet = TRUE)
+  expect_equivalent(round(AIC(f_9_IRLS), 2), 139.43)
+
+  f_9_d_3 <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
+    error_model = "tc", error_model_algorithm = "d_3", quiet = TRUE)
+  expect_equivalent(round(AIC(f_9_d_3), 2), 134.94)
 })
 
+test_that("The default error model algorithm finds the best known AIC values for parent fits", {
+  f_tc_exp_d_3 <- mmkin(c("SFO", "DFOP", "HS"),
+    lapply(experimental_data_for_UBA_2019, function(x) x$data),
+    error_model = "tc",
+    error_model_algorithm = "d_3",
+    quiet = TRUE)
 
+  AIC_exp_d_3 <- lapply(f_tc_exp_d_3, AIC)
+  AIC_exp_d_3 <- lapply(AIC_exp_d_3, round, 1)
+  dim(AIC_exp_d_3) <- dim(f_tc_exp_d_3)
+  dimnames(AIC_exp_d_3) <- dimnames(f_tc_exp_d_3)
+
+  expect_known_output(AIC_exp_d_3, "AIC_exp_d_3.out")
+})

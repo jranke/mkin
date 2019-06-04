@@ -1,8 +1,10 @@
-# mkin 0.9.49.4 (2019-05-23)
+# mkin 0.9.49.5 (2019-06-04)
 
-- Direct minimization of the negative log-likelihood for non-constant error models (two-component and variance by variable). In the case the error model is constant variance, least squares is used as this is more stable
+- Several algorithms for minimization of the negative log-likelihood for non-constant error models (two-component and variance by variable). In the case the error model is constant variance, least squares is used as this is more stable. The default algorithm tries direct minimization and a three step procedure, and returns the model with the highest likelihood.
 
-- The argument 'reweight.method' to mkinfit and mmkin is now obsolete, use 'error_model' instead
+- The argument 'reweight.method' to mkinfit and mmkin is now obsolete, use 'error_model' and 'error_model_algorithm' instead
+
+- Add a test that checks if we get the best known AIC for parent only fits to 12 test datasets. Add these test datasets for this purpose.
 
 - New function 'mkinerrplot'. This function is also used for residual plots in 'plot.mmkin' if the argument 'resplot = "errmod"' is given, and in 'plot.mkinfit' if 'show_errplot' is set to TRUE.
 

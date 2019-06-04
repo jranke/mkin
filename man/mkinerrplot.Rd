@@ -68,8 +68,10 @@
  \code{\link{mkinplot}}, for a way to plot the data and the fitted lines of the
  mkinfit object.  }
 \examples{
+\dontrun{
 model <- mkinmod(parent = mkinsub("SFO", "m1"), m1 = mkinsub("SFO"))
 fit <- mkinfit(model, FOCUS_2006_D, error_model = "tc", quiet = TRUE)
 mkinerrplot(fit)
+}
 }
 \keyword{ hplot }

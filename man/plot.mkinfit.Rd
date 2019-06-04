@@ -115,6 +115,7 @@ plot_sep(fit, sep_obs = TRUE,  show_residuals = TRUE, show_errmin = TRUE, \dots)
 \examples{
 # One parent compound, one metabolite, both single first order, path from
 # parent to sink included
+\dontrun{
 SFO_SFO <- mkinmod(parent = mkinsub("SFO", "m1", full = "Parent"),
                    m1 = mkinsub("SFO", full = "Metabolite M1" ))
 fit <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE, error_model = "tc")
@@ -135,6 +136,7 @@ plot_sep(fit, lpos = c("topright", "bottomright"))
 # Show the observed variables separately, with the error model
 plot(fit, sep_obs = TRUE, show_errplot = TRUE, lpos = c("topright", "bottomright"),
      show_errmin = TRUE)
+}
 }
 \author{
   Johannes Ranke

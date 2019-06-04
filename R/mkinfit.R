@@ -34,7 +34,7 @@ mkinfit <- function(mkinmod, observed,
   quiet = FALSE,
   atol = 1e-8, rtol = 1e-10, n.outtimes = 100,
   error_model = c("const", "obs", "tc"),
-  error_model_algorithm = c("direct", "twostep", "threestep", "fourstep", "IRLS"),
+  error_model_algorithm = c("d_3", "direct", "twostep", "threestep", "fourstep", "IRLS"),
   reweight.tol = 1e-8, reweight.max.iter = 10,
   trace_parms = FALSE,
   ...)
@@ -442,77 +442,102 @@ mkinfit <- function(mkinmod, observed,
   fit_time <- system.time({
     degparms <- c(state.ini.optim, transparms.optim)
 
-    if (err_mod == "const" | error_model_algorithm != "direct") {
+    if (err_mod == "const") {
       if (!quiet) message("Ordinary least squares optimisation")
       fit <- nlminb(degparms, nlogLik, control = control,
         lower = lower[names(degparms)],
         upper = upper[names(degparms)], OLS = TRUE, ...)
       degparms <- fit$par
+
       # Get the maximum likelihood estimate for sigma at the optimum parameter values
       data_errmod$residual <- data_errmod$value.observed - data_errmod$value.predicted
       sigma_mle <- sqrt(sum(data_errmod$residual^2)/nrow(data_errmod))
 
-      if (err_mod == "const") {
-        errparms <- c(sigma = sigma_mle)
-      }
-
+      errparms <- c(sigma = sigma_mle)
       nlogLik.current <- nlogLik(c(degparms, errparms), OLS = FALSE)
       fit$logLik <- - nlogLik.current
-    }
-    if (error_model_algorithm %in% c("threestep", "fourstep")) {
-      if (!quiet) message("Optimising the error model")
-      fit <- nlminb(errparms, nlogLik, control = control,
-        lower = lower[names(errparms)],
-        upper = upper[names(errparms)],
-        fixed_degparms = degparms, ...)
-      errparms <- fit$par
-    }
-    if (error_model_algorithm == "fourstep") {
-      if (!quiet) message("Optimising the degradation model")
-      fit <- nlminb(degparms, nlogLik, control = control,
-        lower = lower[names(degparms)],
-        upper = upper[names(degparms)],
-        fixed_errparms = errparms, ...)
-      degparms <- fit$par
-    }
-    if (error_model_algorithm %in% c("direct", "twostep", "threestep", "fourstep") &
-        err_mod != "const") {
-      if (!quiet) message("Optimising the complete model")
-      parms.start <- c(degparms, errparms)
-      fit <- nlminb(parms.start, nlogLik,
-        lower = lower[names(parms.start)],
-        upper = upper[names(parms.start)],
-        control = control, ...)
-      fit$logLik <- - nlogLik.current
-    }
-    if (err_mod != "const" & error_model_algorithm == "IRLS") {
-      reweight.diff <- 1
-      n.iter <- 0
-      errparms_last <- errparms
+    } else {
+      if (error_model_algorithm == "d_3") {
+        if (!quiet) message("Directly optimising the complete model")
+        parms.start <- c(degparms, errparms)
+        fit_direct <- nlminb(parms.start, nlogLik,
+          lower = lower[names(parms.start)],
+          upper = upper[names(parms.start)],
+          control = control, ...)
+        fit_direct$logLik <- - nlogLik.current
+        nlogLik.current <- Inf # reset to avoid conflict with the OLS step
+      }
+      if (error_model_algorithm != "direct") {
+        if (!quiet) message("Ordinary least squares optimisation")
+        fit <- nlminb(degparms, nlogLik, control = control,
+          lower = lower[names(degparms)],
+          upper = upper[names(degparms)], OLS = TRUE, ...)
+        degparms <- fit$par
+        # Get the maximum likelihood estimate for sigma at the optimum parameter values
+        data_errmod$residual <- data_errmod$value.observed - data_errmod$value.predicted
+        sigma_mle <- sqrt(sum(data_errmod$residual^2)/nrow(data_errmod))
 
-      while (reweight.diff > reweight.tol &
-             n.iter < reweight.max.iter) {
-
+        nlogLik.current <- nlogLik(c(degparms, errparms), OLS = FALSE)
+        fit$logLik <- - nlogLik.current
+      }
+      if (error_model_algorithm %in% c("threestep", "fourstep", "d_3")) {
         if (!quiet) message("Optimising the error model")
         fit <- nlminb(errparms, nlogLik, control = control,
           lower = lower[names(errparms)],
           upper = upper[names(errparms)],
           fixed_degparms = degparms, ...)
         errparms <- fit$par
-
+      }
+      if (error_model_algorithm == "fourstep") {
         if (!quiet) message("Optimising the degradation model")
         fit <- nlminb(degparms, nlogLik, control = control,
           lower = lower[names(degparms)],
           upper = upper[names(degparms)],
           fixed_errparms = errparms, ...)
         degparms <- fit$par
-
-        reweight.diff <- dist(rbind(errparms, errparms_last))
+      }
+      if (error_model_algorithm %in% c("direct", "twostep", "threestep",
+                                       "fourstep", "d_3")) {
+        if (!quiet) message("Optimising the complete model")
+        parms.start <- c(degparms, errparms)
+        fit <- nlminb(parms.start, nlogLik,
+          lower = lower[names(parms.start)],
+          upper = upper[names(parms.start)],
+          control = control, ...)
+        fit$logLik <- - nlogLik.current
+        if (error_model_algorithm == "d_3" && fit_direct$logLik > fit$logLik) {
+          fit <- fit_direct
+        }
+      }
+      if (err_mod != "const" & error_model_algorithm == "IRLS") {
+        reweight.diff <- 1
+        n.iter <- 0
         errparms_last <- errparms
 
-        fit$par <- c(fit$par, errparms)
-        nlogLik.current <- nlogLik(c(degparms, errparms), OLS = FALSE)
-        fit$logLik <- - nlogLik.current
+        while (reweight.diff > reweight.tol &
+               n.iter < reweight.max.iter) {
+
+          if (!quiet) message("Optimising the error model")
+          fit <- nlminb(errparms, nlogLik, control = control,
+            lower = lower[names(errparms)],
+            upper = upper[names(errparms)],
+            fixed_degparms = degparms, ...)
+          errparms <- fit$par
+
+          if (!quiet) message("Optimising the degradation model")
+          fit <- nlminb(degparms, nlogLik, control = control,
+            lower = lower[names(degparms)],
+            upper = upper[names(degparms)],
+            fixed_errparms = errparms, ...)
+          degparms <- fit$par
+
+          reweight.diff <- dist(rbind(errparms, errparms_last))
+          errparms_last <- errparms
+
+          fit$par <- c(fit$par, errparms)
+          nlogLik.current <- nlogLik(c(degparms, errparms), OLS = FALSE)
+          fit$logLik <- - nlogLik.current
+        }
       }
     }
 
