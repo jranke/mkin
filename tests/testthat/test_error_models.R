@@ -180,7 +180,6 @@ test_that("Reweighting method 'tc' produces reasonable variance estimates", {
 
 test_that("The two-component error model finds the best known AIC values for parent models", {
   skip_on_cran()
-  experimental_data_for_UBA_2019
   library(parallel)
   source("~/git/mkin/R/mkinfit.R")
   source("~/git/mkin/R/mmkin.R")
@@ -195,27 +194,68 @@ test_that("The two-component error model finds the best known AIC values for par
                  error_model = "tc", error_model_algorithm = "fourstep")
   f_9 <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
                  error_model = "tc", error_model_algorithm = "IRLS")
+  f_9 <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
+                 error_model = "tc", error_model_algorithm = "d_3")
   AIC(f_9)
-  f_tc_exp <- mmkin(c("SFO"),
+  f_10 <- mkinfit("DFOP", experimental_data_for_UBA_2019[[10]]$data,
+                 error_model = "tc", error_model_algorithm = "IRLS")
+  f_tc_exp_direct <- mmkin(c("SFO", "DFOP", "HS"),
     lapply(experimental_data_for_UBA_2019, function(x) x$data),
     error_model = "tc",
     error_model_algorithm = "direct",
     quiet = TRUE)
-  f_tc_exp <- mmkin(c("SFO"),
+  f_tc_exp_twostep <- mmkin(c("SFO", "DFOP", "HS"),
     lapply(experimental_data_for_UBA_2019, function(x) x$data),
     error_model = "tc",
     error_model_algorithm = "twostep",
     quiet = TRUE)
-  f_tc_exp <- mmkin(c("SFO"),
+  f_tc_exp_threestep <- mmkin(c("SFO", "DFOP", "HS"),
     lapply(experimental_data_for_UBA_2019, function(x) x$data),
     error_model = "tc",
     error_model_algorithm = "threestep",
     quiet = TRUE)
+  f_tc_exp_fourstep <- mmkin(c("SFO", "DFOP", "HS"),
+    lapply(experimental_data_for_UBA_2019, function(x) x$data),
+    error_model = "tc",
+    error_model_algorithm = "fourstep",
+    quiet = TRUE)
+  f_tc_exp_IRLS <- mmkin(c("SFO", "DFOP", "HS"),
+    lapply(experimental_data_for_UBA_2019, function(x) x$data),
+    error_model = "tc",
+    error_model_algorithm = "IRLS",
+    quiet = TRUE)
+
+  AIC_exp_direct <- lapply(f_tc_exp_direct, AIC)
+  AIC_exp_direct <- lapply(AIC_exp_direct, round, 1)
+  dim(AIC_exp_direct) <- dim(f_tc_exp_direct)
+  dimnames(AIC_exp_direct) <- dimnames(f_tc_exp_direct)
+
+  AIC_exp_twostep <- lapply(f_tc_exp_twostep, AIC)
+  AIC_exp_twostep <- lapply(AIC_exp_twostep, round, 1)
+  dim(AIC_exp_twostep) <- dim(f_tc_exp_twostep)
+  dimnames(AIC_exp_twostep) <- dimnames(f_tc_exp_twostep)
+
+  AIC_exp_threestep <- lapply(f_tc_exp_threestep, AIC)
+  AIC_exp_threestep <- lapply(AIC_exp_threestep, round, 1)
+  dim(AIC_exp_threestep) <- dim(f_tc_exp_threestep)
+  dimnames(AIC_exp_threestep) <- dimnames(f_tc_exp_threestep)
+
+  AIC_exp_fourstep <- lapply(f_tc_exp_fourstep, AIC)
+  AIC_exp_fourstep <- lapply(AIC_exp_fourstep, round, 1)
+  dim(AIC_exp_fourstep) <- dim(f_tc_exp_fourstep)
+  dimnames(AIC_exp_fourstep) <- dimnames(f_tc_exp_fourstep)
+
+  AIC_exp_IRLS <- lapply(f_tc_exp_IRLS, AIC)
+  AIC_exp_IRLS <- lapply(AIC_exp_IRLS, round, 1)
+  dim(AIC_exp_IRLS) <- dim(f_tc_exp_IRLS)
+  dimnames(AIC_exp_IRLS) <- dimnames(f_tc_exp_IRLS)
 
   AIC_exp <- lapply(f_tc_exp, AIC)
   dim(AIC_exp) <- dim(f_tc_exp)
   dimnames(AIC_exp) <- dimnames(f_tc_exp)
-  expect_equivalent(round(AIC_exp["SFO", c(9, 11, 12)], 1), c(134.9, 125.5, 82.0))
+  unlist(AIC_exp["SFO", c(9, 11, 12)])
+  expect_equivalent(round(unlist(AIC_exp["SFO", c(9, 11, 12)]), 1),
+                    c(134.9, 125.5, 82.0))
 })
 
 

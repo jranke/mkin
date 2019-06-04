@@ -35,6 +35,7 @@ mkinfit <- function(mkinmod, observed,
   atol = 1e-8, rtol = 1e-10, n.outtimes = 100,
   error_model = c("const", "obs", "tc"),
   error_model_algorithm = c("direct", "twostep", "threestep", "fourstep", "IRLS"),
+  reweight.tol = 1e-8, reweight.max.iter = 10,
   trace_parms = FALSE,
   ...)
 {
@@ -285,7 +286,7 @@ mkinfit <- function(mkinmod, observed,
     # Trace parameter values if requested and if we are actually optimising
     if(trace_parms & update_data) cat(P, "\n")
 
-    if (fixed_degparms[1] != FALSE) {
+    if (is.numeric(fixed_degparms)) {
       degparms <- fixed_degparms
       errparms <- P # This version of errparms is local to the function
       degparms_fixed = TRUE
@@ -293,7 +294,7 @@ mkinfit <- function(mkinmod, observed,
       degparms_fixed = FALSE
     }
 
-    if (fixed_errparms[1] != FALSE) {
+    if (is.numeric(fixed_errparms)) {
       degparms <- P
       errparms <- fixed_errparms # Local to the function
       errparms_fixed = TRUE
@@ -364,7 +365,8 @@ mkinfit <- function(mkinmod, observed,
         sum(dnorm(x = value.observed, mean = value.predicted, sd = std, log = TRUE)))
     }
 
-    # We update the current likelihood and data during the optimisation, not during hessian calculations
+    # We update the current likelihood and data during the optimisation, not
+    # during hessian calculations
     if (update_data) {
 
       assign("out_predicted", out_long, inherits = TRUE)
@@ -434,11 +436,10 @@ mkinfit <- function(mkinmod, observed,
   # Show parameter names if tracing is requested
   if(trace_parms) cat(names_optim, "\n")
 
+  # browser()
+
   # Do the fit and take the time until the hessians are calculated
   fit_time <- system.time({
-    # In the inital run, we assume a constant standard deviation and do
-    # not optimise it, as this is unnecessary and leads to instability of the
-    # fit (most obvious when fitting the IORE model)
     degparms <- c(state.ini.optim, transparms.optim)
 
     if (err_mod == "const" | error_model_algorithm != "direct") {
@@ -463,7 +464,7 @@ mkinfit <- function(mkinmod, observed,
       fit <- nlminb(errparms, nlogLik, control = control,
         lower = lower[names(errparms)],
         upper = upper[names(errparms)],
-        degparms_fixed = degparms, ...)
+        fixed_degparms = degparms, ...)
       errparms <- fit$par
     }
     if (error_model_algorithm == "fourstep") {
@@ -471,10 +472,11 @@ mkinfit <- function(mkinmod, observed,
       fit <- nlminb(degparms, nlogLik, control = control,
         lower = lower[names(degparms)],
         upper = upper[names(degparms)],
-        errparms_fixed = errparms, ...)
+        fixed_errparms = errparms, ...)
       degparms <- fit$par
     }
-    if (error_model_algorithm %in% c("direct", "twostep", "threestep", "fourstep")) {
+    if (error_model_algorithm %in% c("direct", "twostep", "threestep", "fourstep") &
+        err_mod != "const") {
       if (!quiet) message("Optimising the complete model")
       parms.start <- c(degparms, errparms)
       fit <- nlminb(parms.start, nlogLik,
@@ -482,6 +484,36 @@ mkinfit <- function(mkinmod, observed,
         upper = upper[names(parms.start)],
         control = control, ...)
       fit$logLik <- - nlogLik.current
+    }
+    if (err_mod != "const" & error_model_algorithm == "IRLS") {
+      reweight.diff <- 1
+      n.iter <- 0
+      errparms_last <- errparms
+
+      while (reweight.diff > reweight.tol &
+             n.iter < reweight.max.iter) {
+
+        if (!quiet) message("Optimising the error model")
+        fit <- nlminb(errparms, nlogLik, control = control,
+          lower = lower[names(errparms)],
+          upper = upper[names(errparms)],
+          fixed_degparms = degparms, ...)
+        errparms <- fit$par
+
+        if (!quiet) message("Optimising the degradation model")
+        fit <- nlminb(degparms, nlogLik, control = control,
+          lower = lower[names(degparms)],
+          upper = upper[names(degparms)],
+          fixed_errparms = errparms, ...)
+        degparms <- fit$par
+
+        reweight.diff <- dist(rbind(errparms, errparms_last))
+        errparms_last <- errparms
+
+        fit$par <- c(fit$par, errparms)
+        nlogLik.current <- nlogLik(c(degparms, errparms), OLS = FALSE)
+        fit$logLik <- - nlogLik.current
+      }
     }
 
     # We include the error model in the parameter uncertainty analysis, also
