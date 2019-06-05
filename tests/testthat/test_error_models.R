@@ -153,7 +153,7 @@ test_that("Reweighting method 'tc' produces reasonable variance estimates", {
   # For a single fit, we get a relative error of less than 10%  in the error
   # model components
   f_met_2_tc_e4 <- mkinfit(m_synth_DFOP_lin, d_met_2_15[[1]], quiet = TRUE,
-                          error_model = "tc")
+    error_model = "tc", error_model_algorithm = "direct")
   parm_errors_met_2_tc_e4 <- (f_met_2_tc_e4$errparms - c(0.5, 0.07)) / c(0.5, 0.07)
   expect_true(all(abs(parm_errors_met_2_tc_e4) < 0.1))
 
