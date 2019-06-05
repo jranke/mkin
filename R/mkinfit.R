@@ -506,18 +506,23 @@ mkinfit <- function(mkinmod, observed,
           control = control, ...)
         fit$logLik <- - nlogLik.current
 
+        d_3_messages = c(
+           same = "Direct fitting and three-step fitting yield approximately the same likelihood",
+           threestep = "Three-step fitting yielded a higher likelihood than direct fitting",
+           direct = "Direct fitting yielded a higher likelihood than three-step fitting")
         if (error_model_algorithm == "d_3") {
           rel_diff <- abs((fit_direct$logLik - fit$logLik))/-mean(c(fit_direct$logLik, fit$logLik))
           if (rel_diff < 0.0001) {
-            if (!quiet) {
-              message("Direct fitting and three-step fitting yield approximately the same likelihood")
-            }
+            if (!quiet) message(d_3_messages["same"])
+            fit$d_3_message <- d_3_messages["same"]
           } else {
             if (fit$logLik > fit_direct$logLik) {
-              if (!quiet) message("Three-step fitting yielded a higher likelihood than direct fitting")
+              if (!quiet) message(d_3_messages["threestep"])
+              fit$d_3_message <- d_3_messages["threestep"]
             } else {
-              if (!quiet) message("Direct fitting yielded a higher likelihood than three-step fitting")
+              if (!quiet) message(d_3_messages["direct"])
               fit <- fit_direct
+              fit$d_3_message <- d_3_messages["direct"]
             }
           }
         }
@@ -553,6 +558,7 @@ mkinfit <- function(mkinmod, observed,
         }
       }
     }
+    fit$error_model_algorithm <- error_model_algorithm
 
     # We include the error model in the parameter uncertainty analysis, also
     # for constant variance, to get a confidence interval for it
@@ -725,6 +731,7 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
     solution_type = object$solution_type,
     warning = object$warning,
     use_of_ff = object$mkinmod$use_of_ff,
+    error_model_algorithm = object$error_model_algorithm,
     df = c(p, rdf),
     cov.unscaled = covar,
     err_mod = object$err_mod,
@@ -763,8 +770,9 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
   ep <- endpoints(object)
   if (length(ep$ff) != 0)
     ans$ff <- ep$ff
-  if(distimes) ans$distimes <- ep$distimes
-  if(length(ep$SFORB) != 0) ans$SFORB <- ep$SFORB
+  if (distimes) ans$distimes <- ep$distimes
+  if (length(ep$SFORB) != 0) ans$SFORB <- ep$SFORB
+  if (!is.null(object$d_3_message)) ans$d_3_message <- object$d_3_message
   class(ans) <- c("summary.mkinfit", "summary.modFit")
   return(ans)
 }
@@ -794,11 +802,14 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
 
   cat("\nFitted using", x$calls, "model solutions performed in", x$time[["elapsed"]],  "s\n")
 
-  cat("\nError model:\n")
+  cat("\nError model: ")
   cat(switch(x$err_mod,
              const = "Constant variance",
              obs = "Variance unique to each observed variable",
              tc = "Two-component variance function"), "\n")
+
+  cat("\nError model algorithm:", x$error_model_algorithm, "\n")
+  if (!is.null(x$d_3_message)) cat(x$d_3_message, "\n")
 
   cat("\nStarting values for parameters to be optimised:\n")
   print(x$start)

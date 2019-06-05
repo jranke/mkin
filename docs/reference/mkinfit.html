@@ -399,18 +399,19 @@ Per default, parameters in the kinetic models are internally transformed in
 <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='st'>"FOMC"</span>, <span class='no'>FOCUS_2006_C</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.49.5 
 #&gt; R version used for fitting:       3.6.0 
-#&gt; Date of fit:     Tue Jun  4 15:01:15 2019 
-#&gt; Date of summary: Tue Jun  4 15:01:15 2019 
+#&gt; Date of fit:     Wed Jun  5 15:08:20 2019 
+#&gt; Date of summary: Wed Jun  5 15:08:20 2019 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent
 #&gt; 
 #&gt; Model predictions using solution type analytical 
 #&gt; 
-#&gt; Fitted using 222 model solutions performed in 0.461 s
+#&gt; Fitted using 222 model solutions performed in 0.469 s
 #&gt; 
-#&gt; Error model:
-#&gt; Constant variance 
+#&gt; Error model: Constant variance 
+#&gt; 
+#&gt; Error model algorithm: d_3 
 #&gt; 
 #&gt; Starting values for parameters to be optimised:
 #&gt;              value   type
@@ -480,7 +481,7 @@ Per default, parameters in the kinetic models are internally transformed in
   <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='co'># Fit the model to the FOCUS example dataset D using defaults</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.time'>system.time</a></span>(<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>,
                            <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"eigen"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)))</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='output co'>#&gt;        User      System verstrichen 
-#&gt;       1.521       0.000       1.526 </div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/coef'>coef</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; NULL</div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; $ff
+#&gt;       1.579       0.000       1.581 </div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/coef'>coef</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; NULL</div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; $ff
 #&gt; parent_sink   parent_m1     m1_sink 
 #&gt;    0.485524    0.514476    1.000000 
 #&gt; 
@@ -552,7 +553,7 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt; Sum of squared residuals at call 126: 371.2134
 #&gt; Sum of squared residuals at call 135: 371.2134
 #&gt; Negative log-likelihood at call 145: 97.22429</div><div class='output co'>#&gt; <span class='message'>Optimisation successfully terminated.</span></div><div class='output co'>#&gt;        User      System verstrichen 
-#&gt;       1.093       0.000       1.093 </div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/coef'>coef</a></span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt; NULL</div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt; $ff
+#&gt;       1.159       0.000       1.160 </div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/coef'>coef</a></span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt; NULL</div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt; $ff
 #&gt; parent_sink   parent_m1     m1_sink 
 #&gt;    0.485524    0.514476    1.000000 
 #&gt; 
@@ -584,8 +585,8 @@ Per default, parameters in the kinetic models are internally transformed in
 <span class='no'>SFO_SFO.ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>),
                       <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='no'>f.noweight</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>f.noweight</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.49.5 
 #&gt; R version used for fitting:       3.6.0 
-#&gt; Date of fit:     Tue Jun  4 15:01:31 2019 
-#&gt; Date of summary: Tue Jun  4 15:01:31 2019 
+#&gt; Date of fit:     Wed Jun  5 15:08:36 2019 
+#&gt; Date of summary: Wed Jun  5 15:08:36 2019 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -593,10 +594,11 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted using 421 model solutions performed in 1.096 s
+#&gt; Fitted using 421 model solutions performed in 1.181 s
 #&gt; 
-#&gt; Error model:
-#&gt; Constant variance 
+#&gt; Error model: Constant variance 
+#&gt; 
+#&gt; Error model algorithm: d_3 
 #&gt; 
 #&gt; Starting values for parameters to be optimised:
 #&gt;                     value   type
@@ -702,8 +704,8 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt;   120       m1    25.15  28.78984 -3.640e+00
 #&gt;   120       m1    33.31  28.78984  4.520e+00</div><div class='input'><span class='no'>f.obs</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"obs"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>f.obs</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.49.5 
 #&gt; R version used for fitting:       3.6.0 
-#&gt; Date of fit:     Tue Jun  4 15:01:34 2019 
-#&gt; Date of summary: Tue Jun  4 15:01:34 2019 
+#&gt; Date of fit:     Wed Jun  5 15:08:39 2019 
+#&gt; Date of summary: Wed Jun  5 15:08:39 2019 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -711,10 +713,12 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted using 979 model solutions performed in 2.603 s
+#&gt; Fitted using 979 model solutions performed in 2.672 s
 #&gt; 
-#&gt; Error model:
-#&gt; Variance unique to each observed variable 
+#&gt; Error model: Variance unique to each observed variable 
+#&gt; 
+#&gt; Error model algorithm: d_3 
+#&gt; Direct fitting and three-step fitting yield approximately the same likelihood 
 #&gt; 
 #&gt; Starting values for parameters to be optimised:
 #&gt;                     value   type
@@ -832,8 +836,8 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt;   120       m1    25.15  28.80429 -3.654e+00
 #&gt;   120       m1    33.31  28.80429  4.506e+00</div><div class='input'><span class='no'>f.tc</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"tc"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>f.tc</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.49.5 
 #&gt; R version used for fitting:       3.6.0 
-#&gt; Date of fit:     Tue Jun  4 15:01:43 2019 
-#&gt; Date of summary: Tue Jun  4 15:01:43 2019 
+#&gt; Date of fit:     Wed Jun  5 15:08:50 2019 
+#&gt; Date of summary: Wed Jun  5 15:08:50 2019 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -841,10 +845,12 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted using 2289 model solutions performed in 9.499 s
+#&gt; Fitted using 2289 model solutions performed in 10.959 s
 #&gt; 
-#&gt; Error model:
-#&gt; Two-component variance function 
+#&gt; Error model: Two-component variance function 
+#&gt; 
+#&gt; Error model algorithm: d_3 
+#&gt; Direct fitting and three-step fitting yield approximately the same likelihood 
 #&gt; 
 #&gt; Starting values for parameters to be optimised:
 #&gt;                       value   type
