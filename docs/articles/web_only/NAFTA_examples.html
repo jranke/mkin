@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.49.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.49.5</span>
       </span>
     </div>
 
@@ -88,7 +88,7 @@
       <h1>Evaluation of example datasets from Attachment 1 to the US EPA SOP for the NAFTA guidance</h1>
                         <h4 class="author">Johannes Ranke</h4>
             
-            <h4 class="date">2019-05-08</h4>
+            <h4 class="date">2019-06-05</h4>
       
       
       <div class="hidden name"><code>NAFTA_examples.Rmd</code></div>
@@ -308,16 +308,11 @@
 <a href="#example-on-page-8" class="anchor"></a>Example on page 8</h2>
 <p>For this dataset, the IORE fit does not converge when the default starting values used by mkin for the IORE model are used. Therefore, a lower value for the rate constant is used here.</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1">p8 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/nafta.html">nafta</a></span>(NAFTA_SOP_Attachment[[<span class="st">"p8"</span>]], <span class="dt">parms.ini =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dt">k__iore_parent_sink =</span> <span class="fl">1e-3</span>))</a></code></pre></div>
-<pre><code>## Warning in summary.mkinfit(x): Could not calculate correlation; no
-## covariance matrix
-
-## Warning in summary.mkinfit(x): Could not calculate correlation; no
-## covariance matrix</code></pre>
 <pre><code>## The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</code></pre>
 <pre><code>## The half-life obtained from the IORE model may be used</code></pre>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(p8)</a></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(p8)</a></code></pre></div>
 <p><img src="NAFTA_examples_files/figure-html/p8-1.png" width="700"></p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(p8)</a></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(p8)</a></code></pre></div>
 <pre><code>## Sums of squares:
 ##       SFO      IORE      DFOP 
 ## 1996.9408  444.9237  547.5616 
@@ -327,11 +322,10 @@
 ## 
 ## Parameters:
 ## $SFO
-##                     Estimate Pr(&gt;t) Lower Upper
-## parent_0            88.16549     NA    NA    NA
-## k__iore_parent_sink  0.00100     NA    NA    NA
-## k_parent_sink        0.00803     NA    NA    NA
-## sigma                7.44786     NA    NA    NA
+##               Estimate   Pr(&gt;t)    Lower    Upper
+## parent_0      88.16549 6.53e-29 83.37344 92.95754
+## k_parent_sink  0.00803 1.67e-13  0.00674  0.00957
+## sigma          7.44786 4.17e-10  5.66209  9.23363
 ## 
 ## $IORE
 ##                     Estimate   Pr(&gt;t)    Lower    Upper
@@ -341,13 +335,12 @@
 ## sigma               3.52e+00 5.36e-10 2.67e+00 4.36e+00
 ## 
 ## $DFOP
-##                     Estimate Pr(&gt;t) Lower Upper
-## parent_0            95.70619     NA    NA    NA
-## k__iore_parent_sink  0.00100     NA    NA    NA
-## k1                   0.02500     NA    NA    NA
-## k2                   0.00273     NA    NA    NA
-## g                    0.58835     NA    NA    NA
-## sigma                3.90001     NA    NA    NA
+##          Estimate   Pr(&gt;t)    Lower    Upper
+## parent_0 95.70619 8.99e-32 91.87941 99.53298
+## k1        0.02500 5.25e-04  0.01422  0.04394
+## k2        0.00273 6.84e-03  0.00125  0.00597
+## g         0.58835 2.84e-06  0.36595  0.77970
+## sigma     3.90001 6.94e-10  2.96260  4.83741
 ## 
 ## 
 ## DTx values:
@@ -366,12 +359,12 @@
 <div id="example-on-page-9-upper-panel" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example-on-page-9-upper-panel" class="anchor"></a>Example on page 9, upper panel</h2>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1">p9a &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/nafta.html">nafta</a></span>(NAFTA_SOP_Attachment[[<span class="st">"p9a"</span>]])</a></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" title="1">p9a &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/nafta.html">nafta</a></span>(NAFTA_SOP_Attachment[[<span class="st">"p9a"</span>]])</a></code></pre></div>
 <pre><code>## The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</code></pre>
 <pre><code>## The half-life obtained from the IORE model may be used</code></pre>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(p9a)</a></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(p9a)</a></code></pre></div>
 <p><img src="NAFTA_examples_files/figure-html/p9a-1.png" width="700"></p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(p9a)</a></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(p9a)</a></code></pre></div>
 <pre><code>## Sums of squares:
 ##       SFO      IORE      DFOP 
 ## 839.35238  88.57064   9.93363 
@@ -415,7 +408,7 @@
 <div id="example-on-page-9-lower-panel" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example-on-page-9-lower-panel" class="anchor"></a>Example on page 9, lower panel</h2>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" title="1">p9b &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/nafta.html">nafta</a></span>(NAFTA_SOP_Attachment[[<span class="st">"p9b"</span>]])</a></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" title="1">p9b &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/nafta.html">nafta</a></span>(NAFTA_SOP_Attachment[[<span class="st">"p9b"</span>]])</a></code></pre></div>
 <pre><code>## Warning in sqrt(diag(covar)): NaNs wurden erzeugt</code></pre>
 <pre><code>## Warning in sqrt(diag(covar_notrans)): NaNs wurden erzeugt</code></pre>
 <pre><code>## Warning in sqrt(1/diag(V)): NaNs wurden erzeugt</code></pre>
@@ -423,9 +416,9 @@
 ## finite result is doubtful</code></pre>
 <pre><code>## The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</code></pre>
 <pre><code>## The half-life obtained from the IORE model may be used</code></pre>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(p9b)</a></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(p9b)</a></code></pre></div>
 <p><img src="NAFTA_examples_files/figure-html/p9b-1.png" width="700"></p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(p9b)</a></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(p9b)</a></code></pre></div>
 <pre><code>## Sums of squares:
 ##      SFO     IORE     DFOP 
 ## 35.64867 23.22334 35.64867 
@@ -469,12 +462,12 @@
 <div id="example-on-page-10" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example-on-page-10" class="anchor"></a>Example on page 10</h2>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" title="1">p10 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/nafta.html">nafta</a></span>(NAFTA_SOP_Attachment[[<span class="st">"p10"</span>]])</a></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" title="1">p10 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/nafta.html">nafta</a></span>(NAFTA_SOP_Attachment[[<span class="st">"p10"</span>]])</a></code></pre></div>
 <pre><code>## The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</code></pre>
 <pre><code>## The half-life obtained from the IORE model may be used</code></pre>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(p10)</a></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(p10)</a></code></pre></div>
 <p><img src="NAFTA_examples_files/figure-html/p10-1.png" width="700"></p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(p10)</a></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(p10)</a></code></pre></div>
 <pre><code>## Sums of squares:
 ##      SFO     IORE     DFOP 
 ## 899.4089 336.4348 899.4089 
@@ -522,12 +515,12 @@
 <div id="example-on-page-11" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example-on-page-11" class="anchor"></a>Example on page 11</h2>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb54-1" title="1">p11 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/nafta.html">nafta</a></span>(NAFTA_SOP_Attachment[[<span class="st">"p11"</span>]])</a></code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" title="1">p11 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/nafta.html">nafta</a></span>(NAFTA_SOP_Attachment[[<span class="st">"p11"</span>]])</a></code></pre></div>
 <pre><code>## The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</code></pre>
 <pre><code>## The half-life obtained from the IORE model may be used</code></pre>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(p11)</a></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(p11)</a></code></pre></div>
 <p><img src="NAFTA_examples_files/figure-html/p11-1.png" width="700"></p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(p11)</a></code></pre></div>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(p11)</a></code></pre></div>
 <pre><code>## Sums of squares:
 ##      SFO     IORE     DFOP 
 ## 579.6805 204.7932 144.7783 
@@ -576,14 +569,14 @@
 <div id="example-on-page-12-upper-panel" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example-on-page-12-upper-panel" class="anchor"></a>Example on page 12, upper panel</h2>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb60-1" title="1">p12a &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/nafta.html">nafta</a></span>(NAFTA_SOP_Attachment[[<span class="st">"p12a"</span>]])</a></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb59-1" title="1">p12a &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/nafta.html">nafta</a></span>(NAFTA_SOP_Attachment[[<span class="st">"p12a"</span>]])</a></code></pre></div>
 <pre><code>## Warning in summary.mkinfit(x): Could not calculate correlation; no
 ## covariance matrix</code></pre>
 <pre><code>## The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</code></pre>
 <pre><code>## The half-life obtained from the IORE model may be used</code></pre>
-<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb64-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(p12a)</a></code></pre></div>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(p12a)</a></code></pre></div>
 <p><img src="NAFTA_examples_files/figure-html/p12a-1.png" width="700"></p>
-<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb65-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(p12a)</a></code></pre></div>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb64-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(p12a)</a></code></pre></div>
 <pre><code>## Sums of squares:
 ##      SFO     IORE     DFOP 
 ## 695.4440 220.0685 695.4440 
@@ -626,7 +619,7 @@
 <div id="example-on-page-12-lower-panel" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example-on-page-12-lower-panel" class="anchor"></a>Example on page 12, lower panel</h2>
-<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb67-1" title="1">p12b &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/nafta.html">nafta</a></span>(NAFTA_SOP_Attachment[[<span class="st">"p12b"</span>]])</a></code></pre></div>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb66-1" title="1">p12b &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/nafta.html">nafta</a></span>(NAFTA_SOP_Attachment[[<span class="st">"p12b"</span>]])</a></code></pre></div>
 <pre><code>## Warning in sqrt(diag(covar)): NaNs wurden erzeugt</code></pre>
 <pre><code>## Warning in qt(alpha/2, rdf): NaNs wurden erzeugt</code></pre>
 <pre><code>## Warning in qt(1 - alpha/2, rdf): NaNs wurden erzeugt</code></pre>
@@ -637,9 +630,9 @@
 ## finite result is doubtful</code></pre>
 <pre><code>## The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</code></pre>
 <pre><code>## The half-life obtained from the IORE model may be used</code></pre>
-<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb77-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(p12b)</a></code></pre></div>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb76-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(p12b)</a></code></pre></div>
 <p><img src="NAFTA_examples_files/figure-html/p12b-1.png" width="700"></p>
-<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb78-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(p12b)</a></code></pre></div>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb77-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(p12b)</a></code></pre></div>
 <pre><code>## Sums of squares:
 ##      SFO     IORE     DFOP 
 ## 58.90242 19.06353 58.90242 
@@ -682,16 +675,16 @@
 <div id="example-on-page-13" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example-on-page-13" class="anchor"></a>Example on page 13</h2>
-<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb80-1" title="1">p13 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/nafta.html">nafta</a></span>(NAFTA_SOP_Attachment[[<span class="st">"p13"</span>]])</a></code></pre></div>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb79-1" title="1">p13 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/nafta.html">nafta</a></span>(NAFTA_SOP_Attachment[[<span class="st">"p13"</span>]])</a></code></pre></div>
 <pre><code>## Warning in sqrt(diag(covar)): NaNs wurden erzeugt</code></pre>
 <pre><code>## Warning in sqrt(1/diag(V)): NaNs wurden erzeugt</code></pre>
 <pre><code>## Warning in cov2cor(ans$cov.unscaled): diag(.) had 0 or NA entries; non-
 ## finite result is doubtful</code></pre>
 <pre><code>## The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</code></pre>
 <pre><code>## The half-life obtained from the IORE model may be used</code></pre>
-<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb86-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(p13)</a></code></pre></div>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb85-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(p13)</a></code></pre></div>
 <p><img src="NAFTA_examples_files/figure-html/p13-1.png" width="700"></p>
-<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb87-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(p13)</a></code></pre></div>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb86-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(p13)</a></code></pre></div>
 <pre><code>## Sums of squares:
 ##      SFO     IORE     DFOP 
 ## 174.5971 142.3951 174.5971 
@@ -735,16 +728,16 @@
 <div id="dt50-not-observed-in-the-study-and-dfop-problems-in-pestdf" class="section level1">
 <h1 class="hasAnchor">
 <a href="#dt50-not-observed-in-the-study-and-dfop-problems-in-pestdf" class="anchor"></a>DT50 not observed in the study and DFOP problems in PestDF</h1>
-<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb89-1" title="1">p14 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/nafta.html">nafta</a></span>(NAFTA_SOP_Attachment[[<span class="st">"p14"</span>]])</a></code></pre></div>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb88-1" title="1">p14 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/nafta.html">nafta</a></span>(NAFTA_SOP_Attachment[[<span class="st">"p14"</span>]])</a></code></pre></div>
 <pre><code>## Warning in sqrt(diag(covar)): NaNs wurden erzeugt</code></pre>
 <pre><code>## Warning in sqrt(1/diag(V)): NaNs wurden erzeugt</code></pre>
 <pre><code>## Warning in cov2cor(ans$cov.unscaled): diag(.) had 0 or NA entries; non-
 ## finite result is doubtful</code></pre>
 <pre><code>## The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</code></pre>
 <pre><code>## The half-life obtained from the IORE model may be used</code></pre>
-<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb95-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(p14)</a></code></pre></div>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb94-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(p14)</a></code></pre></div>
 <p><img src="NAFTA_examples_files/figure-html/p14-1.png" width="700"></p>
-<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb96-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(p14)</a></code></pre></div>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb95-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(p14)</a></code></pre></div>
 <pre><code>## Sums of squares:
 ##      SFO     IORE     DFOP 
 ## 48.43249 28.67746 27.26248 
@@ -788,7 +781,7 @@
 <div id="n-is-less-than-1-and-dfop-fraction-parameter-is-below-zero" class="section level1">
 <h1 class="hasAnchor">
 <a href="#n-is-less-than-1-and-dfop-fraction-parameter-is-below-zero" class="anchor"></a>N is less than 1 and DFOP fraction parameter is below zero</h1>
-<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb98-1" title="1">p15a &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/nafta.html">nafta</a></span>(NAFTA_SOP_Attachment[[<span class="st">"p15a"</span>]])</a></code></pre></div>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb97-1" title="1">p15a &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/nafta.html">nafta</a></span>(NAFTA_SOP_Attachment[[<span class="st">"p15a"</span>]])</a></code></pre></div>
 <pre><code>## Warning in sqrt(diag(covar)): NaNs wurden erzeugt</code></pre>
 <pre><code>## Warning in sqrt(diag(covar_notrans)): NaNs wurden erzeugt</code></pre>
 <pre><code>## Warning in sqrt(1/diag(V)): NaNs wurden erzeugt</code></pre>
@@ -796,9 +789,9 @@
 ## finite result is doubtful</code></pre>
 <pre><code>## The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</code></pre>
 <pre><code>## The half-life obtained from the IORE model may be used</code></pre>
-<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb105-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(p15a)</a></code></pre></div>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb104-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(p15a)</a></code></pre></div>
 <p><img src="NAFTA_examples_files/figure-html/p15a-1.png" width="700"></p>
-<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb106-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(p15a)</a></code></pre></div>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb105-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(p15a)</a></code></pre></div>
 <pre><code>## Sums of squares:
 ##      SFO     IORE     DFOP 
 ## 245.5248 135.0132 245.5248 
@@ -837,16 +830,16 @@
 ## 
 ## Representative half-life:
 ## [1] 41.33</code></pre>
-<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb108-1" title="1">p15b &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/nafta.html">nafta</a></span>(NAFTA_SOP_Attachment[[<span class="st">"p15b"</span>]])</a></code></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb107-1" title="1">p15b &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/nafta.html">nafta</a></span>(NAFTA_SOP_Attachment[[<span class="st">"p15b"</span>]])</a></code></pre></div>
 <pre><code>## Warning in sqrt(diag(covar)): NaNs wurden erzeugt</code></pre>
 <pre><code>## Warning in sqrt(1/diag(V)): NaNs wurden erzeugt</code></pre>
 <pre><code>## Warning in cov2cor(ans$cov.unscaled): diag(.) had 0 or NA entries; non-
 ## finite result is doubtful</code></pre>
 <pre><code>## The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</code></pre>
 <pre><code>## The half-life obtained from the IORE model may be used</code></pre>
-<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb114-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(p15b)</a></code></pre></div>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb113-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(p15b)</a></code></pre></div>
 <p><img src="NAFTA_examples_files/figure-html/p15b-1.png" width="700"></p>
-<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb115-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(p15b)</a></code></pre></div>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb114-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(p15b)</a></code></pre></div>
 <pre><code>## Sums of squares:
 ##       SFO      IORE      DFOP 
 ## 106.91629  68.55574 106.91629 
@@ -890,14 +883,14 @@
 <div id="the-dfop-fraction-parameter-is-greater-than-1" class="section level1">
 <h1 class="hasAnchor">
 <a href="#the-dfop-fraction-parameter-is-greater-than-1" class="anchor"></a>The DFOP fraction parameter is greater than 1</h1>
-<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb117-1" title="1">p16 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/nafta.html">nafta</a></span>(NAFTA_SOP_Attachment[[<span class="st">"p16"</span>]])</a></code></pre></div>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb116-1" title="1">p16 &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/nafta.html">nafta</a></span>(NAFTA_SOP_Attachment[[<span class="st">"p16"</span>]])</a></code></pre></div>
 <pre><code>## The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</code></pre>
 <pre><code>## The representative half-life of the IORE model is longer than the one corresponding</code></pre>
 <pre><code>## to the terminal degradation rate found with the DFOP model.</code></pre>
 <pre><code>## The representative half-life obtained from the DFOP model may be used</code></pre>
-<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb122-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(p16)</a></code></pre></div>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb121-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(p16)</a></code></pre></div>
 <p><img src="NAFTA_examples_files/figure-html/p16-1.png" width="700"></p>
-<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb123-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(p16)</a></code></pre></div>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb122-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(p16)</a></code></pre></div>
 <pre><code>## Sums of squares:
 ##      SFO     IORE     DFOP 
 ## 3831.804 2062.008 1550.980 
@@ -1010,7 +1003,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
 </div>
       </footer>
 </div>

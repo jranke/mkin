@@ -153,7 +153,7 @@ test_that("Reweighting method 'tc' produces reasonable variance estimates", {
   # For a single fit, we get a relative error of less than 10%  in the error
   # model components
   f_met_2_tc_e4 <- mkinfit(m_synth_DFOP_lin, d_met_2_15[[1]], quiet = TRUE,
-                          error_model = "tc")
+    error_model = "tc", error_model_algorithm = "direct")
   parm_errors_met_2_tc_e4 <- (f_met_2_tc_e4$errparms - c(0.5, 0.07)) / c(0.5, 0.07)
   expect_true(all(abs(parm_errors_met_2_tc_e4) < 0.1))
 
@@ -176,4 +176,51 @@ test_that("Reweighting method 'tc' produces reasonable variance estimates", {
   # Here we get a precision < 10% for retrieving the original error model components
   # from 15 datasets
   expect_true(all(abs(tcf_met_2_15_tc_error_model_errors) < 0.10))
+})
+
+test_that("The different error model fitting methods work for parent fits", {
+  skip_on_cran()
+
+  f_9_OLS <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
+                     quiet = TRUE)
+  expect_equivalent(round(AIC(f_9_OLS), 2), 137.43)
+
+  f_9_direct <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
+    error_model = "tc", error_model_algorithm = "direct", quiet = TRUE)
+  expect_equivalent(round(AIC(f_9_direct), 2), 134.94)
+
+  f_9_twostep <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
+    error_model = "tc", error_model_algorithm = "twostep", quiet = TRUE)
+  expect_equivalent(round(AIC(f_9_twostep), 2), 134.94)
+
+  f_9_threestep <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
+    error_model = "tc", error_model_algorithm = "threestep", quiet = TRUE)
+  expect_equivalent(round(AIC(f_9_threestep), 2), 139.43)
+
+  f_9_fourstep <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
+    error_model = "tc", error_model_algorithm = "fourstep", quiet = TRUE)
+  expect_equivalent(round(AIC(f_9_fourstep), 2), 139.43)
+
+  f_9_IRLS <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
+    error_model = "tc", error_model_algorithm = "IRLS", quiet = TRUE)
+  expect_equivalent(round(AIC(f_9_IRLS), 2), 139.43)
+
+  f_9_d_3 <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
+    error_model = "tc", error_model_algorithm = "d_3", quiet = TRUE)
+  expect_equivalent(round(AIC(f_9_d_3), 2), 134.94)
+})
+
+test_that("The default error model algorithm finds the best known AIC values for parent fits", {
+  f_tc_exp_d_3 <- mmkin(c("SFO", "DFOP", "HS"),
+    lapply(experimental_data_for_UBA_2019, function(x) x$data),
+    error_model = "tc",
+    error_model_algorithm = "d_3",
+    quiet = TRUE)
+
+  AIC_exp_d_3 <- lapply(f_tc_exp_d_3, AIC)
+  AIC_exp_d_3 <- lapply(AIC_exp_d_3, round, 1)
+  dim(AIC_exp_d_3) <- dim(f_tc_exp_d_3)
+  dimnames(AIC_exp_d_3) <- dimnames(f_tc_exp_d_3)
+
+  expect_known_output(AIC_exp_d_3, "AIC_exp_d_3.out")
 })
