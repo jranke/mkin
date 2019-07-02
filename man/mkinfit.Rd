@@ -186,7 +186,7 @@ mkinfit(mkinmod, observed,
     log-likelihood.
 
     The algorithm "twostep" will minimize the negative log-likelihood
-    after an initial unweighted leas squares optimisation step.
+    after an initial unweighted least squares optimisation step.
 
     The algorithm "threestep" starts with unweighted least squares,
     then optimizes only the error model using the degradation model
