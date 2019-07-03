@@ -211,6 +211,7 @@ test_that("The different error model fitting methods work for parent fits", {
 })
 
 test_that("The default error model algorithm finds the best known AIC values for parent fits", {
+  skip_on_cran()
   f_tc_exp_d_3 <- mmkin(c("SFO", "DFOP", "HS"),
     lapply(experimental_data_for_UBA_2019, function(x) x$data),
     error_model = "tc",
