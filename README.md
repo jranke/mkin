@@ -2,7 +2,7 @@
 
 [![](https://www.r-pkg.org/badges/version/mkin)](https://cran.r-project.org/package=mkin)
 [![Build Status](https://travis-ci.com/jranke/mkin.svg?branch=master)](https://travis-ci.com/jranke/mkin)
-[![codecov](https://codecov.io/github/jranke/mkin/branch/master/graphs/badge.svg)](https://codecov.io/github/jranke/mkin) 
+[![codecov](https://codecov.io/github/jranke/mkin/branch/master/graphs/badge.svg)](https://codecov.io/github/jranke/mkin)
 
 The R package **mkin** provides calculation routines for the analysis of
 chemical degradation data, including <b>m</b>ulticompartment <b>kin</b>etics as
@@ -86,17 +86,17 @@ and at [R-Forge](http://kinfit.r-forge.r-project.org/mkin_static/index.html).
   approximately reproduce the fit with other tools.
 * The chi-squared error level as defined in the FOCUS kinetics guidance
   (see below) is calculated for each observed variable.
-* Iteratively reweighted least squares fitting is implemented in a similar way
-  as in KinGUII and CAKE (see below). Simply add the argument
-  `reweight.method = "obs"` to your call to `mkinfit` and a separate variance
-  componenent for each of the observed variables will be optimised
-  in a second stage after the primary optimisation algorithm has converged.
-* Iterative reweighting is also possible using a two-component error model
-  for analytical data similar to the one proposed by
-  [Rocke and Lorenzato](https://pkgdown.jrwb.de/mkin/reference/sigma_twocomp.html)
-  using the argument `reweight.method = "tc"`.
 * When a metabolite decline phase is not described well by SFO kinetics,
   SFORB kinetics can be used for the metabolite.
+* Three different error models can be selected using the argument `error_model`
+  to the [`mkinfit`](https://pkgdown.jrwb.de/mkin/reference/mkinfit.html)
+  function.
+* Iteratively reweighted least squares fitting is now obsolete, and the
+  variance by variable error model should now be specified as `error_model
+  = "obs"`.
+* A two-component error model similar to the one proposed by
+  [Rocke and Lorenzato](https://pkgdown.jrwb.de/mkin/reference/sigma_twocomp.html)
+  can be selected using the argument `error_model = "tc"`.
 
 ## GUI
 

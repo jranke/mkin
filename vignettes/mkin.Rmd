@@ -28,7 +28,7 @@ In the regulatory evaluation of chemical substances like plant protection
 products (pesticides), biocides and other chemicals, degradation data play an
 important role. For the evaluation of pesticide degradation experiments,
 detailed guidance has been developed, based on nonlinear optimisation.
-The `R` add-on package `mkin` [@pkg:mkin] implements fitting some of the models
+The `R` add-on package `mkin` implements fitting some of the models
 recommended in this guidance from within R and calculates some statistical
 measures for data series within one or more compartments, for parent and
 metabolites.
@@ -71,10 +71,10 @@ data.
 
 The `mkin` package [@pkg:mkin] implements the approach recommended in the
 kinetics report provided by the FOrum for Co-ordination of pesticide fate
-models and their USe [@FOCUS2006; -@FOCUSkinetics2014] implements this approach
+models and their USe [@FOCUS2006; -@FOCUSkinetics2014]
 for simple decline data series, data series with transformation products,
-commonly termed metabolites, data series for more than one compartment. It is
-also possible to include back reactions, so equilibrium reactions and
+commonly termed metabolites, and for data series for more than one compartment.
+It is also possible to include back reactions, so equilibrium reactions and
 equilibrium partitioning can be specified, although this oftentimes leads to an
 overparameterisation of the model.
 
@@ -99,13 +99,16 @@ vignette) to specify the system of differential equations and to include the
 output requested by the FOCUS guidance, such as the relative standard deviation
 that has to be assumed for the residuals, such that the $\chi^2$
 goodness-of-fit test as defined by the FOCUS kinetics workgroup would pass
-using an significance level $\alpha$ of 0.05.
+using an significance level $\alpha$ of 0.05. This relative error, expressed
+as a percentage, is often termed $\chi^2$ error level or similar.
 
 Also, `mkin` introduced using analytical solutions for parent only kinetics for
 improved optimization speed. Later, Eigenvalue based solutions were
 introduced to `mkin` for the case of linear differential equations (*i.e.*
 where the FOMC or DFOP models were not used for the parent compound), greatly
-improving the optimization speed for these cases.
+improving the optimization speed for these cases. This, however, has become
+somehow obsolete, as the use of compiled code described below gives even
+smaller execution times.
 
 The possibility to specify back-reactions and a biphasic model (SFORB) for
 metabolites were present in `mkin` from the very beginning.
@@ -120,7 +123,7 @@ parameter distributions by Markov Chain Monte Carlo (MCMC) sampling.
 
 CAKE focuses on a smooth use experience, sacrificing some flexibility in the model
 definition, originally allowing only two primary metabolites in parallel.
-The current version 3.2 of CAKE release in March 2016 uses a basic scheme for
+The current version 3.3 of CAKE release in March 2016 uses a basic scheme for
 up to six metabolites in a flexible arrangement, but does not support
 back-reactions (non-instantaneous equilibria) or biphasic kinetics for metabolites.
 
@@ -136,13 +139,28 @@ degree of maturity is the browser based GUI named `gmkin`. Please see its
 [manual](https://pkgdown.jrwb.de/gmkin/articles/gmkin_manual.html)
 for further information.
 
+A comparison of scope, usability and numerical results obtained with these
+tools has been recently been published by @ranke2018.
+
 ## Recent developments
 
-Currently (June 2016), the main features available in `mkin` which are
-not present in KinGUII or CAKE, are the speed increase by using compiled code when
+Currently (July 2019), the main features available in `mkin` which are not
+present in KinGUII or CAKE, are the speed increase by using compiled code when
 a compiler is present, parallel model fitting on multicore machines using the
 `mmkin` function, and the estimation of parameter confidence intervals based on
-transformed parameters. These are explained in more detail below.
+transformed parameters.
+
+In addition, the possibility to use two alternative error models to constant
+variance have been integrated. The variance by variable error model introduced
+by @gao11 has been available via an iteratively reweighted least squares (IRLS)
+procedure since mkin
+[version 0.9-22](https://pkgdown.jrwb.de/mkin/news/index.html#mkin-0-9-22-2013-10-26).
+With [release 0.9.49.5](https://pkgdown.jrwb.de/mkin/news/index.html#mkin-0-9-49-5-2019-07-04),
+the IRLS algorithm has been replaced by direct or step-wise maximisation of
+the likelihood function, which makes it possible not only to fit the
+variance by variable error model but also a
+[two-component error model](https://pkgdown.jrwb.de/mkin/reference/sigma_twocomp.html)
+inspired by error models developed in analytical chemistry.
 
 # Internal parameter transformations
 
