@@ -39,7 +39,9 @@ test_that("Test data from Appendix B are correctly evaluated", {
   expect_known_output(print(res), "NAFTA_SOP_Appendix_B.txt")
 
   plot_nafta <- function() plot(res)
-  vdiffr::expect_doppelganger("NAFTA SOP Appendix B", plot_nafta)
+  if(requireNamespace("vdiffr", quietly = TRUE)) {
+    vdiffr::expect_doppelganger("NAFTA SOP Appendix B", plot_nafta)
+  }
 })
 
 test_that("Test data from Appendix D are correctly evaluated", {
@@ -61,5 +63,7 @@ test_that("Test data from Appendix D are correctly evaluated", {
   expect_known_output(print(res), "NAFTA_SOP_Appendix_D.txt")
 
   plot_nafta <- function() plot(res)
-  vdiffr::expect_doppelganger("Plot NAFTA analysis", plot_nafta)
+  if(requireNamespace("vdiffr", quietly = TRUE)) {
+    vdiffr::expect_doppelganger("Plot NAFTA analysis", plot_nafta)
+  }
 })

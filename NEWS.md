@@ -1,4 +1,4 @@
-# mkin 0.9.49.5 (2019-07-03)
+# mkin 0.9.49.5 (2019-07-04)
 
 - Several algorithms for minimization of the negative log-likelihood for non-constant error models (two-component and variance by variable). In the case the error model is constant variance, least squares is used as this is more stable. The default algorithm 'd_3' tries direct minimization and a three-step procedure, and returns the model with the highest likelihood.
 
@@ -14,13 +14,15 @@
 
 - Add a simple benchmark vignette to document the impact on performance.
 
-- The code for manual weighting was removed. This functionality might get added again at a later time.
+- The code for manual weighting was removed. This functionality might get added again at a later time. For the time being, please use an earlier version, e.g. 0.9.48.1 if you want to do manual weighting.
 
 - The fitting time reported in the summary now includes the time used for calculation of the hessians
 
 - Adapt tests
 
 - Fix an error in the FOCUS chi2 error level calculations that occurred if parameters were specified in parms.ini that were not in the model. A warning was already issued, but when fitting in parallel via mmkin this could go unnoticed.
+
+- Add example datasets obtained from risk assessment reports published by the European Food Safety Agency.
 
 # mkin 0.9.48.1 (2019-03-04)
 

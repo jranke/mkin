@@ -91,14 +91,17 @@ test_that("Reweighting method 'tc' produces reasonable variance estimates", {
     sdfunc = function(x) sigma_twocomp(x, 0.5, 0.07),
     n = 1, reps = 100, digits = 5, LOD = -Inf, seed = 123456)
 
-  # Per default (on my box) use all cores minus one
-  n_cores <- parallel::detectCores() - 1
+  # Per default (on my box where I set NOT_CRAN) use all cores minus one
+  if (identical(Sys.getenv("NOT_CRAN"), "true")) {
+    n_cores <- parallel::detectCores() - 1
+  } else {
+    n_cores <- 1
+  }
 
-  # We are only allowed one core on travis
+  # We are only allowed one core on travis, but they also set NOT_CRAN=true
   if (Sys.getenv("TRAVIS") != "") n_cores = 1
 
-  # Also on Windows we would need to make a cluster first,
-  # and I do not know how this would work on winbuilder or CRAN, so
+  # On Windows we would need to make a cluster first
   if (Sys.info()["sysname"] == "Windows") n_cores = 1
 
   # Unweighted fits
