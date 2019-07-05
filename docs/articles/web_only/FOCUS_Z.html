@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.49.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.49.6</span>
       </span>
     </div>
 
@@ -88,7 +88,7 @@
       <h1>Example evaluation of FOCUS dataset Z</h1>
                         <h4 class="author">Johannes Ranke</h4>
             
-            <h4 class="date">2019-07-04</h4>
+            <h4 class="date">2019-07-05</h4>
       
       
       <div class="hidden name"><code>FOCUS_Z.Rmd</code></div>
@@ -125,92 +125,82 @@
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">Z<span class="fl">.2</span>a &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(<span class="dt">Z0 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z1"</span>),</a>
 <a class="sourceLine" id="cb2-2" title="2">                <span class="dt">Z1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>))</a></code></pre></div>
 <pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">m.Z<span class="fl">.2</span>a &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(Z<span class="fl">.2</span>a, FOCUS_<span class="dv">2006</span>_Z_mkin, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>## Warning in mkinfit(Z.2a, FOCUS_2006_Z_mkin, quiet = TRUE): Observations
-## with value of zero were removed from the data</code></pre>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z<span class="fl">.2</span>a)</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">m.Z<span class="fl">.2</span>a &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(Z<span class="fl">.2</span>a, FOCUS_<span class="dv">2006</span>_Z_mkin, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="kw"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z<span class="fl">.2</span>a)</a></code></pre></div>
 <p><img src="FOCUS_Z_files/figure-html/FOCUS_2006_Z_fits_1-1.png" width="700"></p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(m.Z<span class="fl">.2</span>a, <span class="dt">data =</span> <span class="ot">FALSE</span>)<span class="op">$</span>bpar</a></code></pre></div>
-<pre><code>##             Estimate se_notrans    t value     Pr(&gt;t)    Lower    Upper
-## Z0_0      9.7015e+01   3.393176 2.8591e+01 6.4352e-21 91.66556 102.3642
-## k_Z0_sink 7.2231e-10   0.225254 3.2067e-09 5.0000e-01  0.00000      Inf
-## k_Z0_Z1   2.2360e+00   0.159134 1.4051e+01 1.1369e-13  1.95303   2.5600
-## k_Z1_sink 4.8212e-01   0.065454 7.3658e+00 5.1186e-08  0.40341   0.5762
-## sigma     4.8041e+00   0.637618 7.5345e+00 3.4431e-08  3.52677   6.0815</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(m.Z<span class="fl">.2</span>a, <span class="dt">data =</span> <span class="ot">FALSE</span>)<span class="op">$</span>bpar</a></code></pre></div>
+<pre><code>##             Estimate se_notrans    t value     Pr(&gt;t)   Lower     Upper
+## Z0_0      9.7015e+01   3.553140 2.7304e+01 1.6792e-21 91.4112 102.61853
+## k_Z0_sink 7.2008e-10   0.226895 3.1736e-09 5.0000e-01  0.0000       Inf
+## k_Z0_Z1   2.2360e+00   0.165074 1.3545e+01 7.3943e-14  1.8393   2.71827
+## k_Z1_sink 4.8212e-01   0.065854 7.3212e+00 3.5520e-08  0.4006   0.58023</code></pre>
 <p>As obvious from the parameter summary (the  component of the summary), the kinetic rate constant from parent compound Z to sink is very small and the t-test for this parameter suggests that it is not significantly different from zero. This suggests, in agreement with the analysis in the FOCUS kinetics report, to simplify the model by removing the pathway to sink.</p>
 <p>A similar result can be obtained when formation fractions are used in the model formulation:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">Z<span class="fl">.2</span>a.ff &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(<span class="dt">Z0 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z1"</span>),</a>
-<a class="sourceLine" id="cb9-2" title="2">                   <span class="dt">Z1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>),</a>
-<a class="sourceLine" id="cb9-3" title="3">                   <span class="dt">use_of_ff =</span> <span class="st">"max"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">Z<span class="fl">.2</span>a.ff &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(<span class="dt">Z0 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z1"</span>),</a>
+<a class="sourceLine" id="cb7-2" title="2">                   <span class="dt">Z1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>),</a>
+<a class="sourceLine" id="cb7-3" title="3">                   <span class="dt">use_of_ff =</span> <span class="st">"max"</span>)</a></code></pre></div>
 <pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">m.Z<span class="fl">.2</span>a.ff &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(Z<span class="fl">.2</span>a.ff, FOCUS_<span class="dv">2006</span>_Z_mkin, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>## Warning in mkinfit(Z.2a.ff, FOCUS_2006_Z_mkin, quiet = TRUE): Observations
-## with value of zero were removed from the data</code></pre>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z<span class="fl">.2</span>a.ff)</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">m.Z<span class="fl">.2</span>a.ff &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(Z<span class="fl">.2</span>a.ff, FOCUS_<span class="dv">2006</span>_Z_mkin, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb9-2" title="2"><span class="kw"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z<span class="fl">.2</span>a.ff)</a></code></pre></div>
 <p><img src="FOCUS_Z_files/figure-html/FOCUS_2006_Z_fits_2-1.png" width="700"></p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(m.Z<span class="fl">.2</span>a.ff, <span class="dt">data =</span> <span class="ot">FALSE</span>)<span class="op">$</span>bpar</a></code></pre></div>
-<pre><code>##            Estimate se_notrans t value     Pr(&gt;t)    Lower    Upper
-## Z0_0       97.01488   3.301084 29.3888 3.2971e-21 91.66556 102.3642
-## k_Z0        2.23601   0.207078 10.7979 3.3309e-11  1.95303   2.5600
-## k_Z1        0.48212   0.063265  7.6207 2.8155e-08  0.40341   0.5762
-## f_Z0_to_Z1  1.00000   0.094764 10.5525 5.3560e-11  0.00000   1.0000
-## sigma       4.80411   0.635638  7.5579 3.2592e-08  3.52677   6.0815</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(m.Z<span class="fl">.2</span>a.ff, <span class="dt">data =</span> <span class="ot">FALSE</span>)<span class="op">$</span>bpar</a></code></pre></div>
+<pre><code>## Warning in summary.mkinfit(m.Z.2a.ff, data = FALSE): Could not estimate
+## covariance matrix; singular system.</code></pre>
+<pre><code>##            Estimate se_notrans t value     Pr(&gt;t) Lower Upper
+## Z0_0       97.01488   3.553145 27.3040 1.6793e-21    NA    NA
+## k_Z0        2.23601   0.216848 10.3114 3.6620e-11    NA    NA
+## k_Z1        0.48212   0.065854  7.3211 3.5520e-08    NA    NA
+## f_Z0_to_Z1  1.00000   0.101473  9.8548 9.7068e-11    NA    NA</code></pre>
 <p>Here, the ilr transformed formation fraction fitted in the model takes a very large value, and the backtransformed formation fraction from parent Z to Z1 is practically unity. Here, the covariance matrix used for the calculation of confidence intervals is not returned as the model is overparameterised.</p>
 <p>A simplified model is obtained by removing the pathway to the sink. </p>
 <p>In the following, we use the parameterisation with formation fractions in order to be able to compare with the results in the FOCUS guidance, and as it makes it easier to use parameters obtained in a previous fit when adding a further metabolite.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">Z<span class="fl">.3</span> &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(<span class="dt">Z0 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z1"</span>, <span class="dt">sink =</span> <span class="ot">FALSE</span>),</a>
-<a class="sourceLine" id="cb16-2" title="2">               <span class="dt">Z1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>), <span class="dt">use_of_ff =</span> <span class="st">"max"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">Z<span class="fl">.3</span> &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(<span class="dt">Z0 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z1"</span>, <span class="dt">sink =</span> <span class="ot">FALSE</span>),</a>
+<a class="sourceLine" id="cb13-2" title="2">               <span class="dt">Z1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>), <span class="dt">use_of_ff =</span> <span class="st">"max"</span>)</a></code></pre></div>
 <pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1">m.Z<span class="fl">.3</span> &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(Z<span class="fl">.3</span>, FOCUS_<span class="dv">2006</span>_Z_mkin, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>## Warning in mkinfit(Z.3, FOCUS_2006_Z_mkin, quiet = TRUE): Observations with
-## value of zero were removed from the data</code></pre>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="kw"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z<span class="fl">.3</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">m.Z<span class="fl">.3</span> &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(Z<span class="fl">.3</span>, FOCUS_<span class="dv">2006</span>_Z_mkin, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb15-2" title="2"><span class="kw"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z<span class="fl">.3</span>)</a></code></pre></div>
 <p><img src="FOCUS_Z_files/figure-html/FOCUS_2006_Z_fits_3-1.png" width="700"></p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(m.Z<span class="fl">.3</span>, <span class="dt">data =</span> <span class="ot">FALSE</span>)<span class="op">$</span>bpar</a></code></pre></div>
-<pre><code>##       Estimate se_notrans t value     Pr(&gt;t)    Lower    Upper
-## Z0_0  97.01488   2.597342  37.352 2.0106e-24 91.67597 102.3538
-## k_Z0   2.23601   0.146904  15.221 9.1477e-15  1.95354   2.5593
-## k_Z1   0.48212   0.041727  11.554 4.8268e-12  0.40355   0.5760
-## sigma  4.80411   0.620208   7.746 1.6110e-08  3.52925   6.0790</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(m.Z<span class="fl">.3</span>, <span class="dt">data =</span> <span class="ot">FALSE</span>)<span class="op">$</span>bpar</a></code></pre></div>
+<pre><code>##      Estimate se_notrans t value     Pr(&gt;t)    Lower   Upper
+## Z0_0 97.01488   2.681770  36.176 2.3636e-25 91.52153 102.508
+## k_Z0  2.23601   0.146862  15.225 2.2469e-15  1.95453   2.558
+## k_Z1  0.48212   0.042687  11.294 3.0685e-12  0.40216   0.578</code></pre>
 <p>As there is only one transformation product for Z0 and no pathway to sink, the formation fraction is internally fixed to unity.</p>
 </div>
 <div id="metabolites-z2-and-z3" class="section level1">
 <h1 class="hasAnchor">
 <a href="#metabolites-z2-and-z3" class="anchor"></a>Metabolites Z2 and Z3</h1>
 <p>As suggested in the FOCUS report, the pathway to sink was removed for metabolite Z1 as well in the next step. While this step appears questionable on the basis of the above results, it is followed here for the purpose of comparison. Also, in the FOCUS report, it is assumed that there is additional empirical evidence that Z1 quickly and exclusively hydrolyses to Z2.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1">Z<span class="fl">.5</span> &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(<span class="dt">Z0 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z1"</span>, <span class="dt">sink =</span> <span class="ot">FALSE</span>),</a>
-<a class="sourceLine" id="cb23-2" title="2">               <span class="dt">Z1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z2"</span>, <span class="dt">sink =</span> <span class="ot">FALSE</span>),</a>
-<a class="sourceLine" id="cb23-3" title="3">               <span class="dt">Z2 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>), <span class="dt">use_of_ff =</span> <span class="st">"max"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1">Z<span class="fl">.5</span> &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(<span class="dt">Z0 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z1"</span>, <span class="dt">sink =</span> <span class="ot">FALSE</span>),</a>
+<a class="sourceLine" id="cb18-2" title="2">               <span class="dt">Z1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z2"</span>, <span class="dt">sink =</span> <span class="ot">FALSE</span>),</a>
+<a class="sourceLine" id="cb18-3" title="3">               <span class="dt">Z2 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>), <span class="dt">use_of_ff =</span> <span class="st">"max"</span>)</a></code></pre></div>
 <pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1">m.Z<span class="fl">.5</span> &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(Z<span class="fl">.5</span>, FOCUS_<span class="dv">2006</span>_Z_mkin, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>## Warning in mkinfit(Z.5, FOCUS_2006_Z_mkin, quiet = TRUE): Observations with
-## value of zero were removed from the data</code></pre>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1"><span class="kw"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z<span class="fl">.5</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">m.Z<span class="fl">.5</span> &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(Z<span class="fl">.5</span>, FOCUS_<span class="dv">2006</span>_Z_mkin, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb20-2" title="2"><span class="kw"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z<span class="fl">.5</span>)</a></code></pre></div>
 <p><img src="FOCUS_Z_files/figure-html/FOCUS_2006_Z_fits_5-1.png" width="700"></p>
 <p>Finally, metabolite Z3 is added to the model. We use the optimised differential equation parameter values from the previous fit in order to accelerate the optimization.</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1">Z.FOCUS &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(<span class="dt">Z0 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z1"</span>, <span class="dt">sink =</span> <span class="ot">FALSE</span>),</a>
-<a class="sourceLine" id="cb28-2" title="2">                   <span class="dt">Z1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z2"</span>, <span class="dt">sink =</span> <span class="ot">FALSE</span>),</a>
-<a class="sourceLine" id="cb28-3" title="3">                   <span class="dt">Z2 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z3"</span>),</a>
-<a class="sourceLine" id="cb28-4" title="4">                   <span class="dt">Z3 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>),</a>
-<a class="sourceLine" id="cb28-5" title="5">                   <span class="dt">use_of_ff =</span> <span class="st">"max"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1">Z.FOCUS &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(<span class="dt">Z0 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z1"</span>, <span class="dt">sink =</span> <span class="ot">FALSE</span>),</a>
+<a class="sourceLine" id="cb21-2" title="2">                   <span class="dt">Z1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z2"</span>, <span class="dt">sink =</span> <span class="ot">FALSE</span>),</a>
+<a class="sourceLine" id="cb21-3" title="3">                   <span class="dt">Z2 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z3"</span>),</a>
+<a class="sourceLine" id="cb21-4" title="4">                   <span class="dt">Z3 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>),</a>
+<a class="sourceLine" id="cb21-5" title="5">                   <span class="dt">use_of_ff =</span> <span class="st">"max"</span>)</a></code></pre></div>
 <pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1">m.Z.FOCUS &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(Z.FOCUS, FOCUS_<span class="dv">2006</span>_Z_mkin,</a>
-<a class="sourceLine" id="cb30-2" title="2">                     <span class="dt">parms.ini =</span> m.Z<span class="fl">.5</span><span class="op">$</span>bparms.ode,</a>
-<a class="sourceLine" id="cb30-3" title="3">                     <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>## Warning in mkinfit(Z.FOCUS, FOCUS_2006_Z_mkin, parms.ini = m.Z.
-## 5$bparms.ode, : Observations with value of zero were removed from the data</code></pre>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1"><span class="kw"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z.FOCUS)</a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1">m.Z.FOCUS &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(Z.FOCUS, FOCUS_<span class="dv">2006</span>_Z_mkin,</a>
+<a class="sourceLine" id="cb23-2" title="2">                     <span class="dt">parms.ini =</span> m.Z<span class="fl">.5</span><span class="op">$</span>bparms.ode,</a>
+<a class="sourceLine" id="cb23-3" title="3">                     <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<pre><code>## Warning in mkinfit(Z.FOCUS, FOCUS_2006_Z_mkin, parms.ini = m.Z.5$bparms.ode, : Optimisation by method Port did not converge:
+## false convergence (8)</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1"><span class="kw"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z.FOCUS)</a></code></pre></div>
 <p><img src="FOCUS_Z_files/figure-html/FOCUS_2006_Z_fits_6-1.png" width="700"></p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(m.Z.FOCUS, <span class="dt">data =</span> <span class="ot">FALSE</span>)<span class="op">$</span>bpar</a></code></pre></div>
-<pre><code>##             Estimate se_notrans t value     Pr(&gt;t)     Lower      Upper
-## Z0_0       96.838607   1.994273 48.5584 4.0283e-42 92.826626 100.850589
-## k_Z0        2.215405   0.118459 18.7018 1.0415e-23  1.989465   2.467003
-## k_Z1        0.478300   0.028257 16.9267 6.2408e-22  0.424701   0.538662
-## k_Z2        0.451618   0.042138 10.7177 1.6308e-14  0.374328   0.544867
-## k_Z3        0.058693   0.015246  3.8498 1.7806e-04  0.034805   0.098978
-## f_Z2_to_Z3  0.471508   0.058352  8.0804 9.6648e-11  0.357735   0.588320
-## sigma       3.984431   0.383402 10.3923 4.5575e-14  3.213126   4.755736</code></pre>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" title="1"><span class="kw"><a href="../../reference/endpoints.html">endpoints</a></span>(m.Z.FOCUS)</a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(m.Z.FOCUS, <span class="dt">data =</span> <span class="ot">FALSE</span>)<span class="op">$</span>bpar</a></code></pre></div>
+<pre><code>##             Estimate se_notrans t value     Pr(&gt;t)     Lower     Upper
+## Z0_0       96.838695   2.058856 47.0352 5.5825e-44 92.705465 100.97192
+## k_Z0        2.215407   0.118130 18.7540 7.7427e-25  1.990629   2.46557
+## k_Z1        0.478300   0.029289 16.3305 3.3382e-22  0.422974   0.54086
+## k_Z2        0.451619   0.044213 10.2146 3.1113e-14  0.371037   0.54970
+## k_Z3        0.058693   0.014295  4.1058 7.2882e-05  0.035996   0.09570
+## f_Z2_to_Z3  0.471507   0.057053  8.2643 2.8118e-11  0.360388   0.58552</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1"><span class="kw"><a href="../../reference/endpoints.html">endpoints</a></span>(m.Z.FOCUS)</a></code></pre></div>
 <pre><code>## $ff
 ##   Z2_Z3 Z2_sink 
 ## 0.47151 0.52849 
@@ -222,8 +212,8 @@
 ##        DT50    DT90
 ## Z0  0.31288  1.0394
 ## Z1  1.44919  4.8141
-## Z2  1.53481  5.0985
-## Z3 11.80965 39.2308</code></pre>
+## Z2  1.53480  5.0985
+## Z3 11.80969 39.2310</code></pre>
 <p>This fit corresponds to the final result chosen in Appendix 7 of the FOCUS report. Confidence intervals returned by mkin are based on internally transformed parameters, however.</p>
 </div>
 <div id="using-the-sforb-model" class="section level1">
@@ -231,116 +221,77 @@
 <a href="#using-the-sforb-model" class="anchor"></a>Using the SFORB model</h1>
 <p>As the FOCUS report states, there is a certain tailing of the time course of metabolite Z3. Also, the time course of the parent compound is not fitted very well using the SFO model, as residues at a certain low level remain.</p>
 <p>Therefore, an additional model is offered here, using the single first-order reversible binding (SFORB) model for metabolite Z3. As expected, the <span class="math inline">\(\chi^2\)</span> error level is lower for metabolite Z3 using this model and the graphical fit for Z3 is improved. However, the covariance matrix is not returned.</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" title="1">Z.mkin<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(<span class="dt">Z0 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z1"</span>, <span class="dt">sink =</span> <span class="ot">FALSE</span>),</a>
-<a class="sourceLine" id="cb37-2" title="2">                    <span class="dt">Z1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z2"</span>, <span class="dt">sink =</span> <span class="ot">FALSE</span>),</a>
-<a class="sourceLine" id="cb37-3" title="3">                    <span class="dt">Z2 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z3"</span>),</a>
-<a class="sourceLine" id="cb37-4" title="4">                    <span class="dt">Z3 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFORB"</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1">Z.mkin<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(<span class="dt">Z0 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z1"</span>, <span class="dt">sink =</span> <span class="ot">FALSE</span>),</a>
+<a class="sourceLine" id="cb30-2" title="2">                    <span class="dt">Z1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z2"</span>, <span class="dt">sink =</span> <span class="ot">FALSE</span>),</a>
+<a class="sourceLine" id="cb30-3" title="3">                    <span class="dt">Z2 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z3"</span>),</a>
+<a class="sourceLine" id="cb30-4" title="4">                    <span class="dt">Z3 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFORB"</span>))</a></code></pre></div>
 <pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" title="1">m.Z.mkin<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(Z.mkin<span class="fl">.1</span>, FOCUS_<span class="dv">2006</span>_Z_mkin, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>## Warning in mkinfit(Z.mkin.1, FOCUS_2006_Z_mkin, quiet = TRUE): Observations
-## with value of zero were removed from the data</code></pre>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" title="1"><span class="kw"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z.mkin<span class="fl">.1</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1">m.Z.mkin<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(Z.mkin<span class="fl">.1</span>, FOCUS_<span class="dv">2006</span>_Z_mkin, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb32-2" title="2"><span class="kw"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z.mkin<span class="fl">.1</span>)</a></code></pre></div>
 <p><img src="FOCUS_Z_files/figure-html/FOCUS_2006_Z_fits_7-1.png" width="700"></p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(m.Z.mkin<span class="fl">.1</span>, <span class="dt">data =</span> <span class="ot">FALSE</span>)<span class="op">$</span>cov.unscaled</a></code></pre></div>
-<pre><code>##                            Z0_0 log_k_Z0_Z1 log_k_Z1_Z2 log_k_Z2_sink
-## Z0_0                 3.8375e+00  5.4918e-03  3.0584e-02    1.2969e-01
-## log_k_Z0_Z1          5.4918e-03  2.7613e-03 -1.8820e-04    2.6634e-04
-## log_k_Z1_Z2          3.0584e-02 -1.8820e-04  3.3807e-03    3.2177e-03
-## log_k_Z2_sink        1.2969e-01  2.6634e-04  3.2177e-03    3.4256e-02
-## log_k_Z2_Z3_free    -2.4223e-02 -2.6169e-04 -1.1845e-03   -8.1134e-03
-## log_k_Z3_free_sink  -6.5467e-02 -4.0815e-04 -3.2978e-03   -3.6010e-02
-## log_k_Z3_free_bound -6.0659e-02 -4.4768e-04 -3.0588e-03   -3.9074e-02
-## log_k_Z3_bound_free  5.2844e-01  4.5458e-03  7.9800e-03    4.6274e-02
-## sigma                2.0366e-10 -3.4658e-10  8.9910e-11   -2.5946e-10
-##                     log_k_Z2_Z3_free log_k_Z3_free_sink
-## Z0_0                     -2.4223e-02        -6.5467e-02
-## log_k_Z0_Z1              -2.6169e-04        -4.0815e-04
-## log_k_Z1_Z2              -1.1845e-03        -3.2978e-03
-## log_k_Z2_sink            -8.1134e-03        -3.6010e-02
-## log_k_Z2_Z3_free          1.5500e-02         2.1583e-02
-## log_k_Z3_free_sink        2.1583e-02         7.5705e-02
-## log_k_Z3_free_bound       2.5836e-02         1.1964e-01
-## log_k_Z3_bound_free       5.2534e-02         2.9441e-01
-## sigma                     1.3063e-10         3.4170e-10
-##                     log_k_Z3_free_bound log_k_Z3_bound_free       sigma
-## Z0_0                        -6.0659e-02          5.2844e-01  2.0366e-10
-## log_k_Z0_Z1                 -4.4768e-04          4.5458e-03 -3.4658e-10
-## log_k_Z1_Z2                 -3.0588e-03          7.9800e-03  8.9910e-11
-## log_k_Z2_sink               -3.9074e-02          4.6274e-02 -2.5946e-10
-## log_k_Z2_Z3_free             2.5836e-02          5.2534e-02  1.3063e-10
-## log_k_Z3_free_sink           1.1964e-01          2.9441e-01  3.4170e-10
-## log_k_Z3_free_bound          6.5902e-01          5.4737e+00 -6.7704e-10
-## log_k_Z3_bound_free          5.4737e+00          2.8722e+08  7.2421e-02
-## sigma                       -6.7704e-10          7.2421e-02  1.4170e-01</code></pre>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(m.Z.mkin<span class="fl">.1</span>, <span class="dt">data =</span> <span class="ot">FALSE</span>)<span class="op">$</span>cov.unscaled</a></code></pre></div>
+<pre><code>## Warning in summary.mkinfit(m.Z.mkin.1, data = FALSE): Could not estimate
+## covariance matrix; singular system.</code></pre>
+<pre><code>## NULL</code></pre>
 <p>Therefore, a further stepwise model building is performed starting from the stage of parent and two metabolites, starting from the assumption that the model fit for the parent compound can be improved by using the SFORB model.</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" title="1">Z.mkin<span class="fl">.3</span> &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(<span class="dt">Z0 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFORB"</span>, <span class="st">"Z1"</span>, <span class="dt">sink =</span> <span class="ot">FALSE</span>),</a>
-<a class="sourceLine" id="cb44-2" title="2">                    <span class="dt">Z1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z2"</span>, <span class="dt">sink =</span> <span class="ot">FALSE</span>),</a>
-<a class="sourceLine" id="cb44-3" title="3">                    <span class="dt">Z2 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" title="1">Z.mkin<span class="fl">.3</span> &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(<span class="dt">Z0 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFORB"</span>, <span class="st">"Z1"</span>, <span class="dt">sink =</span> <span class="ot">FALSE</span>),</a>
+<a class="sourceLine" id="cb36-2" title="2">                    <span class="dt">Z1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z2"</span>, <span class="dt">sink =</span> <span class="ot">FALSE</span>),</a>
+<a class="sourceLine" id="cb36-3" title="3">                    <span class="dt">Z2 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>))</a></code></pre></div>
 <pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" title="1">m.Z.mkin<span class="fl">.3</span> &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(Z.mkin<span class="fl">.3</span>, FOCUS_<span class="dv">2006</span>_Z_mkin, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>## Warning in mkinfit(Z.mkin.3, FOCUS_2006_Z_mkin, quiet = TRUE): Observations
-## with value of zero were removed from the data</code></pre>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" title="1"><span class="kw"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z.mkin<span class="fl">.3</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" title="1">m.Z.mkin<span class="fl">.3</span> &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(Z.mkin<span class="fl">.3</span>, FOCUS_<span class="dv">2006</span>_Z_mkin, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb38-2" title="2"><span class="kw"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z.mkin<span class="fl">.3</span>)</a></code></pre></div>
 <p><img src="FOCUS_Z_files/figure-html/FOCUS_2006_Z_fits_9-1.png" width="700"></p>
 <p>This results in a much better representation of the behaviour of the parent compound Z0.</p>
 <p>Finally, Z3 is added as well. These models appear overparameterised (no covariance matrix returned) if the sink for Z1 is left in the models.</p>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" title="1">Z.mkin<span class="fl">.4</span> &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(<span class="dt">Z0 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFORB"</span>, <span class="st">"Z1"</span>, <span class="dt">sink =</span> <span class="ot">FALSE</span>),</a>
-<a class="sourceLine" id="cb49-2" title="2">                    <span class="dt">Z1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z2"</span>, <span class="dt">sink =</span> <span class="ot">FALSE</span>),</a>
-<a class="sourceLine" id="cb49-3" title="3">                    <span class="dt">Z2 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z3"</span>),</a>
-<a class="sourceLine" id="cb49-4" title="4">                    <span class="dt">Z3 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" title="1">Z.mkin<span class="fl">.4</span> &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(<span class="dt">Z0 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFORB"</span>, <span class="st">"Z1"</span>, <span class="dt">sink =</span> <span class="ot">FALSE</span>),</a>
+<a class="sourceLine" id="cb39-2" title="2">                    <span class="dt">Z1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z2"</span>, <span class="dt">sink =</span> <span class="ot">FALSE</span>),</a>
+<a class="sourceLine" id="cb39-3" title="3">                    <span class="dt">Z2 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z3"</span>),</a>
+<a class="sourceLine" id="cb39-4" title="4">                    <span class="dt">Z3 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>))</a></code></pre></div>
 <pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" title="1">m.Z.mkin<span class="fl">.4</span> &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(Z.mkin<span class="fl">.4</span>, FOCUS_<span class="dv">2006</span>_Z_mkin,</a>
-<a class="sourceLine" id="cb51-2" title="2">                      <span class="dt">parms.ini =</span> m.Z.mkin<span class="fl">.3</span><span class="op">$</span>bparms.ode,</a>
-<a class="sourceLine" id="cb51-3" title="3">                      <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>## Warning in mkinfit(Z.mkin.4, FOCUS_2006_Z_mkin, parms.ini = m.Z.mkin.
-## 3$bparms.ode, : Observations with value of zero were removed from the data</code></pre>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" title="1"><span class="kw"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z.mkin<span class="fl">.4</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" title="1">m.Z.mkin<span class="fl">.4</span> &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(Z.mkin<span class="fl">.4</span>, FOCUS_<span class="dv">2006</span>_Z_mkin,</a>
+<a class="sourceLine" id="cb41-2" title="2">                      <span class="dt">parms.ini =</span> m.Z.mkin<span class="fl">.3</span><span class="op">$</span>bparms.ode,</a>
+<a class="sourceLine" id="cb41-3" title="3">                      <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb41-4" title="4"><span class="kw"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z.mkin<span class="fl">.4</span>)</a></code></pre></div>
 <p><img src="FOCUS_Z_files/figure-html/FOCUS_2006_Z_fits_10-1.png" width="700"></p>
 <p>The error level of the fit, but especially of metabolite Z3, can be improved if the SFORB model is chosen for this metabolite, as this model is capable of representing the tailing of the metabolite decline phase.</p>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb54-1" title="1">Z.mkin<span class="fl">.5</span> &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(<span class="dt">Z0 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFORB"</span>, <span class="st">"Z1"</span>, <span class="dt">sink =</span> <span class="ot">FALSE</span>),</a>
-<a class="sourceLine" id="cb54-2" title="2">                    <span class="dt">Z1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z2"</span>, <span class="dt">sink =</span> <span class="ot">FALSE</span>),</a>
-<a class="sourceLine" id="cb54-3" title="3">                    <span class="dt">Z2 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z3"</span>),</a>
-<a class="sourceLine" id="cb54-4" title="4">                    <span class="dt">Z3 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFORB"</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" title="1">Z.mkin<span class="fl">.5</span> &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(<span class="dt">Z0 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFORB"</span>, <span class="st">"Z1"</span>, <span class="dt">sink =</span> <span class="ot">FALSE</span>),</a>
+<a class="sourceLine" id="cb42-2" title="2">                    <span class="dt">Z1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z2"</span>, <span class="dt">sink =</span> <span class="ot">FALSE</span>),</a>
+<a class="sourceLine" id="cb42-3" title="3">                    <span class="dt">Z2 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z3"</span>),</a>
+<a class="sourceLine" id="cb42-4" title="4">                    <span class="dt">Z3 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFORB"</span>))</a></code></pre></div>
 <pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" title="1">m.Z.mkin<span class="fl">.5</span> &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(Z.mkin<span class="fl">.5</span>, FOCUS_<span class="dv">2006</span>_Z_mkin,</a>
-<a class="sourceLine" id="cb56-2" title="2">                      <span class="dt">parms.ini =</span> m.Z.mkin<span class="fl">.4</span><span class="op">$</span>bparms.ode[<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>],</a>
-<a class="sourceLine" id="cb56-3" title="3">                      <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>## Warning in mkinfit(Z.mkin.5, FOCUS_2006_Z_mkin, parms.ini = m.Z.mkin.
-## 4$bparms.ode[1:4], : Observations with value of zero were removed from the
-## data</code></pre>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" title="1"><span class="kw"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z.mkin<span class="fl">.5</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" title="1">m.Z.mkin<span class="fl">.5</span> &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(Z.mkin<span class="fl">.5</span>, FOCUS_<span class="dv">2006</span>_Z_mkin,</a>
+<a class="sourceLine" id="cb44-2" title="2">                      <span class="dt">parms.ini =</span> m.Z.mkin<span class="fl">.4</span><span class="op">$</span>bparms.ode[<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>],</a>
+<a class="sourceLine" id="cb44-3" title="3">                      <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb44-4" title="4"><span class="kw"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z.mkin<span class="fl">.5</span>)</a></code></pre></div>
 <p><img src="FOCUS_Z_files/figure-html/FOCUS_2006_Z_fits_11-1.png" width="700"></p>
 <p>The summary view of the backtransformed parameters shows that we get no confidence intervals due to overparameterisation. As the optimized  is excessively small, it seems reasonable to fix it to zero.</p>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb59-1" title="1">m.Z.mkin<span class="fl">.5</span>a &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(Z.mkin<span class="fl">.5</span>, FOCUS_<span class="dv">2006</span>_Z_mkin,</a>
-<a class="sourceLine" id="cb59-2" title="2">                       <span class="dt">parms.ini =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(m.Z.mkin<span class="fl">.5</span><span class="op">$</span>bparms.ode[<span class="dv">1</span><span class="op">:</span><span class="dv">7</span>],</a>
-<a class="sourceLine" id="cb59-3" title="3">                                     <span class="dt">k_Z3_bound_free =</span> <span class="dv">0</span>),</a>
-<a class="sourceLine" id="cb59-4" title="4">                       <span class="dt">fixed_parms =</span> <span class="st">"k_Z3_bound_free"</span>,</a>
-<a class="sourceLine" id="cb59-5" title="5">                       <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>## Warning in mkinfit(Z.mkin.5, FOCUS_2006_Z_mkin, parms.ini = c(m.Z.mkin.
-## 5$bparms.ode[1:7], : Observations with value of zero were removed from the
-## data</code></pre>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" title="1"><span class="kw"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z.mkin<span class="fl">.5</span>a)</a></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" title="1">m.Z.mkin<span class="fl">.5</span>a &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(Z.mkin<span class="fl">.5</span>, FOCUS_<span class="dv">2006</span>_Z_mkin,</a>
+<a class="sourceLine" id="cb45-2" title="2">                       <span class="dt">parms.ini =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(m.Z.mkin<span class="fl">.5</span><span class="op">$</span>bparms.ode[<span class="dv">1</span><span class="op">:</span><span class="dv">7</span>],</a>
+<a class="sourceLine" id="cb45-3" title="3">                                     <span class="dt">k_Z3_bound_free =</span> <span class="dv">0</span>),</a>
+<a class="sourceLine" id="cb45-4" title="4">                       <span class="dt">fixed_parms =</span> <span class="st">"k_Z3_bound_free"</span>,</a>
+<a class="sourceLine" id="cb45-5" title="5">                       <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb45-6" title="6"><span class="kw"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z.mkin<span class="fl">.5</span>a)</a></code></pre></div>
 <p><img src="FOCUS_Z_files/figure-html/FOCUS_2006_Z_fits_11a-1.png" width="700"></p>
 <p>As expected, the residual plots for Z0 and Z3 are more random than in the case of the all SFO model for which they were shown above. In conclusion, the model  is proposed as the best-fit model for the dataset from Appendix 7 of the FOCUS report.</p>
 <p>A graphical representation of the confidence intervals can finally be obtained.</p>
-<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb62-1" title="1"><span class="kw"><a href="../../reference/mkinparplot.html">mkinparplot</a></span>(m.Z.mkin<span class="fl">.5</span>a)</a></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" title="1"><span class="kw"><a href="../../reference/mkinparplot.html">mkinparplot</a></span>(m.Z.mkin<span class="fl">.5</span>a)</a></code></pre></div>
 <p><img src="FOCUS_Z_files/figure-html/FOCUS_2006_Z_fits_11b-1.png" width="700"></p>
 <p>The endpoints obtained with this model are</p>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" title="1"><span class="kw"><a href="../../reference/endpoints.html">endpoints</a></span>(m.Z.mkin<span class="fl">.5</span>a)</a></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" title="1"><span class="kw"><a href="../../reference/endpoints.html">endpoints</a></span>(m.Z.mkin<span class="fl">.5</span>a)</a></code></pre></div>
 <pre><code>## $ff
 ##   Z0_free_Z1        Z1_Z2      Z2_sink   Z2_Z3_free Z3_free_sink 
 ##      1.00000      1.00000      0.46344      0.53656      1.00000 
 ## 
 ## $SFORB
 ##     Z0_b1     Z0_b2     Z3_b1     Z3_b2 
-## 2.4471381 0.0075124 0.0800075 0.0000000 
+## 2.4471359 0.0075125 0.0800071 0.0000000 
 ## 
 ## $distimes
 ##      DT50   DT90 DT50_Z0_b1 DT50_Z0_b2 DT50_Z3_b1 DT50_Z3_b2
-## Z0 0.3043 1.1848    0.28325     92.267         NA         NA
+## Z0 0.3043 1.1848    0.28325     92.266         NA         NA
 ## Z1 1.5148 5.0320         NA         NA         NA         NA
 ## Z2 1.6414 5.4526         NA         NA         NA         NA
-## Z3     NA     NA         NA         NA     8.6635        Inf</code></pre>
+## Z3     NA     NA         NA         NA     8.6636        Inf</code></pre>
 <p>It is clear the degradation rate of Z3 towards the end of the experiment is very low as DT50_Z3_b2 (the second Eigenvalue of the system of two differential equations representing the SFORB system for Z3, corresponding to the slower rate constant of the DFOP model) is reported to be infinity. However, this appears to be a feature of the data.</p>
 </div>
 <div id="references" class="section level1">

@@ -443,6 +443,7 @@ mkinfit <- function(mkinmod, observed,
     degparms <- c(state.ini.optim, transparms.optim)
 
     if (err_mod == "const") {
+      error_model_algorithm = "OLS"
       if (!quiet) message("Ordinary least squares optimisation")
       fit <- nlminb(degparms, nlogLik, control = control,
         lower = lower[names(degparms)],

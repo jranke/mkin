@@ -1,3 +1,9 @@
+# mkin 0.9.49.6 (2019-07-05)
+
+- Update README and the introductory vignette
+
+- Report 'OLS' as error_model_algorithm in the summary in the case that the default error_model ('const') is used
+
 # mkin 0.9.49.5 (2019-07-04)
 
 - Several algorithms for minimization of the negative log-likelihood for non-constant error models (two-component and variance by variable). In the case the error model is constant variance, least squares is used as this is more stable. The default algorithm 'd_3' tries direct minimization and a three-step procedure, and returns the model with the highest likelihood.

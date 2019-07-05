@@ -176,7 +176,8 @@ mkinfit(mkinmod, observed,
   \item{error_model_algorithm}{
     If the error model is "const", the error model algorithm is ignored,
     because no special algorithm is needed and unweighted (also known as
-    ordinary) least squares fitting can be applied.
+    ordinary) least squares fitting (listed as "OLS" in the summary) can be
+    applied.
 
     The default algorithm "d_3" will directly minimize the negative
     log-likelihood and - independently - also use the three step algorithm
