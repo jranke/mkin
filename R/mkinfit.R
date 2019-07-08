@@ -803,14 +803,16 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
 
   cat("\nFitted using", x$calls, "model solutions performed in", x$time[["elapsed"]],  "s\n")
 
-  cat("\nError model: ")
-  cat(switch(x$err_mod,
-             const = "Constant variance",
-             obs = "Variance unique to each observed variable",
-             tc = "Two-component variance function"), "\n")
+  if (!is.null(x$err_mod)) {
+    cat("\nError model: ")
+    cat(switch(x$err_mod,
+               const = "Constant variance",
+               obs = "Variance unique to each observed variable",
+               tc = "Two-component variance function"), "\n")
 
-  cat("\nError model algorithm:", x$error_model_algorithm, "\n")
-  if (!is.null(x$d_3_message)) cat(x$d_3_message, "\n")
+    cat("\nError model algorithm:", x$error_model_algorithm, "\n")
+    if (!is.null(x$d_3_message)) cat(x$d_3_message, "\n")
+  }
 
   cat("\nStarting values for parameters to be optimised:\n")
   print(x$start)

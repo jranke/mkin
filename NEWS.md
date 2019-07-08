@@ -1,8 +1,10 @@
-# mkin 0.9.49.6 (2019-07-05)
+# mkin 0.9.49.6 (2019-07-08)
 
 - Update README and the introductory vignette
 
 - Report 'OLS' as error_model_algorithm in the summary in the case that the default error_model ('const') is used
+
+- Support summarizing 'mkinfit' objects generated with versions < 0.9.49.5
 
 # mkin 0.9.49.5 (2019-07-04)
 
