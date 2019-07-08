@@ -26,6 +26,7 @@
   there are several fits in the column).
 }
 \examples{
+  \dontrun{ # skip, as it takes > 10 s on winbuilder
   f <- mmkin(c("SFO", "FOMC", "DFOP"),
     list("FOCUS A" = FOCUS_2006_A,
          "FOCUS C" = FOCUS_2006_C), cores = 1, quiet = TRUE)
@@ -38,6 +39,7 @@
 
   # For FOCUS C, the more complex models fit better
   AIC(f[, "FOCUS C"])
+  }
 }
 \author{
   Johannes Ranke

@@ -31,7 +31,8 @@ mkinfit(mkinmod, observed,
   quiet = FALSE,
   atol = 1e-8, rtol = 1e-10, n.outtimes = 100,
   error_model = c("const", "obs", "tc"),
-  error_model_algorithm = c("d_3", "direct", "twostep", "threestep", "fourstep", "IRLS"),
+  error_model_algorithm = c("d_3", "direct", "twostep", "threestep", "fourstep", "IRLS", 
+                            "OLS"),
   reweight.tol = 1e-8, reweight.max.iter = 10,
   trace_parms = FALSE, ...)
 }
@@ -200,10 +201,14 @@ mkinfit(mkinmod, observed,
     with fixed error model parameters, and finally minimizes the negative
     log-likelihood with free degradation and error model parameters.
 
-    The algorithm "IRLS" starts with unweighted least squares,
-    and then iterates optimization of the error model parameters and subsequent
+    The algorithm "IRLS" (Iteratively Reweighted Least Squares) starts with
+    unweighted least squares, and then iterates optimization of the error model
+    parameters and subsequent
     optimization of the degradation model using those error model parameters,
     until the error model parameters converge.
+
+    The algorithm "OLS" (Ordinary Least Squares) is automatically selected when
+    the error model is "const" and results in an unweighted least squares fit.
   }
   \item{reweight.tol}{
     Tolerance for the convergence criterion calculated from the error model

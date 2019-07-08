@@ -34,7 +34,7 @@ mkinfit <- function(mkinmod, observed,
   quiet = FALSE,
   atol = 1e-8, rtol = 1e-10, n.outtimes = 100,
   error_model = c("const", "obs", "tc"),
-  error_model_algorithm = c("d_3", "direct", "twostep", "threestep", "fourstep", "IRLS"),
+  error_model_algorithm = c("d_3", "direct", "twostep", "threestep", "fourstep", "IRLS", "OLS"),
   reweight.tol = 1e-8, reweight.max.iter = 10,
   trace_parms = FALSE,
   ...)
@@ -590,6 +590,8 @@ mkinfit <- function(mkinmod, observed,
   fit$solution_type <- solution_type
   fit$transform_rates <- transform_rates
   fit$transform_fractions <- transform_fractions
+  fit$reweight.tol <- reweight.tol
+  fit$reweight.max.iter <- reweight.max.iter
   fit$control <- control
   fit$calls <- calls
   fit$time <- fit_time

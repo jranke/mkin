@@ -148,7 +148,7 @@ Somewhat in parallel, Syngenta has sponsored the development of an `mkin` and
 KinGUII based GUI application called CAKE, which also adds IRLS and MCMC, is
 more limited in the model formulation, but puts more weight on usability.
 CAKE is available for download from the [CAKE
-website](http://showcase.tessella.com/products/cake), where you can also
+website](https://www.tessella.com/showcase/computer-assisted-kinetic-evaluation), where you can also
 find a zip archive of the R scripts derived from `mkin`, published under the GPL
 license.
 
