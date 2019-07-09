@@ -8,7 +8,10 @@ Example datasets from the NAFTA SOP published 2015
 \description{
 Data taken from US EPA (2015), p. 19 and 23.
 }
-\usage{NAFTA_SOP_2015}
+\usage{
+  NAFTA_SOP_Appendix_B
+  NAFTA_SOP_Appendix_D
+}
 \format{
   2 datasets with observations on the following variables.
   \describe{

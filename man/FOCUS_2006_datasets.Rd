@@ -12,7 +12,14 @@ Datasets A to F from the FOCUS Kinetics report from 2006
 \description{
 Data taken from FOCUS (2006), p. 258.
 }
-\usage{FOCUS_2006_datasets}
+\usage{
+  FOCUS_2006_A
+  FOCUS_2006_B
+  FOCUS_2006_C
+  FOCUS_2006_D
+  FOCUS_2006_E
+  FOCUS_2006_F
+}
 \format{
   6 datasets with observations on the following variables.
   \describe{
