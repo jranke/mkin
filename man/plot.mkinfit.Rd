@@ -27,7 +27,7 @@
   maxabs = "auto",
   sep_obs = FALSE, rel.height.middle = 0.9,
   lpos = "topright", inset = c(0.05, 0.05),
-  show_errmin = FALSE, errmin_digits = 3, \dots)
+  show_errmin = FALSE, errmin_digits = 3, frame = TRUE, \dots)
 plot_sep(fit, sep_obs = TRUE,  show_residuals = TRUE, show_errmin = TRUE, \dots)
 }
 \arguments{
@@ -104,6 +104,9 @@ plot_sep(fit, sep_obs = TRUE,  show_residuals = TRUE, show_errmin = TRUE, \dots)
   }
   \item{errmin_digits}{
     The number of significant digits for rounding the FOCUS chi2 error percentage.
+  }
+  \item{frame}{
+    Should a frame be drawn around the plots?
   }
   \item{\dots}{
     Further arguments passed to \code{\link{plot}}.

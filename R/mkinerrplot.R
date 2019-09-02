@@ -23,6 +23,7 @@ mkinerrplot <- function (object,
   xlab = "Predicted", ylab = "Squared residual",
   maxy = "auto", legend= TRUE, lpos = "topright",
   col_obs = "auto", pch_obs = "auto",
+  frame = TRUE,
   ...)
 {
   obs_vars_all <- as.character(unique(object$data$variable))
@@ -48,7 +49,7 @@ mkinerrplot <- function (object,
   plot(0, type = "n",
        xlab = xlab, ylab = ylab,
        xlim = xlim,
-       ylim = c(0, 1.2 * maxy), ...)
+       ylim = c(0, 1.2 * maxy), frame = frame, ...)
 
   for(obs_var in obs_vars){
     residuals_plot <- subset(object$data, variable == obs_var, c("predicted", "residual"))

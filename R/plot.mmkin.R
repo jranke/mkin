@@ -18,6 +18,7 @@
 
 plot.mmkin <- function(x, main = "auto", legends = 1, 
                        resplot = c("time", "errmod"),
+                       show_errmin = TRUE,
                        errmin_var = "All data", errmin_digits = 3,
                        cex = 0.7, rel.height.middle = 0.9, ...) {
   n.m <- nrow(x)
@@ -83,23 +84,27 @@ plot.mmkin <- function(x, main = "auto", legends = 1,
                        datasets = colnames(x)[i.fit],
                        none = "")
 
-    chi2 <- signif(100 * mkinerrmin(fit)[errmin_var, "err.min"], errmin_digits)
+    if (show_errmin) {
+      chi2 <- signif(100 * mkinerrmin(fit)[errmin_var, "err.min"], errmin_digits)
 
-    # Use LateX if the current plotting device is tikz
-    if (names(dev.cur()) == "tikz output") {
-      chi2_text <- paste0(fit_name, " $\\chi^2$ error level = ", chi2, "\\%")
-    } else {
-      chi2_perc <- paste0(chi2, "%")
-      chi2_text <- bquote(.(fit_name) ~ chi^2 ~ "error level" == .(chi2_perc))
+      # Use LateX if the current plotting device is tikz
+      if (names(dev.cur()) == "tikz output") {
+        chi2_text <- paste0(fit_name, " $\\chi^2$ error level = ", chi2, "\\%")
+      } else {
+        chi2_perc <- paste0(chi2, "%")
+        chi2_text <- bquote(.(fit_name) ~ chi^2 ~ "error level" == .(chi2_perc))
+      }
+      mtext(chi2_text, cex = cex, line = 0.4)
     }
-    mtext(chi2_text, cex = cex, line = 0.4)
 
     if (resplot == "time") {
       mkinresplot(fit, legend = FALSE, ...)
     } else {
       mkinerrplot(fit, legend = FALSE, ...)
     }
-    mtext(paste(fit_name, "residuals"), cex = cex, line = 0.4)
+    if (show_errmin) {
+      mtext(paste(fit_name, "residuals"), cex = cex, line = 0.4)
+    }
   }
 
   par(oldpar, no.readonly = TRUE)

@@ -1,4 +1,8 @@
-# mkin 0.9.49.6 (2019-07-08)
+# mkin 0.9.49.6 (unreleased)
+
+- Support frameless plots ('frame = FALSE')
+
+- Support to suppress the chi2 error level ('show_errmin = FALSE') in 'plot.mmkin'
 
 - Update README and the introductory vignette
 

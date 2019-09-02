@@ -13,8 +13,8 @@
 }
 \usage{
 \method{plot}{mmkin}(x, main = "auto", legends = 1,
-  resplot = c("time", "errmod"), errmin_var = "All data", errmin_digits = 3,
-  cex = 0.7, rel.height.middle = 0.9, ...)
+  resplot = c("time", "errmod"), show_errmin = TRUE, errmin_var = "All data", 
+  errmin_digits = 3, cex = 0.7, rel.height.middle = 0.9, ...)
 }
 \arguments{
   \item{x}{
@@ -31,6 +31,9 @@
     or as squared residuals against predicted values, with the error model,
     using \code{\link{mkinerrplot}}.
 }
+  \item{show_errmin}{
+    Should the chi2 error level be shown on top of the plots to the left?
+  }
   \item{errmin_var}{
     The variable for which the FOCUS chi2 error value should be shown.
 }

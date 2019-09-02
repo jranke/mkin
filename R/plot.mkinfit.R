@@ -31,7 +31,8 @@ plot.mkinfit <- function(x, fit = x,
   maxabs = "auto",
   sep_obs = FALSE, rel.height.middle = 0.9,
   lpos = "topright", inset = c(0.05, 0.05),
-  show_errmin = FALSE, errmin_digits = 3, ...)
+  show_errmin = FALSE, errmin_digits = 3, 
+  frame = TRUE, ...)
 {
   if (add && show_residuals) stop("If adding to an existing plot we can not show residuals")
   if (add && show_errplot) stop("If adding to an existing plot we can not show the error model plot")
@@ -138,7 +139,7 @@ plot.mkinfit <- function(x, fit = x,
     if (add == FALSE) {
       plot(0, type="n",
         xlim = xlim, ylim = ylim_row,
-        xlab = xlab, ylab = ylab, ...)
+        xlab = xlab, ylab = ylab, frame = frame, ...)
     }
 
     # Plot the data
@@ -197,7 +198,7 @@ plot.mkinfit <- function(x, fit = x,
       plot(0, type="n",
         xlim = xlim,
         ylim = c(-1.2 * maxabs_row, 1.2 * maxabs_row),
-        xlab = xlab, ylab = "Residuals")
+        xlab = xlab, ylab = "Residuals", frame = frame)
       for(obs_var in row_obs_vars){
         residuals_plot <- subset(fit$data, variable == obs_var, c("time", "residual"))
         points(residuals_plot, pch = pch_obs[obs_var], col = col_obs[obs_var])
@@ -208,7 +209,7 @@ plot.mkinfit <- function(x, fit = x,
     # Show error model plot if requested
     if (show_errplot) {
       mkinerrplot(fit, obs_vars = row_obs_vars, pch_obs = pch_obs[row_obs_vars], col_obs = col_obs[row_obs_vars],
-                  legend = FALSE)
+                  legend = FALSE, frame = frame)
     }
   }
   if (do_layout) par(oldpar, no.readonly = TRUE)

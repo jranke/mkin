@@ -18,6 +18,7 @@
     xlab = "Predicted", ylab = "Squared residual",
     maxy = "auto", legend= TRUE, lpos = "topright",
     col_obs = "auto", pch_obs = "auto",
+    frame = TRUE,
     ...)
 }
 \arguments{
@@ -53,6 +54,9 @@
   }
   \item{pch_obs}{
     Symbols to be used for the observed variables.
+  }
+  \item{frame}{
+    Should a frame be drawn around the plots?
   }
   \item{\dots}{
    further arguments passed to \code{\link{plot}}.
