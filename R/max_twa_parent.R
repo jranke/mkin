@@ -1,4 +1,4 @@
-# Copyright (C) 2016,2017,2018 Johannes Ranke
+# Copyright (C) 2016-2019 Johannes Ranke
 # Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
@@ -37,14 +37,14 @@ max_twa_parent <- function(fit, windows) {
     }
     k <- parms.all[k_name]
     twafunc <- function(t) {
-      M0 * (1 - exp(- k * t)) / (k * t)
+      max_twa_sfo(M0, k, t)
     }
   }
   if (type == "FOMC") {
     alpha <- parms.all["alpha"]
     beta <- parms.all["beta"]
     twafunc <- function(t) {
-      M0 * (beta)/(t * (1 - alpha)) * ((t/beta + 1)^(1 - alpha) - 1)
+      max_twa_fomc(M0, alpha, beta, t)
     }
   }
   if (type == "DFOP") {
@@ -52,7 +52,7 @@ max_twa_parent <- function(fit, windows) {
     k2 <- parms.all["k2"]
     g <- parms.all["g"]
     twafunc <- function(t) {
-      M0/t * ((g/k1) * (1 - exp(- k1 * t)) + ((1 - g)/k2) * (1 - exp(- k2 * t)))
+      max_twa_dfop(M0, k1, k2, g, t)
     }
   }
   if (type == "HS") {
@@ -61,11 +61,8 @@ max_twa_parent <- function(fit, windows) {
     tb <- parms.all["tb"]
     twafunc <- function(t) {
       ifelse(t <= tb,
-        M0 * (1 - exp(- k1 * t)) / (k1 * t),
-        (M0 / t) * (
-          (1/k1) * (1 - exp(- k1 * tb)) +
-          (exp(- k1 * tb) / k2) * (1 - exp(- k2 * (t - tb)))
-        )
+        max_twa_sfo(M0, k1, t),
+        max_twa_hs(M0, k1, k2, tb, t)
       )
     }
   }
@@ -76,4 +73,19 @@ max_twa_parent <- function(fit, windows) {
   res <- twafunc(windows)
   names(res) <- windows
   return(res)
+}
+max_twa_sfo <- function(M0 = 1, k, t) {
+  M0 * (1 - exp(- k * t)) / (k * t)
+}
+max_twa_fomc <- function(M0 = 1, alpha, beta, t) {
+  M0 * (beta)/(t * (1 - alpha)) * ((t/beta + 1)^(1 - alpha) - 1)
+}
+max_twa_dfop <- function(M0 = 1, k1, k2, g, t) {
+  M0/t * ((g/k1) * (1 - exp(- k1 * t)) + ((1 - g)/k2) * (1 - exp(- k2 * t)))
+}
+max_twa_hs <- function(M0 = 1, k1, k2, tb, t) {
+  (M0 / t) * (
+    (1/k1) * (1 - exp(- k1 * tb)) +
+    (exp(- k1 * tb) / k2) * (1 - exp(- k2 * (t - tb)))
+  )
 }

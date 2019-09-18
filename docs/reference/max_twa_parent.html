@@ -16,13 +16,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -49,6 +51,7 @@ guidance." />
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
 
 
   </head>
@@ -120,6 +123,7 @@ guidance." />
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -140,7 +144,11 @@ guidance.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>max_twa_parent</span>(<span class='no'>fit</span>, <span class='no'>windows</span>)</pre>
+    <pre class="usage"><span class='fu'>max_twa_parent</span>(<span class='no'>fit</span>, <span class='no'>windows</span>)
+  <span class='fu'>max_twa_sfo</span>(<span class='kw'>M0</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='no'>k</span>, <span class='no'>t</span>)
+  <span class='fu'>max_twa_fomc</span>(<span class='kw'>M0</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='no'>alpha</span>, <span class='no'>beta</span>, <span class='no'>t</span>)
+  <span class='fu'>max_twa_dfop</span>(<span class='kw'>M0</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='no'>k1</span>, <span class='no'>k2</span>, <span class='no'>g</span>, <span class='no'>t</span>)
+  <span class='fu'>max_twa_hs</span>(<span class='kw'>M0</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='no'>k1</span>, <span class='no'>k2</span>, <span class='no'>tb</span>, <span class='no'>t</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -153,11 +161,52 @@ guidance.</p>
       <th>windows</th>
       <td><p>The width of the time windows for which the TWAs should be calculated.</p></td>
     </tr>
+    <tr>
+      <th>M0</th>
+      <td><p>The initial concentration for which the maximum time weighted
+   average over the decline curve should be calculated. The default
+   is to use a value of 1, which means that a relative maximum time
+   weighted average factor (f_twa) is calculated.</p></td>
+    </tr>
+    <tr>
+      <th>k</th>
+      <td><p>The rate constant in the case of SFO kinetics.</p></td>
+    </tr>
+    <tr>
+      <th>t</th>
+      <td><p>The width of the time window.</p></td>
+    </tr>
+    <tr>
+      <th>alpha</th>
+      <td><p>Parameter of the FOMC model.</p></td>
+    </tr>
+    <tr>
+      <th>beta</th>
+      <td><p>Parameter of the FOMC model.</p></td>
+    </tr>
+    <tr>
+      <th>k1</th>
+      <td><p>The first rate constant of the DFOP or the HS kinetics.</p></td>
+    </tr>
+    <tr>
+      <th>k2</th>
+      <td><p>The second rate constant of the DFOP or the HS kinetics.</p></td>
+    </tr>
+    <tr>
+      <th>g</th>
+      <td><p>Parameter of the DFOP model.</p></td>
+    </tr>
+    <tr>
+      <th>tb</th>
+      <td><p>Parameter of the HS model.</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A numeric vector, named using the <code>windows</code> argument.</p>
+    <p>For <code>max_twa_parent</code>, a numeric vector, named using the <code>windows</code> argument.
+  For the other functions, a numeric vector of length one (also known as 'a
+  number').</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
@@ -170,7 +219,7 @@ guidance.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>  <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='st'>"FOMC"</span>, <span class='no'>FOCUS_2006_C</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-  <span class='fu'>max_twa_parent</span>(<span class='no'>fit</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>7</span>, <span class='fl'>21</span>))</div><div class='output co'>#&gt;        7       21 
+  <span class='fu'>max_twa_parent</span>(<span class='no'>fit</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>7</span>, <span class='fl'>21</span>))</div><div class='output co'>#&gt;        7       21 
 #&gt; 34.71343 18.22124 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -190,19 +239,23 @@ guidance.</p>
   </div>
 </div>
 
+
       <footer>
       <div class="copyright">
   <p>Developed by Johannes Ranke.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

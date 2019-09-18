@@ -1,5 +1,9 @@
 \name{max_twa_parent}
 \alias{max_twa_parent}
+\alias{max_twa_sfo}
+\alias{max_twa_fomc}
+\alias{max_twa_dfop}
+\alias{max_twa_hs}
 \title{
   Function to calculate maximum time weighted average concentrations from kinetic models fitted with mkinfit
 }
@@ -11,6 +15,10 @@ using the analytical formulas given in the PEC soil section of the FOCUS
 guidance.}
 \usage{
   max_twa_parent(fit, windows)
+  max_twa_sfo(M0 = 1, k, t)
+  max_twa_fomc(M0 = 1, alpha, beta, t)
+  max_twa_dfop(M0 = 1, k1, k2, g, t)
+  max_twa_hs(M0 = 1, k1, k2, tb, t)
 }
 \arguments{
   \item{fit}{
@@ -19,13 +27,45 @@ guidance.}
   \item{windows}{
     The width of the time windows for which the TWAs should be calculated.
   }
+  \item{M0}{
+   The initial concentration for which the maximum time weighted
+   average over the decline curve should be calculated. The default
+   is to use a value of 1, which means that a relative maximum time
+   weighted average factor (f_twa) is calculated.
+  }
+  \item{k}{
+    The rate constant in the case of SFO kinetics.
+  }
+  \item{t}{
+    The width of the time window.
+  }
+  \item{alpha}{
+    Parameter of the FOMC model.
+  }
+  \item{beta}{
+    Parameter of the FOMC model.
+  }
+  \item{k1}{
+    The first rate constant of the DFOP or the HS kinetics.
+  }
+  \item{k2}{
+    The second rate constant of the DFOP or the HS kinetics.
+  }
+  \item{g}{
+    Parameter of the DFOP model.
+  }
+  \item{tb}{
+    Parameter of the HS model.
+  }
 }
 \value{
-  A numeric vector, named using the \code{windows} argument.
+  For \code{max_twa_parent}, a numeric vector, named using the \code{windows} argument.
+  For the other functions, a numeric vector of length one (also known as 'a
+  number').
 }
 \examples{
   fit <- mkinfit("FOMC", FOCUS_2006_C, quiet = TRUE)
-  max_twa_parent(fit, c(7, 21))  
+  max_twa_parent(fit, c(7, 21))
 }
 \references{
   FOCUS (2006) \dQuote{Guidance Document on Estimating Persistence and

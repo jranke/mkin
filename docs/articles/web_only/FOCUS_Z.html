@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Example evaluation of FOCUS dataset Z • mkin</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../../pkgdown.css" rel="stylesheet">
 <script src="../../pkgdown.js"></script><meta property="og:title" content="Example evaluation of FOCUS dataset Z">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
@@ -82,13 +83,14 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Example evaluation of FOCUS dataset Z</h1>
                         <h4 class="author">Johannes Ranke</h4>
             
-            <h4 class="date">2019-07-09</h4>
+            <h4 class="date">2019-09-18</h4>
       
       
       <div class="hidden name"><code>FOCUS_Z.Rmd</code></div>
@@ -102,18 +104,18 @@
 <h1 class="hasAnchor">
 <a href="#the-data" class="anchor"></a>The data</h1>
 <p>The following code defines the example dataset from Appendix 7 to the FOCUS kinetics report <span class="citation">(FOCUS Work Group on Degradation Kinetics 2014, 354)</span>.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(mkin, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)</a>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(mkin, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb1-2" title="2">LOD =<span class="st"> </span><span class="fl">0.5</span></a>
-<a class="sourceLine" id="cb1-3" title="3">FOCUS_<span class="dv">2006</span>_Z =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(</a>
-<a class="sourceLine" id="cb1-4" title="4">  <span class="dt">t =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="fl">0.04</span>, <span class="fl">0.125</span>, <span class="fl">0.29</span>, <span class="fl">0.54</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">7</span>, <span class="dv">10</span>, <span class="dv">14</span>, <span class="dv">21</span>,</a>
+<a class="sourceLine" id="cb1-3" title="3">FOCUS_<span class="dv">2006</span>_Z =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(</a>
+<a class="sourceLine" id="cb1-4" title="4">  <span class="dt">t =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">0</span>, <span class="fl">0.04</span>, <span class="fl">0.125</span>, <span class="fl">0.29</span>, <span class="fl">0.54</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">7</span>, <span class="dv">10</span>, <span class="dv">14</span>, <span class="dv">21</span>,</a>
 <a class="sourceLine" id="cb1-5" title="5">        <span class="dv">42</span>, <span class="dv">61</span>, <span class="dv">96</span>, <span class="dv">124</span>),</a>
-<a class="sourceLine" id="cb1-6" title="6">  <span class="dt">Z0 =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">100</span>, <span class="fl">81.7</span>, <span class="fl">70.4</span>, <span class="fl">51.1</span>, <span class="fl">41.2</span>, <span class="fl">6.6</span>, <span class="fl">4.6</span>, <span class="fl">3.9</span>, <span class="fl">4.6</span>, <span class="fl">4.3</span>, <span class="fl">6.8</span>,</a>
+<a class="sourceLine" id="cb1-6" title="6">  <span class="dt">Z0 =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">100</span>, <span class="fl">81.7</span>, <span class="fl">70.4</span>, <span class="fl">51.1</span>, <span class="fl">41.2</span>, <span class="fl">6.6</span>, <span class="fl">4.6</span>, <span class="fl">3.9</span>, <span class="fl">4.6</span>, <span class="fl">4.3</span>, <span class="fl">6.8</span>,</a>
 <a class="sourceLine" id="cb1-7" title="7">         <span class="fl">2.9</span>, <span class="fl">3.5</span>, <span class="fl">5.3</span>, <span class="fl">4.4</span>, <span class="fl">1.2</span>, <span class="fl">0.7</span>),</a>
-<a class="sourceLine" id="cb1-8" title="8">  <span class="dt">Z1 =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="fl">18.3</span>, <span class="fl">29.6</span>, <span class="fl">46.3</span>, <span class="fl">55.1</span>, <span class="fl">65.7</span>, <span class="fl">39.1</span>, <span class="dv">36</span>, <span class="fl">15.3</span>, <span class="fl">5.6</span>, <span class="fl">1.1</span>,</a>
+<a class="sourceLine" id="cb1-8" title="8">  <span class="dt">Z1 =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">0</span>, <span class="fl">18.3</span>, <span class="fl">29.6</span>, <span class="fl">46.3</span>, <span class="fl">55.1</span>, <span class="fl">65.7</span>, <span class="fl">39.1</span>, <span class="dv">36</span>, <span class="fl">15.3</span>, <span class="fl">5.6</span>, <span class="fl">1.1</span>,</a>
 <a class="sourceLine" id="cb1-9" title="9">         <span class="fl">1.6</span>, <span class="fl">0.6</span>, <span class="fl">0.5</span> <span class="op">*</span><span class="st"> </span>LOD, <span class="ot">NA</span>, <span class="ot">NA</span>, <span class="ot">NA</span>),</a>
-<a class="sourceLine" id="cb1-10" title="10">  <span class="dt">Z2 =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="ot">NA</span>, <span class="fl">0.5</span> <span class="op">*</span><span class="st"> </span>LOD, <span class="fl">2.6</span>, <span class="fl">3.8</span>, <span class="fl">15.3</span>, <span class="fl">37.2</span>, <span class="fl">31.7</span>, <span class="fl">35.6</span>, <span class="fl">14.5</span>,</a>
+<a class="sourceLine" id="cb1-10" title="10">  <span class="dt">Z2 =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">0</span>, <span class="ot">NA</span>, <span class="fl">0.5</span> <span class="op">*</span><span class="st"> </span>LOD, <span class="fl">2.6</span>, <span class="fl">3.8</span>, <span class="fl">15.3</span>, <span class="fl">37.2</span>, <span class="fl">31.7</span>, <span class="fl">35.6</span>, <span class="fl">14.5</span>,</a>
 <a class="sourceLine" id="cb1-11" title="11">         <span class="fl">0.8</span>, <span class="fl">2.1</span>, <span class="fl">1.9</span>, <span class="fl">0.5</span> <span class="op">*</span><span class="st"> </span>LOD, <span class="ot">NA</span>, <span class="ot">NA</span>, <span class="ot">NA</span>),</a>
-<a class="sourceLine" id="cb1-12" title="12">  <span class="dt">Z3 =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="ot">NA</span>, <span class="ot">NA</span>, <span class="ot">NA</span>, <span class="ot">NA</span>, <span class="fl">0.5</span> <span class="op">*</span><span class="st"> </span>LOD, <span class="fl">9.2</span>, <span class="fl">13.1</span>, <span class="fl">22.3</span>, <span class="fl">28.4</span>, <span class="fl">32.5</span>,</a>
+<a class="sourceLine" id="cb1-12" title="12">  <span class="dt">Z3 =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">0</span>, <span class="ot">NA</span>, <span class="ot">NA</span>, <span class="ot">NA</span>, <span class="ot">NA</span>, <span class="fl">0.5</span> <span class="op">*</span><span class="st"> </span>LOD, <span class="fl">9.2</span>, <span class="fl">13.1</span>, <span class="fl">22.3</span>, <span class="fl">28.4</span>, <span class="fl">32.5</span>,</a>
 <a class="sourceLine" id="cb1-13" title="13">         <span class="fl">25.2</span>, <span class="fl">17.2</span>, <span class="fl">4.8</span>, <span class="fl">4.5</span>, <span class="fl">2.8</span>, <span class="fl">4.4</span>))</a>
 <a class="sourceLine" id="cb1-14" title="14"></a>
 <a class="sourceLine" id="cb1-15" title="15">FOCUS_<span class="dv">2006</span>_Z_mkin &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkin_wide_to_long.html">mkin_wide_to_long</a></span>(FOCUS_<span class="dv">2006</span>_Z)</a></code></pre></div>
@@ -130,7 +132,7 @@
 ## with value of zero were removed from the data</code></pre>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z<span class="fl">.2</span>a)</a></code></pre></div>
 <p><img src="FOCUS_Z_files/figure-html/FOCUS_2006_Z_fits_1-1.png" width="700"></p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(m.Z<span class="fl">.2</span>a, <span class="dt">data =</span> <span class="ot">FALSE</span>)<span class="op">$</span>bpar</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(m.Z<span class="fl">.2</span>a, <span class="dt">data =</span> <span class="ot">FALSE</span>)<span class="op">$</span>bpar</a></code></pre></div>
 <pre><code>##             Estimate se_notrans    t value     Pr(&gt;t)    Lower    Upper
 ## Z0_0      9.7015e+01   3.393176 2.8591e+01 6.4352e-21 91.66556 102.3642
 ## k_Z0_sink 7.2231e-10   0.225254 3.2067e-09 5.0000e-01  0.00000      Inf
@@ -148,7 +150,7 @@
 ## with value of zero were removed from the data</code></pre>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z<span class="fl">.2</span>a.ff)</a></code></pre></div>
 <p><img src="FOCUS_Z_files/figure-html/FOCUS_2006_Z_fits_2-1.png" width="700"></p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(m.Z<span class="fl">.2</span>a.ff, <span class="dt">data =</span> <span class="ot">FALSE</span>)<span class="op">$</span>bpar</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(m.Z<span class="fl">.2</span>a.ff, <span class="dt">data =</span> <span class="ot">FALSE</span>)<span class="op">$</span>bpar</a></code></pre></div>
 <pre><code>##            Estimate se_notrans t value     Pr(&gt;t)    Lower    Upper
 ## Z0_0       97.01488   3.301084 29.3888 3.2971e-21 91.66556 102.3642
 ## k_Z0        2.23601   0.207078 10.7979 3.3309e-11  1.95303   2.5600
@@ -166,7 +168,7 @@
 ## value of zero were removed from the data</code></pre>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="kw"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z<span class="fl">.3</span>)</a></code></pre></div>
 <p><img src="FOCUS_Z_files/figure-html/FOCUS_2006_Z_fits_3-1.png" width="700"></p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(m.Z<span class="fl">.3</span>, <span class="dt">data =</span> <span class="ot">FALSE</span>)<span class="op">$</span>bpar</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(m.Z<span class="fl">.3</span>, <span class="dt">data =</span> <span class="ot">FALSE</span>)<span class="op">$</span>bpar</a></code></pre></div>
 <pre><code>##       Estimate se_notrans t value     Pr(&gt;t)    Lower    Upper
 ## Z0_0  97.01488   2.597342  37.352 2.0106e-24 91.67597 102.3538
 ## k_Z0   2.23601   0.146904  15.221 9.1477e-15  1.95354   2.5593
@@ -201,7 +203,7 @@
 ## 5$bparms.ode, : Observations with value of zero were removed from the data</code></pre>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1"><span class="kw"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z.FOCUS)</a></code></pre></div>
 <p><img src="FOCUS_Z_files/figure-html/FOCUS_2006_Z_fits_6-1.png" width="700"></p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(m.Z.FOCUS, <span class="dt">data =</span> <span class="ot">FALSE</span>)<span class="op">$</span>bpar</a></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(m.Z.FOCUS, <span class="dt">data =</span> <span class="ot">FALSE</span>)<span class="op">$</span>bpar</a></code></pre></div>
 <pre><code>##             Estimate se_notrans t value     Pr(&gt;t)     Lower      Upper
 ## Z0_0       96.838607   1.994273 48.5584 4.0283e-42 92.826626 100.850589
 ## k_Z0        2.215405   0.118459 18.7018 1.0415e-23  1.989465   2.467003
@@ -241,7 +243,7 @@
 ## with value of zero were removed from the data</code></pre>
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" title="1"><span class="kw"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(m.Z.mkin<span class="fl">.1</span>)</a></code></pre></div>
 <p><img src="FOCUS_Z_files/figure-html/FOCUS_2006_Z_fits_7-1.png" width="700"></p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(m.Z.mkin<span class="fl">.1</span>, <span class="dt">data =</span> <span class="ot">FALSE</span>)<span class="op">$</span>cov.unscaled</a></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(m.Z.mkin<span class="fl">.1</span>, <span class="dt">data =</span> <span class="ot">FALSE</span>)<span class="op">$</span>cov.unscaled</a></code></pre></div>
 <pre><code>##                            Z0_0 log_k_Z0_Z1 log_k_Z1_Z2 log_k_Z2_sink
 ## Z0_0                 3.8375e+00  5.4918e-03  3.0584e-02    1.2969e-01
 ## log_k_Z0_Z1          5.4918e-03  2.7613e-03 -1.8820e-04    2.6634e-04
@@ -312,7 +314,7 @@
 <p><img src="FOCUS_Z_files/figure-html/FOCUS_2006_Z_fits_11-1.png" width="700"></p>
 <p>The summary view of the backtransformed parameters shows that we get no confidence intervals due to overparameterisation. As the optimized  is excessively small, it seems reasonable to fix it to zero.</p>
 <div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb59-1" title="1">m.Z.mkin<span class="fl">.5</span>a &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(Z.mkin<span class="fl">.5</span>, FOCUS_<span class="dv">2006</span>_Z_mkin,</a>
-<a class="sourceLine" id="cb59-2" title="2">                       <span class="dt">parms.ini =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(m.Z.mkin<span class="fl">.5</span><span class="op">$</span>bparms.ode[<span class="dv">1</span><span class="op">:</span><span class="dv">7</span>],</a>
+<a class="sourceLine" id="cb59-2" title="2">                       <span class="dt">parms.ini =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(m.Z.mkin<span class="fl">.5</span><span class="op">$</span>bparms.ode[<span class="dv">1</span><span class="op">:</span><span class="dv">7</span>],</a>
 <a class="sourceLine" id="cb59-3" title="3">                                     <span class="dt">k_Z3_bound_free =</span> <span class="dv">0</span>),</a>
 <a class="sourceLine" id="cb59-4" title="4">                       <span class="dt">fixed_parms =</span> <span class="st">"k_Z3_bound_free"</span>,</a>
 <a class="sourceLine" id="cb59-5" title="5">                       <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
@@ -372,17 +374,20 @@
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by Johannes Ranke.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

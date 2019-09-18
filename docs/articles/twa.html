@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calculation of time weighted average concentrations with mkin • mkin</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Calculation of time weighted average concentrations with mkin">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
@@ -82,13 +83,14 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Calculation of time weighted average concentrations with mkin</h1>
                         <h4 class="author">Johannes Ranke</h4>
             
-            <h4 class="date">2019-07-09</h4>
+            <h4 class="date">2019-09-18</h4>
       
       
       <div class="hidden name"><code>twa.Rmd</code></div>
@@ -108,6 +110,10 @@
 <p><span class="math display">\[c_\textrm{twa} = \frac{c_0}{t} \left(
   \frac{g}{k_1} \left( 1 - e^{- k_1 t} \right) +
   \frac{1-g}{k_2} \left( 1 - e^{- k_2 t} \right)  \right) \]</span></p>
+<p>HS for <span class="math inline">\(t &gt; t_b\)</span>:</p>
+<p><span class="math display">\[c_\textrm{twa} = \frac{c_0}{t} \left(
+  \frac{1}{k_1} \left( 1 - e^{- k_1 t_b} \right) +
+  \frac{e^{- k_1 t_b}}{k_2} \left( 1 - e^{- k_2 (t - t_b)} \right)  \right) \]</span></p>
 <p>Often, the ratio between the time weighted average concentration <span class="math inline">\(c_\textrm{twa}\)</span> and the initial concentration <span class="math inline">\(c_0\)</span></p>
 <p><span class="math display">\[f_\textrm{twa} = \frac{c_\textrm{twa}}{c_0}\]</span></p>
 <p>is needed. This can be calculated from the fitted initial concentration <span class="math inline">\(c_0\)</span> and the time weighted average concentration <span class="math inline">\(c_\textrm{twa}\)</span>, or directly from the model parameters using the following formulas:</p>
@@ -120,7 +126,11 @@
 <p><span class="math display">\[f_\textrm{twa} = \frac{1}{t} \left(
   \frac{g}{k_1} \left( 1 - e^{- k_1 t} \right) +
   \frac{1-g}{k_2} \left( 1 - e^{- k_2 t} \right)  \right) \]</span></p>
-<p>Note that a method for calculating maximum moving window time weighted average concentrations for any model fitted by ‘mkinfit’, and also for metabolites in such models, can be found in the ‘pfm’ package, which is currently not published on CRAN, but available from <a href="https://github.com/jranke/pfm">github</a> and <a href="https://pkgdown.jrwb.de/pfm">documented</a> at my website.</p>
+<p>HS for <span class="math inline">\(t &gt; t_b\)</span>:</p>
+<p><span class="math display">\[f_\textrm{twa} = \frac{1}{t} \left(
+  \frac{1}{k_1} \left( 1 - e^{- k_1 t_b} \right) +
+  \frac{e^{- k_1 t_b}}{k_2} \left( 1 - e^{- k_2 (t - t_b)} \right)  \right) \]</span></p>
+<p>Note that a method for calculating maximum moving window time weighted average concentrations for a model fitted by ‘mkinfit’ is include in the ‘mkin’ package (<a href="https://pkgdown.jrwb.de/mkin/reference/max_twa_parent.html">‘max_twa_parent’</a>. If the same is needed for metabolites, the function <a href="https://pkgdown.jrwb.de/pfm/reference/max_twa.html">‘max_twa’</a> can be used.</p>
 <div id="refs" class="references">
 <div id="ref-FOCUSkinetics2014">
 <p>FOCUS Work Group on Degradation Kinetics. 2014. <em>Generic Guidance for Estimating Persistence and Degradation Kinetics from Environmental Fate Studies on Pesticides in Eu Registration</em>. 1.1 ed. <a href="http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics" class="uri">http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics</a>.</p>
@@ -134,17 +144,20 @@
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by Johannes Ranke.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

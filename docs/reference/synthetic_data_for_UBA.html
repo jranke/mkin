@@ -16,13 +16,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -60,6 +62,7 @@ Compare also the code in the example section to see the degradation models." />
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
 
 
   </head>
@@ -131,6 +134,7 @@ Compare also the code in the example section to see the degradation models." />
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -170,7 +174,9 @@ Compare also the code in the example section to see the degradation models." />
   each containing, among others, the following components</p><dl class='dl-horizontal'>
     <dt><code>title</code></dt><dd><p>The name of the dataset, e.g. <code>SFO_lin_a</code></p></dd>
     <dt><code>data</code></dt><dd><p>A data frame with the data in the form expected by <code><a href='mkinfit.html'>mkinfit</a></code></p></dd>
-  </dl>
+  
+</dl>
+
     
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
@@ -181,109 +187,7 @@ Compare also the code in the example section to see the degradation models." />
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'># The data have been generated using the following kinetic models
-m_synth_SFO_lin <- mkinmod(parent = list(type = "SFO", to = "M1"),
-                           M1 = list(type = "SFO", to = "M2"),
-                           M2 = list(type = "SFO"), use_of_ff = "max")
-
-
-m_synth_SFO_par <- mkinmod(parent = list(type = "SFO", to = c("M1", "M2"),
-                                         sink = FALSE),
-                           M1 = list(type = "SFO"),
-                           M2 = list(type = "SFO"), use_of_ff = "max")
-
-m_synth_DFOP_lin <- mkinmod(parent = list(type = "DFOP", to = "M1"),
-                            M1 = list(type = "SFO", to = "M2"),
-                            M2 = list(type = "SFO"), use_of_ff = "max")
-
-m_synth_DFOP_par <- mkinmod(parent = list(type = "DFOP", to = c("M1", "M2"),
-                                          sink = FALSE),
-                            M1 = list(type = "SFO"),
-                            M2 = list(type = "SFO"), use_of_ff = "max")
-
-# The model predictions without intentional error were generated as follows
-sampling_times = c(0, 1, 3, 7, 14, 28, 60, 90, 120)
-
-d_synth_SFO_lin <- mkinpredict(m_synth_SFO_lin,
-                               c(k_parent = 0.7, f_parent_to_M1 = 0.8,
-                                 k_M1 = 0.3, f_M1_to_M2 = 0.7,
-                                 k_M2 = 0.02),
-                               c(parent = 100, M1 = 0, M2 = 0),
-                               sampling_times)
-
-d_synth_DFOP_lin <- mkinpredict(m_synth_DFOP_lin,
-                                c(k1 = 0.2, k2 = 0.02, g = 0.5,
-                                  f_parent_to_M1 = 0.5, k_M1 = 0.3,
-                                  f_M1_to_M2 = 0.7, k_M2 = 0.02),
-                                 c(parent = 100, M1 = 0, M2 = 0),
-                                 sampling_times)
-
-d_synth_SFO_par <- mkinpredict(m_synth_SFO_par,
-                               c(k_parent = 0.2,
-                                 f_parent_to_M1 = 0.8, k_M1 = 0.01,
-                                 f_parent_to_M2 = 0.2, k_M2 = 0.02),
-                                 c(parent = 100, M1 = 0, M2 = 0),
-                                 sampling_times)
-
-d_synth_DFOP_par <- mkinpredict(m_synth_DFOP_par,
-                               c(k1 = 0.3, k2 = 0.02, g = 0.7,
-                                 f_parent_to_M1 = 0.6, k_M1 = 0.04,
-                                 f_parent_to_M2 = 0.4, k_M2 = 0.01),
-                                 c(parent = 100, M1 = 0, M2 = 0),
-                                 sampling_times)
-
-# Construct names for datasets with errors
-d_synth_names = paste0("d_synth_", c("SFO_lin", "SFO_par",
-                                     "DFOP_lin", "DFOP_par"))
-
-# Function for adding errors. The add_err function now published with this
-# package is a slightly generalised version where the names of secondary
-# compartments that should have an initial value of zero (M1 and M2 in this
-# case) are not hardcoded any more.
-add_err = function(d, sdfunc, LOD = 0.1, reps = 2, seed = 123456789)
-{
-  set.seed(seed)
-  d_long = mkin_wide_to_long(d, time = "time")
-  d_rep = data.frame(lapply(d_long, rep, each = 2))
-  d_rep$value = rnorm(length(d_rep$value), d_rep$value, sdfunc(d_rep$value))
-
-  d_rep[d_rep$time == 0 & d_rep$name <!-- %in% c("M1", "M2"), "value"] &lt;- 0 -->
-  d_NA <- transform(d_rep, value = ifelse(value < LOD, NA, value))
-  d_NA$value <- round(d_NA$value, 1)
-  return(d_NA)
-}
-
-# The following is the simplified version of the two-component model of Rocke
-# and Lorenzato (1995)
-sdfunc_twocomp = function(value, sd_low, rsd_high) {
-  sqrt(sd_low^2 + value^2 * rsd_high^2)
-}
-
-# Add the errors.
-for (d_synth_name in d_synth_names)
-{
-  d_synth = get(d_synth_name)
-  assign(paste0(d_synth_name, "_a"), add_err(d_synth, function(value) 3))
-  assign(paste0(d_synth_name, "_b"), add_err(d_synth, function(value) 7))
-  assign(paste0(d_synth_name, "_c"), add_err(d_synth,
-                           function(value) sdfunc_twocomp(value, 0.5, 0.07)))
-
-}
-
-d_synth_err_names = c(
-  paste(rep(d_synth_names, each = 3), letters[1:3], sep = "_")
-)
-
-# This is just one example of an evaluation using the kinetic model used for
-# the generation of the data
-fit <- mkinfit(m_synth_SFO_lin, synthetic_data_for_UBA_2014[[1]]$data,
-               quiet = TRUE)
-plot_sep(fit)
-summary(fit)
-</div><div class='output co'>#&gt; <span class='error'>Error: &lt;text&gt;:67:43: Unerwartete(s) SPECIAL</span>
-#&gt; <span class='error'>66: </span>
-#&gt; <span class='error'>67:   d_rep[d_rep$time == 0 &amp; d_rep$name &lt;!-- %in%</span>
-#&gt; <span class='error'>                                              ^</span></div></pre>
+    <pre class="examples"></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -299,19 +203,23 @@ summary(fit)
   </div>
 </div>
 
+
       <footer>
       <div class="copyright">
   <p>Developed by Johannes Ranke.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 
