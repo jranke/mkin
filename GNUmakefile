@@ -79,7 +79,7 @@ README.html: README.md
 vignettes/%.html: vignettes/mkin_vignettes.css vignettes/references.bib vignettes/%.Rmd
 	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/$*.Rmd', dir = 'vignettes')"
 
-vignettes: vignettes/mkin.html vignettes/FOCUS_D.html vignettes/FOCUS_L.html
+vignettes: vignettes/mkin.html vignettes/FOCUS_D.html vignettes/FOCUS_L.html vignettes/twa.html
 
 vignettes/web_only/%.html: vignettes/references.bib vignettes/web_only/%.Rmd
 	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/web_only/$*.Rmd', dir = 'vignettes/web_only')"
