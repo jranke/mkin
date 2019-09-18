@@ -1,5 +1,7 @@
 # mkin 0.9.49.6 (unreleased)
 
+- Vignette 'twa.html': Add the maximum time weighted average formulas for the hockey stick model
+
 - Support frameless plots ('frame = FALSE')
 
 - Support to suppress the chi2 error level ('show_errmin = FALSE') in 'plot.mmkin'
