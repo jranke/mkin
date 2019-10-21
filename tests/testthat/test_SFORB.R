@@ -16,20 +16,17 @@
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
 
-context("Export dataset for reading into CAKE")
+context("Fitting the SFORB model")
 
-test_that("Exporting is reproducible", {
-  CAKE_export(
-    ds = list("FOCUS C" = FOCUS_2006_C,
-              "FOCUS D" = FOCUS_2006_D),
-    map = c(parent = "Parent", m1 = "M1"),
-    links = c(parent = "m1"),
-    filename = "FOCUS_2006_D.csf", overwrite = TRUE, 
-    study = "FOCUS 2006 D")
-  csf <- readLines(con = "FOCUS_2006_D.csf")
-  csf[8] <- "Date: Dummy date 0000-00-00"
-  expect_known_value(csf, file = "FOCUS_2006_D.rds")
-  expect_error(CAKE_export(ds = list("FOCUS C" = FOCUS_2006_C),
-    filename = "FOCUS_2006_D.csf", overwrite = FALSE),
-    "already exists")
+logistic <- mkinmod(parent = mkinsub("logistic"))
+
+test_that("Fitting the SFORB model is equivalent to fitting DFOP", {
+  f_sforb <- mkinfit("SFORB", FOCUS_2006_C, quiet = TRUE)
+  f_dfop <- mkinfit("DFOP", FOCUS_2006_C, quiet = TRUE)
+  expect_equivalent(endpoints(f_sforb)$distimes, endpoints(f_dfop)$distimes,
+    tolerance = 1e-6)
+  s_sforb <- capture_output(print(summary(f_sforb)))
+  expect_match(s_sforb, "Estimated Eigenvalues of SFORB model\\(s\\):")
+  expect_match(s_sforb, "parent_b1 parent_b2")
+  expect_match(s_sforb, "0.45956 *0.01785")
 })

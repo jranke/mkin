@@ -16,11 +16,6 @@
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
 
-models <- c("SFO", "FOMC", "DFOP", "HS")
-fits <- mmkin(models,
-  list(FOCUS_C = FOCUS_2006_C, FOCUS_D = FOCUS_2006_D),
-  quiet = TRUE, cores = 1)
-
 context("Calculation of maximum time weighted average concentrations (TWAs)")
 
 test_that("Time weighted average concentrations are correct", {
@@ -49,7 +44,7 @@ test_that("Time weighted average concentrations are correct", {
 
 context("Summary")
 
-test_that("The summary is reproducible", {
+test_that("Summaries are reproducible", {
   fit <- fits[["DFOP", "FOCUS_C"]]
   test_summary <- summary(fit)
   test_summary$fit_version <- "Dummy 0.0 for testing"
@@ -63,6 +58,19 @@ test_that("The summary is reproducible", {
   # and between Travis and my own Linux system
   test_summary$Corr <- signif(test_summary$Corr, 1)
   expect_known_output(print(test_summary), "summary_DFOP_FOCUS_C.txt")
+
+  test_summary_2 <- summary(f_sfo_sfo,)
+  test_summary_2$fit_version <- "Dummy 0.0 for testing"
+  test_summary_2$fit_Rversion <- "Dummy R version for testing"
+  test_summary_2$date.fit <- "Dummy date for testing"
+  test_summary_2$date.summary <- "Dummy date for testing"
+  test_summary_2$calls <- "test 0"
+  test_summary_2$time <- c(elapsed = "test time 0")
+  # The correlation matrix is quite platform dependent
+  # It differs between i386 and amd64 on Windows
+  # and between Travis and my own Linux system
+  test_summary_2$Corr <- signif(test_summary_2$Corr, 1)
+  expect_known_output(print(test_summary_2), "summary_DFOP_FOCUS_D.txt")
 })
 
 context("Plotting")
@@ -71,11 +79,13 @@ test_that("Plotting mmkin objects is reproducible", {
   skip_on_cran()
   plot_sep_FOCUS_C_SFO <- function() plot_sep(fits[["SFO", "FOCUS_C"]])
   mkinparplot_FOCUS_C_SFO <- function() mkinparplot(fits[["SFO", "FOCUS_C"]])
+  mkinerrplot_FOCUS_C_SFO <- function() mkinerrplot(fits[["SFO", "FOCUS_C"]])
   mmkin_FOCUS_C <- function() plot(fits[, "FOCUS_C"])
   mmkin_SFO <- function() plot(fits["SFO",])
 
   vdiffr::expect_doppelganger("mkinfit plot for FOCUS C with sep = TRUE", plot_sep_FOCUS_C_SFO)
   vdiffr::expect_doppelganger("mkinparplot for FOCUS C SFO", mkinparplot_FOCUS_C_SFO)
+  vdiffr::expect_doppelganger("mkinerrplot for FOCUS C SFO", mkinerrplot_FOCUS_C_SFO)
   vdiffr::expect_doppelganger("mmkin plot for FOCUS C", mmkin_FOCUS_C)
   vdiffr::expect_doppelganger("mmkin plot for SFO (FOCUS C and D)", mmkin_SFO)
 })
@@ -84,7 +94,8 @@ context("AIC calculation")
 
 test_that("The AIC is reproducible", {
   expect_equivalent(AIC(fits[["SFO", "FOCUS_C"]]), 59.3, scale = 1, tolerance = 0.1)
-  expect_equivalent(AIC(fits[, "FOCUS_C"]), 
-                    data.frame(df = c(3, 4, 5, 5), AIC = c(59.3, 44.7, 29.0, 39.2)), 
+  expect_equivalent(AIC(fits[, "FOCUS_C"]),
+                    data.frame(df = c(3, 4, 5, 5), AIC = c(59.3, 44.7, 29.0, 39.2)),
                     scale = 1, tolerance = 0.1)
+  expect_error(AIC(fits["SFO", ]), "column object")
 })

@@ -18,37 +18,6 @@
 
 context("Error model fitting")
 
-m_synth_SFO_lin <- mkinmod(parent = mkinsub("SFO", "M1"),
-                           M1 = mkinsub("SFO", "M2"),
-                           M2 = mkinsub("SFO"),
-                           use_of_ff = "max", quiet = TRUE)
-
-m_synth_DFOP_par <- mkinmod(parent = mkinsub("DFOP", c("M1", "M2")),
-                           M1 = mkinsub("SFO"),
-                           M2 = mkinsub("SFO"),
-                           use_of_ff = "max", quiet = TRUE)
-
-SFO_lin_a <- synthetic_data_for_UBA_2014[[1]]$data
-
-DFOP_par_c <- synthetic_data_for_UBA_2014[[12]]$data
-
-test_that("Error model 'const' works", {
-  skip_on_cran()
-  fit_const_1 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, error_model = "const", quiet = TRUE)
-  bpar_1 <- fit_const_1$bparms.optim
-  # The reference used here is mkin 0.9.48.1
-  bpar_1_mkin_0.9 <-   read.table(text =
-"parent_0       102.0000
-k_parent         0.7390
-k_M1             0.2990
-k_M2             0.0202
-f_parent_to_M1   0.7690
-f_M1_to_M2       0.7230",
-col.names = c("parameter", "estimate"))
-
-  expect_equivalent(signif(bpar_1, 3), bpar_1_mkin_0.9$estimate)
-})
-
 test_that("Error model 'obs' works", {
   skip_on_cran()
   fit_obs_1 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, error_model = "obs", quiet = TRUE)

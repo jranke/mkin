@@ -19,12 +19,6 @@
 context("Results for FOCUS D established in expertise for UBA (Ranke 2014)")
 
 # Results are from p. 40
-SFO_SFO <- mkinmod(parent = list(type = "SFO", to = "m1"),
-                   m1 = list(type = "SFO"), quiet = TRUE)
-SFO_SFO.ff <- mkinmod(parent = list(type = "SFO", to = "m1"),
-                      m1 = list(type = "SFO"),
-                      use_of_ff = "max", quiet = TRUE)
-
 
 test_that("Fits without formation fractions are correct for FOCUS D", {
   fit.default <- expect_warning(mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE), "value of zero")

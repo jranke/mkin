@@ -1,3 +1,36 @@
+# Copyright (C) 2018,2019 Johannes Ranke
+# Contact: jranke@uni-bremen.de
+
+# This file is part of the R package mkin
+
+# mkin is free software: you can redistribute it and/or modify it under the
+# terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
+
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+# details.
+
+# You should have received a copy of the GNU General Public License along with
+# this program. If not, see <http://www.gnu.org/licenses/>
+
+context("Roundtripping error model parameters")
+
+# Per default (on my box where I set NOT_CRAN) use all cores minus one
+if (identical(Sys.getenv("NOT_CRAN"), "true")) {
+  n_cores <- parallel::detectCores() - 1
+} else {
+  n_cores <- 1
+}
+
+# We are only allowed one core on travis, but they also set NOT_CRAN=true
+if (Sys.getenv("TRAVIS") != "") n_cores = 1
+
+# On Windows we would need to make a cluster first
+if (Sys.info()["sysname"] == "Windows") n_cores = 1
+
 test_that("Reweighting method 'tc' produces reasonable variance estimates", {
 
   # Check if we can approximately obtain the parameters and the error model
@@ -19,18 +52,6 @@ test_that("Reweighting method 'tc' produces reasonable variance estimates", {
     sdfunc = function(x) sigma_twocomp(x, 0.5, 0.07),
     n = 1, reps = 100, digits = 5, LOD = -Inf, seed = 123456)
 
-  # Per default (on my box where I set NOT_CRAN) use all cores minus one
-  if (identical(Sys.getenv("NOT_CRAN"), "true")) {
-    n_cores <- parallel::detectCores() - 1
-  } else {
-    n_cores <- 1
-  }
-
-  # We are only allowed one core on travis, but they also set NOT_CRAN=true
-  if (Sys.getenv("TRAVIS") != "") n_cores = 1
-
-  # On Windows we would need to make a cluster first
-  if (Sys.info()["sysname"] == "Windows") n_cores = 1
 
   # Unweighted fits
   f_2_10 <- mmkin("DFOP", d_2_10, error_model = "const", quiet = TRUE,

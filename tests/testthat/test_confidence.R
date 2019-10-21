@@ -18,20 +18,8 @@
 
 context("Confidence intervals and p-values")
 
-m_synth_SFO_lin <- mkinmod(
-  parent = mkinsub("SFO", "M1"),
-  M1 = mkinsub("SFO", "M2"),
-  M2 = mkinsub("SFO"),
-  use_of_ff = "max", quiet = TRUE)
-
-SFO_lin_a <- synthetic_data_for_UBA_2014[[1]]$data
-
 test_that("Confidence intervals are stable", {
-  f_1_mkin_OLS <- mkinfit(m_synth_SFO_lin, SFO_lin_a, quiet = TRUE)
-  f_1_mkin_ML <- mkinfit(m_synth_SFO_lin, SFO_lin_a, quiet = TRUE,
-    error_model = "const", error_model_algorithm = "direct")
-
-  bpar_1 <- summary(f_1_mkin_ML)$bpar[, c("Estimate", "Lower", "Upper")]
+  bpar_1 <- summary(f_SFO_lin_mkin_ML)$bpar[, c("Estimate", "Lower", "Upper")]
   # The reference used here is mkin 0.9.48.1
   bpar_1_mkin_0.9 <-   read.table(text =
 "parent_0       102.0000 98.6000 106.0000
@@ -47,5 +35,6 @@ col.names = c("parameter", "estimate", "lower", "upper"))
   # Relative difference of lower bound of the confidence interval is < 0.02
   expect_equivalent(bpar_1[1:6, "Lower"], bpar_1_mkin_0.9$lower,
       scale = bpar_1_mkin_0.9$lower, tolerance = 0.02)
+  expect_equivalent(f_SFO_lin_mkin_OLS$bpar, f_SFO_lin_mkin_ML$bpar)
   })
 
