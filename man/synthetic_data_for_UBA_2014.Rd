@@ -138,9 +138,11 @@ d_synth_err_names = c(
 
 # This is just one example of an evaluation using the kinetic model used for
 # the generation of the data
-fit <- mkinfit(m_synth_SFO_lin, synthetic_data_for_UBA_2014[[1]]$data,
-               quiet = TRUE)
-plot_sep(fit)
-summary(fit)
+\dontrun{
+  fit <- mkinfit(m_synth_SFO_lin, synthetic_data_for_UBA_2014[[1]]$data,
+                 quiet = TRUE)
+  plot_sep(fit)
+  summary(fit)
+}
 }
 \keyword{datasets}

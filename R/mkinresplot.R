@@ -1,4 +1,4 @@
-# Copyright (C) 2008-2014 Johannes Ranke
+# Copyright (C) 2008-2014,2019 Johannes Ranke
 # Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
@@ -21,7 +21,10 @@ mkinresplot <- function (object,
   obs_vars = names(object$mkinmod$map),
   xlim = c(0, 1.1 * max(object$data$time)),
   xlab = "Time", ylab = "Residual",
-  maxabs = "auto", legend= TRUE, lpos = "topright", ...)
+  maxabs = "auto", legend= TRUE, lpos = "topright", 
+  col_obs = "auto", pch_obs = "auto",
+  frame = TRUE,
+  ...)
 {
   obs_vars_all <- as.character(unique(object$data$variable))
 
@@ -33,10 +36,17 @@ mkinresplot <- function (object,
 
   if (maxabs == "auto") maxabs = max(abs(residuals), na.rm = TRUE)
 
-  col_obs <- pch_obs <- 1:length(obs_vars)
+  # Set colors and symbols
+  if (col_obs[1] == "auto") {
+    col_obs <- 1:length(obs_vars)
+  }
+
+  if (pch_obs[1] == "auto") {
+    pch_obs <- 1:length(obs_vars)
+  }
   names(col_obs) <- names(pch_obs) <- obs_vars
 
-  plot(0, type = "n",
+  plot(0, type = "n", frame = frame,
        xlab = xlab, ylab = ylab,
        xlim = xlim,
        ylim = c(-1.2 * maxabs, 1.2 * maxabs), ...)

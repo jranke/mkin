@@ -59,7 +59,7 @@ test_that("Summaries are reproducible", {
   test_summary$Corr <- signif(test_summary$Corr, 1)
   expect_known_output(print(test_summary), "summary_DFOP_FOCUS_C.txt")
 
-  test_summary_2 <- summary(f_sfo_sfo,)
+  test_summary_2 <- summary(f_sfo_sfo)
   test_summary_2$fit_version <- "Dummy 0.0 for testing"
   test_summary_2$fit_Rversion <- "Dummy R version for testing"
   test_summary_2$date.fit <- "Dummy date for testing"
@@ -75,19 +75,23 @@ test_that("Summaries are reproducible", {
 
 context("Plotting")
 
-test_that("Plotting mmkin objects is reproducible", {
+test_that("Plotting mkinfit and mmkin objects is reproducible", {
   skip_on_cran()
   plot_sep_FOCUS_C_SFO <- function() plot_sep(fits[["SFO", "FOCUS_C"]])
   mkinparplot_FOCUS_C_SFO <- function() mkinparplot(fits[["SFO", "FOCUS_C"]])
   mkinerrplot_FOCUS_C_SFO <- function() mkinerrplot(fits[["SFO", "FOCUS_C"]])
   mmkin_FOCUS_C <- function() plot(fits[, "FOCUS_C"])
   mmkin_SFO <- function() plot(fits["SFO",])
+  plot_res_sfo_sfo <- function() plot_res(f_sfo_sfo)
+  plot_err_sfo_sfo <- function() plot_err(f_sfo_sfo)
 
   vdiffr::expect_doppelganger("mkinfit plot for FOCUS C with sep = TRUE", plot_sep_FOCUS_C_SFO)
   vdiffr::expect_doppelganger("mkinparplot for FOCUS C SFO", mkinparplot_FOCUS_C_SFO)
   vdiffr::expect_doppelganger("mkinerrplot for FOCUS C SFO", mkinerrplot_FOCUS_C_SFO)
   vdiffr::expect_doppelganger("mmkin plot for FOCUS C", mmkin_FOCUS_C)
   vdiffr::expect_doppelganger("mmkin plot for SFO (FOCUS C and D)", mmkin_SFO)
+  vdiffr::expect_doppelganger("plot_res for FOCUS D", plot_res_sfo_sfo)
+  vdiffr::expect_doppelganger("plot_err for FOCUS D", plot_err_sfo_sfo)
 })
 
 context("AIC calculation")

@@ -1,6 +1,8 @@
 \name{plot.mkinfit}
 \alias{plot.mkinfit}
 \alias{plot_sep}
+\alias{plot_res}
+\alias{plot_err}
 \title{
   Plot the observed data and the fitted model of an mkinfit object
 }
@@ -26,9 +28,12 @@
   show_errplot = FALSE,
   maxabs = "auto",
   sep_obs = FALSE, rel.height.middle = 0.9,
+  row_layout = FALSE,
   lpos = "topright", inset = c(0.05, 0.05),
   show_errmin = FALSE, errmin_digits = 3, frame = TRUE, \dots)
-plot_sep(fit, sep_obs = TRUE,  show_residuals = TRUE, show_errmin = TRUE, \dots)
+plot_sep(fit, show_errmin = TRUE, \dots)
+plot_res(fit, sep_obs = FALSE, show_errmin = sep_obs, \dots)
+plot_err(fit, sep_obs = FALSE, show_errmin = sep_obs, \dots)
 }
 \arguments{
   \item{x}{
@@ -92,6 +97,10 @@ plot_sep(fit, sep_obs = TRUE,  show_residuals = TRUE, show_errmin = TRUE, \dots)
   \item{rel.height.middle}{
     The relative height of the middle plot, if more than two rows of plots are shown.
   }
+  \item{row_layout}{
+    Should we use a row layout where the residual plot or the error model plot is shown
+    to the right?
+  }
   \item{lpos}{
     Position(s) of the legend(s). Passed to \code{\link{legend}} as the first argument.
     If not length one, this should be of the same length as the obs_var argument.
@@ -123,8 +132,8 @@ SFO_SFO <- mkinmod(parent = mkinsub("SFO", "m1", full = "Parent"),
                    m1 = mkinsub("SFO", full = "Metabolite M1" ))
 fit <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE, error_model = "tc")
 plot(fit)
-plot(fit, show_residuals = TRUE)
-plot(fit, show_errplot = TRUE)
+plot_res(fit)
+plot_err(fit)
 
 # Show the observed variables separately
 plot(fit, sep_obs = TRUE, lpos = c("topright", "bottomright"))

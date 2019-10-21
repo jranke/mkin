@@ -23,6 +23,9 @@ test_that("Error model 'obs' works", {
   fit_obs_1 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, error_model = "obs", quiet = TRUE)
   parms_2 <- round(fit_obs_1$bparms.optim, c(1, 4, 4, 4, 4, 4))
   expect_equivalent(parms_2, c(102.1, 0.7389, 0.2982, 0.0203, 0.7677, 0.7246))
+  plot_errmod_fit_obs_1 <- function() plot_err(fit_obs_1, sep_obs = FALSE)
+
+  vdiffr::expect_doppelganger("plot_errmod with SFO_lin_a", plot_errmod_fit_obs_1)
 })
 
 test_that("Error model 'tc' works", {

@@ -30,8 +30,9 @@ plot.mkinfit <- function(x, fit = x,
   show_errplot = FALSE,
   maxabs = "auto",
   sep_obs = FALSE, rel.height.middle = 0.9,
+  row_layout = FALSE,
   lpos = "topright", inset = c(0.05, 0.05),
-  show_errmin = FALSE, errmin_digits = 3, 
+  show_errmin = FALSE, errmin_digits = 3,
   frame = TRUE, ...)
 {
   if (add && show_residuals) stop("If adding to an existing plot we can not show residuals")
@@ -80,8 +81,9 @@ plot.mkinfit <- function(x, fit = x,
     # Layout should be restored afterwards
     oldpar <- par(no.readonly = TRUE)
 
-    # If the observed variables are shown separately, do row layout
-    if (sep_obs) {
+    # If the observed variables are shown separately, or if requested, do row layout
+    if (sep_obs | row_layout) {
+      row_layout <- TRUE
       n_plot_cols = if (show_residuals | show_errplot) 2 else 1
       n_plots = n_plot_rows * n_plot_cols
 
@@ -114,7 +116,7 @@ plot.mkinfit <- function(x, fit = x,
       ylim_row = ylim
     }
 
-    if (sep_obs) {
+    if (row_layout) {
       # Margins for top row of plots when we have more than one row
       # Reduce bottom margin by 2.1 - hides x axis legend
       if (plot_row == 1 & n_plot_rows > 1) {
@@ -186,24 +188,14 @@ plot.mkinfit <- function(x, fit = x,
       mtext(chi2_text, cex = 0.7, line = 0.4)
     }
 
+    if (do_layout & !row_layout) {
+      par(mar = c(5, 4, 0, 2) + 0.1)
+    }
+
     # Show residuals if requested
     if (show_residuals) {
-      residuals <- subset(fit$data, variable %in% row_obs_vars, residual)
-      if (maxabs == "auto") {
-        maxabs_row = max(abs(residuals), na.rm = TRUE)
-      } else {
-        maxabs_row = maxabs
-      }
-      if (!sep_obs) par(mar = c(5, 4, 0, 2) + 0.1)
-      plot(0, type="n",
-        xlim = xlim,
-        ylim = c(-1.2 * maxabs_row, 1.2 * maxabs_row),
-        xlab = xlab, ylab = "Residuals", frame = frame)
-      for(obs_var in row_obs_vars){
-        residuals_plot <- subset(fit$data, variable == obs_var, c("time", "residual"))
-        points(residuals_plot, pch = pch_obs[obs_var], col = col_obs[obs_var])
-      }
-      abline(h = 0, lty = 2)
+      mkinresplot(fit, obs_vars = row_obs_vars, pch_obs = pch_obs[row_obs_vars], col_obs = col_obs[row_obs_vars],
+                  legend = FALSE, frame = frame)
     }
 
     # Show error model plot if requested
@@ -216,7 +208,15 @@ plot.mkinfit <- function(x, fit = x,
 }
 # Convenience function for switching on some features of mkinfit
 # that have not been made the default to keep compatibility
-plot_sep <- function(fit, sep_obs = TRUE, show_residuals = TRUE, show_errmin = TRUE, ...) {
+plot_sep <- function(fit, show_errmin = TRUE, ...) {
   plot.mkinfit(fit, sep_obs = TRUE, show_residuals = TRUE,
-          show_errmin = TRUE, ...)
+          show_errmin = show_errmin, ...)
+}
+plot_res <- function(fit, sep_obs = FALSE, show_errmin = sep_obs, ...) {
+  plot.mkinfit(fit, sep_obs = sep_obs, show_errmin = show_errmin,
+    show_residuals = TRUE, row_layout = TRUE, ...)
+}
+plot_err <- function(fit, sep_obs = FALSE, show_errmin = sep_obs, ...) {
+  plot.mkinfit(fit, sep_obs = sep_obs, show_errmin = show_errmin,
+    show_errplot = TRUE, row_layout = TRUE, ...)
 }

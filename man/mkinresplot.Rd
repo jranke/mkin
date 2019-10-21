@@ -14,38 +14,50 @@
     obs_vars = names(object$mkinmod$map),
     xlim = c(0, 1.1 * max(object$data$time)),
     xlab = "Time", ylab = "Residual", 
-    maxabs = "auto", legend = TRUE, lpos = "topright", ...)
+    maxabs = "auto", legend = TRUE, lpos = "topright", 
+    col_obs = "auto", pch_obs = "auto",
+    frame = TRUE,
+    ...)
 }
 \arguments{
   \item{object}{
     A fit represented in an \code{\link{mkinfit}} object.
-}
+  }
   \item{obs_vars}{
     A character vector of names of the observed variables for which residuals
     should be plotted. Defaults to all observed variables in the model
-}
+  }
   \item{xlim}{
     plot range in x direction.
   }
   \item{xlab}{
     Label for the x axis. Defaults to "Time [days]".
-}
+  }
   \item{ylab}{
     Label for the y axis. Defaults to "Residual [\% of applied radioactivity]".
-}
+  }
   \item{maxabs}{
     Maximum absolute value of the residuals. This is used for the scaling of
     the y axis and defaults to "auto".
-}
+  }
   \item{legend}{
     Should a legend be plotted? Defaults to "TRUE".
-}
+  }
   \item{lpos}{ 
     Where should the legend be placed? Default is "topright". Will be passed on to
-		\code{\link{legend}}. }
+    \code{\link{legend}}. }
+  \item{col_obs}{
+    Colors for the observed variables.
+  }
+  \item{pch_obs}{
+    Symbols to be used for the observed variables.
+  }
+  \item{frame}{
+    Should a frame be drawn around the plots?
+  }
   \item{\dots}{
-   further arguments passed to \code{\link{plot}}.
-}
+    further arguments passed to \code{\link{plot}}.
+  }
 }
 \value{
   Nothing is returned by this function, as it is called for its side effect, namely to produce a plot.
