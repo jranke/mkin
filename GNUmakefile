@@ -70,6 +70,7 @@ clean:
 
 test: install
 	"$(RBIN)/Rscript" -e 'devtools::test()' 2>&1 | tee test.log
+	sed -i -e "s/\r.*\r//" test.log
 
 testcheck: test check
 
