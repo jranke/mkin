@@ -52,6 +52,7 @@ test_that("Summaries are reproducible", {
   test_summary$date.fit <- "Dummy date for testing"
   test_summary$date.summary <- "Dummy date for testing"
   test_summary$calls <- "test 0"
+  test_summary$Corr <- signif(test_summary$Corr, 1)
   test_summary$time <- c(elapsed = "test time 0")
   # The correlation matrix is quite platform dependent
   # It differs between i386 and amd64 on Windows
@@ -83,7 +84,7 @@ test_that("Summaries are reproducible", {
   # The correlation matrix is quite platform dependent
   # It differs between i386 and amd64 on Windows
   # and between Travis and my own Linux system
-  test_summary_3$Corr <- signif(test_summary_3$Corr, 1)
+  test_summary_3$Corr <- NULL
   expect_known_output(print(test_summary_3), "summary_DFOP_FOCUS_D_deSolve.txt")
 })
 

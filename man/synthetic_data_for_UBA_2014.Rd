@@ -43,6 +43,7 @@
   measurement error in analytical chemistry. Technometrics 37(2), 176-184.
 }
 \examples{
+\dontrun{
 # The data have been generated using the following kinetic models
 m_synth_SFO_lin <- mkinmod(parent = list(type = "SFO", to = "M1"),
                            M1 = list(type = "SFO", to = "M2"),
@@ -138,7 +139,6 @@ d_synth_err_names = c(
 
 # This is just one example of an evaluation using the kinetic model used for
 # the generation of the data
-\dontrun{
   fit <- mkinfit(m_synth_SFO_lin, synthetic_data_for_UBA_2014[[1]]$data,
                  quiet = TRUE)
   plot_sep(fit)
