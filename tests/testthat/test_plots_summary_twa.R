@@ -56,7 +56,7 @@ test_that("Summaries are reproducible", {
   # The correlation matrix is quite platform dependent
   # It differs between i386 and amd64 on Windows
   # and between Travis and my own Linux system
-  test_summary$Corr <- signif(test_summary$Corr, 1)
+  test_summary$Corr <- NULL
   expect_known_output(print(test_summary), "summary_DFOP_FOCUS_C.txt")
 
   test_summary_2 <- summary(f_sfo_sfo_eigen)
@@ -69,7 +69,8 @@ test_that("Summaries are reproducible", {
   # The correlation matrix is quite platform dependent
   # It differs between i386 and amd64 on Windows
   # and between Travis and my own Linux system
-  test_summary_2$Corr <- signif(test_summary_2$Corr, 1)
+  # Even more so when using the Eigen method
+  test_summary_2$Corr <- NULL
   expect_known_output(print(test_summary_2), "summary_DFOP_FOCUS_D_eigen.txt")
 
   test_summary_3 <- summary(f_sfo_sfo_desolve)
