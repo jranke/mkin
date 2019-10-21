@@ -72,6 +72,10 @@ test: install
 	"$(RBIN)/Rscript" -e 'devtools::test()' 2>&1 | tee test.log
 	sed -i -e "s/\r.*\r//" test.log
 
+slowtests: install
+	NOT_CRAN=true "$(RBIN)/Rscript" -e 'library(mkin); testthat::test_dir("tests/testthat/slow")' 2>&1 | tee tests_slow.log
+	sed -i -e "s/\r.*\r//" tests_slow.log
+
 testcheck: test check
 
 README.html: README.md

@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2014 Johannes Ranke
+# Copyright (C) 2010-2019 Johannes Ranke
 # Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
@@ -62,9 +62,8 @@ mkinerrmin <- function(fit, alpha = 0.05)
     n.k.optim <- n.k.optim + length(grep(paste("^log_k", obs_var, sep="_"),
                                          names(parms.optim)))
     n.k__iore.optim <- length(grep(paste("^k__iore", obs_var, sep="_"), names(parms.optim)))
-    n.k__iore.optim <- n.k__iore.optim + length(grep(paste("^log_k__iore", obs_var,
-							 sep = "_"),
-						   names(parms.optim)))
+    n.k__iore.optim <- n.k__iore.optim + length(grep(paste("^log_k__iore",
+          obs_var, sep = "_"), names(parms.optim)))
 
     n.N.optim <- length(grep(paste("^N", obs_var, sep="_"), names(parms.optim)))
 

@@ -31,8 +31,8 @@ mkinfit(mkinmod, observed,
   quiet = FALSE,
   atol = 1e-8, rtol = 1e-10, n.outtimes = 100,
   error_model = c("const", "obs", "tc"),
-  error_model_algorithm = c("d_3", "direct", "twostep", "threestep", "fourstep", "IRLS", 
-                            "OLS"),
+  error_model_algorithm = c("auto", "d_3", "direct", "twostep", "threestep",
+    "fourstep", "IRLS", "OLS"),
   reweight.tol = 1e-8, reweight.max.iter = 10,
   trace_parms = FALSE, ...)
 }
@@ -175,12 +175,13 @@ mkinfit(mkinmod, observed,
     distribution as assumed by this method.
   }
   \item{error_model_algorithm}{
-    If the error model is "const", the error model algorithm is ignored,
-    because no special algorithm is needed and unweighted (also known as
-    ordinary) least squares fitting (listed as "OLS" in the summary) can be
-    applied.
+    If "auto", the selected algorithm depends on the error model. 
+    If the error model is "const", nonlinear least squares fitting ("OLS") is
+    selected. If the error model is "obs", iteratively reweighted least squares
+    fitting ("IRLS") is selected. If the error model is "tc", the "d_3" 
+    algorithm is selected.
 
-    The default algorithm "d_3" will directly minimize the negative
+    The algorithm "d_3" will directly minimize the negative
     log-likelihood and - independently - also use the three step algorithm
     described below. The fit with the higher likelihood is returned.
 
@@ -206,9 +207,6 @@ mkinfit(mkinmod, observed,
     parameters and subsequent
     optimization of the degradation model using those error model parameters,
     until the error model parameters converge.
-
-    The algorithm "OLS" (Ordinary Least Squares) is automatically selected when
-    the error model is "const" and results in an unweighted least squares fit.
   }
   \item{reweight.tol}{
     Tolerance for the convergence criterion calculated from the error model

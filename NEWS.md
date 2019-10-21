@@ -1,5 +1,11 @@
 # mkin 0.9.49.6 (unreleased)
 
+- Move long-running tests to tests/testthat/slow with a separate test log. They currently take around 7 minutes on my system
+
+- 'mkinfit': Clean the code and return functions to calculate the log-likelihood and the sum of squared residuals
+
+- 'mkinfit': The default algorithm for fitting the 'obs' error model is now IRLS
+
 - Vignette 'twa.html': Add the maximum time weighted average formulas for the hockey stick model
 
 - Support frameless plots ('frame = FALSE')
@@ -42,7 +48,7 @@
 
 - Add the function 'logLik.mkinfit' which makes it possible to calculate an AIC for mkinfit objects
 
-- Add the function 'AIC.mmkin' to makeqit easy to compare columns of mmkin objects
+- Add the function 'AIC.mmkin' to make it easy to compare columns of mmkin objects
 
 - 'add_err': Respect the argument giving the number of replicates in the synthetic dataset
 
