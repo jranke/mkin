@@ -59,7 +59,7 @@ test_that("Summaries are reproducible", {
   test_summary$Corr <- signif(test_summary$Corr, 1)
   expect_known_output(print(test_summary), "summary_DFOP_FOCUS_C.txt")
 
-  test_summary_2 <- summary(f_sfo_sfo)
+  test_summary_2 <- summary(f_sfo_sfo_eigen)
   test_summary_2$fit_version <- "Dummy 0.0 for testing"
   test_summary_2$fit_Rversion <- "Dummy R version for testing"
   test_summary_2$date.fit <- "Dummy date for testing"
@@ -70,7 +70,20 @@ test_that("Summaries are reproducible", {
   # It differs between i386 and amd64 on Windows
   # and between Travis and my own Linux system
   test_summary_2$Corr <- signif(test_summary_2$Corr, 1)
-  expect_known_output(print(test_summary_2), "summary_DFOP_FOCUS_D.txt")
+  expect_known_output(print(test_summary_2), "summary_DFOP_FOCUS_D_eigen.txt")
+
+  test_summary_3 <- summary(f_sfo_sfo_desolve)
+  test_summary_3$fit_version <- "Dummy 0.0 for testing"
+  test_summary_3$fit_Rversion <- "Dummy R version for testing"
+  test_summary_3$date.fit <- "Dummy date for testing"
+  test_summary_3$date.summary <- "Dummy date for testing"
+  test_summary_3$calls <- "test 0"
+  test_summary_3$time <- c(elapsed = "test time 0")
+  # The correlation matrix is quite platform dependent
+  # It differs between i386 and amd64 on Windows
+  # and between Travis and my own Linux system
+  test_summary_3$Corr <- signif(test_summary_3$Corr, 1)
+  expect_known_output(print(test_summary_3), "summary_DFOP_FOCUS_D_deSolve.txt")
 })
 
 context("Plotting")
@@ -82,8 +95,8 @@ test_that("Plotting mkinfit and mmkin objects is reproducible", {
   mkinerrplot_FOCUS_C_SFO <- function() mkinerrplot(fits[["SFO", "FOCUS_C"]])
   mmkin_FOCUS_C <- function() plot(fits[, "FOCUS_C"])
   mmkin_SFO <- function() plot(fits["SFO",])
-  plot_res_sfo_sfo <- function() plot_res(f_sfo_sfo)
-  plot_err_sfo_sfo <- function() plot_err(f_sfo_sfo)
+  plot_res_sfo_sfo <- function() plot_res(f_sfo_sfo_desolve)
+  plot_err_sfo_sfo <- function() plot_err(f_sfo_sfo_desolve)
 
   vdiffr::expect_doppelganger("mkinfit plot for FOCUS C with sep = TRUE", plot_sep_FOCUS_C_SFO)
   vdiffr::expect_doppelganger("mkinparplot for FOCUS C SFO", mkinparplot_FOCUS_C_SFO)

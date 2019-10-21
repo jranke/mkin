@@ -45,9 +45,12 @@ SFO_SFO.ff <- mkinmod(parent = list(type = "SFO", to = "m1"),
                       m1 = list(type = "SFO"),
                       use_of_ff = "max", quiet = TRUE)
 
-f_sfo_sfo <- mkinfit(SFO_SFO,
+f_sfo_sfo_desolve <- mkinfit(SFO_SFO,
   subset(FOCUS_2006_D, value != 0),
-  quiet = TRUE)
+  solution_type = "deSolve", quiet = TRUE)
+f_sfo_sfo_eigen <- mkinfit(SFO_SFO,
+  subset(FOCUS_2006_D, value != 0),
+  solution_type = "eigen", quiet = TRUE)
 
 f_sfo_sfo.ff <- mkinfit(SFO_SFO.ff,
   subset(FOCUS_2006_D, value != 0),
