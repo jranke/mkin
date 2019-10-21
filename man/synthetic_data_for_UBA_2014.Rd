@@ -110,7 +110,7 @@ d_synth_names = paste0("d_synth_", c("SFO_lin", "SFO_par",
 #   d_rep = data.frame(lapply(d_long, rep, each = 2))
 #   d_rep$value = rnorm(length(d_rep$value), d_rep$value, sdfunc(d_rep$value))
 #
-#   d_rep[d_rep$time == 0 & d_rep$name %in% c("M1", "M2"), "value"] <- 0
+#   d_rep[d_rep$time == 0 & d_rep$name \%in\% c("M1", "M2"), "value"] <- 0
 #   d_NA <- transform(d_rep, value = ifelse(value < LOD, NA, value))
 #   d_NA$value <- round(d_NA$value, 1)
 #   return(d_NA)

@@ -5,8 +5,8 @@
   Function describing the standard deviation of the measurement error 
   in dependence of the measured value \eqn{y}:
 
-    \deqn{\sigma = \sqrt{ \sigma_{low}^2 + y^2 * {rsd}_{high}^2}}{%
-      sigma = sqrt(sigma_low^2 + y^2 * rsd_high^2)}
+    \deqn{\sigma = \sqrt{ \sigma_{low}^2 + y^2 * {rsd}_{high}^2}}
+    {sigma = sqrt(sigma_low^2 + y^2 * rsd_high^2)}
 
   This is the error model used for example by Werner et al. (1978). The model
   proposed by Rocke and Lorenzato (1995) can be written in this form as well,
