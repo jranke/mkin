@@ -252,7 +252,7 @@ mkinfit <- function(mkinmod, observed,
   }
   if (error_model_algorithm == "auto") {
     error_model_algorithm = switch(err_mod,
-      const = "OLS", obs = "IRLS", tc = "d_3")
+      const = "OLS", obs = "d_3", tc = "d_3")
   }
   errparm_names <- switch(err_mod,
     "const" = "sigma",

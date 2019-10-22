@@ -4,8 +4,6 @@
 
 - 'mkinfit': Clean the code and return functions to calculate the log-likelihood and the sum of squared residuals
 
-- 'mkinfit': The default algorithm for fitting the 'obs' error model is now IRLS
-
 - Vignette 'twa.html': Add the maximum time weighted average formulas for the hockey stick model
 
 - Support frameless plots ('frame = FALSE')

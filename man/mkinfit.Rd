@@ -176,9 +176,8 @@ mkinfit(mkinmod, observed,
   }
   \item{error_model_algorithm}{
     If "auto", the selected algorithm depends on the error model. 
-    If the error model is "const", nonlinear least squares fitting ("OLS") is
-    selected. If the error model is "obs", iteratively reweighted least squares
-    fitting ("IRLS") is selected. If the error model is "tc", the "d_3" 
+    If the error model is "const", unweighted nonlinear least squares fitting
+    ("OLS") is selected. If the error model is "obs", or "tc", the "d_3"
     algorithm is selected.
 
     The algorithm "d_3" will directly minimize the negative
