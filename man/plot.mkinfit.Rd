@@ -135,9 +135,6 @@ plot(fit)
 plot_res(fit)
 plot_err(fit)
 
-# Show the observed variables separately
-plot(fit, sep_obs = TRUE, lpos = c("topright", "bottomright"))
-
 # Show the observed variables separately, with residuals
 plot(fit, sep_obs = TRUE, show_residuals = TRUE, lpos = c("topright", "bottomright"),
      show_errmin = TRUE)

@@ -76,3 +76,5 @@ f_SFO_lin_mkin_OLS <- mkinfit(m_synth_SFO_lin, SFO_lin_a, quiet = TRUE)
 f_SFO_lin_mkin_ML <- mkinfit(m_synth_SFO_lin, SFO_lin_a, quiet = TRUE,
   error_model = "const", error_model_algorithm = "direct")
 
+fit_obs_1 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, error_model = "obs", quiet = TRUE)
+fit_tc_1 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, error_model = "tc", quiet = TRUE)

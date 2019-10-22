@@ -76,6 +76,9 @@ slowtests: install
 	NOT_CRAN=true "$(RBIN)/Rscript" -e 'library(mkin); testthat::test_dir("tests/testthat/slow")' 2>&1 | tee tests_slow.log
 	sed -i -e "s/\r.*\r//" tests_slow.log
 
+vdiffr:
+	"$(RBIN)/Rscript" -e 'vdiffr::manage_cases(filter = "plots|nafta")'
+
 testcheck: test check
 
 README.html: README.md
@@ -122,7 +125,6 @@ winbin: $(WINBIN)
 
 dratwin: winbin
 	"$(RBIN)/Rscript" -e "drat::insertPackage('$(WINBIN)', '~/git/drat/', commit = TRUE)"
-
 
 submit:
 	@echo "\nHow about make test, make check, make pd, make winbuilder"
