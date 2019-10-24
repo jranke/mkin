@@ -1,22 +1,41 @@
-# Copyright (C) 2008-2014,2019 Johannes Ranke
-# Contact: jranke@uni-bremen.de
-
-# This file is part of the R package mkin
-
-# mkin is free software: you can redistribute it and/or modify it under the
-# terms of the GNU General Public License as published by the Free Software
-# Foundation, either version 3 of the License, or (at your option) any later
-# version.
-
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
-# details.
-
-# You should have received a copy of the GNU General Public License along with
-# this program. If not, see <http://www.gnu.org/licenses/>
 if(getRversion() >= '2.15.1') utils::globalVariables(c("variable", "residual"))
 
+#' Function to plot residuals stored in an mkin object
+#' 
+#' This function plots the residuals for the specified subset of the observed
+#' variables from an mkinfit object. A combined plot of the fitted model and
+#' the residuals can be obtained using \code{\link{plot.mkinfit}} using the
+#' argument \code{show_residuals = TRUE}.
+#' 
+#' @param object A fit represented in an \code{\link{mkinfit}} object.
+#' @param obs_vars A character vector of names of the observed variables for
+#'   which residuals should be plotted. Defaults to all observed variables in
+#'   the model
+#' @param xlim plot range in x direction.
+#' @param xlab Label for the x axis. Defaults to "Time [days]".
+#' @param ylab Label for the y axis. Defaults to "Residual [\% of applied
+#'   radioactivity]".
+#' @param maxabs Maximum absolute value of the residuals. This is used for the
+#'   scaling of the y axis and defaults to "auto".
+#' @param legend Should a legend be plotted? Defaults to "TRUE".
+#' @param lpos Where should the legend be placed? Default is "topright". Will
+#'   be passed on to \code{\link{legend}}.
+#' @param col_obs Colors for the observed variables.
+#' @param pch_obs Symbols to be used for the observed variables.
+#' @param frame Should a frame be drawn around the plots?
+#' @param \dots further arguments passed to \code{\link{plot}}.
+#' @return Nothing is returned by this function, as it is called for its side
+#'   effect, namely to produce a plot.
+#' @author Johannes Ranke
+#' @seealso \code{\link{mkinplot}}, for a way to plot the data and the fitted
+#'   lines of the mkinfit object.
+#' @examples
+#' 
+#' model <- mkinmod(parent = mkinsub("SFO", "m1"), m1 = mkinsub("SFO"))
+#' fit <- mkinfit(model, FOCUS_2006_D, quiet = TRUE)
+#' mkinresplot(fit, "m1")
+#' 
+#' @export
 mkinresplot <- function (object,
   obs_vars = names(object$mkinmod$map),
   xlim = c(0, 1.1 * max(object$data$time)),

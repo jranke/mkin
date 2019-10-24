@@ -1,21 +1,40 @@
-# Copyright (C) 2019 Johannes Ranke
-# Contact: jranke@uni-bremen.de
-
-# This file is part of the R package mkin
-
-# mkin is free software: you can redistribute it and/or modify it under the
-# terms of the GNU General Public License as published by the Free Software
-# Foundation, either version 3 of the License, or (at your option) any later
-# version.
-
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
-# details.
-
-# You should have received a copy of the GNU General Public License along with
-# this program. If not, see <http://www.gnu.org/licenses/>
-
+#' Evaluate parent kinetics using the NAFTA guidance
+#' 
+#' The function fits the SFO, IORE and DFOP models using \code{\link{mmkin}}
+#' and returns an object of class \code{nafta} that has methods for printing
+#' and plotting.
+#' 
+#' @param ds A dataframe that must contain one variable called "time" with the
+#'   time values specified by the \code{time} argument, one column called
+#'   "name" with the grouping of the observed values, and finally one column of
+#'   observed values called "value".
+#' @param title Optional title of the dataset
+#' @param quiet Should the evaluation text be shown?
+#' @param \dots Further arguments passed to \code{\link{mmkin}} (not for the
+#'  printing method).
+#' @importFrom stats qf
+#' @return An list of class \code{nafta}. The list element named "mmkin" is the
+#'   \code{\link{mmkin}} object containing the fits of the three models. The
+#'   list element named "title" contains the title of the dataset used. The
+#'   list element "data" contains the dataset used in the fits.
+#' @author Johannes Ranke
+#' @source NAFTA (2011) Guidance for evaluating and calculating degradation
+#'   kinetics in environmental media. NAFTA Technical Working Group on
+#'   Pesticides
+#'   \url{https://www.epa.gov/pesticide-science-and-assessing-pesticide-risks/guidance-evaluating-and-calculating-degradation}
+#'   accessed 2019-02-22
+#' 
+#'   US EPA (2015) Standard Operating Procedure for Using the NAFTA Guidance to
+#'   Calculate Representative Half-life Values and Characterizing Pesticide
+#'   Degradation
+#'   \url{https://www.epa.gov/pesticide-science-and-assessing-pesticide-risks/standard-operating-procedure-using-nafta-guidance}
+#' @examples
+#' 
+#'   nafta_evaluation <- nafta(NAFTA_SOP_Appendix_D, cores = 1)
+#'   print(nafta_evaluation)
+#'   plot(nafta_evaluation)
+#' 
+#' @export
 nafta <- function(ds, title = NA, quiet = FALSE, ...) {
   if (length(levels(ds$name)) > 1) {
     stop("The NAFTA procedure is only defined for decline data for a single compound")
@@ -56,6 +75,20 @@ nafta <- function(ds, title = NA, quiet = FALSE, ...) {
   return(result)
 }
 
+#' Plot the results of the three models used in the NAFTA scheme. 
+#' 
+#' The plots are ordered with increasing complexity of the model in this
+#' function (SFO, then IORE, then DFOP).
+#' 
+#' Calls \code{\link{plot.mmkin}}.
+#' 
+#' @param x An object of class \code{\link{nafta}}.
+#' @param legend Should a legend be added?
+#' @param main Possibility to override the main title of the plot.
+#' @param \dots Further arguments passed to \code{\link{plot.mmkin}}.
+#' @return The function is called for its side effect.
+#' @author Johannes Ranke
+#' @export
 plot.nafta <- function(x, legend = FALSE, main = "auto", ...) {
   if (main == "auto") {
     if (is.na(x$title)) main = ""
@@ -64,6 +97,16 @@ plot.nafta <- function(x, legend = FALSE, main = "auto", ...) {
   plot(x$mmkin, ..., legend = legend, main = main)
 }
 
+#' Print nafta objects
+#' 
+#' Print nafta objects. The results for the three models are printed in the
+#' order of increasing model complexity, i.e. SFO, then IORE, and finally DFOP.
+#' 
+#' @param x An \code{\link{nafta}} object.
+#' @param digits Number of digits to be used for printing parameters and
+#'   dissipation times.
+#' @rdname nafta
+#' @export
 print.nafta <- function(x, quiet = TRUE, digits = 3, ...) {
   cat("Sums of squares:\n")
   print(x$S)

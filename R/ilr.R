@@ -1,6 +1,3 @@
-# Copyright (C) 2012 René Lehmann, Johannes Ranke
-# Contact: jranke@uni-bremen.de
-
 # This file is part of the R package mkin
 
 # mkin is free software: you can redistribute it and/or modify it under the
@@ -16,6 +13,47 @@
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see <http://www.gnu.org/licenses/>
 
+#' Function to perform isometric log-ratio transformation
+#' 
+#' This implementation is a special case of the class of isometric log-ratio
+#' transformations.
+#' 
+#' @aliases ilr invilr
+#' @param x A numeric vector. Naturally, the forward transformation is only
+#'   sensible for vectors with all elements being greater than zero.
+#' @return The result of the forward or backward transformation. The returned
+#'   components always sum to 1 for the case of the inverse log-ratio
+#'   transformation.
+#' @author René Lehmann and Johannes Ranke
+#' @seealso Another implementation can be found in R package
+#'   \code{robCompositions}.
+#' @references Peter Filzmoser, Karel Hron (2008) Outlier Detection for
+#'   Compositional Data Using Robust Methods. Math Geosci 40 233-248
+#' @keywords manip
+#' @examples
+#' 
+#' # Order matters
+#' ilr(c(0.1, 1, 10))
+#' ilr(c(10, 1, 0.1))
+#' # Equal entries give ilr transformations with zeros as elements
+#' ilr(c(3, 3, 3))
+#' # Almost equal entries give small numbers
+#' ilr(c(0.3, 0.4, 0.3))
+#' # Only the ratio between the numbers counts, not their sum
+#' invilr(ilr(c(0.7, 0.29, 0.01)))
+#' invilr(ilr(2.1 * c(0.7, 0.29, 0.01)))
+#' # Inverse transformation of larger numbers gives unequal elements
+#' invilr(-10)
+#' invilr(c(-10, 0))
+#' # The sum of the elements of the inverse ilr is 1
+#' sum(invilr(c(-10, 0)))
+#' # This is why we do not need all elements of the inverse transformation to go back:
+#' a <- c(0.1, 0.3, 0.5)
+#' b <- invilr(a)
+#' length(b) # Four elements
+#' ilr(c(b[1:3], 1 - sum(b[1:3]))) # Gives c(0.1, 0.3, 0.5)
+#' 
+#' @export
 ilr <- function(x) {
   z <- vector()
   for (i in 1:(length(x) - 1)) {
@@ -24,6 +62,8 @@ ilr <- function(x) {
   return(z)
 }
 
+#' @rdname ilr
+#' @export
 invilr<-function(x) {
   D <- length(x) + 1
   z <- c(x, 0)

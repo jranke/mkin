@@ -1,21 +1,105 @@
-# Copyright (C) 2010-2015,2019 Johannes Ranke {{{
-# Contact: jranke@uni-bremen.de
-
-# This file is part of the R package mkin
-
-# mkin is free software: you can redistribute it and/or modify it under the
-# terms of the GNU General Public License as published by the Free Software
-# Foundation, either version 3 of the License, or (at your option) any later
-# version.
-
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
-# details.
-
-# You should have received a copy of the GNU General Public License along with
-# this program. If not, see <http://www.gnu.org/licenses/> }}}
-
+#' Function to set up a kinetic model with one or more state variables
+#'
+#' The function usually takes several expressions, each assigning a compound
+#' name to a list, specifying the kinetic model type and reaction or transfer
+#' to other observed compartments. Instead of specifying several expressions, a
+#' list of lists can be given in the speclist argument.
+#'
+#' For the definition of model types and their parameters, the equations given
+#' in the FOCUS and NAFTA guidance documents are used.
+#'
+#' @param ...  For each observed variable, a list has to be specified as an
+#'   argument, containing at least a component \code{type}, specifying the type
+#'   of kinetics to use for the variable. Currently, single first order
+#'   kinetics "SFO", indeterminate order rate equation kinetics "IORE", or
+#'   single first order with reversible binding "SFORB" are implemented for all
+#'   variables, while "FOMC", "DFOP" and "HS" can additionally be chosen for
+#'   the first variable which is assumed to be the source compartment.
+#'   Additionally, each component of the list can include a character vector
+#'   \code{to}, specifying names of variables to which a transfer is to be
+#'   assumed in the model.  If the argument \code{use_of_ff} is set to "min"
+#'   (default) and the model for the compartment is "SFO" or "SFORB", an
+#'   additional component of the list can be "sink=FALSE" effectively fixing
+#'   the flux to sink to zero.
+#' @param use_of_ff Specification of the use of formation fractions in the
+#'   model equations and, if applicable, the coefficient matrix. If "min", a
+#'   minimum use of formation fractions is made in order to avoid fitting the
+#'   product of formation fractions and rate constants. If "max", formation
+#'   fractions are always used.
+#' @param speclist The specification of the observed variables and their
+#'   submodel types and pathways can be given as a single list using this
+#'   argument. Default is NULL.
+#' @param quiet Should messages be suppressed?
+#' @param verbose If \code{TRUE}, passed to \code{\link{cfunction}} if
+#'   applicable to give detailed information about the C function being built.
+#' @importFrom methods signature
+#' @importFrom inline cfunction
+#' @return A list of class \code{mkinmod} for use with \code{\link{mkinfit}},
+#'   containing, among others,
+#'   \item{diffs}{
+#'     A vector of string representations of differential equations, one for
+#'     each modelling variable.
+#'   }
+#'   \item{map}{
+#'     A list containing named character vectors for each observed variable,
+#'     specifying the modelling variables by which it is represented.
+#'   }
+#'   \item{use_of_ff}{
+#'     The content of \code{use_of_ff} is passed on in this list component.
+#'   }
+#'   \item{coefmat}{
+#'     The coefficient matrix, if the system of differential equations can be
+#'     represented by one.
+#'   }
+#'   \item{ll}{
+#'     The likelihood function, taking the parameter vector as the first argument.
+#'   }
+#' @note The IORE submodel is not well tested for metabolites. When using this
+#'   model for metabolites, you may want to read the second note in the help
+#'   page to \code{\link{mkinfit}}.
+#' @author Johannes Ranke
+#' @references FOCUS (2006) \dQuote{Guidance Document on Estimating Persistence
+#'   and Degradation Kinetics from Environmental Fate Studies on Pesticides in
+#'   EU Registration} Report of the FOCUS Work Group on Degradation Kinetics,
+#'   EC Document Reference Sanco/10058/2005 version 2.0, 434 pp,
+#'   \url{http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics}
+#'
+#'   NAFTA Technical Working Group on Pesticides (not dated) Guidance for
+#'   Evaluating and Calculating Degradation Kinetics in Environmental Media
+#' @examples
+#'
+#' # Specify the SFO model (this is not needed any more, as we can now mkinfit("SFO", ...)
+#' SFO <- mkinmod(parent = list(type = "SFO"))
+#'
+#' # One parent compound, one metabolite, both single first order
+#' SFO_SFO <- mkinmod(
+#'   parent = mkinsub("SFO", "m1"),
+#'   m1 = mkinsub("SFO"))
+#'
+#' \dontrun{
+#' # The above model used to be specified like this, before the advent of mkinsub()
+#' SFO_SFO <- mkinmod(
+#'   parent = list(type = "SFO", to = "m1"),
+#'   m1 = list(type = "SFO"))
+#'
+#' # Show details of creating the C function
+#' SFO_SFO <- mkinmod(
+#'   parent = mkinsub("SFO", "m1"),
+#'   m1 = mkinsub("SFO"), verbose = TRUE)
+#'
+#' # If we have several parallel metabolites
+#' # (compare tests/testthat/test_synthetic_data_for_UBA_2014.R)
+#' m_synth_DFOP_par <- mkinmod(parent = mkinsub("DFOP", c("M1", "M2")),
+#'                            M1 = mkinsub("SFO"),
+#'                            M2 = mkinsub("SFO"),
+#'                            use_of_ff = "max", quiet = TRUE)
+#'
+#' fit_DFOP_par_c <- mkinfit(m_synth_DFOP_par,
+#'                           synthetic_data_for_UBA_2014[[12]]$data,
+#'                           quiet = TRUE)
+#' }
+#'
+#' @export mkinmod
 mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verbose = FALSE)
 {
   if (is.null(speclist)) spec <- list(...)
@@ -236,12 +320,12 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
 
           } else {          # off-diagonal elements
             k.candidate = paste("k", from, to, sep = "_")
-	    if (sub("_free$", "", from) == sub("_bound$", "", to)) {
+      if (sub("_free$", "", from) == sub("_bound$", "", to)) {
               k.candidate = paste("k", sub("_free$", "_free_bound", from), sep = "_")
-	    }
-	    if (sub("_bound$", "", from) == sub("_free$", "", to)) {
+      }
+      if (sub("_bound$", "", from) == sub("_free$", "", to)) {
               k.candidate = paste("k", sub("_bound$", "_bound_free", from), sep = "_")
-	    }
+      }
             k.effective = intersect(model$parms, k.candidate)
             m[to, from] = ifelse(length(k.effective) > 0,
                 k.effective, "0")
@@ -361,6 +445,22 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
   return(model)
 }
 
+#' Print mkinmod objects
+#'
+#' Print mkinmod objects in a way that the user finds his way to get to its
+#' components.
+#'
+#' @param x An \code{\link{mkinmod}} object.
+#' @param \dots Not used.
+#' @examples
+#'
+#'   m_synth_SFO_lin <- mkinmod(parent = list(type = "SFO", to = "M1"),
+#'                              M1 = list(type = "SFO", to = "M2"),
+#'                              M2 = list(type = "SFO"), use_of_ff = "max")
+#'
+#'   print(m_synth_SFO_lin)
+#'
+#' @export
 print.mkinmod <- function(x, ...) {
   cat("<mkinmod> model generated with\n")
   cat("Use of formation fractions $use_of_ff:", x$use_of_ff, "\n")

@@ -1,21 +1,33 @@
-# Copyright (C) 2015,2018,2019 Johannes Ranke
-# Contact: jranke@uni-bremen.de
-
-# This file is part of the R package mkin
-
-# mkin is free software: you can redistribute it and/or modify it under the
-# terms of the GNU General Public License as published by the Free Software
-# Foundation, either version 3 of the License, or (at your option) any later
-# version.
-
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
-# details.
-
-# You should have received a copy of the GNU General Public License along with
-# this program. If not, see <http://www.gnu.org/licenses/>
-
+#' A dataset class for mkin
+#' 
+#' A dataset class for mkin
+#' 
+#' @name mkinds
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @section Fields:
+#' 
+#' \describe{ \item{list("title")}{A full title for the dataset}
+#' 
+#' \item{list("sampling")}{times The sampling times}
+#' 
+#' \item{list("time_unit")}{The time unit}
+#' 
+#' \item{list("observed")}{Names of the observed compounds}
+#' 
+#' \item{list("unit")}{The unit of the observations}
+#' 
+#' \item{list("replicates")}{The number of replicates}
+#' 
+#' \item{list("data")}{A dataframe with at least the columns name, time and
+#' value in order to be compatible with mkinfit} }
+#' @importFrom R6 R6Class
+#' @keywords datasets
+#' @examples
+#' 
+#' mds <- mkinds$new("FOCUS A", FOCUS_2006_A)
+#' 
+#' @export
 mkinds <- R6Class("mkinds",
   public = list(
     title = NULL,
@@ -42,6 +54,13 @@ mkinds <- R6Class("mkinds",
   )
 )
 
+#' Print mkinds objects
+#' 
+#' Print mkinds objects.
+#' 
+#' @param x An \code{\link{mkinds}} object.
+#' @param \dots Not used.
+#' @export
 print.mkinds <- function(x, ...) {
   cat("<mkinds> with $title: ",  x$title, "\n")
   cat("Observed compounds $observed: ", paste(x$observed, collapse = ", "), "\n")

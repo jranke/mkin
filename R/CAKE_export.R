@@ -1,20 +1,30 @@
-# Copyright (C) 2019 Johannes Ranke
-# Contact: jranke@uni-bremen.de
-
-# This file is part of the R package mkin
-
-# mkin is free software: you can redistribute it and/or modify it under the
-# terms of the GNU General Public License as published by the Free Software
-# Foundation, either version 3 of the License, or (at your option) any later
-# version.
-
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
-# details.
-
-# You should have received a copy of the GNU General Public License along with
-# this program. If not, see <http://www.gnu.org/licenses/>
+#' Export a list of datasets format to a CAKE study file
+#' 
+#' In addition to the datasets, the pathways in the degradation model can be
+#' specified as well.
+#' 
+#' @param ds A named list of datasets in long format as compatible with
+#'   \code{\link{mkinfit}}.
+#' @param map A character vector with CAKE compartment names (Parent, A1, ...),
+#'   named with the names used in the list of datasets.
+#' @param links An optional character vector of target compartments, named with
+#'   the names of the source compartments. In order to make this easier, the
+#'   names are used as in the datasets supplied.
+#' @param filename Where to write the result. Should end in .csf in order to be
+#'   compatible with CAKE.
+#' @param path An optional path to the output file.
+#' @param overwrite If TRUE, existing files are overwritten.
+#' @param study The name of the study.
+#' @param description An optional description.
+#' @param time_unit The time unit for the residue data.
+#' @param res_unit The unit used for the residues.
+#' @param comment An optional comment.
+#' @param date The date of file creation.
+#' @param optimiser Can be OLS or IRLS.
+#' @importFrom utils write.table
+#' @return The function is called for its side effect.
+#' @author Johannes Ranke
+#' @export
 CAKE_export <- function(ds, map = c(parent = "Parent"),
   links = NA,
   filename = "CAKE_export.csf", path = ".", overwrite = FALSE,

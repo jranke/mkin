@@ -1,21 +1,22 @@
-# Copyright (C) 2010-2011 Johannes Ranke
-# Contact: jranke@uni-bremen.de
-
-# This file is part of the R package mkin
-
-# mkin is free software: you can redistribute it and/or modify it under the
-# terms of the GNU General Public License as published by the Free Software
-# Foundation, either version 3 of the License, or (at your option) any later
-# version.
-
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
-# details.
-
-# You should have received a copy of the GNU General Public License along with
-# this program. If not, see <http://www.gnu.org/licenses/>
-
+#' Convert a dataframe from long to wide format
+#' 
+#' This function takes a dataframe in the long form, i.e. with a row for each
+#' observed value, and converts it into a dataframe with one independent
+#' variable and several dependent variables as columns.
+#' 
+#' @param long_data The dataframe must contain one variable called "time" with
+#'   the time values specified by the \code{time} argument, one column called
+#'   "name" with the grouping of the observed values, and finally one column of
+#'   observed values called "value".
+#' @param time The name of the time variable in the long input data.
+#' @param outtime The name of the time variable in the wide output data.
+#' @return Dataframe in wide format.
+#' @author Johannes Ranke
+#' @examples
+#' 
+#' mkin_long_to_wide(FOCUS_2006_D)
+#' 
+#' @export mkin_long_to_wide
 mkin_long_to_wide <- function(long_data, time = "time", outtime = "time")
 {
   colnames <- unique(long_data$name)

@@ -1,21 +1,35 @@
-# Copyright (C) 2018 Johannes Ranke
-# Contact: jranke@uni-bremen.de
-
-# This file is part of the R package mkin
-
-# mkin is free software: you can redistribute it and/or modify it under the
-# terms of the GNU General Public License as published by the Free Software
-# Foundation, either version 3 of the License, or (at your option) any later
-# version.
-
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
-# details.
-
-# You should have received a copy of the GNU General Public License along with
-# this program. If not, see <http://www.gnu.org/licenses/>
-AIC.mmkin <- function(object, ..., k = 2) {
+#' Calculated the AIC for a column of an mmkin object
+#' 
+#' Provides a convenient way to compare different kinetic models fitted to the
+#' same dataset.
+#' 
+#' @param object An object of class \code{\link{mmkin}}, containing only one
+#'   column.
+#' @param \dots For compatibility with the generic method
+#' @param k As in the generic method
+#' @return As in the generic method (a numeric value for single fits, or a
+#'   dataframe if there are several fits in the column).
+#' @author Johannes Ranke
+#' @examples
+#' 
+#'   \dontrun{ # skip, as it takes > 10 s on winbuilder
+#'   f <- mmkin(c("SFO", "FOMC", "DFOP"),
+#'     list("FOCUS A" = FOCUS_2006_A,
+#'          "FOCUS C" = FOCUS_2006_C), cores = 1, quiet = TRUE)
+#'   AIC(f[1, "FOCUS A"]) # We get a single number for a single fit
+#' 
+#'   # For FOCUS A, the models fit almost equally well, so the higher the number
+#'   # of parameters, the higher (worse) the AIC
+#'   AIC(f[, "FOCUS A"])
+#'   AIC(f[, "FOCUS A"], k = 0) # If we do not penalize additional parameters, we get nearly the same
+#' 
+#'   # For FOCUS C, the more complex models fit better
+#'   AIC(f[, "FOCUS C"])
+#'   }
+#' 
+#' @export
+AIC.mmkin <- function(object, ..., k = 2)
+{
   # We can only handle a single column
   if (ncol(object) != 1) stop("Please provide a single column object")
   n.fits <- length(object)

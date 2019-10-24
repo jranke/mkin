@@ -1,20 +1,23 @@
-# Copyright (C) 2014 Johannes Ranke
-# Contact: jranke@uni-bremen.de
-
-# This file is part of the R package mkin
-
-# mkin is free software: you can redistribute it and/or modify it under the
-# terms of the GNU General Public License as published by the Free Software
-# Foundation, either version 3 of the License, or (at your option) any later
-# version.
-
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
-# details.
-
-# You should have received a copy of the GNU General Public License along with
-# this program. If not, see <http://www.gnu.org/licenses/>
+#' Function to plot the confidence intervals obtained using mkinfit
+#' 
+#' This function plots the confidence intervals for the parameters fitted using
+#' \code{\link{mkinfit}}.
+#' 
+#' @param object A fit represented in an \code{\link{mkinfit}} object.
+#' @return Nothing is returned by this function, as it is called for its side
+#'   effect, namely to produce a plot.
+#' @author Johannes Ranke
+#' @examples
+#' 
+#' \dontrun{
+#' model <- mkinmod(
+#'   T245 = mkinsub("SFO", to = c("phenol"), sink = FALSE),
+#'   phenol = mkinsub("SFO", to = c("anisole")),
+#'   anisole = mkinsub("SFO"), use_of_ff = "max")
+#' fit <- mkinfit(model, subset(mccall81_245T, soil == "Commerce"), quiet = TRUE)
+#' mkinparplot(fit)
+#' }
+#' @export
 mkinparplot <- function(object) {
   state.optim = rownames(subset(object$start, type == "state"))
   deparms.optim = rownames(subset(object$start, type == "deparm"))

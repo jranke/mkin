@@ -1,23 +1,39 @@
-# Copyright (C) 2014,2015 Johannes Ranke
-# Portions of this code are copyright (C) 2013 Eurofins Regulatory AG
-# Contact: jranke@uni-bremen.de
-
-# This file is part of the R package mkin
-
-# mkin is free software: you can redistribute it and/or modify it under the
-# terms of the GNU General Public License as published by the Free Software
-# Foundation, either version 3 of the License, or (at your option) any later
-# version.
-
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
-# details.
-
-# You should have received a copy of the GNU General Public License along with
-# this program. If not, see <http://www.gnu.org/licenses/>
+#' Function to set up a kinetic submodel for one state variable
+#' 
+#' This is a convenience function to set up the lists used as arguments for
+#' \code{\link{mkinmod}}.
+#' 
+#' @param submodel Character vector of length one to specify the submodel type.
+#'   See \code{\link{mkinmod}} for the list of allowed submodel names.
+#' @param to Vector of the names of the state variable to which a
+#'   transformation shall be included in the model.
+#' @param sink Should a pathway to sink be included in the model in addition to
+#'   the pathways to other state variables?
+#' @param full_name An optional name to be used e.g. for plotting fits
+#'   performed with the model.  You can use non-ASCII characters here, but then
+#'   your R code will not be portable, \emph{i.e.} may produce unintended plot
+#'   results on other operating systems or system configurations.
+#' @return A list for use with \code{\link{mkinmod}}.
+#' @author Johannes Ranke
+#' @examples
+#' 
+#' # One parent compound, one metabolite, both single first order.
+#' SFO_SFO <- mkinmod(
+#'   parent = list(type = "SFO", to = "m1"),
+#'   m1 = list(type = "SFO"))
+#' 
+#' # The same model using mkinsub
+#' SFO_SFO.2 <- mkinmod(
+#'   parent = mkinsub("SFO", "m1"),
+#'   m1 = mkinsub("SFO"))
+#' 
+#' # Now supplying full names
+#' SFO_SFO.2 <- mkinmod(
+#'   parent = mkinsub("SFO", "m1", full_name = "Test compound"),
+#'   m1 = mkinsub("SFO", full_name = "Metabolite M1"))
+#' 
+#' @export
 mkinsub <- function(submodel, to = NULL, sink = TRUE, full_name = NA)
 {
   return(list(type = submodel, to = to, sink = sink, full_name = full_name))
 }
-# vim: set ts=2 sw=2 expandtab:

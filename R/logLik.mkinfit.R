@@ -1,24 +1,40 @@
-# Copyright (C) 2018,2019 Johannes Ranke
-# Contact: jranke@uni-bremen.de
-
-# This file is part of the R package mkin
-
-# mkin is free software: you can redistribute it and/or modify it under the
-# terms of the GNU General Public License as published by the Free Software
-# Foundation, either version 3 of the License, or (at your option) any later
-# version.
-
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
-# details.
-
-# You should have received a copy of the GNU General Public License along with
-# this program. If not, see <http://www.gnu.org/licenses/>
+#' Calculated the log-likelihood of a fitted mkinfit object
+#' 
+#' This function simply calculates the product of the likelihood densities
+#' calculated using \code{\link{dnorm}}, i.e. assuming normal distribution,
+#' with of the mean predicted by the degradation model, and the standard
+#' deviation predicted by the error model.
+#' 
+#' The total number of estimated parameters returned with the value of the
+#' likelihood is calculated as the sum of fitted degradation model parameters
+#' and the fitted error model parameters.
+#' 
+#' @param object An object of class \code{\link{mkinfit}}.
+#' @param \dots For compatibility with the generic method
+#' @return An object of class \code{\link{logLik}} with the number of estimated
+#'   parameters (degradation model parameters plus variance model parameters)
+#'   as attribute.
+#' @author Johannes Ranke
+#' @seealso Compare the AIC of columns of \code{\link{mmkin}} objects using
+#'   \code{\link{AIC.mmkin}}.
+#' @examples
+#' 
+#'   \dontrun{
+#'   sfo_sfo <- mkinmod(
+#'     parent = mkinsub("SFO", to = "m1"),
+#'     m1 = mkinsub("SFO")
+#'   )
+#'   d_t <- FOCUS_2006_D
+#'   f_nw <- mkinfit(sfo_sfo, d_t, quiet = TRUE) # no weighting (weights are unity)
+#'   f_obs <- mkinfit(sfo_sfo, d_t, error_model = "obs", quiet = TRUE)
+#'   f_tc <- mkinfit(sfo_sfo, d_t, error_model = "tc", quiet = TRUE)
+#'   AIC(f_nw, f_obs, f_tc)
+#'   }
+#' 
+#' @export
 logLik.mkinfit <- function(object, ...) {
   val <- object$logLik
   # Number of estimated parameters
   attr(val, "df") <- length(object$bparms.optim) + length(object$errparms)
   return(val)
 }
-# vim: set ts=2 sw=2 expandtab:

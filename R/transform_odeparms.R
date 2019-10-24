@@ -1,21 +1,97 @@
-# Copyright (C) 2010-2014,2019 Johannes Ranke
-# Contact: jranke@uni-bremen.de
-
-# This file is part of the R package mkin
-
-# mkin is free software: you can redistribute it and/or modify it under the
-# terms of the GNU General Public License as published by the Free Software
-# Foundation, either version 3 of the License, or (at your option) any later
-# version.
-
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
-# details.
-
-# You should have received a copy of the GNU General Public License along with
-# this program. If not, see <http://www.gnu.org/licenses/>
-
+#' Functions to transform and backtransform kinetic parameters for fitting
+#' 
+#' The transformations are intended to map parameters that should only take on
+#' restricted values to the full scale of real numbers. For kinetic rate
+#' constants and other paramters that can only take on positive values, a
+#' simple log transformation is used. For compositional parameters, such as the
+#' formations fractions that should always sum up to 1 and can not be negative,
+#' the \code{\link{ilr}} transformation is used.
+#' 
+#' The transformation of sets of formation fractions is fragile, as it supposes
+#' the same ordering of the components in forward and backward transformation.
+#' This is no problem for the internal use in \code{\link{mkinfit}}.
+#' 
+#' @aliases transform_odeparms backtransform_odeparms
+#' @param parms Parameters of kinetic models as used in the differential
+#'   equations.
+#' @param transparms Transformed parameters of kinetic models as used in the
+#'   fitting procedure.
+#' @param mkinmod The kinetic model of class \code{\link{mkinmod}}, containing
+#'   the names of the model variables that are needed for grouping the
+#'   formation fractions before \code{\link{ilr}} transformation, the parameter
+#'   names and the information if the pathway to sink is included in the model.
+#' @param transform_rates Boolean specifying if kinetic rate constants should
+#'   be transformed in the model specification used in the fitting for better
+#'   compliance with the assumption of normal distribution of the estimator. If
+#'   TRUE, also alpha and beta parameters of the FOMC model are
+#'   log-transformed, as well as k1 and k2 rate constants for the DFOP and HS
+#'   models and the break point tb of the HS model.
+#' @param transform_fractions Boolean specifying if formation fractions
+#'   constants should be transformed in the model specification used in the
+#'   fitting for better compliance with the assumption of normal distribution
+#'   of the estimator. The default (TRUE) is to do transformations. The g
+#'   parameter of the DFOP and HS models are also transformed, as they can also
+#'   be seen as compositional data. The transformation used for these
+#'   transformations is the \code{\link{ilr}} transformation.
+#' @return A vector of transformed or backtransformed parameters with the same
+#'   names as the original parameters.
+#' @author Johannes Ranke
+#' @examples
+#' 
+#' SFO_SFO <- mkinmod(
+#'   parent = list(type = "SFO", to = "m1", sink = TRUE),
+#'   m1 = list(type = "SFO"))
+#' # Fit the model to the FOCUS example dataset D using defaults
+#' fit <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE)
+#' fit.s <- summary(fit)
+#' # Transformed and backtransformed parameters
+#' print(fit.s$par, 3)
+#' print(fit.s$bpar, 3)
+#' 
+#' \dontrun{
+#' # Compare to the version without transforming rate parameters
+#' fit.2 <- mkinfit(SFO_SFO, FOCUS_2006_D, transform_rates = FALSE, quiet = TRUE)
+#' fit.2.s <- summary(fit.2)
+#' print(fit.2.s$par, 3)
+#' print(fit.2.s$bpar, 3)
+#' }
+#' 
+#' initials <- fit$start$value
+#' names(initials) <- rownames(fit$start)
+#' transformed <- fit$start_transformed$value
+#' names(transformed) <- rownames(fit$start_transformed)
+#' transform_odeparms(initials, SFO_SFO)
+#' backtransform_odeparms(transformed, SFO_SFO)
+#' 
+#' \dontrun{
+#' # The case of formation fractions
+#' SFO_SFO.ff <- mkinmod(
+#'   parent = list(type = "SFO", to = "m1", sink = TRUE),
+#'   m1 = list(type = "SFO"),
+#'   use_of_ff = "max")
+#' 
+#' fit.ff <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, quiet = TRUE)
+#' fit.ff.s <- summary(fit.ff)
+#' print(fit.ff.s$par, 3)
+#' print(fit.ff.s$bpar, 3)
+#' initials <- c("f_parent_to_m1" = 0.5)
+#' transformed <- transform_odeparms(initials, SFO_SFO.ff)
+#' backtransform_odeparms(transformed, SFO_SFO.ff)
+#' 
+#' # And without sink
+#' SFO_SFO.ff.2 <- mkinmod(
+#'   parent = list(type = "SFO", to = "m1", sink = FALSE),
+#'   m1 = list(type = "SFO"),
+#'   use_of_ff = "max")
+#' 
+#' 
+#' fit.ff.2 <- mkinfit(SFO_SFO.ff.2, FOCUS_2006_D, quiet = TRUE)
+#' fit.ff.2.s <- summary(fit.ff.2)
+#' print(fit.ff.2.s$par, 3)
+#' print(fit.ff.2.s$bpar, 3)
+#' }
+#' 
+#' @export transform_odeparms
 transform_odeparms <- function(parms, mkinmod,
                                transform_rates = TRUE,
                                transform_fractions = TRUE)
@@ -96,6 +172,8 @@ transform_odeparms <- function(parms, mkinmod,
   return(transparms)
 }
 
+#' @describeIn transform_odeparms Backtransform the set of transformed parameters
+#' @export backtransform_odeparms
 backtransform_odeparms <- function(transparms, mkinmod,
                                    transform_rates = TRUE,
                                    transform_fractions = TRUE)
