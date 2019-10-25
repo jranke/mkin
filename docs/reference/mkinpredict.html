@@ -8,11 +8,13 @@
 
 <title>Produce predictions from a kinetic model using specific parameters — mkinpredict • mkin</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -32,12 +34,13 @@
 
 
 
-<meta property="og:title" content="Produce predictions from a kinetic model using specific parameters — mkinpredict" />
 
+<meta property="og:title" content="Produce predictions from a kinetic model using specific parameters — mkinpredict" />
 <meta property="og:description" content="This function produces a time series for all the observed variables in a
-  kinetic model as specified by mkinmod, using a specific set of
-  kinetic parameters and initial values for the state variables." />
+kinetic model as specified by mkinmod, using a specific set of
+kinetic parameters and initial values for the state variables." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -111,7 +114,6 @@
   <a href="../news/index.html">News</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         
       </ul>
@@ -133,89 +135,105 @@
     </div>
 
     <div class="ref-description">
-    
     <p>This function produces a time series for all the observed variables in a
-  kinetic model as specified by <code><a href='mkinmod.html'>mkinmod</a></code>, using a specific set of
-  kinetic parameters and initial values for the state variables.</p>
-    
+kinetic model as specified by <code><a href='mkinmod.html'>mkinmod</a></code>, using a specific set of
+kinetic parameters and initial values for the state variables.</p>
     </div>
 
     <pre class="usage"><span class='fu'>mkinpredict</span>(<span class='no'>x</span>, <span class='no'>odeparms</span>, <span class='no'>odeini</span>, <span class='kw'>outtimes</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fl'>0</span>, <span class='fl'>120</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>0.1</span>),
-    <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"deSolve"</span>, <span class='kw'>use_compiled</span> <span class='kw'>=</span> <span class='st'>"auto"</span>, <span class='kw'>method.ode</span> <span class='kw'>=</span> <span class='st'>"lsoda"</span>,
-    <span class='kw'>atol</span> <span class='kw'>=</span> <span class='fl'>1e-08</span>, <span class='kw'>rtol</span> <span class='kw'>=</span> <span class='fl'>1e-10</span>, <span class='kw'>map_output</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
-    
+  <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"deSolve"</span>, <span class='kw'>use_compiled</span> <span class='kw'>=</span> <span class='st'>"auto"</span>,
+  <span class='kw'>method.ode</span> <span class='kw'>=</span> <span class='st'>"lsoda"</span>, <span class='kw'>atol</span> <span class='kw'>=</span> <span class='fl'>1e-08</span>, <span class='kw'>rtol</span> <span class='kw'>=</span> <span class='fl'>1e-10</span>,
+  <span class='kw'>map_output</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for mkinmod</span>
+<span class='fu'>mkinpredict</span>(<span class='no'>x</span>, <span class='kw'>odeparms</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>k_parent_sink</span> <span class='kw'>=</span> <span class='fl'>0.1</span>),
+  <span class='kw'>odeini</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fl'>100</span>), <span class='kw'>outtimes</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fl'>0</span>, <span class='fl'>120</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>0.1</span>),
+  <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"deSolve"</span>, <span class='kw'>use_compiled</span> <span class='kw'>=</span> <span class='st'>"auto"</span>,
+  <span class='kw'>method.ode</span> <span class='kw'>=</span> <span class='st'>"lsoda"</span>, <span class='kw'>atol</span> <span class='kw'>=</span> <span class='fl'>1e-08</span>, <span class='kw'>rtol</span> <span class='kw'>=</span> <span class='fl'>1e-10</span>,
+  <span class='kw'>map_output</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for mkinfit</span>
+<span class='fu'>mkinpredict</span>(<span class='no'>x</span>, <span class='kw'>odeparms</span> <span class='kw'>=</span> <span class='no'>x</span>$<span class='no'>bparms.ode</span>,
+  <span class='kw'>odeini</span> <span class='kw'>=</span> <span class='no'>x</span>$<span class='no'>bparms.state</span>, <span class='kw'>outtimes</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fl'>0</span>, <span class='fl'>120</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>0.1</span>),
+  <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"deSolve"</span>, <span class='kw'>use_compiled</span> <span class='kw'>=</span> <span class='st'>"auto"</span>,
+  <span class='kw'>method.ode</span> <span class='kw'>=</span> <span class='st'>"lsoda"</span>, <span class='kw'>atol</span> <span class='kw'>=</span> <span class='fl'>1e-08</span>, <span class='kw'>rtol</span> <span class='kw'>=</span> <span class='fl'>1e-10</span>,
+  <span class='kw'>map_output</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
       <td><p>A kinetic model as produced by <code><a href='mkinmod.html'>mkinmod</a></code>, or a kinetic
-    fit as fitted by <code><a href='mkinfit.html'>mkinfit</a></code>. In the latter case, the fitted
-    parameters are used for the prediction.</p></td>
+fit as fitted by <code><a href='mkinfit.html'>mkinfit</a></code>. In the latter case, the fitted
+parameters are used for the prediction.</p></td>
     </tr>
     <tr>
       <th>odeparms</th>
-      <td><p>A numeric vector specifying the parameters used in the kinetic model, which
-    is generally defined as a set of ordinary differential equations.</p></td>
+      <td><p>A numeric vector specifying the parameters used in the
+kinetic model, which is generally defined as a set of ordinary
+differential equations.</p></td>
     </tr>
     <tr>
       <th>odeini</th>
-      <td><p>A numeric vectory containing the initial values of the state variables of
-    the model. Note that the state variables can differ from the observed
-    variables, for example in the case of the SFORB model.</p></td>
+      <td><p>A numeric vectory containing the initial values of the state
+variables of the model. Note that the state variables can differ from the
+observed variables, for example in the case of the SFORB model.</p></td>
     </tr>
     <tr>
       <th>outtimes</th>
-      <td><p>A numeric vector specifying the time points for which model predictions
-    should be generated.</p></td>
+      <td><p>A numeric vector specifying the time points for which model
+predictions should be generated.</p></td>
     </tr>
     <tr>
       <th>solution_type</th>
-      <td><p>The method that should be used for producing the predictions. This should
-    generally be "analytical" if there is only one observed variable, and
-    usually "deSolve" in the case of several observed variables. The third
-    possibility "eigen" is faster but not applicable to some models e.g.
-    using FOMC for the parent compound.</p></td>
-    </tr>
-    <tr>
-      <th>method.ode</th>
-      <td><p>The solution method passed via <code>mkinpredict</code> to
-    <code>ode</code> in case the solution type is "deSolve". The default
-    "lsoda" is performant, but sometimes fails to converge.</p></td>
+      <td><p>The method that should be used for producing the
+predictions. This should generally be "analytical" if there is only one
+observed variable, and usually "deSolve" in the case of several observed
+variables. The third possibility "eigen" is faster but not applicable to
+some models e.g.  using FOMC for the parent compound.</p></td>
     </tr>
     <tr>
       <th>use_compiled</th>
-      <td><p>If set to <code>FALSE</code>, no compiled version of the <code><a href='mkinmod.html'>mkinmod</a></code>
-    model is used, even if is present.</p></td>
+      <td><p>If set to <code>FALSE</code>, no compiled version of the
+<code><a href='mkinmod.html'>mkinmod</a></code> model is used, even if is present.</p></td>
+    </tr>
+    <tr>
+      <th>method.ode</th>
+      <td><p>The solution method passed via <code>mkinpredict</code>
+to <code>ode</code> in case the solution type is "deSolve". The default
+"lsoda" is performant, but sometimes fails to converge.</p></td>
     </tr>
     <tr>
       <th>atol</th>
-      <td><p>Absolute error tolerance, passed to <code>ode</code>. Default is 1e-8,
-    lower than in <code>lsoda</code>.</p></td>
+      <td><p>Absolute error tolerance, passed to <code>ode</code>. Default
+is 1e-8, lower than in <code>lsoda</code>.</p></td>
     </tr>
     <tr>
       <th>rtol</th>
-      <td><p>Absolute error tolerance, passed to <code>ode</code>. Default is 1e-10,
-    much lower than in <code>lsoda</code>.</p></td>
+      <td><p>Absolute error tolerance, passed to <code>ode</code>. Default
+is 1e-10, much lower than in <code>lsoda</code>.</p></td>
     </tr>
     <tr>
       <th>map_output</th>
-      <td><p>Boolean to specify if the output should list values for the observed
-    variables (default) or for all state variables (if set to FALSE).</p></td>
+      <td><p>Boolean to specify if the output should list values for
+the observed variables (default) or for all state variables (if set to
+FALSE).</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Further arguments passed to the ode solver in case such a solver is used.</p></td>
+      <td><p>Further arguments passed to the ode solver in case such a
+solver is used.</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A matrix in the same format as the output of <code>ode</code>.</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>  <span class='no'>SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>degradinol</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))
+    <pre class="examples"><div class='input'>
+  <span class='no'>SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>degradinol</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))
   <span class='co'># Compare solution types</span>
   <span class='fu'>mkinpredict</span>(<span class='no'>SFO</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>k_degradinol_sink</span> <span class='kw'>=</span> <span class='fl'>0.3</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>degradinol</span> <span class='kw'>=</span> <span class='fl'>100</span>), <span class='fl'>0</span>:<span class='fl'>20</span>,
         <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"analytical"</span>)</div><div class='output co'>#&gt;    time  degradinol
@@ -342,7 +360,7 @@
                 <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fl'>0</span>), <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span>(<span class='fl'>0</span>, <span class='fl'>20</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>0.1</span>),
                 <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"deSolve"</span>, <span class='kw'>use_compiled</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)[<span class='fl'>201</span>,]))</div><div class='output co'>#&gt;     time   parent       m1
 #&gt; 201   20 4.978707 27.46227</div><div class='output co'>#&gt;        User      System verstrichen 
-#&gt;       0.022       0.000       0.021 </div><div class='input'>
+#&gt;       0.021       0.000       0.021 </div><div class='input'>
   <span class='co'># \dontrun{</span>
     <span class='co'># Predict from a fitted model</span>
     <span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_C</span>)</div><div class='output co'>#&gt; <span class='message'>Ordinary least squares optimisation</span></div><div class='output co'>#&gt; Sum of squared residuals at call 1: 552.5739
@@ -380,15 +398,14 @@
 #&gt; 4  0.3 75.25515 3.399419
 #&gt; 5  0.4 72.98675 4.441969
 #&gt; 6  0.5 70.78673 5.441679</div><div class='input'>  # }
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 

@@ -8,11 +8,13 @@
 
 <title>Functions to transform and backtransform kinetic parameters for fitting — transform_odeparms • mkin</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -32,18 +34,16 @@
 
 
 
-<meta property="og:title" content="Functions to transform and backtransform kinetic parameters for fitting — transform_odeparms" />
 
-<meta property="og:description" content="The transformations are intended to map parameters that should only take
-  on restricted values to the full scale of real numbers. For kinetic rate
-  constants and other paramters that can only take on positive values, a
-  simple log transformation is used. For compositional parameters, such as
-  the formations fractions that should always sum up to 1 and can not be
-  negative, the ilr transformation is used.
-The transformation of sets of formation fractions is fragile, as it supposes
-  the same ordering of the components in forward and backward transformation.
-  This is no problem for the internal use in mkinfit." />
+<meta property="og:title" content="Functions to transform and backtransform kinetic parameters for fitting — transform_odeparms" />
+<meta property="og:description" content="The transformations are intended to map parameters that should only take on
+restricted values to the full scale of real numbers. For kinetic rate
+constants and other paramters that can only take on positive values, a
+simple log transformation is used. For compositional parameters, such as the
+formations fractions that should always sum up to 1 and can not be negative,
+the ilr transformation is used." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -117,7 +117,6 @@ The transformation of sets of formation fractions is fragile, as it supposes
   <a href="../news/index.html">News</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         
       </ul>
@@ -139,71 +138,80 @@ The transformation of sets of formation fractions is fragile, as it supposes
     </div>
 
     <div class="ref-description">
-    
-    <p>The transformations are intended to map parameters that should only take
-  on restricted values to the full scale of real numbers. For kinetic rate
-  constants and other paramters that can only take on positive values, a
-  simple log transformation is used. For compositional parameters, such as
-  the formations fractions that should always sum up to 1 and can not be
-  negative, the <code><a href='ilr.html'>ilr</a></code> transformation is used.</p>
-<p>The transformation of sets of formation fractions is fragile, as it supposes
-  the same ordering of the components in forward and backward transformation.
-  This is no problem for the internal use in <code><a href='mkinfit.html'>mkinfit</a></code>.</p>
-    
+    <p>The transformations are intended to map parameters that should only take on
+restricted values to the full scale of real numbers. For kinetic rate
+constants and other paramters that can only take on positive values, a
+simple log transformation is used. For compositional parameters, such as the
+formations fractions that should always sum up to 1 and can not be negative,
+the <code><a href='ilr.html'>ilr</a></code> transformation is used.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>transform_odeparms</span>(<span class='no'>parms</span>, <span class='no'>mkinmod</span>,
-                   <span class='kw'>transform_rates</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>transform_fractions</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>backtransform_odeparms</span>(<span class='no'>transparms</span>, <span class='no'>mkinmod</span>,
-                       <span class='kw'>transform_rates</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>transform_fractions</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
-    
+    <pre class="usage"><span class='fu'>transform_odeparms</span>(<span class='no'>parms</span>, <span class='no'>mkinmod</span>, <span class='kw'>transform_rates</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>transform_fractions</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+
+<span class='fu'>backtransform_odeparms</span>(<span class='no'>transparms</span>, <span class='no'>mkinmod</span>, <span class='kw'>transform_rates</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>transform_fractions</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>parms</th>
-      <td><p>Parameters of kinetic models as used in the differential equations.</p></td>
-    </tr>
-    <tr>
-      <th>transparms</th>
-      <td><p>Transformed parameters of kinetic models as used in the fitting procedure.</p></td>
+      <td><p>Parameters of kinetic models as used in the differential
+equations.</p></td>
     </tr>
     <tr>
       <th>mkinmod</th>
-      <td><p>The kinetic model of class <code><a href='mkinmod.html'>mkinmod</a></code>, containing the names of
-    the model variables that are needed for grouping the formation fractions
-    before <code><a href='ilr.html'>ilr</a></code> transformation, the parameter names and
-    the information if the pathway to sink is included in the model.</p></td>
+      <td><p>The kinetic model of class <code><a href='mkinmod.html'>mkinmod</a></code>, containing
+the names of the model variables that are needed for grouping the
+formation fractions before <code><a href='ilr.html'>ilr</a></code> transformation, the parameter
+names and the information if the pathway to sink is included in the model.</p></td>
     </tr>
     <tr>
       <th>transform_rates</th>
-      <td><p>Boolean specifying if kinetic rate constants should be transformed in the
-    model specification used in the fitting for better compliance with the
-    assumption of normal distribution of the estimator. If TRUE, also
-    alpha and beta parameters of the FOMC model are log-transformed, as well
-    as k1 and k2 rate constants for the DFOP and HS models and the break point tb
-    of the HS model.</p></td>
+      <td><p>Boolean specifying if kinetic rate constants should
+be transformed in the model specification used in the fitting for better
+compliance with the assumption of normal distribution of the estimator. If
+TRUE, also alpha and beta parameters of the FOMC model are
+log-transformed, as well as k1 and k2 rate constants for the DFOP and HS
+models and the break point tb of the HS model.</p></td>
     </tr>
     <tr>
       <th>transform_fractions</th>
-      <td><p>Boolean specifying if formation fractions constants should be transformed in the
-    model specification used in the fitting for better compliance with the
-    assumption of normal distribution of the estimator. The default (TRUE) is
-    to do transformations. The g parameter of the DFOP and HS models are also
-    transformed, as they can also be seen as compositional data. The
-    transformation used for these transformations is the <code><a href='ilr.html'>ilr</a></code>
-    transformation.</p></td>
+      <td><p>Boolean specifying if formation fractions
+constants should be transformed in the model specification used in the
+fitting for better compliance with the assumption of normal distribution
+of the estimator. The default (TRUE) is to do transformations. The g
+parameter of the DFOP and HS models are also transformed, as they can also
+be seen as compositional data. The transformation used for these
+transformations is the <code><a href='ilr.html'>ilr</a></code> transformation.</p></td>
+    </tr>
+    <tr>
+      <th>transparms</th>
+      <td><p>Transformed parameters of kinetic models as used in the
+fitting procedure.</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A vector of transformed or backtransformed parameters with the same names
-  as the original parameters.</p>
+    <p>A vector of transformed or backtransformed parameters with the same
+  names as the original parameters.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The transformation of sets of formation fractions is fragile, as it supposes
+the same ordering of the components in forward and backward transformation.
+This is no problem for the internal use in <code><a href='mkinfit.html'>mkinfit</a></code>.</p>
+    <h2 class="hasAnchor" id="functions"><a class="anchor" href="#functions"></a>Functions</h2>
+
     
+<ul>
+<li><p><code>backtransform_odeparms</code>: Backtransform the set of transformed parameters</p></li>
+</ul>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(
+    <pre class="examples"><div class='input'>
+<span class='no'>SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(
   <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"m1"</span>, <span class='kw'>sink</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>),
   <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='co'># Fit the model to the FOCUS example dataset D using defaults</span>
 <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='no'>fit.s</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>fit</span>)
@@ -278,15 +286,16 @@ The transformation of sets of formation fractions is fragile, as it supposes
 #&gt; k_parent   0.0635    0.00521   12.19 2.91e-14  0.0538  0.075
 #&gt; k_m1       0.0148    0.00182    8.13 8.81e-10  0.0115  0.019
 #&gt; sigma      8.2229    0.94323    8.72 1.73e-10  6.3060 10.140</div><div class='input'># }
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-      
+      <li><a href="#details">Details</a></li>
+      <li><a href="#functions">Functions</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
 

@@ -8,11 +8,13 @@
 
 <title>Fit a kinetic model to data with one or more state variables — mkinfit • mkin</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -32,18 +34,17 @@
 
 
 
-<meta property="og:title" content="Fit a kinetic model to data with one or more state variables — mkinfit" />
 
-<meta property="og:description" content="This function maximises the likelihood of the observed data using
-  the Port algorithm nlminb, and the specified initial or fixed
-  parameters and starting values.  In each step of the optimsation, the kinetic
-  model is solved using the function mkinpredict. The parameters
-  of the selected error model are fitted simultaneously with the degradation
-  model parameters, as both of them are arguments of the likelihood function.
-Per default, parameters in the kinetic models are internally transformed in
-  order to better satisfy the assumption of a normal distribution of their
-  estimators." />
+<meta property="og:title" content="Fit a kinetic model to data with one or more state variables — mkinfit" />
+<meta property="og:description" content="This function maximises the likelihood of the observed data using the Port
+algorithm nlminb, and the specified initial or fixed
+parameters and starting values.  In each step of the optimsation, the
+kinetic model is solved using the function mkinpredict. The
+parameters of the selected error model are fitted simultaneously with the
+degradation model parameters, as both of them are arguments of the
+likelihood function." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -117,7 +118,6 @@ Per default, parameters in the kinetic models are internally transformed in
   <a href="../news/index.html">News</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         
       </ul>
@@ -139,135 +139,126 @@ Per default, parameters in the kinetic models are internally transformed in
     </div>
 
     <div class="ref-description">
-    
-    <p>This function maximises the likelihood of the observed data using
-  the Port algorithm <code><a href='https://rdrr.io/r/stats/nlminb.html'>nlminb</a></code>, and the specified initial or fixed
-  parameters and starting values.  In each step of the optimsation, the kinetic
-  model is solved using the function <code><a href='mkinpredict.html'>mkinpredict</a></code>. The parameters
-  of the selected error model are fitted simultaneously with the degradation
-  model parameters, as both of them are arguments of the likelihood function.</p>
-<p>Per default, parameters in the kinetic models are internally transformed in
-  order to better satisfy the assumption of a normal distribution of their
-  estimators.</p>
-    
+    <p>This function maximises the likelihood of the observed data using the Port
+algorithm <code><a href='https://rdrr.io/r/stats/nlminb.html'>nlminb</a></code>, and the specified initial or fixed
+parameters and starting values.  In each step of the optimsation, the
+kinetic model is solved using the function <code><a href='mkinpredict.html'>mkinpredict</a></code>. The
+parameters of the selected error model are fitted simultaneously with the
+degradation model parameters, as both of them are arguments of the
+likelihood function.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>mkinfit</span>(<span class='no'>mkinmod</span>, <span class='no'>observed</span>,
-  <span class='kw'>parms.ini</span> <span class='kw'>=</span> <span class='st'>"auto"</span>,
-  <span class='kw'>state.ini</span> <span class='kw'>=</span> <span class='st'>"auto"</span>,
-  <span class='kw'>err.ini</span> <span class='kw'>=</span> <span class='st'>"auto"</span>,
-  <span class='kw'>fixed_parms</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fixed_initials</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>mkinmod</span>$<span class='no'>diffs</span>)[-<span class='fl'>1</span>],
-  <span class='kw'>from_max_mean</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+    <pre class="usage"><span class='fu'>mkinfit</span>(<span class='no'>mkinmod</span>, <span class='no'>observed</span>, <span class='kw'>parms.ini</span> <span class='kw'>=</span> <span class='st'>"auto"</span>, <span class='kw'>state.ini</span> <span class='kw'>=</span> <span class='st'>"auto"</span>,
+  <span class='kw'>err.ini</span> <span class='kw'>=</span> <span class='st'>"auto"</span>, <span class='kw'>fixed_parms</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>fixed_initials</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>mkinmod</span>$<span class='no'>diffs</span>)[-<span class='fl'>1</span>], <span class='kw'>from_max_mean</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"auto"</span>, <span class='st'>"analytical"</span>, <span class='st'>"eigen"</span>, <span class='st'>"deSolve"</span>),
-  <span class='kw'>method.ode</span> <span class='kw'>=</span> <span class='st'>"lsoda"</span>,
-  <span class='kw'>use_compiled</span> <span class='kw'>=</span> <span class='st'>"auto"</span>,
+  <span class='kw'>method.ode</span> <span class='kw'>=</span> <span class='st'>"lsoda"</span>, <span class='kw'>use_compiled</span> <span class='kw'>=</span> <span class='st'>"auto"</span>,
   <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>eval.max</span> <span class='kw'>=</span> <span class='fl'>300</span>, <span class='kw'>iter.max</span> <span class='kw'>=</span> <span class='fl'>200</span>),
-  <span class='kw'>transform_rates</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>transform_fractions</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>atol</span> <span class='kw'>=</span> <span class='fl'>1e-8</span>, <span class='kw'>rtol</span> <span class='kw'>=</span> <span class='fl'>1e-10</span>, <span class='kw'>n.outtimes</span> <span class='kw'>=</span> <span class='fl'>100</span>,
+  <span class='kw'>transform_rates</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>transform_fractions</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>atol</span> <span class='kw'>=</span> <span class='fl'>1e-08</span>, <span class='kw'>rtol</span> <span class='kw'>=</span> <span class='fl'>1e-10</span>, <span class='kw'>n.outtimes</span> <span class='kw'>=</span> <span class='fl'>100</span>,
   <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"const"</span>, <span class='st'>"obs"</span>, <span class='st'>"tc"</span>),
-  <span class='kw'>error_model_algorithm</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"auto"</span>, <span class='st'>"d_3"</span>, <span class='st'>"direct"</span>, <span class='st'>"twostep"</span>, <span class='st'>"threestep"</span>,
-    <span class='st'>"fourstep"</span>, <span class='st'>"IRLS"</span>, <span class='st'>"OLS"</span>),
-  <span class='kw'>reweight.tol</span> <span class='kw'>=</span> <span class='fl'>1e-8</span>, <span class='kw'>reweight.max.iter</span> <span class='kw'>=</span> <span class='fl'>10</span>,
-  <span class='kw'>trace_parms</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
-    
+  <span class='kw'>error_model_algorithm</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"auto"</span>, <span class='st'>"d_3"</span>, <span class='st'>"direct"</span>, <span class='st'>"twostep"</span>,
+  <span class='st'>"threestep"</span>, <span class='st'>"fourstep"</span>, <span class='st'>"IRLS"</span>, <span class='st'>"OLS"</span>), <span class='kw'>reweight.tol</span> <span class='kw'>=</span> <span class='fl'>1e-08</span>,
+  <span class='kw'>reweight.max.iter</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>trace_parms</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>mkinmod</th>
-      <td><p>A list of class <code><a href='mkinmod.html'>mkinmod</a></code>, containing the kinetic model to be
-    fitted to the data, or one of the shorthand names ("SFO", "FOMC", "DFOP",
-    "HS", "SFORB", "IORE"). If a shorthand name is given, a parent only degradation
-    model is generated for the variable with the highest value in
-    <code>observed</code>.</p></td>
+      <td><p>A list of class <code><a href='mkinmod.html'>mkinmod</a></code>, containing the kinetic
+model to be fitted to the data, or one of the shorthand names ("SFO",
+"FOMC", "DFOP", "HS", "SFORB", "IORE"). If a shorthand name is given, a
+parent only degradation model is generated for the variable with the
+highest value in <code>observed</code>.</p></td>
     </tr>
     <tr>
       <th>observed</th>
-      <td><p>A dataframe with the observed data.  The first column called "name" must
-    contain the name of the observed variable for each data point. The second
-    column must contain the times of observation, named "time".  The third
-    column must be named "value" and contain the observed values. Zero values
-    in the "value" column will be removed, with a warning, in order to
-    avoid problems with fitting the two-component error model. This is not
-    expected to be a problem, because in general, values of zero are not
-    observed in degradation data, because there is a lower limit of detection.</p></td>
+      <td><p>A dataframe with the observed data.  The first column called
+"name" must contain the name of the observed variable for each data point.
+The second column must contain the times of observation, named "time".
+The third column must be named "value" and contain the observed values.
+Zero values in the "value" column will be removed, with a warning, in
+order to avoid problems with fitting the two-component error model. This
+is not expected to be a problem, because in general, values of zero are
+not observed in degradation data, because there is a lower limit of
+detection.</p></td>
     </tr>
     <tr>
       <th>parms.ini</th>
-      <td><p>A named vector of initial values for the parameters, including parameters
-    to be optimised and potentially also fixed parameters as indicated by
-    <code>fixed_parms</code>.  If set to "auto", initial values for rate constants
-    are set to default values.  Using parameter names that are not in the model
-    gives an error.</p>
+      <td><p>A named vector of initial values for the parameters,
+  including parameters to be optimised and potentially also fixed parameters
+  as indicated by <code>fixed_parms</code>.  If set to "auto", initial values for
+  rate constants are set to default values.  Using parameter names that are
+  not in the model gives an error.</p>
 <p>It is possible to only specify a subset of the parameters that the model
-    needs. You can use the parameter lists "bparms.ode" from a previously
-    fitted model, which contains the differential equation parameters from this
-    model. This works nicely if the models are nested. An example is given
-    below.</p></td>
+  needs. You can use the parameter lists "bparms.ode" from a previously
+  fitted model, which contains the differential equation parameters from
+  this model.  This works nicely if the models are nested. An example is
+  given below.</p></td>
     </tr>
     <tr>
       <th>state.ini</th>
-      <td><p>A named vector of initial values for the state variables of the model. In
-    case the observed variables are represented by more than one model
-    variable, the names will differ from the names of the observed variables
-    (see <code>map</code> component of <code><a href='mkinmod.html'>mkinmod</a></code>). The default is to set
-    the initial value of the first model variable to the mean of the time zero
-    values for the variable with the maximum observed value, and all others to 0.
-    If this variable has no time zero observations, its initial value is set to 100.</p></td>
+      <td><p>A named vector of initial values for the state variables of
+the model. In case the observed variables are represented by more than one
+model variable, the names will differ from the names of the observed
+variables (see <code>map</code> component of <code><a href='mkinmod.html'>mkinmod</a></code>). The default
+is to set the initial value of the first model variable to the mean of the
+time zero values for the variable with the maximum observed value, and all
+others to 0.  If this variable has no time zero observations, its initial
+value is set to 100.</p></td>
     </tr>
     <tr>
       <th>err.ini</th>
-      <td><p>A named vector of initial values for the error model parameters to be
-    optimised.  If set to "auto", initial values are set to default values.
-    Otherwise, inital values for all error model parameters must be
-    given.</p></td>
+      <td><p>A named vector of initial values for the error model
+parameters to be optimised.  If set to "auto", initial values are set to
+default values.  Otherwise, inital values for all error model parameters
+must be given.</p></td>
     </tr>
     <tr>
       <th>fixed_parms</th>
-      <td><p>The names of parameters that should not be optimised but rather kept at the
-    values specified in <code>parms.ini</code>.</p></td>
+      <td><p>The names of parameters that should not be optimised but
+rather kept at the values specified in <code>parms.ini</code>.</p></td>
     </tr>
     <tr>
       <th>fixed_initials</th>
-      <td><p>The names of model variables for which the initial state at time 0 should
-    be excluded from the optimisation. Defaults to all state variables except
-    for the first one.</p></td>
+      <td><p>The names of model variables for which the initial
+state at time 0 should be excluded from the optimisation. Defaults to all
+state variables except for the first one.</p></td>
     </tr>
     <tr>
       <th>from_max_mean</th>
-      <td><p>If this is set to TRUE, and the model has only one observed variable, then
-    data before the time of the maximum observed value (after averaging for each
-    sampling time) are discarded, and this time is subtracted from all
-    remaining time values, so the time of the maximum observed mean value is
-    the new time zero.</p></td>
+      <td><p>If this is set to TRUE, and the model has only one
+observed variable, then data before the time of the maximum observed value
+(after averaging for each sampling time) are discarded, and this time is
+subtracted from all remaining time values, so the time of the maximum
+observed mean value is the new time zero.</p></td>
     </tr>
     <tr>
       <th>solution_type</th>
-      <td><p>If set to "eigen", the solution of the system of differential equations is
-    based on the spectral decomposition of the coefficient matrix in cases that
-    this is possible. If set to "deSolve", a numerical ode solver from package
-    <code>deSolve</code> is used. If set to "analytical", an analytical
-    solution of the model is used. This is only implemented for simple
-    degradation experiments with only one state variable, i.e. with no
-    metabolites. The default is "auto", which uses "analytical" if possible,
-    otherwise "deSolve" if a compiler is present, and "eigen" if no
-    compiler is present and the model can be expressed using eigenvalues and
-    eigenvectors.  This argument is passed on to the helper function
-    <code><a href='mkinpredict.html'>mkinpredict</a></code>.</p></td>
+      <td><p>If set to "eigen", the solution of the system of
+differential equations is based on the spectral decomposition of the
+coefficient matrix in cases that this is possible. If set to "deSolve", a
+numerical ode solver from package <code>deSolve</code> is used. If set to
+"analytical", an analytical solution of the model is used. This is only
+implemented for simple degradation experiments with only one state
+variable, i.e. with no metabolites. The default is "auto", which uses
+"analytical" if possible, otherwise "deSolve" if a compiler is present,
+and "eigen" if no compiler is present and the model can be expressed using
+eigenvalues and eigenvectors.  This argument is passed on to the helper
+function <code><a href='mkinpredict.html'>mkinpredict</a></code>.</p></td>
     </tr>
     <tr>
       <th>method.ode</th>
-      <td><p>The solution method passed via <code><a href='mkinpredict.html'>mkinpredict</a></code> to
-    <code>ode</code> in case the solution type is "deSolve". The default
-    "lsoda" is performant, but sometimes fails to converge.</p></td>
+      <td><p>The solution method passed via <code><a href='mkinpredict.html'>mkinpredict</a></code>
+to <code>ode</code> in case the solution type is "deSolve". The default
+"lsoda" is performant, but sometimes fails to converge.</p></td>
     </tr>
     <tr>
       <th>use_compiled</th>
-      <td><p>If set to <code>FALSE</code>, no compiled version of the <code><a href='mkinmod.html'>mkinmod</a></code>
-    model is used in the calls to <code><a href='mkinpredict.html'>mkinpredict</a></code> even if a compiled
-    version is present.</p></td>
+      <td><p>If set to <code>FALSE</code>, no compiled version of the
+<code><a href='mkinmod.html'>mkinmod</a></code> model is used in the calls to
+<code><a href='mkinpredict.html'>mkinpredict</a></code> even if a compiled version is present.</p></td>
     </tr>
     <tr>
       <th>control</th>
@@ -275,92 +266,90 @@ Per default, parameters in the kinetic models are internally transformed in
     </tr>
     <tr>
       <th>transform_rates</th>
-      <td><p>Boolean specifying if kinetic rate constants should be transformed in the
-    model specification used in the fitting for better compliance with the
-    assumption of normal distribution of the estimator. If TRUE, also
-    alpha and beta parameters of the FOMC model are log-transformed, as well
-    as k1 and k2 rate constants for the DFOP and HS models and the break point
-    tb of the HS model.  If FALSE, zero is used as a lower bound for the rates
-    in the optimisation.</p></td>
+      <td><p>Boolean specifying if kinetic rate constants should
+be transformed in the model specification used in the fitting for better
+compliance with the assumption of normal distribution of the estimator. If
+TRUE, also alpha and beta parameters of the FOMC model are
+log-transformed, as well as k1 and k2 rate constants for the DFOP and HS
+models and the break point tb of the HS model.  If FALSE, zero is used as
+a lower bound for the rates in the optimisation.</p></td>
     </tr>
     <tr>
       <th>transform_fractions</th>
-      <td><p>Boolean specifying if formation fractions constants should be transformed in the
-    model specification used in the fitting for better compliance with the
-    assumption of normal distribution of the estimator. The default (TRUE) is
-    to do transformations. If TRUE, the g parameter of the DFOP and HS
-    models are also transformed, as they can also be seen as compositional
-    data. The transformation used for these transformations is the
-    <code><a href='ilr.html'>ilr</a></code> transformation.</p></td>
+      <td><p>Boolean specifying if formation fractions
+constants should be transformed in the model specification used in the
+fitting for better compliance with the assumption of normal distribution
+of the estimator. The default (TRUE) is to do transformations. If TRUE,
+the g parameter of the DFOP and HS models are also transformed, as they
+can also be seen as compositional data. The transformation used for these
+transformations is the <code><a href='ilr.html'>ilr</a></code> transformation.</p></td>
     </tr>
     <tr>
       <th>quiet</th>
-      <td><p>Suppress printing out the current value of the negative log-likelihood
-    after each improvement?</p></td>
+      <td><p>Suppress printing out the current value of the negative
+log-likelihood after each improvement?</p></td>
     </tr>
     <tr>
       <th>atol</th>
-      <td><p>Absolute error tolerance, passed to <code>ode</code>. Default is 1e-8,
-    lower than in <code>lsoda</code>.</p></td>
+      <td><p>Absolute error tolerance, passed to <code>ode</code>. Default
+is 1e-8, lower than in <code>lsoda</code>.</p></td>
     </tr>
     <tr>
       <th>rtol</th>
-      <td><p>Absolute error tolerance, passed to <code>ode</code>. Default is 1e-10,
-    much lower than in <code>lsoda</code>.</p></td>
+      <td><p>Absolute error tolerance, passed to <code>ode</code>. Default
+is 1e-10, much lower than in <code>lsoda</code>.</p></td>
     </tr>
     <tr>
       <th>n.outtimes</th>
-      <td><p>The length of the dataseries that is produced by the model prediction
-    function <code><a href='mkinpredict.html'>mkinpredict</a></code>. This impacts the accuracy of
-    the numerical solver if that is used (see <code>solution_type</code> argument.
-    The default value is 100.</p></td>
+      <td><p>The length of the dataseries that is produced by the model
+prediction function <code><a href='mkinpredict.html'>mkinpredict</a></code>. This impacts the accuracy
+of the numerical solver if that is used (see <code>solution_type</code>
+argument.  The default value is 100.</p></td>
     </tr>
     <tr>
       <th>error_model</th>
-      <td><p>If the error model is "const", a constant standard deviation
-    is assumed.</p>
+      <td><p>If the error model is "const", a constant standard
+  deviation is assumed.</p>
 <p>If the error model is "obs", each observed variable is assumed to have its
-    own variance.</p>
+  own variance.</p>
 <p>If the error model is "tc" (two-component error model), a two component
-    error model similar to the one described by Rocke and Lorenzato (1995) is
-    used for setting up the likelihood function.  Note that this model deviates
-    from the model by Rocke and Lorenzato, as their model implies that the
-    errors follow a lognormal distribution for large values, not a normal
-    distribution as assumed by this method.</p></td>
+  error model similar to the one described by Rocke and Lorenzato (1995) is
+  used for setting up the likelihood function.  Note that this model
+  deviates from the model by Rocke and Lorenzato, as their model implies
+  that the errors follow a lognormal distribution for large values, not a
+  normal distribution as assumed by this method.</p></td>
     </tr>
     <tr>
       <th>error_model_algorithm</th>
-      <td><p>If "auto", the selected algorithm depends on the error model. 
-    If the error model is "const", nonlinear least squares fitting ("OLS") is
-    selected. If the error model is "obs", iteratively reweighted least squares
-    fitting ("IRLS") is selected. If the error model is "tc", the "d_3" 
-    algorithm is selected.</p>
-<p>The algorithm "d_3" will directly minimize the negative
-    log-likelihood and - independently - also use the three step algorithm
-    described below. The fit with the higher likelihood is returned.</p>
-<p>The algorithm "direct" will directly minimize the negative
-    log-likelihood.</p>
-<p>The algorithm "twostep" will minimize the negative log-likelihood
-    after an initial unweighted least squares optimisation step.</p>
-<p>The algorithm "threestep" starts with unweighted least squares,
-    then optimizes only the error model using the degradation model
-    parameters found, and then minimizes the negative log-likelihood
-    with free degradation and error model parameters.</p>
-<p>The algorithm "fourstep" starts with unweighted least squares,
-    then optimizes only the error model using the degradation model
-    parameters found, then optimizes the degradation model again
-    with fixed error model parameters, and finally minimizes the negative
-    log-likelihood with free degradation and error model parameters.</p>
+      <td><p>If "auto", the selected algorithm depends on
+  the error model.  If the error model is "const", unweighted nonlinear
+  least squares fitting ("OLS") is selected. If the error model is "obs", or
+  "tc", the "d_3" algorithm is selected.</p>
+<p>The algorithm "d_3" will directly minimize the negative log-likelihood and
+  - independently - also use the three step algorithm described below. The
+  fit with the higher likelihood is returned.</p>
+<p>The algorithm "direct" will directly minimize the negative log-likelihood.</p>
+<p>The algorithm "twostep" will minimize the negative log-likelihood after an
+  initial unweighted least squares optimisation step.</p>
+<p>The algorithm "threestep" starts with unweighted least squares, then
+  optimizes only the error model using the degradation model parameters
+  found, and then minimizes the negative log-likelihood with free
+  degradation and error model parameters.</p>
+<p>The algorithm "fourstep" starts with unweighted least squares, then
+  optimizes only the error model using the degradation model parameters
+  found, then optimizes the degradation model again with fixed error model
+  parameters, and finally minimizes the negative log-likelihood with free
+  degradation and error model parameters.</p>
 <p>The algorithm "IRLS" (Iteratively Reweighted Least Squares) starts with
-    unweighted least squares, and then iterates optimization of the error model
-    parameters and subsequent
-    optimization of the degradation model using those error model parameters,
-    until the error model parameters converge.</p></td>
+  unweighted least squares, and then iterates optimization of the error
+  model parameters and subsequent optimization of the degradation model
+  using those error model parameters, until the error model parameters
+  converge.</p></td>
     </tr>
     <tr>
       <th>reweight.tol</th>
-      <td><p>Tolerance for the convergence criterion calculated from the error model
-    parameters in IRLS fits.</p></td>
+      <td><p>Tolerance for the convergence criterion calculated from
+the error model parameters in IRLS fits.</p></td>
     </tr>
     <tr>
       <th>reweight.max.iter</th>
@@ -372,50 +361,54 @@ Per default, parameters in the kinetic models are internally transformed in
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Further arguments that will be passed on to <code>deSolve</code>.</p></td>
+      <td><p>Further arguments that will be passed on to
+<code>deSolve</code>.</p></td>
     </tr>
     </table>
-    
+
+    <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
+
+    <p>Rocke, David M. und Lorenzato, Stefan (1995) A two-component model
+  for measurement error in analytical chemistry. Technometrics 37(2), 176-184.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list with "mkinfit" in the class attribute.  A summary can be obtained by
-  <code><a href='summary.mkinfit.html'>summary.mkinfit</a></code>.</p>
-    
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+    <p>A list with "mkinfit" in the class attribute.  A summary can be
+  obtained by <code><a href='summary.mkinfit.html'>summary.mkinfit</a></code>.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <div class='dont-index'><p>Plotting methods <code><a href='plot.mkinfit.html'>plot.mkinfit</a></code> and <code><a href='mkinparplot.html'>mkinparplot</a></code>.</p>
-<p>Comparisons of models fitted to the same data can be made using <code><a href='https://rdrr.io/r/stats/AIC.html'>AIC</a></code>
-  by virtue of the method <code><a href='logLik.mkinfit.html'>logLik.mkinfit</a></code>.</p>
-<p>Fitting of several models to several datasets in a single call to
-  <code><a href='mmkin.html'>mmkin</a></code>.</p></div>
-    
+    <p>Per default, parameters in the kinetic models are internally transformed in
+order to better satisfy the assumption of a normal distribution of their
+estimators.</p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
     <p>When using the "IORE" submodel for metabolites, fitting with
   "transform_rates = TRUE" (the default) often leads to failures of the
   numerical ODE solver. In this situation it may help to switch off the
   internal rate transformation.</p>
-    
-    <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p>Rocke, David M. und Lorenzato, Stefan (1995) A two-component model for
-  measurement error in analytical chemistry. Technometrics 37(2), 176-184.</p>
-    
+    <div class='dont-index'><p>Plotting methods <code><a href='plot.mkinfit.html'>plot.mkinfit</a></code> and
+  <code><a href='mkinparplot.html'>mkinparplot</a></code>.</p>
+<p>Comparisons of models fitted to the same data can be made using
+  <code><a href='https://rdrr.io/r/stats/AIC.html'>AIC</a></code> by virtue of the method <code><a href='logLik.mkinfit.html'>logLik.mkinfit</a></code>.</p>
+<p>Fitting of several models to several datasets in a single call to
+  <code><a href='mmkin.html'>mmkin</a></code>.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># Use shorthand notation for parent only degradation</span>
+    <pre class="examples"><div class='input'>
+<span class='co'># Use shorthand notation for parent only degradation</span>
 <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='st'>"FOMC"</span>, <span class='no'>FOCUS_2006_C</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.49.6 
 #&gt; R version used for fitting:       3.6.1 
-#&gt; Date of fit:     Mon Oct 21 12:07:39 2019 
-#&gt; Date of summary: Mon Oct 21 12:07:39 2019 
+#&gt; Date of fit:     Fri Oct 25 02:08:07 2019 
+#&gt; Date of summary: Fri Oct 25 02:08:07 2019 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent
 #&gt; 
 #&gt; Model predictions using solution type analytical 
 #&gt; 
-#&gt; Fitted using 222 model solutions performed in 0.459 s
+#&gt; Fitted using 222 model solutions performed in 0.453 s
 #&gt; 
 #&gt; Error model: Constant variance 
 #&gt; 
@@ -487,7 +480,7 @@ Per default, parameters in the kinetic models are internally transformed in
   <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='co'># Fit the model to the FOCUS example dataset D using defaults</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>,
                            <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"eigen"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)))</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='output co'>#&gt;        User      System verstrichen 
-#&gt;       1.462       0.000       1.463 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; NULL</div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; $ff
+#&gt;       1.447       0.000       1.448 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; NULL</div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; $ff
 #&gt; parent_sink   parent_m1     m1_sink 
 #&gt;    0.485524    0.514476    1.000000 
 #&gt; 
@@ -560,7 +553,7 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt; Sum of squared residuals at call 126: 371.2134
 #&gt; Sum of squared residuals at call 135: 371.2134
 #&gt; Negative log-likelihood at call 145: 97.22429</div><div class='output co'>#&gt; <span class='message'>Optimisation successfully terminated.</span></div><div class='output co'>#&gt;        User      System verstrichen 
-#&gt;        1.04        0.00        1.04 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt; NULL</div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt; $ff
+#&gt;       1.032       0.000       1.032 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/coef.html'>coef</a></span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt; NULL</div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt; $ff
 #&gt; parent_sink   parent_m1     m1_sink 
 #&gt;    0.485524    0.514476    1.000000 
 #&gt; 
@@ -596,8 +589,8 @@ Per default, parameters in the kinetic models are internally transformed in
 <span class='no'>SFO_SFO.ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>),
                       <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='no'>f.noweight</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>f.noweight</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.49.6 
 #&gt; R version used for fitting:       3.6.1 
-#&gt; Date of fit:     Mon Oct 21 12:07:54 2019 
-#&gt; Date of summary: Mon Oct 21 12:07:54 2019 
+#&gt; Date of fit:     Fri Oct 25 02:08:22 2019 
+#&gt; Date of summary: Fri Oct 25 02:08:22 2019 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -605,7 +598,7 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted using 421 model solutions performed in 1.07 s
+#&gt; Fitted using 421 model solutions performed in 1.062 s
 #&gt; 
 #&gt; Error model: Constant variance 
 #&gt; 
@@ -713,8 +706,8 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt;   120       m1    25.15  28.78984 -3.640e+00
 #&gt;   120       m1    33.31  28.78984  4.520e+00</div><div class='input'><span class='no'>f.obs</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"obs"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>f.obs</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.49.6 
 #&gt; R version used for fitting:       3.6.1 
-#&gt; Date of fit:     Mon Oct 21 12:07:56 2019 
-#&gt; Date of summary: Mon Oct 21 12:07:56 2019 
+#&gt; Date of fit:     Fri Oct 25 02:08:25 2019 
+#&gt; Date of summary: Fri Oct 25 02:08:25 2019 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -722,11 +715,12 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted using 897 model solutions performed in 2.363 s
+#&gt; Fitted using 978 model solutions performed in 2.523 s
 #&gt; 
 #&gt; Error model: Variance unique to each observed variable 
 #&gt; 
-#&gt; Error model algorithm: IRLS 
+#&gt; Error model algorithm: d_3 
+#&gt; Direct fitting and three-step fitting yield approximately the same likelihood 
 #&gt; 
 #&gt; Starting values for parameters to be optimised:
 #&gt;                   value   type
@@ -761,16 +755,16 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt; 
 #&gt; Parameter correlation:
 #&gt;                parent_0 log_k_parent log_k_m1 f_parent_ilr_1 sigma_parent
-#&gt; parent_0        1.00000      0.51078 -0.19132       -0.59997     0.035676
-#&gt; log_k_parent    0.51078      1.00000 -0.37457       -0.59239     0.069834
-#&gt; log_k_m1       -0.19132     -0.37457  1.00000        0.74398    -0.026158
-#&gt; f_parent_ilr_1 -0.59997     -0.59239  0.74398        1.00000    -0.041371
-#&gt; sigma_parent    0.03568      0.06983 -0.02616       -0.04137     1.000000
-#&gt; sigma_m1       -0.03385     -0.06626  0.02482        0.03926    -0.004628
+#&gt; parent_0        1.00000      0.51078 -0.19133       -0.59997     0.035670
+#&gt; log_k_parent    0.51078      1.00000 -0.37458       -0.59239     0.069833
+#&gt; log_k_m1       -0.19133     -0.37458  1.00000        0.74398    -0.026158
+#&gt; f_parent_ilr_1 -0.59997     -0.59239  0.74398        1.00000    -0.041369
+#&gt; sigma_parent    0.03567      0.06983 -0.02616       -0.04137     1.000000
+#&gt; sigma_m1       -0.03385     -0.06627  0.02482        0.03926    -0.004628
 #&gt;                 sigma_m1
 #&gt; parent_0       -0.033847
 #&gt; log_k_parent   -0.066265
-#&gt; log_k_m1        0.024824
+#&gt; log_k_m1        0.024823
 #&gt; f_parent_ilr_1  0.039256
 #&gt; sigma_parent   -0.004628
 #&gt; sigma_m1        1.000000
@@ -784,7 +778,7 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt; k_parent        0.098970  22.850 1.099e-21  0.090530 1.082e-01
 #&gt; k_m1            0.005245   8.046 1.732e-09  0.004072 6.756e-03
 #&gt; f_parent_to_m1  0.513600  23.560 4.352e-22  0.469300 5.578e-01
-#&gt; sigma_parent    3.401000   5.985 5.661e-07  2.244000 4.559e+00
+#&gt; sigma_parent    3.401000   5.985 5.662e-07  2.244000 4.559e+00
 #&gt; sigma_m1        2.855000   6.311 2.215e-07  1.934000 3.777e+00
 #&gt; 
 #&gt; FOCUS Chi2 error levels in percent:
@@ -805,47 +799,47 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt; 
 #&gt; Data:
 #&gt;  time variable observed predicted   residual
-#&gt;     0   parent    99.46  99.65420 -1.942e-01
-#&gt;     0   parent   102.04  99.65420  2.386e+00
-#&gt;     1   parent    93.50  90.26335  3.237e+00
-#&gt;     1   parent    92.50  90.26335  2.237e+00
-#&gt;     3   parent    63.23  74.05308 -1.082e+01
-#&gt;     3   parent    68.99  74.05308 -5.063e+00
-#&gt;     7   parent    52.32  49.84326  2.477e+00
-#&gt;     7   parent    55.13  49.84326  5.287e+00
+#&gt;     0   parent    99.46  99.65417 -1.942e-01
+#&gt;     0   parent   102.04  99.65417  2.386e+00
+#&gt;     1   parent    93.50  90.26332  3.237e+00
+#&gt;     1   parent    92.50  90.26332  2.237e+00
+#&gt;     3   parent    63.23  74.05306 -1.082e+01
+#&gt;     3   parent    68.99  74.05306 -5.063e+00
+#&gt;     7   parent    52.32  49.84325  2.477e+00
+#&gt;     7   parent    55.13  49.84325  5.287e+00
 #&gt;    14   parent    27.27  24.92971  2.340e+00
 #&gt;    14   parent    26.64  24.92971  1.710e+00
 #&gt;    21   parent    11.50  12.46890 -9.689e-01
 #&gt;    21   parent    11.64  12.46890 -8.289e-01
 #&gt;    35   parent     2.85   3.11925 -2.692e-01
 #&gt;    35   parent     2.91   3.11925 -2.092e-01
-#&gt;    50   parent     0.69   0.70678 -1.678e-02
-#&gt;    50   parent     0.63   0.70678 -7.678e-02
+#&gt;    50   parent     0.69   0.70679 -1.679e-02
+#&gt;    50   parent     0.63   0.70679 -7.679e-02
 #&gt;    75   parent     0.05   0.05952 -9.523e-03
 #&gt;    75   parent     0.06   0.05952  4.772e-04
 #&gt;     1       m1     4.84   4.81075  2.925e-02
 #&gt;     1       m1     5.64   4.81075  8.292e-01
-#&gt;     3       m1    12.91  13.04197 -1.320e-01
-#&gt;     3       m1    12.96  13.04197 -8.197e-02
-#&gt;     7       m1    22.97  25.06848 -2.098e+00
-#&gt;     7       m1    24.47  25.06848 -5.985e-01
+#&gt;     3       m1    12.91  13.04196 -1.320e-01
+#&gt;     3       m1    12.96  13.04196 -8.196e-02
+#&gt;     7       m1    22.97  25.06847 -2.098e+00
+#&gt;     7       m1    24.47  25.06847 -5.985e-01
 #&gt;    14       m1    41.69  36.70308  4.987e+00
 #&gt;    14       m1    33.21  36.70308 -3.493e+00
 #&gt;    21       m1    44.37  41.65115  2.719e+00
 #&gt;    21       m1    46.44  41.65115  4.789e+00
 #&gt;    35       m1    41.22  43.29465 -2.075e+00
 #&gt;    35       m1    37.95  43.29465 -5.345e+00
-#&gt;    50       m1    41.19  41.19948 -9.477e-03
+#&gt;    50       m1    41.19  41.19948 -9.479e-03
 #&gt;    50       m1    40.01  41.19948 -1.189e+00
 #&gt;    75       m1    40.09  36.44035  3.650e+00
 #&gt;    75       m1    33.85  36.44035 -2.590e+00
-#&gt;   100       m1    31.04  31.98772 -9.477e-01
-#&gt;   100       m1    33.13  31.98772  1.142e+00
-#&gt;   120       m1    25.15  28.80428 -3.654e+00
-#&gt;   120       m1    33.31  28.80428  4.506e+00</div><div class='input'><span class='no'>f.tc</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"tc"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>f.tc</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.49.6 
+#&gt;   100       m1    31.04  31.98773 -9.477e-01
+#&gt;   100       m1    33.13  31.98773  1.142e+00
+#&gt;   120       m1    25.15  28.80429 -3.654e+00
+#&gt;   120       m1    33.31  28.80429  4.506e+00</div><div class='input'><span class='no'>f.tc</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"tc"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>f.tc</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.49.6 
 #&gt; R version used for fitting:       3.6.1 
-#&gt; Date of fit:     Mon Oct 21 12:08:06 2019 
-#&gt; Date of summary: Mon Oct 21 12:08:06 2019 
+#&gt; Date of fit:     Fri Oct 25 02:08:34 2019 
+#&gt; Date of summary: Fri Oct 25 02:08:34 2019 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -853,7 +847,7 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt; 
 #&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted using 2289 model solutions performed in 9.175 s
+#&gt; Fitted using 2289 model solutions performed in 9.136 s
 #&gt; 
 #&gt; Error model: Two-component variance function 
 #&gt; 
@@ -969,21 +963,18 @@ Per default, parameters in the kinetic models are internally transformed in
 #&gt;   120       m1    25.15  29.04130  -3.891304
 #&gt;   120       m1    33.31  29.04130   4.268696</div><div class='input'># }
 
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-
-      <li><a href="#see-also">See also</a></li>
-
-      <li><a href="#note">Note</a></li>
-
       <li><a href="#source">Source</a></li>
-      
+      <li><a href="#value">Value</a></li>
+      <li><a href="#details">Details</a></li>
+      <li><a href="#note">Note</a></li>
+      <li><a href="#see-also">See also</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
 
