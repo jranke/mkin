@@ -1,40 +1,123 @@
-# Copyright (C) 2019 Johannes Ranke
-# Contact: jranke@uni-bremen.de
-
-# This file is part of the R package mkin
-
-# mkin is free software: you can redistribute it and/or modify it under the
-# terms of the GNU General Public License as published by the Free Software
-# Foundation, either version 3 of the License, or (at your option) any later
-# version.
-
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
-# details.
-
-# You should have received a copy of the GNU General Public License along with
-# this program. If not, see <http://www.gnu.org/licenses/>
-
 context("Confidence intervals and p-values")
 
-test_that("Confidence intervals are stable", {
-  bpar_1 <- summary(f_SFO_lin_mkin_ML)$bpar[, c("Estimate", "Lower", "Upper")]
-  # The reference used here is mkin 0.9.48.1
-  bpar_1_mkin_0.9 <-   read.table(text =
-"parent_0       102.0000 98.6000 106.0000
-k_parent         0.7390  0.6770   0.8070
-k_M1             0.2990  0.2560   0.3490
-k_M2             0.0202  0.0176   0.0233
-f_parent_to_M1   0.7690  0.6640   0.8480
-f_M1_to_M2       0.7230  0.6030   0.8180",
-col.names = c("parameter", "estimate", "lower", "upper"))
+test_that("The confint method 'quadratic' is consistent with the summary", {
+  expect_equivalent(
+    confint(f_SFO_lin_mkin_ML, method = "quadratic"),
+    summary(f_SFO_lin_mkin_ML)$bpar[, c("Lower", "Upper")])
 
-  expect_equivalent(signif(bpar_1[1:6, "Estimate"], 3), bpar_1_mkin_0.9$estimate)
+  expect_equivalent(
+    confint(f_SFO_lin_mkin_ML, method = "quadratic", backtransform = FALSE),
+    summary(f_SFO_lin_mkin_ML)$par[, c("Lower", "Upper")])
 
-  # Relative difference of lower bound of the confidence interval is < 0.02
-  expect_equivalent(bpar_1[1:6, "Lower"], bpar_1_mkin_0.9$lower,
-      scale = bpar_1_mkin_0.9$lower, tolerance = 0.02)
-  expect_equivalent(f_SFO_lin_mkin_OLS$bpar, f_SFO_lin_mkin_ML$bpar)
-  })
+  f_notrans <- mkinfit("SFO", FOCUS_2006_C, quiet = TRUE, transform_rates = FALSE)
+  expect_equivalent(
+    confint(f_notrans, method = "quadratic", transformed = FALSE),
+    summary(f_notrans)$par[, c("Lower", "Upper")])
 
+  expect_equivalent(
+    confint(f_notrans, method = "quadratic", transformed = FALSE),
+    summary(f_notrans)$bpar[, c("Lower", "Upper")])
+
+})
+
+test_that("Quadratic confidence intervals for rate constants are comparable to confint.nls", {
+
+  SFO_trans <- function(t, parent_0, log_k_parent_sink) {
+    parent_0 * exp(- exp(log_k_parent_sink) * t)
+  }
+  SFO_notrans <- function(t, parent_0, k_parent_sink) {
+    parent_0 * exp(- k_parent_sink * t)
+  }
+  f_1_nls_trans <- nls(value ~ SFO_trans(time, parent_0, log_k_parent_sink),
+    data = FOCUS_2006_A,
+    start = list(parent_0 = 100, log_k_parent_sink = log(0.1)))
+  f_1_nls_notrans <- nls(value ~ SFO_notrans(time, parent_0, k_parent_sink),
+    data = FOCUS_2006_A,
+    start = list(parent_0 = 100, k_parent_sink = 0.1))
+
+  f_1_mkin_OLS <- mkinfit("SFO", FOCUS_2006_A, quiet = TRUE)
+  f_1_mkin_OLS_notrans <- mkinfit("SFO", FOCUS_2006_A, quiet = TRUE,
+    transform_rates = FALSE)
+
+  # Check fitted parameter values
+  expect_equivalent(
+    (f_1_mkin_OLS$bparms.optim -coef(f_1_nls_notrans))/f_1_mkin_OLS$bparms.optim,
+    rep(0, 2), tolerance = 1e-6)
+  expect_equivalent(
+    (f_1_mkin_OLS$par[1:2] - coef(f_1_nls_trans))/f_1_mkin_OLS$par[1:2],
+    rep(0, 2), tolerance = 1e-6)
+
+  # Check the standard error for the transformed parameters
+  se_nls <- summary(f_1_nls_trans)$coefficients[, "Std. Error"]
+  # This is of similar magnitude as the standard error obtained with the mkin
+  se_mkin <- summary(f_1_mkin_OLS)$par[1:2, "Std. Error"]
+
+  se_nls_notrans <- summary(f_1_nls_notrans)$coefficients[, "Std. Error"]
+  # This is also of similar magnitude as the standard error obtained with the mkin
+  se_mkin_notrans <- summary(f_1_mkin_OLS_notrans)$par[1:2, "Std. Error"]
+
+  # The difference can partly be explained by the ratio between
+  # the maximum likelihood estimate of the standard error sqrt(rss/n)
+  # and the estimate used in nls sqrt(rss/rdf), i.e. by the factor
+  # sqrt(n/rdf).
+  # In the case of mkin, the residual degrees of freedom are only taken into
+  # account in the subsequent step of generating the confidence intervals for
+  # the parameters (including sigma)
+
+  # Strangely, this only works for the rate constant to less than 1%, but
+  # not for the initial estimate
+  expect_equivalent(se_nls[2] / se_mkin[2], sqrt(8/5), tolerance = 0.01)
+  expect_equivalent(se_nls_notrans[2] / se_mkin_notrans[2], sqrt(8/5), tolerance = 0.01)
+
+  # Another case:
+  f_2_mkin <- mkinfit("DFOP", FOCUS_2006_C, quiet = TRUE)
+  f_2_nls <- nls(value ~ SSbiexp(time, A1, lrc1, A2, lrc2), data = FOCUS_2006_C)
+  se_mkin_2 <- summary(f_2_mkin)$par[1:4, "Std. Error"]
+  se_nls_2 <- summary(f_2_nls)$coefficients[, "Std. Error"]
+  # Here we the ratio of standard errors can be explained by the same
+  # principle up to about 3%
+  expect_equivalent(
+    se_nls_2[c("lrc1", "lrc2")] / se_mkin_2[c("log_k1", "log_k2")],
+    rep(sqrt(nrow(FOCUS_2006_C) / (nrow(FOCUS_2006_C) - 4)), 2),
+    tolerance = 0.03)
+}
+
+test_that("Likelihood profile based confidence intervals work", {
+
+#   f <- mkinfit("SFO", FOCUS_2006_C, quiet = TRUE)
+#   f <- fits[["SFO", "FOCUS_C"]]
+#   f_notrans <- mkinfit("SFO", FOCUS_2006_C, quiet = TRUE, transform_rates = FALSE)
+#   pf <- parms(f)
+#   f_nll <- function(parent_0, k_parent_sink, sigma) {
+#     - f$ll(c(parent_0 = as.numeric(parent_0),
+#         k_parent_sink = as.numeric(k_parent_sink),
+#         sigma = as.numeric(sigma)))
+#   }
+#   f_nll(parent_0 = 100, k_parent_sink = 0.3, sigma = 4.7)
+#   f_nll(pf[1], pf[2], pf[3])
+#   f_mle <- stats4::mle(f_nll, start = as.list(parms(f)), nobs = nrow(FOCUS_2006_C))
+#   f_mle <- stats4::mle(f_nll, start = as.list(parms(f)), nobs = 17L)
+#   logLik(f_mle)
+#   stats4::confint(f_mle, nobs = nrow(FOCUS_2006_C))
+# 
+#     ci_mkin_1 <- confint(f,
+#       method = "quadratic", backtransform = FALSE,
+#       transformed = TRUE)
+#     ci_maxLik_1 <- maxLik::confint.maxLik(f_maxLik)
+# 
+#     f_tc_2_maxLik <- maxLik::maxLik(f_tc_2$ll,
+#       start = f_tc_2$par)
+#     ci_tc_2 <- confint(f_tc_2, method = "quadratic",
+#         backtransform = FALSE, transformed = TRUE,
+#         distribution = "normal")
+#     ci_tc_2_maxLik <- confint(f_tc_2_maxLik)
+#     rel_diff_ci_tc_2 <- (ci_tc_2 - ci_tc_2_maxLik)/ci_tc_2_maxLik
+#     # The ilr transformed variable appear to misbehave in the numeric differentiation
+#     expect_equivalent(
+#       rel_diff_ci_tc_2[c(2, 3, 4, 6, 7, 9, 10), ], rep(0, 14),
+#       tolerance = 0.05)
+# 
+#     ci_tc_2[, 1]
+#       ci_tc_2_maxLik[, 1]
+
+})

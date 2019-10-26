@@ -1,21 +1,3 @@
-# Copyright (C) 2016-2019 Johannes Ranke
-# Contact: jranke@uni-bremen.de
-
-# This file is part of the R package mkin
-
-# mkin is free software: you can redistribute it and/or modify it under the
-# terms of the GNU General Public License as published by the Free Software
-# Foundation, either version 3 of the License, or (at your option) any later
-# version.
-
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-# FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
-# details.
-
-# You should have received a copy of the GNU General Public License along with
-# this program. If not, see <http://www.gnu.org/licenses/>
-
 require(mkin)
 require(testthat)
 
@@ -76,5 +58,16 @@ f_SFO_lin_mkin_OLS <- mkinfit(m_synth_SFO_lin, SFO_lin_a, quiet = TRUE)
 f_SFO_lin_mkin_ML <- mkinfit(m_synth_SFO_lin, SFO_lin_a, quiet = TRUE,
   error_model = "const", error_model_algorithm = "direct")
 
-fit_obs_1 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, error_model = "obs", quiet = TRUE)
-fit_tc_1 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, error_model = "tc", quiet = TRUE)
+# We know direct optimization is OK and direct needs 4 sec versus 5.5 for threestep and 6 for IRLS
+fit_obs_1 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, error_model = "obs", quiet = TRUE,
+  error_model_algorithm = "direct")
+# We know threestep is OK, and threestep (and IRLS) need 4.8 se versus 5.6 for direct
+fit_tc_1 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, error_model = "tc", quiet = TRUE,
+  error_model_algorithm = "threestep")
+
+# We know direct optimization is OK and direct needs 8 sec versus 11 sec for threestep
+f_tc_2 <- mkinfit(m_synth_DFOP_par, DFOP_par_c, error_model = "tc",
+  error_model_algorithm = "direct", quiet = TRUE)
+
+f_tc_2_ntf <- mkinfit(m_synth_DFOP_par, DFOP_par_c, error_model = "tc",
+  transform_fractions = FALSE, error_model_algorithm = "direct", quiet = TRUE)

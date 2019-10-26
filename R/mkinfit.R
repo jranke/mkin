@@ -1,7 +1,7 @@
 if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 
 #' Fit a kinetic model to data with one or more state variables
-#' 
+#'
 #' This function maximises the likelihood of the observed data using the Port
 #' algorithm \code{\link{nlminb}}, and the specified initial or fixed
 #' parameters and starting values.  In each step of the optimsation, the
@@ -9,11 +9,11 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #' parameters of the selected error model are fitted simultaneously with the
 #' degradation model parameters, as both of them are arguments of the
 #' likelihood function.
-#' 
+#'
 #' Per default, parameters in the kinetic models are internally transformed in
 #' order to better satisfy the assumption of a normal distribution of their
 #' estimators.
-#' 
+#'
 #' @param mkinmod A list of class \code{\link{mkinmod}}, containing the kinetic
 #'   model to be fitted to the data, or one of the shorthand names ("SFO",
 #'   "FOMC", "DFOP", "HS", "SFORB", "IORE"). If a shorthand name is given, a
@@ -33,7 +33,7 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #'   as indicated by \code{fixed_parms}.  If set to "auto", initial values for
 #'   rate constants are set to default values.  Using parameter names that are
 #'   not in the model gives an error.
-#' 
+#'
 #'   It is possible to only specify a subset of the parameters that the model
 #'   needs. You can use the parameter lists "bparms.ode" from a previously
 #'   fitted model, which contains the differential equation parameters from
@@ -105,10 +105,10 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #'   argument.  The default value is 100.
 #' @param error_model If the error model is "const", a constant standard
 #'   deviation is assumed.
-#' 
+#'
 #'   If the error model is "obs", each observed variable is assumed to have its
 #'   own variance.
-#' 
+#'
 #'   If the error model is "tc" (two-component error model), a two component
 #'   error model similar to the one described by Rocke and Lorenzato (1995) is
 #'   used for setting up the likelihood function.  Note that this model
@@ -119,27 +119,27 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #'   the error model.  If the error model is "const", unweighted nonlinear
 #'   least squares fitting ("OLS") is selected. If the error model is "obs", or
 #'   "tc", the "d_3" algorithm is selected.
-#' 
+#'
 #'   The algorithm "d_3" will directly minimize the negative log-likelihood and
 #'   - independently - also use the three step algorithm described below. The
 #'   fit with the higher likelihood is returned.
-#' 
+#'
 #'   The algorithm "direct" will directly minimize the negative log-likelihood.
-#' 
+#'
 #'   The algorithm "twostep" will minimize the negative log-likelihood after an
 #'   initial unweighted least squares optimisation step.
-#' 
+#'
 #'   The algorithm "threestep" starts with unweighted least squares, then
 #'   optimizes only the error model using the degradation model parameters
 #'   found, and then minimizes the negative log-likelihood with free
 #'   degradation and error model parameters.
-#' 
+#'
 #'   The algorithm "fourstep" starts with unweighted least squares, then
 #'   optimizes only the error model using the degradation model parameters
 #'   found, then optimizes the degradation model again with fixed error model
 #'   parameters, and finally minimizes the negative log-likelihood with free
 #'   degradation and error model parameters.
-#' 
+#'
 #'   The algorithm "IRLS" (Iteratively Reweighted Least Squares) starts with
 #'   unweighted least squares, and then iterates optimization of the error
 #'   model parameters and subsequent optimization of the degradation model
@@ -161,20 +161,20 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #' @author Johannes Ranke
 #' @seealso Plotting methods \code{\link{plot.mkinfit}} and
 #'   \code{\link{mkinparplot}}.
-#' 
+#'
 #'   Comparisons of models fitted to the same data can be made using
 #'   \code{\link{AIC}} by virtue of the method \code{\link{logLik.mkinfit}}.
-#' 
+#'
 #'   Fitting of several models to several datasets in a single call to
 #'   \code{\link{mmkin}}.
 #' @source Rocke, David M. und Lorenzato, Stefan (1995) A two-component model
 #'   for measurement error in analytical chemistry. Technometrics 37(2), 176-184.
 #' @examples
-#' 
+#'
 #' # Use shorthand notation for parent only degradation
 #' fit <- mkinfit("FOMC", FOCUS_2006_C, quiet = TRUE)
 #' summary(fit)
-#' 
+#'
 #' # One parent compound, one metabolite, both single first order.
 #' # Use mkinsub for convenience in model formulation. Pathway to sink included per default.
 #' SFO_SFO <- mkinmod(
@@ -192,7 +192,7 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #' coef(fit.deSolve)
 #' endpoints(fit.deSolve)
 #' }
-#' 
+#'
 #' # Use stepwise fitting, using optimised parameters from parent only fit, FOMC
 #' \dontrun{
 #' FOMC_SFO <- mkinmod(
@@ -204,7 +204,7 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #' fit.FOMC = mkinfit("FOMC", FOCUS_2006_D, quiet = TRUE)
 #' fit.FOMC_SFO <- mkinfit(FOMC_SFO, FOCUS_2006_D, quiet = TRUE,
 #'   parms.ini = fit.FOMC$bparms.ode)
-#' 
+#'
 #' # Use stepwise fitting, using optimised parameters from parent only fit, SFORB
 #' SFORB_SFO <- mkinmod(
 #'   parent = list(type = "SFORB", to = "m1", sink = TRUE),
@@ -217,7 +217,7 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #' fit.SFORB = mkinfit("SFORB", FOCUS_2006_D, quiet = TRUE)
 #' fit.SFORB_SFO <- mkinfit(SFORB_SFO, FOCUS_2006_D, parms.ini = fit.SFORB$bparms.ode, quiet = TRUE)
 #' }
-#' 
+#'
 #' \dontrun{
 #' # Weighted fits, including IRLS
 #' SFO_SFO.ff <- mkinmod(parent = mkinsub("SFO", "m1"),
@@ -229,8 +229,8 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #' f.tc <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, error_model = "tc", quiet = TRUE)
 #' summary(f.tc)
 #' }
-#' 
-#' 
+#'
+#'
 #' @export
 mkinfit <- function(mkinmod, observed,
   parms.ini = "auto",
@@ -795,6 +795,8 @@ mkinfit <- function(mkinmod, observed,
 
     fit$hessian <- try(numDeriv::hessian(cost_function, c(degparms, errparms), OLS = FALSE,
         update_data = FALSE), silent = TRUE)
+    dimnames(fit$hessian) <- list(names(c(degparms, errparms)),
+      names(c(degparms, errparms)))
 
     # Backtransform parameters
     bparms.optim = backtransform_odeparms(fit$par, mkinmod,
@@ -805,6 +807,9 @@ mkinfit <- function(mkinmod, observed,
 
     fit$hessian_notrans <- try(numDeriv::hessian(cost_function, c(bparms.all, errparms),
         OLS = FALSE, trans = FALSE, update_data = FALSE), silent = TRUE)
+
+    dimnames(fit$hessian_notrans) <- list(names(c(bparms.all, errparms)),
+      names(c(bparms.all, errparms)))
   })
 
   fit$error_model_algorithm <- error_model_algorithm
@@ -839,7 +844,7 @@ mkinfit <- function(mkinmod, observed,
 
   # Log-likelihood with possibility to fix degparms or errparms
   fit$ll <- function(P, fixed_degparms = FALSE, fixed_errparms = FALSE) {
-    - cost_function(P, fixed_degparms = fixed_degparms,
+    - cost_function(P, trans = FALSE, fixed_degparms = fixed_degparms,
       fixed_errparms = fixed_errparms, OLS = FALSE, update_data = FALSE)
   }
 

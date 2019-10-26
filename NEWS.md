@@ -1,5 +1,7 @@
 # mkin 0.9.49.6 (unreleased)
 
+- Add 'parms' and 'confint' methods for mkinfit objects. Confidence intervals based on the quadratic approximation as in the summary, and based on the profile likelihood
+
 - Move long-running tests to tests/testthat/slow with a separate test log. They currently take around 7 minutes on my system
 
 - 'mkinfit': Clean the code and return functions to calculate the log-likelihood and the sum of squared residuals
