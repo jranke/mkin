@@ -21,6 +21,8 @@
 #' @param quiet Should we suppress messages?
 #' @return A matrix with columns giving lower and upper confidence limits for
 #'   each parameter.
+#' @param \dots Not used
+#' @importFrom stats qnorm
 #' @references Pawitan Y (2013) In all likelihood - Statistical modelling and
 #'   inference using likelihood. Clarendon Press, Oxford.
 #' @examples

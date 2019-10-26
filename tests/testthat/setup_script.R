@@ -69,5 +69,5 @@ fit_tc_1 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, error_model = "tc", quiet = TRUE
 f_tc_2 <- mkinfit(m_synth_DFOP_par, DFOP_par_c, error_model = "tc",
   error_model_algorithm = "direct", quiet = TRUE)
 
-f_tc_2_ntf <- mkinfit(m_synth_DFOP_par, DFOP_par_c, error_model = "tc",
-  transform_fractions = FALSE, error_model_algorithm = "direct", quiet = TRUE)
+#f_tc_2_ntf <- mkinfit(m_synth_DFOP_par, DFOP_par_c, error_model = "tc",
+#  transform_fractions = FALSE, error_model_algorithm = "direct", quiet = TRUE)

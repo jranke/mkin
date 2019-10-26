@@ -80,9 +80,9 @@ test_that("Quadratic confidence intervals for rate constants are comparable to c
     se_nls_2[c("lrc1", "lrc2")] / se_mkin_2[c("log_k1", "log_k2")],
     rep(sqrt(nrow(FOCUS_2006_C) / (nrow(FOCUS_2006_C) - 4)), 2),
     tolerance = 0.03)
-}
+})
 
-test_that("Likelihood profile based confidence intervals work", {
+#test_that("Likelihood profile based confidence intervals work", {
 
 #   f <- mkinfit("SFO", FOCUS_2006_C, quiet = TRUE)
 #   f <- fits[["SFO", "FOCUS_C"]]
@@ -120,4 +120,4 @@ test_that("Likelihood profile based confidence intervals work", {
 #     ci_tc_2[, 1]
 #       ci_tc_2_maxLik[, 1]
 
-})
+#})

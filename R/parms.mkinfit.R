@@ -5,7 +5,6 @@
 #' considering the error structure that was assumed for the fit.
 #' 
 #' @param object A fitted model object
-#' @param complete Unused argument for compatibility with the generic coef function from base R
 #' @return A numeric vector of fitted model parameters
 #' @export
 parms <- function(object, ...)
