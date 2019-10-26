@@ -5,6 +5,7 @@
 #' considering the error structure that was assumed for the fit.
 #' 
 #' @param object A fitted model object
+#' @param \dots Not used
 #' @return A numeric vector of fitted model parameters
 #' @export
 parms <- function(object, ...)

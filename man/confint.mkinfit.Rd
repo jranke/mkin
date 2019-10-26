@@ -37,6 +37,8 @@ the student t distribution or assume normal distribution for
 the parameter estimate}
 
 \item{quiet}{Should we suppress messages?}
+
+\item{\dots}{Not used}
 }
 \value{
 A matrix with columns giving lower and upper confidence limits for
@@ -48,7 +50,9 @@ Confidence intervals for parameters of mkinfit objects
 \examples{
 f <- mkinfit("SFO", FOCUS_2006_C, quiet = TRUE)
 confint(f, method = "quadratic")
-confint(f, method = "profile")
+\dontrun{
+  confint(f, method = "profile")
+}
 }
 \references{
 Pawitan Y (2013) In all likelihood - Statistical modelling and

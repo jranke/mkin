@@ -28,7 +28,9 @@
 #' @examples
 #' f <- mkinfit("SFO", FOCUS_2006_C, quiet = TRUE)
 #' confint(f, method = "quadratic")
-#' confint(f, method = "profile")
+#' \dontrun{
+#'   confint(f, method = "profile")
+#' }
 #' @export
 confint.mkinfit <- function(object, parm,
   level = 0.95, alpha = 1 - level,

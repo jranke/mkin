@@ -12,10 +12,10 @@ parms(object, ...)
 \arguments{
 \item{object}{A fitted model object}
 
+\item{\dots}{Not used}
+
 \item{transformed}{Should the parameters be returned
 as used internally during the optimisation?}
-
-\item{complete}{Unused argument for compatibility with the generic coef function from base R}
 }
 \value{
 A numeric vector of fitted model parameters
