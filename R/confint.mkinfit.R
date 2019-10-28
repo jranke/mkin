@@ -32,6 +32,7 @@
 #' @importFrom stats qnorm
 #' @references Pawitan Y (2013) In all likelihood - Statistical modelling and
 #'   inference using likelihood. Clarendon Press, Oxford.
+#'
 #'   Venzon DJ and Moolgavkar SH (1988) A Method for Computing
 #'   Profile-Likelihood Based Confidence Intervals, Applied Statistics, 37,
 #'   87–94.
