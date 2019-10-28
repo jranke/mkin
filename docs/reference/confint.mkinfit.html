@@ -36,7 +36,9 @@
 
 
 <meta property="og:title" content="Confidence intervals for parameters of mkinfit objects — confint.mkinfit" />
-<meta property="og:description" content="Confidence intervals for parameters of mkinfit objects" />
+<meta property="og:description" content="The default method 'profile' is based on the profile likelihood for each
+parameter. The method uses two nested optimisations. The speed of the method
+could likely be improved by using the method of Venzon and Moolgavkar (1988)." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -133,14 +135,16 @@
     </div>
 
     <div class="ref-description">
-    <p>Confidence intervals for parameters of mkinfit objects</p>
+    <p>The default method 'profile' is based on the profile likelihood for each
+parameter. The method uses two nested optimisations. The speed of the method
+could likely be improved by using the method of Venzon and Moolgavkar (1988).</p>
     </div>
 
     <pre class="usage"><span class='co'># S3 method for mkinfit</span>
 <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>object</span>, <span class='no'>parm</span>, <span class='kw'>level</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>1</span> -
-  <span class='no'>level</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"profile"</span>, <span class='st'>"quadratic"</span>), <span class='kw'>transformed</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>backtransform</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>distribution</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"student_t"</span>, <span class='st'>"normal"</span>),
-  <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
+  <span class='no'>level</span>, <span class='no'>cutoff</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"profile"</span>, <span class='st'>"quadratic"</span>),
+  <span class='kw'>transformed</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>backtransform</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>distribution</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"student_t"</span>, <span class='st'>"normal"</span>), <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -161,6 +165,12 @@ confidence intervals. If missing, all parameters are considered.</p></td>
     <tr>
       <th>alpha</th>
       <td><p>The allowed error probability, overrides 'level' if specified.</p></td>
+    </tr>
+    <tr>
+      <th>cutoff</th>
+      <td><p>Possibility to specify an alternative cutoff for the difference
+in the log-likelihoods at the confidence boundary. Specifying an explicit
+cutoff value overrides arguments 'level' and 'alpha'</p></td>
     </tr>
     <tr>
       <th>method</th>
@@ -204,7 +214,10 @@ the parameter estimate</p></td>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Pawitan Y (2013) In all likelihood - Statistical modelling and
-  inference using likelihood. Clarendon Press, Oxford.</p>
+  inference using likelihood. Clarendon Press, Oxford.
+  Venzon DJ and Moolgavkar SH (1988) A Method for Computing
+  Profile-Likelihood Based Confidence Intervals, Applied Statistics, 37,
+  87–94.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='st'>"SFO"</span>, <span class='no'>FOCUS_2006_C</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
@@ -213,9 +226,9 @@ the parameter estimate</p></td>
 #&gt; k_parent_sink  0.2109541  0.4440528
 #&gt; sigma          1.9778868  7.3681380</div><div class='input'><span class='co'># \dontrun{</span>
   <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"profile"</span>)</div><div class='output co'>#&gt; <span class='message'>Profiling the likelihood</span></div><div class='output co'>#&gt;                     2.5%      97.5%
-#&gt; parent_0      71.3471007 93.9447024
-#&gt; k_parent_sink  0.2030765  0.4491067
-#&gt; sigma          2.9810656  8.8633278</div><div class='input'># }
+#&gt; parent_0      73.0641834 92.1392181
+#&gt; k_parent_sink  0.2170293  0.4235348
+#&gt; sigma          3.1307772  8.0628314</div><div class='input'># }
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

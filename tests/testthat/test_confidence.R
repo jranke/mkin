@@ -1,3 +1,25 @@
+# We set up some models and fits with nls for comparisons
+SFO_trans <- function(t, parent_0, log_k_parent_sink) {
+  parent_0 * exp(- exp(log_k_parent_sink) * t)
+}
+SFO_notrans <- function(t, parent_0, k_parent_sink) {
+  parent_0 * exp(- k_parent_sink * t)
+}
+f_1_nls_trans <- nls(value ~ SFO_trans(time, parent_0, log_k_parent_sink),
+  data = FOCUS_2006_A,
+  start = list(parent_0 = 100, log_k_parent_sink = log(0.1)))
+f_1_nls_notrans <- nls(value ~ SFO_notrans(time, parent_0, k_parent_sink),
+  data = FOCUS_2006_A,
+  start = list(parent_0 = 100, k_parent_sink = 0.1))
+
+f_1_mkin_OLS <- mkinfit("SFO", FOCUS_2006_A, quiet = TRUE)
+f_1_mkin_OLS_notrans <- mkinfit("SFO", FOCUS_2006_A, quiet = TRUE,
+  transform_rates = FALSE)
+
+
+f_2_mkin <- mkinfit("DFOP", FOCUS_2006_C, quiet = TRUE)
+f_2_nls <- nls(value ~ SSbiexp(time, A1, lrc1, A2, lrc2), data = FOCUS_2006_C)
+
 context("Confidence intervals and p-values")
 
 test_that("The confint method 'quadratic' is consistent with the summary", {
@@ -20,24 +42,7 @@ test_that("The confint method 'quadratic' is consistent with the summary", {
 
 })
 
-test_that("Quadratic confidence intervals for rate constants are comparable to confint.nls", {
-
-  SFO_trans <- function(t, parent_0, log_k_parent_sink) {
-    parent_0 * exp(- exp(log_k_parent_sink) * t)
-  }
-  SFO_notrans <- function(t, parent_0, k_parent_sink) {
-    parent_0 * exp(- k_parent_sink * t)
-  }
-  f_1_nls_trans <- nls(value ~ SFO_trans(time, parent_0, log_k_parent_sink),
-    data = FOCUS_2006_A,
-    start = list(parent_0 = 100, log_k_parent_sink = log(0.1)))
-  f_1_nls_notrans <- nls(value ~ SFO_notrans(time, parent_0, k_parent_sink),
-    data = FOCUS_2006_A,
-    start = list(parent_0 = 100, k_parent_sink = 0.1))
-
-  f_1_mkin_OLS <- mkinfit("SFO", FOCUS_2006_A, quiet = TRUE)
-  f_1_mkin_OLS_notrans <- mkinfit("SFO", FOCUS_2006_A, quiet = TRUE,
-    transform_rates = FALSE)
+test_that("Quadratic confidence intervals for rate constants are comparable to values in summary.nls", {
 
   # Check fitted parameter values
   expect_equivalent(
@@ -70,8 +75,6 @@ test_that("Quadratic confidence intervals for rate constants are comparable to c
   expect_equivalent(se_nls_notrans[2] / se_mkin_notrans[2], sqrt(8/5), tolerance = 0.01)
 
   # Another case:
-  f_2_mkin <- mkinfit("DFOP", FOCUS_2006_C, quiet = TRUE)
-  f_2_nls <- nls(value ~ SSbiexp(time, A1, lrc1, A2, lrc2), data = FOCUS_2006_C)
   se_mkin_2 <- summary(f_2_mkin)$par[1:4, "Std. Error"]
   se_nls_2 <- summary(f_2_nls)$coefficients[, "Std. Error"]
   # Here we the ratio of standard errors can be explained by the same
@@ -82,42 +85,24 @@ test_that("Quadratic confidence intervals for rate constants are comparable to c
     tolerance = 0.03)
 })
 
-#test_that("Likelihood profile based confidence intervals work", {
+test_that("Likelihood profile based confidence intervals work", {
+   f <- fits[["SFO", "FOCUS_C"]]
 
-#   f <- mkinfit("SFO", FOCUS_2006_C, quiet = TRUE)
-#   f <- fits[["SFO", "FOCUS_C"]]
-#   f_notrans <- mkinfit("SFO", FOCUS_2006_C, quiet = TRUE, transform_rates = FALSE)
-#   pf <- parms(f)
-#   f_nll <- function(parent_0, k_parent_sink, sigma) {
-#     - f$ll(c(parent_0 = as.numeric(parent_0),
-#         k_parent_sink = as.numeric(k_parent_sink),
-#         sigma = as.numeric(sigma)))
-#   }
-#   f_nll(parent_0 = 100, k_parent_sink = 0.3, sigma = 4.7)
-#   f_nll(pf[1], pf[2], pf[3])
-#   f_mle <- stats4::mle(f_nll, start = as.list(parms(f)), nobs = nrow(FOCUS_2006_C))
-#   f_mle <- stats4::mle(f_nll, start = as.list(parms(f)), nobs = 17L)
-#   logLik(f_mle)
-#   stats4::confint(f_mle, nobs = nrow(FOCUS_2006_C))
-# 
-#     ci_mkin_1 <- confint(f,
-#       method = "quadratic", backtransform = FALSE,
-#       transformed = TRUE)
-#     ci_maxLik_1 <- maxLik::confint.maxLik(f_maxLik)
-# 
-#     f_tc_2_maxLik <- maxLik::maxLik(f_tc_2$ll,
-#       start = f_tc_2$par)
-#     ci_tc_2 <- confint(f_tc_2, method = "quadratic",
-#         backtransform = FALSE, transformed = TRUE,
-#         distribution = "normal")
-#     ci_tc_2_maxLik <- confint(f_tc_2_maxLik)
-#     rel_diff_ci_tc_2 <- (ci_tc_2 - ci_tc_2_maxLik)/ci_tc_2_maxLik
-#     # The ilr transformed variable appear to misbehave in the numeric differentiation
-#     expect_equivalent(
-#       rel_diff_ci_tc_2[c(2, 3, 4, 6, 7, 9, 10), ], rep(0, 14),
-#       tolerance = 0.05)
-# 
-#     ci_tc_2[, 1]
-#       ci_tc_2_maxLik[, 1]
+   # negative log-likelihood for use with mle
+   f_nll <- function(parent_0, k_parent_sink, sigma) {
+     - f$ll(c(parent_0 = as.numeric(parent_0),
+         k_parent_sink = as.numeric(k_parent_sink),
+         sigma = as.numeric(sigma)))
+   }
+   f_mle <- stats4::mle(f_nll, start = as.list(parms(f)), nobs = nrow(FOCUS_2006_C))
 
-#})
+   ci_mkin_1_p_0.95 <- confint(f, method = "profile", level = 0.95, quiet = TRUE)
+
+   # Magically, we get very similar boundaries as stats4::mle
+   # (we need to capture the output to avoid printing this while testing as
+   # stats4::confint uses cat() for its message, instead of message(), so
+   # suppressMessage() has no effect)
+   msg <- capture.output(ci_mle_1_0.95 <- stats4::confint(f_mle, level = 0.95))
+   rel_diff_ci <- (ci_mle_1_0.95 - ci_mkin_1_p_0.95)/ci_mle_1_0.95
+   expect_equivalent(as.numeric(rel_diff_ci), rep(0, 6), tolerance = 1e-4)
+})

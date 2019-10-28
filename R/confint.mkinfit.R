@@ -1,10 +1,17 @@
 #' Confidence intervals for parameters of mkinfit objects
 #'
+#' The default method 'profile' is based on the profile likelihood for each
+#' parameter. The method uses two nested optimisations. The speed of the method
+#' could likely be improved by using the method of Venzon and Moolgavkar (1988).
+#'
 #' @param object An \code{\link{mkinfit}} object
 #' @param parm A vector of names of the parameters which are to be given
 #'   confidence intervals. If missing, all parameters are considered.
 #' @param level The confidence level required
 #' @param alpha The allowed error probability, overrides 'level' if specified.
+#' @param cutoff Possibility to specify an alternative cutoff for the difference
+#'   in the log-likelihoods at the confidence boundary. Specifying an explicit
+#'   cutoff value overrides arguments 'level' and 'alpha'
 #' @param method The 'profile' method searches the parameter space for the
 #'   cutoff of the confidence intervals by means of a likelihood ratio test.
 #'   The 'quadratic' method approximates the likelihood function at the
@@ -25,6 +32,9 @@
 #' @importFrom stats qnorm
 #' @references Pawitan Y (2013) In all likelihood - Statistical modelling and
 #'   inference using likelihood. Clarendon Press, Oxford.
+#'   Venzon DJ and Moolgavkar SH (1988) A Method for Computing
+#'   Profile-Likelihood Based Confidence Intervals, Applied Statistics, 37,
+#'   87–94.
 #' @examples
 #' f <- mkinfit("SFO", FOCUS_2006_C, quiet = TRUE)
 #' confint(f, method = "quadratic")
@@ -33,7 +43,7 @@
 #' }
 #' @export
 confint.mkinfit <- function(object, parm,
-  level = 0.95, alpha = 1 - level,
+  level = 0.95, alpha = 1 - level, cutoff,
   method = c("profile", "quadratic"),
   transformed = TRUE, backtransform = TRUE,
   distribution = c("student_t", "normal"), quiet = FALSE, ...)
@@ -100,15 +110,17 @@ confint.mkinfit <- function(object, parm,
   }
 
   if (method == "profile") {
-    message("Profiling the likelihood")
+    if (!quiet) message("Profiling the likelihood")
+
     lci <- uci <- rep(NA, p)
     names(lci) <- names(uci) <- return_pnames
 
     profile_pnames <- if(missing(parm)) names(parms(object))
       else parm
 
-    # We do two-sided intervals based on the likelihood ratio
-    cutoff <- 0.5 * qchisq(1 - (alpha / 2), 1)
+    if (missing(cutoff)) {
+      cutoff <- 0.5 * qchisq(1 - alpha, 1)
+    }
 
     all_parms <- parms(object)
 
