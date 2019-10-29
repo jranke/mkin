@@ -236,7 +236,7 @@ machines, cores &gt; 1 is not supported.</p></td>
   <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='no'>f_d_1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO</span>, <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>FOCUS_2006_D</span>, <span class='no'>value</span> <span class='kw'>!=</span> <span class='fl'>0</span>), <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='no'>ci_profile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_d_1</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt;        User      System verstrichen 
-#&gt;      51.063       0.000      51.090 </div><div class='input'><span class='co'># The following does not save much time, as parent_0 takes up most of the time</span>
+#&gt;      50.787       0.000      50.815 </div><div class='input'><span class='co'># The following does not save much time, as parent_0 takes up most of the time</span>
 <span class='co'># system.time(ci_profile &lt;- confint(f_d_1, cores = 5))</span>
 <span class='co'># system.time(ci_profile &lt;- confint(f_d_1,</span>
 <span class='co'>#   c("k_parent_sink", "k_parent_m1", "k_m1_sink", "sigma"), cores = 1))</span>
@@ -322,16 +322,27 @@ machines, cores &gt; 1 is not supported.</p></td>
 #&gt; k_m1           0.0146746451 0.0025300990
 #&gt; f_parent_to_m1 0.0046997668 0.0023460293
 #&gt; sigma          0.0550252516 0.0327066836</div><div class='input'>
-# The profiling for the following fit does not finish in a reasonable time
-#m_synth_DFOP_par <- mkinmod(parent = mkinsub("DFOP", c("M1", "M2")),
-#  M1 = mkinsub("SFO"),
-#  M2 = mkinsub("SFO"),
-#  use_of_ff = "max", quiet = TRUE)
-#DFOP_par_c <- synthetic_data_for_UBA_2014[[12]]$data
-#f_tc_2 <- mkinfit(m_synth_DFOP_par, DFOP_par_c, error_model = "tc",
-#  error_model_algorithm = "direct", quiet = TRUE)
-#confint(f_tc_2, "parent_0")
-# }
+<span class='co'># The profiling for the following fit does not finish in a reasonable time,</span>
+<span class='co'># therefore we use the quadratic approximation</span>
+<span class='no'>m_synth_DFOP_par</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"DFOP"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"M1"</span>, <span class='st'>"M2"</span>)),
+  <span class='kw'>M1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>),
+  <span class='kw'>M2</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>),
+  <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>DFOP_par_c</span> <span class='kw'>&lt;-</span> <span class='no'>synthetic_data_for_UBA_2014</span><span class='kw'>[[</span><span class='fl'>12</span>]]$<span class='no'>data</span>
+<span class='no'>f_tc_2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>m_synth_DFOP_par</span>, <span class='no'>DFOP_par_c</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"tc"</span>,
+  <span class='kw'>error_model_algorithm</span> <span class='kw'>=</span> <span class='st'>"direct"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_tc_2</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"quadratic"</span>)</div><div class='output co'>#&gt;                        2.5%        97.5%
+#&gt; parent_0       94.596183241 106.19937044
+#&gt; k_M1            0.037605436   0.04490758
+#&gt; k_M2            0.008568746   0.01087675
+#&gt; f_parent_to_M1  0.021464277   0.62023879
+#&gt; f_parent_to_M2  0.015166876   0.37975352
+#&gt; k1              0.273897622   0.33388081
+#&gt; k2              0.018614564   0.02250380
+#&gt; g               0.671943572   0.73583247
+#&gt; sigma_low       0.251284138   0.83992136
+#&gt; rsd_high        0.040410998   0.07661999</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_tc_2</span>, <span class='st'>"parent_0"</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"quadratic"</span>)</div><div class='output co'>#&gt;              2.5%    97.5%
+#&gt; parent_0 94.59618 106.1994</div><div class='input'># }
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

@@ -98,15 +98,17 @@
 #' rel_diffs_transformed_ff
 #' rel_diffs_untransformed_ff
 #'
-#' # The profiling for the following fit does not finish in a reasonable time
-#' #m_synth_DFOP_par <- mkinmod(parent = mkinsub("DFOP", c("M1", "M2")),
-#' #  M1 = mkinsub("SFO"),
-#' #  M2 = mkinsub("SFO"),
-#' #  use_of_ff = "max", quiet = TRUE)
-#' #DFOP_par_c <- synthetic_data_for_UBA_2014[[12]]$data
-#' #f_tc_2 <- mkinfit(m_synth_DFOP_par, DFOP_par_c, error_model = "tc",
-#' #  error_model_algorithm = "direct", quiet = TRUE)
-#' #confint(f_tc_2, "parent_0")
+#' # The profiling for the following fit does not finish in a reasonable time,
+#' # therefore we use the quadratic approximation
+#' m_synth_DFOP_par <- mkinmod(parent = mkinsub("DFOP", c("M1", "M2")),
+#'   M1 = mkinsub("SFO"),
+#'   M2 = mkinsub("SFO"),
+#'   use_of_ff = "max", quiet = TRUE)
+#' DFOP_par_c <- synthetic_data_for_UBA_2014[[12]]$data
+#' f_tc_2 <- mkinfit(m_synth_DFOP_par, DFOP_par_c, error_model = "tc",
+#'   error_model_algorithm = "direct", quiet = TRUE)
+#' confint(f_tc_2, method = "quadratic")
+#' confint(f_tc_2, "parent_0", method = "quadratic")
 #' }
 #' @export
 confint.mkinfit <- function(object, parm,
@@ -164,10 +166,12 @@ confint.mkinfit <- function(object, parm,
       if (transformed & backtransform) {
         lci_back <- backtransform_odeparms(lci,
           object$mkinmod, object$transform_rates, object$transform_fractions)
-        lci <- c(lci_back, lci[names(object$errparms)])
         uci_back <- backtransform_odeparms(uci,
           object$mkinmod, object$transform_rates, object$transform_fractions)
-        uci <- c(uci_back, uci[names(object$errparms)])
+
+        return_errparm_names <- intersect(names(object$errparms), return_pnames)
+        lci <- c(lci_back, lci[return_errparm_names])
+        uci <- c(uci_back, uci[return_errparm_names])
       }
     }
     ci <- cbind(lower = lci, upper = uci)
