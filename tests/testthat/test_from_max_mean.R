@@ -19,8 +19,7 @@
 context("Test fitting the decline of metabolites from their maximum")
 
 test_that("Fitting from maximum mean value works", {
-  SFO_SFO <- mkinmod(parent = mkinsub("SFO", "m1"),
-                     m1 = mkinsub("SFO"))
+
   expect_warning(
     expect_error(mkinfit(SFO_SFO, FOCUS_2006_D, from_max_mean = TRUE),
       "only implemented for models with a single observed variable"),

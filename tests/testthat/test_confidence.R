@@ -73,7 +73,8 @@ test_that("Likelihood profile based confidence intervals work", {
    }
    f_mle <- stats4::mle(f_nll, start = as.list(parms(f)), nobs = nrow(FOCUS_2006_C))
 
-   ci_mkin_1_p_0.95 <- confint(f, method = "profile", level = 0.95, quiet = TRUE)
+   ci_mkin_1_p_0.95 <- confint(f, method = "profile", level = 0.95, 
+     cores = n_cores, quiet = TRUE)
 
    # Magically, we get very similar boundaries as stats4::mle
    # (we need to capture the output to avoid printing this while testing as

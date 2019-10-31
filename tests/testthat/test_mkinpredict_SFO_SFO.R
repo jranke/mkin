@@ -31,20 +31,20 @@ test_that("Variants of model predictions for SFO_SFO model give equivalent resul
          m1 = list(type = "SFO"), use_of_ff = "max", quiet = TRUE)
 
   ot = seq(0, 100, by = 1)
-  r.1.e <- subset(mkinpredict(SFO_SFO.1, 
-             c(k_parent_m1 = 0.1, k_parent_sink = 0.1, k_m1_sink = 0.1), 
-             c(parent = 100, m1 = 0), ot, solution_type = "eigen"), 
+  r.1.e <- subset(mkinpredict(SFO_SFO.1,
+             c(k_parent_m1 = 0.1, k_parent_sink = 0.1, k_m1_sink = 0.1),
+             c(parent = 100, m1 = 0), ot, solution_type = "eigen"),
                  time %in% c(1, 10, 50, 100))
-  r.1.d <- subset(mkinpredict(SFO_SFO.1, 
-             c(k_parent_m1 = 0.1, k_parent_sink = 0.1, k_m1_sink = 0.1), 
-             c(parent = 100, m1 = 0), ot, solution_type = "deSolve"), 
+  r.1.d <- subset(mkinpredict(SFO_SFO.1,
+             c(k_parent_m1 = 0.1, k_parent_sink = 0.1, k_m1_sink = 0.1),
+             c(parent = 100, m1 = 0), ot, solution_type = "deSolve"),
                  time %in% c(1, 10, 50, 100))
 
-  r.2.e <- subset(mkinpredict(SFO_SFO.2, c(k_parent = 0.2, f_parent_to_m1 = 0.5, k_m1 = 0.1), 
-	    c(parent = 100, m1 = 0), ot, solution_type = "eigen"),
+  r.2.e <- subset(mkinpredict(SFO_SFO.2, c(k_parent = 0.2, f_parent_to_m1 = 0.5, k_m1 = 0.1),
+      c(parent = 100, m1 = 0), ot, solution_type = "eigen"),
                   time %in% c(1, 10, 50, 100))
-  r.2.d <- subset(mkinpredict(SFO_SFO.2, c(k_parent = 0.2, f_parent_to_m1 = 0.5, k_m1 = 0.1), 
-	    c(parent = 100, m1 = 0), ot, solution_type = "deSolve"),
+  r.2.d <- subset(mkinpredict(SFO_SFO.2, c(k_parent = 0.2, f_parent_to_m1 = 0.5, k_m1 = 0.1),
+      c(parent = 100, m1 = 0), ot, solution_type = "deSolve"),
                   time %in% c(1, 10, 50, 100))
 
   # Compare eigen and deSolve for minimum use of formation fractions

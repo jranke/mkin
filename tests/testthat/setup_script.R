@@ -47,6 +47,9 @@ SFO_SFO <- mkinmod(parent = list(type = "SFO", to = "m1"),
 SFO_SFO.ff <- mkinmod(parent = list(type = "SFO", to = "m1"),
                       m1 = list(type = "SFO"),
                       use_of_ff = "max", quiet = TRUE)
+SFO_SFO.ff.nosink <- mkinmod(
+  parent = mkinsub("SFO", "m1", sink = FALSE),
+  m1 = mkinsub("SFO"), quiet = TRUE, use_of_ff = "max")
 
 f_sfo_sfo_desolve <- mkinfit(SFO_SFO,
   subset(FOCUS_2006_D, value != 0),
@@ -76,8 +79,6 @@ m_synth_DFOP_par <- mkinmod(parent = mkinsub("DFOP", c("M1", "M2")),
   use_of_ff = "max", quiet = TRUE)
 
 fit_nw_1 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, quiet = TRUE)
-fit_nw_1_ML <- mkinfit(m_synth_SFO_lin, SFO_lin_a, quiet = TRUE,
-  error_model = "const", error_model_algorithm = "direct")
 
 # We know direct optimization is OK and direct needs 4 sec versus 5.5 for threestep and 6 for IRLS
 fit_obs_1 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, error_model = "obs", quiet = TRUE,
@@ -85,19 +86,3 @@ fit_obs_1 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, error_model = "obs", quiet = TR
 # We know threestep is OK, and threestep (and IRLS) need 4.8 se versus 5.6 for direct
 fit_tc_1 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, error_model = "tc", quiet = TRUE,
   error_model_algorithm = "threestep")
-
-# We know direct optimization is OK and direct needs 8 sec versus 11 sec for threestep
-f_tc_2 <- mkinfit(m_synth_DFOP_par, DFOP_par_c, error_model = "tc",
-  error_model_algorithm = "direct", quiet = TRUE)
-
-# Experimental data for UBA
-dfop_sfo_sfo <- mkinmod(
-  parent = mkinsub("DFOP", to = "A1"),
-  A1 = mkinsub("SFO", to = "A2"),
-  A2 = mkinsub("SFO"),
-  use_of_ff = "max"
-)
-
-f_soil_1_tc <- mkinfit(dfop_sfo_sfo,
-  experimental_data_for_UBA_2019[[1]]$data,
-  error_model = "tc", quiet = TRUE)

@@ -18,14 +18,6 @@
 
 context("Special cases of mkinfit calls")
 
-SFO_SFO.ff.nosink <- mkinmod(
-  parent = mkinsub("SFO", "m1", sink = FALSE),
-  m1 = mkinsub("SFO"), quiet = TRUE, use_of_ff = "max")
-
-SFO_SFO.ff <- mkinmod(
-  parent = mkinsub("SFO", "m1"),
-  m1 = mkinsub("SFO"), quiet = TRUE, use_of_ff = "max")
-
 test_that("mkinfit stops to prevent and/or explain user errors", {
   expect_error(mkinfit("foo", FOCUS_2006_A))
   expect_error(mkinfit(3, FOCUS_2006_A))
