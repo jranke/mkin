@@ -5,7 +5,7 @@ test_that("The likelihood ratio test works", {
   expect_error(lrtest(fit_tc_1, f_tc_2), "not been fitted to the same data")
 
   res <- lrtest(fit_nw_1, fit_tc_1)
-  expect_equal(res[["2", "Pr(>Chisq)"]], 0.9999998)
+  expect_equal(res[["2", "Pr(>Chisq)"]], 1, tolerance = 1e-5)
 
 })
 
@@ -23,5 +23,5 @@ test_that("Updating fitted models works", {
   test_nw_tc <- lrtest(f_soil_1_nw, f_soil_1_tc)
   expect_equivalent(test_nw_tc[["2", "Pr(>Chisq)"]], 2.113e-6)
   test_nw_A2 <- lrtest(f_soil_1_nw, f_soil_1_nw_A2)
-  expect_equivalent(test_nw_A2[["2", "Pr(>Chisq)"]], 0.9999468)
+  expect_equivalent(test_nw_A2[["2", "Pr(>Chisq)"]], 1, tolerance = 1e-4)
 })
