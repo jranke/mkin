@@ -30,8 +30,11 @@ lmtest::lrtest
 #' dfop_fit <- mkinfit("DFOP", test_data, quiet = TRUE)
 #' lrtest(dfop_fit, sfo_fit)
 #' lrtest(sfo_fit, dfop_fit)
-#' lrtest(dfop_fit, error_model = "tc")
-#' lrtest(dfop_fit, fixed_parms = c(k2 = 0))
+#' 
+#' # The following two examples are commented out as they fail during
+#' # generation of the static help pages by pkgdown
+#' # lrtest(dfop_fit, error_model = "tc")
+#' # lrtest(dfop_fit, fixed_parms = c(k2 = 0))
 #' }
 #' @export
 lrtest.mkinfit <- function(object, object_2 = NULL, ...) {
