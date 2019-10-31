@@ -52,7 +52,9 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #'   default values.  Otherwise, inital values for all error model parameters
 #'   must be given.
 #' @param fixed_parms The names of parameters that should not be optimised but
-#'   rather kept at the values specified in \code{parms.ini}.
+#'   rather kept at the values specified in \code{parms.ini}. Alternatively,
+#'   a named numeric vector of parameters to be fixed, regardless of the values
+#'   in parms.ini.
 #' @param fixed_initials The names of model variables for which the initial
 #'   state at time 0 should be excluded from the optimisation. Defaults to all
 #'   state variables except for the first one.
@@ -253,6 +255,12 @@ mkinfit <- function(mkinmod, observed,
   trace_parms = FALSE,
   ...)
 {
+  call <- match.call()
+
+  # Derive the name used for the model
+  if (is.character(mkinmod)) mkinmod_name <- mkinmod
+  else mkinmod_name <- deparse(substitute(mkinmod))
+
   # Check mkinmod and generate a model for the variable whith the highest value
   # if a suitable string is given
   parent_models_available = c("SFO", "FOMC", "DFOP", "HS", "SFORB", "IORE", "logistic")
@@ -301,6 +309,14 @@ mkinfit <- function(mkinmod, observed,
 
   # Define starting values for parameters where not specified by the user
   if (parms.ini[[1]] == "auto") parms.ini = vector()
+
+  # Override parms.ini for parameters given as a numeric vector in
+  # fixed_parms
+  if (is.numeric(fixed_parms)) {
+    fixed_parm_names <- names(fixed_parms)
+    parms.ini[fixed_parm_names] <- fixed_parms
+    fixed_parms <- fixed_parm_names
+  }
 
   # Warn for inital parameter specifications that are not in the model
   wrongpar.names <- setdiff(names(parms.ini), mkinmod$parms)
@@ -384,15 +400,22 @@ mkinfit <- function(mkinmod, observed,
 
   # Set default for state.ini if appropriate
   parent_name = names(mkinmod$spec)[[1]]
-  if (state.ini[1] == "auto") {
-    parent_time_0 = subset(observed, time == 0 & name == parent_name)$value
-    parent_time_0_mean = mean(parent_time_0, na.rm = TRUE)
-    if (is.na(parent_time_0_mean)) {
-      state.ini = c(100, rep(0, length(mkinmod$diffs) - 1))
-    } else {
-      state.ini = c(parent_time_0_mean, rep(0, length(mkinmod$diffs) - 1))
-    }
+  parent_time_0 = subset(observed, time == 0 & name == parent_name)$value
+  parent_time_0_mean = mean(parent_time_0, na.rm = TRUE)
+  if (is.na(parent_time_0_mean)) {
+    state.ini_auto = c(100, rep(0, length(mkinmod$diffs) - 1))
+  } else {
+    state.ini_auto = c(parent_time_0_mean, rep(0, length(mkinmod$diffs) - 1))
   }
+  names(state.ini_auto) <- mod_vars
+
+  if (state.ini[1] == "auto") {
+    state.ini_used <- state.ini_auto
+  } else {
+    state.ini_used <- state.ini_auto
+    state.ini_used[names(state.ini)] <- state.ini
+  }
+  state.ini <- state.ini_used
 
   # Name the inital state variable values if they are not named yet
   if(is.null(names(state.ini))) names(state.ini) <- mod_vars
@@ -799,18 +822,20 @@ mkinfit <- function(mkinmod, observed,
       names(c(degparms, errparms)))
 
     # Backtransform parameters
-    bparms.optim = backtransform_odeparms(fit$par, mkinmod,
+    bparms.optim = backtransform_odeparms(degparms, mkinmod,
       transform_rates = transform_rates,
       transform_fractions = transform_fractions)
     bparms.fixed = c(state.ini.fixed, parms.fixed)
     bparms.all = c(bparms.optim, parms.fixed)
 
-    fit$hessian_notrans <- try(numDeriv::hessian(cost_function, c(bparms.all, errparms),
+    fit$hessian_notrans <- try(numDeriv::hessian(cost_function, c(bparms.optim, errparms),
         OLS = FALSE, trans = FALSE, update_data = FALSE), silent = TRUE)
 
-    dimnames(fit$hessian_notrans) <- list(names(c(bparms.all, errparms)),
-      names(c(bparms.all, errparms)))
+    dimnames(fit$hessian_notrans) <- list(names(c(bparms.optim, errparms)),
+      names(c(bparms.optim, errparms)))
   })
+
+  fit$call <- call
 
   fit$error_model_algorithm <- error_model_algorithm
 
@@ -831,8 +856,9 @@ mkinfit <- function(mkinmod, observed,
   fit$calls <- calls
   fit$time <- fit_time
 
-  # We also need the model for summary and plotting
+  # We also need the model and a model name for summary and plotting
   fit$mkinmod <- mkinmod
+  fit$mkinmod$name <- mkinmod_name
 
   # We need data and predictions for summary and plotting
   fit$observed <- observed

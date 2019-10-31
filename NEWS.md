@@ -1,5 +1,13 @@
 # mkin 0.9.49.6 (unreleased)
 
+- Implement a likelihood ratio test as a method for 'lrtest' from the lmtest package
+
+- Add an 'update' method for mkinfit objects which remembers fitted parameters if appropriate
+
+- Add a 'residuals' method for mkinfit objects that supports scaling based on the error model
+
+- Fix a bug in 'mkinfit' that prevented summaries of objects fitted with fixed parameters to be generated
+
 - Add 'parms' and 'confint' methods for mkinfit objects. Confidence intervals based on the quadratic approximation as in the summary, and based on the profile likelihood
 
 - Move long-running tests to tests/testthat/slow with a separate test log. They currently take around 7 minutes on my system

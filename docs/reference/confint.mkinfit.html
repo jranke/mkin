@@ -236,13 +236,14 @@ machines, cores &gt; 1 is not supported.</p></td>
   <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='no'>f_d_1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO</span>, <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>FOCUS_2006_D</span>, <span class='no'>value</span> <span class='kw'>!=</span> <span class='fl'>0</span>), <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='no'>ci_profile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_d_1</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt;        User      System verstrichen 
-#&gt;      50.787       0.000      50.815 </div><div class='input'><span class='co'># The following does not save much time, as parent_0 takes up most of the time</span>
+#&gt;      50.987       0.008      51.023 </div><div class='input'><span class='co'># The following does not save much time, as parent_0 takes up most of the time</span>
 <span class='co'># system.time(ci_profile &lt;- confint(f_d_1, cores = 5))</span>
 <span class='co'># system.time(ci_profile &lt;- confint(f_d_1,</span>
 <span class='co'>#   c("k_parent_sink", "k_parent_m1", "k_m1_sink", "sigma"), cores = 1))</span>
 <span class='co'># If we exclude parent_0 (the confidence of which is often of minor interest), we get a nice</span>
 <span class='co'># performance improvement from about 30 seconds to about 12 seconds</span>
-<span class='co'># system.time(ci_profile_no_parent_0 &lt;- confint(f_d_1, c("k_parent_sink", "k_parent_m1", "k_m1_sink", "sigma"), cores = 4))</span>
+<span class='co'># system.time(ci_profile_no_parent_0 &lt;- confint(f_d_1, </span>
+<span class='co'>#   c("k_parent_sink", "k_parent_m1", "k_m1_sink", "sigma"), cores = 4))</span>
 <span class='no'>ci_profile</span></div><div class='output co'>#&gt;                       2.5%        97.5%
 #&gt; parent_0      96.456003650 1.027703e+02
 #&gt; k_parent_sink  0.040762501 5.549764e-02

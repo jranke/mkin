@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Calculated the log-likelihood of a fitted mkinfit object — logLik.mkinfit • mkin</title>
+<title>Likelihood ratio test for mkinfit models — lrtest.mkinfit • mkin</title>
 
 
 <!-- jquery -->
@@ -35,12 +35,12 @@
 
 
 
-<meta property="og:title" content="Calculated the log-likelihood of a fitted mkinfit object — logLik.mkinfit" />
-<meta property="og:description" content="This function returns the product of the likelihood densities of each
-observed value, as calculated as part of the fitting procedure using
-dnorm, i.e. assuming normal distribution, and with the means
-predicted by the degradation model, and the standard deviations predicted by
-the error model." />
+<meta property="og:title" content="Likelihood ratio test for mkinfit models — lrtest.mkinfit" />
+<meta property="og:description" content="Compare two mkinfit models based on their likelihood. If two fitted
+mkinfit objects are given as arguments, it is checked if they have been
+fitted to the same data. It is the responsibility of the user to make sure
+that the models are nested, i.e. one of them has less degrees of freedom
+and can be expressed by fixing the parameters of the other." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -131,76 +131,81 @@ the error model." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Calculated the log-likelihood of a fitted mkinfit object</h1>
+    <h1>Likelihood ratio test for mkinfit models</h1>
     
-    <div class="hidden name"><code>logLik.mkinfit.Rd</code></div>
+    <div class="hidden name"><code>lrtest.mkinfit.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function returns the product of the likelihood densities of each
-observed value, as calculated as part of the fitting procedure using
-<code><a href='https://rdrr.io/r/stats/Normal.html'>dnorm</a></code>, i.e. assuming normal distribution, and with the means
-predicted by the degradation model, and the standard deviations predicted by
-the error model.</p>
+    <p>Compare two mkinfit models based on their likelihood. If two fitted
+mkinfit objects are given as arguments, it is checked if they have been
+fitted to the same data. It is the responsibility of the user to make sure
+that the models are nested, i.e. one of them has less degrees of freedom
+and can be expressed by fixing the parameters of the other.</p>
     </div>
 
     <pre class="usage"><span class='co'># S3 method for mkinfit</span>
-<span class='fu'><a href='https://rdrr.io/r/stats/logLik.html'>logLik</a></span>(<span class='no'>object</span>, <span class='no'>...</span>)</pre>
+<span class='fu'><a href='https://rdrr.io/pkg/lmtest/man/lrtest.html'>lrtest</a></span>(<span class='no'>object</span>, <span class='kw'>object_2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>object</th>
-      <td><p>An object of class <code><a href='mkinfit.html'>mkinfit</a></code>.</p></td>
+      <td><p>An <code><a href='mkinfit.html'>mkinfit</a></code> object</p></td>
+    </tr>
+    <tr>
+      <th>object_2</th>
+      <td><p>Optionally, another mkinfit object fitted to the same data.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>For compatibility with the generic method</p></td>
+      <td><p>Argument to <code><a href='mkinfit.html'>mkinfit</a></code>, passed to
+<code><a href='update.mkinfit.html'>update.mkinfit</a></code> for creating the alternative fitted object.</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>An object of class <code><a href='https://rdrr.io/r/stats/logLik.html'>logLik</a></code> with the number of estimated
-  parameters (degradation model parameters plus variance model parameters)
-  as attribute.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The total number of estimated parameters returned with the value of the
-likelihood is calculated as the sum of fitted degradation model parameters
-and the fitted error model parameters.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>Compare the AIC of columns of <code><a href='mmkin.html'>mmkin</a></code> objects using
-  <code><a href='AIC.mmkin.html'>AIC.mmkin</a></code>.</p></div>
+    <p>Alternatively, an argument to mkinfit can be given which is then passed
+to <code><a href='update.mkinfit.html'>update.mkinfit</a></code> to obtain the alternative model.</p>
+<p>The comparison is then made by the <code><a href='https://rdrr.io/pkg/lmtest/man/lrtest.html'>lrtest.default</a></code>
+method from the lmtest package. The model with the higher number of fitted
+parameters (alternative hypothesis) is listed first, then the model with the
+lower number of fitted parameters (null hypothesis).</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-  <span class='co'># \dontrun{</span>
-  <span class='no'>sfo_sfo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(
-    <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"m1"</span>),
-    <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>)
-  )</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>  <span class='no'>d_t</span> <span class='kw'>&lt;-</span> <span class='no'>FOCUS_2006_D</span>
-  <span class='no'>f_nw</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>sfo_sfo</span>, <span class='no'>d_t</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='co'># no weighting (weights are unity)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'>  <span class='no'>f_obs</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>sfo_sfo</span>, <span class='no'>d_t</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"obs"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'>  <span class='no'>f_tc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>sfo_sfo</span>, <span class='no'>d_t</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"tc"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/stats/AIC.html'>AIC</a></span>(<span class='no'>f_nw</span>, <span class='no'>f_obs</span>, <span class='no'>f_tc</span>)</div><div class='output co'>#&gt;       df      AIC
-#&gt; f_nw   5 204.4486
-#&gt; f_obs  6 205.8727
-#&gt; f_tc   6 141.9656</div><div class='input'>  # }
-
+    <pre class="examples"><div class='input'><span class='co'># \dontrun{</span>
+<span class='no'>test_data</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>synthetic_data_for_UBA_2014</span><span class='kw'>[[</span><span class='fl'>12</span>]]$<span class='no'>data</span>, <span class='no'>name</span> <span class='kw'>==</span> <span class='st'>"parent"</span>)
+<span class='no'>sfo_fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='st'>"SFO"</span>, <span class='no'>test_data</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>dfop_fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='st'>"DFOP"</span>, <span class='no'>test_data</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/lmtest/man/lrtest.html'>lrtest</a></span>(<span class='no'>dfop_fit</span>, <span class='no'>sfo_fit</span>)</div><div class='output co'>#&gt; Likelihood ratio test
+#&gt; 
+#&gt; Model 1: DFOP with error model const
+#&gt; Model 2: SFO with error model const
+#&gt;   #Df  LogLik Df  Chisq Pr(&gt;Chisq)    
+#&gt; 1   5 -42.453                         
+#&gt; 2   3 -63.954 -2 43.002  4.594e-10 ***
+#&gt; ---
+#&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/lmtest/man/lrtest.html'>lrtest</a></span>(<span class='no'>sfo_fit</span>, <span class='no'>dfop_fit</span>)</div><div class='output co'>#&gt; Likelihood ratio test
+#&gt; 
+#&gt; Model 1: DFOP with error model const
+#&gt; Model 2: SFO with error model const
+#&gt;   #Df  LogLik Df  Chisq Pr(&gt;Chisq)    
+#&gt; 1   5 -42.453                         
+#&gt; 2   3 -63.954 -2 43.002  4.594e-10 ***
+#&gt; ---
+#&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/lmtest/man/lrtest.html'>lrtest</a></span>(<span class='no'>dfop_fit</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"tc"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in mkinfit(mkinmod = "DFOP", observed = test_data, quiet = TRUE,     error_model = "tc", parms.ini = c(k1 = 0.359673923258109,     k2 = 0.0219997339436148, g = 0.692423284341522), state.ini = c(parent = 103.83323992643)): Objekt 'test_data' nicht gefunden</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/lmtest/man/lrtest.html'>lrtest</a></span>(<span class='no'>dfop_fit</span>, <span class='kw'>fixed_parms</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>k2</span> <span class='kw'>=</span> <span class='fl'>0</span>))</div><div class='output co'>#&gt; <span class='error'>Error in mkinfit(mkinmod = "DFOP", observed = test_data, quiet = TRUE,     fixed_parms = ..1, parms.ini = c(k1 = 0.359673923258109,     k2 = 0.0219997339436148, g = 0.692423284341522), state.ini = c(parent = 103.83323992643)): Objekt 'test_data' nicht gefunden</span></div><div class='input'># }
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
       <li><a href="#details">Details</a></li>
-      <li><a href="#see-also">See also</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
 
-    <h2>Author</h2>
-    <p>Johannes Ranke</p>
   </div>
 </div>
 

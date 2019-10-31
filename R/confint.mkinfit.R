@@ -57,7 +57,8 @@
 #' #   c("k_parent_sink", "k_parent_m1", "k_m1_sink", "sigma"), cores = 1))
 #' # If we exclude parent_0 (the confidence of which is often of minor interest), we get a nice
 #' # performance improvement from about 30 seconds to about 12 seconds
-#' # system.time(ci_profile_no_parent_0 <- confint(f_d_1, c("k_parent_sink", "k_parent_m1", "k_m1_sink", "sigma"), cores = 4))
+#' # system.time(ci_profile_no_parent_0 <- confint(f_d_1, 
+#' #   c("k_parent_sink", "k_parent_m1", "k_m1_sink", "sigma"), cores = 4))
 #' ci_profile
 #' ci_quadratic_transformed <- confint(f_d_1, method = "quadratic")
 #' ci_quadratic_transformed

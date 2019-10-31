@@ -17,10 +17,11 @@ An object of class \code{\link{logLik}} with the number of estimated
   as attribute.
 }
 \description{
-This function simply calculates the product of the likelihood densities
-calculated using \code{\link{dnorm}}, i.e. assuming normal distribution,
-with of the mean predicted by the degradation model, and the standard
-deviation predicted by the error model.
+This function returns the product of the likelihood densities of each
+observed value, as calculated as part of the fitting procedure using
+\code{\link{dnorm}}, i.e. assuming normal distribution, and with the means
+predicted by the degradation model, and the standard deviations predicted by
+the error model.
 }
 \details{
 The total number of estimated parameters returned with the value of the

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Calculated the log-likelihood of a fitted mkinfit object — logLik.mkinfit • mkin</title>
+<title>Extract residuals from an mkinfit model — residuals.mkinfit • mkin</title>
 
 
 <!-- jquery -->
@@ -35,12 +35,8 @@
 
 
 
-<meta property="og:title" content="Calculated the log-likelihood of a fitted mkinfit object — logLik.mkinfit" />
-<meta property="og:description" content="This function returns the product of the likelihood densities of each
-observed value, as calculated as part of the fitting procedure using
-dnorm, i.e. assuming normal distribution, and with the means
-predicted by the degradation model, and the standard deviations predicted by
-the error model." />
+<meta property="og:title" content="Extract residuals from an mkinfit model — residuals.mkinfit" />
+<meta property="og:description" content="Extract residuals from an mkinfit model" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -131,76 +127,50 @@ the error model." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Calculated the log-likelihood of a fitted mkinfit object</h1>
+    <h1>Extract residuals from an mkinfit model</h1>
     
-    <div class="hidden name"><code>logLik.mkinfit.Rd</code></div>
+    <div class="hidden name"><code>residuals.mkinfit.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function returns the product of the likelihood densities of each
-observed value, as calculated as part of the fitting procedure using
-<code><a href='https://rdrr.io/r/stats/Normal.html'>dnorm</a></code>, i.e. assuming normal distribution, and with the means
-predicted by the degradation model, and the standard deviations predicted by
-the error model.</p>
+    <p>Extract residuals from an mkinfit model</p>
     </div>
 
     <pre class="usage"><span class='co'># S3 method for mkinfit</span>
-<span class='fu'><a href='https://rdrr.io/r/stats/logLik.html'>logLik</a></span>(<span class='no'>object</span>, <span class='no'>...</span>)</pre>
+<span class='fu'><a href='https://rdrr.io/r/stats/residuals.html'>residuals</a></span>(<span class='no'>object</span>, <span class='kw'>standardized</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>object</th>
-      <td><p>An object of class <code><a href='mkinfit.html'>mkinfit</a></code>.</p></td>
+      <td><p>An <code><a href='mkinfit.html'>mkinfit</a></code> object</p></td>
+    </tr>
+    <tr>
+      <th>standardized</th>
+      <td><p>Should the residuals be standardized by dividing by the
+standard deviation obtained from the fitted error model?</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>For compatibility with the generic method</p></td>
+      <td><p>Not used</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>An object of class <code><a href='https://rdrr.io/r/stats/logLik.html'>logLik</a></code> with the number of estimated
-  parameters (degradation model parameters plus variance model parameters)
-  as attribute.</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>The total number of estimated parameters returned with the value of the
-likelihood is calculated as the sum of fitted degradation model parameters
-and the fitted error model parameters.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>Compare the AIC of columns of <code><a href='mmkin.html'>mmkin</a></code> objects using
-  <code><a href='AIC.mmkin.html'>AIC.mmkin</a></code>.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-  <span class='co'># \dontrun{</span>
-  <span class='no'>sfo_sfo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(
-    <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"m1"</span>),
-    <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>)
-  )</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>  <span class='no'>d_t</span> <span class='kw'>&lt;-</span> <span class='no'>FOCUS_2006_D</span>
-  <span class='no'>f_nw</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>sfo_sfo</span>, <span class='no'>d_t</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='co'># no weighting (weights are unity)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'>  <span class='no'>f_obs</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>sfo_sfo</span>, <span class='no'>d_t</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"obs"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'>  <span class='no'>f_tc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>sfo_sfo</span>, <span class='no'>d_t</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"tc"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/stats/AIC.html'>AIC</a></span>(<span class='no'>f_nw</span>, <span class='no'>f_obs</span>, <span class='no'>f_tc</span>)</div><div class='output co'>#&gt;       df      AIC
-#&gt; f_nw   5 204.4486
-#&gt; f_obs  6 205.8727
-#&gt; f_tc   6 141.9656</div><div class='input'>  # }
-
-</div></pre>
+    <pre class="examples"><div class='input'><span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='st'>"DFOP"</span>, <span class='no'>FOCUS_2006_C</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'><a href='https://rdrr.io/r/stats/residuals.html'>residuals</a></span>(<span class='no'>f</span>)</div><div class='output co'>#&gt; [1]  0.09726306 -0.13912135 -0.15351176  0.73388319 -0.08657030 -0.93204730
+#&gt; [7] -0.03269102  1.45347805 -0.88423710</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/residuals.html'>residuals</a></span>(<span class='no'>f</span>, <span class='kw'>standardized</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1]  0.13969820 -0.19981894 -0.22048777  1.05407086 -0.12434027 -1.33869248
+#&gt; [7] -0.04695387  2.08761953 -1.27002305</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#see-also">See also</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
 
-    <h2>Author</h2>
-    <p>Johannes Ranke</p>
   </div>
 </div>
 

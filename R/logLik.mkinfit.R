@@ -1,9 +1,10 @@
 #' Calculated the log-likelihood of a fitted mkinfit object
 #' 
-#' This function simply calculates the product of the likelihood densities
-#' calculated using \code{\link{dnorm}}, i.e. assuming normal distribution,
-#' with of the mean predicted by the degradation model, and the standard
-#' deviation predicted by the error model.
+#' This function returns the product of the likelihood densities of each
+#' observed value, as calculated as part of the fitting procedure using
+#' \code{\link{dnorm}}, i.e. assuming normal distribution, and with the means
+#' predicted by the degradation model, and the standard deviations predicted by
+#' the error model.
 #' 
 #' The total number of estimated parameters returned with the value of the
 #' likelihood is calculated as the sum of fitted degradation model parameters

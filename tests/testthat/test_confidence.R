@@ -1,44 +1,21 @@
-# We set up some models and fits with nls for comparisons
-SFO_trans <- function(t, parent_0, log_k_parent_sink) {
-  parent_0 * exp(- exp(log_k_parent_sink) * t)
-}
-SFO_notrans <- function(t, parent_0, k_parent_sink) {
-  parent_0 * exp(- k_parent_sink * t)
-}
-f_1_nls_trans <- nls(value ~ SFO_trans(time, parent_0, log_k_parent_sink),
-  data = FOCUS_2006_A,
-  start = list(parent_0 = 100, log_k_parent_sink = log(0.1)))
-f_1_nls_notrans <- nls(value ~ SFO_notrans(time, parent_0, k_parent_sink),
-  data = FOCUS_2006_A,
-  start = list(parent_0 = 100, k_parent_sink = 0.1))
-
-f_1_mkin_OLS <- mkinfit("SFO", FOCUS_2006_A, quiet = TRUE)
-f_1_mkin_OLS_notrans <- mkinfit("SFO", FOCUS_2006_A, quiet = TRUE,
-  transform_rates = FALSE)
-
-
-f_2_mkin <- mkinfit("DFOP", FOCUS_2006_C, quiet = TRUE)
-f_2_nls <- nls(value ~ SSbiexp(time, A1, lrc1, A2, lrc2), data = FOCUS_2006_C)
-
 context("Confidence intervals and p-values")
 
 test_that("The confint method 'quadratic' is consistent with the summary", {
   expect_equivalent(
-    confint(f_SFO_lin_mkin_ML, method = "quadratic"),
-    summary(f_SFO_lin_mkin_ML)$bpar[, c("Lower", "Upper")])
+    confint(fit_nw_1, method = "quadratic"),
+    summary(fit_nw_1)$bpar[, c("Lower", "Upper")])
 
   expect_equivalent(
-    confint(f_SFO_lin_mkin_ML, method = "quadratic", backtransform = FALSE),
-    summary(f_SFO_lin_mkin_ML)$par[, c("Lower", "Upper")])
-
-  f_notrans <- mkinfit("SFO", FOCUS_2006_C, quiet = TRUE, transform_rates = FALSE)
-  expect_equivalent(
-    confint(f_notrans, method = "quadratic", transformed = FALSE),
-    summary(f_notrans)$par[, c("Lower", "Upper")])
+    confint(fit_nw_1, method = "quadratic", backtransform = FALSE),
+    summary(fit_nw_1)$par[, c("Lower", "Upper")])
 
   expect_equivalent(
-    confint(f_notrans, method = "quadratic", transformed = FALSE),
-    summary(f_notrans)$bpar[, c("Lower", "Upper")])
+    confint(f_1_mkin_notrans, method = "quadratic", transformed = FALSE),
+    summary(f_1_mkin_notrans)$par[, c("Lower", "Upper")])
+
+  expect_equivalent(
+    confint(f_1_mkin_notrans, method = "quadratic", transformed = FALSE),
+    summary(f_1_mkin_notrans)$bpar[, c("Lower", "Upper")])
 
 })
 
@@ -46,20 +23,20 @@ test_that("Quadratic confidence intervals for rate constants are comparable to v
 
   # Check fitted parameter values
   expect_equivalent(
-    (f_1_mkin_OLS$bparms.optim -coef(f_1_nls_notrans))/f_1_mkin_OLS$bparms.optim,
+    (f_1_mkin_trans$bparms.optim -coef(f_1_nls_notrans))/f_1_mkin_trans$bparms.optim,
     rep(0, 2), tolerance = 1e-6)
   expect_equivalent(
-    (f_1_mkin_OLS$par[1:2] - coef(f_1_nls_trans))/f_1_mkin_OLS$par[1:2],
+    (f_1_mkin_trans$par[1:2] - coef(f_1_nls_trans))/f_1_mkin_trans$par[1:2],
     rep(0, 2), tolerance = 1e-6)
 
   # Check the standard error for the transformed parameters
   se_nls <- summary(f_1_nls_trans)$coefficients[, "Std. Error"]
   # This is of similar magnitude as the standard error obtained with the mkin
-  se_mkin <- summary(f_1_mkin_OLS)$par[1:2, "Std. Error"]
+  se_mkin <- summary(f_1_mkin_trans)$par[1:2, "Std. Error"]
 
   se_nls_notrans <- summary(f_1_nls_notrans)$coefficients[, "Std. Error"]
   # This is also of similar magnitude as the standard error obtained with the mkin
-  se_mkin_notrans <- summary(f_1_mkin_OLS_notrans)$par[1:2, "Std. Error"]
+  se_mkin_notrans <- summary(f_1_mkin_notrans)$par[1:2, "Std. Error"]
 
   # The difference can partly be explained by the ratio between
   # the maximum likelihood estimate of the standard error sqrt(rss/n)

@@ -65,7 +65,9 @@ default values.  Otherwise, inital values for all error model parameters
 must be given.}
 
 \item{fixed_parms}{The names of parameters that should not be optimised but
-rather kept at the values specified in \code{parms.ini}.}
+rather kept at the values specified in \code{parms.ini}. Alternatively,
+a named numeric vector of parameters to be fixed, regardless of the values
+in parms.ini.}
 
 \item{fixed_initials}{The names of model variables for which the initial
 state at time 0 should be excluded from the optimisation. Defaults to all
