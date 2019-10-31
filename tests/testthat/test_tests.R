@@ -5,7 +5,7 @@ test_that("The likelihood ratio test works", {
   expect_error(lrtest(f_1_mkin_trans, f_2_mkin), "not been fitted to the same data")
 
   res <- lrtest(fit_nw_1, fit_tc_1)
-  expect_equal(res[["2", "Pr(>Chisq)"]], 1, tolerance = 1e-5)
+  expect_equal(res[["2", "Pr(>Chisq)"]], 1, tolerance = 1e-4)
 
 })
 
