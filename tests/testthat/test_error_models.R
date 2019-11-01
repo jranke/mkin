@@ -45,7 +45,7 @@ test_that("The different error model fitting methods work for parent fits", {
 
   f_9_twostep <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
     error_model = "tc", error_model_algorithm = "twostep", quiet = TRUE)
-  expect_equivalent(parms(f_9_twostep), f_9_parms_tc_direct)
+  expect_equivalent(parms(f_9_twostep), f_9_parms_tc_direct, tolerance = 1e-5)
 
   f_9_threestep <- mkinfit("SFO", experimental_data_for_UBA_2019[[9]]$data,
     error_model = "tc", error_model_algorithm = "threestep", quiet = TRUE)

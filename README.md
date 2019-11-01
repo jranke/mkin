@@ -61,7 +61,7 @@ and at [R-Forge](http://kinfit.r-forge.r-project.org/mkin_static/index.html).
   using a numeric solver from the `deSolve` package (default is `lsoda`).
 * If a C compiler is installed, the kinetic models are compiled from automatically
   generated C code, see
-  [vignette `compiled_models`](https://pkgdown.jrwb.de/mkin/articles/compiled_models.html).
+  [vignette `compiled_models`](https://pkgdown.jrwb.de/mkin/articles/web_only/compiled_models.html).
   The autogeneration of C code was
   inspired by the [`ccSolve`](https://github.com/karlines/ccSolve) package. Thanks
   to Karline Soetaert for her work on that.
