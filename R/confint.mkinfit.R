@@ -1,8 +1,13 @@
 #' Confidence intervals for parameters of mkinfit objects
 #'
-#' The default method 'profile' is based on the profile likelihood for each
-#' parameter. The method uses two nested optimisations. The speed of the method
-#' could likely be improved by using the method of Venzon and Moolgavkar (1988).
+#' The default method 'quadratic' is based on the quadratic approximation of
+#' the curvature of the likelihood function at the maximum likelihood parameter
+#' estimates.
+#' The alternative method 'profile' is based on the profile likelihood for each
+#' parameter. The method uses two nested optimisations and can take a very long
+#' time, even if parallelized by specifying 'cores' on unixoid platforms. The
+#' speed of the method could likely be improved by using the method of Venzon
+#' and Moolgavkar (1988).
 #'
 #' @param object An \code{\link{mkinfit}} object
 #' @param parm A vector of names of the parameters which are to be given
@@ -12,11 +17,11 @@
 #' @param cutoff Possibility to specify an alternative cutoff for the difference
 #'   in the log-likelihoods at the confidence boundary. Specifying an explicit
 #'   cutoff value overrides arguments 'level' and 'alpha'
-#' @param method The 'profile' method searches the parameter space for the
+#' @param method The 'quadratic' method approximates the likelihood function at
+#'   the optimised parameters using the second term of the Taylor expansion,
+#'   using a second derivative (hessian) contained in the object.
+#'   The 'profile' method searches the parameter space for the
 #'   cutoff of the confidence intervals by means of a likelihood ratio test.
-#'   The 'quadratic' method approximates the likelihood function at the
-#'   optimised parameters using the second term of the Taylor expansion, using
-#'   a second derivative (hessian) contained in the object.
 #' @param transformed If the quadratic approximation is used, should it be
 #'   applied to the likelihood based on the transformed parameters?
 #' @param backtransform If we approximate the likelihood in terms of the
@@ -46,19 +51,26 @@
 #' \dontrun{
 #' confint(f, method = "profile")
 #'
+#' # Set the number of cores for the profiling method for further examples
+#' if (identical(Sys.getenv("NOT_CRAN"), "true")) {
+#'   n_cores <- parallel::detectCores() - 1
+#' } else {
+#'  n_cores <- 1
+#' }
+#' if (Sys.getenv("TRAVIS") != "") n_cores = 1
+#' if (Sys.info()["sysname"] == "Windows") n_cores = 1
+#'
 #' SFO_SFO <- mkinmod(parent = mkinsub("SFO", "m1"), m1 = mkinsub("SFO"), quiet = TRUE)
 #' SFO_SFO.ff <- mkinmod(parent = mkinsub("SFO", "m1"), m1 = mkinsub("SFO"),
 #'   use_of_ff = "max", quiet = TRUE)
 #' f_d_1 <- mkinfit(SFO_SFO, subset(FOCUS_2006_D, value != 0), quiet = TRUE)
-#' system.time(ci_profile <- confint(f_d_1, cores = 1, quiet = TRUE))
-#' # The following does not save much time, as parent_0 takes up most of the time
-#' # system.time(ci_profile <- confint(f_d_1, cores = 5))
-#' # system.time(ci_profile <- confint(f_d_1,
-#' #   c("k_parent_sink", "k_parent_m1", "k_m1_sink", "sigma"), cores = 1))
-#' # If we exclude parent_0 (the confidence of which is often of minor interest), we get a nice
-#' # performance improvement from about 30 seconds to about 12 seconds
-#' # system.time(ci_profile_no_parent_0 <- confint(f_d_1, 
-#' #   c("k_parent_sink", "k_parent_m1", "k_m1_sink", "sigma"), cores = 4))
+#' system.time(ci_profile <- confint(f_d_1, method = "profile", cores = 1, quiet = TRUE))
+#' # Using more cores does not save much time here, as parent_0 takes up most of the time
+#' # If we additionally exclude parent_0 (the confidence of which is often of
+#' # minor interest), we get a nice performance improvement from about 50
+#' # seconds to about 12 seconds if we use at least four cores
+#' system.time(ci_profile_no_parent_0 <- confint(f_d_1, method = "profile",
+#'   c("k_parent_sink", "k_parent_m1", "k_m1_sink", "sigma"), cores = n_cores))
 #' ci_profile
 #' ci_quadratic_transformed <- confint(f_d_1, method = "quadratic")
 #' ci_quadratic_transformed
@@ -70,21 +82,14 @@
 #' # interval based on the untransformed fit for k_m1_sink
 #' rel_diffs_transformed <- abs((ci_quadratic_transformed - ci_profile)/ci_profile)
 #' rel_diffs_untransformed <- abs((ci_quadratic_untransformed - ci_profile)/ci_profile)
-#' rel_diffs_transformed
-#' rel_diffs_untransformed
+#' rel_diffs_transformed < rel_diffs_untransformed
+#' signif(rel_diffs_transformed, 3)
+#' signif(rel_diffs_untransformed, 3)
 #'
-#' # Set the number of cores for further examples
-#' if (identical(Sys.getenv("NOT_CRAN"), "true")) {
-#'   n_cores <- parallel::detectCores() - 1
-#' } else {
-#'  n_cores <- 1
-#' }
-#' if (Sys.getenv("TRAVIS") != "") n_cores = 1
-#' if (Sys.info()["sysname"] == "Windows") n_cores = 1
 #'
 #' # Investigate a case with formation fractions
 #' f_d_2 <- mkinfit(SFO_SFO.ff, subset(FOCUS_2006_D, value != 0), quiet = TRUE)
-#' ci_profile_ff <- confint(f_d_2, cores = n_cores)
+#' ci_profile_ff <- confint(f_d_2, method = "profile", cores = n_cores)
 #' ci_profile_ff
 #' ci_quadratic_transformed_ff <- confint(f_d_2, method = "quadratic")
 #' ci_quadratic_transformed_ff
@@ -94,8 +99,9 @@
 #' rel_diffs_untransformed_ff <- abs((ci_quadratic_untransformed_ff - ci_profile_ff)/ci_profile_ff)
 #' # While the confidence interval for the parent rate constant is closer to
 #' # the profile based interval when using the internal parameter
-#' # transformation, the intervals for the other parameters are 'better
+#' # transformation, the interval for the metabolite rate constant is 'better
 #' # without internal parameter transformation.
+#' rel_diffs_transformed_ff < rel_diffs_untransformed_ff
 #' rel_diffs_transformed_ff
 #' rel_diffs_untransformed_ff
 #'
@@ -114,7 +120,7 @@
 #' @export
 confint.mkinfit <- function(object, parm,
   level = 0.95, alpha = 1 - level, cutoff,
-  method = c("profile", "quadratic"),
+  method = c("quadratic", "profile"),
   transformed = TRUE, backtransform = TRUE,
   cores = round(detectCores()/2), quiet = FALSE, ...)
 {

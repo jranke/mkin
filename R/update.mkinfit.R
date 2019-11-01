@@ -12,8 +12,12 @@
 #' @param evaluate Should the call be evaluated or returned as a call
 #' @examples
 #' \dontrun{
-#' fit <- mkinfit("DFOP", subset(FOCUS_2006_D, value != 0), quiet = TRUE)
-#' update(fit, error_model = "tc")
+#' fit <- mkinfit("SFO", subset(FOCUS_2006_D, value != 0), quiet = TRUE)
+#' parms(fit)
+#' plot_err(fit)
+#' fit_2 <- update(fit, error_model = "tc")
+#' parms(fit_2)
+#' plot_err(fit_2)
 #' }
 #' @export
 update.mkinfit <- function(object, ..., evaluate = TRUE)

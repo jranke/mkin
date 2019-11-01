@@ -7,7 +7,7 @@
 \method{residuals}{mkinfit}(object, standardized = FALSE, ...)
 }
 \arguments{
-\item{object}{An \code{\link{mkinfit}} object}
+\item{object}{A \code{\link{mkinfit}} object}
 
 \item{standardized}{Should the residuals be standardized by dividing by the
 standard deviation obtained from the fitted error model?}

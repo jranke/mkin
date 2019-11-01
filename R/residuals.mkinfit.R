@@ -1,6 +1,6 @@
 #' Extract residuals from an mkinfit model
 #'
-#' @param object An \code{\link{mkinfit}} object
+#' @param object A \code{\link{mkinfit}} object
 #' @param standardized Should the residuals be standardized by dividing by the
 #'   standard deviation obtained from the fitted error model?
 #' @param \dots Not used

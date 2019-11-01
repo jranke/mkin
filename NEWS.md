@@ -1,3 +1,7 @@
+# mkin 0.9.49.8 (unreleased)
+
+- 'confint.mkinfit': Make the quadratic approximation the default, as the likelihood profiling takes too much time for any with more than three parameters
+
 # mkin 0.9.49.7 (2019-11-01)
 
 - Fix a bug introduced in 0.9.49.6 that occurred if the direct optimisation yielded a higher likelihood than the three-step optimisation in the d_3 algorithm, which caused the fitted parameters of the three-step optimisation to be returned instead of the parameters of the direct optimisation

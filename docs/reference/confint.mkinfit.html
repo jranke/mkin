@@ -36,9 +36,14 @@
 
 
 <meta property="og:title" content="Confidence intervals for parameters of mkinfit objects — confint.mkinfit" />
-<meta property="og:description" content="The default method 'profile' is based on the profile likelihood for each
-parameter. The method uses two nested optimisations. The speed of the method
-could likely be improved by using the method of Venzon and Moolgavkar (1988)." />
+<meta property="og:description" content="The default method 'quadratic' is based on the quadratic approximation of
+the curvature of the likelihood function at the maximum likelihood parameter
+estimates.
+The alternative method 'profile' is based on the profile likelihood for each
+parameter. The method uses two nested optimisations and can take a very long
+time, even if parallelized by specifying 'cores' on unixoid platforms. The
+speed of the method could likely be improved by using the method of Venzon
+and Moolgavkar (1988)." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -71,7 +76,7 @@ could likely be improved by using the method of Venzon and Moolgavkar (1988)." /
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.49.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.49.8</span>
       </span>
     </div>
 
@@ -135,14 +140,19 @@ could likely be improved by using the method of Venzon and Moolgavkar (1988)." /
     </div>
 
     <div class="ref-description">
-    <p>The default method 'profile' is based on the profile likelihood for each
-parameter. The method uses two nested optimisations. The speed of the method
-could likely be improved by using the method of Venzon and Moolgavkar (1988).</p>
+    <p>The default method 'quadratic' is based on the quadratic approximation of
+the curvature of the likelihood function at the maximum likelihood parameter
+estimates.
+The alternative method 'profile' is based on the profile likelihood for each
+parameter. The method uses two nested optimisations and can take a very long
+time, even if parallelized by specifying 'cores' on unixoid platforms. The
+speed of the method could likely be improved by using the method of Venzon
+and Moolgavkar (1988).</p>
     </div>
 
     <pre class="usage"><span class='co'># S3 method for mkinfit</span>
 <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>object</span>, <span class='no'>parm</span>, <span class='kw'>level</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>1</span> -
-  <span class='no'>level</span>, <span class='no'>cutoff</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"profile"</span>, <span class='st'>"quadratic"</span>),
+  <span class='no'>level</span>, <span class='no'>cutoff</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"quadratic"</span>, <span class='st'>"profile"</span>),
   <span class='kw'>transformed</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>backtransform</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span>(<span class='fu'>detectCores</span>()/<span class='fl'>2</span>), <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
 
@@ -174,11 +184,11 @@ cutoff value overrides arguments 'level' and 'alpha'</p></td>
     </tr>
     <tr>
       <th>method</th>
-      <td><p>The 'profile' method searches the parameter space for the
-cutoff of the confidence intervals by means of a likelihood ratio test.
-The 'quadratic' method approximates the likelihood function at the
-optimised parameters using the second term of the Taylor expansion, using
-a second derivative (hessian) contained in the object.</p></td>
+      <td><p>The 'quadratic' method approximates the likelihood function at
+the optimised parameters using the second term of the Taylor expansion,
+using a second derivative (hessian) contained in the object.
+The 'profile' method searches the parameter space for the
+cutoff of the confidence intervals by means of a likelihood ratio test.</p></td>
     </tr>
     <tr>
       <th>transformed</th>
@@ -231,20 +241,27 @@ machines, cores &gt; 1 is not supported.</p></td>
 #&gt; parent_0      73.0641834 92.1392181
 #&gt; k_parent_sink  0.2170293  0.4235348
 #&gt; sigma          3.1307772  8.0628314</div><div class='input'>
+<span class='co'># Set the number of cores for the profiling method for further examples</span>
+<span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span>(<span class='st'>"NOT_CRAN"</span>), <span class='st'>"true"</span>)) {
+  <span class='no'>n_cores</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>parallel</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/r/parallel/detectCores.html'>detectCores</a></span>() - <span class='fl'>1</span>
+} <span class='kw'>else</span> {
+ <span class='no'>n_cores</span> <span class='kw'>&lt;-</span> <span class='fl'>1</span>
+}
+<span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span>(<span class='st'>"TRAVIS"</span>) <span class='kw'>!=</span> <span class='st'>""</span>) <span class='no'>n_cores</span> <span class='kw'>=</span> <span class='fl'>1</span>
+<span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/Sys.info.html'>Sys.info</a></span>()[<span class='st'>"sysname"</span>] <span class='kw'>==</span> <span class='st'>"Windows"</span>) <span class='no'>n_cores</span> <span class='kw'>=</span> <span class='fl'>1</span>
+
 <span class='no'>SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>), <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='no'>SFO_SFO.ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>), <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>),
   <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='no'>f_d_1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO</span>, <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>FOCUS_2006_D</span>, <span class='no'>value</span> <span class='kw'>!=</span> <span class='fl'>0</span>), <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='no'>ci_profile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_d_1</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt;        User      System verstrichen 
-#&gt;      51.646       0.000      51.673 </div><div class='input'><span class='co'># The following does not save much time, as parent_0 takes up most of the time</span>
-<span class='co'># system.time(ci_profile &lt;- confint(f_d_1, cores = 5))</span>
-<span class='co'># system.time(ci_profile &lt;- confint(f_d_1,</span>
-<span class='co'>#   c("k_parent_sink", "k_parent_m1", "k_m1_sink", "sigma"), cores = 1))</span>
-<span class='co'># If we exclude parent_0 (the confidence of which is often of minor interest), we get a nice</span>
-<span class='co'># performance improvement from about 30 seconds to about 12 seconds</span>
-<span class='co'># system.time(ci_profile_no_parent_0 &lt;- confint(f_d_1, </span>
-<span class='co'>#   c("k_parent_sink", "k_parent_m1", "k_m1_sink", "sigma"), cores = 4))</span>
-<span class='no'>ci_profile</span></div><div class='output co'>#&gt;                       2.5%        97.5%
+<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='no'>ci_profile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_d_1</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"profile"</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt;        User      System verstrichen 
+#&gt;      51.297       0.000      51.328 </div><div class='input'><span class='co'># Using more cores does not save much time here, as parent_0 takes up most of the time</span>
+<span class='co'># If we additionally exclude parent_0 (the confidence of which is often of</span>
+<span class='co'># minor interest), we get a nice performance improvement from about 50</span>
+<span class='co'># seconds to about 12 seconds if we use at least four cores</span>
+<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='no'>ci_profile_no_parent_0</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_d_1</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"profile"</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"k_parent_sink"</span>, <span class='st'>"k_parent_m1"</span>, <span class='st'>"k_m1_sink"</span>, <span class='st'>"sigma"</span>), <span class='kw'>cores</span> <span class='kw'>=</span> <span class='no'>n_cores</span>))</div><div class='output co'>#&gt; <span class='message'>Profiling the likelihood</span></div><div class='output co'>#&gt;        User      System verstrichen 
+#&gt;       0.006       0.003      11.435 </div><div class='input'><span class='no'>ci_profile</span></div><div class='output co'>#&gt;                       2.5%        97.5%
 #&gt; parent_0      96.456003650 1.027703e+02
 #&gt; k_parent_sink  0.040762501 5.549764e-02
 #&gt; k_parent_m1    0.046786482 5.500879e-02
@@ -267,29 +284,26 @@ machines, cores &gt; 1 is not supported.</p></td>
 <span class='co'># interval based on the untransformed fit for k_m1_sink</span>
 <span class='no'>rel_diffs_transformed</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span>((<span class='no'>ci_quadratic_transformed</span> - <span class='no'>ci_profile</span>)/<span class='no'>ci_profile</span>)
 <span class='no'>rel_diffs_untransformed</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span>((<span class='no'>ci_quadratic_untransformed</span> - <span class='no'>ci_profile</span>)/<span class='no'>ci_profile</span>)
-<span class='no'>rel_diffs_transformed</span></div><div class='output co'>#&gt;                       2.5%        97.5%
-#&gt; parent_0      0.0005407854 0.0002218012
-#&gt; k_parent_sink 0.0066452394 0.0083795930
-#&gt; k_parent_m1   0.0001833903 0.0020092090
-#&gt; k_m1_sink     0.0307278240 0.0290580487
-#&gt; sigma         0.0550252516 0.0327066836</div><div class='input'><span class='no'>rel_diffs_untransformed</span></div><div class='output co'>#&gt;                       2.5%        97.5%
-#&gt; parent_0      0.0005407854 0.0002218011
-#&gt; k_parent_sink 0.0067996407 0.0025717594
-#&gt; k_parent_m1   0.0037382781 0.0011843074
-#&gt; k_m1_sink     0.0146745610 0.0025299672
-#&gt; sigma         0.0550252516 0.0327066836</div><div class='input'>
-<span class='co'># Set the number of cores for further examples</span>
-<span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span>(<span class='st'>"NOT_CRAN"</span>), <span class='st'>"true"</span>)) {
-  <span class='no'>n_cores</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>parallel</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/r/parallel/detectCores.html'>detectCores</a></span>() - <span class='fl'>1</span>
-} <span class='kw'>else</span> {
- <span class='no'>n_cores</span> <span class='kw'>&lt;-</span> <span class='fl'>1</span>
-}
-<span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span>(<span class='st'>"TRAVIS"</span>) <span class='kw'>!=</span> <span class='st'>""</span>) <span class='no'>n_cores</span> <span class='kw'>=</span> <span class='fl'>1</span>
-<span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/Sys.info.html'>Sys.info</a></span>()[<span class='st'>"sysname"</span>] <span class='kw'>==</span> <span class='st'>"Windows"</span>) <span class='no'>n_cores</span> <span class='kw'>=</span> <span class='fl'>1</span>
+<span class='no'>rel_diffs_transformed</span> <span class='kw'>&lt;</span> <span class='no'>rel_diffs_untransformed</span></div><div class='output co'>#&gt;                2.5% 97.5%
+#&gt; parent_0      FALSE FALSE
+#&gt; k_parent_sink  TRUE FALSE
+#&gt; k_parent_m1    TRUE FALSE
+#&gt; k_m1_sink     FALSE FALSE
+#&gt; sigma         FALSE FALSE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Round.html'>signif</a></span>(<span class='no'>rel_diffs_transformed</span>, <span class='fl'>3</span>)</div><div class='output co'>#&gt;                   2.5%    97.5%
+#&gt; parent_0      0.000541 0.000222
+#&gt; k_parent_sink 0.006650 0.008380
+#&gt; k_parent_m1   0.000183 0.002010
+#&gt; k_m1_sink     0.030700 0.029100
+#&gt; sigma         0.055000 0.032700</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Round.html'>signif</a></span>(<span class='no'>rel_diffs_untransformed</span>, <span class='fl'>3</span>)</div><div class='output co'>#&gt;                   2.5%    97.5%
+#&gt; parent_0      0.000541 0.000222
+#&gt; k_parent_sink 0.006800 0.002570
+#&gt; k_parent_m1   0.003740 0.001180
+#&gt; k_m1_sink     0.014700 0.002530
+#&gt; sigma         0.055000 0.032700</div><div class='input'>
 
 <span class='co'># Investigate a case with formation fractions</span>
 <span class='no'>f_d_2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO.ff</span>, <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>FOCUS_2006_D</span>, <span class='no'>value</span> <span class='kw'>!=</span> <span class='fl'>0</span>), <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='no'>ci_profile_ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_d_2</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='no'>n_cores</span>)</div><div class='output co'>#&gt; <span class='message'>Profiling the likelihood</span></div><div class='input'><span class='no'>ci_profile_ff</span></div><div class='output co'>#&gt;                        2.5%        97.5%
+<span class='no'>ci_profile_ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_d_2</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"profile"</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='no'>n_cores</span>)</div><div class='output co'>#&gt; <span class='message'>Profiling the likelihood</span></div><div class='input'><span class='no'>ci_profile_ff</span></div><div class='output co'>#&gt;                        2.5%        97.5%
 #&gt; parent_0       96.456003650 1.027703e+02
 #&gt; k_parent        0.090911032 1.071578e-01
 #&gt; k_m1            0.003892605 6.702778e-03
@@ -310,9 +324,14 @@ machines, cores &gt; 1 is not supported.</p></td>
 <span class='no'>rel_diffs_untransformed_ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span>((<span class='no'>ci_quadratic_untransformed_ff</span> - <span class='no'>ci_profile_ff</span>)/<span class='no'>ci_profile_ff</span>)
 <span class='co'># While the confidence interval for the parent rate constant is closer to</span>
 <span class='co'># the profile based interval when using the internal parameter</span>
-<span class='co'># transformation, the intervals for the other parameters are 'better</span>
+<span class='co'># transformation, the interval for the metabolite rate constant is 'better</span>
 <span class='co'># without internal parameter transformation.</span>
-<span class='no'>rel_diffs_transformed_ff</span></div><div class='output co'>#&gt;                        2.5%        97.5%
+<span class='no'>rel_diffs_transformed_ff</span> <span class='kw'>&lt;</span> <span class='no'>rel_diffs_untransformed_ff</span></div><div class='output co'>#&gt;                 2.5% 97.5%
+#&gt; parent_0        TRUE  TRUE
+#&gt; k_parent        TRUE  TRUE
+#&gt; k_m1           FALSE FALSE
+#&gt; f_parent_to_m1  TRUE FALSE
+#&gt; sigma          FALSE  TRUE</div><div class='input'><span class='no'>rel_diffs_transformed_ff</span></div><div class='output co'>#&gt;                        2.5%        97.5%
 #&gt; parent_0       0.0005408012 0.0002217857
 #&gt; k_parent       0.0009596303 0.0009003981
 #&gt; k_m1           0.0307277425 0.0290579163
