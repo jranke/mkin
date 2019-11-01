@@ -36,9 +36,8 @@ applied to the likelihood based on the transformed parameters?}
 transformed parameters, should we backtransform the parameters with
 their confidence intervals?}
 
-\item{cores}{The number of cores to be used for multicore processing. This
-is only used when the \code{cluster} argument is \code{NULL}. On Windows
-machines, cores > 1 is not supported.}
+\item{cores}{The number of cores to be used for multicore processing. 
+On Windows machines, cores > 1 is currently not supported.}
 
 \item{quiet}{Should we suppress the message "Profiling the likelihood"}
 

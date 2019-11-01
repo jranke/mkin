@@ -27,9 +27,8 @@
 #' @param backtransform If we approximate the likelihood in terms of the
 #'   transformed parameters, should we backtransform the parameters with
 #'   their confidence intervals?
-#' @param cores The number of cores to be used for multicore processing. This
-#'   is only used when the \code{cluster} argument is \code{NULL}. On Windows
-#'   machines, cores > 1 is not supported.
+#' @param cores The number of cores to be used for multicore processing. 
+#'   On Windows machines, cores > 1 is currently not supported.
 #' @param quiet Should we suppress the message "Profiling the likelihood"
 #' @return A matrix with columns giving lower and upper confidence limits for
 #'   each parameter.

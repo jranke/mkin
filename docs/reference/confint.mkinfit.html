@@ -203,9 +203,8 @@ their confidence intervals?</p></td>
     </tr>
     <tr>
       <th>cores</th>
-      <td><p>The number of cores to be used for multicore processing. This
-is only used when the <code>cluster</code> argument is <code>NULL</code>. On Windows
-machines, cores &gt; 1 is not supported.</p></td>
+      <td><p>The number of cores to be used for multicore processing. 
+On Windows machines, cores &gt; 1 is currently not supported.</p></td>
     </tr>
     <tr>
       <th>quiet</th>
@@ -255,13 +254,13 @@ machines, cores &gt; 1 is not supported.</p></td>
   <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='no'>f_d_1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO</span>, <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>FOCUS_2006_D</span>, <span class='no'>value</span> <span class='kw'>!=</span> <span class='fl'>0</span>), <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='no'>ci_profile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_d_1</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"profile"</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt;        User      System verstrichen 
-#&gt;      51.297       0.000      51.328 </div><div class='input'><span class='co'># Using more cores does not save much time here, as parent_0 takes up most of the time</span>
+#&gt;      51.341       0.000      51.370 </div><div class='input'><span class='co'># Using more cores does not save much time here, as parent_0 takes up most of the time</span>
 <span class='co'># If we additionally exclude parent_0 (the confidence of which is often of</span>
 <span class='co'># minor interest), we get a nice performance improvement from about 50</span>
 <span class='co'># seconds to about 12 seconds if we use at least four cores</span>
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='no'>ci_profile_no_parent_0</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_d_1</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"profile"</span>,
   <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"k_parent_sink"</span>, <span class='st'>"k_parent_m1"</span>, <span class='st'>"k_m1_sink"</span>, <span class='st'>"sigma"</span>), <span class='kw'>cores</span> <span class='kw'>=</span> <span class='no'>n_cores</span>))</div><div class='output co'>#&gt; <span class='message'>Profiling the likelihood</span></div><div class='output co'>#&gt;        User      System verstrichen 
-#&gt;       0.006       0.003      11.435 </div><div class='input'><span class='no'>ci_profile</span></div><div class='output co'>#&gt;                       2.5%        97.5%
+#&gt;       0.001       0.007      11.432 </div><div class='input'><span class='no'>ci_profile</span></div><div class='output co'>#&gt;                       2.5%        97.5%
 #&gt; parent_0      96.456003650 1.027703e+02
 #&gt; k_parent_sink  0.040762501 5.549764e-02
 #&gt; k_parent_m1    0.046786482 5.500879e-02
