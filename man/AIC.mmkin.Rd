@@ -2,9 +2,12 @@
 % Please edit documentation in R/AIC.mmkin.R
 \name{AIC.mmkin}
 \alias{AIC.mmkin}
-\title{Calculated the AIC for a column of an mmkin object}
+\alias{BIC.mmkin}
+\title{Calculate the AIC for a column of an mmkin object}
 \usage{
 \method{AIC}{mmkin}(object, ..., k = 2)
+
+\method{BIC}{mmkin}(object, ...)
 }
 \arguments{
 \item{object}{An object of class \code{\link{mmkin}}, containing only one

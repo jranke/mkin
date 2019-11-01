@@ -1,4 +1,10 @@
-# mkin 0.9.49.6 (unreleased)
+# mkin 0.9.49.7 (2019-11-01)
+
+- Fix a bug introduced in 0.9.49.6 that occurred if the direct optimisation yielded a higher likelihood than the three-step optimisation in the d_3 algorithm, which caused the fitted parameters of the three-step optimisation to be returned instead of the parameters of the direct optimisation
+
+- Add an 'nobs' method for mkinfit methods, enabling the default 'BIC' method from the stats package. Also, add a 'BIC' method for mmkin column objects.
+
+# mkin 0.9.49.6 (2019-10-31)
 
 - Implement a likelihood ratio test as a method for 'lrtest' from the lmtest package
 

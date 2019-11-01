@@ -781,6 +781,8 @@ mkinfit <- function(mkinmod, observed,
             if (!quiet) message(d_3_messages["direct"])
             fit <- fit_direct
             fit$d_3_message <- d_3_messages["direct"]
+            degparms <- fit$par[degparms_index]
+            errparms <- fit$par[errparms_index]
           }
         }
       }
