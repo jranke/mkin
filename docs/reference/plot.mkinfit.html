@@ -71,7 +71,7 @@ observed data together with the solution of the fitted model." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.49.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.49.8</span>
       </span>
     </div>
 
@@ -150,9 +150,13 @@ observed data together with the solution of the fitted model.</p>
   <span class='kw'>lpos</span> <span class='kw'>=</span> <span class='st'>"topright"</span>, <span class='kw'>inset</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.05</span>, <span class='fl'>0.05</span>), <span class='kw'>show_errmin</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>errmin_digits</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>frame</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
 
-<span class='fu'>plot_sep</span>(<span class='no'>fit</span>, <span class='kw'>show_errmin</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+<span class='fu'>plot_sep</span>(<span class='no'>fit</span>, <span class='kw'>show_errmin</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>show_residuals</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span>(<span class='no'>fit</span>$<span class='no'>err_mod</span>, <span class='st'>"const"</span>), <span class='fl'>TRUE</span>,
+  <span class='st'>"standardized"</span>), <span class='no'>...</span>)
 
-<span class='fu'>plot_res</span>(<span class='no'>fit</span>, <span class='kw'>sep_obs</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show_errmin</span> <span class='kw'>=</span> <span class='no'>sep_obs</span>, <span class='no'>...</span>)
+<span class='fu'>plot_res</span>(<span class='no'>fit</span>, <span class='kw'>sep_obs</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show_errmin</span> <span class='kw'>=</span> <span class='no'>sep_obs</span>,
+  <span class='kw'>show_residuals</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span>(<span class='no'>fit</span>$<span class='no'>err_mod</span>, <span class='st'>"const"</span>), <span class='fl'>TRUE</span>,
+  <span class='st'>"standardized"</span>), <span class='no'>...</span>)
 
 <span class='fu'>plot_err</span>(<span class='no'>fit</span>, <span class='kw'>sep_obs</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>show_errmin</span> <span class='kw'>=</span> <span class='no'>sep_obs</span>, <span class='no'>...</span>)</pre>
 
@@ -216,7 +220,9 @@ corresponding model prediction lines.</p></td>
       <td><p>Should residuals be shown? If only one plot of the
 fits is shown, the residual plot is in the lower third of the plot.
 Otherwise, i.e. if "sep_obs" is given, the residual plots will be located
-to the right of the plots of the fitted curves.</p></td>
+to the right of the plots of the fitted curves. If this is set to
+'standardized', a plot of the residuals divided by the standard deviation
+ given by the fitted error model will be shown.</p></td>
     </tr>
     <tr>
       <th>show_errplot</th>
@@ -274,6 +280,10 @@ chi2 error percentage.</p></td>
       <th>...</th>
       <td><p>Further arguments passed to <code><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></code>.</p></td>
     </tr>
+    <tr>
+      <th>standardized</th>
+      <td><p>For</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -291,16 +301,15 @@ latex is being used for the formatting of the chi2 error level, if
 <span class='co'># parent to sink included</span>
 <span class='co'># \dontrun{</span>
 <span class='no'>SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>, <span class='kw'>full</span> <span class='kw'>=</span> <span class='st'>"Parent"</span>),
-                   <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='kw'>full</span> <span class='kw'>=</span> <span class='st'>"Metabolite M1"</span> ))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"tc"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>fit</span>)</div><div class='img'><img src='plot.mkinfit-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot_res</span>(<span class='no'>fit</span>)</div><div class='img'><img src='plot.mkinfit-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot_err</span>(<span class='no'>fit</span>)</div><div class='img'><img src='plot.mkinfit-3.png' alt='' width='700' height='433' /></div><div class='input'>
+                   <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='kw'>full</span> <span class='kw'>=</span> <span class='st'>"Metabolite M1"</span> ))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"tc"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>fit</span>)</div><div class='img'><img src='plot.mkinfit-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot_res</span>(<span class='no'>fit</span>)</div><div class='img'><img src='plot.mkinfit-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot_res</span>(<span class='no'>fit</span>, <span class='kw'>standardized</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: "standardized" ist kein Grafikparameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "standardized" ist kein Grafikparameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "standardized" ist kein Grafikparameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "standardized" ist kein Grafikparameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "standardized" ist kein Grafikparameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "standardized" ist kein Grafikparameter</span></div><div class='img'><img src='plot.mkinfit-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>plot_err</span>(<span class='no'>fit</span>)</div><div class='img'><img src='plot.mkinfit-4.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Show the observed variables separately, with residuals</span>
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>fit</span>, <span class='kw'>sep_obs</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>show_residuals</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>lpos</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"topright"</span>, <span class='st'>"bottomright"</span>),
-     <span class='kw'>show_errmin</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='plot.mkinfit-4.png' alt='' width='700' height='433' /></div><div class='input'>
+     <span class='kw'>show_errmin</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='plot.mkinfit-5.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># The same can be obtained with less typing, using the convenience function plot_sep</span>
-<span class='fu'>plot_sep</span>(<span class='no'>fit</span>, <span class='kw'>lpos</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"topright"</span>, <span class='st'>"bottomright"</span>))
-
+<span class='fu'>plot_sep</span>(<span class='no'>fit</span>, <span class='kw'>lpos</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"topright"</span>, <span class='st'>"bottomright"</span>))</div><div class='img'><img src='plot.mkinfit-6.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># Show the observed variables separately, with the error model</span>
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>fit</span>, <span class='kw'>sep_obs</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>show_errplot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>lpos</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"topright"</span>, <span class='st'>"bottomright"</span>),
-     <span class='kw'>show_errmin</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='plot.mkinfit-5.png' alt='' width='700' height='433' /></div><div class='input'># }
+     <span class='kw'>show_errmin</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='img'><img src='plot.mkinfit-7.png' alt='' width='700' height='433' /></div><div class='input'># }
 
 </div></pre>
   </div>
