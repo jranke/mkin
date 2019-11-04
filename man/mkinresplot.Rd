@@ -5,7 +5,8 @@
 \title{Function to plot residuals stored in an mkin object}
 \usage{
 mkinresplot(object, obs_vars = names(object$mkinmod$map), xlim = c(0,
-  1.1 * max(object$data$time)), xlab = "Time", ylab = "Residual",
+  1.1 * max(object$data$time)), standardized = FALSE, xlab = "Time",
+  ylab = ifelse(standardized, "Standardized residual", "Residual"),
   maxabs = "auto", legend = TRUE, lpos = "topright",
   col_obs = "auto", pch_obs = "auto", frame = TRUE, ...)
 }
@@ -18,15 +19,17 @@ the model}
 
 \item{xlim}{plot range in x direction.}
 
-\item{xlab}{Label for the x axis. Defaults to "Time [days]".}
+\item{standardized}{Should the residuals be standardized by dividing by the
+standard deviation given by the error model of the fit?}
 
-\item{ylab}{Label for the y axis. Defaults to "Residual [\% of applied
-radioactivity]".}
+\item{xlab}{Label for the x axis.}
+
+\item{ylab}{Label for the y axis.}
 
 \item{maxabs}{Maximum absolute value of the residuals. This is used for the
 scaling of the y axis and defaults to "auto".}
 
-\item{legend}{Should a legend be plotted? Defaults to "TRUE".}
+\item{legend}{Should a legend be plotted?}
 
 \item{lpos}{Where should the legend be placed? Default is "topright". Will
 be passed on to \code{\link{legend}}.}
@@ -58,7 +61,8 @@ mkinresplot(fit, "m1")
 }
 \seealso{
 \code{\link{mkinplot}}, for a way to plot the data and the fitted
-  lines of the mkinfit object.
+  lines of the mkinfit object, and \code{\link{plot_res}} for a function
+  combining the plot of the fit and the residual plot.
 }
 \author{
 Johannes Ranke

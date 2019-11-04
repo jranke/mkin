@@ -16,9 +16,13 @@
   lpos = "topright", inset = c(0.05, 0.05), show_errmin = FALSE,
   errmin_digits = 3, frame = TRUE, ...)
 
-plot_sep(fit, show_errmin = TRUE, ...)
+plot_sep(fit, show_errmin = TRUE,
+  show_residuals = ifelse(identical(fit$err_mod, "const"), TRUE,
+  "standardized"), ...)
 
-plot_res(fit, sep_obs = FALSE, show_errmin = sep_obs, ...)
+plot_res(fit, sep_obs = FALSE, show_errmin = sep_obs,
+  show_residuals = ifelse(identical(fit$err_mod, "const"), TRUE,
+  "standardized"), ...)
 
 plot_err(fit, sep_obs = FALSE, show_errmin = sep_obs, ...)
 }
@@ -54,7 +58,9 @@ corresponding model prediction lines.}
 \item{show_residuals}{Should residuals be shown? If only one plot of the
 fits is shown, the residual plot is in the lower third of the plot.
 Otherwise, i.e. if "sep_obs" is given, the residual plots will be located
-to the right of the plots of the fitted curves.}
+to the right of the plots of the fitted curves. If this is set to
+'standardized', a plot of the residuals divided by the standard deviation
+ given by the fitted error model will be shown.}
 
 \item{show_errplot}{Should squared residuals and the error model be shown?
 If only one plot of the fits is shown, this plot is in the lower third of
@@ -89,6 +95,8 @@ chi2 error percentage.}
 \item{frame}{Should a frame be drawn around the plots?}
 
 \item{\dots}{Further arguments passed to \code{\link{plot}}.}
+
+\item{standardized}{For}
 }
 \value{
 The function is called for its side effect.
@@ -113,6 +121,7 @@ SFO_SFO <- mkinmod(parent = mkinsub("SFO", "m1", full = "Parent"),
 fit <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE, error_model = "tc")
 plot(fit)
 plot_res(fit)
+plot_res(fit, standardized = FALSE)
 plot_err(fit)
 
 # Show the observed variables separately, with residuals

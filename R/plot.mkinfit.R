@@ -30,7 +30,10 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("type", "variable", "obse
 #' @param show_residuals Should residuals be shown? If only one plot of the
 #'   fits is shown, the residual plot is in the lower third of the plot.
 #'   Otherwise, i.e. if "sep_obs" is given, the residual plots will be located
-#'   to the right of the plots of the fitted curves.
+#'   to the right of the plots of the fitted curves. If this is set to
+#'   'standardized', a plot of the residuals divided by the standard deviation
+#'    given by the fitted error model will be shown.
+#' @param standardized For 
 #' @param show_errplot Should squared residuals and the error model be shown?
 #'   If only one plot of the fits is shown, this plot is in the lower third of
 #'   the plot.  Otherwise, i.e. if "sep_obs" is given, the residual plots will
@@ -68,6 +71,7 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("type", "variable", "obse
 #' fit <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE, error_model = "tc")
 #' plot(fit)
 #' plot_res(fit)
+#' plot_res(fit, standardized = FALSE)
 #' plot_err(fit)
 #'
 #' # Show the observed variables separately, with residuals
@@ -101,10 +105,18 @@ plot.mkinfit <- function(x, fit = x,
   show_errmin = FALSE, errmin_digits = 3,
   frame = TRUE, ...)
 {
+  if (identical(show_residuals, "standardized")) {
+    show_residuals <- TRUE
+    standardized <- TRUE
+  } else {
+    standardized <- FALSE
+  }
+
   if (add && show_residuals) stop("If adding to an existing plot we can not show residuals")
   if (add && show_errplot) stop("If adding to an existing plot we can not show the error model plot")
   if (show_residuals && show_errplot) stop("We can either show residuals over time or the error model plot, not both")
   if (add && sep_obs) stop("If adding to an existing plot we can not show observed variables separately")
+
 
   solution_type = fit$solution_type
   parms.all <- c(fit$bparms.optim, fit$bparms.fixed)
@@ -260,14 +272,16 @@ plot.mkinfit <- function(x, fit = x,
 
     # Show residuals if requested
     if (show_residuals) {
-      mkinresplot(fit, obs_vars = row_obs_vars, pch_obs = pch_obs[row_obs_vars], col_obs = col_obs[row_obs_vars],
-                  legend = FALSE, frame = frame)
+      mkinresplot(fit, obs_vars = row_obs_vars, standardized = standardized,
+        pch_obs = pch_obs[row_obs_vars], col_obs = col_obs[row_obs_vars],
+        legend = FALSE, frame = frame)
     }
 
     # Show error model plot if requested
     if (show_errplot) {
-      mkinerrplot(fit, obs_vars = row_obs_vars, pch_obs = pch_obs[row_obs_vars], col_obs = col_obs[row_obs_vars],
-                  legend = FALSE, frame = frame)
+      mkinerrplot(fit, obs_vars = row_obs_vars,
+        pch_obs = pch_obs[row_obs_vars], col_obs = col_obs[row_obs_vars],
+        legend = FALSE, frame = frame)
     }
   }
   if (do_layout) par(oldpar, no.readonly = TRUE)
@@ -275,16 +289,19 @@ plot.mkinfit <- function(x, fit = x,
 
 #' @rdname plot.mkinfit
 #' @export
-plot_sep <- function(fit, show_errmin = TRUE, ...) {
-  plot.mkinfit(fit, sep_obs = TRUE, show_residuals = TRUE,
+plot_sep <- function(fit, show_errmin = TRUE,
+  show_residuals = ifelse(identical(fit$err_mod, "const"), TRUE, "standardized"), ...) {
+  plot.mkinfit(fit, sep_obs = TRUE, show_residuals = show_residuals,
           show_errmin = show_errmin, ...)
 }
 
 #' @rdname plot.mkinfit
 #' @export
-plot_res <- function(fit, sep_obs = FALSE, show_errmin = sep_obs, ...) {
+plot_res <- function(fit, sep_obs = FALSE, show_errmin = sep_obs,
+  show_residuals = ifelse(identical(fit$err_mod, "const"), TRUE, "standardized"), ...)
+{
   plot.mkinfit(fit, sep_obs = sep_obs, show_errmin = show_errmin,
-    show_residuals = TRUE, row_layout = TRUE, ...)
+    show_residuals = show_residuals, row_layout = TRUE, ...)
 }
 
 #' @rdname plot.mkinfit

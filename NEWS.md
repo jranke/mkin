@@ -1,5 +1,7 @@
 # mkin 0.9.49.8 (unreleased)
 
+- 'plot_res', 'plot_sep' and 'mkinerrplot': Add the possibility to show standardized residuals and make it the default for fits with error models other than 'const'
+
 - 'lrtest.mkinfit': Improve naming of the compared fits in the case of fixed parameters
 
 - 'confint.mkinfit': Make the quadratic approximation the default, as the likelihood profiling takes a lot of time, especially if the fit has more than three parameters
