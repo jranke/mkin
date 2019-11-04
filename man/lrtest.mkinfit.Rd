@@ -40,7 +40,11 @@ lrtest(sfo_fit, dfop_fit)
 
 # The following two examples are commented out as they fail during
 # generation of the static help pages by pkgdown
-# lrtest(dfop_fit, error_model = "tc")
-# lrtest(dfop_fit, fixed_parms = c(k2 = 0))
+#lrtest(dfop_fit, error_model = "tc")
+#lrtest(dfop_fit, fixed_parms = c(k2 = 0))
+
+# However, this equivalent syntax works for static help pages
+lrtest(dfop_fit, update(dfop_fit, error_model = "tc"))
+lrtest(dfop_fit, update(dfop_fit, fixed_parms = c(k2 = 0)))
 }
 }

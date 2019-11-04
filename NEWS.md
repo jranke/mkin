@@ -1,6 +1,8 @@
 # mkin 0.9.49.8 (unreleased)
 
-- 'confint.mkinfit': Make the quadratic approximation the default, as the likelihood profiling takes too much time for any with more than three parameters
+- 'lrtest.mkinfit': Improve naming of the compared fits in the case of fixed parameters
+
+- 'confint.mkinfit': Make the quadratic approximation the default, as the likelihood profiling takes a lot of time, especially if the fit has more than three parameters
 
 # mkin 0.9.49.7 (2019-11-01)
 

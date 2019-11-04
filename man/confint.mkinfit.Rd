@@ -52,10 +52,10 @@ The default method 'quadratic' is based on the quadratic approximation of
 the curvature of the likelihood function at the maximum likelihood parameter
 estimates.
 The alternative method 'profile' is based on the profile likelihood for each
-parameter. The method uses two nested optimisations and can take a very long
-time, even if parallelized by specifying 'cores' on unixoid platforms. The
-speed of the method could likely be improved by using the method of Venzon
-and Moolgavkar (1988).
+parameter. The 'profile' method uses two nested optimisations and can take a
+very long time, even if parallelized by specifying 'cores' on unixoid
+platforms. The speed of the method could likely be improved by using the
+method of Venzon and Moolgavkar (1988).
 }
 \examples{
 f <- mkinfit("SFO", FOCUS_2006_C, quiet = TRUE)

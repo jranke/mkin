@@ -73,7 +73,7 @@ and can be expressed by fixing the parameters of the other." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.49.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.49.8</span>
       </span>
     </div>
 
@@ -196,11 +196,29 @@ lower number of fitted parameters (null hypothesis).</p>
 #&gt; 2   3 -63.954 -2 43.002  4.594e-10 ***
 #&gt; ---
 #&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</div><div class='input'>
-# The following two examples are commented out as they fail during
-# generation of the static help pages by pkgdown
-# lrtest(dfop_fit, error_model = "tc")
-# lrtest(dfop_fit, fixed_parms = c(k2 = 0))
-# }
+<span class='co'># The following two examples are commented out as they fail during</span>
+<span class='co'># generation of the static help pages by pkgdown</span>
+<span class='co'>#lrtest(dfop_fit, error_model = "tc")</span>
+<span class='co'>#lrtest(dfop_fit, fixed_parms = c(k2 = 0))</span>
+
+<span class='co'># However, this equivalent syntax works for static help pages</span>
+<span class='fu'><a href='https://rdrr.io/pkg/lmtest/man/lrtest.html'>lrtest</a></span>(<span class='no'>dfop_fit</span>, <span class='fu'><a href='https://rdrr.io/r/stats/update.html'>update</a></span>(<span class='no'>dfop_fit</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"tc"</span>))</div><div class='output co'>#&gt; Likelihood ratio test
+#&gt; 
+#&gt; Model 1: DFOP with error model tc
+#&gt; Model 2: DFOP with error model const
+#&gt;   #Df  LogLik Df  Chisq Pr(&gt;Chisq)    
+#&gt; 1   6 -34.587                         
+#&gt; 2   5 -42.453 -1 15.731  7.302e-05 ***
+#&gt; ---
+#&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/lmtest/man/lrtest.html'>lrtest</a></span>(<span class='no'>dfop_fit</span>, <span class='fu'><a href='https://rdrr.io/r/stats/update.html'>update</a></span>(<span class='no'>dfop_fit</span>, <span class='kw'>fixed_parms</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>k2</span> <span class='kw'>=</span> <span class='fl'>0</span>)))</div><div class='output co'>#&gt; Likelihood ratio test
+#&gt; 
+#&gt; Model 1: DFOP with error model const
+#&gt; Model 2: DFOP with error model const and fixed parameter(s) k2
+#&gt;   #Df  LogLik Df  Chisq Pr(&gt;Chisq)    
+#&gt; 1   5 -42.453                         
+#&gt; 2   4 -57.340 -1 29.776  4.851e-08 ***
+#&gt; ---
+#&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</div><div class='input'># }
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
