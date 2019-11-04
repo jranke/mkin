@@ -21,8 +21,8 @@ plot_sep(fit, show_errmin = TRUE,
   "standardized"), ...)
 
 plot_res(fit, sep_obs = FALSE, show_errmin = sep_obs,
-  show_residuals = ifelse(identical(fit$err_mod, "const"), TRUE,
-  "standardized"), ...)
+  standardized = ifelse(identical(fit$err_mod, "const"), FALSE, TRUE),
+  ...)
 
 plot_err(fit, sep_obs = FALSE, show_errmin = sep_obs, ...)
 }
@@ -96,7 +96,8 @@ chi2 error percentage.}
 
 \item{\dots}{Further arguments passed to \code{\link{plot}}.}
 
-\item{standardized}{For}
+\item{standardized}{When calling 'plot_res', should the residuals be
+standardized in the residual plot?}
 }
 \value{
 The function is called for its side effect.

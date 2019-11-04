@@ -33,7 +33,8 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("type", "variable", "obse
 #'   to the right of the plots of the fitted curves. If this is set to
 #'   'standardized', a plot of the residuals divided by the standard deviation
 #'    given by the fitted error model will be shown.
-#' @param standardized For 
+#' @param standardized When calling 'plot_res', should the residuals be
+#'   standardized in the residual plot?
 #' @param show_errplot Should squared residuals and the error model be shown?
 #'   If only one plot of the fits is shown, this plot is in the lower third of
 #'   the plot.  Otherwise, i.e. if "sep_obs" is given, the residual plots will
@@ -298,10 +299,11 @@ plot_sep <- function(fit, show_errmin = TRUE,
 #' @rdname plot.mkinfit
 #' @export
 plot_res <- function(fit, sep_obs = FALSE, show_errmin = sep_obs,
-  show_residuals = ifelse(identical(fit$err_mod, "const"), TRUE, "standardized"), ...)
+  standardized = ifelse(identical(fit$err_mod, "const"), FALSE, TRUE), ...)
 {
   plot.mkinfit(fit, sep_obs = sep_obs, show_errmin = show_errmin,
-    show_residuals = show_residuals, row_layout = TRUE, ...)
+    show_residuals = ifelse(standardized, "standardized", TRUE),
+    row_layout = TRUE, ...)
 }
 
 #' @rdname plot.mkinfit
