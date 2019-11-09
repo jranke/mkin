@@ -32,9 +32,6 @@ f_1_mkin_trans <- mkinfit("SFO", FOCUS_2006_A, quiet = TRUE)
 f_1_mkin_notrans <- mkinfit("SFO", FOCUS_2006_A, quiet = TRUE,
   transform_rates = FALSE)
 
-f_2_mkin <- mkinfit("DFOP", FOCUS_2006_C, quiet = TRUE)
-f_2_nls <- nls(value ~ SSbiexp(time, A1, lrc1, A2, lrc2), data = FOCUS_2006_C)
-
 # mmkin object of parent fits for tests
 models <- c("SFO", "FOMC", "DFOP", "HS")
 fits <- mmkin(models,
@@ -62,11 +59,14 @@ f_sfo_sfo.ff <- mkinfit(SFO_SFO.ff,
   subset(FOCUS_2006_D, value != 0),
   quiet = TRUE)
 
-# Two metabolites
 SFO_lin_a <- synthetic_data_for_UBA_2014[[1]]$data
-
 DFOP_par_c <- synthetic_data_for_UBA_2014[[12]]$data
 
+f_2_mkin <- mkinfit("DFOP", DFOP_par_c, quiet = TRUE)
+f_2_nls <- nls(value ~ SSbiexp(time, A1, lrc1, A2, lrc2), data = subset(DFOP_par_c, name == "parent"))
+f_2_anova <- lm(value ~ as.factor(time), data = subset(DFOP_par_c, name == "parent"))
+
+# Two metabolites
 m_synth_SFO_lin <- mkinmod(
   parent = mkinsub("SFO", "M1"),
   M1 = mkinsub("SFO", "M2"),

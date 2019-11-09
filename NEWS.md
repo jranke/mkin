@@ -1,5 +1,7 @@
 # mkin 0.9.49.8 (unreleased)
 
+- 'loftest': Add a lack-of-fit test
+
 - 'plot_res', 'plot_sep' and 'mkinerrplot': Add the possibility to show standardized residuals and make it the default for fits with error models other than 'const'
 
 - 'lrtest.mkinfit': Improve naming of the compared fits in the case of fixed parameters
