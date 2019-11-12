@@ -18,6 +18,8 @@ lmtest::lrtest
 #' parameters (alternative hypothesis) is listed first, then the model with the
 #' lower number of fitted parameters (null hypothesis).
 #'
+#' The method for mmkin objects only works for column objects with two members.
+#'
 #' @importFrom stats logLik update
 #' @param object An \code{\link{mkinfit}} object
 #' @param object_2 Optionally, another mkinfit object fitted to the same data.
@@ -67,4 +69,11 @@ lrtest.mkinfit <- function(object, object_2 = NULL, ...) {
   } else {
     lmtest::lrtest.default(object_2, object, name = name_function)
   }
+}
+
+#' @rdname lrtest.mkinfit
+#' @export
+lrtest.mmkin <- function(object, ...) {
+  if (nrow(object) != 2 | ncol(object) > 1) stop("Only works for a column containing two mkinfit objects")
+  lrtest(object[[1, 1]], object[[2, 1]])
 }
