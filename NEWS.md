@@ -1,5 +1,7 @@
 # mkin 0.9.49.8 (unreleased)
 
+- 'aw': Generic function for calculating Akaike weights, methods for mkinfit objects and mmkin columns
+
 - 'loftest': Add a lack-of-fit test
 
 - 'plot_res', 'plot_sep' and 'mkinerrplot': Add the possibility to show standardized residuals and make it the default for fits with error models other than 'const'
