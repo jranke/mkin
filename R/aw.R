@@ -4,16 +4,17 @@
 #' expected Kullback-Leibler information as specified
 #' by Burnham and Anderson (2004).
 #'
-#' @param object An mmkin column object, containing two or more
-#'   \code{\link{mkinfit}} models that have been fitted to the same data,
+#' @param object An [mmkin] column object, containing two or more
+#'   [mkinfit] models that have been fitted to the same data,
 #'   or an mkinfit object. In the latter case, further mkinfit
 #'   objects fitted to the same data should be specified
 #'   as dots arguments.
-#' @param \dots Not used in the method for mmkin column objects,
-#'   further mkinfit objects in the method for mkinfit objects.
+#' @param \dots Not used in the method for [mmkin] column objects,
+#'   further [mkinfit] objects in the method for mkinfit objects.
 #' @references Burnham KP and Anderson DR (2004) Multimodel
-#'   Inference: Understanding AIC and BIC in Model Selection
-#'   Sociological Methods & Research 33(2) 261-304
+#'   Inference: Understanding AIC and BIC in Model Selection.
+#'   *Sociological Methods & Research* **33**(2) 261-304
+#' @md
 #' @examples
 #' \dontrun{
 #' f_sfo <- mkinfit("SFO", FOCUS_2006_D, quiet = TRUE)
@@ -55,6 +56,3 @@ aw.mmkin <- function(object, ...) {
   if (ncol(object) > 1) stop("Please supply an mmkin column object")
   do.call(aw, object)
 }
-
-
-

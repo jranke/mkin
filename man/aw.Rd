@@ -13,14 +13,14 @@ aw(object, ...)
 \method{aw}{mmkin}(object, ...)
 }
 \arguments{
-\item{object}{An mmkin column object, containing two or more
-\code{\link{mkinfit}} models that have been fitted to the same data,
+\item{object}{An \link{mmkin} column object, containing two or more
+\link{mkinfit} models that have been fitted to the same data,
 or an mkinfit object. In the latter case, further mkinfit
 objects fitted to the same data should be specified
 as dots arguments.}
 
-\item{\dots}{Not used in the method for mmkin column objects,
-further mkinfit objects in the method for mkinfit objects.}
+\item{\dots}{Not used in the method for \link{mmkin} column objects,
+further \link{mkinfit} objects in the method for mkinfit objects.}
 }
 \description{
 Akaike weights are calculated based on the relative
@@ -42,6 +42,6 @@ aw(f[c("SFO", "DFOP")])
 }
 \references{
 Burnham KP and Anderson DR (2004) Multimodel
-  Inference: Understanding AIC and BIC in Model Selection
-  Sociological Methods & Research 33(2) 261-304
+Inference: Understanding AIC and BIC in Model Selection.
+\emph{Sociological Methods & Research} \strong{33}(2) 261-304
 }
