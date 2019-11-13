@@ -71,7 +71,7 @@ and at [R-Forge](http://kinfit.r-forge.r-project.org/mkin_static/index.html).
   so their estimators can more reasonably be expected to follow
   a normal distribution. This has the side effect that no constraints
   are needed in the optimisation. Thanks to René Lehmann for the nice
-  cooperation on this, especially the isometric logration transformation
+  cooperation on this, especially the isometric log-ratio transformation
   that is now used for the formation fractions.
 * A side effect of this is that when parameter estimates are backtransformed
   to match the model definition, confidence intervals calculated from
@@ -91,9 +91,9 @@ and at [R-Forge](http://kinfit.r-forge.r-project.org/mkin_static/index.html).
 * Three different error models can be selected using the argument `error_model`
   to the [`mkinfit`](https://pkgdown.jrwb.de/mkin/reference/mkinfit.html)
   function.
-* Iteratively reweighted least squares fitting is now obsolete, and the
-  variance by variable error model should now be specified as `error_model
-  = "obs"`.
+* The 'variance by variable' error model which is often fitted using
+  Iteratively Reweighted Least Squares (IRLS) should now be specified as
+  `error_model = "obs"`.
 * A two-component error model similar to the one proposed by
   [Rocke and Lorenzato](https://pkgdown.jrwb.de/mkin/reference/sigma_twocomp.html)
   can be selected using the argument `error_model = "tc"`.
@@ -160,11 +160,4 @@ will hopefully be able to learn from each other in the future as well.
 
 ## Development
 
-Contributions are welcome! Your
-[mkin fork](https://help.github.com/articles/fork-a-repo) is just a mouse click
-away... The master branch on github should always be in good shape, I implement
-new features in separate branches now. If you prefer subversion, project
-members for the
-[r-forge project](http://r-forge.r-project.org/R/?group_id=615) are welcome as well.
-Generally, the source code of the latest CRAN version should be available there.
-You can also browse the source code at [cgit.jrwb.de/mkin](http://cgit.jrwb.de/mkin).
+Contributions are welcome!
