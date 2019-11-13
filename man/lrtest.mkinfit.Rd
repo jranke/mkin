@@ -2,12 +2,16 @@
 % Please edit documentation in R/lrtest.mkinfit.R
 \name{lrtest.mkinfit}
 \alias{lrtest.mkinfit}
+\alias{lrtest.mmkin}
 \title{Likelihood ratio test for mkinfit models}
 \usage{
 \method{lrtest}{mkinfit}(object, object_2 = NULL, ...)
+
+\method{lrtest}{mmkin}(object, ...)
 }
 \arguments{
-\item{object}{An \code{\link{mkinfit}} object}
+\item{object}{An \code{\link{mkinfit}} object, or an \code{\link{mmkin}} column
+object containing two fits to the same data.}
 
 \item{object_2}{Optionally, another mkinfit object fitted to the same data.}
 

@@ -18,10 +18,9 @@ lmtest::lrtest
 #' parameters (alternative hypothesis) is listed first, then the model with the
 #' lower number of fitted parameters (null hypothesis).
 #'
-#' The method for mmkin objects only works for column objects with two members.
-#'
 #' @importFrom stats logLik update
-#' @param object An \code{\link{mkinfit}} object
+#' @param object An \code{\link{mkinfit}} object, or an \code{\link{mmkin}} column
+#'  object containing two fits to the same data.
 #' @param object_2 Optionally, another mkinfit object fitted to the same data.
 #' @param \dots Argument to \code{\link{mkinfit}}, passed to
 #'   \code{\link{update.mkinfit}} for creating the alternative fitted object.
