@@ -1,4 +1,4 @@
-#' Two component error model
+#' Two-component error model
 #' 
 #' Function describing the standard deviation of the measurement error in
 #' dependence of the measured value \eqn{y}:

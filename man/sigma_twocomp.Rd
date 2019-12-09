@@ -2,7 +2,7 @@
 % Please edit documentation in R/sigma_twocomp.R
 \name{sigma_twocomp}
 \alias{sigma_twocomp}
-\title{Two component error model}
+\title{Two-component error model}
 \usage{
 sigma_twocomp(y, sigma_low, rsd_high)
 }
