@@ -112,10 +112,11 @@ and one for the [github master branch](https://github.com/jranke/mkin/blob/maste
 ## Credits and historical remarks
 
 `mkin` would not be possible without the underlying software stack consisting
-of R and the packages [deSolve](https://cran.r-project.org/package=deSolve)
-and [FME](https://cran.r-project.org/package=FME), to say the least.
+of R and the package [deSolve](https://cran.r-project.org/package=deSolve).
+In previous version, `mkin` was also using the functionality of the
+[FME](https://cran.r-project.org/package=FME) package.
 
-It could not have been written without me being introduced to regulatory fate
+`mkin` could not have been written without me being introduced to regulatory fate
 modelling of pesticides by Adrian Gurney during my time at Harlan Laboratories
 Ltd (formerly RCC Ltd). `mkin` greatly profits from and largely follows
 the work done by the
@@ -157,6 +158,23 @@ Finally, there is
 a further development of the scripts used for KinGUII, so the different tools
 will hopefully be able to learn from each other in the future as well.
 
+## References
+
+<table>
+  <tr><td>Ranke J, Meinecke S (2019)
+  Error Models for the Kinetic Evaluation of Chemical Degradation Data
+  <i>Environments</i>
+  <b>6</b> (12) 124
+  <a href='https://doi.org/10.3390/environments6120124'>doi:10.3390/environments6120124</a>
+  </td></tr>
+
+  <tr><td>Ranke J, Wöltjen J, Meinecke S (2018)
+  Comparison of software tools for kinetic evaluation of chemical degradation data
+  <i>Environmental Sciences Europe</i>
+  <b>30</b> 17
+  <a href='https://doi.org/10.1186/s12302-018-0145-1'>doi:10.1186/s12302-018-0145-1</a>
+  </td></tr>
+</table>
 
 ## Development
 
