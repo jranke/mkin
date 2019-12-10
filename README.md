@@ -111,10 +111,14 @@ and one for the [github master branch](https://github.com/jranke/mkin/blob/maste
 
 ## Credits and historical remarks
 
-`mkin` would not be possible without the underlying software stack consisting
-of R and the package [deSolve](https://cran.r-project.org/package=deSolve).
+`mkin` would not be possible without the underlying software stack consisting of,
+among others, R and the package [deSolve](https://cran.r-project.org/package=deSolve).
 In previous version, `mkin` was also using the functionality of the
-[FME](https://cran.r-project.org/package=FME) package.
+[FME](https://cran.r-project.org/package=FME) package. Please refer to the
+[package page on CRAN](https://cran.r-project.org/package=mkin) for the full list
+of imported and suggested R packages. Also, [Debian Linux](https://debian.org),
+the vim editor and the [Nvim-R](https://github.com/jalvesaq/Nvim-R) plugin have
+been invaluable in its development.
 
 `mkin` could not have been written without me being introduced to regulatory fate
 modelling of pesticides by Adrian Gurney during my time at Harlan Laboratories
