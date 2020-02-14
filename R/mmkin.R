@@ -1,10 +1,10 @@
 #' Fit one or more kinetic models with one or more state variables to one or
 #' more datasets
-#' 
+#'
 #' This function calls \code{\link{mkinfit}} on all combinations of models and
 #' datasets specified in its first two arguments.
-#' 
-#' @param models Either a character vector of shorthand names like 
+#'
+#' @param models Either a character vector of shorthand names like
 #'   \code{c("SFO", "FOMC", "DFOP", "HS", "SFORB")}, or an optionally named
 #'   list of \code{\link{mkinmod}} objects.
 #' @param datasets An optionally named list of datasets suitable as observed
@@ -24,28 +24,28 @@
 #'   plotting.
 #' @keywords optimize
 #' @examples
-#' 
+#'
 #' \dontrun{
 #' m_synth_SFO_lin <- mkinmod(parent = mkinsub("SFO", "M1"),
 #'                            M1 = mkinsub("SFO", "M2"),
 #'                            M2 = mkinsub("SFO"), use_of_ff = "max")
-#' 
+#'
 #' m_synth_FOMC_lin <- mkinmod(parent = mkinsub("FOMC", "M1"),
 #'                             M1 = mkinsub("SFO", "M2"),
 #'                             M2 = mkinsub("SFO"), use_of_ff = "max")
-#' 
+#'
 #' models <- list(SFO_lin = m_synth_SFO_lin, FOMC_lin = m_synth_FOMC_lin)
 #' datasets <- lapply(synthetic_data_for_UBA_2014[1:3], function(x) x$data)
 #' names(datasets) <- paste("Dataset", 1:3)
-#' 
+#'
 #' time_default <- system.time(fits.0 <- mmkin(models, datasets, quiet = TRUE))
 #' time_1 <- system.time(fits.4 <- mmkin(models, datasets, cores = 1, quiet = TRUE))
-#' 
+#'
 #' time_default
 #' time_1
-#' 
+#'
 #' endpoints(fits.0[["SFO_lin", 2]])
-#' 
+#'
 #' # plot.mkinfit handles rows or columns of mmkin result objects
 #' plot(fits.0[1, ])
 #' plot(fits.0[1, ], obs_var = c("M1", "M2"))
@@ -58,7 +58,7 @@
 #' # allow to plot the observed variables separately
 #' plot(fits.0[1, 1])
 #' }
-#' 
+#'
 #' @export mmkin
 mmkin <- function(models = c("SFO", "FOMC", "DFOP"), datasets,
                   cores = round(detectCores()/2), cluster = NULL, ...)
