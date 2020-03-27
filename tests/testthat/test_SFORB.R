@@ -18,8 +18,6 @@
 
 context("Fitting the SFORB model")
 
-logistic <- mkinmod(parent = mkinsub("logistic"))
-
 test_that("Fitting the SFORB model is equivalent to fitting DFOP", {
   f_sforb <- mkinfit("SFORB", FOCUS_2006_C, quiet = TRUE)
   f_dfop <- mkinfit("DFOP", FOCUS_2006_C, quiet = TRUE)

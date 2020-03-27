@@ -54,11 +54,12 @@ test_that("Quadratic confidence intervals for rate constants are comparable to v
   # Another case:
   se_mkin_2 <- summary(f_2_mkin)$par[1:4, "Std. Error"]
   se_nls_2 <- summary(f_2_nls)$coefficients[, "Std. Error"]
-  # Here we the ratio of standard errors can be explained by the same
+  # Here the ratio of standard errors can be explained by the same
   # principle up to about 3%
+  nobs_DFOP_par_c_parent <- nrow(subset(DFOP_par_c, name == "parent"))
   expect_equivalent(
     se_nls_2[c("lrc1", "lrc2")] / se_mkin_2[c("log_k1", "log_k2")],
-    rep(sqrt(nrow(FOCUS_2006_C) / (nrow(FOCUS_2006_C) - 4)), 2),
+    rep(sqrt(nobs_DFOP_par_c_parent / (nobs_DFOP_par_c_parent - 4)), 2),
     tolerance = 0.03)
 })
 
@@ -73,7 +74,7 @@ test_that("Likelihood profile based confidence intervals work", {
    }
    f_mle <- stats4::mle(f_nll, start = as.list(parms(f)), nobs = nrow(FOCUS_2006_C))
 
-   ci_mkin_1_p_0.95 <- confint(f, method = "profile", level = 0.95, 
+   ci_mkin_1_p_0.95 <- confint(f, method = "profile", level = 0.95,
      cores = n_cores, quiet = TRUE)
 
    # Magically, we get very similar boundaries as stats4::mle

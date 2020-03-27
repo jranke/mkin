@@ -14,11 +14,10 @@
 <meta property="og:description" content="Calculation routines based on the FOCUS Kinetics Report (2006,
   2014).  Includes a function for conveniently defining differential equation
   models, model solution based on eigenvalues if possible or using numerical
-  solvers and a choice of the optimisation methods made available by the FME
-  package.  If a C compiler (on windows: Rtools) is installed, differential
-  equation models are solved using compiled C functions.  Please note that no
-  warranty is implied for correctness of results or fitness for a particular
-  purpose.">
+  solvers.  If a C compiler (on windows: Rtools) is installed, differential
+  equation models are solved using automatically generated C functions.  Please
+  note that no warranty is implied for correctness of results or fitness for a
+  particular purpose.">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -38,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.49.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.49.9</span>
       </span>
     </div>
 
@@ -127,14 +126,14 @@
 <li>As of version 0.9-39, fitting of several models to several datasets, optionally in parallel, is supported, see for example <a href="https://pkgdown.jrwb.de/mkin/reference/plot.mmkin.html"><code>plot.mmkin</code></a>.</li>
 <li>Model solution (forward modelling) in the function <a href="https://pkgdown.jrwb.de/mkin/reference/mkinpredict.html"><code>mkinpredict</code></a> is performed either using the analytical solution for the case of parent only degradation, an eigenvalue based solution if only simple first-order (SFO) or SFORB kinetics are used in the model, or using a numeric solver from the <code>deSolve</code> package (default is <code>lsoda</code>).</li>
 <li>If a C compiler is installed, the kinetic models are compiled from automatically generated C code, see <a href="https://pkgdown.jrwb.de/mkin/articles/web_only/compiled_models.html">vignette <code>compiled_models</code></a>. The autogeneration of C code was inspired by the <a href="https://github.com/karlines/ccSolve"><code>ccSolve</code></a> package. Thanks to Karline Soetaert for her work on that.</li>
-<li>By default, kinetic rate constants and kinetic formation fractions are transformed internally using <a href="https://pkgdown.jrwb.de/mkin/reference/transform_odeparms.html"><code>transform_odeparms</code></a> so their estimators can more reasonably be expected to follow a normal distribution. This has the side effect that no constraints are needed in the optimisation. Thanks to René Lehmann for the nice cooperation on this, especially the isometric logration transformation that is now used for the formation fractions.</li>
+<li>By default, kinetic rate constants and kinetic formation fractions are transformed internally using <a href="https://pkgdown.jrwb.de/mkin/reference/transform_odeparms.html"><code>transform_odeparms</code></a> so their estimators can more reasonably be expected to follow a normal distribution. This has the side effect that no constraints are needed in the optimisation. Thanks to René Lehmann for the nice cooperation on this, especially the isometric log-ratio transformation that is now used for the formation fractions.</li>
 <li>A side effect of this is that when parameter estimates are backtransformed to match the model definition, confidence intervals calculated from standard errors are also backtransformed to the correct scale, and will not include meaningless values like negative rate constants or formation fractions adding up to more than 1, which can not occur in a single experiment with a single defined radiolabel position.</li>
 <li>The usual one-sided t-test for significant difference from zero is nevertheless shown based on estimators for the untransformed parameters.</li>
 <li>Summary and plotting functions. The <code>summary</code> of an <code>mkinfit</code> object is in fact a full report that should give enough information to be able to approximately reproduce the fit with other tools.</li>
 <li>The chi-squared error level as defined in the FOCUS kinetics guidance (see below) is calculated for each observed variable.</li>
 <li>When a metabolite decline phase is not described well by SFO kinetics, SFORB kinetics can be used for the metabolite.</li>
 <li>Three different error models can be selected using the argument <code>error_model</code> to the <a href="https://pkgdown.jrwb.de/mkin/reference/mkinfit.html"><code>mkinfit</code></a> function.</li>
-<li>Iteratively reweighted least squares fitting is now obsolete, and the variance by variable error model should now be specified as <code>error_model = "obs"</code>.</li>
+<li>The ‘variance by variable’ error model which is often fitted using Iteratively Reweighted Least Squares (IRLS) should now be specified as <code>error_model = "obs"</code>.</li>
 <li>A two-component error model similar to the one proposed by <a href="https://pkgdown.jrwb.de/mkin/reference/sigma_twocomp.html">Rocke and Lorenzato</a> can be selected using the argument <code>error_model = "tc"</code>.</li>
 </ul>
 </div>
@@ -151,8 +150,8 @@
 <div id="credits-and-historical-remarks" class="section level2">
 <h2 class="hasAnchor">
 <a href="#credits-and-historical-remarks" class="anchor"></a>Credits and historical remarks</h2>
-<p><code>mkin</code> would not be possible without the underlying software stack consisting of R and the packages <a href="https://cran.r-project.org/package=deSolve">deSolve</a> and <a href="https://cran.r-project.org/package=FME">FME</a>, to say the least.</p>
-<p>It could not have been written without me being introduced to regulatory fate modelling of pesticides by Adrian Gurney during my time at Harlan Laboratories Ltd (formerly RCC Ltd). <code>mkin</code> greatly profits from and largely follows the work done by the <a href="http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics">FOCUS Degradation Kinetics Workgroup</a>, as detailed in their guidance document from 2006, slightly updated in 2011 and in 2014.</p>
+<p><code>mkin</code> would not be possible without the underlying software stack consisting of, among others, R and the package <a href="https://cran.r-project.org/package=deSolve">deSolve</a>. In previous version, <code>mkin</code> was also using the functionality of the <a href="https://cran.r-project.org/package=FME">FME</a> package. Please refer to the <a href="https://cran.r-project.org/package=mkin">package page on CRAN</a> for the full list of imported and suggested R packages. Also, <a href="https://debian.org">Debian Linux</a>, the vim editor and the <a href="https://github.com/jalvesaq/Nvim-R">Nvim-R</a> plugin have been invaluable in its development.</p>
+<p><code>mkin</code> could not have been written without me being introduced to regulatory fate modelling of pesticides by Adrian Gurney during my time at Harlan Laboratories Ltd (formerly RCC Ltd). <code>mkin</code> greatly profits from and largely follows the work done by the <a href="http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics">FOCUS Degradation Kinetics Workgroup</a>, as detailed in their guidance document from 2006, slightly updated in 2011 and in 2014.</p>
 <p>Also, it was inspired by the first version of KinGUI developed by BayerCropScience, which is based on the MatLab runtime environment.</p>
 <p>The companion package <a href="http://kinfit.r-forge.r-project.org/kinfit_static/index.html">kinfit</a> (now deprecated) was <a href="https://r-forge.r-project.org/scm/viewvc.php?view=rev&amp;root=kinfit&amp;revision=2">started in 2008</a> and <a href="https://cran.r-project.org/src/contrib/Archive/kinfit/">first published</a> on CRAN on 01 May 2010.</p>
 <p>The first <code>mkin</code> code was <a href="https://r-forge.r-project.org/scm/viewvc.php?view=rev&amp;root=kinfit&amp;revision=8">published on 11 May 2010</a> and the <a href="https://cran.r-project.org/src/contrib/Archive/mkin">first CRAN version</a> on 18 May 2010.</p>
@@ -160,10 +159,28 @@
 <p>Somewhat in parallel, Syngenta has sponsored the development of an <code>mkin</code> and KinGUII based GUI application called CAKE, which also adds IRLS and MCMC, is more limited in the model formulation, but puts more weight on usability. CAKE is available for download from the <a href="https://www.tessella.com/showcase/computer-assisted-kinetic-evaluation">CAKE website</a>, where you can also find a zip archive of the R scripts derived from <code>mkin</code>, published under the GPL license.</p>
 <p>Finally, there is <a href="http://github.com/zhenglei-gao/KineticEval">KineticEval</a>, which contains a further development of the scripts used for KinGUII, so the different tools will hopefully be able to learn from each other in the future as well.</p>
 </div>
+<div id="references" class="section level2">
+<h2 class="hasAnchor">
+<a href="#references" class="anchor"></a>References</h2>
+<table class="table">
+<tr><td>Ranke J, Meinecke S (2019)
+  Error Models for the Kinetic Evaluation of Chemical Degradation Data
+  <i>Environments</i>
+  <b>6</b> (12) 124
+  <a href="https://doi.org/10.3390/environments6120124">doi:10.3390/environments6120124</a>
+  </td></tr>
+<tr><td>Ranke J, Wöltjen J, Meinecke S (2018)
+  Comparison of software tools for kinetic evaluation of chemical degradation data
+  <i>Environmental Sciences Europe</i>
+  <b>30</b> 17
+  <a href="https://doi.org/10.1186/s12302-018-0145-1">doi:10.1186/s12302-018-0145-1</a>
+  </td></tr>
+</table>
+</div>
 <div id="development" class="section level2">
 <h2 class="hasAnchor">
 <a href="#development" class="anchor"></a>Development</h2>
-<p>Contributions are welcome! Your <a href="https://help.github.com/articles/fork-a-repo">mkin fork</a> is just a mouse click away… The master branch on github should always be in good shape, I implement new features in separate branches now. If you prefer subversion, project members for the <a href="http://r-forge.r-project.org/R/?group_id=615">r-forge project</a> are welcome as well. Generally, the source code of the latest CRAN version should be available there. You can also browse the source code at <a href="http://cgit.jrwb.de/mkin">cgit.jrwb.de/mkin</a>.</p>
+<p>Contributions are welcome!</p>
 </div>
 </div>
   </div>

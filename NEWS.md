@@ -1,5 +1,9 @@
 # mkin 0.9.49.8 (unreleased)
 
+- 'aw': Generic function for calculating Akaike weights, methods for mkinfit objects and mmkin columns
+
+- 'loftest': Add a lack-of-fit test
+
 - 'plot_res', 'plot_sep' and 'mkinerrplot': Add the possibility to show standardized residuals and make it the default for fits with error models other than 'const'
 
 - 'lrtest.mkinfit': Improve naming of the compared fits in the case of fixed parameters
@@ -10,7 +14,7 @@
 
 - Fix a bug introduced in 0.9.49.6 that occurred if the direct optimisation yielded a higher likelihood than the three-step optimisation in the d_3 algorithm, which caused the fitted parameters of the three-step optimisation to be returned instead of the parameters of the direct optimisation
 
-- Add an 'nobs' method for mkinfit methods, enabling the default 'BIC' method from the stats package. Also, add a 'BIC' method for mmkin column objects.
+- Add a 'nobs' method for mkinfit objects, enabling the default 'BIC' method from the stats package. Also, add a 'BIC' method for mmkin column objects.
 
 # mkin 0.9.49.6 (2019-10-31)
 

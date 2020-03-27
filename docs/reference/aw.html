@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Two-component error model — sigma_twocomp • mkin</title>
+<title>Calculate Akaike weights for model averaging — aw • mkin</title>
 
 
 <!-- jquery -->
@@ -35,9 +35,10 @@
 
 
 
-<meta property="og:title" content="Two-component error model — sigma_twocomp" />
-<meta property="og:description" content="Function describing the standard deviation of the measurement error in
-dependence of the measured value \(y\):" />
+<meta property="og:title" content="Calculate Akaike weights for model averaging — aw" />
+<meta property="og:description" content="Akaike weights are calculated based on the relative
+expected Kullback-Leibler information as specified
+by Burnham and Anderson (2004)." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -128,64 +129,64 @@ dependence of the measured value \(y\):" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Two-component error model</h1>
+    <h1>Calculate Akaike weights for model averaging</h1>
     
-    <div class="hidden name"><code>sigma_twocomp.Rd</code></div>
+    <div class="hidden name"><code>aw.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Function describing the standard deviation of the measurement error in
-dependence of the measured value \(y\):</p>
+    <p>Akaike weights are calculated based on the relative
+expected Kullback-Leibler information as specified
+by Burnham and Anderson (2004).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>sigma_twocomp</span>(<span class='no'>y</span>, <span class='no'>sigma_low</span>, <span class='no'>rsd_high</span>)</pre>
+    <pre class="usage"><span class='fu'>aw</span>(<span class='no'>object</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for mkinfit</span>
+<span class='fu'>aw</span>(<span class='no'>object</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for mmkin</span>
+<span class='fu'>aw</span>(<span class='no'>object</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>y</th>
-      <td><p>The magnitude of the observed value</p></td>
+      <th>object</th>
+      <td><p>An <a href='mmkin.html'>mmkin</a> column object, containing two or more
+<a href='mkinfit.html'>mkinfit</a> models that have been fitted to the same data,
+or an mkinfit object. In the latter case, further mkinfit
+objects fitted to the same data should be specified
+as dots arguments.</p></td>
     </tr>
     <tr>
-      <th>sigma_low</th>
-      <td><p>The asymptotic minimum of the standard deviation for low
-observed values</p></td>
-    </tr>
-    <tr>
-      <th>rsd_high</th>
-      <td><p>The coefficient describing the increase of the standard
-deviation with the magnitude of the observed value</p></td>
+      <th>...</th>
+      <td><p>Not used in the method for <a href='mmkin.html'>mmkin</a> column objects,
+further <a href='mkinfit.html'>mkinfit</a> objects in the method for mkinfit objects.</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>The standard deviation of the response variable.</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>$$\sigma = \sqrt{ \sigma_{low}^2 + y^2 * {rsd}_{high}^2}$$ sigma =
-sqrt(sigma_low^2 + y^2 * rsd_high^2)</p>
-<p>This is the error model used for example by Werner et al. (1978). The model
-proposed by Rocke and Lorenzato (1995) can be written in this form as well,
-but assumes approximate lognormal distribution of errors for high values of
-y.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Werner, Mario, Brooks, Samuel H., and Knott, Lancaster B. (1978)
-  Additive, Multiplicative, and Mixed Analytical Errors. Clinical Chemistry
-  24(11), 1895-1898.</p>
-<p>Rocke, David M. and Lorenzato, Stefan (1995) A two-component model for
-  measurement error in analytical chemistry. Technometrics 37(2), 176-184.</p>
+    <p>Burnham KP and Anderson DR (2004) Multimodel
+Inference: Understanding AIC and BIC in Model Selection.
+<em>Sociological Methods &amp; Research</em> <strong>33</strong>(2) 261-304</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'># \dontrun{</span>
+<span class='no'>f_sfo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='st'>"SFO"</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>f_dfop</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='st'>"DFOP"</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>aw_sfo_dfop</span> <span class='kw'>&lt;-</span> <span class='fu'>aw</span>(<span class='no'>f_sfo</span>, <span class='no'>f_dfop</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='no'>aw_sfo_dfop</span>)</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='no'>aw_sfo_dfop</span> <span class='co'># SFO gets more weight as it has less parameters and a similar fit</span></div><div class='output co'>#&gt; [1] 0.5970258 0.4029742</div><div class='input'><span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"FOMC"</span>, <span class='st'>"DFOP"</span>), <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='st'>"FOCUS D"</span> <span class='kw'>=</span> <span class='no'>FOCUS_2006_D</span>), <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>aw</span>(<span class='no'>f</span>)</div><div class='output co'>#&gt; [1] 0.4808722 0.1945539 0.3245740</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='fu'>aw</span>(<span class='no'>f</span>))</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='fu'>aw</span>(<span class='no'>f</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"DFOP"</span>)])</div><div class='output co'>#&gt; [1] 0.5970258 0.4029742</div><div class='input'># }
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
       <li><a href="#references">References</a></li>
+      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>

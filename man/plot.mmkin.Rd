@@ -8,7 +8,7 @@ of an mmkin object}
 \method{plot}{mmkin}(x, main = "auto", legends = 1,
   resplot = c("time", "errmod"), show_errmin = TRUE,
   errmin_var = "All data", errmin_digits = 3, cex = 0.7,
-  rel.height.middle = 0.9, ...)
+  rel.height.middle = 0.9, ymax = "auto", ...)
 }
 \arguments{
 \item{x}{An object of class \code{\link{mmkin}}, with either one row or one
@@ -35,6 +35,8 @@ chi2 error percentage.}
 
 \item{rel.height.middle}{The relative height of the middle plot, if more
 than two rows of plots are shown.}
+
+\item{ymax}{Maximum y axis value for \code{\link{plot.mkinfit}}.}
 
 \item{\dots}{Further arguments passed to \code{\link{plot.mkinfit}} and
 \code{\link{mkinresplot}}.}
