@@ -66,11 +66,10 @@
 #' }
 #' f_nlme_fomc_sfo <- memkin(f_2[3, ])
 #' \dontrun{
-#'   f_nlme_dfop_sfo <- memkin(f_2[4, ])  # apparently underdetermined}
+#'   f_nlme_dfop_sfo <- memkin(f_2[4, ])  # apparently underdetermined
 #'   f_nlme_sforb_sfo <- memkin(f_2[5, ]) # also does not converge
 #' }
-#' anova(f_nlme_sfo_sfo, f_nlme_fomc_sfo)
-#' # The FOMC variant has a lower AIC and has significantly higher likelihood
+#' anova(f_nlme_fomc_sfo, f_nlme_sfo_sfo, f_nlme_sfo_sfo_4)
 #' @export
 memkin <- function(object, random_spec = "auto", ...) {
   if (nrow(object) > 1) stop("Only row objects allowed")

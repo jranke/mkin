@@ -4,15 +4,18 @@
 \alias{memkin}
 \title{Estimation of parameter distributions from mmkin row objects}
 \usage{
-memkin(object, ...)
+memkin(object, random_spec = "auto", ...)
 }
 \arguments{
 \item{object}{An mmkin row object containing several fits of the same model to different datasets}
 
+\item{random_spec}{Either "auto" or a specification of random effects for \code{\link{nlme}}
+given as a character vector}
+
 \item{...}{Additional arguments passed to \code{\link{nlme}}}
 }
 \value{
-A fitted object of class 'memkin'
+An nlme object
 }
 \description{
 This function sets up and attempts to fit a mixed effects model to
@@ -55,18 +58,27 @@ m_fomc_sfo <- mkinmod(parent = mkinsub("FOMC", "A1"),
   A1 = mkinsub("SFO"))
 m_dfop_sfo <- mkinmod(parent = mkinsub("DFOP", "A1"),
   A1 = mkinsub("SFO"))
+m_sforb_sfo <- mkinmod(parent = mkinsub("SFORB", "A1"),
+  A1 = mkinsub("SFO"))
 
 f_2 <- mmkin(list("SFO-SFO" = m_sfo_sfo,
  "SFO-SFO-ff" = m_sfo_sfo_ff,
  "FOMC-SFO" = m_fomc_sfo,
- "DFOP-SFO" = m_dfop_sfo),
+ "DFOP-SFO" = m_dfop_sfo,
+ "SFORB-SFO" = m_sforb_sfo),
   ds_2)
 
 f_nlme_sfo_sfo <- memkin(f_2[1, ])
-\dontrun{f_nlme_sfo_sfo_ff <- memkin(f_2[2, ])} # does not converge with maxIter = 50
+f_nlme_sfo_sfo_2 <- memkin(f_2[1, ], "pdDiag(parent_0 + log_k_parent_sink + log_k_parent_A1 + log_k_A1_sink ~ 1)") # explicit
+f_nlme_sfo_sfo_3 <- memkin(f_2[1, ], "pdDiag(parent_0 + log_k_parent_sink + log_k_parent_A1 ~ 1)") # reduced
+f_nlme_sfo_sfo_4 <- memkin(f_2[1, ], "pdDiag(parent_0 + log_k_parent_sink ~ 1)") # further reduced
+\dontrun{
+  f_nlme_sfo_sfo_ff <- memkin(f_2[2, ]) # does not converge with maxIter = 50
+}
 f_nlme_fomc_sfo <- memkin(f_2[3, ])
-\dontrun{f_nlme_dfop_sfo <- memkin(f_2[4, ]) # apparently underdetermined}
-anova(f_nlme_sfo_sfo, f_nlme_fomc_sfo)
-# The FOMC variant has a lower AIC and has significantly higher likelihood
-update(f_nlme_fomc_sfo)
+\dontrun{
+  f_nlme_dfop_sfo <- memkin(f_2[4, ])  # apparently underdetermined
+  f_nlme_sforb_sfo <- memkin(f_2[5, ]) # also does not converge
+}
+anova(f_nlme_fomc_sfo, f_nlme_sfo_sfo, f_nlme_sfo_sfo_4)
 }
