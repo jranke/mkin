@@ -1,4 +1,8 @@
-# mkin 0.9.49.8 (unreleased)
+# mkin 0.9.49.9 (unreleased)
+
+- 'mkinmod': Do not check for gcc using Sys.which('gcc') any more, as this will often fail even if Rtools are installed
+
+# mkin 0.9.49.8 (2020-01-09)
 
 - 'aw': Generic function for calculating Akaike weights, methods for mkinfit objects and mmkin columns
 
