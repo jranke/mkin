@@ -5,10 +5,19 @@
 \title{Plot model fits (observed and fitted) and the residuals for a row or column
 of an mmkin object}
 \usage{
-\method{plot}{mmkin}(x, main = "auto", legends = 1,
-  resplot = c("time", "errmod"), show_errmin = TRUE,
-  errmin_var = "All data", errmin_digits = 3, cex = 0.7,
-  rel.height.middle = 0.9, ymax = "auto", ...)
+\method{plot}{mmkin}(
+  x,
+  main = "auto",
+  legends = 1,
+  resplot = c("time", "errmod"),
+  show_errmin = TRUE,
+  errmin_var = "All data",
+  errmin_digits = 3,
+  cex = 0.7,
+  rel.height.middle = 0.9,
+  ymax = "auto",
+  ...
+)
 }
 \arguments{
 \item{x}{An object of class \code{\link{mmkin}}, with either one row or one

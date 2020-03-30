@@ -5,11 +5,9 @@
 \alias{print.summary.mkinfit}
 \title{Summary method for class "mkinfit"}
 \usage{
-\method{summary}{mkinfit}(object, data = TRUE, distimes = TRUE,
-  alpha = 0.05, ...)
+\method{summary}{mkinfit}(object, data = TRUE, distimes = TRUE, alpha = 0.05, ...)
 
-\method{print}{summary.mkinfit}(x, digits = max(3, getOption("digits") -
-  3), ...)
+\method{print}{summary.mkinfit}(x, digits = max(3, getOption("digits") - 3), ...)
 }
 \arguments{
 \item{object}{an object of class \code{\link{mkinfit}}.}

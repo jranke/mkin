@@ -4,11 +4,21 @@
 \alias{mkinresplot}
 \title{Function to plot residuals stored in an mkin object}
 \usage{
-mkinresplot(object, obs_vars = names(object$mkinmod$map), xlim = c(0,
-  1.1 * max(object$data$time)), standardized = FALSE, xlab = "Time",
+mkinresplot(
+  object,
+  obs_vars = names(object$mkinmod$map),
+  xlim = c(0, 1.1 * max(object$data$time)),
+  standardized = FALSE,
+  xlab = "Time",
   ylab = ifelse(standardized, "Standardized residual", "Residual"),
-  maxabs = "auto", legend = TRUE, lpos = "topright",
-  col_obs = "auto", pch_obs = "auto", frame = TRUE, ...)
+  maxabs = "auto",
+  legend = TRUE,
+  lpos = "topright",
+  col_obs = "auto",
+  pch_obs = "auto",
+  frame = TRUE,
+  ...
+)
 }
 \arguments{
 \item{object}{A fit represented in an \code{\link{mkinfit}} object.}

@@ -6,22 +6,47 @@
 \alias{mkinpredict.mkinfit}
 \title{Produce predictions from a kinetic model using specific parameters}
 \usage{
-mkinpredict(x, odeparms, odeini, outtimes = seq(0, 120, by = 0.1),
-  solution_type = "deSolve", use_compiled = "auto",
-  method.ode = "lsoda", atol = 1e-08, rtol = 1e-10,
-  map_output = TRUE, ...)
+mkinpredict(
+  x,
+  odeparms,
+  odeini,
+  outtimes = seq(0, 120, by = 0.1),
+  solution_type = "deSolve",
+  use_compiled = "auto",
+  method.ode = "lsoda",
+  atol = 1e-08,
+  rtol = 1e-10,
+  map_output = TRUE,
+  ...
+)
 
-\method{mkinpredict}{mkinmod}(x, odeparms = c(k_parent_sink = 0.1),
-  odeini = c(parent = 100), outtimes = seq(0, 120, by = 0.1),
-  solution_type = "deSolve", use_compiled = "auto",
-  method.ode = "lsoda", atol = 1e-08, rtol = 1e-10,
-  map_output = TRUE, ...)
+\method{mkinpredict}{mkinmod}(
+  x,
+  odeparms = c(k_parent_sink = 0.1),
+  odeini = c(parent = 100),
+  outtimes = seq(0, 120, by = 0.1),
+  solution_type = "deSolve",
+  use_compiled = "auto",
+  method.ode = "lsoda",
+  atol = 1e-08,
+  rtol = 1e-10,
+  map_output = TRUE,
+  ...
+)
 
-\method{mkinpredict}{mkinfit}(x, odeparms = x$bparms.ode,
-  odeini = x$bparms.state, outtimes = seq(0, 120, by = 0.1),
-  solution_type = "deSolve", use_compiled = "auto",
-  method.ode = "lsoda", atol = 1e-08, rtol = 1e-10,
-  map_output = TRUE, ...)
+\method{mkinpredict}{mkinfit}(
+  x,
+  odeparms = x$bparms.ode,
+  odeini = x$bparms.state,
+  outtimes = seq(0, 120, by = 0.1),
+  solution_type = "deSolve",
+  use_compiled = "auto",
+  method.ode = "lsoda",
+  atol = 1e-08,
+  rtol = 1e-10,
+  map_output = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{A kinetic model as produced by \code{\link{mkinmod}}, or a kinetic

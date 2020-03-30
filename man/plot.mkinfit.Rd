@@ -7,22 +7,47 @@
 \alias{plot_err}
 \title{Plot the observed data and the fitted model of an mkinfit object}
 \usage{
-\method{plot}{mkinfit}(x, fit = x, obs_vars = names(fit$mkinmod$map),
-  xlab = "Time", ylab = "Observed", xlim = range(fit$data$time),
-  ylim = "default", col_obs = 1:length(obs_vars), pch_obs = col_obs,
-  lty_obs = rep(1, length(obs_vars)), add = FALSE, legend = !add,
-  show_residuals = FALSE, show_errplot = FALSE, maxabs = "auto",
-  sep_obs = FALSE, rel.height.middle = 0.9, row_layout = FALSE,
-  lpos = "topright", inset = c(0.05, 0.05), show_errmin = FALSE,
-  errmin_digits = 3, frame = TRUE, ...)
+\method{plot}{mkinfit}(
+  x,
+  fit = x,
+  obs_vars = names(fit$mkinmod$map),
+  xlab = "Time",
+  ylab = "Observed",
+  xlim = range(fit$data$time),
+  ylim = "default",
+  col_obs = 1:length(obs_vars),
+  pch_obs = col_obs,
+  lty_obs = rep(1, length(obs_vars)),
+  add = FALSE,
+  legend = !add,
+  show_residuals = FALSE,
+  show_errplot = FALSE,
+  maxabs = "auto",
+  sep_obs = FALSE,
+  rel.height.middle = 0.9,
+  row_layout = FALSE,
+  lpos = "topright",
+  inset = c(0.05, 0.05),
+  show_errmin = FALSE,
+  errmin_digits = 3,
+  frame = TRUE,
+  ...
+)
 
-plot_sep(fit, show_errmin = TRUE,
-  show_residuals = ifelse(identical(fit$err_mod, "const"), TRUE,
-  "standardized"), ...)
+plot_sep(
+  fit,
+  show_errmin = TRUE,
+  show_residuals = ifelse(identical(fit$err_mod, "const"), TRUE, "standardized"),
+  ...
+)
 
-plot_res(fit, sep_obs = FALSE, show_errmin = sep_obs,
+plot_res(
+  fit,
+  sep_obs = FALSE,
+  show_errmin = sep_obs,
   standardized = ifelse(identical(fit$err_mod, "const"), FALSE, TRUE),
-  ...)
+  ...
+)
 
 plot_err(fit, sep_obs = FALSE, show_errmin = sep_obs, ...)
 }

@@ -4,8 +4,16 @@
 \alias{add_err}
 \title{Add normally distributed errors to simulated kinetic degradation data}
 \usage{
-add_err(prediction, sdfunc, secondary = c("M1", "M2"), n = 1000,
-  LOD = 0.1, reps = 2, digits = 1, seed = NA)
+add_err(
+  prediction,
+  sdfunc,
+  secondary = c("M1", "M2"),
+  n = 1000,
+  LOD = 0.1,
+  reps = 2,
+  digits = 1,
+  seed = NA
+)
 }
 \arguments{
 \item{prediction}{A prediction from a kinetic model as produced by

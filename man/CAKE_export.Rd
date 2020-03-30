@@ -4,12 +4,21 @@
 \alias{CAKE_export}
 \title{Export a list of datasets format to a CAKE study file}
 \usage{
-CAKE_export(ds, map = c(parent = "Parent"), links = NA,
-  filename = "CAKE_export.csf", path = ".", overwrite = FALSE,
-  study = "Codlemone aerobic soil degradation", description = "",
-  time_unit = "days", res_unit = "\% AR",
-  comment = "Created using mkin::CAKE_export", date = Sys.Date(),
-  optimiser = "IRLS")
+CAKE_export(
+  ds,
+  map = c(parent = "Parent"),
+  links = NA,
+  filename = "CAKE_export.csf",
+  path = ".",
+  overwrite = FALSE,
+  study = "Codlemone aerobic soil degradation",
+  description = "",
+  time_unit = "days",
+  res_unit = "\% AR",
+  comment = "Created using mkin::CAKE_export",
+  date = Sys.Date(),
+  optimiser = "IRLS"
+)
 }
 \arguments{
 \item{ds}{A named list of datasets in long format as compatible with

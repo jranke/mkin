@@ -4,11 +4,20 @@
 \alias{mkinerrplot}
 \title{Function to plot squared residuals and the error model for an mkin object}
 \usage{
-mkinerrplot(object, obs_vars = names(object$mkinmod$map), xlim = c(0,
-  1.1 * max(object$data$predicted)), xlab = "Predicted",
-  ylab = "Squared residual", maxy = "auto", legend = TRUE,
-  lpos = "topright", col_obs = "auto", pch_obs = "auto",
-  frame = TRUE, ...)
+mkinerrplot(
+  object,
+  obs_vars = names(object$mkinmod$map),
+  xlim = c(0, 1.1 * max(object$data$predicted)),
+  xlab = "Predicted",
+  ylab = "Squared residual",
+  maxy = "auto",
+  legend = TRUE,
+  lpos = "topright",
+  col_obs = "auto",
+  pch_obs = "auto",
+  frame = TRUE,
+  ...
+)
 }
 \arguments{
 \item{object}{A fit represented in an \code{\link{mkinfit}} object.}
