@@ -5,11 +5,16 @@
 \title{Fit one or more kinetic models with one or more state variables to one or
 more datasets}
 \usage{
-mmkin(models = c("SFO", "FOMC", "DFOP"), datasets,
-  cores = round(detectCores()/2), cluster = NULL, ...)
+mmkin(
+  models = c("SFO", "FOMC", "DFOP"),
+  datasets,
+  cores = round(detectCores()/2),
+  cluster = NULL,
+  ...
+)
 }
 \arguments{
-\item{models}{Either a character vector of shorthand names like 
+\item{models}{Either a character vector of shorthand names like
 \code{c("SFO", "FOMC", "DFOP", "HS", "SFORB")}, or an optionally named
 list of \code{\link{mkinmod}} objects.}
 

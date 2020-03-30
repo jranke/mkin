@@ -8,18 +8,33 @@ Rocke, David M. und Lorenzato, Stefan (1995) A two-component model
   for measurement error in analytical chemistry. Technometrics 37(2), 176-184.
 }
 \usage{
-mkinfit(mkinmod, observed, parms.ini = "auto", state.ini = "auto",
-  err.ini = "auto", fixed_parms = NULL,
-  fixed_initials = names(mkinmod$diffs)[-1], from_max_mean = FALSE,
+mkinfit(
+  mkinmod,
+  observed,
+  parms.ini = "auto",
+  state.ini = "auto",
+  err.ini = "auto",
+  fixed_parms = NULL,
+  fixed_initials = names(mkinmod$diffs)[-1],
+  from_max_mean = FALSE,
   solution_type = c("auto", "analytical", "eigen", "deSolve"),
-  method.ode = "lsoda", use_compiled = "auto",
+  method.ode = "lsoda",
+  use_compiled = "auto",
   control = list(eval.max = 300, iter.max = 200),
-  transform_rates = TRUE, transform_fractions = TRUE, quiet = FALSE,
-  atol = 1e-08, rtol = 1e-10, n.outtimes = 100,
+  transform_rates = TRUE,
+  transform_fractions = TRUE,
+  quiet = FALSE,
+  atol = 1e-08,
+  rtol = 1e-10,
+  n.outtimes = 100,
   error_model = c("const", "obs", "tc"),
-  error_model_algorithm = c("auto", "d_3", "direct", "twostep",
-  "threestep", "fourstep", "IRLS", "OLS"), reweight.tol = 1e-08,
-  reweight.max.iter = 10, trace_parms = FALSE, ...)
+  error_model_algorithm = c("auto", "d_3", "direct", "twostep", "threestep", "fourstep",
+    "IRLS", "OLS"),
+  reweight.tol = 1e-08,
+  reweight.max.iter = 10,
+  trace_parms = FALSE,
+  ...
+)
 }
 \arguments{
 \item{mkinmod}{A list of class \code{\link{mkinmod}}, containing the kinetic

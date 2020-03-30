@@ -4,10 +4,19 @@
 \alias{confint.mkinfit}
 \title{Confidence intervals for parameters of mkinfit objects}
 \usage{
-\method{confint}{mkinfit}(object, parm, level = 0.95, alpha = 1 -
-  level, cutoff, method = c("quadratic", "profile"),
-  transformed = TRUE, backtransform = TRUE,
-  cores = round(detectCores()/2), quiet = FALSE, ...)
+\method{confint}{mkinfit}(
+  object,
+  parm,
+  level = 0.95,
+  alpha = 1 - level,
+  cutoff,
+  method = c("quadratic", "profile"),
+  transformed = TRUE,
+  backtransform = TRUE,
+  cores = round(detectCores()/2),
+  quiet = FALSE,
+  ...
+)
 }
 \arguments{
 \item{object}{An \code{\link{mkinfit}} object}

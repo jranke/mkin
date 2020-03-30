@@ -47,7 +47,7 @@ lrtest(sfo_fit, dfop_fit)
 #lrtest(dfop_fit, error_model = "tc")
 #lrtest(dfop_fit, fixed_parms = c(k2 = 0))
 
-# However, this equivalent syntax works for static help pages
+# However, this equivalent syntax also works for static help pages
 lrtest(dfop_fit, update(dfop_fit, error_model = "tc"))
 lrtest(dfop_fit, update(dfop_fit, fixed_parms = c(k2 = 0)))
 }

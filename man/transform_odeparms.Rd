@@ -5,11 +5,19 @@
 \alias{backtransform_odeparms}
 \title{Functions to transform and backtransform kinetic parameters for fitting}
 \usage{
-transform_odeparms(parms, mkinmod, transform_rates = TRUE,
-  transform_fractions = TRUE)
+transform_odeparms(
+  parms,
+  mkinmod,
+  transform_rates = TRUE,
+  transform_fractions = TRUE
+)
 
-backtransform_odeparms(transparms, mkinmod, transform_rates = TRUE,
-  transform_fractions = TRUE)
+backtransform_odeparms(
+  transparms,
+  mkinmod,
+  transform_rates = TRUE,
+  transform_fractions = TRUE
+)
 }
 \arguments{
 \item{parms}{Parameters of kinetic models as used in the differential

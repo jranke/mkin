@@ -5,9 +5,6 @@
 \alias{mkinds}
 \title{A dataset class for mkin}
 \format{An \code{\link{R6Class}} generator object.}
-\usage{
-mkinds
-}
 \description{
 A dataset class for mkin
 }
@@ -36,3 +33,35 @@ mds <- mkinds$new("FOCUS A", FOCUS_2006_A)
 
 }
 \keyword{datasets}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-new}{\code{mkinds$new()}}
+\item \href{#method-clone}{\code{mkinds$clone()}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-new"></a>}}
+\subsection{Method \code{new()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{mkinds$new(title = "", data, time_unit = NA, unit = NA)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{mkinds$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}

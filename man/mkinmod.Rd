@@ -4,8 +4,13 @@
 \alias{mkinmod}
 \title{Function to set up a kinetic model with one or more state variables}
 \usage{
-mkinmod(..., use_of_ff = "min", speclist = NULL, quiet = FALSE,
-  verbose = FALSE)
+mkinmod(
+  ...,
+  use_of_ff = "min",
+  speclist = NULL,
+  quiet = FALSE,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{...}{For each observed variable, a list has to be specified as an
