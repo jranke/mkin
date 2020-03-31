@@ -36,7 +36,10 @@
 
 
 <meta property="og:title" content="A dataset class for mkin — mkinds" />
-<meta property="og:description" content="A dataset class for mkin" />
+<meta property="og:description" content="At the moment this dataset class is hardly used in mkin. For example,
+mkinfit does not take mkinds datasets as argument, but works with dataframes
+such as the on contained in the data field of mkinds objects. Some datasets
+provided by this package come as mkinds objects nevertheless." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -133,36 +136,36 @@
     </div>
 
     <div class="ref-description">
-    <p>A dataset class for mkin</p>
+    <p>At the moment this dataset class is hardly used in mkin. For example,
+mkinfit does not take mkinds datasets as argument, but works with dataframes
+such as the on contained in the data field of mkinds objects. Some datasets
+provided by this package come as mkinds objects nevertheless.</p>
     </div>
 
 
 
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p>An <code>R6Class</code> generator object.</p>
-    <h2 class="hasAnchor" id="fields"><a class="anchor" href="#fields"></a>Fields</h2>
+    <div class='dont-index'><p>The S3 printing method <code><a href='print.mkinds.html'>print.mkinds</a></code></p></div>
+    <h2 class="hasAnchor" id="public-fields"><a class="anchor" href="#public-fields"></a>Public fields</h2>
 
-    
+    <p><div class="r6-fields"></p><dl class='dl-horizontal'>
+<dt><code>title</code></dt><dd><p>A full title for the dataset</p></dd>
 
+<dt><code>sampling_times</code></dt><dd><p>The sampling times</p></dd>
 
-<dl class='dl-horizontal'>
-<dt>list("title")</dt><dd><p>A full title for the dataset</p></dd>
+<dt><code>time_unit</code></dt><dd><p>The time unit</p></dd>
 
-<dt>list("sampling")</dt><dd><p>times The sampling times</p></dd>
+<dt><code>observed</code></dt><dd><p>Names of the observed variables</p></dd>
 
-<dt>list("time_unit")</dt><dd><p>The time unit</p></dd>
+<dt><code>unit</code></dt><dd><p>The unit of the observations</p></dd>
 
-<dt>list("observed")</dt><dd><p>Names of the observed compounds</p></dd>
+<dt><code>replicates</code></dt><dd><p>The maximum number of replicates per sampling time</p></dd>
 
-<dt>list("unit")</dt><dd><p>The unit of the observations</p></dd>
+<dt><code>data</code></dt><dd><p>A data frame with at least the columns name, time
+and value in order to be compatible with mkinfit</p></dd>
 
-<dt>list("replicates")</dt><dd><p>The number of replicates</p></dd>
-
-<dt>list("data")</dt><dd><p>A dataframe with at least the columns name, time and
-value in order to be compatible with mkinfit</p></dd> 
-</dl>
-
+</dl><p></div></p>
     <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
 
     
@@ -174,10 +177,20 @@ value in order to be compatible with mkinfit</p></dd>
 </ul>
 <p><hr>
 <a id="method-new"></a></p><h3>Method <code>new()</code></h3>
-
-<h3>Usage</h3>
+<p>Create a new mkinds object</p><h3>Usage</h3>
 <p><div class="r"></p><pre>mkinds$new(title = "", data, time_unit = NA, unit = NA)</pre><p></div></p>
 
+<h3>Arguments</h3>
+<p><div class="arguments"></p><dl class='dl-horizontal'>
+<dt><code>title</code></dt><dd><p>The dataset title</p></dd>
+
+<dt><code>data</code></dt><dd><p>The data</p></dd>
+
+<dt><code>time_unit</code></dt><dd><p>The time unit</p></dd>
+
+<dt><code>unit</code></dt><dd><p>The unit of the observations</p></dd>
+
+</dl><p></div></p>
 <p><hr>
 <a id="method-clone"></a></p><h3>Method <code>clone()</code></h3>
 <p>The objects of this class are cloneable with this method.</p><h3>Usage</h3>
@@ -193,13 +206,18 @@ value in order to be compatible with mkinfit</p></dd>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='no'>mds</span> <span class='kw'>&lt;-</span> <span class='no'>mkinds</span>$<span class='fu'>new</span>(<span class='st'>"FOCUS A"</span>, <span class='no'>FOCUS_2006_A</span>)</div></pre>
+<span class='no'>mds</span> <span class='kw'>&lt;-</span> <span class='no'>mkinds</span>$<span class='fu'>new</span>(<span class='st'>"FOCUS A"</span>, <span class='no'>FOCUS_2006_A</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>mds</span>)</div><div class='output co'>#&gt; &lt;mkinds&gt; with $title:  FOCUS A 
+#&gt; Observed compounds $observed:  parent 
+#&gt; Sampling times $sampling_times:  0, 3, 7, 14, 30, 62, 90, 118 
+#&gt; With a maximum of  1  replicates</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#format">Format</a></li>
-      <li><a href="#fields">Fields</a></li>
+      <li><a href="#see-also">See also</a></li>
+      <li><a href="#public-fields">Public fields</a></li>
       <li><a href="#methods">Methods</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
