@@ -33,6 +33,7 @@
 #' @param verbose If \code{TRUE}, passed to \code{\link{cfunction}} if
 #'   applicable to give detailed information about the C function being built.
 #' @importFrom methods signature
+#' @importFrom pkgbuild has_compiler
 #' @importFrom inline cfunction
 #' @return A list of class \code{mkinmod} for use with \code{\link{mkinfit}},
 #'   containing, among others,
@@ -364,8 +365,9 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
     model$coefmat <- m
   }#}}}
 
-  # Try to create a function compiled from C code if >1 observed variable {{{
-  if (length(obs_vars) > 1) {
+  # Try to create a function compiled from C code there is more than one observed variable {{{
+  # and a compiler is available
+  if (length(obs_vars) > 1 & has_compiler()) {
 
     # Translate the R code for the derivatives to C code
     diffs.C <- paste(diffs, collapse = ";\n")
