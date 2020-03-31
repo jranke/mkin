@@ -1,6 +1,8 @@
 # mkin 0.9.49.9 (unreleased)
 
-- 'mkinmod': Do not check for gcc using Sys.which('gcc') any more, as this will often fail even if Rtools are installed
+- 'mkinmod': Use pkgbuild::has_compiler instead of Sys.which('gcc'), as the latter will often fail even if Rtools are installed
+
+- 'mkinds': Use roxygen for documenting fields and methods of this R6 class
 
 # mkin 0.9.49.8 (2020-01-09)
 
