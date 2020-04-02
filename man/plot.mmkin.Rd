@@ -10,6 +10,7 @@ of an mmkin object}
   main = "auto",
   legends = 1,
   resplot = c("time", "errmod"),
+  standardized = FALSE,
   show_errmin = TRUE,
   errmin_var = "All data",
   errmin_digits = 3,
@@ -30,6 +31,10 @@ column.}
 \item{resplot}{Should the residuals plotted against time, using
 \code{\link{mkinresplot}}, or as squared residuals against predicted
 values, with the error model, using \code{\link{mkinerrplot}}.}
+
+\item{standardized}{Should the residuals be standardized? This option
+is passed to \code{\link{mkinresplot}}, it only takes effect if 
+`resplot = "time"`.}
 
 \item{show_errmin}{Should the chi2 error level be shown on top of the plots
 to the left?}
