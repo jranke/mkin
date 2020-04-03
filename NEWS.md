@@ -1,4 +1,18 @@
-# mkin 0.9.49.8 (unreleased)
+# mkin 0.9.49.10 (unreleased)
+
+- 'endpoints': Don't return the SFORB list component if it's empty. This reduces distraction and complies with the documentation
+
+- Article in compiled models: Add some platform specific code and suppress warnings about zero values being removed from the FOCUS D dataset
+
+- 'plot.mmkin': Add the argument 'standardized' to avoid warnings that occurred when it was passed as part of the additional arguments captured by the dots (...)
+
+# mkin 0.9.49.9 (2020-03-31)
+
+- 'mkinmod': Use pkgbuild::has_compiler instead of Sys.which('gcc'), as the latter will often fail even if Rtools are installed
+
+- 'mkinds': Use roxygen for documenting fields and methods of this R6 class
+
+# mkin 0.9.49.8 (2020-01-09)
 
 - 'aw': Generic function for calculating Akaike weights, methods for mkinfit objects and mmkin columns
 

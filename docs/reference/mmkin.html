@@ -72,7 +72,7 @@ datasets specified in its first two arguments." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.49.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.49.9</span>
       </span>
     </div>
 
@@ -141,15 +141,20 @@ more datasets</h1>
 datasets specified in its first two arguments.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>mmkin</span>(<span class='kw'>models</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"FOMC"</span>, <span class='st'>"DFOP"</span>), <span class='no'>datasets</span>,
-  <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span>(<span class='fu'>detectCores</span>()/<span class='fl'>2</span>), <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>mmkin</span>(
+  <span class='kw'>models</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"FOMC"</span>, <span class='st'>"DFOP"</span>),
+  <span class='no'>datasets</span>,
+  <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span>(<span class='fu'>detectCores</span>()/<span class='fl'>2</span>),
+  <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>...</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>models</th>
-      <td><p>Either a character vector of shorthand names like 
+      <td><p>Either a character vector of shorthand names like
 <code><a href='https://rdrr.io/r/base/c.html'>c("SFO", "FOMC", "DFOP", "HS", "SFORB")</a></code>, or an optionally named
 list of <code><a href='mkinmod.html'>mkinmod</a></code> objects.</p></td>
     </tr>
@@ -202,11 +207,11 @@ for parallel execution.</p></td>
 <span class='no'>time_1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='no'>fits.4</span> <span class='kw'>&lt;-</span> <span class='fu'>mmkin</span>(<span class='no'>models</span>, <span class='no'>datasets</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))
 
 <span class='no'>time_default</span></div><div class='output co'>#&gt;        User      System verstrichen 
-#&gt;       0.014       0.024       4.895 </div><div class='input'><span class='no'>time_1</span></div><div class='output co'>#&gt;        User      System verstrichen 
-#&gt;      19.047       0.004      19.063 </div><div class='input'>
+#&gt;      18.739       0.379       6.198 </div><div class='input'><span class='no'>time_1</span></div><div class='output co'>#&gt;        User      System verstrichen 
+#&gt;      19.910       0.000      19.925 </div><div class='input'>
 <span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fits.0</span><span class='kw'>[[</span><span class='st'>"SFO_lin"</span>, <span class='fl'>2</span>]])</div><div class='output co'>#&gt; $ff
 #&gt;   parent_M1 parent_sink       M1_M2     M1_sink 
-#&gt;   0.7340481   0.2659519   0.7505684   0.2494316 
+#&gt;   0.7340480   0.2659520   0.7505686   0.2494314 
 #&gt; 
 #&gt; $SFORB
 #&gt; logical(0)
@@ -214,8 +219,8 @@ for parallel execution.</p></td>
 #&gt; $distimes
 #&gt;              DT50       DT90
 #&gt; parent  0.8777689   2.915885
-#&gt; M1      2.3257449   7.725957
-#&gt; M2     33.7200958 112.015734
+#&gt; M1      2.3257452   7.725958
+#&gt; M2     33.7200890 112.015711
 #&gt; </div><div class='input'>
 <span class='co'># plot.mkinfit handles rows or columns of mmkin result objects</span>
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>fits.0</span>[<span class='fl'>1</span>, ])</div><div class='img'><img src='mmkin-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>fits.0</span>[<span class='fl'>1</span>, ], <span class='kw'>obs_var</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"M1"</span>, <span class='st'>"M2"</span>))</div><div class='img'><img src='mmkin-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='no'>fits.0</span>[, <span class='fl'>1</span>])</div><div class='img'><img src='mmkin-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># Use double brackets to extract a single mkinfit object, which will be plotted</span>

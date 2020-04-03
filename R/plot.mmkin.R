@@ -15,6 +15,9 @@
 #' @param resplot Should the residuals plotted against time, using
 #'   \code{\link{mkinresplot}}, or as squared residuals against predicted
 #'   values, with the error model, using \code{\link{mkinerrplot}}.
+#' @param standardized Should the residuals be standardized? This option
+#'   is passed to \code{\link{mkinresplot}}, it only takes effect if 
+#'   `resplot = "time"`.
 #' @param show_errmin Should the chi2 error level be shown on top of the plots
 #'   to the left?
 #' @param errmin_var The variable for which the FOCUS chi2 error value should
@@ -51,6 +54,7 @@
 #' @export
 plot.mmkin <- function(x, main = "auto", legends = 1,
                        resplot = c("time", "errmod"),
+                       standardized = FALSE,
                        show_errmin = TRUE,
                        errmin_var = "All data", errmin_digits = 3,
                        cex = 0.7, rel.height.middle = 0.9,
@@ -136,7 +140,7 @@ plot.mmkin <- function(x, main = "auto", legends = 1,
     }
 
     if (resplot == "time") {
-      mkinresplot(fit, legend = FALSE, ...)
+      mkinresplot(fit, legend = FALSE, standardized = standardized, ...)
     } else {
       mkinerrplot(fit, legend = FALSE, ...)
     }

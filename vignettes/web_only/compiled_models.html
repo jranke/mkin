@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 <meta name="author" content="Johannes Ranke" />
 
-<meta name="date" content="2019-04-04" />
+<meta name="date" content="2020-04-02" />
 
 <title>Performance benefit by using compiled model definitions in mkin</title>
 
@@ -69,8 +69,6 @@ overflow: auto;
 margin-left: 2%;
 position: fixed;
 border: 1px solid #ccc;
-webkit-border-radius: 6px;
-moz-border-radius: 6px;
 border-radius: 6px;
 }
 
@@ -98,9 +96,14 @@ font-size: 12px;
 .tocify-subheader .tocify-subheader {
 text-indent: 30px;
 }
-
 .tocify-subheader .tocify-subheader .tocify-subheader {
 text-indent: 40px;
+}
+.tocify-subheader .tocify-subheader .tocify-subheader .tocify-subheader {
+text-indent: 50px;
+}
+.tocify-subheader .tocify-subheader .tocify-subheader .tocify-subheader .tocify-subheader {
+text-indent: 60px;
 }
 
 .tocify .tocify-item > a, .tocify .nav-list .nav-header {
@@ -504,13 +507,13 @@ float: none;
 
           item.append($("<a/>", {
 
-            "text": self.text()
+            "html": self.html()
 
           }));
 
         } else {
 
-          item.text(self.text());
+          item.html(self.html());
 
         }
 
@@ -1280,12 +1283,12 @@ window.initializeCodeFolding = function(show) {
   var currentIndex = 1;
 
   // select all R code blocks
-  var rCodeBlocks = $('pre.r, pre.python, pre.bash, pre.sql, pre.cpp, pre.stan');
+  var rCodeBlocks = $('pre.r, pre.python, pre.bash, pre.sql, pre.cpp, pre.stan, pre.julia');
   rCodeBlocks.each(function() {
 
     // create a collapsable div to wrap the code in
     var div = $('<div class="collapse r-code-collapse"></div>');
-    if (show)
+    if (show || $(this)[0].classList.contains('fold-show'))
       div.addClass('in');
     var id = 'rcode-643E0F36' + currentIndex++;
     div.attr('id', id);
@@ -1387,9 +1390,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type="text/css">
 .main-container {
@@ -1403,7 +1404,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -1420,8 +1420,6 @@ summary {
 </style>
 
 
-
-<div class="container-fluid main-container">
 
 <!-- tabsets -->
 
@@ -1467,6 +1465,7 @@ summary {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -1479,56 +1478,12 @@ summary {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 <style type="text/css">
 .code-folding-btn { margin-bottom: 4px; }
 </style>
-<script>
-$(document).ready(function () {
-  window.initializeCodeFolding("show" === "show");
-});
-</script>
 
 
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -1542,6 +1497,12 @@ $(document).ready(function ()  {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -1577,8 +1538,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -1587,6 +1546,16 @@ div.tocify {
 
 
 </style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row-fluid">
@@ -1613,25 +1582,36 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">Performance benefit by using compiled model definitions in mkin</h1>
-<h4 class="author"><em>Johannes Ranke</em></h4>
-<h4 class="date"><em>2019-04-04</em></h4>
+<h4 class="author">Johannes Ranke</h4>
+<h4 class="date">2020-04-02</h4>
 
 </div>
 
 
-<div id="model-that-can-also-be-solved-with-eigenvalues" class="section level2">
-<h2>Model that can also be solved with Eigenvalues</h2>
-<p>This evaluation is taken from the example section of mkinfit. When using an mkin version equal to or greater than 0.9-36 and a C compiler (gcc) is available, you will see a message that the model is being compiled from autogenerated C code when defining a model using mkinmod. The <code>mkinmod()</code> function checks for presence of the gcc compiler using</p>
-<pre class="r"><code>Sys.which(&quot;gcc&quot;)</code></pre>
-<pre><code>##            gcc 
-## &quot;/usr/bin/gcc&quot;</code></pre>
+<div id="how-to-benefit-from-compiled-models" class="section level2">
+<h2>How to benefit from compiled models</h2>
+<p>When using an mkin version equal to or greater than 0.9-36 and a C compiler is available, you will see a message that the model is being compiled from autogenerated C code when defining a model using mkinmod. Starting from version 0.9.49.9, the <code>mkinmod()</code> function checks for presence of a compiler using</p>
+<pre class="r"><code>pkgbuild::has_compiler()</code></pre>
+<p>In previous versions, it used <code>Sys.which(&quot;gcc&quot;)</code> for this check.</p>
+<div id="platform-specific-notes" class="section level3">
+<h3>Platform specific notes</h3>
+<p>On Linux, you need to have the essential build tools like make and gcc or clang installed. On Debian based linux distributions, these will be pulled in by installing the build-essential package.</p>
+<p>On MacOS, which I do not use personally, I have had reports that a compiler is available by default.</p>
+<p>On Windows, you need to install Rtools and have the path to its bin directory in your PATH variable. You do not need to modify the PATH variable when installing Rtools. Instead, I would recommend to put the line</p>
+<pre class="r"><code>Sys.setenv(PATH = paste(&quot;C:/Rtools/bin&quot;, Sys.getenv(&quot;PATH&quot;), sep=&quot;;&quot;))</code></pre>
+<p>into your .Rprofile startup file. This is just a text file with some R code that is executed when your R session starts. It has to be named .Rprofile and has to be located in your home directory, which will generally be your Documents folder. You can check the location of the home directory used by R by issuing</p>
+<pre class="r"><code>Sys.getenv(&quot;HOME&quot;)</code></pre>
+</div>
+</div>
+<div id="comparison-with-eigenvalue-based-solutions" class="section level2">
+<h2>Comparison with Eigenvalue based solutions</h2>
 <p>First, we build a simple degradation model for a parent compound with one metabolite.</p>
 <pre class="r"><code>library(&quot;mkin&quot;, quietly = TRUE)
 SFO_SFO &lt;- mkinmod(
   parent = mkinsub(&quot;SFO&quot;, &quot;m1&quot;),
   m1 = mkinsub(&quot;SFO&quot;))</code></pre>
 <pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
-<p>We can compare the performance of the Eigenvalue based solution against the compiled version and the R implementation of the differential equations using the benchmark package.</p>
+<p>We can compare the performance of the Eigenvalue based solution against the compiled version and the R implementation of the differential equations using the benchmark package. In the output of below code, the warnings about zero being removed from the FOCUS D dataset are suppressed.</p>
 <pre class="r"><code>if (require(rbenchmark)) {
   b.1 &lt;- benchmark(
     &quot;deSolve, not compiled&quot; = mkinfit(SFO_SFO, FOCUS_2006_D,
@@ -1648,16 +1628,15 @@ SFO_SFO &lt;- mkinmod(
   factor_SFO_SFO &lt;- NA
   print(&quot;R package rbenchmark is not available&quot;)
 }</code></pre>
-<pre><code>## Loading required package: rbenchmark</code></pre>
 <pre><code>##                    test replications elapsed relative user.self sys.self
-## 3     deSolve, compiled            3   3.533    1.000     3.531        0
-## 1 deSolve, not compiled            3  46.050   13.034    46.030        0
-## 2      Eigenvalue based            3   5.068    1.434     5.066        0
+## 3     deSolve, compiled            3   3.148    1.000     3.146    0.000
+## 1 deSolve, not compiled            3  28.920    9.187    28.904    0.001
+## 2      Eigenvalue based            3   4.442    1.411     4.439    0.000
 ##   user.child sys.child
 ## 3          0         0
 ## 1          0         0
 ## 2          0         0</code></pre>
-<p>We see that using the compiled model is by a factor of around 13 faster than using the R version with the default ode solver, and it is even faster than the Eigenvalue based solution implemented in R which does not need iterative solution of the ODEs.</p>
+<p>We see that using the compiled model is by a factor of around 9 faster than using the R version with the default ode solver, and it is even faster than the Eigenvalue based solution implemented in R which does not need iterative solution of the ODEs.</p>
 </div>
 <div id="model-that-can-not-be-solved-with-eigenvalues" class="section level2">
 <h2>Model that can not be solved with Eigenvalues</h2>
@@ -1680,16 +1659,16 @@ SFO_SFO &lt;- mkinmod(
 }</code></pre>
 <pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
 <pre><code>##                    test replications elapsed relative user.self sys.self
-## 2     deSolve, compiled            3   4.934    1.000     4.931        0
-## 1 deSolve, not compiled            3  72.993   14.794    72.961        0
+## 2     deSolve, compiled            3   4.879    1.000     4.877        0
+## 1 deSolve, not compiled            3  53.551   10.976    53.525        0
 ##   user.child sys.child
 ## 2          0         0
 ## 1          0         0</code></pre>
-<p>Here we get a performance benefit of a factor of 15 using the version of the differential equation model compiled from C code!</p>
-<p>This vignette was built with mkin 0.9.49.1 on</p>
-<pre><code>## R version 3.5.3 (2019-03-11)
+<p>Here we get a performance benefit of a factor of 11 using the version of the differential equation model compiled from C code!</p>
+<p>This vignette was built with mkin 0.9.49.9 on</p>
+<pre><code>## R version 3.6.3 (2020-02-29)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: Debian GNU/Linux 9 (stretch)</code></pre>
+## Running under: Debian GNU/Linux 10 (buster)</code></pre>
 <pre><code>## CPU model: AMD Ryzen 7 1700 Eight-Core Processor</code></pre>
 </div>
 
@@ -1711,6 +1690,54 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

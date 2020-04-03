@@ -76,7 +76,7 @@ method of Venzon and Moolgavkar (1988)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.49.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.49.9</span>
       </span>
     </div>
 
@@ -151,10 +151,19 @@ method of Venzon and Moolgavkar (1988).</p>
     </div>
 
     <pre class="usage"><span class='co'># S3 method for mkinfit</span>
-<span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>object</span>, <span class='no'>parm</span>, <span class='kw'>level</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>1</span> -
-  <span class='no'>level</span>, <span class='no'>cutoff</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"quadratic"</span>, <span class='st'>"profile"</span>),
-  <span class='kw'>transformed</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>backtransform</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span>(<span class='fu'>detectCores</span>()/<span class='fl'>2</span>), <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
+<span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(
+  <span class='no'>object</span>,
+  <span class='no'>parm</span>,
+  <span class='kw'>level</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
+  <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>1</span> - <span class='no'>level</span>,
+  <span class='no'>cutoff</span>,
+  <span class='kw'>method</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"quadratic"</span>, <span class='st'>"profile"</span>),
+  <span class='kw'>transformed</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>backtransform</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span>(<span class='fu'>detectCores</span>()/<span class='fl'>2</span>),
+  <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='no'>...</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -253,52 +262,30 @@ On Windows machines, cores &gt; 1 is currently not supported.</p></td>
 <span class='no'>SFO_SFO.ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>), <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>),
   <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='no'>f_d_1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO</span>, <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>FOCUS_2006_D</span>, <span class='no'>value</span> <span class='kw'>!=</span> <span class='fl'>0</span>), <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='no'>ci_profile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_d_1</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"profile"</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt;        User      System verstrichen 
-#&gt;      51.058       0.000      51.088 </div><div class='input'><span class='co'># Using more cores does not save much time here, as parent_0 takes up most of the time</span>
+<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='no'>ci_profile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_d_1</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"profile"</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt; <span class='error'>Error in mkinpredict.mkinmod(mkinmod, parms, odeini, outtimes, solution_type = solution_type,     use_compiled = use_compiled, method.ode = method.ode, atol = atol,     rtol = rtol, ...): Differential equations were not integrated for all output times because</span>
+#&gt; <span class='error'>NaN values occurred in output from ode()</span></div><div class='output co'>#&gt; <span class='message'>Timing stopped at: 11.39 0 11.4</span></div><div class='input'><span class='co'># Using more cores does not save much time here, as parent_0 takes up most of the time</span>
 <span class='co'># If we additionally exclude parent_0 (the confidence of which is often of</span>
 <span class='co'># minor interest), we get a nice performance improvement from about 50</span>
 <span class='co'># seconds to about 12 seconds if we use at least four cores</span>
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='no'>ci_profile_no_parent_0</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_d_1</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"profile"</span>,
   <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"k_parent_sink"</span>, <span class='st'>"k_parent_m1"</span>, <span class='st'>"k_m1_sink"</span>, <span class='st'>"sigma"</span>), <span class='kw'>cores</span> <span class='kw'>=</span> <span class='no'>n_cores</span>))</div><div class='output co'>#&gt; <span class='message'>Profiling the likelihood</span></div><div class='output co'>#&gt;        User      System verstrichen 
-#&gt;       0.005       0.004      11.349 </div><div class='input'><span class='no'>ci_profile</span></div><div class='output co'>#&gt;                       2.5%        97.5%
-#&gt; parent_0      96.456003650 1.027703e+02
-#&gt; k_parent_sink  0.040762501 5.549764e-02
-#&gt; k_parent_m1    0.046786482 5.500879e-02
-#&gt; k_m1_sink      0.003892605 6.702778e-03
-#&gt; sigma          2.535612399 3.985263e+00</div><div class='input'><span class='no'>ci_quadratic_transformed</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_d_1</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"quadratic"</span>)
+#&gt;      20.058       0.122      11.784 </div><div class='input'><span class='no'>ci_profile</span></div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): Objekt 'ci_profile' nicht gefunden</span></div><div class='input'><span class='no'>ci_quadratic_transformed</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_d_1</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"quadratic"</span>)
 <span class='no'>ci_quadratic_transformed</span></div><div class='output co'>#&gt;                       2.5%        97.5%
-#&gt; parent_0      96.403841649 1.027931e+02
+#&gt; parent_0      96.403841641 1.027931e+02
 #&gt; k_parent_sink  0.041033378 5.596269e-02
 #&gt; k_parent_m1    0.046777902 5.511931e-02
 #&gt; k_m1_sink      0.004012217 6.897547e-03
 #&gt; sigma          2.396089689 3.854918e+00</div><div class='input'><span class='no'>ci_quadratic_untransformed</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_d_1</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"quadratic"</span>, <span class='kw'>transformed</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 <span class='no'>ci_quadratic_untransformed</span></div><div class='output co'>#&gt;                       2.5%        97.5%
-#&gt; parent_0      96.403841653 102.79312450
+#&gt; parent_0      96.403841648 102.79312450
 #&gt; k_parent_sink  0.040485331   0.05535491
-#&gt; k_parent_m1    0.046611581   0.05494364
+#&gt; k_parent_m1    0.046611582   0.05494364
 #&gt; k_m1_sink      0.003835483   0.00668582
 #&gt; sigma          2.396089689   3.85491806</div><div class='input'><span class='co'># Against the expectation based on Bates and Watts (1988), the confidence</span>
 <span class='co'># intervals based on the internal parameter transformation are less</span>
 <span class='co'># congruent with the likelihood based intervals. Note the superiority of the</span>
 <span class='co'># interval based on the untransformed fit for k_m1_sink</span>
-<span class='no'>rel_diffs_transformed</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span>((<span class='no'>ci_quadratic_transformed</span> - <span class='no'>ci_profile</span>)/<span class='no'>ci_profile</span>)
-<span class='no'>rel_diffs_untransformed</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span>((<span class='no'>ci_quadratic_untransformed</span> - <span class='no'>ci_profile</span>)/<span class='no'>ci_profile</span>)
-<span class='no'>rel_diffs_transformed</span> <span class='kw'>&lt;</span> <span class='no'>rel_diffs_untransformed</span></div><div class='output co'>#&gt;                2.5% 97.5%
-#&gt; parent_0      FALSE FALSE
-#&gt; k_parent_sink  TRUE FALSE
-#&gt; k_parent_m1    TRUE FALSE
-#&gt; k_m1_sink     FALSE FALSE
-#&gt; sigma         FALSE FALSE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Round.html'>signif</a></span>(<span class='no'>rel_diffs_transformed</span>, <span class='fl'>3</span>)</div><div class='output co'>#&gt;                   2.5%    97.5%
-#&gt; parent_0      0.000541 0.000222
-#&gt; k_parent_sink 0.006650 0.008380
-#&gt; k_parent_m1   0.000183 0.002010
-#&gt; k_m1_sink     0.030700 0.029100
-#&gt; sigma         0.055000 0.032700</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Round.html'>signif</a></span>(<span class='no'>rel_diffs_untransformed</span>, <span class='fl'>3</span>)</div><div class='output co'>#&gt;                   2.5%    97.5%
-#&gt; parent_0      0.000541 0.000222
-#&gt; k_parent_sink 0.006800 0.002570
-#&gt; k_parent_m1   0.003740 0.001180
-#&gt; k_m1_sink     0.014700 0.002530
-#&gt; sigma         0.055000 0.032700</div><div class='input'>
+<span class='no'>rel_diffs_transformed</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span>((<span class='no'>ci_quadratic_transformed</span> - <span class='no'>ci_profile</span>)/<span class='no'>ci_profile</span>)</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): Objekt 'ci_profile' nicht gefunden</span></div><div class='input'><span class='no'>rel_diffs_untransformed</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span>((<span class='no'>ci_quadratic_untransformed</span> - <span class='no'>ci_profile</span>)/<span class='no'>ci_profile</span>)</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): Objekt 'ci_profile' nicht gefunden</span></div><div class='input'><span class='no'>rel_diffs_transformed</span> <span class='kw'>&lt;</span> <span class='no'>rel_diffs_untransformed</span></div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): Objekt 'rel_diffs_transformed' nicht gefunden</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Round.html'>signif</a></span>(<span class='no'>rel_diffs_transformed</span>, <span class='fl'>3</span>)</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): Objekt 'rel_diffs_transformed' nicht gefunden</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Round.html'>signif</a></span>(<span class='no'>rel_diffs_untransformed</span>, <span class='fl'>3</span>)</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): Objekt 'rel_diffs_untransformed' nicht gefunden</span></div><div class='input'>
 
 <span class='co'># Investigate a case with formation fractions</span>
 <span class='no'>f_d_2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO.ff</span>, <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>FOCUS_2006_D</span>, <span class='no'>value</span> <span class='kw'>!=</span> <span class='fl'>0</span>), <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
@@ -309,16 +296,16 @@ On Windows machines, cores &gt; 1 is currently not supported.</p></td>
 #&gt; f_parent_to_m1  0.471328495 5.611550e-01
 #&gt; sigma           2.535612399 3.985263e+00</div><div class='input'><span class='no'>ci_quadratic_transformed_ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_d_2</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"quadratic"</span>)
 <span class='no'>ci_quadratic_transformed_ff</span></div><div class='output co'>#&gt;                        2.5%        97.5%
-#&gt; parent_0       96.403840123 1.027931e+02
-#&gt; k_parent        0.090823791 1.072543e-01
+#&gt; parent_0       96.403839992 1.027931e+02
+#&gt; k_parent        0.090823790 1.072543e-01
 #&gt; k_m1            0.004012216 6.897547e-03
-#&gt; f_parent_to_m1  0.469118710 5.595960e-01
+#&gt; f_parent_to_m1  0.469118711 5.595960e-01
 #&gt; sigma           2.396089689 3.854918e+00</div><div class='input'><span class='no'>ci_quadratic_untransformed_ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_d_2</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"quadratic"</span>, <span class='kw'>transformed</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 <span class='no'>ci_quadratic_untransformed_ff</span></div><div class='output co'>#&gt;                        2.5%        97.5%
-#&gt; parent_0       96.403840057 1.027931e+02
-#&gt; k_parent        0.090491932 1.069035e-01
+#&gt; parent_0       96.403839944 1.027931e+02
+#&gt; k_parent        0.090491931 1.069035e-01
 #&gt; k_m1            0.003835483 6.685819e-03
-#&gt; f_parent_to_m1  0.469113361 5.598386e-01
+#&gt; f_parent_to_m1  0.469113362 5.598386e-01
 #&gt; sigma           2.396089689 3.854918e+00</div><div class='input'><span class='no'>rel_diffs_transformed_ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span>((<span class='no'>ci_quadratic_transformed_ff</span> - <span class='no'>ci_profile_ff</span>)/<span class='no'>ci_profile_ff</span>)
 <span class='no'>rel_diffs_untransformed_ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span>((<span class='no'>ci_quadratic_untransformed_ff</span> - <span class='no'>ci_profile_ff</span>)/<span class='no'>ci_profile_ff</span>)
 <span class='co'># While the confidence interval for the parent rate constant is closer to</span>
@@ -330,16 +317,16 @@ On Windows machines, cores &gt; 1 is currently not supported.</p></td>
 #&gt; k_parent        TRUE  TRUE
 #&gt; k_m1           FALSE FALSE
 #&gt; f_parent_to_m1  TRUE FALSE
-#&gt; sigma          FALSE  TRUE</div><div class='input'><span class='no'>rel_diffs_transformed_ff</span></div><div class='output co'>#&gt;                        2.5%        97.5%
-#&gt; parent_0       0.0005408012 0.0002217857
-#&gt; k_parent       0.0009596303 0.0009003981
-#&gt; k_m1           0.0307277425 0.0290579163
-#&gt; f_parent_to_m1 0.0046884178 0.0027782643
+#&gt; sigma          FALSE FALSE</div><div class='input'><span class='no'>rel_diffs_transformed_ff</span></div><div class='output co'>#&gt;                        2.5%        97.5%
+#&gt; parent_0       0.0005408026 0.0002217846
+#&gt; k_parent       0.0009596414 0.0009003877
+#&gt; k_m1           0.0307277403 0.0290579212
+#&gt; f_parent_to_m1 0.0046884168 0.0027782604
 #&gt; sigma          0.0550252516 0.0327066836</div><div class='input'><span class='no'>rel_diffs_untransformed_ff</span></div><div class='output co'>#&gt;                        2.5%        97.5%
-#&gt; parent_0       0.0005408019 0.0002217863
-#&gt; k_parent       0.0046099989 0.0023730118
-#&gt; k_m1           0.0146746451 0.0025300990
-#&gt; f_parent_to_m1 0.0046997668 0.0023460293
+#&gt; parent_0       0.0005408031 0.0002217851
+#&gt; k_parent       0.0046100089 0.0023730230
+#&gt; k_m1           0.0146746442 0.0025300972
+#&gt; f_parent_to_m1 0.0046997642 0.0023460268
 #&gt; sigma          0.0550252516 0.0327066836</div><div class='input'>
 <span class='co'># The profiling for the following fit does not finish in a reasonable time,</span>
 <span class='co'># therefore we use the quadratic approximation</span>
@@ -351,17 +338,17 @@ On Windows machines, cores &gt; 1 is currently not supported.</p></td>
 <span class='no'>f_tc_2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>m_synth_DFOP_par</span>, <span class='no'>DFOP_par_c</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"tc"</span>,
   <span class='kw'>error_model_algorithm</span> <span class='kw'>=</span> <span class='st'>"direct"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_tc_2</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"quadratic"</span>)</div><div class='output co'>#&gt;                        2.5%        97.5%
-#&gt; parent_0       94.596183241 106.19937044
-#&gt; k_M1            0.037605436   0.04490758
-#&gt; k_M2            0.008568746   0.01087675
-#&gt; f_parent_to_M1  0.021464277   0.62023879
-#&gt; f_parent_to_M2  0.015166876   0.37975352
-#&gt; k1              0.273897622   0.33388081
-#&gt; k2              0.018614564   0.02250380
-#&gt; g               0.671943572   0.73583247
-#&gt; sigma_low       0.251284138   0.83992136
-#&gt; rsd_high        0.040410998   0.07661999</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_tc_2</span>, <span class='st'>"parent_0"</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"quadratic"</span>)</div><div class='output co'>#&gt;              2.5%    97.5%
-#&gt; parent_0 94.59618 106.1994</div><div class='input'># }
+#&gt; parent_0       94.596218141 106.19934683
+#&gt; k_M1            0.037605440   0.04490756
+#&gt; k_M2            0.008568747   0.01087674
+#&gt; f_parent_to_M1  0.021466788   0.62023878
+#&gt; f_parent_to_M2  0.015168650   0.37975352
+#&gt; k1              0.273897581   0.33388066
+#&gt; k2              0.018614556   0.02250379
+#&gt; g               0.671943831   0.73583255
+#&gt; sigma_low       0.251283700   0.83992071
+#&gt; rsd_high        0.040411017   0.07662005</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_tc_2</span>, <span class='st'>"parent_0"</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"quadratic"</span>)</div><div class='output co'>#&gt;              2.5%    97.5%
+#&gt; parent_0 94.59622 106.1993</div><div class='input'># }
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

@@ -26,7 +26,7 @@ The function is used internally by \code{\link{summary.mkinfit}}.
 \examples{
 
   fit <- mkinfit("FOMC", FOCUS_2006_C, quiet = TRUE)
-  endpoints(fit)  
+  endpoints(fit)
 
 }
 \author{

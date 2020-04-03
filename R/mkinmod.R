@@ -33,6 +33,7 @@
 #' @param verbose If \code{TRUE}, passed to \code{\link{cfunction}} if
 #'   applicable to give detailed information about the C function being built.
 #' @importFrom methods signature
+#' @importFrom pkgbuild has_compiler
 #' @importFrom inline cfunction
 #' @return A list of class \code{mkinmod} for use with \code{\link{mkinfit}},
 #'   containing, among others,
@@ -364,79 +365,77 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
     model$coefmat <- m
   }#}}}
 
-  # Try to create a function compiled from C code if more than one observed {{{
-  # variable and gcc is available
-  if (length(obs_vars) > 1) {
-    if (Sys.which("gcc") != "") {
+  # Try to create a function compiled from C code there is more than one observed variable {{{
+  # and a compiler is available
+  if (length(obs_vars) > 1 & has_compiler()) {
 
-      # Translate the R code for the derivatives to C code
-      diffs.C <- paste(diffs, collapse = ";\n")
-      diffs.C <- paste0(diffs.C, ";")
+    # Translate the R code for the derivatives to C code
+    diffs.C <- paste(diffs, collapse = ";\n")
+    diffs.C <- paste0(diffs.C, ";")
 
-      # HS
-      diffs.C <- gsub(HS_decline, "(time <= tb ? k1 : k2)", diffs.C, fixed = TRUE)
+    # HS
+    diffs.C <- gsub(HS_decline, "(time <= tb ? k1 : k2)", diffs.C, fixed = TRUE)
 
-      for (i in seq_along(diffs)) {
-        state_var <- names(diffs)[i]
+    for (i in seq_along(diffs)) {
+      state_var <- names(diffs)[i]
 
-        # IORE
-        if (state_var %in% obs_vars) {
-          if (spec[[state_var]]$type == "IORE") {
-            diffs.C <- gsub(paste0(state_var, "^N_", state_var),
-                            paste0("pow(y[", i - 1, "], N_", state_var, ")"),
-                            diffs.C, fixed = TRUE)
-          }
+      # IORE
+      if (state_var %in% obs_vars) {
+        if (spec[[state_var]]$type == "IORE") {
+          diffs.C <- gsub(paste0(state_var, "^N_", state_var),
+                          paste0("pow(y[", i - 1, "], N_", state_var, ")"),
+                          diffs.C, fixed = TRUE)
         }
-
-        # Replace d_... terms by f[i-1]
-        # First line
-        pattern <- paste0("^d_", state_var)
-        replacement <- paste0("\nf[", i - 1, "]")
-        diffs.C <- gsub(pattern, replacement, diffs.C)
-        # Other lines
-        pattern <- paste0("\\nd_", state_var)
-        replacement <- paste0("\nf[", i - 1, "]")
-        diffs.C <- gsub(pattern, replacement, diffs.C)
-
-        # Replace names of observed variables by y[i],
-        # making the implicit assumption that the observed variables only occur after "* "
-        pattern <- paste0("\\* ", state_var)
-        replacement <- paste0("* y[", i - 1, "]")
-        diffs.C <- gsub(pattern, replacement, diffs.C)
       }
 
-      derivs_sig <- signature(n = "integer", t = "numeric", y = "numeric",
-                              f = "numeric", rpar = "numeric", ipar = "integer")
+      # Replace d_... terms by f[i-1]
+      # First line
+      pattern <- paste0("^d_", state_var)
+      replacement <- paste0("\nf[", i - 1, "]")
+      diffs.C <- gsub(pattern, replacement, diffs.C)
+      # Other lines
+      pattern <- paste0("\\nd_", state_var)
+      replacement <- paste0("\nf[", i - 1, "]")
+      diffs.C <- gsub(pattern, replacement, diffs.C)
 
-      # Declare the time variable in the body of the function if it is used
-      derivs_code <- if (spec[[1]]$type %in% c("FOMC", "DFOP", "HS")) {
-        paste0("double time = *t;\n", diffs.C)
-      } else {
-        diffs.C
-      }
+      # Replace names of observed variables by y[i],
+      # making the implicit assumption that the observed variables only occur after "* "
+      pattern <- paste0("\\* ", state_var)
+      replacement <- paste0("* y[", i - 1, "]")
+      diffs.C <- gsub(pattern, replacement, diffs.C)
+    }
 
-      # Define the function initializing the parameters
-      npar <- length(parms)
-      initpar_code <- paste0(
-        "static double parms [", npar, "];\n",
-        paste0("#define ", parms, " parms[", 0:(npar - 1), "]\n", collapse = ""),
-        "\n",
-        "void initpar(void (* odeparms)(int *, double *)) {\n",
-        "    int N = ", npar, ";\n",
-        "    odeparms(&N, parms);\n",
-        "}\n\n")
+    derivs_sig <- signature(n = "integer", t = "numeric", y = "numeric",
+                            f = "numeric", rpar = "numeric", ipar = "integer")
 
-      # Try to build a shared library
-      cf <- try(cfunction(list(func = derivs_sig), derivs_code,
-                          otherdefs = initpar_code,
-                          verbose = verbose,
-                          convention = ".C", language = "C"),
-                silent = TRUE)
+    # Declare the time variable in the body of the function if it is used
+    derivs_code <- if (spec[[1]]$type %in% c("FOMC", "DFOP", "HS")) {
+      paste0("double time = *t;\n", diffs.C)
+    } else {
+      diffs.C
+    }
 
-      if (!inherits(cf, "try-error")) {
-        if (!quiet) message("Successfully compiled differential equation model from auto-generated C code.")
-        model$cf <- cf
-      }
+    # Define the function initializing the parameters
+    npar <- length(parms)
+    initpar_code <- paste0(
+      "static double parms [", npar, "];\n",
+      paste0("#define ", parms, " parms[", 0:(npar - 1), "]\n", collapse = ""),
+      "\n",
+      "void initpar(void (* odeparms)(int *, double *)) {\n",
+      "    int N = ", npar, ";\n",
+      "    odeparms(&N, parms);\n",
+      "}\n\n")
+
+    # Try to build a shared library
+    cf <- try(cfunction(list(func = derivs_sig), derivs_code,
+                        otherdefs = initpar_code,
+                        verbose = verbose,
+                        convention = ".C", language = "C"),
+              silent = TRUE)
+
+    if (!inherits(cf, "try-error")) {
+      if (!quiet) message("Successfully compiled differential equation model from auto-generated C code.")
+      model$cf <- cf
     }
   }
   # }}}

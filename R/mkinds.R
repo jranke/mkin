@@ -1,43 +1,50 @@
 #' A dataset class for mkin
 #' 
-#' A dataset class for mkin
-#' 
-#' @name mkinds
-#' @docType class
-#' @format An \code{\link{R6Class}} generator object.
-#' @section Fields:
-#' 
-#' \describe{ \item{list("title")}{A full title for the dataset}
-#' 
-#' \item{list("sampling")}{times The sampling times}
-#' 
-#' \item{list("time_unit")}{The time unit}
-#' 
-#' \item{list("observed")}{Names of the observed compounds}
-#' 
-#' \item{list("unit")}{The unit of the observations}
-#' 
-#' \item{list("replicates")}{The number of replicates}
-#' 
-#' \item{list("data")}{A dataframe with at least the columns name, time and
-#' value in order to be compatible with mkinfit} }
+#' @description
+#' At the moment this dataset class is hardly used in mkin. For example,
+#' mkinfit does not take mkinds datasets as argument, but works with dataframes
+#' such as the on contained in the data field of mkinds objects. Some datasets
+#' provided by this package come as mkinds objects nevertheless.
+#'
 #' @importFrom R6 R6Class
-#' @keywords datasets
+#' @seealso The S3 printing method \code{\link{print.mkinds}}
 #' @examples
 #' 
 #' mds <- mkinds$new("FOCUS A", FOCUS_2006_A)
+#' print(mds)
 #' 
 #' @export
 mkinds <- R6Class("mkinds",
   public = list(
+
+    #' @field title A full title for the dataset
     title = NULL,
+
+    #' @field sampling_times The sampling times
     sampling_times = NULL,
+
+    #' @field time_unit The time unit
     time_unit = NULL,
+
+    #' @field observed Names of the observed variables
     observed = NULL,
+
+    #' @field unit The unit of the observations
     unit = NULL,
+
+    #' @field replicates The maximum number of replicates per sampling time
     replicates = NULL,
+
+    #' @field data A data frame with at least the columns name, time
+    #' and value in order to be compatible with mkinfit
     data = NULL,
 
+    #' @description
+    #' Create a new mkinds object
+    #' @param title The dataset title
+    #' @param data The data
+    #' @param time_unit The time unit
+    #' @param unit The unit of the observations
     initialize = function(title = "", data, time_unit = NA, unit = NA) {
 
       self$title <- title
@@ -55,8 +62,6 @@ mkinds <- R6Class("mkinds",
 )
 
 #' Print mkinds objects
-#' 
-#' Print mkinds objects.
 #' 
 #' @param x An \code{\link{mkinds}} object.
 #' @param \dots Not used.

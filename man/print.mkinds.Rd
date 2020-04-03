@@ -12,5 +12,5 @@
 \item{\dots}{Not used.}
 }
 \description{
-Print mkinds objects.
+Print mkinds objects
 }
