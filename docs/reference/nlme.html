@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function to set up a kinetic submodel for one state variable — mkinsub • mkin</title>
+<title>Estimation of parameter distributions from mmkin row objects — mean_degparms • mkin</title>
 
 
 <!-- jquery -->
@@ -35,9 +35,11 @@
 
 
 
-<meta property="og:title" content="Function to set up a kinetic submodel for one state variable — mkinsub" />
-<meta property="og:description" content="This is a convenience function to set up the lists used as arguments for
-mkinmod." />
+<meta property="og:title" content="Estimation of parameter distributions from mmkin row objects — mean_degparms" />
+<meta property="og:description" content="This function sets up and attempts to fit a mixed effects model to
+an mmkin row object. An mmkin row object is essentially a list of mkinfit
+objects that have been obtained by fitting the same model to a list of
+datasets." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -128,65 +130,41 @@ mkinmod." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Function to set up a kinetic submodel for one state variable</h1>
+    <h1>Estimation of parameter distributions from mmkin row objects</h1>
     
-    <div class="hidden name"><code>mkinsub.Rd</code></div>
+    <div class="hidden name"><code>nlme.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This is a convenience function to set up the lists used as arguments for
-<code><a href='mkinmod.html'>mkinmod</a></code>.</p>
+    <p>This function sets up and attempts to fit a mixed effects model to
+an mmkin row object. An mmkin row object is essentially a list of mkinfit
+objects that have been obtained by fitting the same model to a list of
+datasets.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>mkinsub</span>(<span class='no'>submodel</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>sink</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>full_name</span> <span class='kw'>=</span> <span class='fl'>NA</span>)</pre>
+    <pre class="usage"><span class='fu'>mean_degparms</span>(<span class='no'>object</span>)
+
+<span class='fu'>nlme_data</span>(<span class='no'>object</span>)
+
+<span class='fu'>nlme_function</span>(<span class='no'>object</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>submodel</th>
-      <td><p>Character vector of length one to specify the submodel type.
-See <code><a href='mkinmod.html'>mkinmod</a></code> for the list of allowed submodel names.</p></td>
-    </tr>
-    <tr>
-      <th>to</th>
-      <td><p>Vector of the names of the state variable to which a
-transformation shall be included in the model.</p></td>
-    </tr>
-    <tr>
-      <th>sink</th>
-      <td><p>Should a pathway to sink be included in the model in addition to
-the pathways to other state variables?</p></td>
-    </tr>
-    <tr>
-      <th>full_name</th>
-      <td><p>An optional name to be used e.g. for plotting fits
-performed with the model.  You can use non-ASCII characters here, but then
-your R code will not be portable, <em>i.e.</em> may produce unintended plot
-results on other operating systems or system configurations.</p></td>
+      <th>object</th>
+      <td><p>An mmkin row object containing several fits of the same model to different datasets</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list for use with <code><a href='mkinmod.html'>mkinmod</a></code>.</p>
+    <p>A named vector containing mean values of the fitted degradation model parameters</p>
+<p>A groupedData data object</p>
+<p>A function that can be used with nlme</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='co'># One parent compound, one metabolite, both single first order.</span>
-<span class='no'>SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(
-  <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"m1"</span>),
-  <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
-<span class='co'># The same model using mkinsub</span>
-<span class='no'>SFO_SFO.2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(
-  <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'>mkinsub</span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>),
-  <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'>mkinsub</span>(<span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
-<span class='co'># \dontrun{</span>
-  <span class='co'># Now supplying full names</span>
-  <span class='no'>SFO_SFO.2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(
-    <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'>mkinsub</span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>, <span class='kw'>full_name</span> <span class='kw'>=</span> <span class='st'>"Test compound"</span>),
-    <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'>mkinsub</span>(<span class='st'>"SFO"</span>, <span class='kw'>full_name</span> <span class='kw'>=</span> <span class='st'>"Metabolite M1"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'> # }
-</div></pre>
+    <pre class="examples"></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -196,8 +174,6 @@ results on other operating systems or system configurations.</p></td>
       <li><a href="#examples">Examples</a></li>
     </ul>
 
-    <h2>Author</h2>
-    <p>Johannes Ranke</p>
   </div>
 </div>
 
