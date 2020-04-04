@@ -40,11 +40,12 @@ SFO_SFO.2 <- mkinmod(
   parent = mkinsub("SFO", "m1"),
   m1 = mkinsub("SFO"))
 
-# Now supplying full names
-SFO_SFO.2 <- mkinmod(
-  parent = mkinsub("SFO", "m1", full_name = "Test compound"),
-  m1 = mkinsub("SFO", full_name = "Metabolite M1"))
-
+\dontrun{
+  # Now supplying full names
+  SFO_SFO.2 <- mkinmod(
+    parent = mkinsub("SFO", "m1", full_name = "Test compound"),
+    m1 = mkinsub("SFO", full_name = "Metabolite M1"))
+ }
 }
 \author{
 Johannes Ranke
