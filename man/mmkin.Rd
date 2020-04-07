@@ -32,8 +32,9 @@ for parallel execution.}
 \item{\dots}{Further arguments that will be passed to \code{\link{mkinfit}}.}
 }
 \value{
-A matrix of \code{\link{mkinfit}} objects that can be indexed using
-  the model and dataset names as row and column indices.
+A two-dimensional \code{\link{array}} of \code{\link{mkinfit}}
+  objects that can be indexed using the model names for the first index (row index) 
+  and the dataset names for the second index (column index).
 }
 \description{
 This function calls \code{\link{mkinfit}} on all combinations of models and
