@@ -17,8 +17,9 @@
 #'   for parallel execution.
 #' @param \dots Further arguments that will be passed to \code{\link{mkinfit}}.
 #' @importFrom parallel mclapply parLapply detectCores
-#' @return A matrix of \code{\link{mkinfit}} objects that can be indexed using
-#'   the model and dataset names as row and column indices.
+#' @return A two-dimensional \code{\link{array}} of \code{\link{mkinfit}}
+#'   objects that can be indexed using the model names for the first index (row index) 
+#'   and the dataset names for the second index (column index).
 #' @author Johannes Ranke
 #' @seealso \code{\link{[.mmkin}} for subsetting, \code{\link{plot.mmkin}} for
 #'   plotting.
