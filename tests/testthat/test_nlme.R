@@ -26,7 +26,11 @@ test_that("nlme_function works correctly", {
 
   mean_dp <- mean_degparms(f)
   grouped_data <- nlme_data(f)
+
   nlme_f <- nlme_function(f)
+  # The following assignment was introduced for nlme as evaluated by testthat
+  # to find the function
+  assign("nlme_f", nlme_f, pos = globalenv())
 
   m_nlme_raw <- nlme(value ~ SSasymp(time, 0, parent_0, log_k_parent_sink),
     data = grouped_data,
@@ -58,6 +62,5 @@ test_that("nlme_function works correctly", {
   m_nlme_mkin_up_2 <- update(m_nlme_mkin, random = parent_0 ~ 1)
   expect_equal(m_nlme_raw_up_2$coefficients, m_nlme_mkin_up_2$coefficients)
 
-  # update(m_nlme_mkin) # works
-
+  expect_silent(tmp <- update(m_nlme_mkin))
 })
