@@ -57,7 +57,11 @@ test_that("Updating fitted models works", {
 })
 
 test_that("We can do a likelihood ratio test using an update specification", {
-  skip("This errors out if called by testthat while it works in a normal R session")
+  # The following two assignments were made so the update.mkinfit function called
+  # by lrtest.mkinfit finds these objects when lrtest.mkinfit is called by
+  # testthat
+  assign("f_2_mkin", f_2_mkin, globalenv())
+  assign("DFOP_par_c", DFOP_par_c, globalenv())
   test_2_mkin_k2 <- lrtest(f_2_mkin, fixed_parms = c(k2 = 0))
   expect_equivalent(test_2_mkin_k2[["2", "Pr(>Chisq)"]], 4.851e-8, tolerance = 1e-8)
   test_2_mkin_tc <- lrtest(f_2_mkin, error_model = "tc")
