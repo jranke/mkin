@@ -1,4 +1,4 @@
-# Copyright (C) 2016-2019 Johannes Ranke
+# Copyright (C) 2016-2020 Johannes Ranke
 # Contact: jranke@uni-bremen.de
 
 # This file is part of the R package mkin
@@ -94,6 +94,7 @@ test_that("Plotting mkinfit and mmkin objects is reproducible", {
   skip_on_cran()
   plot_default_FOCUS_C_SFO <- function() plot(fits[["SFO", "FOCUS_C"]])
   plot_res_FOCUS_C_SFO <- function() plot(fits[["SFO", "FOCUS_C"]], show_residuals = TRUE)
+  plot_res_FOCUS_C_SFO_2 <- function() plot_res(fits[["SFO", "FOCUS_C"]])
   plot_sep_FOCUS_C_SFO <- function() plot_sep(fits[["SFO", "FOCUS_C"]])
   mkinparplot_FOCUS_C_SFO <- function() mkinparplot(fits[["SFO", "FOCUS_C"]])
   mkinerrplot_FOCUS_C_SFO <- function() mkinerrplot(fits[["SFO", "FOCUS_C"]])
@@ -112,6 +113,7 @@ test_that("Plotting mkinfit and mmkin objects is reproducible", {
 
   vdiffr::expect_doppelganger("mkinfit plot for FOCUS C with defaults", plot_default_FOCUS_C_SFO)
   vdiffr::expect_doppelganger("mkinfit plot for FOCUS C with residuals like in gmkin", plot_res_FOCUS_C_SFO)
+  vdiffr::expect_doppelganger("plot_res for FOCUS C", plot_res_FOCUS_C_SFO_2)
   vdiffr::expect_doppelganger("mkinfit plot for FOCUS C with sep = TRUE", plot_sep_FOCUS_C_SFO)
   vdiffr::expect_doppelganger("mkinparplot for FOCUS C SFO", mkinparplot_FOCUS_C_SFO)
   vdiffr::expect_doppelganger("mkinerrplot for FOCUS C SFO", mkinerrplot_FOCUS_C_SFO)
