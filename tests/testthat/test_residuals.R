@@ -15,5 +15,5 @@ test_that("Residuals are correctly returned", {
   expect_equivalent(
     residuals(fit_tc_1, standardized = TRUE)[1:3],
     c(-0.2474499, -0.3794267, 2.2749216),
-    tolerance = 1e-7)
+    tolerance = 1e-6)
 })
