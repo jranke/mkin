@@ -10,7 +10,8 @@ test_that("Residuals are correctly returned", {
 
   expect_equivalent(
     residuals(fit_obs_1, standardized = TRUE)[1:3],
-    c(-0.21771169, -0.33576060, 2.02836138))
+    c(-0.21771169, -0.33576060, 2.02836138),
+    tolerance = 1e-6)
 
   expect_equivalent(
     residuals(fit_tc_1, standardized = TRUE)[1:3],
