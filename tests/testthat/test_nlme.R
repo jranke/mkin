@@ -31,6 +31,7 @@ test_that("nlme_function works correctly", {
   # The following assignment was introduced for nlme as evaluated by testthat
   # to find the function
   assign("nlme_f", nlme_f, pos = globalenv())
+  assign("sampling_times", sampling_times, pos = globalenv())
 
   m_nlme_raw <- nlme(value ~ SSasymp(time, 0, parent_0, log_k_parent_sink),
     data = grouped_data,
@@ -68,7 +69,6 @@ test_that("nlme_function works correctly", {
 test_that("nlme_function works correctly in other cases", {
 
   dt50_in <- c(400, 800, 1200, 1600, 2000)
-  dt50_in_geomean <- geomean(dt50_in)
   k_in <- log(2) / dt50_in
   SFO <- mkinmod(parent = mkinsub("SFO"))
   pred_sfo <- function(k) {
@@ -85,15 +85,16 @@ test_that("nlme_function works correctly in other cases", {
   names(ds_me_sfo_5) <- paste("Dataset", 1:15)
   dimnames(ds_me_sfo_5) <- list(Subset = 1:3, DT50 = dt50_in)
 
-  f_me_sfo_5 <- mmkin("SFO", ds_me_sfo_5)
+  f_me_sfo_5 <- mmkin("SFO", ds_me_sfo_5, quiet = TRUE)
 
   ds_me_sfo_5_grouped_mkin <- nlme_data(f_me_sfo_5)
   ds_me_sfo_5_mean_dp <- mean_degparms(f_me_sfo_5)
   me_sfo_function <- nlme_function(f_me_sfo_5)
+  assign("me_sfo_function", me_sfo_function, pos = globalenv())
 
   f_nlme_sfo_5_all_mkin <- nlme(value ~ me_sfo_function(name, time,
       parent_0, log_k_parent_sink),
-    data = ds_me_sfo_5_grouped,
+    data = ds_me_sfo_5_grouped_mkin,
     fixed = parent_0 + log_k_parent_sink ~ 1,
     random = pdDiag(parent_0 + log_k_parent_sink ~ 1),
     start = ds_me_sfo_5_mean_dp)
@@ -109,7 +110,7 @@ test_that("nlme_function works correctly in other cases", {
   # With less ideal starting values we get fits with lower AIC (not shown)
   f_nlme_sfo_5_all_mkin_nostart <- nlme(value ~ me_sfo_function(name, time,
       parent_0, log_k_parent_sink),
-    data = ds_me_sfo_5_grouped,
+    data = ds_me_sfo_5_grouped_mkin,
     fixed = parent_0 + log_k_parent_sink ~ 1,
     random = pdDiag(parent_0 + log_k_parent_sink ~ 1),
     start = c(parent_0 = 100, log_k_parent_sink = log(0.1)))
