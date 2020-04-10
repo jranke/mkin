@@ -1,14 +1,12 @@
 #' Estimation of parameter distributions from mmkin row objects
 #'
-#' This function sets up and attempts to fit a mixed effects model to
+#' These functions facilitate setting up a nonlinear mixed effects model for
 #' an mmkin row object. An mmkin row object is essentially a list of mkinfit
 #' objects that have been obtained by fitting the same model to a list of
 #' datasets.
 #'
 #' @param object An mmkin row object containing several fits of the same model to different datasets
 #' @import nlme
-#' @importFrom purrr map_dfr
-#' @return A named vector containing mean values of the fitted degradation model parameters
 #' @rdname nlme
 #' @examples
 #' sampling_times = c(0, 1, 3, 7, 14, 28, 60, 90, 120)
@@ -45,7 +43,7 @@
 #' summary(m_nlme)
 #'
 #' \dontrun{
-#'   Test on some real data
+#'   # Test on some real data
 #'   ds_2 <- lapply(experimental_data_for_UBA_2019[6:10],
 #'    function(x) x$data[c("name", "time", "value")])
 #'   m_sfo_sfo <- mkinmod(parent = mkinsub("SFO", "A1"),
@@ -113,36 +111,7 @@
 #'
 #'   anova(f_nlme_fomc_sfo, f_nlme_sfo_sfo)
 #' }
-#' @export
-mean_degparms <- function(object) {
-  if (nrow(object) > 1) stop("Only row objects allowed")
-  p_mat_start_trans <- sapply(object, parms, transformed = TRUE)
-  mean_degparm_names <- setdiff(rownames(p_mat_start_trans), names(object[[1]]$errparms))
-  res <- apply(p_mat_start_trans[mean_degparm_names, ], 1, mean)
-  return(res)
-}
-
-#' @rdname nlme
-#' @importFrom purrr map_dfr
-#' @return A groupedData data object
-#' @export
-nlme_data <- function(object) {
-  if (nrow(object) > 1) stop("Only row objects allowed")
-  ds_names <- colnames(object)
-
-  ds_list <- lapply(object, function(x) x$data[c("time", "variable", "observed")])
-  names(ds_list) <- ds_names
-  ds_nlme <- purrr::map_dfr(ds_list, function(x) x, .id = "ds")
-  ds_nlme$variable <- as.character(ds_nlme$variable)
-  ds_nlme_renamed <- data.frame(ds = ds_nlme$ds, name = ds_nlme$variable,
-    time = ds_nlme$time, value = ds_nlme$observed,
-    stringsAsFactors = FALSE)
-  ds_nlme_grouped <- groupedData(value ~ time | ds, ds_nlme_renamed)
-  return(ds_nlme_grouped)
-}
-
-#' @rdname nlme
-#' @return A function that can be used with nlme
+#' @return A function that can be used with \code{link{nlme}}
 #' @export
 nlme_function <- function(object) {
   if (nrow(object) > 1) stop("Only row objects allowed")
@@ -210,4 +179,34 @@ nlme_function <- function(object) {
   })
   model_function <- as.function(c(model_function_alist, model_function_body))
   return(model_function)
+}
+
+#' @rdname nlme
+#' @return A named vector containing mean values of the fitted degradation model parameters
+#' @export
+mean_degparms <- function(object) {
+  if (nrow(object) > 1) stop("Only row objects allowed")
+  degparm_mat_trans <- sapply(object, parms, transformed = TRUE)
+  mean_degparm_names <- setdiff(rownames(degparm_mat_trans), names(object[[1]]$errparms))
+  res <- apply(degparm_mat_trans[mean_degparm_names, ], 1, mean)
+  return(res)
+}
+
+#' @rdname nlme
+#' @importFrom purrr map_dfr
+#' @return A \code{\link{groupedData}} object
+#' @export
+nlme_data <- function(object) {
+  if (nrow(object) > 1) stop("Only row objects allowed")
+  ds_names <- colnames(object)
+
+  ds_list <- lapply(object, function(x) x$data[c("time", "variable", "observed")])
+  names(ds_list) <- ds_names
+  ds_nlme <- purrr::map_dfr(ds_list, function(x) x, .id = "ds")
+  ds_nlme$variable <- as.character(ds_nlme$variable)
+  ds_nlme_renamed <- data.frame(ds = ds_nlme$ds, name = ds_nlme$variable,
+    time = ds_nlme$time, value = ds_nlme$observed,
+    stringsAsFactors = FALSE)
+  ds_nlme_grouped <- groupedData(value ~ time | ds, ds_nlme_renamed)
+  return(ds_nlme_grouped)
 }

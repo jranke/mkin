@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Estimation of parameter distributions from mmkin row objects — mean_degparms • mkin</title>
+<title>Estimation of parameter distributions from mmkin row objects — nlme_function • mkin</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Estimation of parameter distributions from mmkin row objects — mean_degparms" />
-<meta property="og:description" content="This function sets up and attempts to fit a mixed effects model to
+<meta property="og:title" content="Estimation of parameter distributions from mmkin row objects — nlme_function" />
+<meta property="og:description" content="These functions facilitate setting up a nonlinear mixed effects model for
 an mmkin row object. An mmkin row object is essentially a list of mkinfit
 objects that have been obtained by fitting the same model to a list of
 datasets." />
@@ -72,7 +72,7 @@ datasets." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.49.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.49.10</span>
       </span>
     </div>
 
@@ -136,17 +136,17 @@ datasets." />
     </div>
 
     <div class="ref-description">
-    <p>This function sets up and attempts to fit a mixed effects model to
+    <p>These functions facilitate setting up a nonlinear mixed effects model for
 an mmkin row object. An mmkin row object is essentially a list of mkinfit
 objects that have been obtained by fitting the same model to a list of
 datasets.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>mean_degparms</span>(<span class='no'>object</span>)
+    <pre class="usage"><span class='fu'>nlme_function</span>(<span class='no'>object</span>)
 
-<span class='fu'>nlme_data</span>(<span class='no'>object</span>)
+<span class='fu'>mean_degparms</span>(<span class='no'>object</span>)
 
-<span class='fu'>nlme_function</span>(<span class='no'>object</span>)</pre>
+<span class='fu'>nlme_data</span>(<span class='no'>object</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -159,12 +159,102 @@ datasets.</p>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A named vector containing mean values of the fitted degradation model parameters</p>
-<p>A groupedData data object</p>
-<p>A function that can be used with nlme</p>
+    <p>A function that can be used with <code>link{nlme}</code></p>
+<p>A named vector containing mean values of the fitted degradation model parameters</p>
+<p>A <code><a href='https://rdrr.io/pkg/nlme/man/groupedData.html'>groupedData</a></code> object</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"></pre>
+    <pre class="examples"><div class='input'><span class='no'>sampling_times</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>7</span>, <span class='fl'>14</span>, <span class='fl'>28</span>, <span class='fl'>60</span>, <span class='fl'>90</span>, <span class='fl'>120</span>)
+<span class='no'>m_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))
+<span class='no'>d_SFO_1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinpredict.html'>mkinpredict</a></span>(<span class='no'>m_SFO</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>k_parent_sink</span> <span class='kw'>=</span> <span class='fl'>0.1</span>),
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fl'>98</span>), <span class='no'>sampling_times</span>)
+<span class='no'>d_SFO_1_long</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkin_wide_to_long.html'>mkin_wide_to_long</a></span>(<span class='no'>d_SFO_1</span>, <span class='kw'>time</span> <span class='kw'>=</span> <span class='st'>"time"</span>)
+<span class='no'>d_SFO_2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinpredict.html'>mkinpredict</a></span>(<span class='no'>m_SFO</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>k_parent_sink</span> <span class='kw'>=</span> <span class='fl'>0.05</span>),
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fl'>102</span>), <span class='no'>sampling_times</span>)
+<span class='no'>d_SFO_2_long</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkin_wide_to_long.html'>mkin_wide_to_long</a></span>(<span class='no'>d_SFO_2</span>, <span class='kw'>time</span> <span class='kw'>=</span> <span class='st'>"time"</span>)
+<span class='no'>d_SFO_3</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinpredict.html'>mkinpredict</a></span>(<span class='no'>m_SFO</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>k_parent_sink</span> <span class='kw'>=</span> <span class='fl'>0.02</span>),
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fl'>103</span>), <span class='no'>sampling_times</span>)
+<span class='no'>d_SFO_3_long</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkin_wide_to_long.html'>mkin_wide_to_long</a></span>(<span class='no'>d_SFO_3</span>, <span class='kw'>time</span> <span class='kw'>=</span> <span class='st'>"time"</span>)
+
+<span class='no'>d1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='add_err.html'>add_err</a></span>(<span class='no'>d_SFO_1</span>, <span class='kw'>function</span>(<span class='no'>value</span>) <span class='fl'>3</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>1</span>)
+<span class='no'>d2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='add_err.html'>add_err</a></span>(<span class='no'>d_SFO_2</span>, <span class='kw'>function</span>(<span class='no'>value</span>) <span class='fl'>2</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>1</span>)
+<span class='no'>d3</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='add_err.html'>add_err</a></span>(<span class='no'>d_SFO_3</span>, <span class='kw'>function</span>(<span class='no'>value</span>) <span class='fl'>4</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>1</span>)
+<span class='no'>ds</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>d1</span> <span class='kw'>=</span> <span class='no'>d1</span>, <span class='kw'>d2</span> <span class='kw'>=</span> <span class='no'>d2</span>, <span class='kw'>d3</span> <span class='kw'>=</span> <span class='no'>d3</span>)
+
+<span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span>(<span class='st'>"SFO"</span>, <span class='no'>ds</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>mean_dp</span> <span class='kw'>&lt;-</span> <span class='fu'>mean_degparms</span>(<span class='no'>f</span>)
+<span class='no'>grouped_data</span> <span class='kw'>&lt;-</span> <span class='fu'>nlme_data</span>(<span class='no'>f</span>)
+<span class='no'>nlme_f</span> <span class='kw'>&lt;-</span> <span class='fu'>nlme_function</span>(<span class='no'>f</span>)
+
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>nlme</span>)
+<span class='no'>m_nlme</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span>(<span class='no'>value</span> ~ <span class='fu'>nlme_f</span>(<span class='no'>name</span>, <span class='no'>time</span>, <span class='no'>parent_0</span>, <span class='no'>log_k_parent_sink</span>),
+  <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>grouped_data</span>,
+  <span class='kw'>fixed</span> <span class='kw'>=</span> <span class='no'>parent_0</span> + <span class='no'>log_k_parent_sink</span> ~ <span class='fl'>1</span>,
+  <span class='kw'>random</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/pdDiag.html'>pdDiag</a></span>(<span class='no'>parent_0</span> + <span class='no'>log_k_parent_sink</span> ~ <span class='fl'>1</span>),
+  <span class='kw'>start</span> <span class='kw'>=</span> <span class='no'>mean_dp</span>)</div><div class='output co'>#&gt; <span class='error'>Error in nlme_f(name, time, parent_0, log_k_parent_sink): konnte Funktion "nlme_f" nicht finden</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m_nlme</span>)</div><div class='output co'>#&gt; <span class='error'>Error in summary(m_nlme): Objekt 'm_nlme' nicht gefunden</span></div><div class='input'>
+<span class='co'># \dontrun{</span>
+  <span class='co'># Test on some real data</span>
+  <span class='no'>ds_2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span>(<span class='no'>experimental_data_for_UBA_2019</span>[<span class='fl'>6</span>:<span class='fl'>10</span>],
+   <span class='kw'>function</span>(<span class='no'>x</span>) <span class='no'>x</span>$<span class='no'>data</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"name"</span>, <span class='st'>"time"</span>, <span class='st'>"value"</span>)])
+  <span class='no'>m_sfo_sfo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"A1"</span>),
+    <span class='kw'>A1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"min"</span>)</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>  <span class='no'>m_sfo_sfo_ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"A1"</span>),
+    <span class='kw'>A1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>  <span class='no'>m_fomc_sfo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"FOMC"</span>, <span class='st'>"A1"</span>),
+    <span class='kw'>A1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>  <span class='no'>m_dfop_sfo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"DFOP"</span>, <span class='st'>"A1"</span>),
+    <span class='kw'>A1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>  <span class='no'>m_sforb_sfo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFORB"</span>, <span class='st'>"A1"</span>),
+    <span class='kw'>A1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
+  <span class='no'>f_2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='st'>"SFO-SFO"</span> <span class='kw'>=</span> <span class='no'>m_sfo_sfo</span>,
+   <span class='st'>"SFO-SFO-ff"</span> <span class='kw'>=</span> <span class='no'>m_sfo_sfo_ff</span>,
+   <span class='st'>"FOMC-SFO"</span> <span class='kw'>=</span> <span class='no'>m_fomc_sfo</span>,
+   <span class='st'>"DFOP-SFO"</span> <span class='kw'>=</span> <span class='no'>m_dfop_sfo</span>,
+   <span class='st'>"SFORB-SFO"</span> <span class='kw'>=</span> <span class='no'>m_sforb_sfo</span>),
+    <span class='no'>ds_2</span>)
+
+  <span class='no'>grouped_data_2</span> <span class='kw'>&lt;-</span> <span class='fu'>nlme_data</span>(<span class='no'>f_2</span>[<span class='st'>"SFO-SFO"</span>, ])
+
+  <span class='no'>mean_dp_sfo_sfo</span> <span class='kw'>&lt;-</span> <span class='fu'>mean_degparms</span>(<span class='no'>f_2</span>[<span class='st'>"SFO-SFO"</span>, ])
+  <span class='no'>mean_dp_sfo_sfo_ff</span> <span class='kw'>&lt;-</span> <span class='fu'>mean_degparms</span>(<span class='no'>f_2</span>[<span class='st'>"SFO-SFO-ff"</span>, ])
+  <span class='no'>mean_dp_fomc_sfo</span> <span class='kw'>&lt;-</span> <span class='fu'>mean_degparms</span>(<span class='no'>f_2</span>[<span class='st'>"FOMC-SFO"</span>, ])
+  <span class='no'>mean_dp_dfop_sfo</span> <span class='kw'>&lt;-</span> <span class='fu'>mean_degparms</span>(<span class='no'>f_2</span>[<span class='st'>"DFOP-SFO"</span>, ])
+  <span class='no'>mean_dp_sforb_sfo</span> <span class='kw'>&lt;-</span> <span class='fu'>mean_degparms</span>(<span class='no'>f_2</span>[<span class='st'>"SFORB-SFO"</span>, ])
+
+  <span class='no'>nlme_f_sfo_sfo</span> <span class='kw'>&lt;-</span> <span class='fu'>nlme_function</span>(<span class='no'>f_2</span>[<span class='st'>"SFO-SFO"</span>, ])
+  <span class='no'>nlme_f_sfo_sfo_ff</span> <span class='kw'>&lt;-</span> <span class='fu'>nlme_function</span>(<span class='no'>f_2</span>[<span class='st'>"SFO-SFO-ff"</span>, ])
+  <span class='no'>nlme_f_fomc_sfo</span> <span class='kw'>&lt;-</span> <span class='fu'>nlme_function</span>(<span class='no'>f_2</span>[<span class='st'>"FOMC-SFO"</span>, ])
+
+  <span class='co'># Allowing for correlations between random effects leads to non-convergence</span>
+  <span class='no'>f_nlme_sfo_sfo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span>(<span class='no'>value</span> ~ <span class='fu'>nlme_f_sfo_sfo</span>(<span class='no'>name</span>, <span class='no'>time</span>,
+       <span class='no'>parent_0</span>, <span class='no'>log_k_parent_sink</span>, <span class='no'>log_k_parent_A1</span>, <span class='no'>log_k_A1_sink</span>),
+     <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>grouped_data_2</span>,
+     <span class='kw'>fixed</span> <span class='kw'>=</span> <span class='no'>parent_0</span> + <span class='no'>log_k_parent_sink</span> + <span class='no'>log_k_parent_A1</span> + <span class='no'>log_k_A1_sink</span> ~ <span class='fl'>1</span>,
+     <span class='kw'>random</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/pdDiag.html'>pdDiag</a></span>(<span class='no'>parent_0</span> + <span class='no'>log_k_parent_sink</span> + <span class='no'>log_k_parent_A1</span> + <span class='no'>log_k_A1_sink</span> ~ <span class='fl'>1</span>),
+     <span class='kw'>start</span> <span class='kw'>=</span> <span class='no'>mean_dp_sfo_sfo</span>)</div><div class='output co'>#&gt; <span class='error'>Error in nlme_f_sfo_sfo(name, time, parent_0, log_k_parent_sink, log_k_parent_A1,     log_k_A1_sink): konnte Funktion "nlme_f_sfo_sfo" nicht finden</span></div><div class='input'>
+  <span class='co'># The same model fitted with transformed formation fractions does not converge</span>
+  <span class='no'>f_nlme_sfo_sfo_ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span>(<span class='no'>value</span> ~ <span class='fu'>nlme_f_sfo_sfo_ff</span>(<span class='no'>name</span>, <span class='no'>time</span>,
+       <span class='no'>parent_0</span>, <span class='no'>log_k_parent</span>, <span class='no'>log_k_A1</span>, <span class='no'>f_parent_ilr_1</span>),
+     <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>grouped_data_2</span>,
+     <span class='kw'>fixed</span> <span class='kw'>=</span> <span class='no'>parent_0</span> + <span class='no'>log_k_parent</span> + <span class='no'>log_k_A1</span> + <span class='no'>f_parent_ilr_1</span> ~ <span class='fl'>1</span>,
+     <span class='kw'>random</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/pdDiag.html'>pdDiag</a></span>(<span class='no'>parent_0</span> + <span class='no'>log_k_parent</span> + <span class='no'>log_k_A1</span> + <span class='no'>f_parent_ilr_1</span> ~ <span class='fl'>1</span>),
+     <span class='kw'>start</span> <span class='kw'>=</span> <span class='no'>mean_dp_sfo_sfo_ff</span>)</div><div class='output co'>#&gt; <span class='error'>Error in nlme_f_sfo_sfo_ff(name, time, parent_0, log_k_parent, log_k_A1,     f_parent_ilr_1): konnte Funktion "nlme_f_sfo_sfo_ff" nicht finden</span></div><div class='input'>
+  <span class='co'># It does converge with this version of reduced random effects</span>
+  <span class='no'>f_nlme_sfo_sfo_ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span>(<span class='no'>value</span> ~ <span class='fu'>nlme_f_sfo_sfo_ff</span>(<span class='no'>name</span>, <span class='no'>time</span>,
+       <span class='no'>parent_0</span>, <span class='no'>log_k_parent</span>, <span class='no'>log_k_A1</span>, <span class='no'>f_parent_ilr_1</span>),
+     <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>grouped_data_2</span>,
+     <span class='kw'>fixed</span> <span class='kw'>=</span> <span class='no'>parent_0</span> + <span class='no'>log_k_parent</span> + <span class='no'>log_k_A1</span> + <span class='no'>f_parent_ilr_1</span> ~ <span class='fl'>1</span>,
+     <span class='kw'>random</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/pdDiag.html'>pdDiag</a></span>(<span class='no'>parent_0</span> + <span class='no'>log_k_parent</span> ~ <span class='fl'>1</span>),
+     <span class='kw'>start</span> <span class='kw'>=</span> <span class='no'>mean_dp_sfo_sfo_ff</span>)</div><div class='output co'>#&gt; <span class='error'>Error in nlme_f_sfo_sfo_ff(name, time, parent_0, log_k_parent, log_k_A1,     f_parent_ilr_1): konnte Funktion "nlme_f_sfo_sfo_ff" nicht finden</span></div><div class='input'>
+  <span class='no'>f_nlme_fomc_sfo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span>(<span class='no'>value</span> ~ <span class='fu'>nlme_f_fomc_sfo</span>(<span class='no'>name</span>, <span class='no'>time</span>,
+       <span class='no'>parent_0</span>, <span class='no'>log_alpha</span>, <span class='no'>log_beta</span>, <span class='no'>log_k_A1</span>, <span class='no'>f_parent_ilr_1</span>),
+     <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>grouped_data_2</span>,
+     <span class='kw'>fixed</span> <span class='kw'>=</span> <span class='no'>parent_0</span> + <span class='no'>log_alpha</span> + <span class='no'>log_beta</span> + <span class='no'>log_k_A1</span> + <span class='no'>f_parent_ilr_1</span> ~ <span class='fl'>1</span>,
+     <span class='kw'>random</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/pdDiag.html'>pdDiag</a></span>(<span class='no'>parent_0</span> + <span class='no'>log_alpha</span> + <span class='no'>log_beta</span> + <span class='no'>log_k_A1</span> + <span class='no'>f_parent_ilr_1</span> ~ <span class='fl'>1</span>),
+     <span class='kw'>start</span> <span class='kw'>=</span> <span class='no'>mean_dp_fomc_sfo</span>)</div><div class='output co'>#&gt; <span class='error'>Error in nlme_f_fomc_sfo(name, time, parent_0, log_alpha, log_beta, log_k_A1,     f_parent_ilr_1): konnte Funktion "nlme_f_fomc_sfo" nicht finden</span></div><div class='input'>
+  <span class='co'># DFOP-SFO and SFORB-SFO did not converge with full random effects</span>
+
+  <span class='fu'><a href='https://rdrr.io/r/stats/anova.html'>anova</a></span>(<span class='no'>f_nlme_fomc_sfo</span>, <span class='no'>f_nlme_sfo_sfo</span>)</div><div class='output co'>#&gt; <span class='error'>Error in anova(f_nlme_fomc_sfo, f_nlme_sfo_sfo): Objekt 'f_nlme_fomc_sfo' nicht gefunden</span></div><div class='input'># }
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
