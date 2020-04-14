@@ -1,4 +1,4 @@
-#' Estimation of parameter distributions from mmkin row objects
+#' Helper functions to create nlme models from mmkin row objects
 #'
 #' These functions facilitate setting up a nonlinear mixed effects model for
 #' an mmkin row object. An mmkin row object is essentially a list of mkinfit
@@ -81,14 +81,19 @@
 #'   nlme_f_sfo_sfo <- nlme_function(f_2["SFO-SFO", ])
 #'   nlme_f_sfo_sfo_ff <- nlme_function(f_2["SFO-SFO-ff", ])
 #'   nlme_f_fomc_sfo <- nlme_function(f_2["FOMC-SFO", ])
+#'   assign("nlme_f_sfo_sfo", nlme_f_sfo_sfo, globalenv())
+#'   assign("nlme_f_sfo_sfo_ff", nlme_f_sfo_sfo_ff, globalenv())
+#'   assign("nlme_f_fomc_sfo", nlme_f_fomc_sfo, globalenv())
 #'
-#'   # Allowing for correlations between random effects leads to non-convergence
+#'   # Allowing for correlations between random effects (not shown)
+#'   # leads to non-convergence
 #'   f_nlme_sfo_sfo <- nlme(value ~ nlme_f_sfo_sfo(name, time,
 #'        parent_0, log_k_parent_sink, log_k_parent_A1, log_k_A1_sink),
 #'      data = grouped_data_2,
 #'      fixed = parent_0 + log_k_parent_sink + log_k_parent_A1 + log_k_A1_sink ~ 1,
 #'      random = pdDiag(parent_0 + log_k_parent_sink + log_k_parent_A1 + log_k_A1_sink ~ 1),
 #'      start = mean_dp_sfo_sfo)
+#'    # augPred does not see to work on this object, so no plot is shown
 #'
 #'   # The same model fitted with transformed formation fractions does not converge
 #'   f_nlme_sfo_sfo_ff <- nlme(value ~ nlme_f_sfo_sfo_ff(name, time,
@@ -96,14 +101,6 @@
 #'      data = grouped_data_2,
 #'      fixed = parent_0 + log_k_parent + log_k_A1 + f_parent_ilr_1 ~ 1,
 #'      random = pdDiag(parent_0 + log_k_parent + log_k_A1 + f_parent_ilr_1 ~ 1),
-#'      start = mean_dp_sfo_sfo_ff)
-#'
-#'   # It does converge with this version of reduced random effects
-#'   f_nlme_sfo_sfo_ff <- nlme(value ~ nlme_f_sfo_sfo_ff(name, time,
-#'        parent_0, log_k_parent, log_k_A1, f_parent_ilr_1),
-#'      data = grouped_data_2,
-#'      fixed = parent_0 + log_k_parent + log_k_A1 + f_parent_ilr_1 ~ 1,
-#'      random = pdDiag(parent_0 + log_k_parent ~ 1),
 #'      start = mean_dp_sfo_sfo_ff)
 #'
 #'   f_nlme_fomc_sfo <- nlme(value ~ nlme_f_fomc_sfo(name, time,

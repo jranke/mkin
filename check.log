@@ -5,7 +5,7 @@
 * using options ‘--no-tests --as-cran’
 * checking for file ‘mkin/DESCRIPTION’ ... OK
 * checking extension type ... Package
-* this is package ‘mkin’ version ‘0.9.49.9’
+* this is package ‘mkin’ version ‘0.9.49.10’
 * package encoding: UTF-8
 * checking CRAN incoming feasibility ... Note_to_CRAN_maintainers
 Maintainer: ‘Johannes Ranke <jranke@uni-bremen.de>’
@@ -41,7 +41,14 @@ Maintainer: ‘Johannes Ranke <jranke@uni-bremen.de>’
 * checking S3 generic/method consistency ... OK
 * checking replacement functions ... OK
 * checking foreign function calls ... OK
-* checking R code for possible problems ... OK
+* checking R code for possible problems ... NOTE
+nlme.mmkin: no visible binding for global variable ‘na.fail’
+nlme.mmkin: no visible binding for global variable ‘f’
+Undefined global functions or variables:
+  f na.fail
+Consider adding
+  importFrom("stats", "na.fail")
+to your NAMESPACE file.
 * checking Rd files ... OK
 * checking Rd metadata ... OK
 * checking Rd line widths ... OK
@@ -56,7 +63,91 @@ Maintainer: ‘Johannes Ranke <jranke@uni-bremen.de>’
 * checking data for ASCII and uncompressed saves ... OK
 * checking installed files from ‘inst/doc’ ... OK
 * checking files in ‘vignettes’ ... OK
-* checking examples ... OK
+* checking examples ... ERROR
+Running examples in ‘mkin-Ex.R’ failed
+The error most likely occurred in:
+
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: nlme_function
+> ### Title: Estimation of parameter distributions from mmkin row objects
+> ### Aliases: nlme_function mean_degparms nlme_data
+> 
+> ### ** Examples
+> 
+> sampling_times = c(0, 1, 3, 7, 14, 28, 60, 90, 120)
+> m_SFO <- mkinmod(parent = mkinsub("SFO"))
+> d_SFO_1 <- mkinpredict(m_SFO,
++   c(k_parent_sink = 0.1),
++   c(parent = 98), sampling_times)
+> d_SFO_1_long <- mkin_wide_to_long(d_SFO_1, time = "time")
+> d_SFO_2 <- mkinpredict(m_SFO,
++   c(k_parent_sink = 0.05),
++   c(parent = 102), sampling_times)
+> d_SFO_2_long <- mkin_wide_to_long(d_SFO_2, time = "time")
+> d_SFO_3 <- mkinpredict(m_SFO,
++   c(k_parent_sink = 0.02),
++   c(parent = 103), sampling_times)
+> d_SFO_3_long <- mkin_wide_to_long(d_SFO_3, time = "time")
+> 
+> d1 <- add_err(d_SFO_1, function(value) 3, n = 1)
+> d2 <- add_err(d_SFO_2, function(value) 2, n = 1)
+> d3 <- add_err(d_SFO_3, function(value) 4, n = 1)
+> ds <- c(d1 = d1, d2 = d2, d3 = d3)
+> 
+> f <- mmkin("SFO", ds, cores = 1, quiet = TRUE)
+> mean_dp <- mean_degparms(f)
+> grouped_data <- nlme_data(f)
+> nlme_f <- nlme_function(f)
+> # These assignments are necessary for these objects to be
+> # visible to nlme and augPred when evaluation is done by
+> # pkgdown to generated the html docs.
+> assign("nlme_f", nlme_f, globalenv())
+> assign("grouped_data", grouped_data, globalenv())
+> 
+> library(nlme)
+> m_nlme <- nlme(value ~ nlme_f(name, time, parent_0, log_k_parent_sink),
++   data = grouped_data,
++   fixed = parent_0 + log_k_parent_sink ~ 1,
++   random = pdDiag(parent_0 + log_k_parent_sink ~ 1),
++   start = mean_dp)
+> summary(m_nlme)
+Nonlinear mixed-effects model fit by maximum likelihood
+  Model: value ~ nlme_f(name, time, parent_0, log_k_parent_sink) 
+ Data: grouped_data 
+       AIC      BIC    logLik
+  253.6377 262.9937 -121.8188
+
+Random effects:
+ Formula: list(parent_0 ~ 1, log_k_parent_sink ~ 1)
+ Level: ds
+ Structure: Diagonal
+        parent_0 log_k_parent_sink Residual
+StdDev: 2.486822         0.6481355 2.368137
+
+Fixed effects: parent_0 + log_k_parent_sink ~ 1 
+                      Value Std.Error DF  t-value p-value
+parent_0          101.43096 1.5960157 44 63.55261       0
+log_k_parent_sink  -3.07614 0.3827294 44 -8.03737       0
+ Correlation: 
+                  prnt_0
+log_k_parent_sink 0.011 
+
+Standardized Within-Group Residuals:
+       Min         Q1        Med         Q3        Max 
+-1.9643731 -0.5430765  0.1659516  0.6160408  1.8082871 
+
+Number of Observations: 48
+Number of Groups: 3 
+> plot(augPred(m_nlme, level = 0:1), layout = c(3, 1))
+> 
+> m_nlme <- nlme(nlme_formula,
++   data = grouped_data,
++   fixed = parent_0 + log_k_parent_sink ~ 1,
++   random = pdDiag(parent_0 + log_k_parent_sink ~ 1),
++   start = mean_dp)
+Error in nlme(nlme_formula, data = grouped_data, fixed = parent_0 + log_k_parent_sink ~  : 
+  object 'nlme_formula' not found
+Execution halted
 * checking for unstated dependencies in ‘tests’ ... OK
 * checking tests ... SKIPPED
 * checking for unstated dependencies in vignettes ... OK
@@ -66,5 +157,8 @@ Maintainer: ‘Johannes Ranke <jranke@uni-bremen.de>’
 * checking for detritus in the temp directory ... OK
 * DONE
 
-Status: OK
+Status: 1 ERROR, 1 NOTE
+See
+  ‘/home/jranke/git/mkin/mkin.Rcheck/00check.log’
+for details.
 
