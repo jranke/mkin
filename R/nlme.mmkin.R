@@ -22,8 +22,8 @@
 #' @param control passed to nlme
 #' @param verbose passed to nlme
 #' @importFrom stats na.fail
-#' @return Upon success, a fitted nlme.mmkin object, which is
-#'   an nlme object with additional elements
+#' @return Upon success, a fitted nlme.mmkin object, which is an nlme object
+#'   with additional elements
 #' @export
 #' @seealso \code{\link{nlme_function}}
 #' @examples
@@ -54,7 +54,7 @@ nlme.mmkin <- function(model, data = sys.frame(sys.parent()),
   }
 
   deg_func <- nlme_function(model)
-  assign("deg_func", deg_func, parent.frame())
+  assign("deg_func", deg_func, globalenv())
 
   # specify the model formula
   this_model_text <- paste0("value ~ deg_func(",
@@ -79,7 +79,8 @@ nlme.mmkin <- function(model, data = sys.frame(sys.parent()),
   }
 
   val <- do.call("nlme.formula", thisCall)
-  return(val)
+  val$mmkin_orig <- model
   class(val) <- c("nlme.mmkin", "nlme", "lme")
+  return(val)
 }
 

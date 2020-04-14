@@ -54,11 +54,13 @@ parameters taken from the mmkin object are used}
 \item{verbose}{passed to nlme}
 }
 \value{
-Upon success, a fitted nlme.mmkin object, which is
-  an nlme object with additional elements
+Upon success, a fitted nlme.mmkin object, which is an nlme object
+  with additional elements
 }
 \description{
-Create an nlme model for an mmkin row object
+This functions sets up a nonlinear mixed effects model for an mmkin row
+object. An mmkin row object is essentially a list of mkinfit objects that
+have been obtained by fitting the same model to a list of datasets.
 }
 \examples{
 ds <- lapply(experimental_data_for_UBA_2019[6:10],
@@ -69,4 +71,7 @@ f_nlme <- nlme(f)
 nlme(f, random = parent_0 ~ 1)
 f_nlme <- nlme(f, start = c(parent_0 = 100, log_k_parent_sink = 0.1))
 update(f_nlme, random = parent_0 ~ 1)
+}
+\seealso{
+\code{\link{nlme_function}}
 }

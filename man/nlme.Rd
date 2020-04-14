@@ -4,7 +4,7 @@
 \alias{nlme_function}
 \alias{mean_degparms}
 \alias{nlme_data}
-\title{Estimation of parameter distributions from mmkin row objects}
+\title{Helper functions to create nlme models from mmkin row objects}
 \usage{
 nlme_function(object)
 
