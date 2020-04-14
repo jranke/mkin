@@ -33,6 +33,11 @@
 #' mean_dp <- mean_degparms(f)
 #' grouped_data <- nlme_data(f)
 #' nlme_f <- nlme_function(f)
+#' # These assignments are necessary for these objects to be
+#' # visible to nlme and augPred when evaluation is done by
+#' # pkgdown to generated the html docs.
+#' assign("nlme_f", nlme_f, globalenv())
+#' assign("grouped_data", grouped_data, globalenv())
 #'
 #' library(nlme)
 #' m_nlme <- nlme(value ~ nlme_f(name, time, parent_0, log_k_parent_sink),
@@ -41,6 +46,7 @@
 #'   random = pdDiag(parent_0 + log_k_parent_sink ~ 1),
 #'   start = mean_dp)
 #' summary(m_nlme)
+#' plot(augPred(m_nlme, level = 0:1), layout = c(3, 1))
 #'
 #' \dontrun{
 #'   # Test on some real data
@@ -111,7 +117,7 @@
 #'
 #'   anova(f_nlme_fomc_sfo, f_nlme_sfo_sfo)
 #' }
-#' @return A function that can be used with \code{link{nlme}}
+#' @return A function that can be used with nlme
 #' @export
 nlme_function <- function(object) {
   if (nrow(object) > 1) stop("Only row objects allowed")
@@ -204,9 +210,10 @@ nlme_data <- function(object) {
   names(ds_list) <- ds_names
   ds_nlme <- purrr::map_dfr(ds_list, function(x) x, .id = "ds")
   ds_nlme$variable <- as.character(ds_nlme$variable)
+  ds_nlme$ds <- ordered(ds_nlme$ds, levels = unique(ds_nlme$ds))
   ds_nlme_renamed <- data.frame(ds = ds_nlme$ds, name = ds_nlme$variable,
     time = ds_nlme$time, value = ds_nlme$observed,
     stringsAsFactors = FALSE)
-  ds_nlme_grouped <- groupedData(value ~ time | ds, ds_nlme_renamed)
+  ds_nlme_grouped <- groupedData(value ~ time | ds, ds_nlme_renamed, order.groups = FALSE)
   return(ds_nlme_grouped)
 }

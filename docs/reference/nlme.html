@@ -159,7 +159,7 @@ datasets.</p>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A function that can be used with <code>link{nlme}</code></p>
+    <p>A function that can be used with nlme</p>
 <p>A named vector containing mean values of the fitted degradation model parameters</p>
 <p>A <code><a href='https://rdrr.io/pkg/nlme/man/groupedData.html'>groupedData</a></code> object</p>
 
@@ -188,13 +188,45 @@ datasets.</p>
 <span class='no'>mean_dp</span> <span class='kw'>&lt;-</span> <span class='fu'>mean_degparms</span>(<span class='no'>f</span>)
 <span class='no'>grouped_data</span> <span class='kw'>&lt;-</span> <span class='fu'>nlme_data</span>(<span class='no'>f</span>)
 <span class='no'>nlme_f</span> <span class='kw'>&lt;-</span> <span class='fu'>nlme_function</span>(<span class='no'>f</span>)
+<span class='co'># These assignments are necessary for these objects to be</span>
+<span class='co'># visible to nlme and augPred when evaluation is done by</span>
+<span class='co'># pkgdown to generated the html docs.</span>
+<span class='fu'><a href='https://rdrr.io/r/base/assign.html'>assign</a></span>(<span class='st'>"nlme_f"</span>, <span class='no'>nlme_f</span>, <span class='fu'><a href='https://rdrr.io/r/base/environment.html'>globalenv</a></span>())
+<span class='fu'><a href='https://rdrr.io/r/base/assign.html'>assign</a></span>(<span class='st'>"grouped_data"</span>, <span class='no'>grouped_data</span>, <span class='fu'><a href='https://rdrr.io/r/base/environment.html'>globalenv</a></span>())
 
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>nlme</span>)
 <span class='no'>m_nlme</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span>(<span class='no'>value</span> ~ <span class='fu'>nlme_f</span>(<span class='no'>name</span>, <span class='no'>time</span>, <span class='no'>parent_0</span>, <span class='no'>log_k_parent_sink</span>),
   <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>grouped_data</span>,
   <span class='kw'>fixed</span> <span class='kw'>=</span> <span class='no'>parent_0</span> + <span class='no'>log_k_parent_sink</span> ~ <span class='fl'>1</span>,
   <span class='kw'>random</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/pdDiag.html'>pdDiag</a></span>(<span class='no'>parent_0</span> + <span class='no'>log_k_parent_sink</span> ~ <span class='fl'>1</span>),
-  <span class='kw'>start</span> <span class='kw'>=</span> <span class='no'>mean_dp</span>)</div><div class='output co'>#&gt; <span class='error'>Error in nlme_f(name, time, parent_0, log_k_parent_sink): konnte Funktion "nlme_f" nicht finden</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m_nlme</span>)</div><div class='output co'>#&gt; <span class='error'>Error in summary(m_nlme): Objekt 'm_nlme' nicht gefunden</span></div><div class='input'>
+  <span class='kw'>start</span> <span class='kw'>=</span> <span class='no'>mean_dp</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>m_nlme</span>)</div><div class='output co'>#&gt; Nonlinear mixed-effects model fit by maximum likelihood
+#&gt;   Model: value ~ nlme_f(name, time, parent_0, log_k_parent_sink) 
+#&gt;  Data: grouped_data 
+#&gt;        AIC      BIC    logLik
+#&gt;   298.2781 307.7372 -144.1391
+#&gt; 
+#&gt; Random effects:
+#&gt;  Formula: list(parent_0 ~ 1, log_k_parent_sink ~ 1)
+#&gt;  Level: ds
+#&gt;  Structure: Diagonal
+#&gt;          parent_0 log_k_parent_sink Residual
+#&gt; StdDev: 0.9374733         0.7098105  3.83543
+#&gt; 
+#&gt; Fixed effects: parent_0 + log_k_parent_sink ~ 1 
+#&gt;                       Value Std.Error DF  t-value p-value
+#&gt; parent_0          101.76838 1.1445444 45 88.91606       0
+#&gt; log_k_parent_sink  -3.05444 0.4195622 45 -7.28008       0
+#&gt;  Correlation: 
+#&gt;                   prnt_0
+#&gt; log_k_parent_sink 0.034 
+#&gt; 
+#&gt; Standardized Within-Group Residuals:
+#&gt;        Min         Q1        Med         Q3        Max 
+#&gt; -2.6169360 -0.2185329  0.0574070  0.5720937  3.0459868 
+#&gt; 
+#&gt; Number of Observations: 49
+#&gt; Number of Groups: 3 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/nlme/man/augPred.html'>augPred</a></span>(<span class='no'>m_nlme</span>, <span class='kw'>level</span> <span class='kw'>=</span> <span class='fl'>0</span>:<span class='fl'>1</span>), <span class='kw'>layout</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>3</span>, <span class='fl'>1</span>))</div><div class='img'><img src='nlme-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># \dontrun{</span>
   <span class='co'># Test on some real data</span>
   <span class='no'>ds_2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span>(<span class='no'>experimental_data_for_UBA_2019</span>[<span class='fl'>6</span>:<span class='fl'>10</span>],

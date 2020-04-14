@@ -16,7 +16,7 @@ nlme_data(object)
 \item{object}{An mmkin row object containing several fits of the same model to different datasets}
 }
 \value{
-A function that can be used with \code{link{nlme}}
+A function that can be used with nlme
 
 A named vector containing mean values of the fitted degradation model parameters
 
@@ -53,6 +53,11 @@ f <- mmkin("SFO", ds, cores = 1, quiet = TRUE)
 mean_dp <- mean_degparms(f)
 grouped_data <- nlme_data(f)
 nlme_f <- nlme_function(f)
+# These assignments are necessary for these objects to be
+# visible to nlme and augPred when evaluation is done by
+# pkgdown to generated the html docs.
+assign("nlme_f", nlme_f, globalenv())
+assign("grouped_data", grouped_data, globalenv())
 
 library(nlme)
 m_nlme <- nlme(value ~ nlme_f(name, time, parent_0, log_k_parent_sink),
@@ -61,6 +66,7 @@ m_nlme <- nlme(value ~ nlme_f(name, time, parent_0, log_k_parent_sink),
   random = pdDiag(parent_0 + log_k_parent_sink ~ 1),
   start = mean_dp)
 summary(m_nlme)
+plot(augPred(m_nlme, level = 0:1), layout = c(3, 1))
 
 \dontrun{
   # Test on some real data
