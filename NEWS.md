@@ -1,6 +1,6 @@
 # mkin 0.9.49.10 (unreleased)
 
-- 'nlme.mmkin': An nlme method for mmkin row objects and an associated class with plot method
+- 'nlme.mmkin': An nlme method for mmkin row objects and an associated S3 class with print, plot, anova and endpoint methods
 
 - 'mean_degparms, nlme_data, nlme_function': Three new functions to facilitate building nlme models from mmkin row objects
 

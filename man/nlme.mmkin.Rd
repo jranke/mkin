@@ -79,8 +79,10 @@ ds <- lapply(experimental_data_for_UBA_2019[6:10],
  function(x) subset(x$data[c("name", "time", "value")], name == "parent"))
 f <- mmkin("SFO", ds, quiet = TRUE, cores = 1)
 library(nlme)
+endpoints(f[[1]])
 f_nlme <- nlme(f)
 print(f_nlme)
+endpoints(f_nlme)
 f_nlme_2 <- nlme(f, start = c(parent_0 = 100, log_k_parent_sink = 0.1))
 update(f_nlme_2, random = parent_0 ~ 1)
 \dontrun{
@@ -125,6 +127,9 @@ update(f_nlme_2, random = parent_0 ~ 1)
 
   anova(f_nlme_dfop_sfo, f_nlme_fomc_sfo, f_nlme_sfo_sfo)
   anova(f_nlme_dfop_sfo, f_nlme_sfo_sfo) # if we ignore FOMC
+
+  endpoints(f_nlme_sfo_sfo)
+  endpoints(f_nlme_dfop_sfo)
 }
 }
 \seealso{

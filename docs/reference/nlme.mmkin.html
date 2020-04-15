@@ -253,7 +253,10 @@ parameters taken from the mmkin object are used</p></td>
  <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>x</span>$<span class='no'>data</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"name"</span>, <span class='st'>"time"</span>, <span class='st'>"value"</span>)], <span class='no'>name</span> <span class='kw'>==</span> <span class='st'>"parent"</span>))
 <span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span>(<span class='st'>"SFO"</span>, <span class='no'>ds</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>nlme</span>)
-<span class='no'>f_nlme</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span>(<span class='no'>f</span>)
+<span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>f</span><span class='kw'>[[</span><span class='fl'>1</span>]])</div><div class='output co'>#&gt; $distimes
+#&gt;            DT50     DT90
+#&gt; parent 11.96183 39.73634
+#&gt; </div><div class='input'><span class='no'>f_nlme</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span>(<span class='no'>f</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>f_nlme</span>)</div><div class='output co'>#&gt; Nonlinear mixed-effects model fit by maximum likelihood
 #&gt;   Model: value ~ deg_func(name, time, parent_0, log_k_parent_sink) 
 #&gt;   Data: "Not shown" 
@@ -270,7 +273,10 @@ parameters taken from the mmkin object are used</p></td>
 #&gt; StdDev:  1.30857          1.288591 6.304906
 #&gt; 
 #&gt; Number of Observations: 90
-#&gt; Number of Groups: 5 </div><div class='input'><span class='no'>f_nlme_2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span>(<span class='no'>f</span>, <span class='kw'>start</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>parent_0</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>log_k_parent_sink</span> <span class='kw'>=</span> <span class='fl'>0.1</span>))
+#&gt; Number of Groups: 5 </div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>f_nlme</span>)</div><div class='output co'>#&gt; $distimes
+#&gt;            DT50     DT90
+#&gt; parent 17.51545 58.18505
+#&gt; </div><div class='input'><span class='no'>f_nlme_2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span>(<span class='no'>f</span>, <span class='kw'>start</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>parent_0</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>log_k_parent_sink</span> <span class='kw'>=</span> <span class='fl'>0.1</span>))
 <span class='fu'><a href='https://rdrr.io/r/stats/update.html'>update</a></span>(<span class='no'>f_nlme_2</span>, <span class='kw'>random</span> <span class='kw'>=</span> <span class='no'>parent_0</span> ~ <span class='fl'>1</span>)</div><div class='output co'>#&gt; Nonlinear mixed-effects model fit by maximum likelihood
 #&gt;   Model: value ~ deg_func(name, time, parent_0, log_k_parent_sink) 
 #&gt;   Data: "Not shown" 
@@ -410,7 +416,24 @@ parameters taken from the mmkin object are used</p></td>
 #&gt; f_nlme_fomc_sfo     2 11  818.5149  853.0087 -398.2575 1 vs 2  21.33913  &lt;.0001
 #&gt; f_nlme_sfo_sfo      3  9 1085.1821 1113.4042 -533.5910 2 vs 3 270.66712  &lt;.0001</div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/stats/anova.html'>anova</a></span>(<span class='no'>f_nlme_dfop_sfo</span>, <span class='no'>f_nlme_sfo_sfo</span>) <span class='co'># if we ignore FOMC</span></div><div class='output co'>#&gt;                 Model df       AIC       BIC   logLik   Test L.Ratio p-value
 #&gt; f_nlme_dfop_sfo     1 13  843.8541  884.6194 -408.927                       
-#&gt; f_nlme_sfo_sfo      2  9 1085.1821 1113.4042 -533.591 1 vs 2 249.328  &lt;.0001</div><div class='input'># }
+#&gt; f_nlme_sfo_sfo      2  9 1085.1821 1113.4042 -533.591 1 vs 2 249.328  &lt;.0001</div><div class='input'>
+  <span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>f_nlme_sfo_sfo</span>)</div><div class='output co'>#&gt; $ff
+#&gt; parent_sink   parent_A1     A1_sink 
+#&gt;   0.5912435   0.4087565   1.0000000 
+#&gt; 
+#&gt; $distimes
+#&gt;            DT50      DT90
+#&gt; parent 19.13517  63.56565
+#&gt; A1     66.02149 219.31865
+#&gt; </div><div class='input'>  <span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>f_nlme_dfop_sfo</span>)</div><div class='output co'>#&gt; $ff
+#&gt;   parent_A1 parent_sink     A1_sink 
+#&gt;   0.2768571   0.7231429   1.0000000 
+#&gt; 
+#&gt; $distimes
+#&gt;             DT50     DT90  DT50_k1 DT50_k2
+#&gt; parent  11.07092 104.6325 4.462389 46.2085
+#&gt; A1     162.30937 539.1801       NA      NA
+#&gt; </div><div class='input'># }
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

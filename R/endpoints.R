@@ -7,9 +7,13 @@
 #' are equivalent to the rate constantes of the DFOP model, but with the
 #' advantage that the SFORB model can also be used for metabolites.
 #'
-#' @param fit An object of class \code{\link{mkinfit}}.
+#' @param fit An object of class \code{\link{mkinfit}} or
+#'   \code{\link{nlme.mmkin}}
 #' @importFrom stats optimize
-#' @return A list with the components mentioned above.
+#' @return A list with a matrix of dissipation times named distimes,
+#'   and, if applicable, a vector of formation fractions named ff
+#'   and, if the SFORB model was in use, a vector of eigenvalues
+#'   of these SFORB models, equivalent to DFOP rate constants
 #' @note The function is used internally by \code{\link{summary.mkinfit}}.
 #' @author Johannes Ranke
 #' @keywords manip
@@ -17,6 +21,10 @@
 #'
 #'   fit <- mkinfit("FOMC", FOCUS_2006_C, quiet = TRUE)
 #'   endpoints(fit)
+#'   \dontrun{
+#'     fit_2 <- mkinfit("SFORB", FOCUS_2006_C, quiet = TRUE)
+#'     endpoints(fit_2)
+#'   }
 #'
 #' @export
 endpoints <- function(fit) {
@@ -25,8 +33,22 @@ endpoints <- function(fit) {
   # Additional DT50 values are calculated from the FOMC DT90 and k1 and k2 from
   # HS and DFOP, as well as from Eigenvalues b1 and b2 of any SFORB models
   ep <- list()
-  obs_vars <- fit$obs_vars
-  parms.all <- c(fit$bparms.optim, fit$bparms.fixed)
+  if (inherits(fit, "mkinfit")) {
+    mkinmod <- fit$mkinmod
+    parms.all <- c(fit$bparms.optim, fit$bparms.fixed)
+  } else {
+    if (inherits(fit, "nlme.mmkin")) {
+      mkinmod <- fit$mmkin_orig[[1]]$mkinmod
+      bparms.optim <- backtransform_odeparms(fit$coefficients$fixed,
+        mkinmod,
+        transform_rates = fit$mmkin_orig[[1]]$transform_rates,
+        transform_fractions = fit$mmkin_orig[[1]]$transform_fractions)
+      parms.all <- c(bparms.optim, fit$bparms.fixed)
+    } else {
+      stop("Only implemented for mkinfit and nlme.mmkin objects")
+    }
+  }
+  obs_vars <- names(mkinmod$spec)
   ep$ff <- vector()
   ep$SFORB <- vector()
   ep$distimes <- data.frame(
@@ -34,7 +56,7 @@ endpoints <- function(fit) {
     DT90 = rep(NA, length(obs_vars)),
     row.names = obs_vars)
   for (obs_var in obs_vars) {
-    type = names(fit$mkinmod$map[[obs_var]])[1]
+    type = names(mkinmod$map[[obs_var]])[1]
 
     # Get formation fractions if directly fitted, and calculate remaining fraction to sink
     f_names = grep(paste("^f", obs_var, sep = "_"), names(parms.all), value=TRUE)
@@ -56,7 +78,7 @@ endpoints <- function(fit) {
       k_tot = sum(parms.all[k_names])
       DT50 = log(2)/k_tot
       DT90 = log(10)/k_tot
-      if (fit$mkinmod$use_of_ff == "min") {
+      if (mkinmod$use_of_ff == "min" && length(obs_vars) > 1) {
         for (k_name in k_names)
         {
           ep$ff[[sub("k_", "", k_name)]] = parms.all[[k_name]] / k_tot
@@ -78,7 +100,7 @@ endpoints <- function(fit) {
       n = parms.all[paste("N", obs_var, sep = "_")]
       k = k_tot
       # Use the initial concentration of the parent compound
-      source_name = fit$mkinmod$map[[1]][[1]]
+      source_name = mkinmod$map[[1]][[1]]
       c0 = parms.all[paste(source_name, "0", sep = "_")]
       alpha = 1 / (n - 1)
       beta = (c0^(1 - n))/(k * (n - 1))
@@ -86,7 +108,7 @@ endpoints <- function(fit) {
       DT90 = beta * (10^(1/alpha) - 1)
       DT50_back = DT90 / (log(10)/log(2)) # Backcalculated DT50 as recommended in FOCUS 2011
       ep$distimes[obs_var, c("DT50back")] = DT50_back
-      if (fit$mkinmod$use_of_ff == "min") {
+      if (mkinmod$use_of_ff == "min") {
         for (k_name in k_names)
         {
           ep$ff[[sub("k_", "", k_name)]] = parms.all[[k_name]] / k_tot
@@ -196,6 +218,7 @@ endpoints <- function(fit) {
     }
     ep$distimes[obs_var, c("DT50", "DT90")] = c(DT50, DT90)
   }
+  if (length(ep$ff) == 0) ep$ff <- NULL
   if (length(ep$SFORB) == 0) ep$SFORB <- NULL
   return(ep)
 }
