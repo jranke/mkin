@@ -11,6 +11,9 @@
   legends = 1,
   resplot = c("time", "errmod"),
   standardized = FALSE,
+  show_errmin = TRUE,
+  errmin_var = "All data",
+  errmin_digits = 3,
   cex = 0.7,
   rel.height.middle = 0.9,
   ymax = "auto",
@@ -35,6 +38,15 @@ values, with the error model, using \code{\link{mkinerrplot}}.}
 is passed to \code{\link{mkinresplot}}, it only takes effect if
 `resplot = "time"`.}
 
+\item{show_errmin}{Should the chi2 error level be shown on top of the plots
+to the left?}
+
+\item{errmin_var}{The variable for which the FOCUS chi2 error value should
+be shown.}
+
+\item{errmin_digits}{The number of significant digits for rounding the FOCUS
+chi2 error percentage.}
+
 \item{cex}{Passed to the plot functions and \code{\link{mtext}}.}
 
 \item{rel.height.middle}{The relative height of the middle plot, if more
@@ -56,11 +68,12 @@ ds <- lapply(experimental_data_for_UBA_2019[6:10],
  function(x) subset(x$data[c("name", "time", "value")], name == "parent"))
 f <- mmkin("SFO", ds, quiet = TRUE, cores = 1)
 #plot(f) # too many panels for pkgdown
+plot(f[, 3:4])
 library(nlme)
 f_nlme <- nlme(f)
 
 #plot(f_nlme) # too many panels for pkgdown
-plot(f_nlme, 1:2)
+plot(f_nlme, 3:4)
 }
 \author{
 Johannes Ranke

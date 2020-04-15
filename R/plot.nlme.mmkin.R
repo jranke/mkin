@@ -11,6 +11,12 @@
 #' @param standardized Should the residuals be standardized? This option
 #'   is passed to \code{\link{mkinresplot}}, it only takes effect if
 #'   `resplot = "time"`.
+#' @param show_errmin Should the chi2 error level be shown on top of the plots
+#'   to the left?
+#' @param errmin_var The variable for which the FOCUS chi2 error value should
+#'   be shown.
+#' @param errmin_digits The number of significant digits for rounding the FOCUS
+#'   chi2 error percentage.
 #' @param cex Passed to the plot functions and \code{\link{mtext}}.
 #' @param rel.height.middle The relative height of the middle plot, if more
 #'   than two rows of plots are shown.
@@ -25,16 +31,19 @@
 #'  function(x) subset(x$data[c("name", "time", "value")], name == "parent"))
 #' f <- mmkin("SFO", ds, quiet = TRUE, cores = 1)
 #' #plot(f) # too many panels for pkgdown
+#' plot(f[, 3:4])
 #' library(nlme)
 #' f_nlme <- nlme(f)
 #'
 #' #plot(f_nlme) # too many panels for pkgdown
-#' plot(f_nlme, 1:2)
+#' plot(f_nlme, 3:4)
 #' @export
 plot.nlme.mmkin <- function(x, i = 1:ncol(x$mmkin_orig),
   main = "auto", legends = 1,
   resplot = c("time", "errmod"),
   standardized = FALSE,
+  show_errmin = TRUE,
+  errmin_var = "All data", errmin_digits = 3,
   cex = 0.7, rel.height.middle = 0.9,
   ymax = "auto", ...)
 {
@@ -79,13 +88,14 @@ plot.nlme.mmkin <- function(x, i = 1:ncol(x$mmkin_orig),
     state_ini[names(odeini_optim)] <- odeini_optim
 
     odeparms <- fit_a$bparms.ode
-    odeparms[names(odeparms)] <- odeparms_optim
+    odeparms[names(odeparms_optim)] <- odeparms_optim
 
     mkinfit_call[["observed"]] <- ds[[a]]
     mkinfit_call[["parms.ini"]] <- odeparms
     mkinfit_call[["state.ini"]] <- state_ini
 
-    mkinfit_call[["control"]] <- list(iter.max = 1)
+    mkinfit_call[["control"]] <- list(iter.max = 0)
+    mkinfit_call[["quiet"]] <- TRUE
 
     res <- suppressWarnings(do.call("mkinfit", mkinfit_call))
     return(res)
@@ -94,9 +104,11 @@ plot.nlme.mmkin <- function(x, i = 1:ncol(x$mmkin_orig),
   # Set dimensions with names and the class (mmkin)
   attributes(mmkin_nlme) <- attributes(x$mmkin_orig[, i])
 
-  plot(mmkin_nlme[, i], main = main, legends = legends,
+  plot(mmkin_nlme, main = main, legends = legends,
     resplot = resplot, standardized = standardized,
-    show_errmin = FALSE, cex = cex,
+    show_errmin = show_errmin,
+    errmin_var = errmin_var, errmin_digits = errmin_digits,
+    cex = cex,
     rel.height.middle = rel.height.middle,
     ymax = ymax, ...)
 

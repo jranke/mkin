@@ -8,17 +8,22 @@
 \usage{
 nlme_function(object)
 
-mean_degparms(object)
+mean_degparms(object, random = FALSE)
 
 nlme_data(object)
 }
 \arguments{
 \item{object}{An mmkin row object containing several fits of the same model to different datasets}
+
+\item{random}{Should a list with fixed and random effects be returned?}
 }
 \value{
 A function that can be used with nlme
 
-A named vector containing mean values of the fitted degradation model parameters
+If random is FALSE (default), a named vector containing mean values
+  of the fitted degradation model parameters. If random is TRUE, a list with
+  fixed and random effects, in the format required by the start argument of
+  nlme for the case of a single grouping variable ds?
 
 A \code{\link{groupedData}} object
 }
@@ -67,71 +72,10 @@ m_nlme <- nlme(value ~ nlme_f(name, time, parent_0, log_k_parent_sink),
   start = mean_dp)
 summary(m_nlme)
 plot(augPred(m_nlme, level = 0:1), layout = c(3, 1))
+# augPred does not seem to work on fits with more than one state
+# variable
 
-\dontrun{
-  # Test on some real data
-  ds_2 <- lapply(experimental_data_for_UBA_2019[6:10],
-   function(x) x$data[c("name", "time", "value")])
-  m_sfo_sfo <- mkinmod(parent = mkinsub("SFO", "A1"),
-    A1 = mkinsub("SFO"), use_of_ff = "min")
-  m_sfo_sfo_ff <- mkinmod(parent = mkinsub("SFO", "A1"),
-    A1 = mkinsub("SFO"), use_of_ff = "max")
-  m_fomc_sfo <- mkinmod(parent = mkinsub("FOMC", "A1"),
-    A1 = mkinsub("SFO"))
-  m_dfop_sfo <- mkinmod(parent = mkinsub("DFOP", "A1"),
-    A1 = mkinsub("SFO"))
-  m_sforb_sfo <- mkinmod(parent = mkinsub("SFORB", "A1"),
-    A1 = mkinsub("SFO"))
-
-  f_2 <- mmkin(list("SFO-SFO" = m_sfo_sfo,
-   "SFO-SFO-ff" = m_sfo_sfo_ff,
-   "FOMC-SFO" = m_fomc_sfo,
-   "DFOP-SFO" = m_dfop_sfo,
-   "SFORB-SFO" = m_sforb_sfo),
-    ds_2)
-
-  grouped_data_2 <- nlme_data(f_2["SFO-SFO", ])
-
-  mean_dp_sfo_sfo <- mean_degparms(f_2["SFO-SFO", ])
-  mean_dp_sfo_sfo_ff <- mean_degparms(f_2["SFO-SFO-ff", ])
-  mean_dp_fomc_sfo <- mean_degparms(f_2["FOMC-SFO", ])
-  mean_dp_dfop_sfo <- mean_degparms(f_2["DFOP-SFO", ])
-  mean_dp_sforb_sfo <- mean_degparms(f_2["SFORB-SFO", ])
-
-  nlme_f_sfo_sfo <- nlme_function(f_2["SFO-SFO", ])
-  nlme_f_sfo_sfo_ff <- nlme_function(f_2["SFO-SFO-ff", ])
-  nlme_f_fomc_sfo <- nlme_function(f_2["FOMC-SFO", ])
-  assign("nlme_f_sfo_sfo", nlme_f_sfo_sfo, globalenv())
-  assign("nlme_f_sfo_sfo_ff", nlme_f_sfo_sfo_ff, globalenv())
-  assign("nlme_f_fomc_sfo", nlme_f_fomc_sfo, globalenv())
-
-  # Allowing for correlations between random effects (not shown)
-  # leads to non-convergence
-  f_nlme_sfo_sfo <- nlme(value ~ nlme_f_sfo_sfo(name, time,
-       parent_0, log_k_parent_sink, log_k_parent_A1, log_k_A1_sink),
-     data = grouped_data_2,
-     fixed = parent_0 + log_k_parent_sink + log_k_parent_A1 + log_k_A1_sink ~ 1,
-     random = pdDiag(parent_0 + log_k_parent_sink + log_k_parent_A1 + log_k_A1_sink ~ 1),
-     start = mean_dp_sfo_sfo)
-   # augPred does not see to work on this object, so no plot is shown
-
-  # The same model fitted with transformed formation fractions does not converge
-  f_nlme_sfo_sfo_ff <- nlme(value ~ nlme_f_sfo_sfo_ff(name, time,
-       parent_0, log_k_parent, log_k_A1, f_parent_ilr_1),
-     data = grouped_data_2,
-     fixed = parent_0 + log_k_parent + log_k_A1 + f_parent_ilr_1 ~ 1,
-     random = pdDiag(parent_0 + log_k_parent + log_k_A1 + f_parent_ilr_1 ~ 1),
-     start = mean_dp_sfo_sfo_ff)
-
-  f_nlme_fomc_sfo <- nlme(value ~ nlme_f_fomc_sfo(name, time,
-       parent_0, log_alpha, log_beta, log_k_A1, f_parent_ilr_1),
-     data = grouped_data_2,
-     fixed = parent_0 + log_alpha + log_beta + log_k_A1 + f_parent_ilr_1 ~ 1,
-     random = pdDiag(parent_0 + log_alpha + log_beta + log_k_A1 + f_parent_ilr_1 ~ 1),
-     start = mean_dp_fomc_sfo)
-
-  # DFOP-SFO and SFORB-SFO did not converge with full random effects
-
-  anova(f_nlme_fomc_sfo, f_nlme_sfo_sfo)
 }
+\seealso{
+\code{\link{nlme.mmkin}}
 }

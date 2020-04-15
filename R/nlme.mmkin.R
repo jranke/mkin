@@ -32,9 +32,52 @@
 #' f <- mmkin("SFO", ds, quiet = TRUE, cores = 1)
 #' library(nlme)
 #' f_nlme <- nlme(f)
-#' nlme(f, random = parent_0 ~ 1)
-#' f_nlme <- nlme(f, start = c(parent_0 = 100, log_k_parent_sink = 0.1))
-#' update(f_nlme, random = parent_0 ~ 1)
+#' print(f_nlme)
+#' f_nlme_2 <- nlme(f, start = c(parent_0 = 100, log_k_parent_sink = 0.1))
+#' update(f_nlme_2, random = parent_0 ~ 1)
+#' \dontrun{
+#'   # Test on some real data
+#'   ds_2 <- lapply(experimental_data_for_UBA_2019[6:10],
+#'    function(x) x$data[c("name", "time", "value")])
+#'   m_sfo_sfo <- mkinmod(parent = mkinsub("SFO", "A1"),
+#'     A1 = mkinsub("SFO"), use_of_ff = "min", quiet = TRUE)
+#'   m_sfo_sfo_ff <- mkinmod(parent = mkinsub("SFO", "A1"),
+#'     A1 = mkinsub("SFO"), use_of_ff = "max", quiet = TRUE)
+#'   m_fomc_sfo <- mkinmod(parent = mkinsub("FOMC", "A1"),
+#'     A1 = mkinsub("SFO"), quiet = TRUE)
+#'   m_dfop_sfo <- mkinmod(parent = mkinsub("DFOP", "A1"),
+#'     A1 = mkinsub("SFO"), quiet = TRUE)
+#'
+#'   f_2 <- mmkin(list("SFO-SFO" = m_sfo_sfo,
+#'    "SFO-SFO-ff" = m_sfo_sfo_ff,
+#'    "FOMC-SFO" = m_fomc_sfo,
+#'    "DFOP-SFO" = m_dfop_sfo),
+#'     ds_2, quiet = TRUE)
+#'   plot(f_2["SFO-SFO", 3:4]) # Separate fits for datasets 3 and 4
+#'
+#'   f_nlme_sfo_sfo <- nlme(f_2["SFO-SFO", ])
+#'   # plot(f_nlme_sfo_sfo) # not feasible with pkgdown figures
+#'   plot(f_nlme_sfo_sfo, 3:4) # Global mixed model: Fits for datasets 3 and 4
+#'
+#'   # With formation fractions
+#'   f_nlme_sfo_sfo_ff <- nlme(f_2["SFO-SFO-ff", ])
+#'   plot(f_nlme_sfo_sfo_ff, 3:4) # chi2 different due to different df attribution
+#'
+#'   # For more parameters, we need to increase pnlsMaxIter and the tolerance
+#'   # to get convergence
+#'   f_nlme_fomc_sfo <- nlme(f_2["FOMC-SFO", ],
+#'     control = list(pnlsMaxIter = 100, tolerance = 1e-4), verbose = TRUE)
+#'   f_nlme_dfop_sfo <- nlme(f_2["DFOP-SFO", ],
+#'     control = list(pnlsMaxIter = 120, tolerance = 5e-4), verbose = TRUE)
+#'   plot(f_2["FOMC-SFO", 3:4])
+#'   plot(f_nlme_fomc_sfo, 3:4)
+#'
+#'   plot(f_2["DFOP-SFO", 3:4])
+#'   plot(f_nlme_dfop_sfo, 3:4)
+#'
+#'   anova(f_nlme_dfop_sfo, f_nlme_fomc_sfo, f_nlme_sfo_sfo)
+#'   anova(f_nlme_dfop_sfo, f_nlme_sfo_sfo) # if we ignore FOMC
+#' }
 # Code inspired by nlme.nlsList
 nlme.mmkin <- function(model, data = sys.frame(sys.parent()),
   fixed, random = fixed,
@@ -68,7 +111,7 @@ nlme.mmkin <- function(model, data = sys.frame(sys.parent()),
   thisCall[["data"]] <- nlme_data(model)
 
   if (missing(start)) {
-    thisCall[["start"]] <- mean_dp
+    thisCall[["start"]] <- mean_degparms(model, random = TRUE)
   }
 
   thisCall[["fixed"]] <- lapply(as.list(dp_names), function(el)
@@ -84,3 +127,52 @@ nlme.mmkin <- function(model, data = sys.frame(sys.parent()),
   return(val)
 }
 
+#' @export
+#' @rdname nlme.mmkin
+#' @param x An nlme.mmkin object to print
+#' @param data Should the data be printed?
+#' @param ... Further arguments as in the generic
+print.nlme.mmkin <- function(x, ...) {
+  x$call$data <- "Not shown"
+  NextMethod("print", x)
+}
+
+#' @export
+#' @rdname nlme.mmkin
+#' @param object An nlme.mmkin object to update
+#' @param ... Update specifications passed to update.nlme
+update.nlme.mmkin <- function(object, ...) {
+  res <- NextMethod()
+  res$mmkin_orig <- object$mmkin_orig
+  class(res) <- c("nlme.mmkin", "nlme", "lme")
+  return(res)
+}
+
+# The following is necessary as long as R bug 17761 is not fixed
+# https://bugs.r-project.org/bugzilla/show_bug.cgi?id=17761
+#' @export
+anova.nlme.mmkin <- function(object, ...) {
+  thisCall <- as.list(match.call())[-1]
+  object_name <- as.character(thisCall[[1]])
+  other_object_names <- sapply(thisCall[-1], as.character)
+
+  remove_class <- function(object, classname) {
+    old_class <- class(object)
+    class(object) <- setdiff(old_class, classname)
+    return(object)
+  }
+  object <- remove_class(object, "nlme.mmkin")
+  other_objects <- list(...)
+  other_objects <- lapply(other_objects, remove_class, "nlme.mmkin")
+
+  env <- new.env()
+  assign(object_name, object, env)
+  for (i in seq_along(other_objects)) {
+    assign(other_object_names[i], other_objects[[i]], env)
+  }
+  res <- eval(parse(text = paste0("anova.lme(", object_name, ", ",
+        paste(other_object_names, collapse = ", "), ")")),
+    envir = env)
+
+  return(res)
+}

@@ -33,7 +33,7 @@ column.}
 values, with the error model, using \code{\link{mkinerrplot}}.}
 
 \item{standardized}{Should the residuals be standardized? This option
-is passed to \code{\link{mkinresplot}}, it only takes effect if 
+is passed to \code{\link{mkinresplot}}, it only takes effect if
 `resplot = "time"`.}
 
 \item{show_errmin}{Should the chi2 error level be shown on top of the plots
@@ -76,6 +76,7 @@ latex is being used for the formatting of the chi2 error level.
                 cores = 1, quiet = TRUE, error_model = "tc")
   plot(fits[, "FOCUS C"])
   plot(fits["FOMC", ])
+  plot(fits["FOMC", ], show_errmin = FALSE)
 
   # We can also plot a single fit, if we like the way plot.mmkin works, but then the plot
   # height should be smaller than the plot width (this is not possible for the html pages

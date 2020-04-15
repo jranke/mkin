@@ -2,6 +2,8 @@
 % Please edit documentation in R/nlme.mmkin.R
 \name{nlme.mmkin}
 \alias{nlme.mmkin}
+\alias{print.nlme.mmkin}
+\alias{update.nlme.mmkin}
 \title{Create an nlme model for an mmkin row object}
 \usage{
 \method{nlme}{mmkin}(
@@ -20,11 +22,15 @@
   control = list(),
   verbose = FALSE
 )
+
+\method{print}{nlme.mmkin}(x, ...)
+
+\method{update}{nlme.mmkin}(object, ...)
 }
 \arguments{
 \item{model}{An \code{\link{mmkin}} row object.}
 
-\item{data}{Ignored, data are taken from the mmkin model}
+\item{data}{Should the data be printed?}
 
 \item{fixed}{Ignored, all degradation parameters fitted in the
 mmkin model are used as fixed parameters}
@@ -52,6 +58,12 @@ parameters taken from the mmkin object are used}
 \item{control}{passed to nlme}
 
 \item{verbose}{passed to nlme}
+
+\item{x}{An nlme.mmkin object to print}
+
+\item{...}{Update specifications passed to update.nlme}
+
+\item{object}{An nlme.mmkin object to update}
 }
 \value{
 Upon success, a fitted nlme.mmkin object, which is an nlme object
@@ -68,9 +80,52 @@ ds <- lapply(experimental_data_for_UBA_2019[6:10],
 f <- mmkin("SFO", ds, quiet = TRUE, cores = 1)
 library(nlme)
 f_nlme <- nlme(f)
-nlme(f, random = parent_0 ~ 1)
-f_nlme <- nlme(f, start = c(parent_0 = 100, log_k_parent_sink = 0.1))
-update(f_nlme, random = parent_0 ~ 1)
+print(f_nlme)
+f_nlme_2 <- nlme(f, start = c(parent_0 = 100, log_k_parent_sink = 0.1))
+update(f_nlme_2, random = parent_0 ~ 1)
+\dontrun{
+  # Test on some real data
+  ds_2 <- lapply(experimental_data_for_UBA_2019[6:10],
+   function(x) x$data[c("name", "time", "value")])
+  m_sfo_sfo <- mkinmod(parent = mkinsub("SFO", "A1"),
+    A1 = mkinsub("SFO"), use_of_ff = "min", quiet = TRUE)
+  m_sfo_sfo_ff <- mkinmod(parent = mkinsub("SFO", "A1"),
+    A1 = mkinsub("SFO"), use_of_ff = "max", quiet = TRUE)
+  m_fomc_sfo <- mkinmod(parent = mkinsub("FOMC", "A1"),
+    A1 = mkinsub("SFO"), quiet = TRUE)
+  m_dfop_sfo <- mkinmod(parent = mkinsub("DFOP", "A1"),
+    A1 = mkinsub("SFO"), quiet = TRUE)
+
+  f_2 <- mmkin(list("SFO-SFO" = m_sfo_sfo,
+   "SFO-SFO-ff" = m_sfo_sfo_ff,
+   "FOMC-SFO" = m_fomc_sfo,
+   "DFOP-SFO" = m_dfop_sfo),
+    ds_2, quiet = TRUE)
+  plot(f_2["SFO-SFO", 3:4]) # Separate fits for datasets 3 and 4
+
+  f_nlme_sfo_sfo <- nlme(f_2["SFO-SFO", ])
+  # plot(f_nlme_sfo_sfo) # not feasible with pkgdown figures
+  plot(f_nlme_sfo_sfo, 3:4) # Global mixed model: Fits for datasets 3 and 4
+
+  # With formation fractions
+  f_nlme_sfo_sfo_ff <- nlme(f_2["SFO-SFO-ff", ])
+  plot(f_nlme_sfo_sfo_ff, 3:4) # chi2 different due to different df attribution
+
+  # For more parameters, we need to increase pnlsMaxIter and the tolerance
+  # to get convergence
+  f_nlme_fomc_sfo <- nlme(f_2["FOMC-SFO", ],
+    control = list(pnlsMaxIter = 100, tolerance = 1e-4), verbose = TRUE)
+  f_nlme_dfop_sfo <- nlme(f_2["DFOP-SFO", ],
+    control = list(pnlsMaxIter = 120, tolerance = 5e-4), verbose = TRUE)
+  plot(f_2["FOMC-SFO", 3:4])
+  plot(f_nlme_fomc_sfo, 3:4)
+
+  plot(f_2["DFOP-SFO", 3:4])
+  plot(f_nlme_dfop_sfo, 3:4)
+
+  anova(f_nlme_dfop_sfo, f_nlme_fomc_sfo, f_nlme_sfo_sfo)
+  anova(f_nlme_dfop_sfo, f_nlme_sfo_sfo) # if we ignore FOMC
+}
 }
 \seealso{
 \code{\link{nlme_function}}
