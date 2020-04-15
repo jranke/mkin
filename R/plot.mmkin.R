@@ -16,7 +16,7 @@
 #'   \code{\link{mkinresplot}}, or as squared residuals against predicted
 #'   values, with the error model, using \code{\link{mkinerrplot}}.
 #' @param standardized Should the residuals be standardized? This option
-#'   is passed to \code{\link{mkinresplot}}, it only takes effect if 
+#'   is passed to \code{\link{mkinresplot}}, it only takes effect if
 #'   `resplot = "time"`.
 #' @param show_errmin Should the chi2 error level be shown on top of the plots
 #'   to the left?
@@ -41,6 +41,7 @@
 #'                 cores = 1, quiet = TRUE, error_model = "tc")
 #'   plot(fits[, "FOCUS C"])
 #'   plot(fits["FOMC", ])
+#'   plot(fits["FOMC", ], show_errmin = FALSE)
 #'
 #'   # We can also plot a single fit, if we like the way plot.mmkin works, but then the plot
 #'   # height should be smaller than the plot width (this is not possible for the html pages
@@ -137,6 +138,8 @@ plot.mmkin <- function(x, main = "auto", legends = 1,
         chi2_text <- bquote(.(fit_name) ~ chi^2 ~ "error level" == .(chi2_perc))
       }
       mtext(chi2_text, cex = cex, line = 0.4)
+    } else {
+      mtext(fit_name, cex = cex, line = 0.4)
     }
 
     if (resplot == "time") {
@@ -144,9 +147,7 @@ plot.mmkin <- function(x, main = "auto", legends = 1,
     } else {
       mkinerrplot(fit, legend = FALSE, ...)
     }
-    if (show_errmin) {
-      mtext(paste(fit_name, "residuals"), cex = cex, line = 0.4)
-    }
+    mtext(paste(fit_name, "residuals"), cex = cex, line = 0.4)
   }
 
   par(oldpar, no.readonly = TRUE)
