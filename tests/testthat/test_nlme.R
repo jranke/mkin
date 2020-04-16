@@ -1,5 +1,7 @@
 context("Nonlinear mixed-effects models")
 
+library(nlme)
+
 test_that("nlme_function works correctly", {
 
   sampling_times = c(0, 1, 3, 7, 14, 28, 60, 90, 120)
@@ -47,8 +49,27 @@ test_that("nlme_function works correctly", {
 
   expect_equal(m_nlme_raw$coefficients, m_nlme_mkin$coefficients)
 
+  m_nlme_mmkin <- nlme(f)
+
+  m_nlme_raw_2 <- nlme(value ~ SSasymp(time, 0, parent_0, log_k_parent_sink),
+    data = grouped_data,
+    fixed = parent_0 + log_k_parent_sink ~ 1,
+    random = pdDiag(parent_0 + log_k_parent_sink ~ 1),
+    start = mean_degparms(f, random = TRUE))
+
+  expect_equal(m_nlme_raw_2$coefficients, m_nlme_mmkin$coefficients)
+
+  anova_nlme <- anova(m_nlme_mmkin, m_nlme_raw) # mmkin needs to go first as we had
+  # to adapt the method due to
+  # https://bugs.r-project.org/bugzilla/show_bug.cgi?id=17761
+
+  # We get a slightly lower AIC with the improved starting values used within
+  # nlme.mmkin
+  expect_lt(anova_nlme["m_nlme_mmkin", "AIC"],
+    anova_nlme["m_nlme_raw", "AIC"])
+
   m_nlme_raw_up_1 <- update(m_nlme_raw, random = log_k_parent_sink ~ 1)
-  # The following two calls give an error although they should
+  # The following three calls give an error although they should
   # do the same as the call above
   # The error occurs in the evaluation of the modelExpression in the
   # call to .C(fit_nlme, ...)
@@ -58,16 +79,20 @@ test_that("nlme_function works correctly", {
   #   fixed = parent_0 + log_k_parent_sink ~ 1,
   #   random = log_k_parent_sink ~ 1,
   #   start = mean_dp)
+  # update(m_nlme_mmkin, random = pdDiag(log_k_parent_sink ~ 1),
+  #   start = c(parent_0 = 100, log_k_parent_sink = 0.1))
 
   m_nlme_raw_up_2 <- update(m_nlme_raw, random = parent_0 ~ 1)
   m_nlme_mkin_up_2 <- update(m_nlme_mkin, random = parent_0 ~ 1)
   expect_equal(m_nlme_raw_up_2$coefficients, m_nlme_mkin_up_2$coefficients)
 
   expect_silent(tmp <- update(m_nlme_mkin))
+  expect_silent(tmp <- update(m_nlme_mmkin))
 })
 
 test_that("nlme_function works correctly in other cases", {
 
+  skip_on_cran()
   dt50_in <- c(400, 800, 1200, 1600, 2000)
   k_in <- log(2) / dt50_in
   SFO <- mkinmod(parent = mkinsub("SFO"))
