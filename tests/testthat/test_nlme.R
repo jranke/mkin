@@ -88,6 +88,9 @@ test_that("nlme_function works correctly", {
 
   expect_silent(tmp <- update(m_nlme_mkin))
   expect_silent(tmp <- update(m_nlme_mmkin))
+
+  geomean_dt50_mmkin <- exp(mean(log((sapply(f, function(x) endpoints(x)$distimes["parent", "DT50"])))))
+  expect_equal(round(endpoints(m_nlme_mmkin)$distimes["parent", "DT50"]), round(geomean_dt50_mmkin))
 })
 
 test_that("nlme_function works correctly in other cases", {
