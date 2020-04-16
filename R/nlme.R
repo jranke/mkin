@@ -136,7 +136,7 @@ mean_degparms <- function(object, random = FALSE) {
   if (random) {
     degparm_mat_trans[mean_degparm_names, ]
     random <- t(apply(degparm_mat_trans[mean_degparm_names, ], 2, function(column) column - fixed))
-    rownames(random) <- as.character(1:nrow(random))
+    rownames(random) <- levels(nlme_data(object)$ds)
     return(list(fixed = fixed, random = list(ds = random)))
   } else {
     return(fixed)
