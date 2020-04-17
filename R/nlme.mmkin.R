@@ -1,3 +1,21 @@
+# Code inspired by nlme::nlme.nlsList and R/nlme_fit.R from nlmixr
+
+# We need to assign the degradation function created in nlme.mmkin to an
+# environment that is always accessible, also e.g. when evaluation is done by
+# testthat or pkgdown. Therefore parent.frame() is not good enough. The
+# following environment will be in the mkin namespace.
+.nlme_env <- new.env(parent = emptyenv())
+
+#' Retrieve a degradation function from the mmkin namespace
+#'
+#' @importFrom utils getFromNamespace
+#' @return A function that was likely previously assigned from within
+#'   nlme.mmkin
+#' @export
+get_deg_func <- function() {
+  return(get("deg_func", getFromNamespace(".nlme_env", "mkin")))
+}
+
 #' Create an nlme model for an mmkin row object
 #'
 #' This functions sets up a nonlinear mixed effects model for an mmkin row
@@ -35,9 +53,9 @@
 #' f_nlme <- nlme(f)
 #' print(f_nlme)
 #' endpoints(f_nlme)
-#' f_nlme_2 <- nlme(f, start = c(parent_0 = 100, log_k_parent_sink = 0.1))
-#' update(f_nlme_2, random = parent_0 ~ 1)
 #' \dontrun{
+#'   f_nlme_2 <- nlme(f, start = c(parent_0 = 100, log_k_parent_sink = 0.1))
+#'   update(f_nlme_2, random = parent_0 ~ 1)
 #'   # Test on some real data
 #'   ds_2 <- lapply(experimental_data_for_UBA_2019[6:10],
 #'    function(x) x$data[c("name", "time", "value")])
@@ -83,7 +101,6 @@
 #'   endpoints(f_nlme_sfo_sfo)
 #'   endpoints(f_nlme_dfop_sfo)
 #' }
-# Code inspired by nlme.nlsList
 nlme.mmkin <- function(model, data = sys.frame(sys.parent()),
   fixed, random = fixed,
   groups, start, correlation = NULL, weights = NULL,
@@ -95,19 +112,21 @@ nlme.mmkin <- function(model, data = sys.frame(sys.parent()),
 
   thisCall <- as.list(match.call())[-1]
 
-  # warn in case of use of arguments that are overriden
+  # Warn in case arguments were used that are overriden
   if (any(!is.na(match(names(thisCall),
                c("fixed", "data"))))) {
     warning("'nlme.mmkin' will redefine 'fixed' and 'data'")
   }
 
   deg_func <- nlme_function(model)
-  assign("deg_func", deg_func, globalenv())
 
-  # specify the model formula
-  this_model_text <- paste0("value ~ deg_func(",
+  assign("deg_func", deg_func, getFromNamespace(".nlme_env", "mkin"))
+
+  # For the formula, get the degradation function from the mkin namespace
+  this_model_text <- paste0("value ~ mkin::get_deg_func()(",
     paste(names(formals(deg_func)), collapse = ", "), ")")
-  this_model <- eval(parse(text = this_model_text))
+  this_model <- as.formula(this_model_text)
+
   thisCall[["model"]] <- this_model
 
   mean_dp <- mean_degparms(model)

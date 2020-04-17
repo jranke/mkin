@@ -138,13 +138,11 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
   if (!is.null(object$version)) {
     ans$fit_version <- object$version
     ans$fit_Rversion <- object$Rversion
-  }
-  
-  AIC <- try(AIC(object))
-  if (!inherits(AIC, "try-error")) {
-    ans$AIC = AIC(object)
-    ans$BIC = BIC(object)
-    ans$logLik = logLik(object)
+    if (ans$fit_version >= "0.9.49.6") {
+      ans$AIC = AIC(object)
+      ans$BIC = BIC(object)
+      ans$logLik = logLik(object)
+    }
   }
 
   ans$diffs <- object$mkinmod$diffs

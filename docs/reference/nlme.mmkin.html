@@ -258,7 +258,7 @@ parameters taken from the mmkin object are used</p></td>
 #&gt; parent 11.96183 39.73634
 #&gt; </div><div class='input'><span class='no'>f_nlme</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span>(<span class='no'>f</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>f_nlme</span>)</div><div class='output co'>#&gt; Nonlinear mixed-effects model fit by maximum likelihood
-#&gt;   Model: value ~ deg_func(name, time, parent_0, log_k_parent_sink) 
+#&gt;   Model: value ~ (mkin::get_deg_func())(name, time, parent_0, log_k_parent_sink) 
 #&gt;   Data: "Not shown" 
 #&gt;   Log-likelihood: -307.5269
 #&gt;   Fixed: list(parent_0 ~ 1, log_k_parent_sink ~ 1) 
@@ -276,9 +276,10 @@ parameters taken from the mmkin object are used</p></td>
 #&gt; Number of Groups: 5 </div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>f_nlme</span>)</div><div class='output co'>#&gt; $distimes
 #&gt;            DT50     DT90
 #&gt; parent 17.51545 58.18505
-#&gt; </div><div class='input'><span class='no'>f_nlme_2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span>(<span class='no'>f</span>, <span class='kw'>start</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>parent_0</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>log_k_parent_sink</span> <span class='kw'>=</span> <span class='fl'>0.1</span>))
-<span class='fu'><a href='https://rdrr.io/r/stats/update.html'>update</a></span>(<span class='no'>f_nlme_2</span>, <span class='kw'>random</span> <span class='kw'>=</span> <span class='no'>parent_0</span> ~ <span class='fl'>1</span>)</div><div class='output co'>#&gt; Nonlinear mixed-effects model fit by maximum likelihood
-#&gt;   Model: value ~ deg_func(name, time, parent_0, log_k_parent_sink) 
+#&gt; </div><div class='input'><span class='co'># \dontrun{</span>
+  <span class='no'>f_nlme_2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span>(<span class='no'>f</span>, <span class='kw'>start</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>parent_0</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>log_k_parent_sink</span> <span class='kw'>=</span> <span class='fl'>0.1</span>))
+  <span class='fu'><a href='https://rdrr.io/r/stats/update.html'>update</a></span>(<span class='no'>f_nlme_2</span>, <span class='kw'>random</span> <span class='kw'>=</span> <span class='no'>parent_0</span> ~ <span class='fl'>1</span>)</div><div class='output co'>#&gt; Nonlinear mixed-effects model fit by maximum likelihood
+#&gt;   Model: value ~ (mkin::get_deg_func())(name, time, parent_0, log_k_parent_sink) 
 #&gt;   Data: "Not shown" 
 #&gt;   Log-likelihood: -404.3729
 #&gt;   Fixed: list(parent_0 ~ 1, log_k_parent_sink ~ 1) 
@@ -291,8 +292,7 @@ parameters taken from the mmkin object are used</p></td>
 #&gt; StdDev: 0.002416792 21.63027
 #&gt; 
 #&gt; Number of Observations: 90
-#&gt; Number of Groups: 5 </div><div class='input'><span class='co'># \dontrun{</span>
-  <span class='co'># Test on some real data</span>
+#&gt; Number of Groups: 5 </div><div class='input'>  <span class='co'># Test on some real data</span>
   <span class='no'>ds_2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span>(<span class='no'>experimental_data_for_UBA_2019</span>[<span class='fl'>6</span>:<span class='fl'>10</span>],
    <span class='kw'>function</span>(<span class='no'>x</span>) <span class='no'>x</span>$<span class='no'>data</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"name"</span>, <span class='st'>"time"</span>, <span class='st'>"value"</span>)])
   <span class='no'>m_sfo_sfo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"A1"</span>),

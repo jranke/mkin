@@ -83,9 +83,9 @@ endpoints(f[[1]])
 f_nlme <- nlme(f)
 print(f_nlme)
 endpoints(f_nlme)
-f_nlme_2 <- nlme(f, start = c(parent_0 = 100, log_k_parent_sink = 0.1))
-update(f_nlme_2, random = parent_0 ~ 1)
 \dontrun{
+  f_nlme_2 <- nlme(f, start = c(parent_0 = 100, log_k_parent_sink = 0.1))
+  update(f_nlme_2, random = parent_0 ~ 1)
   # Test on some real data
   ds_2 <- lapply(experimental_data_for_UBA_2019[6:10],
    function(x) x$data[c("name", "time", "value")])
