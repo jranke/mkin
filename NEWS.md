@@ -10,6 +10,8 @@
 
 - 'plot.mmkin': Add the argument 'standardized' to avoid warnings that occurred when it was passed as part of the additional arguments captured by the dots (...)
 
+- 'summary.mkinfit': Add AIC, BIC and log likelihood to the summary
+
 # mkin 0.9.49.9 (2020-03-31)
 
 - 'mkinmod': Use pkgbuild::has_compiler instead of Sys.which('gcc'), as the latter will often fail even if Rtools are installed
