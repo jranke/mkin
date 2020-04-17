@@ -39,7 +39,7 @@ get_deg_func <- function() {
 #' @param naPattern passed to nlme
 #' @param control passed to nlme
 #' @param verbose passed to nlme
-#' @importFrom stats na.fail
+#' @importFrom stats na.fail as.formula
 #' @return Upon success, a fitted nlme.mmkin object, which is an nlme object
 #'   with additional elements
 #' @export
