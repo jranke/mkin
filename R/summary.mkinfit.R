@@ -125,9 +125,6 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
     warning = object$warning,
     use_of_ff = object$mkinmod$use_of_ff,
     error_model_algorithm = object$error_model_algorithm,
-    AIC = AIC(object),
-    BIC = BIC(object),
-    logLik = logLik(object),
     df = c(p, rdf),
     covar = covar,
     covar_notrans = covar_notrans,
@@ -141,6 +138,13 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
   if (!is.null(object$version)) {
     ans$fit_version <- object$version
     ans$fit_Rversion <- object$Rversion
+  }
+  
+  AIC <- try(AIC(object))
+  if (!inherits(AIC, "try-error")) {
+    ans$AIC = AIC(object)
+    ans$BIC = BIC(object)
+    ans$logLik = logLik(object)
   }
 
   ans$diffs <- object$mkinmod$diffs
@@ -220,9 +224,11 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
   if(length(x$fixed$value) == 0) cat("None\n")
   else print(x$fixed)
 
-  cat("\nResults:\n\n")
-  print(data.frame(AIC = x$AIC, BIC = x$BIC, logLik = x$logLik,
-    row.names = " "))
+  if (!is.null(x$AIC)) {
+    cat("\nResults:\n\n")
+    print(data.frame(AIC = x$AIC, BIC = x$BIC, logLik = x$logLik,
+      row.names = " "))
+  }
 
   cat("\nOptimised, transformed parameters with symmetric confidence intervals:\n")
   print(signif(x$par, digits = digits))
