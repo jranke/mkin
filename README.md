@@ -97,6 +97,9 @@ and at [R-Forge](http://kinfit.r-forge.r-project.org/mkin_static/index.html).
 * A two-component error model similar to the one proposed by
   [Rocke and Lorenzato](https://pkgdown.jrwb.de/mkin/reference/sigma_twocomp.html)
   can be selected using the argument `error_model = "tc"`.
+* Nonlinear mixed-effects models can be created from fits of the same degradation
+  model to different datasets for the same compound by using the
+  [nlme.mmkin](https://pkgdown.jrwb.de/mkin/reference/nlme.mmkin.html) method.
 
 ## GUI
 
