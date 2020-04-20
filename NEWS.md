@@ -1,5 +1,7 @@
 # mkin 0.9.49.11 (unreleased)
 
+- Increase a test tolerance to make it pass on all CRAN check machines
+
 # mkin 0.9.49.10 (2020-04-18)
 
 - 'nlme.mmkin': An nlme method for mmkin row objects and an associated S3 class with print, plot, anova and endpoint methods
