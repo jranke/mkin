@@ -52,8 +52,8 @@
 #'     The coefficient matrix, if the system of differential equations can be
 #'     represented by one.
 #'   }
-#'   \item{ll}{
-#'     The likelihood function, taking the parameter vector as the first argument.
+#'   \item{cf}{
+#'     If generated, the compiled function as returned by cfunction.
 #'   }
 #' @note The IORE submodel is not well tested for metabolites. When using this
 #'   model for metabolites, you may want to read the second note in the help
@@ -365,7 +365,7 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
     model$coefmat <- m
   }#}}}
 
-  # Try to create a function compiled from C code there is more than one observed variable {{{
+  # Try to create a function compiled from C code if there is more than one observed variable {{{
   # and a compiler is available
   if (length(obs_vars) > 1 & has_compiler()) {
 
