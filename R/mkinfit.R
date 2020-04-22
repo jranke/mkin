@@ -378,8 +378,9 @@ mkinfit <- function(mkinmod, observed,
     if (parmname == "r") parms.ini[parmname] = 0.2
   }
   # Default values for formation fractions in case they are present
-  for (box in mod_vars) {
-    f_names <- mkinmod$parms[grep(paste0("^f_", box), mkinmod$parms)]
+  for (obs_var in obs_vars) {
+    origin <- mkinmod$map[[obs_var]][[1]]
+    f_names <- mkinmod$parms[grep(paste0("^f_", origin), mkinmod$parms)]
     if (length(f_names) > 0) {
       # We need to differentiate between default and specified fractions
       # and set the unspecified to 1 - sum(specified)/n_unspecified
@@ -388,9 +389,9 @@ mkinfit <- function(mkinmod, observed,
       sum_f_specified = sum(parms.ini[f_specified_names])
       if (sum_f_specified > 1) {
         stop("Starting values for the formation fractions originating from ",
-             box, " sum up to more than 1.")
+             origin, " sum up to more than 1.")
       }
-      if (mkinmod$spec[[box]]$sink) n_unspecified = length(f_default_names) + 1
+      if (mkinmod$spec[[obs_var]]$sink) n_unspecified = length(f_default_names) + 1
       else {
         n_unspecified = length(f_default_names)
       }

@@ -1,4 +1,8 @@
-# mkin 0.9.49.11 (unreleased)
+# mkin 0.9.50.1 (unreleased)
+
+- Support SFORB with formation fractions
+
+# mkin 0.9.49.11 (2020-04-20)
 
 - Increase a test tolerance to make it pass on all CRAN check machines
 

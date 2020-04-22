@@ -182,7 +182,7 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
                 "are only supported with formation fractions (use_of_ff = 'max')")
         }
         if(spec[[varname]]$sink) {
-          # If sink is required, add first-order/IORE sink term
+          # If sink is requested, add first-order/IORE sink term
           k_compound_sink <- paste("k", box_1, "sink", sep = "_")
           if(spec[[varname]]$type == "IORE") {
             k_compound_sink <- paste("k__iore", box_1, "sink", sep = "_")
@@ -197,7 +197,7 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
         } else { # otherwise no decline term needed here
           decline_term = "0"
         }
-      } else {
+      } else { # Maximum use of formation fractions
         k_compound <- paste("k", box_1, sep = "_")
         if(spec[[varname]]$type == "IORE") {
           k_compound <- paste("k__iore", box_1, sep = "_")
@@ -236,26 +236,13 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
     diffs[[box_1]] <- paste(diffs[[box_1]], "-", decline_term)#}}}
     if(spec[[varname]]$type == "SFORB") { # {{{ Add SFORB reversible binding terms
       box_2 = map[[varname]][[2]]
-      if (use_of_ff == "min") { # Minimum use of formation fractions
-        k_free_bound <- paste("k", varname, "free", "bound", sep = "_")
-        k_bound_free <- paste("k", varname, "bound", "free", sep = "_")
-        parms <- c(parms, k_free_bound, k_bound_free)
-        reversible_binding_term_1 <- paste("-", k_free_bound, "*", box_1, "+",
-          k_bound_free, "*", box_2)
-        reversible_binding_term_2 <- paste("+", k_free_bound, "*", box_1, "-",
-          k_bound_free, "*", box_2)
-      } else { # Use formation fractions also for the free compartment
-        stop("The maximum use of formation fractions is not supported for SFORB models")
-        # The problems were: Calculation of dissipation times did not work in this case
-        # and the coefficient matrix is not generated correctly by the code present
-        # in this file in this case
-        #f_free_bound <- paste("f", varname, "free", "bound", sep = "_")
-        #k_bound_free <- paste("k", varname, "bound", "free", sep = "_")
-        #parms <- c(parms, f_free_bound, k_bound_free)
-        #reversible_binding_term_1 <- paste("+", k_bound_free, "*", box_2)
-        #reversible_binding_term_2 <- paste("+", f_free_bound, "*", k_compound, "*", box_1, "-",
-        #  k_bound_free, "*", box_2)
-      }
+      k_free_bound <- paste("k", varname, "free", "bound", sep = "_")
+      k_bound_free <- paste("k", varname, "bound", "free", sep = "_")
+      parms <- c(parms, k_free_bound, k_bound_free)
+      reversible_binding_term_1 <- paste("-", k_free_bound, "*", box_1, "+",
+        k_bound_free, "*", box_2)
+      reversible_binding_term_2 <- paste("+", k_free_bound, "*", box_1, "-",
+        k_bound_free, "*", box_2)
       diffs[[box_1]] <- paste(diffs[[box_1]], reversible_binding_term_1)
       diffs[[box_2]] <- paste(diffs[[box_2]], reversible_binding_term_2)
     } #}}}
@@ -286,7 +273,7 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
             k_from_to, "*", origin_box)
         } else {
           # Do not introduce a formation fraction if this is the only target
-          if (spec[[origin_box]]$sink == FALSE && n_targets == 1) {
+          if (spec[[varname]]$sink == FALSE && n_targets == 1) {
             diffs[[target_box]] <- paste(diffs[[target_box]], "+",
                                          decline_term)
           } else {
@@ -302,7 +289,7 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
 
   model <- list(diffs = diffs, parms = parms, map = map, spec = spec, use_of_ff = use_of_ff)
 
-  # Create coefficient matrix if appropriate#{{{
+  # Create coefficient matrix if possible #{{{
   if (mat) {
     boxes <- names(diffs)
     n <- length(boxes)
@@ -321,12 +308,12 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
 
           } else {          # off-diagonal elements
             k.candidate = paste("k", from, to, sep = "_")
-      if (sub("_free$", "", from) == sub("_bound$", "", to)) {
+            if (sub("_free$", "", from) == sub("_bound$", "", to)) {
               k.candidate = paste("k", sub("_free$", "_free_bound", from), sep = "_")
-      }
-      if (sub("_bound$", "", from) == sub("_free$", "", to)) {
+            }
+            if (sub("_bound$", "", from) == sub("_free$", "", to)) {
               k.candidate = paste("k", sub("_bound$", "_bound_free", from), sep = "_")
-      }
+            }
             k.effective = intersect(model$parms, k.candidate)
             m[to, from] = ifelse(length(k.effective) > 0,
                 k.effective, "0")
@@ -350,7 +337,8 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
           } else {          # off-diagonal elements
             f.candidate = paste("f", from, "to", to, sep = "_")
             k.candidate = paste("k", from, to, sep = "_")
-            # SFORB with maximum use of formation fractions not implemented, see above
+            k.candidate = sub("free.*bound", "free_bound", k.candidate)
+            k.candidate = sub("bound.*free", "bound_free", k.candidate)
             m[to, from] = ifelse(f.candidate %in% model$parms,
               paste(f.candidate, " * k_", from, sep = ""),
               ifelse(k.candidate %in% model$parms, k.candidate, "0"))

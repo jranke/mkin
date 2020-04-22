@@ -60,8 +60,8 @@ A list of class \code{mkinmod} for use with \code{\link{mkinfit}},
     The coefficient matrix, if the system of differential equations can be
     represented by one.
   }
-  \item{ll}{
-    The likelihood function, taking the parameter vector as the first argument.
+  \item{cf}{
+    If generated, the compiled function as returned by cfunction.
   }
 }
 \description{

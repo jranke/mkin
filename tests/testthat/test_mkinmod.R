@@ -20,10 +20,6 @@ test_that("mkinmod stops to prevent and/or explain user errors", {
   expect_error(mkinmod(parent = mkinsub("IORE", "m1"),
                        m1 = mkinsub("SFO"), use_of_ff = "min"),
                "only supported with formation fractions")
-
-  expect_error(mkinmod(parent = mkinsub("SFORB", "m1"),
-                       m1 = mkinsub("SFO"), use_of_ff = "max"),
-               "not supported")
 })
 
 test_that("Printing mkinmod models is reproducible", {
