@@ -1,9 +1,9 @@
 #' Produce predictions from a kinetic model using specific parameters
-#' 
+#'
 #' This function produces a time series for all the observed variables in a
 #' kinetic model as specified by \code{\link{mkinmod}}, using a specific set of
 #' kinetic parameters and initial values for the state variables.
-#' 
+#'
 #' @aliases mkinpredict mkinpredict.mkinmod mkinpredict.mkinfit
 #' @param x A kinetic model as produced by \code{\link{mkinmod}}, or a kinetic
 #'   fit as fitted by \code{\link{mkinfit}}. In the latter case, the fitted
@@ -40,7 +40,7 @@
 #' @return A matrix in the same format as the output of \code{\link{ode}}.
 #' @author Johannes Ranke
 #' @examples
-#' 
+#'
 #'   SFO <- mkinmod(degradinol = mkinsub("SFO"))
 #'   # Compare solution types
 #'   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20,
@@ -51,8 +51,8 @@
 #'         solution_type = "deSolve", use_compiled = FALSE)
 #'   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20,
 #'         solution_type = "eigen")
-#' 
-#' 
+#'
+#'
 #'   # Compare integration methods to analytical solution
 #'   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20,
 #'         solution_type = "analytical")[21,]
@@ -63,14 +63,14 @@
 #'   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100), 0:20,
 #'         method = "rk4")[21,]
 #'  # rk4 is not as precise here
-#' 
+#'
 #'   # The number of output times used to make a lot of difference until the
 #'   # default for atol was adjusted
 #'   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100),
 #'         seq(0, 20, by = 0.1))[201,]
 #'   mkinpredict(SFO, c(k_degradinol_sink = 0.3), c(degradinol = 100),
 #'         seq(0, 20, by = 0.01))[2001,]
-#' 
+#'
 #'   # Check compiled model versions - they are faster than the eigenvalue based solutions!
 #'   SFO_SFO = mkinmod(parent = list(type = "SFO", to = "m1"),
 #'                     m1 = list(type = "SFO"))
@@ -86,13 +86,13 @@
 #'     print(mkinpredict(SFO_SFO, c(k_parent_m1 = 0.05, k_parent_sink = 0.1, k_m1_sink = 0.01),
 #'                 c(parent = 100, m1 = 0), seq(0, 20, by = 0.1),
 #'                 solution_type = "deSolve", use_compiled = FALSE)[201,]))
-#' 
+#'
 #'   \dontrun{
 #'     # Predict from a fitted model
 #'     f <- mkinfit(SFO_SFO, FOCUS_2006_C)
 #'     head(mkinpredict(f))
 #'   }
-#' 
+#'
 #' @export
 mkinpredict <- function(x, odeparms, odeini,
   outtimes = seq(0, 120, by = 0.1),
@@ -137,36 +137,36 @@ mkinpredict.mkinmod <- function(x,
     parent.name = names(x$diffs)[[1]]
     o <- switch(parent.type,
       SFO = SFO.solution(outtimes,
-          evalparse(parent.name),
+        evalparse(parent.name),
           ifelse(x$use_of_ff == "min",
-      evalparse(paste("k", parent.name, "sink", sep="_")),
-      evalparse(paste("k", parent.name, sep="_")))),
+            evalparse(paste("k", parent.name, "sink", sep="_")),
+            evalparse(paste("k", parent.name, sep="_")))),
       FOMC = FOMC.solution(outtimes,
-          evalparse(parent.name),
-          evalparse("alpha"), evalparse("beta")),
+        evalparse(parent.name),
+        evalparse("alpha"), evalparse("beta")),
       IORE = IORE.solution(outtimes,
-          evalparse(parent.name),
-          ifelse(x$use_of_ff == "min",
-      evalparse(paste("k__iore", parent.name, "sink", sep="_")),
-      evalparse(paste("k__iore", parent.name, sep="_"))),
-            evalparse("N_parent")),
+        evalparse(parent.name),
+        ifelse(x$use_of_ff == "min",
+          evalparse(paste("k__iore", parent.name, "sink", sep="_")),
+          evalparse(paste("k__iore", parent.name, sep="_"))),
+        evalparse("N_parent")),
       DFOP = DFOP.solution(outtimes,
-          evalparse(parent.name),
-          evalparse("k1"), evalparse("k2"),
-          evalparse("g")),
+        evalparse(parent.name),
+        evalparse("k1"), evalparse("k2"),
+        evalparse("g")),
       HS = HS.solution(outtimes,
-          evalparse(parent.name),
-          evalparse("k1"), evalparse("k2"),
-          evalparse("tb")),
+        evalparse(parent.name),
+        evalparse("k1"), evalparse("k2"),
+        evalparse("tb")),
       SFORB = SFORB.solution(outtimes,
-          evalparse(parent.name),
-          evalparse(paste("k", parent.name, "bound", sep="_")),
-          evalparse(paste("k", sub("free", "bound", parent.name), "free", sep="_")),
-          evalparse(paste("k", parent.name, "sink", sep="_"))),
+        evalparse(parent.name),
+        evalparse(paste("k", parent.name, "bound", sep="_")),
+        evalparse(paste("k", sub("free", "bound", parent.name), "free", sep="_")),
+        evalparse(paste("k", parent.name, "sink", sep="_"))),
       logistic = logistic.solution(outtimes,
-          evalparse(parent.name),
-          evalparse("kmax"), evalparse("k0"),
-          evalparse("r"))
+        evalparse(parent.name),
+        evalparse("kmax"), evalparse("k0"),
+        evalparse("r"))
     )
     out <- data.frame(outtimes, o)
     names(out) <- c("time", sub("_free", "", parent.name))

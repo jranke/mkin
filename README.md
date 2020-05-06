@@ -103,7 +103,7 @@ and at [R-Forge](http://kinfit.r-forge.r-project.org/mkin_static/index.html).
 
 ## GUI
 
-There is a graphical user interface that I consider useful for real work. Please
+There is a graphical user interface that may be useful. Please
 refer to its [documentation page](http://kinfit.r-forge.r-project.org/gmkin_static)
 for installation instructions and a manual.
 
