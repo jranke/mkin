@@ -117,13 +117,6 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
   if (!use_of_ff %in% c("min", "max"))
     stop("The use of formation fractions 'use_of_ff' can only be 'min' or 'max'")
 
-  # The returned model will be a list of character vectors, containing {{{
-  # differential equations (if supported), parameter names and a mapping from
-  # model variables to observed variables. If possible, a matrix representation
-  # of the differential equations is included
-  # Compiling the functions from the C code generated below only works if the
-  # implicit assumption about differential equations specified below
-  # is satisfied
   parms <- vector()
   # }}}
 
