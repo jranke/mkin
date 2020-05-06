@@ -421,6 +421,46 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
   }
   # }}}
 
+  # Attach a degradation function if an analytical solution is available {{{
+  parent_type = spec[[1]]$type
+  parent_name = names(spec)[[1]]
+  if (length(spec) == 1) {
+    odeparm_map <- switch(parent_type,
+      SFO = c(
+        k = if(use_of_ff == "min") paste("k", parent_name, "sink", sep = "_")
+          else  paste("k", parent_name, sep = "_")),
+      FOMC = c(alpha = "alpha", beta = "beta"),
+      IORE = c(
+        k__iore = if(use_of_ff == "min") paste("k__iore", parent_name, "sink", sep = "_")
+          else paste("k__iore", parent_name, sep = "_"),
+        N = paste("N", parent_name, sep = "_")),
+      DFOP = c(k1 = "k1", k2 = "k2", g = "g"),
+      HS = c(k1 = "k1", k2 = "k2", tb = "tb"),
+      SFORB = c(
+        k_12 = paste("k", parent_name, "free_bound", sep = "_"),
+        k_21 = paste("k", parent_name, "bound_free", sep = "_"),
+        k_1output = paste("k", parent_name, "free_sink", sep = "_")),
+      logistic = c(kmax = "kmax", k0 = "k0", r = "r")
+    )
+    odeparm_rev_map <- names(odeparm_map)
+    names(odeparm_rev_map) <- odeparm_map
+
+    model$deg_func <- function(odeini, odeparms, outtimes) {
+      parent_func <- getFromNamespace(paste0(parent_type, ".solution"), "mkin")
+      odeparm_list <- as.list(odeparms)
+      names(odeparm_list) <- odeparm_rev_map[names(odeparm_list)]
+
+      values <- do.call(parent_func,
+        args = c(
+          list(t = outtimes, parent.0 = odeini[1]),
+          odeparm_list))
+      out <- data.frame(outtimes, values)
+      names(out) <- c("time", parent_name)
+      return(out)
+    }
+  }
+  # }}}
+
   class(model) <- "mkinmod"
   return(model)
 }

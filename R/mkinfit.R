@@ -185,13 +185,13 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #' # Fit the model to the FOCUS example dataset D using defaults
 #' print(system.time(fit <- mkinfit(SFO_SFO, FOCUS_2006_D,
 #'                            solution_type = "eigen", quiet = TRUE)))
-#' coef(fit)
+#' parms(fit)
 #' endpoints(fit)
 #' \dontrun{
 #' # deSolve is slower when no C compiler (gcc) was available during model generation
 #' print(system.time(fit.deSolve <- mkinfit(SFO_SFO, FOCUS_2006_D,
 #'                            solution_type = "deSolve")))
-#' coef(fit.deSolve)
+#' parms(fit.deSolve)
 #' endpoints(fit.deSolve)
 #' }
 #'
@@ -926,6 +926,6 @@ mkinfit <- function(mkinmod, observed,
   fit$version <- as.character(utils::packageVersion("mkin"))
   fit$Rversion <- paste(R.version$major, R.version$minor, sep=".")
 
-  class(fit) <- c("mkinfit", "modFit")
+  class(fit) <- c("mkinfit")
   return(fit)
 }
