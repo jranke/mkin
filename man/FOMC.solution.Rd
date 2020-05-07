@@ -45,6 +45,12 @@ FOCUS (2006) \dQuote{Guidance Document on Estimating Persistence
   EC Document Reference Sanco/10058/2005 version 2.0, 434 pp,
   \url{http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics}
 
+FOCUS (2014) \dQuote{Generic guidance for Estimating Persistence
+  and Degradation Kinetics from Environmental Fate Studies on Pesticides in
+  EU Registration} Report of the FOCUS Work Group on Degradation Kinetics,
+  Version 1.1, 18 December 2014
+  \url{http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics}
+
   Gustafson DI and Holden LR (1990) Nonlinear pesticide dissipation in soil:
   A new model based on spatial variability. \emph{Environmental Science and
   Technology} \bold{24}, 1032-1038

@@ -452,7 +452,7 @@ mkinmod <- function(..., use_of_ff = "min", speclist = NULL, quiet = FALSE, verb
 
       values <- do.call(parent_func,
         args = c(
-          list(t = outtimes, parent.0 = odeini[1]),
+          list(t = outtimes, parent_0 = odeini[1]),
           odeparm_list))
       out <- data.frame(outtimes, values)
       names(out) <- c("time", parent_name)
