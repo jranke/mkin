@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Hockey-Stick kinetics — HS.solution • mkin</title>
+<title>Create degradation functions for known analytical solutions — create_deg_func • mkin</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,8 @@
 
 
 
-<meta property="og:title" content="Hockey-Stick kinetics — HS.solution" />
-<meta property="og:description" content="Function describing two exponential decline functions with a break point
-between them." />
+<meta property="og:title" content="Create degradation functions for known analytical solutions — create_deg_func" />
+<meta property="og:description" content="Create degradation functions for known analytical solutions" />
 
 
 
@@ -136,74 +135,39 @@ between them." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Hockey-Stick kinetics</h1>
-    <small class="dont-index">Source: <a href='http://github.com/jranke/mkin/blob/master/R/parent_solutions.R'><code>R/parent_solutions.R</code></a></small>
-    <div class="hidden name"><code>HS.solution.Rd</code></div>
+    <h1>Create degradation functions for known analytical solutions</h1>
+    <small class="dont-index">Source: <a href='http://github.com/jranke/mkin/blob/master/R/create_deg_func.R'><code>R/create_deg_func.R</code></a></small>
+    <div class="hidden name"><code>create_deg_func.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Function describing two exponential decline functions with a break point
-between them.</p>
+    <p>Create degradation functions for known analytical solutions</p>
     </div>
 
-    <pre class="usage"><span class='fu'>HS.solution</span>(<span class='no'>t</span>, <span class='no'>parent_0</span>, <span class='no'>k1</span>, <span class='no'>k2</span>, <span class='no'>tb</span>)</pre>
+    <pre class="usage"><span class='fu'>create_deg_func</span>(<span class='no'>spec</span>, <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"min"</span>, <span class='st'>"max"</span>))</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>t</th>
-      <td><p>Time.</p></td>
+      <th>spec</th>
+      <td><p>List of model specifications as contained in mkinmod objects</p></td>
     </tr>
     <tr>
-      <th>parent_0</th>
-      <td><p>Starting value for the response variable at time zero.</p></td>
-    </tr>
-    <tr>
-      <th>k1</th>
-      <td><p>First kinetic constant.</p></td>
-    </tr>
-    <tr>
-      <th>k2</th>
-      <td><p>Second kinetic constant.</p></td>
-    </tr>
-    <tr>
-      <th>tb</th>
-      <td><p>Break point. Before this time, exponential decline according to
-<code>k1</code> is calculated, after this time, exponential decline proceeds
-according to <code>k2</code>.</p></td>
+      <th>use_of_ff</th>
+      <td><p>Minimum or maximum use of formation fractions</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The value of the response variable at time <code>t</code>.</p>
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
-
-    <p>FOCUS (2006) &#8220;Guidance Document on Estimating Persistence
-  and Degradation Kinetics from Environmental Fate Studies on Pesticides in
-  EU Registration&#8221; Report of the FOCUS Work Group on Degradation Kinetics,
-  EC Document Reference Sanco/10058/2005 version 2.0, 434 pp,
-  <a href='http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics'>http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics</a>
-FOCUS (2014) &#8220;Generic guidance for Estimating Persistence
-  and Degradation Kinetics from Environmental Fate Studies on Pesticides in
-  EU Registration&#8221; Report of the FOCUS Work Group on Degradation Kinetics,
-  Version 1.1, 18 December 2014
-  <a href='http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics'>http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics</a></p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>Other parent solutions: 
-<code><a href='DFOP.solution.html'>DFOP.solution</a>()</code>,
-<code><a href='FOMC.solution.html'>FOMC.solution</a>()</code>,
-<code><a href='IORE.solution.html'>IORE.solution</a>()</code>,
-<code><a href='SFO.solution.html'>SFO.solution</a>()</code>,
-<code><a href='SFORB.solution.html'>SFORB.solution</a>()</code>,
-<code><a href='logistic.solution.html'>logistic.solution</a>()</code></p></div>
+    <p>Degradation function to be attached to mkinmod objects</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-  <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'>HS.solution</span>(<span class='no'>x</span>, <span class='fl'>100</span>, <span class='fl'>2</span>, <span class='fl'>0.3</span>, <span class='fl'>0.5</span>), <span class='fl'>0</span>, <span class='fl'>2</span>, <span class='kw'>ylim</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>,<span class='fl'>100</span>))</div><div class='img'><img src='HS.solution-1.png' alt='' width='700' height='433' /></div><div class='input'>
-</div></pre>
+<span class='no'>SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(
+  <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>),
+  <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

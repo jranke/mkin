@@ -136,7 +136,7 @@ DFOP.solution <- function(t, parent_0, k1, k2, g)
 #' between them.
 #' 
 #' @family parent solutions
-#' @inherit HS.solution 
+#' @inherit DFOP.solution 
 #' @param tb Break point. Before this time, exponential decline according to
 #'   \code{k1} is calculated, after this time, exponential decline proceeds
 #'   according to \code{k2}.
@@ -161,7 +161,7 @@ HS.solution <- function(t, parent_0, k1, k2, tb)
 #' and no substance in the bound fraction.
 #' 
 #' @family parent solutions
-#' @inherit HS.solution 
+#' @inherit SFO.solution 
 #' @param k_12 Kinetic constant describing transfer from free to bound.
 #' @param k_21 Kinetic constant describing transfer from bound to free.
 #' @param k_1output Kinetic constant describing degradation of the free

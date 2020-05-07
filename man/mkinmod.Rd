@@ -6,7 +6,7 @@
 \usage{
 mkinmod(
   ...,
-  use_of_ff = "min",
+  use_of_ff = "max",
   speclist = NULL,
   quiet = FALSE,
   verbose = FALSE

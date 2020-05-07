@@ -7,6 +7,10 @@
 SFORB.solution(t, parent_0, k_12, k_21, k_1output)
 }
 \arguments{
+\item{t}{Time.}
+
+\item{parent_0}{Starting value for the response variable at time zero.}
+
 \item{k_12}{Kinetic constant describing transfer from free to bound.}
 
 \item{k_21}{Kinetic constant describing transfer from bound to free.}
@@ -29,6 +33,18 @@ and no substance in the bound fraction.
 
   \dontrun{plot(function(x) SFORB.solution(x, 100, 0.5, 2, 3), 0, 2)}
 
+}
+\references{
+FOCUS (2006) \dQuote{Guidance Document on Estimating Persistence
+  and Degradation Kinetics from Environmental Fate Studies on Pesticides in
+  EU Registration} Report of the FOCUS Work Group on Degradation Kinetics,
+  EC Document Reference Sanco/10058/2005 version 2.0, 434 pp,
+  \url{http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics}
+FOCUS (2014) \dQuote{Generic guidance for Estimating Persistence
+  and Degradation Kinetics from Environmental Fate Studies on Pesticides in
+  EU Registration} Report of the FOCUS Work Group on Degradation Kinetics,
+  Version 1.1, 18 December 2014
+  \url{http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics}
 }
 \seealso{
 Other parent solutions: 

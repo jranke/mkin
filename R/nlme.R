@@ -13,15 +13,15 @@
 #' sampling_times = c(0, 1, 3, 7, 14, 28, 60, 90, 120)
 #' m_SFO <- mkinmod(parent = mkinsub("SFO"))
 #' d_SFO_1 <- mkinpredict(m_SFO,
-#'   c(k_parent_sink = 0.1),
+#'   c(k_parent = 0.1),
 #'   c(parent = 98), sampling_times)
 #' d_SFO_1_long <- mkin_wide_to_long(d_SFO_1, time = "time")
 #' d_SFO_2 <- mkinpredict(m_SFO,
-#'   c(k_parent_sink = 0.05),
+#'   c(k_parent = 0.05),
 #'   c(parent = 102), sampling_times)
 #' d_SFO_2_long <- mkin_wide_to_long(d_SFO_2, time = "time")
 #' d_SFO_3 <- mkinpredict(m_SFO,
-#'   c(k_parent_sink = 0.02),
+#'   c(k_parent = 0.02),
 #'   c(parent = 103), sampling_times)
 #' d_SFO_3_long <- mkin_wide_to_long(d_SFO_3, time = "time")
 #'

@@ -15,15 +15,19 @@ test_that("Fitting the SFORB model is equivalent to fitting DFOP", {
     use_of_ff = "max", quiet = TRUE)
   SFORB_SFO <- mkinmod(parent = mkinsub("SFORB", "M1"),
     M1 = mkinsub("SFO"),
+    use_of_ff = "min", quiet = TRUE)
+  SFORB_SFO_ff <- mkinmod(parent = mkinsub("SFORB", "M1"),
+    M1 = mkinsub("SFO"),
     use_of_ff = "max", quiet = TRUE)
-
-  SFORB_SFO$coefmat
 
   f_dfop_sfo <- mkinfit(DFOP_SFO, DFOP_par_c, quiet = TRUE)
   f_sforb_sfo <- mkinfit(SFORB_SFO, DFOP_par_c, quiet = TRUE)
+  f_sforb_sfo_ff <- mkinfit(SFORB_SFO_ff, DFOP_par_c, quiet = TRUE)
   f_sforb_sfo_eigen <- mkinfit(SFORB_SFO, DFOP_par_c, solution_type = "eigen", quiet = TRUE)
 
   expect_equivalent(endpoints(f_sforb_sfo)$distimes, endpoints(f_dfop_sfo)$distimes,
+    tolerance = 1e-6)
+  expect_equivalent(endpoints(f_sforb_sfo_ff)$distimes, endpoints(f_dfop_sfo)$distimes,
     tolerance = 1e-6)
   expect_equivalent(endpoints(f_sforb_sfo_eigen)$distimes, endpoints(f_dfop_sfo)$distimes,
     tolerance = 1e-6)

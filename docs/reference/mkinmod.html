@@ -75,7 +75,7 @@ list of lists can be given in the speclist argument." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.49.11</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50</span>
       </span>
     </div>
 
@@ -152,7 +152,7 @@ list of lists can be given in the speclist argument.</p>
 
     <pre class="usage"><span class='fu'>mkinmod</span>(
   <span class='no'>...</span>,
-  <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"min"</span>,
+  <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>,
   <span class='kw'>speclist</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
@@ -252,15 +252,15 @@ in the FOCUS and NAFTA guidance documents are used.</p>
 <span class='no'>SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinmod</span>(
   <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>),
   <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; Compilation argument:
-#&gt;  /usr/lib/R/bin/R CMD SHLIB file66a9718e919b.c 2&gt; file66a9718e919b.c.err.txt 
+#&gt;  /usr/lib/R/bin/R CMD SHLIB fileb6a4eaab60.c 2&gt; fileb6a4eaab60.c.err.txt 
 #&gt; Program source:
 #&gt;   1: #include &lt;R.h&gt;
 #&gt;   2: 
 #&gt;   3: 
 #&gt;   4: static double parms [3];
-#&gt;   5: #define k_parent_sink parms[0]
-#&gt;   6: #define k_parent_m1 parms[1]
-#&gt;   7: #define k_m1_sink parms[2]
+#&gt;   5: #define k_parent parms[0]
+#&gt;   6: #define f_parent_to_m1 parms[1]
+#&gt;   7: #define k_m1 parms[2]
 #&gt;   8: 
 #&gt;   9: void initpar(void (* odeparms)(int *, double *)) {
 #&gt;  10:     int N = 3;
@@ -270,8 +270,8 @@ in the FOCUS and NAFTA guidance documents are used.</p>
 #&gt;  14: 
 #&gt;  15: void func ( int * n, double * t, double * y, double * f, double * rpar, int * ipar ) {
 #&gt;  16: 
-#&gt;  17: f[0] = - k_parent_sink * y[0] - k_parent_m1 * y[0];
-#&gt;  18: f[1] = + k_parent_m1 * y[0] - k_m1_sink * y[1];
+#&gt;  17: f[0] = - k_parent * y[0];
+#&gt;  18: f[1] = + f_parent_to_m1 * k_parent * y[0] - k_m1 * y[1];
 #&gt;  19: }</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
 <span class='co'># If we have several parallel metabolites</span>
 <span class='co'># (compare tests/testthat/test_synthetic_data_for_UBA_2014.R)</span>

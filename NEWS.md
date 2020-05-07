@@ -2,6 +2,8 @@
 
 - Support SFORB with formation fractions
 
+- 'mkinmod': Make 'use_of_ff' = "max" the default
+
 # mkin 0.9.49.11 (2020-04-20)
 
 - Increase a test tolerance to make it pass on all CRAN check machines

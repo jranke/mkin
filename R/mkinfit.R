@@ -269,7 +269,7 @@ mkinfit <- function(mkinmod, observed,
     if (mkinmod[[1]] %in% parent_models_available) {
       speclist <- list(list(type = mkinmod, sink = TRUE))
       names(speclist) <- presumed_parent_name
-      mkinmod <- mkinmod(speclist = speclist)
+      mkinmod <- mkinmod(speclist = speclist, use_of_ff = "min")
     } else {
       stop("Argument mkinmod must be of class mkinmod or a string containing one of\n  ",
            paste(parent_models_available, collapse = ", "))

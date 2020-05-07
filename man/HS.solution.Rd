@@ -7,9 +7,20 @@
 HS.solution(t, parent_0, k1, k2, tb)
 }
 \arguments{
+\item{t}{Time.}
+
+\item{parent_0}{Starting value for the response variable at time zero.}
+
+\item{k1}{First kinetic constant.}
+
+\item{k2}{Second kinetic constant.}
+
 \item{tb}{Break point. Before this time, exponential decline according to
 \code{k1} is calculated, after this time, exponential decline proceeds
 according to \code{k2}.}
+}
+\value{
+The value of the response variable at time \code{t}.
 }
 \description{
 Function describing two exponential decline functions with a break point
@@ -19,6 +30,18 @@ between them.
 
   plot(function(x) HS.solution(x, 100, 2, 0.3, 0.5), 0, 2, ylim=c(0,100))
 
+}
+\references{
+FOCUS (2006) \dQuote{Guidance Document on Estimating Persistence
+  and Degradation Kinetics from Environmental Fate Studies on Pesticides in
+  EU Registration} Report of the FOCUS Work Group on Degradation Kinetics,
+  EC Document Reference Sanco/10058/2005 version 2.0, 434 pp,
+  \url{http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics}
+FOCUS (2014) \dQuote{Generic guidance for Estimating Persistence
+  and Degradation Kinetics from Environmental Fate Studies on Pesticides in
+  EU Registration} Report of the FOCUS Work Group on Degradation Kinetics,
+  Version 1.1, 18 December 2014
+  \url{http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics}
 }
 \seealso{
 Other parent solutions: 
