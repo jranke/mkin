@@ -8,8 +8,16 @@
 #' SFO_SFO <- mkinmod(
 #'   parent = mkinsub("SFO", "m1"),
 #'   m1 = mkinsub("SFO"))
-#' fit <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE)
-
+#' FOCUS_D <- subset(FOCUS_2006_D, value != 0) # to avoid warnings
+#' fit_1 <- mkinfit(SFO_SFO, FOCUS_D, solution_type = "analytical", quiet = TRUE)
+#' fit_2 <- mkinfit(SFO_SFO, FOCUS_D, solution_type = "deSolve", quiet = TRUE)
+#' \dontrun{
+#' if (require(rbenchmark))
+#'   benchmark(
+#'     analytical = mkinfit(SFO_SFO, FOCUS_D, solution_type = "analytical", quiet = TRUE),
+#'     deSolve = mkinfit(SFO_SFO, FOCUS_D, solution_type = "deSolve", quiet = TRUE),
+#'     replications = 1)
+#' }
 create_deg_func <- function(spec, use_of_ff = c("min", "max")) {
 
   use_of_ff <- match.arg(use_of_ff)
@@ -21,10 +29,13 @@ create_deg_func <- function(spec, use_of_ff = c("min", "max")) {
   n <- character(0)
 
   parent <- obs_vars[1]
+  parent_type <- spec[[1]]$type
 
-  n[1] <- paste0(parent, " = ", spec[[1]]$type, ".solution(outtimes, odeini['", parent, 
-    if (spec[[1]]$type == "SFORB") "_free", "'], ",
-    switch(spec[[1]]$type,
+  supported <- TRUE # This may be modified below
+
+  n[1] <- paste0(parent, " = ", parent_type, ".solution(outtimes, odeini['", parent,
+    if (parent_type == "SFORB") "_free", "'], ",
+    switch(parent_type,
       SFO = paste0("k_", parent, if (min_ff) "_sink" else "", ")"),
       FOMC = "alpha, beta)",
       IORE = paste0("k__iore_", parent, if (min_ff) "_sink" else "", ", N_", parent, ")"),
@@ -35,20 +46,42 @@ create_deg_func <- function(spec, use_of_ff = c("min", "max")) {
     )
   )
 
-  all_n <- paste(n, collapse = ",\n")
+  if (length(obs_vars) >= 2) {
+    supported <- FALSE # except for the following cases
+    n1 <- obs_vars[1]
+    n2 <- obs_vars[2]
+    n10 <- paste0("odeini['", parent, "']")
+    n20 <- paste0("odeini['", n2, "']")
 
-  f_body <- paste0("{\n",
-    "out <- with(as.list(odeparms), {\n",
-    "data.frame(\n",
-      "time = outtimes,\n",
-      all_n, "\n",
-    ")})\n",
-    "return(out)\n}\n"
-  )
+    if (all(use_of_ff == "max", spec[[1]]$sink == TRUE, length(obs_vars) == 2, spec[[2]]$type == "SFO")) {
+      supported <- TRUE
+      k1 <- paste0("k_", n1)
+      k2 <- paste0("k_", n2)
+      f12 <- paste0("f_", n1, "_to_", n2)
+      if (parent_type == "SFO") {
+        n[2] <- paste0(n2, " = (((", k2, "-", k1, ")*", n20, "-", f12, "*", k1, "*", n10, ")*exp(-", k2, "*outtimes)+",
+          f12, "*", k1, "*", n10, "*exp(-", k1, "*outtimes))/(", k2, "-", k1, ")")
+      }
+    }
+  }
 
-  deg_func <- function(odeini, odeparms, outtimes) {}
+  if (supported) {
+    all_n <- paste(n, collapse = ",\n")
 
-  body(deg_func) <- parse(text = f_body)
+    f_body <- paste0("{\n",
+      "out <- with(as.list(odeparms), {\n",
+      "data.frame(\n",
+        "time = outtimes,\n",
+        all_n, ")\n",
+      "})\n",
+      "return(out)\n}\n"
+    )
 
-  return(deg_func)
+    deg_func <- function(odeini, odeparms, outtimes) {}
+
+    body(deg_func) <- parse(text = f_body)
+    return(deg_func)
+  } else {
+    return(NULL)
+  }
 }

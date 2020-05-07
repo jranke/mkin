@@ -459,8 +459,8 @@ mkinfit <- function(mkinmod, observed,
   # Prefer deSolve over eigen if a compiled model is present and use_compiled
   # is not set to FALSE
   solution_type = match.arg(solution_type)
-  if (solution_type == "analytical" && length(mkinmod$spec) > 1)
-     stop("Analytical solution not implemented for models with metabolites.")
+  if (solution_type == "analytical" && !is.function(mkinmod$deg_func))
+     stop("Analytical solution not implemented for this model.")
   if (solution_type == "eigen" && !is.matrix(mkinmod$coefmat))
      stop("Eigenvalue based solution not possible, coefficient matrix not present.")
   if (solution_type == "auto") {
