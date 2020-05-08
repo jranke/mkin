@@ -22,5 +22,14 @@ Create degradation functions for known analytical solutions
 SFO_SFO <- mkinmod(
   parent = mkinsub("SFO", "m1"),
   m1 = mkinsub("SFO"))
-fit <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE)
+FOCUS_D <- subset(FOCUS_2006_D, value != 0) # to avoid warnings
+fit_1 <- mkinfit(SFO_SFO, FOCUS_D, solution_type = "analytical", quiet = TRUE)
+fit_2 <- mkinfit(SFO_SFO, FOCUS_D, solution_type = "deSolve", quiet = TRUE)
+\dontrun{
+if (require(rbenchmark))
+  benchmark(
+    analytical = mkinfit(SFO_SFO, FOCUS_D, solution_type = "analytical", quiet = TRUE),
+    deSolve = mkinfit(SFO_SFO, FOCUS_D, solution_type = "deSolve", quiet = TRUE),
+    replications = 1)
+}
 }

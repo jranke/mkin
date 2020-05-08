@@ -40,7 +40,8 @@ fits <- mmkin(models,
 
 # One metabolite
 SFO_SFO <- mkinmod(parent = list(type = "SFO", to = "m1"),
-                   m1 = list(type = "SFO"), quiet = TRUE)
+                   m1 = list(type = "SFO"),
+                   use_of_ff = "min", quiet = TRUE)
 SFO_SFO.ff <- mkinmod(parent = list(type = "SFO", to = "m1"),
                       m1 = list(type = "SFO"),
                       use_of_ff = "max", quiet = TRUE)

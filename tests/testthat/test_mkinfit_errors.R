@@ -25,7 +25,7 @@ test_that("mkinfit stops to prevent and/or explain user errors", {
                        parms.ini = c(f_parent_to_m1 = 1.1), quiet = TRUE),
    "sum up to more than 1")
 
-  expect_error(mkinfit(SFO_SFO.ff, FOCUS_2006_D, solution_type = "analytical"), "not implemented")
+  expect_error(mkinfit(SFO_SFO, FOCUS_2006_D, solution_type = "analytical"), "not implemented")
 
   expect_error(mkinfit("FOMC", FOCUS_2006_A, solution_type = "eigen"), "coefficient matrix not present")
 })
