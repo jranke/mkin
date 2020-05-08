@@ -587,6 +587,9 @@ mkinfit <- function(mkinmod, observed,
 
     out_long <- mkin_wide_to_long(out, time = "time")
 
+    # Surprisingly, the next line is the one taking the most time for one, two
+    # or three observed variables if we use compiled ODE models
+    # as evidenced by use of github:hadley/lineprof
     cost_data <- merge(observed[c("name", "time", "value")], out_long,
                          by = c("name", "time"), suffixes = c(".observed", ".predicted"))
 
