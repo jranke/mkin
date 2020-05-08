@@ -594,22 +594,19 @@ mkinfit <- function(mkinmod, observed,
 
     out_long <- mkin_wide_to_long(out, time = "time")
 
+    cost_data <- merge(observed[c("name", "time", "value")], out_long,
+                         by = c("name", "time"), suffixes = c(".observed", ".predicted"))
+
     if (err_mod == "const") {
-      observed$std <- if (OLS) NA else cost_errparms["sigma"]
+      cost_data$std <- if (OLS) NA else cost_errparms["sigma"]
     }
     if (err_mod == "obs") {
-      std_names <- paste0("sigma_", observed$name)
-      observed$std <- cost_errparms[std_names]
+      std_names <- paste0("sigma_", cost_data$name)
+      cost_data$std <- cost_errparms[std_names]
     }
     if (err_mod == "tc") {
-      tmp <- merge(observed, out_long, by = c("time", "name"))
-      tmp$name <- ordered(tmp$name, levels = obs_vars)
-      tmp <- tmp[order(tmp$name, tmp$time), ]
-      observed$std <- sqrt(cost_errparms["sigma_low"]^2 + tmp$value.y^2 * cost_errparms["rsd_high"]^2)
+      cost_data$std <- sqrt(cost_errparms["sigma_low"]^2 + cost_data$value.predicted^2 * cost_errparms["rsd_high"]^2)
     }
-
-    cost_data <- merge(observed[c("name", "time", "value", "std")], out_long,
-                         by = c("name", "time"), suffixes = c(".observed", ".predicted"))
 
     if (OLS) {
       # Cost is the sum of squared residuals
