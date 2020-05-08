@@ -101,10 +101,6 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #'   is 1e-8, lower than in \code{\link{lsoda}}.
 #' @param rtol Absolute error tolerance, passed to \code{\link{ode}}. Default
 #'   is 1e-10, much lower than in \code{\link{lsoda}}.
-#' @param n.outtimes The length of the dataseries that is produced by the model
-#'   prediction function \code{\link{mkinpredict}}. This impacts the accuracy
-#'   of the numerical solver if that is used (see \code{solution_type}
-#'   argument.
 #' @param error_model If the error model is "const", a constant standard
 #'   deviation is assumed.
 #'
@@ -248,7 +244,7 @@ mkinfit <- function(mkinmod, observed,
   transform_rates = TRUE,
   transform_fractions = TRUE,
   quiet = FALSE,
-  atol = 1e-8, rtol = 1e-10, n.outtimes = 10,
+  atol = 1e-8, rtol = 1e-10,
   error_model = c("const", "obs", "tc"),
   error_model_algorithm = c("auto", "d_3", "direct", "twostep", "threestep", "fourstep", "IRLS", "OLS"),
   reweight.tol = 1e-8, reweight.max.iter = 10,
@@ -523,11 +519,8 @@ mkinfit <- function(mkinmod, observed,
     errparms_optim <- errparms
   }
 
-  # Define outtimes for model solution.
-  # Include time points at which observed data are available
-  outtimes = sort(unique(c(observed$time, seq(min(observed$time),
-                                              max(observed$time),
-                                              length.out = n.outtimes))))
+  # Unique outtimes for model solution.
+  outtimes = sort(unique(observed$time))
 
   # Define the objective function for optimisation, including (back)transformations
   cost_function <- function(P, trans = TRUE, OLS = FALSE, fixed_degparms = FALSE, fixed_errparms = FALSE, update_data = TRUE, ...)
