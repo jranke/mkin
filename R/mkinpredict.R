@@ -92,10 +92,15 @@
 #'       c(parent = 100, m1 = 0), seq(0, 20, by = 0.1),
 #'       solution_type = "analytical", use_compiled = FALSE)[201,])
 #' }
+#'     analytical = mkinpredict(SFO_SFO,
+#'       c(k_parent = 0.15, f_parent_to_m1 = 0.5, k_m1 = 0.01),
+#'       c(parent = 100, m1 = 0), seq(0, 20, by = 0.1),
+#'       solution_type = "analytical", use_compiled = FALSE)[201,]
 #'
 #' \dontrun{
 #'   # Predict from a fitted model
 #'   f <- mkinfit(SFO_SFO, FOCUS_2006_C, quiet = TRUE)
+#'   f <- mkinfit(SFO_SFO, FOCUS_2006_C, quiet = TRUE, solution_type = "analytical")
 #'   head(mkinpredict(f))
 #' }
 #'
@@ -131,8 +136,16 @@ mkinpredict.mkinmod <- function(x,
   }
 
   if (solution_type == "analytical") {
-    out <- x$deg_func(odeini = odeini,
-      odeparms = odeparms, outtimes = outtimes)
+    # This is clumsy, as we wanted fast analytical predictions for mkinfit
+    out <- data.frame(time = outtimes)
+    obs_vars <- names(x$spec)
+    pseudo_observed <-
+      data.frame(name = rep(obs_vars, each = length(outtimes)),
+      time = rep(outtimes, length(obs_vars)))
+    pseudo_observed$predicted <- x$deg_func(pseudo_observed, odeini, odeparms)
+    for (obs_var in obs_vars) {
+      out[obs_var] <- pseudo_observed[pseudo_observed$name == obs_var, "predicted"]
+    }
   }
 
   if (solution_type == "eigen") {

@@ -21,19 +21,17 @@
 create_deg_func <- function(spec, use_of_ff = c("min", "max")) {
 
   use_of_ff <- match.arg(use_of_ff)
-
   min_ff <- use_of_ff == "min"
-
   obs_vars <- names(spec)
-
-  n <- character(0)
 
   parent <- obs_vars[1]
   parent_type <- spec[[1]]$type
 
   supported <- TRUE # This may be modified below
 
-  n[1] <- paste0(parent, " = ", parent_type, ".solution(outtimes, odeini['", parent,
+  predicted_text <- character(0)
+
+  predicted_text[parent] <- paste0(parent_type, ".solution(t, odeini['", parent,
     if (parent_type == "SFORB") "_free", "'], ",
     switch(parent_type,
       SFO = paste0("k_", parent, if (min_ff) "_sink" else "", ")"),
@@ -59,25 +57,27 @@ create_deg_func <- function(spec, use_of_ff = c("min", "max")) {
       k2 <- paste0("k_", n2)
       f12 <- paste0("f_", n1, "_to_", n2)
       if (parent_type == "SFO") {
-        n[2] <- paste0(n2, " = (((", k2, "-", k1, ")*", n20, "-", f12, "*", k1, "*", n10, ")*exp(-", k2, "*outtimes)+",
-          f12, "*", k1, "*", n10, "*exp(-", k1, "*outtimes))/(", k2, "-", k1, ")")
+        predicted_text[n2] <- paste0(
+          "(((", k2, "-", k1, ")*", n20, "-", f12, "*", k1, "*", n10, ")*exp(-", k2, "*t)+",
+          f12, "*", k1, "*", n10, "*exp(-", k1, "*t))/(", k2, "-", k1, ")")
       }
     }
   }
 
   if (supported) {
-    all_n <- paste(n, collapse = ",\n")
+    deg_func <- function(observed, odeini, odeparms) {}
 
     f_body <- paste0("{\n",
-      "out <- with(as.list(odeparms), {\n",
-      "data.frame(\n",
-        "time = outtimes,\n",
-        all_n, ")\n",
+      "predicted <- numeric(0)\n",
+      "with(as.list(odeparms), {\n")
+    for (obs_var in obs_vars) {
+      f_body <- paste0(f_body,
+      "t <- observed[observed$name == '", obs_var, "', 'time']\n",
+      "predicted <<- c(predicted, ", predicted_text[obs_var], ")\n")
+    }
+    f_body <- paste0(f_body,
       "})\n",
-      "return(out)\n}\n"
-    )
-
-    deg_func <- function(odeini, odeparms, outtimes) {}
+      "return(predicted)\n}\n")
 
     body(deg_func) <- parse(text = f_body)
     return(deg_func)

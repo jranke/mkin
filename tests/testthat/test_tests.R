@@ -49,7 +49,7 @@ test_that("Updating fitted models works", {
     error_model = "tc", quiet = TRUE)
 
   f_soil_1_nw <- update(f_soil_1_tc, error_model = "const")
-  f_soil_1_nw_A2 <- update(f_soil_1_nw, fixed_parms = c(k_A2 = 0))
+  f_soil_1_nw_A2 <- suppressWarnings(update(f_soil_1_nw, fixed_parms = c(k_A2 = 0)))
   test_nw_tc <- lrtest(f_soil_1_nw, f_soil_1_tc)
   expect_equivalent(test_nw_tc[["2", "Pr(>Chisq)"]], 2.113e-6)
   test_nw_A2 <- lrtest(f_soil_1_nw, f_soil_1_nw_A2)

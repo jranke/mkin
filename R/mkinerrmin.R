@@ -1,12 +1,12 @@
 if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "value_mean"))
 
 #' Calculate the minimum error to assume in order to pass the variance test
-#' 
+#'
 #' This function finds the smallest relative error still resulting in passing
 #' the chi-squared test as defined in the FOCUS kinetics report from 2006.
-#' 
+#'
 #' This function is used internally by \code{\link{summary.mkinfit}}.
-#' 
+#'
 #' @param fit an object of class \code{\link{mkinfit}}.
 #' @param alpha The confidence level chosen for the chi-squared test.
 #' @importFrom stats qchisq aggregate
@@ -25,43 +25,41 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "value_mean"))
 #' \url{http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics}
 #' @keywords manip
 #' @examples
-#' 
+#'
 #' SFO_SFO = mkinmod(parent = mkinsub("SFO", to = "m1"),
 #'                   m1 = mkinsub("SFO"),
 #'                   use_of_ff = "max")
-#' 
+#'
 #' fit_FOCUS_D = mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE)
 #' round(mkinerrmin(fit_FOCUS_D), 4)
 #' \dontrun{
 #'   fit_FOCUS_E = mkinfit(SFO_SFO, FOCUS_2006_E, quiet = TRUE)
 #'   round(mkinerrmin(fit_FOCUS_E), 4)
 #' }
-#' 
+#'
 #' @export
 mkinerrmin <- function(fit, alpha = 0.05)
 {
   parms.optim <- fit$par
 
   kinerrmin <- function(errdata, n.parms) {
-    means.mean <- mean(errdata$value_mean, na.rm = TRUE)
-    df = length(errdata$value_mean) - n.parms
+    means.mean <- mean(errdata$observed, na.rm = TRUE)
+    df = nrow(errdata) - n.parms
 
     err.min <- sqrt((1 / qchisq(1 - alpha, df)) *
-               sum((errdata$value_mean - errdata$value_pred)^2)/(means.mean^2))
+               sum((errdata$observed - errdata$predicted)^2)/(means.mean^2))
 
     return(list(err.min = err.min, n.optim = n.parms, df = df))
   }
 
-  means <- aggregate(value ~ time + name, data = fit$observed, mean, na.rm=TRUE)
-  errdata <- merge(means, fit$predicted, by = c("time", "name"),
-    suffixes = c("_mean", "_pred"))
-  errdata <- errdata[order(errdata$time, errdata$name), ]
+  errdata <- aggregate(cbind(observed, predicted) ~ time + variable, data = fit$data, mean, na.rm=TRUE)
+  errdata <- errdata[order(errdata$time, errdata$variable), ]
 
   # Remove values at time zero for variables whose value for state.ini is fixed,
   # as these will not have any effect in the optimization and should therefore not
   # be counted as degrees of freedom.
   fixed_initials = gsub("_0$", "", rownames(subset(fit$fixed, type = "state")))
-  errdata <- subset(errdata, !(time == 0 & name %in% fixed_initials))
+  errdata <- subset(errdata, !(time == 0 & variable %in% fixed_initials))
 
   n.optim.overall <- length(parms.optim) - length(fit$errparms)
 
@@ -73,7 +71,7 @@ mkinerrmin <- function(fit, alpha = 0.05)
   # The degrees of freedom are counted according to FOCUS kinetics (2011, p. 164)
   for (obs_var in fit$obs_vars)
   {
-    errdata.var <- subset(errdata, name == obs_var)
+    errdata.var <- subset(errdata, variable == obs_var)
 
     # Check if initial value is optimised
     n.initials.optim <- length(grep(paste(obs_var, ".*", "_0", sep=""), names(parms.optim)))

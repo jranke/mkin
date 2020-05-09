@@ -288,6 +288,10 @@ mkinfit <- function(mkinmod, observed,
     observed <- subset(observed, value != 0)
   }
 
+  # Sort observed values for efficient analytical predictions
+  observed$name <- ordered(observed$name, levels = obs_vars)
+  observed <- observed[order(observed$name, observed$time), ]
+
   # Obtain data for decline from maximum mean value if requested
   if (from_max_mean) {
     # This is only used for simple decline models
@@ -520,7 +524,7 @@ mkinfit <- function(mkinmod, observed,
   }
 
   # Unique outtimes for model solution.
-  outtimes = sort(unique(observed$time))
+  outtimes <- sort(unique(observed$time))
 
   # Define the objective function for optimisation, including (back)transformations
   cost_function <- function(P, trans = TRUE, OLS = FALSE, fixed_degparms = FALSE, fixed_errparms = FALSE, update_data = TRUE, ...)
@@ -578,47 +582,51 @@ mkinfit <- function(mkinmod, observed,
     }
 
     # Solve the system with current parameter values
-    out <- mkinpredict(mkinmod, parms,
-                       odeini, outtimes,
-                       solution_type = solution_type,
-                       use_compiled = use_compiled,
-                       method.ode = method.ode,
-                       atol = atol, rtol = rtol, ...)
+    if (solution_type == "analytical") {
+      observed$predicted <- mkinmod$deg_func(observed, odeini, parms)
+    } else {
+      out <- mkinpredict(mkinmod, parms,
+                         odeini, outtimes,
+                         solution_type = solution_type,
+                         use_compiled = use_compiled,
+                         method.ode = method.ode,
+                         atol = atol, rtol = rtol, ...)
 
-    out_long <- mkin_wide_to_long(out, time = "time")
+      out_long <- mkin_wide_to_long(out, time = "time")
 
-    # Surprisingly, the next line is the one taking the most time for one, two
-    # or three observed variables if we use compiled ODE models
-    # as evidenced by use of github:hadley/lineprof
-    cost_data <- merge(observed[c("name", "time", "value")], out_long,
-                         by = c("name", "time"), suffixes = c(".observed", ".predicted"))
+      out_merged <- merge(observed[c("name", "time")], out_long)
+      out_merged$name <- ordered(out_merged$name, levels = obs_vars)
+      out_merged <- out_merged[order(out_merged$name, out_merged$time), ]
+      observed$predicted <- out_merged$value
+    }
 
+    # Define standard deviation for each observation
     if (err_mod == "const") {
-      cost_data$std <- if (OLS) NA else cost_errparms["sigma"]
+      observed$std <- if (OLS) NA else cost_errparms["sigma"]
     }
     if (err_mod == "obs") {
-      std_names <- paste0("sigma_", cost_data$name)
-      cost_data$std <- cost_errparms[std_names]
+      std_names <- paste0("sigma_", observed$name)
+      observed$std <- cost_errparms[std_names]
     }
     if (err_mod == "tc") {
-      cost_data$std <- sqrt(cost_errparms["sigma_low"]^2 + cost_data$value.predicted^2 * cost_errparms["rsd_high"]^2)
+      observed$std <- sqrt(cost_errparms["sigma_low"]^2 + observed$predicted^2 * cost_errparms["rsd_high"]^2)
     }
 
+    # Calculate model cost
     if (OLS) {
       # Cost is the sum of squared residuals
-      cost <- with(cost_data, sum((value.observed - value.predicted)^2))
+      cost <- with(observed, sum((value - predicted)^2))
     } else {
       # Cost is the negative log-likelihood
-      cost <- - with(cost_data,
-        sum(dnorm(x = value.observed, mean = value.predicted, sd = std, log = TRUE)))
+      cost <- - with(observed,
+        sum(dnorm(x = value, mean = predicted, sd = std, log = TRUE)))
     }
 
     # We update the current cost and data during the optimisation, not
     # during hessian calculations
     if (update_data) {
 
-      assign("out_predicted", out_long, inherits = TRUE)
-      assign("current_data", cost_data, inherits = TRUE)
+      assign("current_data", observed, inherits = TRUE)
 
       if (cost < cost.current) {
         assign("cost.current", cost, inherits = TRUE)
@@ -718,7 +726,7 @@ mkinfit <- function(mkinmod, observed,
       degparms <- fit$par
 
       # Get the maximum likelihood estimate for sigma at the optimum parameter values
-      current_data$residual <- current_data$value.observed - current_data$value.predicted
+      current_data$residual <- current_data$value - current_data$predicted
       sigma_mle <- sqrt(sum(current_data$residual^2)/nrow(current_data))
 
       # Use that estimate for the constant variance, or as first guess if err_mod = "obs"
@@ -855,11 +863,7 @@ mkinfit <- function(mkinmod, observed,
   # We also need the model and a model name for summary and plotting
   fit$mkinmod <- mkinmod
   fit$mkinmod$name <- mkinmod_name
-
-  # We need data and predictions for summary and plotting
-  fit$observed <- observed
   fit$obs_vars <- obs_vars
-  fit$predicted <- out_predicted
 
   # Residual sum of squares as a function of the fitted parameters
   fit$rss <- function(P) cost_function(P, OLS = TRUE, update_data = FALSE)
@@ -886,15 +890,10 @@ mkinfit <- function(mkinmod, observed,
   fit$fixed$type = c(rep("state", length(state.ini.fixed)),
                      rep("deparm", length(parms.fixed)))
 
-  # Sort observed, predicted and residuals
-  current_data$name <- ordered(current_data$name, levels = obs_vars)
-
-  ordered_data <- current_data[order(current_data$name, current_data$time), ]
-
-  fit$data <- data.frame(time = ordered_data$time,
-                         variable = ordered_data$name,
-                         observed = ordered_data$value.observed,
-                         predicted = ordered_data$value.predicted)
+  fit$data <- data.frame(time = current_data$time,
+                         variable = current_data$name,
+                         observed = current_data$value,
+                         predicted = current_data$predicted)
 
   fit$data$residual <- fit$data$observed - fit$data$predicted
 

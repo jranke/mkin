@@ -144,6 +144,7 @@ latex is being used for the formatting of the chi2 error level, if
 \dontrun{
 SFO_SFO <- mkinmod(parent = mkinsub("SFO", "m1", full = "Parent"),
                    m1 = mkinsub("SFO", full = "Metabolite M1" ))
+fit <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE)
 fit <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE, error_model = "tc")
 plot(fit)
 plot_res(fit)

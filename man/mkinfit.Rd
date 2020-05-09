@@ -26,7 +26,6 @@ mkinfit(
   quiet = FALSE,
   atol = 1e-08,
   rtol = 1e-10,
-  n.outtimes = 10,
   error_model = c("const", "obs", "tc"),
   error_model_algorithm = c("auto", "d_3", "direct", "twostep", "threestep",
     "fourstep", "IRLS", "OLS"),
@@ -140,11 +139,6 @@ is 1e-8, lower than in \code{\link{lsoda}}.}
 
 \item{rtol}{Absolute error tolerance, passed to \code{\link{ode}}. Default
 is 1e-10, much lower than in \code{\link{lsoda}}.}
-
-\item{n.outtimes}{The length of the dataseries that is produced by the model
-prediction function \code{\link{mkinpredict}}. This impacts the accuracy
-of the numerical solver if that is used (see \code{solution_type}
-argument.}
 
 \item{error_model}{If the error model is "const", a constant standard
   deviation is assumed.

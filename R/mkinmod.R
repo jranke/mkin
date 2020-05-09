@@ -70,7 +70,7 @@
 #' @examples
 #'
 #' # Specify the SFO model (this is not needed any more, as we can now mkinfit("SFO", ...)
-#' SFO <- mkinmod(parent = list(type = "SFO"))
+#' SFO <- mkinmod(parent = mkinsub("SFO"))
 #'
 #' # One parent compound, one metabolite, both single first order
 #' SFO_SFO <- mkinmod(

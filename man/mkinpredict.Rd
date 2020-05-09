@@ -91,7 +91,7 @@ FALSE).}
 solver is used.}
 }
 \value{
-A matrix in the same format as the output of \code{\link{ode}}.
+A data frame with the solution in wide format
 }
 \description{
 This function produces a time series for all the observed variables in a
@@ -131,30 +131,35 @@ mkinpredict(SFO, c(k_degradinol = 0.3), c(degradinol = 100),
 
 # Check compiled model versions - they are faster than the eigenvalue based solutions!
 SFO_SFO = mkinmod(parent = list(type = "SFO", to = "m1"),
-                  m1 = list(type = "SFO"), use_of_ff = "min")
+                  m1 = list(type = "SFO"), use_of_ff = "max")
 if(require(rbenchmark)) {
-  benchmark(
-    eigen = mkinpredict(SFO_SFO, c(k_parent_m1 = 0.05, k_parent_sink = 0.1, k_m1_sink = 0.01),
+  benchmark(replications = 10, order = "relative", columns = c("test", "relative", "elapsed"),
+    eigen = mkinpredict(SFO_SFO,
+      c(k_parent = 0.15, f_parent_to_m1 = 0.5, k_m1 = 0.01),
       c(parent = 100, m1 = 0), seq(0, 20, by = 0.1),
       solution_type = "eigen")[201,],
-    deSolve_compiled = mkinpredict(SFO_SFO, 
-      c(k_parent_m1 = 0.05, k_parent_sink = 0.1, k_m1_sink = 0.01),
+    deSolve_compiled = mkinpredict(SFO_SFO,
+      c(k_parent = 0.15, f_parent_to_m1 = 0.5, k_m1 = 0.01),
       c(parent = 100, m1 = 0), seq(0, 20, by = 0.1),
       solution_type = "deSolve")[201,],
-    deSolve = mkinpredict(SFO_SFO, c(k_parent_m1 = 0.05, k_parent_sink = 0.1, k_m1_sink = 0.01),
-     c(parent = 100, m1 = 0), seq(0, 20, by = 0.1),
-     solution_type = "deSolve", use_compiled = FALSE)[201,],
-    replications = 10)
+    deSolve = mkinpredict(SFO_SFO,
+      c(k_parent = 0.15, f_parent_to_m1 = 0.5, k_m1 = 0.01),
+      c(parent = 100, m1 = 0), seq(0, 20, by = 0.1),
+      solution_type = "deSolve", use_compiled = FALSE)[201,],
+    analytical = mkinpredict(SFO_SFO,
+      c(k_parent = 0.15, f_parent_to_m1 = 0.5, k_m1 = 0.01),
+      c(parent = 100, m1 = 0), seq(0, 20, by = 0.1),
+      solution_type = "analytical", use_compiled = FALSE)[201,])
 }
-
-# Since mkin 0.9.49.11 we also have analytical solutions for some models, including SFO-SFO
-#    deSolve = mkinpredict(SFO_SFO, c(k_parent_m1 = 0.05, k_parent_sink = 0.1, k_m1_sink = 0.01),
-#     c(parent = 100, m1 = 0), seq(0, 20, by = 0.1),
-#     solution_type = "analytical", use_compiled = FALSE)[201,],
+    analytical = mkinpredict(SFO_SFO,
+      c(k_parent = 0.15, f_parent_to_m1 = 0.5, k_m1 = 0.01),
+      c(parent = 100, m1 = 0), seq(0, 20, by = 0.1),
+      solution_type = "analytical", use_compiled = FALSE)[201,]
 
 \dontrun{
   # Predict from a fitted model
   f <- mkinfit(SFO_SFO, FOCUS_2006_C, quiet = TRUE)
+  f <- mkinfit(SFO_SFO, FOCUS_2006_C, quiet = TRUE, solution_type = "analytical")
   head(mkinpredict(f))
 }
 
