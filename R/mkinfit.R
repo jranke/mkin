@@ -464,7 +464,7 @@ mkinfit <- function(mkinmod, observed,
   if (solution_type == "eigen" && !is.matrix(mkinmod$coefmat))
      stop("Eigenvalue based solution not possible, coefficient matrix not present.")
   if (solution_type == "auto") {
-    if (length(mkinmod$spec) == 1) {
+    if (length(mkinmod$spec) == 1 || is.function(mkinmod$deg_func)) {
       solution_type = "analytical"
     } else {
       if (!is.null(mkinmod$cf) & use_compiled[1] != FALSE) {
@@ -694,7 +694,7 @@ mkinfit <- function(mkinmod, observed,
   # Show parameter names if tracing is requested
   if(trace_parms) cat(names_optim, "\n")
 
-  # browser()
+  #browser()
 
   # Do the fit and take the time until the hessians are calculated
   fit_time <- system.time({

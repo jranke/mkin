@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 <meta name="author" content="Johannes Ranke" />
 
-<meta name="date" content="2019-05-02" />
+<meta name="date" content="2020-05-10" />
 
 <title>Benchmark timings for mkin on various systems</title>
 
@@ -69,8 +69,6 @@ overflow: auto;
 margin-left: 2%;
 position: fixed;
 border: 1px solid #ccc;
-webkit-border-radius: 6px;
-moz-border-radius: 6px;
 border-radius: 6px;
 }
 
@@ -98,9 +96,14 @@ font-size: 12px;
 .tocify-subheader .tocify-subheader {
 text-indent: 30px;
 }
-
 .tocify-subheader .tocify-subheader .tocify-subheader {
 text-indent: 40px;
+}
+.tocify-subheader .tocify-subheader .tocify-subheader .tocify-subheader {
+text-indent: 50px;
+}
+.tocify-subheader .tocify-subheader .tocify-subheader .tocify-subheader .tocify-subheader {
+text-indent: 60px;
 }
 
 .tocify .tocify-item > a, .tocify .nav-list .nav-header {
@@ -504,13 +507,13 @@ float: none;
 
           item.append($("<a/>", {
 
-            "text": self.text()
+            "html": self.html()
 
           }));
 
         } else {
 
-          item.text(self.text());
+          item.html(self.html());
 
         }
 
@@ -1285,7 +1288,7 @@ window.initializeCodeFolding = function(show) {
 
     // create a collapsable div to wrap the code in
     var div = $('<div class="collapse r-code-collapse"></div>');
-    if (show)
+    if (show || $(this)[0].classList.contains('fold-show'))
       div.addClass('in');
     var id = 'rcode-643E0F36' + currentIndex++;
     div.attr('id', id);
@@ -1401,7 +1404,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -1463,6 +1465,7 @@ summary {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -1475,56 +1478,12 @@ summary {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 <style type="text/css">
 .code-folding-btn { margin-bottom: 4px; }
 </style>
-<script>
-$(document).ready(function () {
-  window.initializeCodeFolding("show" === "show");
-});
-</script>
 
 
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -1538,6 +1497,12 @@ $(document).ready(function ()  {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -1573,8 +1538,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -1620,7 +1583,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Benchmark timings for mkin on various systems</h1>
 <h4 class="author">Johannes Ranke</h4>
-<h4 class="date">2019-05-02</h4>
+<h4 class="date">2020-05-10</h4>
 
 </div>
 
@@ -1640,11 +1603,16 @@ if (mkin_version &gt; &quot;0.9.48.1&quot;) {
 } else {
   mmkin_bench &lt;- function(models, datasets, error_model = NULL) mmkin(models, datasets, reweight.method = error_model, cores = 1, quiet = TRUE)
 }</code></pre>
-<pre class="r"><code># Parent only
-t1 &lt;- system.time(mmkin_bench(c(&quot;SFO&quot;, &quot;FOMC&quot;, &quot;DFOP&quot;, &quot;HS&quot;), list(FOCUS_2006_C, FOCUS_2006_D)))[[&quot;elapsed&quot;]]
-t2 &lt;- system.time(mmkin_bench(c(&quot;SFO&quot;, &quot;FOMC&quot;, &quot;DFOP&quot;, &quot;HS&quot;), list(FOCUS_2006_C, FOCUS_2006_D), error_model = &quot;tc&quot;))[[&quot;elapsed&quot;]]</code></pre>
+<pre class="r"><code>FOCUS_C &lt;- FOCUS_2006_C
+FOCUS_D &lt;- subset(FOCUS_2006_D, value != 0)
+# Parent only
+t1 &lt;- system.time(mmkin_bench(c(&quot;SFO&quot;, &quot;FOMC&quot;, &quot;DFOP&quot;, &quot;HS&quot;), list(FOCUS_C, FOCUS_D)))[[&quot;elapsed&quot;]]
+t2 &lt;- system.time(mmkin_bench(c(&quot;SFO&quot;, &quot;FOMC&quot;, &quot;DFOP&quot;, &quot;HS&quot;), list(FOCUS_C, FOCUS_D), error_model = &quot;tc&quot;))[[&quot;elapsed&quot;]]</code></pre>
 <pre><code>## Warning in mkinfit(models[[model_index]], datasets[[dataset_index]], ...): Optimisation did not converge:
-## false convergence (8)</code></pre>
+## iteration limit reached without convergence (10)
+
+## Warning in mkinfit(models[[model_index]], datasets[[dataset_index]], ...): Optimisation did not converge:
+## iteration limit reached without convergence (10)</code></pre>
 <pre class="r"><code># One metabolite
 SFO_SFO &lt;- mkinmod(
   parent = mkinsub(&quot;SFO&quot;, &quot;m1&quot;),
@@ -1658,25 +1626,11 @@ SFO_SFO &lt;- mkinmod(
   parent = mkinsub(&quot;FOMC&quot;, &quot;m1&quot;),
   m1 = mkinsub(&quot;SFO&quot;))</code></pre>
 <pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
-<pre class="r"><code>t3 &lt;- system.time(mmkin_bench(list(SFO_SFO, FOMC_SFO, DFOP_SFO), list(FOCUS_2006_D)))[[&quot;elapsed&quot;]]</code></pre>
-<pre><code>## Warning in mkinfit(models[[model_index]], datasets[[dataset_index]], ...):
-## Observations with value of zero were removed from the data</code></pre>
-<pre><code>## Warning in mkinfit(models[[model_index]], datasets[[dataset_index]], ...):
-## Observations with value of zero were removed from the data
+<pre class="r"><code>t3 &lt;- system.time(mmkin_bench(list(SFO_SFO, FOMC_SFO, DFOP_SFO), list(FOCUS_D)))[[&quot;elapsed&quot;]]
+t4 &lt;- system.time(mmkin_bench(list(SFO_SFO, FOMC_SFO, DFOP_SFO), list(FOCUS_D), error_model = &quot;tc&quot;))[[&quot;elapsed&quot;]]
+t5 &lt;- system.time(mmkin_bench(list(SFO_SFO, FOMC_SFO, DFOP_SFO), list(FOCUS_D), error_model = &quot;obs&quot;))[[&quot;elapsed&quot;]]
 
-## Warning in mkinfit(models[[model_index]], datasets[[dataset_index]], ...):
-## Observations with value of zero were removed from the data</code></pre>
-<pre class="r"><code>t4 &lt;- system.time(mmkin_bench(list(SFO_SFO, FOMC_SFO, DFOP_SFO), list(subset(FOCUS_2006_D, value != 0)), error_model = &quot;tc&quot;))[[&quot;elapsed&quot;]]
-t5 &lt;- system.time(mmkin_bench(list(SFO_SFO, FOMC_SFO, DFOP_SFO), list(FOCUS_2006_D), error_model = &quot;obs&quot;))[[&quot;elapsed&quot;]]</code></pre>
-<pre><code>## Warning in mkinfit(models[[model_index]], datasets[[dataset_index]], ...):
-## Observations with value of zero were removed from the data
-
-## Warning in mkinfit(models[[model_index]], datasets[[dataset_index]], ...):
-## Observations with value of zero were removed from the data
-
-## Warning in mkinfit(models[[model_index]], datasets[[dataset_index]], ...):
-## Observations with value of zero were removed from the data</code></pre>
-<pre class="r"><code># Two metabolites, synthetic data
+# Two metabolites, synthetic data
 m_synth_SFO_lin &lt;- mkinmod(parent = mkinsub(&quot;SFO&quot;, &quot;M1&quot;),
                            M1 = mkinsub(&quot;SFO&quot;, &quot;M2&quot;),
                            M2 = mkinsub(&quot;SFO&quot;),
@@ -1701,91 +1655,70 @@ t10 &lt;- system.time(mmkin_bench(list(m_synth_SFO_lin), list(SFO_lin_a), error_
 t11 &lt;- system.time(mmkin_bench(list(m_synth_DFOP_par), list(DFOP_par_c), error_model = &quot;obs&quot;))[&quot;elapsed&quot;]
 
 mkin_benchmarks[system_string, paste0(&quot;t&quot;, 1:11)] &lt;- c(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11)
-mkin_benchmarks</code></pre>
-<pre><code>##                                                                                                       CPU
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1 AMD Ryzen 7 1700 Eight-Core Processor
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1 AMD Ryzen 7 1700 Eight-Core Processor
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2 AMD Ryzen 7 1700 Eight-Core Processor
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3 AMD Ryzen 7 1700 Eight-Core Processor
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 AMD Ryzen 7 1700 Eight-Core Processor
-##                                                                        OS
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1 Linux
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1 Linux
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2 Linux
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3 Linux
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 Linux
-##                                                                         mkin
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1 0.9.48.1
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1 0.9.49.1
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2 0.9.49.2
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3 0.9.49.3
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 0.9.49.4
-##                                                                        t1
+mkin_benchmarks[, -c(1:3)]</code></pre>
+<pre><code>##                                                                        t1
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1 3.610
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1 8.184
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2 7.064
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3 7.296
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 6.023
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 5.936
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.50   1.658
 ##                                                                         t2
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1 11.019
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1 22.889
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2 12.558
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3 21.239
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 20.409
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 20.545
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.50    3.820
 ##                                                                        t3
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1 3.764
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1 4.649
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2 4.786
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3 4.510
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 4.283
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 4.446
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.50   3.424
 ##                                                                         t4
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1 14.347
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1 13.789
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2  8.461
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3 13.805
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 14.531
-##                                                                        t5
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1 9.495
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1 6.395
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2 5.675
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3 7.386
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 5.744
-##                                                                        t6
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1 2.623
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1 2.542
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2 2.723
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3 2.643
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 2.518
-##                                                                        t7
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1 4.587
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1 4.128
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2 4.478
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3 4.374
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 4.211
-##                                                                        t8
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1 7.525
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1 4.632
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2 4.862
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3  7.02
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 4.557
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 15.335
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.50   18.375
+##                                                                        t5    t6
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1 9.495 2.623
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1 6.395 2.542
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2 5.675 2.723
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3 7.386 2.643
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 6.002 2.635
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.50   7.480 2.188
+##                                                                        t7    t8
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1 4.587 7.525
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1 4.128 4.632
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2 4.478 4.862
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3 4.374  7.02
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 4.259 4.737
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.50    3.69  3.87
 ##                                                                         t9
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1 16.621
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1  8.171
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2  7.618
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3 11.124
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4  7.739
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4  7.763
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.50    8.872
 ##                                                                       t10
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1 8.576
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1 3.676
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2 3.579
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3 5.388
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 3.413
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4 3.427
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.50   6.257
 ##                                                                        t11
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1 31.267
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1  5.636
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2  5.574
 ## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3  7.365
-## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4  5.588</code></pre>
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4  5.626
+## Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.50    9.289</code></pre>
 <pre class="r"><code>save(mkin_benchmarks, file = &quot;~/git/mkin/vignettes/mkin_benchmarks.rda&quot;)</code></pre>
 </div>
 
@@ -1807,6 +1740,54 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

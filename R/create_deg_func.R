@@ -51,7 +51,8 @@ create_deg_func <- function(spec, use_of_ff = c("min", "max")) {
     n10 <- paste0("odeini['", parent, "']")
     n20 <- paste0("odeini['", n2, "']")
 
-    if (all(use_of_ff == "max", spec[[1]]$sink == TRUE, length(obs_vars) == 2, spec[[2]]$type == "SFO")) {
+    if (all(use_of_ff == "max", spec[[1]]$sink == TRUE, length(obs_vars) == 2,
+        spec[[1]]$type == "SFO", spec[[2]]$type == "SFO")) {
       supported <- TRUE
       k1 <- paste0("k_", n1)
       k2 <- paste0("k_", n2)
