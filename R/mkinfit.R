@@ -532,7 +532,7 @@ mkinfit <- function(mkinmod, observed,
     assign("calls", calls + 1, inherits = TRUE) # Increase the model solution counter
 
     # Trace parameter values if requested and if we are actually optimising
-    if(trace_parms & update_data) cat(P, "\n")
+    if(trace_parms & update_data) cat(format(P, width = 10, digits = 6), "\n")
 
     # Determine local parameter values for the cost estimation
     if (is.numeric(fixed_degparms)) {
@@ -688,7 +688,7 @@ mkinfit <- function(mkinmod, observed,
   current_data <- NA
 
   # Show parameter names if tracing is requested
-  if(trace_parms) cat(names_optim, "\n")
+  if(trace_parms) cat(format(names_optim, width = 10), "\n")
 
   #browser()
 
