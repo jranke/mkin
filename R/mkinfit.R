@@ -297,6 +297,7 @@ mkinfit <- function(mkinmod, observed,
     # This is only used for simple decline models
     if (length(obs_vars) > 1)
       stop("Decline from maximum is only implemented for models with a single observed variable")
+    observed$name <- as.character(observed$name)
 
     means <- aggregate(value ~ time, data = observed, mean, na.rm=TRUE)
     t_of_max <- means[which.max(means$value), "time"]

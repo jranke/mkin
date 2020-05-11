@@ -39,25 +39,27 @@ fits <- mmkin(models,
   quiet = TRUE, cores = n_cores)
 
 # One metabolite
-SFO_SFO <- mkinmod(parent = list(type = "SFO", to = "m1"),
-                   m1 = list(type = "SFO"),
+SFO_SFO <- mkinmod(parent = mkinsub("SFO", to = "m1"),
+                   m1 = mkinsub("SFO"),
                    use_of_ff = "min", quiet = TRUE)
-SFO_SFO.ff <- mkinmod(parent = list(type = "SFO", to = "m1"),
-                      m1 = list(type = "SFO"),
+SFO_SFO.ff <- mkinmod(parent = mkinsub("SFO", to = "m1"),
+                      m1 = mkinsub("SFO"),
                       use_of_ff = "max", quiet = TRUE)
 SFO_SFO.ff.nosink <- mkinmod(
   parent = mkinsub("SFO", "m1", sink = FALSE),
   m1 = mkinsub("SFO"), quiet = TRUE, use_of_ff = "max")
+FOMC_SFO <- mkinmod(parent = mkinsub("FOMC", to = "m1"),
+  m1 = mkinsub("SFO"), quiet = TRUE)
 
-f_sfo_sfo_desolve <- mkinfit(SFO_SFO,
-  subset(FOCUS_2006_D, value != 0),
+# Avoid warning when fitting a dataset where zero value is removed
+FOCUS_D <- subset(FOCUS_2006_D, value != 0)
+
+f_sfo_sfo_desolve <- mkinfit(SFO_SFO, FOCUS_D,
   solution_type = "deSolve", quiet = TRUE)
-f_sfo_sfo_eigen <- mkinfit(SFO_SFO,
-  subset(FOCUS_2006_D, value != 0),
+f_sfo_sfo_eigen <- mkinfit(SFO_SFO, FOCUS_D,
   solution_type = "eigen", quiet = TRUE)
 
-f_sfo_sfo.ff <- mkinfit(SFO_SFO.ff,
-  subset(FOCUS_2006_D, value != 0),
+f_sfo_sfo.ff <- mkinfit(SFO_SFO.ff, FOCUS_D,
   quiet = TRUE)
 
 SFO_lin_a <- synthetic_data_for_UBA_2014[[1]]$data
