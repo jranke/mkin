@@ -40,16 +40,19 @@ fits <- mmkin(models,
 
 # One metabolite
 SFO_SFO <- mkinmod(parent = mkinsub("SFO", to = "m1"),
-                   m1 = mkinsub("SFO"),
-                   use_of_ff = "min", quiet = TRUE)
+  m1 = mkinsub("SFO"),
+  use_of_ff = "min", quiet = TRUE)
 SFO_SFO.ff <- mkinmod(parent = mkinsub("SFO", to = "m1"),
-                      m1 = mkinsub("SFO"),
-                      use_of_ff = "max", quiet = TRUE)
+  m1 = mkinsub("SFO"),
+  use_of_ff = "max", quiet = TRUE)
 SFO_SFO.ff.nosink <- mkinmod(
   parent = mkinsub("SFO", "m1", sink = FALSE),
   m1 = mkinsub("SFO"), quiet = TRUE, use_of_ff = "max")
 FOMC_SFO <- mkinmod(parent = mkinsub("FOMC", to = "m1"),
   m1 = mkinsub("SFO"), quiet = TRUE)
+DFOP_SFO <- mkinmod(parent = mkinsub("DFOP", to = "m1"),
+  m1 = mkinsub("SFO"),
+  use_of_ff = "max", quiet = TRUE)
 
 # Avoid warning when fitting a dataset where zero value is removed
 FOCUS_D <- subset(FOCUS_2006_D, value != 0)

@@ -30,6 +30,13 @@ if (require(rbenchmark))
   benchmark(
     analytical = mkinfit(SFO_SFO, FOCUS_D, solution_type = "analytical", quiet = TRUE),
     deSolve = mkinfit(SFO_SFO, FOCUS_D, solution_type = "deSolve", quiet = TRUE),
-    replications = 1)
+    replications = 2)
+  DFOP_SFO <- mkinmod(
+    parent = mkinsub("DFOP", "m1"),
+    m1 = mkinsub("SFO"))
+  benchmark(
+    analytical = mkinfit(DFOP_SFO, FOCUS_D, solution_type = "analytical", quiet = TRUE),
+    deSolve = mkinfit(DFOP_SFO, FOCUS_D, solution_type = "deSolve", quiet = TRUE),
+    replications = 2)
 }
 }

@@ -1,6 +1,6 @@
 context("Analytical solutions for coupled models")
 
-test_that("The analytical solutions of SFO-SFO are correct", {
+test_that("The analytical solutions for SFO-SFO are correct", {
   # No sink, no formation fractions
   SFO_SFO_nosink <- mkinmod(
     parent = mkinsub("SFO", to = "m1", sink = FALSE),
@@ -43,4 +43,16 @@ test_that("The analytical solutions of SFO-SFO are correct", {
     parms(f_sfo_sfo.ff_desolve)
   )
 
+})
+
+test_that("The analytical solution for DFOP-SFO are correct", {
+  # With formation fraction
+  f_dfop_sfo_analytical <- mkinfit(DFOP_SFO, FOCUS_D,
+    solution_type = "analytical", quiet = TRUE)
+  f_dfop_sfo_desolve <- mkinfit(DFOP_SFO, FOCUS_D,
+    solution_type = "deSolve", quiet = TRUE)
+  expect_equal(
+    parms(f_dfop_sfo_analytical),
+    parms(f_dfop_sfo_desolve)
+  )
 })
