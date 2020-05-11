@@ -76,6 +76,8 @@ add_err <- function(prediction, sdfunc, secondary = c("M1", "M2"),
 {
   if (!is.na(seed)) set.seed(seed)
 
+  prediction <- as.data.frame(prediction)
+
   # The output of mkinpredict is in wide format
   d_long = mkin_wide_to_long(prediction, time = "time")
 

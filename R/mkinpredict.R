@@ -32,12 +32,13 @@
 #'   is 1e-10, much lower than in \code{\link{lsoda}}.
 #' @param map_output Boolean to specify if the output should list values for
 #'   the observed variables (default) or for all state variables (if set to
-#'   FALSE).
+#'   FALSE). Setting this to FALSE has no effect for analytical solutions,
+#'   as these always return mapped output.
 #' @param \dots Further arguments passed to the ode solver in case such a
 #'   solver is used.
 #' @import deSolve
 #' @importFrom inline getDynLib
-#' @return A data frame with the solution in wide format
+#' @return A matrix with the numeric solution in wide format
 #' @author Johannes Ranke
 #' @examples
 #'
@@ -70,7 +71,7 @@
 #' mkinpredict(SFO, c(k_degradinol = 0.3), c(degradinol = 100),
 #'       seq(0, 20, by = 0.01))[2001,]
 #'
-#' # Check compiled model versions - they are faster than the eigenvalue based solutions!
+#' # Comparison of the performance of solution types
 #' SFO_SFO = mkinmod(parent = list(type = "SFO", to = "m1"),
 #'                   m1 = list(type = "SFO"), use_of_ff = "max")
 #' if(require(rbenchmark)) {
@@ -92,15 +93,11 @@
 #'       c(parent = 100, m1 = 0), seq(0, 20, by = 0.1),
 #'       solution_type = "analytical", use_compiled = FALSE)[201,])
 #' }
-#'     analytical = mkinpredict(SFO_SFO,
-#'       c(k_parent = 0.15, f_parent_to_m1 = 0.5, k_m1 = 0.01),
-#'       c(parent = 100, m1 = 0), seq(0, 20, by = 0.1),
-#'       solution_type = "analytical", use_compiled = FALSE)[201,]
 #'
 #' \dontrun{
 #'   # Predict from a fitted model
 #'   f <- mkinfit(SFO_SFO, FOCUS_2006_C, quiet = TRUE)
-#'   f <- mkinfit(SFO_SFO, FOCUS_2006_C, quiet = TRUE, solution_type = "analytical")
+#'   f <- mkinfit(SFO_SFO, FOCUS_2006_C, quiet = TRUE, solution_type = "deSolve")
 #'   head(mkinpredict(f))
 #' }
 #'
@@ -127,29 +124,34 @@ mkinpredict.mkinmod <- function(x,
   map_output = TRUE, ...)
 {
 
-  # Get the names of the state variables in the model
+  # Names of state variables and observed variables
   mod_vars <- names(x$diffs)
+  obs_vars <- names(x$spec)
 
   # Order the inital values for state variables if they are named
   if (!is.null(names(odeini))) {
     odeini <- odeini[mod_vars]
   }
 
+  out_obs <- matrix(NA, nrow = length(outtimes), ncol = 1 + length(obs_vars),
+    dimnames = list(as.character(outtimes), c("time", obs_vars)))
+  out_obs[, "time"] <- outtimes
+
   if (solution_type == "analytical") {
     # This is clumsy, as we wanted fast analytical predictions for mkinfit
-    out <- data.frame(time = outtimes)
-    obs_vars <- names(x$spec)
     pseudo_observed <-
       data.frame(name = rep(obs_vars, each = length(outtimes)),
       time = rep(outtimes, length(obs_vars)))
     pseudo_observed$predicted <- x$deg_func(pseudo_observed, odeini, odeparms)
     for (obs_var in obs_vars) {
-      out[obs_var] <- pseudo_observed[pseudo_observed$name == obs_var, "predicted"]
+      out_obs[, obs_var] <- pseudo_observed[pseudo_observed$name == obs_var, "predicted"]
     }
+    # We don't have solutions for unobserved state variables, the output of
+    # analytical solutions is always mapped to observed variables
+    return(out_obs)
   }
 
   if (solution_type == "eigen") {
-
     evalparse <- function(string) {
       eval(parse(text=string), as.list(c(odeparms, odeini)))
     }
@@ -163,8 +165,8 @@ mkinpredict.mkinmod <- function(x,
     }
     o <- matrix(mapply(f.out, outtimes),
       nrow = length(mod_vars), ncol = length(outtimes))
-    out <- data.frame(outtimes, t(o))
-    names(out) <- c("time", mod_vars)
+    out <- cbind(outtimes, t(o))
+    colnames(out) <- c("time", mod_vars)
   }
 
   if (solution_type == "deSolve") {
@@ -208,21 +210,23 @@ mkinpredict.mkinmod <- function(x,
     if (sum(is.na(out)) > 0) {
       stop("Differential equations were not integrated for all output times because\n",
      "NaN values occurred in output from ode()")
-      }
+    }
   }
+
   if (map_output) {
     # Output transformation for models with unobserved compartments like SFORB
-    out_mapped <- data.frame(time = out[,"time"])
+    # if not already mapped in analytical solution
     for (var in names(x$map)) {
-      if((length(x$map[[var]]) == 1) || solution_type == "analytical") {
-        out_mapped[var] <- out[, var]
+      if((length(x$map[[var]]) == 1)) {
+        out_obs[, var] <- out[, var]
       } else {
-        out_mapped[var] <- rowSums(out[, x$map[[var]]])
+        out_obs[, var] <- out[, x$map[[var]][1]] + out[, x$map[[var]][2]]
       }
     }
-    return(out_mapped)
+    return(out_obs)
   } else {
-    return(as.data.frame(out))
+    dimnames(out) <- list(time = as.character(outtimes), c("time", mod_vars))
+    return(out)
   }
 }
 

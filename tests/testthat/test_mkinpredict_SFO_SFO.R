@@ -5,26 +5,28 @@ test_that("Variants of model predictions for SFO_SFO model give equivalent resul
   # Do not use time 0, as eigenvalue based solution does not give 0 at time 0 for metabolites
   # and relative tolerance is thus not met
   tol = 0.01
-  SFO_SFO.1 <- mkinmod(parent = list(type = "SFO", to = "m1"),
-         m1 = list(type = "SFO"), use_of_ff = "min", quiet = TRUE)
-  SFO_SFO.2 <- mkinmod(parent = list(type = "SFO", to = "m1"),
-         m1 = list(type = "SFO"), use_of_ff = "max", quiet = TRUE)
+  SFO_SFO.1 <- mkinmod(parent = mkinsub("SFO", to = "m1"),
+         m1 = mkinsub("SFO"), use_of_ff = "min", quiet = TRUE)
+  SFO_SFO.2 <- mkinmod(parent = mkinsub("SFO", to = "m1"),
+         m1 = mkinsub("SFO"), use_of_ff = "max", quiet = TRUE)
 
   ot = seq(0, 100, by = 1)
-  r.1.e <- subset(mkinpredict(SFO_SFO.1,
+  r.1.e <- subset(as.data.frame(mkinpredict(SFO_SFO.1,
              c(k_parent_m1 = 0.1, k_parent_sink = 0.1, k_m1_sink = 0.1),
-             c(parent = 100, m1 = 0), ot, solution_type = "eigen"),
+             c(parent = 100, m1 = 0), ot, solution_type = "eigen")),
                  time %in% c(1, 10, 50, 100))
-  r.1.d <- subset(mkinpredict(SFO_SFO.1,
+  r.1.d <- subset(as.data.frame(mkinpredict(SFO_SFO.1,
              c(k_parent_m1 = 0.1, k_parent_sink = 0.1, k_m1_sink = 0.1),
-             c(parent = 100, m1 = 0), ot, solution_type = "deSolve"),
+             c(parent = 100, m1 = 0), ot, solution_type = "deSolve")),
                  time %in% c(1, 10, 50, 100))
 
-  r.2.e <- subset(mkinpredict(SFO_SFO.2, c(k_parent = 0.2, f_parent_to_m1 = 0.5, k_m1 = 0.1),
-      c(parent = 100, m1 = 0), ot, solution_type = "eigen"),
+  r.2.e <- subset(as.data.frame(mkinpredict(SFO_SFO.2,
+      c(k_parent = 0.2, f_parent_to_m1 = 0.5, k_m1 = 0.1),
+      c(parent = 100, m1 = 0), ot, solution_type = "eigen")),
                   time %in% c(1, 10, 50, 100))
-  r.2.d <- subset(mkinpredict(SFO_SFO.2, c(k_parent = 0.2, f_parent_to_m1 = 0.5, k_m1 = 0.1),
-      c(parent = 100, m1 = 0), ot, solution_type = "deSolve"),
+  r.2.d <- subset(as.data.frame(mkinpredict(SFO_SFO.2,
+      c(k_parent = 0.2, f_parent_to_m1 = 0.5, k_m1 = 0.1),
+      c(parent = 100, m1 = 0), ot, solution_type = "deSolve")),
                   time %in% c(1, 10, 50, 100))
 
   # Compare eigen and deSolve for minimum use of formation fractions

@@ -21,6 +21,7 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #' @export
 mkin_wide_to_long <- function(wide_data, time = "t")
 {
+  wide_data <- as.data.frame(wide_data)
   colnames <- names(wide_data)
   if (!(time %in% colnames)) stop("The data in wide format have to contain a variable named ", time, ".")
   vars <- subset(colnames, colnames != time)

@@ -592,12 +592,8 @@ mkinfit <- function(mkinmod, observed,
                          method.ode = method.ode,
                          atol = atol, rtol = rtol, ...)
 
-      out_long <- mkin_wide_to_long(out, time = "time")
-
-      out_merged <- merge(observed[c("name", "time")], out_long)
-      out_merged$name <- ordered(out_merged$name, levels = obs_vars)
-      out_merged <- out_merged[order(out_merged$name, out_merged$time), ]
-      observed$predicted <- out_merged$value
+      observed_index <- cbind(as.character(observed$time), as.character(observed$name))
+      observed$predicted <- out[observed_index]
     }
 
     # Define standard deviation for each observation

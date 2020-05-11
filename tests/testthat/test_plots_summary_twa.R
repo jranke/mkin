@@ -13,7 +13,7 @@ test_that("Time weighted average concentrations are correct", {
                 odeparms = bpar[2:length(bpar)],
                 odeini = c(parent = bpar[[1]]),
                 outtimes = outtimes_10)
-    twa_num <- mean(pred_10$parent)
+    twa_num <- mean(pred_10[, "parent"])
     names(twa_num) <- 10
     twa_ana <- max_twa_parent(fit, 10)
 

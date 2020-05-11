@@ -78,7 +78,7 @@ likelihood function." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.49.11</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50</span>
       </span>
     </div>
 
@@ -174,7 +174,6 @@ likelihood function.</p>
   <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>atol</span> <span class='kw'>=</span> <span class='fl'>1e-08</span>,
   <span class='kw'>rtol</span> <span class='kw'>=</span> <span class='fl'>1e-10</span>,
-  <span class='kw'>n.outtimes</span> <span class='kw'>=</span> <span class='fl'>100</span>,
   <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"const"</span>, <span class='st'>"obs"</span>, <span class='st'>"tc"</span>),
   <span class='kw'>error_model_algorithm</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"auto"</span>, <span class='st'>"d_3"</span>, <span class='st'>"direct"</span>, <span class='st'>"twostep"</span>, <span class='st'>"threestep"</span>,
     <span class='st'>"fourstep"</span>, <span class='st'>"IRLS"</span>, <span class='st'>"OLS"</span>),
@@ -325,13 +324,6 @@ is 1e-8, lower than in <code>lsoda</code>.</p></td>
 is 1e-10, much lower than in <code>lsoda</code>.</p></td>
     </tr>
     <tr>
-      <th>n.outtimes</th>
-      <td><p>The length of the dataseries that is produced by the model
-prediction function <code><a href='mkinpredict.html'>mkinpredict</a></code>. This impacts the accuracy
-of the numerical solver if that is used (see <code>solution_type</code>
-argument.  The default value is 100.</p></td>
-    </tr>
-    <tr>
       <th>error_model</th>
       <td><p>If the error model is "const", a constant standard
   deviation is assumed.</p>
@@ -422,7 +414,87 @@ estimators.</p>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='co'># Use shorthand notation for parent only degradation</span>
-<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='st'>"FOMC"</span>, <span class='no'>FOCUS_2006_C</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in (function (t, parent_0, alpha, beta) {    parent = parent_0/(t/beta + 1)^alpha})(t = c(0, 1, 1.2020202020202, 2.4040404040404, 3, 3.60606060606061, 4.80808080808081, 6.01010101010101, 7, 7.21212121212121, 8.41414141414141, 9.61616161616162, 10.8181818181818, 12.020202020202, 13.2222222222222, 14, 14.4242424242424, 15.6262626262626, 16.8282828282828, 18.030303030303, 19.2323232323232, 20.4343434343434, 21.6363636363636, 22.8383838383838, 24.040404040404, 25.2424242424242, 26.4444444444444, 27.6464646464646, 28, 28.8484848484848, 30.050505050505, 31.2525252525253, 32.4545454545455, 33.6565656565657, 34.8585858585859, 36.0606060606061, 37.2626262626263, 38.4646464646465, 39.6666666666667, 40.8686868686869, 42.0707070707071, 43.2727272727273, 44.4747474747475, 45.6767676767677, 46.8787878787879, 48.0808080808081, 49.2828282828283, 50.4848484848485, 51.6868686868687, 52.8888888888889, 54.0909090909091, 55.2929292929293, 56.4949494949495, 57.6969696969697, 58.8989898989899, 60.1010101010101, 61.3030303030303, 62.5050505050505, 63, 63.7070707070707, 64.9090909090909, 66.1111111111111, 67.3131313131313, 68.5151515151515, 69.7171717171717, 70.9191919191919, 72.1212121212121, 73.3232323232323, 74.5252525252525, 75.7272727272727, 76.9292929292929, 78.1313131313131, 79.3333333333333, 80.5353535353535, 81.7373737373737, 82.9393939393939, 84.1414141414141, 85.3434343434343, 86.5454545454545, 87.7474747474747, 88.9494949494949, 90.1515151515152, 91, 91.3535353535353, 92.5555555555556, 93.7575757575758, 94.959595959596, 96.1616161616162, 97.3636363636364, 98.5656565656566, 99.7676767676768, 100.969696969697, 102.171717171717, 103.373737373737, 104.575757575758, 105.777777777778, 106.979797979798, 108.181818181818, 109.383838383838, 110.585858585859, 111.787878787879, 112.989898989899, 114.191919191919, 115.393939393939, 116.59595959596, 117.79797979798, 119), parent.0 = c(parent = 85.1),     alpha = 1, beta = 10): unbenutztes Argument (parent.0 = 85.1)</span></div><div class='output co'>#&gt; <span class='message'>Timing stopped at: 0 0 0.001</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; <span class='error'>Error in summary(fit): Objekt 'fit' nicht gefunden</span></div><div class='input'>
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='st'>"FOMC"</span>, <span class='no'>FOCUS_2006_C</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.50 
+#&gt; R version used for fitting:       4.0.0 
+#&gt; Date of fit:     Mon May 11 05:14:26 2020 
+#&gt; Date of summary: Mon May 11 05:14:26 2020 
+#&gt; 
+#&gt; Equations:
+#&gt; d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent
+#&gt; 
+#&gt; Model predictions using solution type analytical 
+#&gt; 
+#&gt; Fitted using 222 model solutions performed in 0.043 s
+#&gt; 
+#&gt; Error model: Constant variance 
+#&gt; 
+#&gt; Error model algorithm: OLS 
+#&gt; 
+#&gt; Starting values for parameters to be optimised:
+#&gt;          value   type
+#&gt; parent_0  85.1  state
+#&gt; alpha      1.0 deparm
+#&gt; beta      10.0 deparm
+#&gt; 
+#&gt; Starting values for the transformed parameters actually optimised:
+#&gt;               value lower upper
+#&gt; parent_0  85.100000  -Inf   Inf
+#&gt; log_alpha  0.000000  -Inf   Inf
+#&gt; log_beta   2.302585  -Inf   Inf
+#&gt; 
+#&gt; Fixed parameter values:
+#&gt; None
+#&gt; 
+#&gt; Results:
+#&gt; 
+#&gt;        AIC      BIC    logLik
+#&gt;   44.68652 45.47542 -18.34326
+#&gt; 
+#&gt; Optimised, transformed parameters with symmetric confidence intervals:
+#&gt;           Estimate Std. Error    Lower   Upper
+#&gt; parent_0  85.87000     1.8070 81.23000 90.5200
+#&gt; log_alpha  0.05192     0.1353 -0.29580  0.3996
+#&gt; log_beta   0.65100     0.2287  0.06315  1.2390
+#&gt; sigma      1.85700     0.4378  0.73200  2.9830
+#&gt; 
+#&gt; Parameter correlation:
+#&gt;             parent_0  log_alpha   log_beta     sigma
+#&gt; parent_0   1.000e+00 -1.565e-01 -3.142e-01 4.758e-08
+#&gt; log_alpha -1.565e-01  1.000e+00  9.564e-01 1.007e-07
+#&gt; log_beta  -3.142e-01  9.564e-01  1.000e+00 8.568e-08
+#&gt; sigma      4.758e-08  1.007e-07  8.568e-08 1.000e+00
+#&gt; 
+#&gt; Backtransformed parameters:
+#&gt; Confidence intervals for internally transformed parameters are asymmetric.
+#&gt; t-test (unrealistically) based on the assumption of normal distribution
+#&gt; for estimators of untransformed parameters.
+#&gt;          Estimate t value    Pr(&gt;t)   Lower  Upper
+#&gt; parent_0   85.870  47.530 3.893e-08 81.2300 90.520
+#&gt; alpha       1.053   7.393 3.562e-04  0.7439  1.491
+#&gt; beta        1.917   4.373 3.601e-03  1.0650  3.451
+#&gt; sigma       1.857   4.243 4.074e-03  0.7320  2.983
+#&gt; 
+#&gt; FOCUS Chi2 error levels in percent:
+#&gt;          err.min n.optim df
+#&gt; All data   6.657       3  6
+#&gt; parent     6.657       3  6
+#&gt; 
+#&gt; Estimated disappearance times:
+#&gt;         DT50  DT90 DT50back
+#&gt; parent 1.785 15.15     4.56
+#&gt; 
+#&gt; Data:
+#&gt;  time variable observed predicted residual
+#&gt;     0   parent     85.1    85.875  -0.7749
+#&gt;     1   parent     57.9    55.191   2.7091
+#&gt;     3   parent     29.9    31.845  -1.9452
+#&gt;     7   parent     14.6    17.012  -2.4124
+#&gt;    14   parent      9.7     9.241   0.4590
+#&gt;    28   parent      6.6     4.754   1.8460
+#&gt;    63   parent      4.0     2.102   1.8977
+#&gt;    91   parent      3.9     1.441   2.4590
+#&gt;   119   parent      0.6     1.092  -0.4919</div><div class='input'>
 <span class='co'># One parent compound, one metabolite, both single first order.</span>
 <span class='co'># Use mkinsub for convenience in model formulation. Pathway to sink included per default.</span>
 <span class='no'>SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(
@@ -430,86 +502,105 @@ estimators.</p>
   <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='co'># Fit the model to the FOCUS example dataset D using defaults</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>,
                            <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"eigen"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)))</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='output co'>#&gt;        User      System verstrichen 
-#&gt;       1.526       0.000       1.526 </div><div class='input'><span class='fu'><a href='parms.html'>parms</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt;      parent_0 k_parent_sink   k_parent_m1     k_m1_sink         sigma 
-#&gt;  99.598483069   0.047920122   0.050777612   0.005260651   3.125503875 </div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; $ff
-#&gt; parent_sink   parent_m1     m1_sink 
-#&gt;    0.485524    0.514476    1.000000 
+#&gt;       0.407       0.002       0.409 </div><div class='input'><span class='fu'><a href='parms.html'>parms</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt;       parent_0       k_parent           k_m1 f_parent_to_m1          sigma 
+#&gt;   99.598483222    0.098697734    0.005260651    0.514475962    3.125503875 </div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; $ff
+#&gt;   parent_m1 parent_sink 
+#&gt;    0.514476    0.485524 
 #&gt; 
 #&gt; $distimes
 #&gt;              DT50      DT90
 #&gt; parent   7.022929  23.32967
-#&gt; m1     131.760712 437.69961
+#&gt; m1     131.760715 437.69962
 #&gt; </div><div class='input'><span class='co'># \dontrun{</span>
 <span class='co'># deSolve is slower when no C compiler (gcc) was available during model generation</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='no'>fit.deSolve</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>,
-                           <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"deSolve"</span>)))</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='output co'>#&gt; <span class='message'>Ordinary least squares optimisation</span></div><div class='output co'>#&gt; Sum of squared residuals at call 1: 18915.53
-#&gt; Sum of squared residuals at call 2: 18915.53
-#&gt; Sum of squared residuals at call 6: 11424.02
-#&gt; Sum of squared residuals at call 10: 11424
-#&gt; Sum of squared residuals at call 12: 4094.396
-#&gt; Sum of squared residuals at call 16: 4094.396
-#&gt; Sum of squared residuals at call 19: 1340.595
-#&gt; Sum of squared residuals at call 20: 1340.593
-#&gt; Sum of squared residuals at call 25: 1072.239
-#&gt; Sum of squared residuals at call 28: 1072.236
-#&gt; Sum of squared residuals at call 30: 874.2615
-#&gt; Sum of squared residuals at call 33: 874.2611
-#&gt; Sum of squared residuals at call 35: 616.2375
-#&gt; Sum of squared residuals at call 37: 616.237
-#&gt; Sum of squared residuals at call 40: 467.4386
-#&gt; Sum of squared residuals at call 42: 467.438
-#&gt; Sum of squared residuals at call 46: 398.2913
-#&gt; Sum of squared residuals at call 48: 398.2913
-#&gt; Sum of squared residuals at call 49: 398.2912
-#&gt; Sum of squared residuals at call 51: 395.0711
-#&gt; Sum of squared residuals at call 54: 395.071
-#&gt; Sum of squared residuals at call 56: 378.3298
-#&gt; Sum of squared residuals at call 59: 378.3298
-#&gt; Sum of squared residuals at call 62: 376.9812
-#&gt; Sum of squared residuals at call 64: 376.9811
-#&gt; Sum of squared residuals at call 67: 375.2085
-#&gt; Sum of squared residuals at call 69: 375.2085
-#&gt; Sum of squared residuals at call 70: 375.2085
-#&gt; Sum of squared residuals at call 71: 375.2085
-#&gt; Sum of squared residuals at call 72: 374.5723
-#&gt; Sum of squared residuals at call 74: 374.5723
-#&gt; Sum of squared residuals at call 77: 374.0075
-#&gt; Sum of squared residuals at call 79: 374.0075
-#&gt; Sum of squared residuals at call 80: 374.0075
-#&gt; Sum of squared residuals at call 82: 373.1711
-#&gt; Sum of squared residuals at call 84: 373.1711
-#&gt; Sum of squared residuals at call 87: 372.6445
-#&gt; Sum of squared residuals at call 88: 372.1614
-#&gt; Sum of squared residuals at call 90: 372.1614
-#&gt; Sum of squared residuals at call 91: 372.1614
-#&gt; Sum of squared residuals at call 94: 371.6464
-#&gt; Sum of squared residuals at call 99: 371.4299
-#&gt; Sum of squared residuals at call 101: 371.4299
-#&gt; Sum of squared residuals at call 104: 371.4071
-#&gt; Sum of squared residuals at call 106: 371.4071
-#&gt; Sum of squared residuals at call 107: 371.4071
-#&gt; Sum of squared residuals at call 109: 371.2524
-#&gt; Sum of squared residuals at call 113: 371.2524
-#&gt; Sum of squared residuals at call 114: 371.2136
-#&gt; Sum of squared residuals at call 115: 371.2136
-#&gt; Sum of squared residuals at call 116: 371.2136
-#&gt; Sum of squared residuals at call 119: 371.2134
-#&gt; Sum of squared residuals at call 120: 371.2134
-#&gt; Sum of squared residuals at call 122: 371.2134
-#&gt; Sum of squared residuals at call 123: 371.2134
-#&gt; Sum of squared residuals at call 125: 371.2134
-#&gt; Sum of squared residuals at call 126: 371.2134
-#&gt; Sum of squared residuals at call 135: 371.2134
-#&gt; Negative log-likelihood at call 145: 97.22429</div><div class='output co'>#&gt; <span class='message'>Optimisation successfully terminated.</span></div><div class='output co'>#&gt;        User      System verstrichen 
-#&gt;       1.084       0.000       1.085 </div><div class='input'><span class='fu'><a href='parms.html'>parms</a></span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt;      parent_0 k_parent_sink   k_parent_m1     k_m1_sink         sigma 
-#&gt;  99.598483072   0.047920122   0.050777612   0.005260651   3.125503874 </div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt; $ff
-#&gt; parent_sink   parent_m1     m1_sink 
-#&gt;    0.485524    0.514476    1.000000 
+                           <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"deSolve"</span>)))</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='output co'>#&gt; <span class='message'>Ordinary least squares optimisation</span></div><div class='output co'>#&gt; Sum of squared residuals at call 1: 15156.12
+#&gt; Sum of squared residuals at call 2: 15156.12
+#&gt; Sum of squared residuals at call 6: 8243.645
+#&gt; Sum of squared residuals at call 12: 6290.712
+#&gt; Sum of squared residuals at call 13: 6290.683
+#&gt; Sum of squared residuals at call 15: 6290.452
+#&gt; Sum of squared residuals at call 18: 1700.749
+#&gt; Sum of squared residuals at call 20: 1700.611
+#&gt; Sum of squared residuals at call 24: 1190.923
+#&gt; Sum of squared residuals at call 26: 1190.922
+#&gt; Sum of squared residuals at call 29: 1017.417
+#&gt; Sum of squared residuals at call 31: 1017.417
+#&gt; Sum of squared residuals at call 33: 1017.416
+#&gt; Sum of squared residuals at call 34: 644.0471
+#&gt; Sum of squared residuals at call 36: 644.0469
+#&gt; Sum of squared residuals at call 38: 644.0469
+#&gt; Sum of squared residuals at call 39: 590.5025
+#&gt; Sum of squared residuals at call 41: 590.5022
+#&gt; Sum of squared residuals at call 43: 590.5016
+#&gt; Sum of squared residuals at call 44: 543.219
+#&gt; Sum of squared residuals at call 45: 543.2187
+#&gt; Sum of squared residuals at call 46: 543.2186
+#&gt; Sum of squared residuals at call 50: 391.348
+#&gt; Sum of squared residuals at call 51: 391.3479
+#&gt; Sum of squared residuals at call 56: 386.4789
+#&gt; Sum of squared residuals at call 58: 386.4789
+#&gt; Sum of squared residuals at call 60: 386.4779
+#&gt; Sum of squared residuals at call 61: 384.0686
+#&gt; Sum of squared residuals at call 63: 384.0686
+#&gt; Sum of squared residuals at call 66: 382.7813
+#&gt; Sum of squared residuals at call 68: 382.7813
+#&gt; Sum of squared residuals at call 70: 382.7813
+#&gt; Sum of squared residuals at call 71: 378.9273
+#&gt; Sum of squared residuals at call 73: 378.9273
+#&gt; Sum of squared residuals at call 75: 378.9272
+#&gt; Sum of squared residuals at call 76: 377.4847
+#&gt; Sum of squared residuals at call 78: 377.4846
+#&gt; Sum of squared residuals at call 81: 375.9738
+#&gt; Sum of squared residuals at call 83: 375.9738
+#&gt; Sum of squared residuals at call 86: 375.3387
+#&gt; Sum of squared residuals at call 88: 375.3387
+#&gt; Sum of squared residuals at call 91: 374.5774
+#&gt; Sum of squared residuals at call 93: 374.5774
+#&gt; Sum of squared residuals at call 95: 374.5774
+#&gt; Sum of squared residuals at call 96: 373.5433
+#&gt; Sum of squared residuals at call 100: 373.5433
+#&gt; Sum of squared residuals at call 102: 373.2654
+#&gt; Sum of squared residuals at call 104: 373.2654
+#&gt; Sum of squared residuals at call 107: 372.6841
+#&gt; Sum of squared residuals at call 111: 372.684
+#&gt; Sum of squared residuals at call 114: 372.6374
+#&gt; Sum of squared residuals at call 116: 372.6374
+#&gt; Sum of squared residuals at call 119: 372.6223
+#&gt; Sum of squared residuals at call 121: 372.6223
+#&gt; Sum of squared residuals at call 123: 372.6223
+#&gt; Sum of squared residuals at call 124: 372.5903
+#&gt; Sum of squared residuals at call 126: 372.5903
+#&gt; Sum of squared residuals at call 129: 372.5445
+#&gt; Sum of squared residuals at call 130: 372.4921
+#&gt; Sum of squared residuals at call 131: 372.2377
+#&gt; Sum of squared residuals at call 132: 371.5434
+#&gt; Sum of squared residuals at call 134: 371.5434
+#&gt; Sum of squared residuals at call 137: 371.2857
+#&gt; Sum of squared residuals at call 139: 371.2857
+#&gt; Sum of squared residuals at call 143: 371.2247
+#&gt; Sum of squared residuals at call 144: 371.2247
+#&gt; Sum of squared residuals at call 149: 371.2189
+#&gt; Sum of squared residuals at call 150: 371.2145
+#&gt; Sum of squared residuals at call 153: 371.2145
+#&gt; Sum of squared residuals at call 155: 371.2138
+#&gt; Sum of squared residuals at call 156: 371.2138
+#&gt; Sum of squared residuals at call 157: 371.2138
+#&gt; Sum of squared residuals at call 161: 371.2134
+#&gt; Sum of squared residuals at call 162: 371.2134
+#&gt; Sum of squared residuals at call 165: 371.2134
+#&gt; Sum of squared residuals at call 166: 371.2134
+#&gt; Sum of squared residuals at call 168: 371.2134
+#&gt; Negative log-likelihood at call 178: 97.22429</div><div class='output co'>#&gt; <span class='message'>Optimisation successfully terminated.</span></div><div class='output co'>#&gt;        User      System verstrichen 
+#&gt;       0.349       0.000       0.350 </div><div class='input'><span class='fu'><a href='parms.html'>parms</a></span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt;       parent_0       k_parent           k_m1 f_parent_to_m1          sigma 
+#&gt;   99.598480759    0.098697739    0.005260651    0.514475958    3.125503874 </div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt; $ff
+#&gt;   parent_m1 parent_sink 
+#&gt;    0.514476    0.485524 
 #&gt; 
 #&gt; $distimes
 #&gt;              DT50      DT90
-#&gt; parent   7.022929  23.32967
-#&gt; m1     131.760712 437.69961
+#&gt; parent   7.022929  23.32966
+#&gt; m1     131.760731 437.69967
 #&gt; </div><div class='input'><span class='co'># }</span>
 
 <span class='co'># Use stepwise fitting, using optimised parameters from parent only fit, FOMC</span>
@@ -518,31 +609,33 @@ estimators.</p>
   <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"FOMC"</span>, <span class='st'>"m1"</span>),
   <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='co'># Fit the model to the FOCUS example dataset D using defaults</span>
 <span class='no'>fit.FOMC_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>FOMC_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='co'># Use starting parameters from parent only FOMC fit</span>
-<span class='no'>fit.FOMC</span> <span class='kw'>=</span> <span class='fu'>mkinfit</span>(<span class='st'>"FOMC"</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in (function (t, parent_0, alpha, beta) {    parent = parent_0/(t/beta + 1)^alpha})(t = c(0, 0.757575757575758, 1, 1.51515151515152, 2.27272727272727, 3, 3.03030303030303, 3.78787878787879, 4.54545454545454, 5.3030303030303, 6.06060606060606, 6.81818181818182, 7, 7.57575757575758, 8.33333333333333, 9.09090909090909, 9.84848484848485, 10.6060606060606, 11.3636363636364, 12.1212121212121, 12.8787878787879, 13.6363636363636, 14, 14.3939393939394, 15.1515151515152, 15.9090909090909, 16.6666666666667, 17.4242424242424, 18.1818181818182, 18.9393939393939, 19.6969696969697, 20.4545454545455, 21, 21.2121212121212, 21.969696969697, 22.7272727272727, 23.4848484848485, 24.2424242424242, 25, 25.7575757575758, 26.5151515151515, 27.2727272727273, 28.030303030303, 28.7878787878788, 29.5454545454545, 30.3030303030303, 31.0606060606061, 31.8181818181818, 32.5757575757576, 33.3333333333333, 34.0909090909091, 34.8484848484849, 35, 35.6060606060606, 36.3636363636364, 37.1212121212121, 37.8787878787879, 38.6363636363636, 39.3939393939394, 40.1515151515151, 40.9090909090909, 41.6666666666667, 42.4242424242424, 43.1818181818182, 43.9393939393939, 44.6969696969697, 45.4545454545455, 46.2121212121212, 46.969696969697, 47.7272727272727, 48.4848484848485, 49.2424242424242, 50, 50.7575757575758, 51.5151515151515, 52.2727272727273, 53.030303030303, 53.7878787878788, 54.5454545454545, 55.3030303030303, 56.0606060606061, 56.8181818181818, 57.5757575757576, 58.3333333333333, 59.0909090909091, 59.8484848484849, 60.6060606060606, 61.3636363636364, 62.1212121212121, 62.8787878787879, 63.6363636363636, 64.3939393939394, 65.1515151515152, 65.9090909090909, 66.6666666666667, 67.4242424242424, 68.1818181818182, 68.9393939393939, 69.6969696969697, 70.4545454545455, 71.2121212121212, 71.969696969697, 72.7272727272727, 73.4848484848485, 74.2424242424242, 75), parent.0 = c(parent = 100.75), alpha = 1,     beta = 10): unbenutztes Argument (parent.0 = 100.75)</span></div><div class='output co'>#&gt; <span class='message'>Timing stopped at: 0 0 0.001</span></div><div class='input'><span class='no'>fit.FOMC_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>FOMC_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>parms.ini</span> <span class='kw'>=</span> <span class='no'>fit.FOMC</span>$<span class='no'>bparms.ode</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='output co'>#&gt; <span class='error'>Error in mkinfit(FOMC_SFO, FOCUS_2006_D, quiet = TRUE, parms.ini = fit.FOMC$bparms.ode): Objekt 'fit.FOMC' nicht gefunden</span></div><div class='input'>
+<span class='no'>fit.FOMC</span> <span class='kw'>=</span> <span class='fu'>mkinfit</span>(<span class='st'>"FOMC"</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>fit.FOMC_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>FOMC_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>parms.ini</span> <span class='kw'>=</span> <span class='no'>fit.FOMC</span>$<span class='no'>bparms.ode</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'>
 <span class='co'># Use stepwise fitting, using optimised parameters from parent only fit, SFORB</span>
 <span class='no'>SFORB_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(
   <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFORB"</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"m1"</span>, <span class='kw'>sink</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>),
   <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='co'># Fit the model to the FOCUS example dataset D using defaults</span>
 <span class='no'>fit.SFORB_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFORB_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='no'>fit.SFORB_SFO.deSolve</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFORB_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"deSolve"</span>,
                                  <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='co'># Use starting parameters from parent only SFORB fit (not really needed in this case)</span>
-<span class='no'>fit.SFORB</span> <span class='kw'>=</span> <span class='fu'>mkinfit</span>(<span class='st'>"SFORB"</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='error'>Error in (function (t, parent_0, k_12, k_21, k_1output) {    sqrt_exp = sqrt(1/4 * (k_12 + k_21 + k_1output)^2 + k_12 *         k_21 - (k_12 + k_1output) * k_21)    b1 = 0.5 * (k_12 + k_21 + k_1output) + sqrt_exp    b2 = 0.5 * (k_12 + k_21 + k_1output) - sqrt_exp    parent = parent_0 * (((k_12 + k_21 - b1)/(b2 - b1)) * exp(-b1 *         t) + ((k_12 + k_21 - b2)/(b1 - b2)) * exp(-b2 * t))})(t = c(0, 0.757575757575758, 1, 1.51515151515152, 2.27272727272727, 3, 3.03030303030303, 3.78787878787879, 4.54545454545454, 5.3030303030303, 6.06060606060606, 6.81818181818182, 7, 7.57575757575758, 8.33333333333333, 9.09090909090909, 9.84848484848485, 10.6060606060606, 11.3636363636364, 12.1212121212121, 12.8787878787879, 13.6363636363636, 14, 14.3939393939394, 15.1515151515152, 15.9090909090909, 16.6666666666667, 17.4242424242424, 18.1818181818182, 18.9393939393939, 19.6969696969697, 20.4545454545455, 21, 21.2121212121212, 21.969696969697, 22.7272727272727, 23.4848484848485, 24.2424242424242, 25, 25.7575757575758, 26.5151515151515, 27.2727272727273, 28.030303030303, 28.7878787878788, 29.5454545454545, 30.3030303030303, 31.0606060606061, 31.8181818181818, 32.5757575757576, 33.3333333333333, 34.0909090909091, 34.8484848484849, 35, 35.6060606060606, 36.3636363636364, 37.1212121212121, 37.8787878787879, 38.6363636363636, 39.3939393939394, 40.1515151515151, 40.9090909090909, 41.6666666666667, 42.4242424242424, 43.1818181818182, 43.9393939393939, 44.6969696969697, 45.4545454545455, 46.2121212121212, 46.969696969697, 47.7272727272727, 48.4848484848485, 49.2424242424242, 50, 50.7575757575758, 51.5151515151515, 52.2727272727273, 53.030303030303, 53.7878787878788, 54.5454545454545, 55.3030303030303, 56.0606060606061, 56.8181818181818, 57.5757575757576, 58.3333333333333, 59.0909090909091, 59.8484848484849, 60.6060606060606, 61.3636363636364, 62.1212121212121, 62.8787878787879, 63.6363636363636, 64.3939393939394, 65.1515151515152, 65.9090909090909, 66.6666666666667, 67.4242424242424, 68.1818181818182, 68.9393939393939, 69.6969696969697, 70.4545454545455, 71.2121212121212, 71.969696969697, 72.7272727272727, 73.4848484848485, 74.2424242424242, 75), parent.0 = c(parent_free = 100.75), k_1output = 0.1,     k_12 = 0.1, k_21 = 0.02): unbenutztes Argument (parent.0 = 100.75)</span></div><div class='output co'>#&gt; <span class='message'>Timing stopped at: 0.001 0 0.001</span></div><div class='input'><span class='no'>fit.SFORB_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFORB_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>parms.ini</span> <span class='kw'>=</span> <span class='no'>fit.SFORB</span>$<span class='no'>bparms.ode</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='output co'>#&gt; <span class='error'>Error in mkinfit(SFORB_SFO, FOCUS_2006_D, parms.ini = fit.SFORB$bparms.ode,     quiet = TRUE): Objekt 'fit.SFORB' nicht gefunden</span></div><div class='input'><span class='co'># }</span>
+<span class='no'>fit.SFORB</span> <span class='kw'>=</span> <span class='fu'>mkinfit</span>(<span class='st'>"SFORB"</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>fit.SFORB_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFORB_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>parms.ini</span> <span class='kw'>=</span> <span class='no'>fit.SFORB</span>$<span class='no'>bparms.ode</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Initial parameter(s) k_parent_free_sink not used in the model</span></div><div class='input'><span class='co'># }</span>
 
 <span class='co'># \dontrun{</span>
 <span class='co'># Weighted fits, including IRLS</span>
 <span class='no'>SFO_SFO.ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>),
-                      <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='no'>f.noweight</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>f.noweight</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.49.11 
+                      <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='no'>f.noweight</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>f.noweight</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.50 
 #&gt; R version used for fitting:       4.0.0 
-#&gt; Date of fit:     Thu May  7 08:59:03 2020 
-#&gt; Date of summary: Thu May  7 08:59:03 2020 
+#&gt; Date of fit:     Mon May 11 05:14:31 2020 
+#&gt; Date of summary: Mon May 11 05:14:31 2020 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
 #&gt; d_m1/dt = + f_parent_to_m1 * k_parent * parent - k_m1 * m1
 #&gt; 
-#&gt; Model predictions using solution type deSolve 
+#&gt; Model predictions using solution type analytical 
 #&gt; 
-#&gt; Fitted using 422 model solutions performed in 1.106 s
+#&gt; Fitted using 421 model solutions performed in 0.124 s
 #&gt; 
 #&gt; Error model: Constant variance 
 #&gt; 
@@ -566,6 +659,11 @@ estimators.</p>
 #&gt;      value  type
 #&gt; m1_0     0 state
 #&gt; 
+#&gt; Results:
+#&gt; 
+#&gt;        AIC      BIC    logLik
+#&gt;   204.4486 212.6365 -97.22429
+#&gt; 
 #&gt; Optimised, transformed parameters with symmetric confidence intervals:
 #&gt;                Estimate Std. Error    Lower    Upper
 #&gt; parent_0       99.60000    1.57000 96.40000 102.8000
@@ -576,11 +674,11 @@ estimators.</p>
 #&gt; 
 #&gt; Parameter correlation:
 #&gt;                  parent_0 log_k_parent   log_k_m1 f_parent_ilr_1      sigma
-#&gt; parent_0        1.000e+00    5.174e-01 -1.688e-01     -5.471e-01 -2.443e-07
-#&gt; log_k_parent    5.174e-01    1.000e+00 -3.263e-01     -5.426e-01  3.181e-07
-#&gt; log_k_m1       -1.688e-01   -3.263e-01  1.000e+00      7.478e-01 -1.369e-07
-#&gt; f_parent_ilr_1 -5.471e-01   -5.426e-01  7.478e-01      1.000e+00 -2.287e-08
-#&gt; sigma          -2.443e-07    3.181e-07 -1.369e-07     -2.287e-08  1.000e+00
+#&gt; parent_0        1.000e+00    5.174e-01 -1.688e-01     -5.471e-01 -3.214e-07
+#&gt; log_k_parent    5.174e-01    1.000e+00 -3.263e-01     -5.426e-01  3.168e-07
+#&gt; log_k_m1       -1.688e-01   -3.263e-01  1.000e+00      7.478e-01 -1.410e-07
+#&gt; f_parent_ilr_1 -5.471e-01   -5.426e-01  7.478e-01      1.000e+00  5.093e-10
+#&gt; sigma          -3.214e-07    3.168e-07 -1.410e-07      5.093e-10  1.000e+00
 #&gt; 
 #&gt; Backtransformed parameters:
 #&gt; Confidence intervals for internally transformed parameters are asymmetric.
@@ -648,18 +746,18 @@ estimators.</p>
 #&gt;   100       m1    31.04  31.98163 -9.416e-01
 #&gt;   100       m1    33.13  31.98163  1.148e+00
 #&gt;   120       m1    25.15  28.78984 -3.640e+00
-#&gt;   120       m1    33.31  28.78984  4.520e+00</div><div class='input'><span class='no'>f.obs</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"obs"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>f.obs</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.49.11 
+#&gt;   120       m1    33.31  28.78984  4.520e+00</div><div class='input'><span class='no'>f.obs</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"obs"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>f.obs</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.50 
 #&gt; R version used for fitting:       4.0.0 
-#&gt; Date of fit:     Thu May  7 08:59:06 2020 
-#&gt; Date of summary: Thu May  7 08:59:06 2020 
+#&gt; Date of fit:     Mon May 11 05:14:32 2020 
+#&gt; Date of summary: Mon May 11 05:14:32 2020 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
 #&gt; d_m1/dt = + f_parent_to_m1 * k_parent * parent - k_m1 * m1
 #&gt; 
-#&gt; Model predictions using solution type deSolve 
+#&gt; Model predictions using solution type analytical 
 #&gt; 
-#&gt; Fitted using 979 model solutions performed in 2.604 s
+#&gt; Fitted using 978 model solutions performed in 0.336 s
 #&gt; 
 #&gt; Error model: Variance unique to each observed variable 
 #&gt; 
@@ -687,6 +785,11 @@ estimators.</p>
 #&gt; Fixed parameter values:
 #&gt;      value  type
 #&gt; m1_0     0 state
+#&gt; 
+#&gt; Results:
+#&gt; 
+#&gt;        AIC      BIC    logLik
+#&gt;   205.8727 215.6982 -96.93634
 #&gt; 
 #&gt; Optimised, transformed parameters with symmetric confidence intervals:
 #&gt;                Estimate Std. Error    Lower    Upper
@@ -780,23 +883,23 @@ estimators.</p>
 #&gt;   100       m1    31.04  31.98773 -9.477e-01
 #&gt;   100       m1    33.13  31.98773  1.142e+00
 #&gt;   120       m1    25.15  28.80429 -3.654e+00
-#&gt;   120       m1    33.31  28.80429  4.506e+00</div><div class='input'><span class='no'>f.tc</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"tc"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>f.tc</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.49.11 
+#&gt;   120       m1    33.31  28.80429  4.506e+00</div><div class='input'><span class='no'>f.tc</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"tc"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>f.tc</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.50 
 #&gt; R version used for fitting:       4.0.0 
-#&gt; Date of fit:     Thu May  7 08:59:16 2020 
-#&gt; Date of summary: Thu May  7 08:59:16 2020 
+#&gt; Date of fit:     Mon May 11 05:14:32 2020 
+#&gt; Date of summary: Mon May 11 05:14:32 2020 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
 #&gt; d_m1/dt = + f_parent_to_m1 * k_parent * parent - k_m1 * m1
 #&gt; 
-#&gt; Model predictions using solution type deSolve 
+#&gt; Model predictions using solution type analytical 
 #&gt; 
-#&gt; Fitted using 2552 model solutions performed in 10.544 s
+#&gt; Fitted using 1875 model solutions performed in 0.642 s
 #&gt; 
 #&gt; Error model: Two-component variance function 
 #&gt; 
 #&gt; Error model algorithm: d_3 
-#&gt; Three-step fitting yielded a higher likelihood than direct fitting 
+#&gt; Direct fitting and three-step fitting yield approximately the same likelihood 
 #&gt; 
 #&gt; Starting values for parameters to be optimised:
 #&gt;                   value   type
@@ -819,6 +922,11 @@ estimators.</p>
 #&gt; Fixed parameter values:
 #&gt;      value  type
 #&gt; m1_0     0 state
+#&gt; 
+#&gt; Results:
+#&gt; 
+#&gt;        AIC      BIC    logLik
+#&gt;   141.9656 151.7911 -64.98278
 #&gt; 
 #&gt; Optimised, transformed parameters with symmetric confidence intervals:
 #&gt;                 Estimate Std. Error     Lower     Upper
@@ -868,14 +976,14 @@ estimators.</p>
 #&gt; 
 #&gt; Data:
 #&gt;  time variable observed predicted   residual
-#&gt;     0   parent    99.46 100.73434  -1.274339
-#&gt;     0   parent   102.04 100.73434   1.305661
+#&gt;     0   parent    99.46 100.73434  -1.274340
+#&gt;     0   parent   102.04 100.73434   1.305660
 #&gt;     1   parent    93.50  91.09751   2.402486
 #&gt;     1   parent    92.50  91.09751   1.402486
 #&gt;     3   parent    63.23  74.50141 -11.271410
 #&gt;     3   parent    68.99  74.50141  -5.511410
-#&gt;     7   parent    52.32  49.82880   2.491201
-#&gt;     7   parent    55.13  49.82880   5.301201
+#&gt;     7   parent    52.32  49.82880   2.491200
+#&gt;     7   parent    55.13  49.82880   5.301200
 #&gt;    14   parent    27.27  24.64809   2.621908
 #&gt;    14   parent    26.64  24.64809   1.991908
 #&gt;    21   parent    11.50  12.19232  -0.692315
@@ -902,8 +1010,8 @@ estimators.</p>
 #&gt;    50       m1    40.01  41.34199  -1.331985
 #&gt;    75       m1    40.09  36.61471   3.475295
 #&gt;    75       m1    33.85  36.61471  -2.764705
-#&gt;   100       m1    31.04  32.20082  -1.160824
-#&gt;   100       m1    33.13  32.20082   0.929176
+#&gt;   100       m1    31.04  32.20082  -1.160823
+#&gt;   100       m1    33.13  32.20082   0.929177
 #&gt;   120       m1    25.15  29.04130  -3.891304
 #&gt;   120       m1    33.31  29.04130   4.268696</div><div class='input'># }
 

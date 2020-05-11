@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.49.11</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50</span>
       </span>
     </div>
 
@@ -97,7 +97,7 @@
       <h1 data-toc-skip>Example evaluation of FOCUS Example Dataset D</h1>
                         <h4 class="author">Johannes Ranke</h4>
             
-            <h4 class="date">2020-05-07</h4>
+            <h4 class="date">2020-05-11</h4>
       
       <small class="dont-index">Source: <a href="http://github.com/jranke/mkin/blob/master/vignettes/FOCUS_D.Rmd"><code>vignettes/FOCUS_D.Rmd</code></a></small>
       <div class="hidden name"><code>FOCUS_D.Rmd</code></div>
@@ -159,10 +159,10 @@
 <div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">SFO_SFO</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/mkinmod.html">mkinmod</a></span>(<span class="kw">parent</span> <span class="kw">=</span> <span class="fu"><a href="../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"m1"</span>), <span class="kw">m1</span> <span class="kw">=</span> <span class="fu"><a href="../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>))</pre></body></html></div>
 <pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">SFO_SFO</span>$<span class="no">diffs</span>)</pre></body></html></div>
-<pre><code>##                                                       parent 
-## "d_parent = - k_parent_sink * parent - k_parent_m1 * parent" 
-##                                                           m1 
-##             "d_m1 = + k_parent_m1 * parent - k_m1_sink * m1"</code></pre>
+<pre><code>##                                                    parent 
+##                          "d_parent = - k_parent * parent" 
+##                                                        m1 
+## "d_m1 = + f_parent_to_m1 * k_parent * parent - k_m1 * m1"</code></pre>
 <p>We do the fitting without progress report (<code>quiet = TRUE</code>).</p>
 <div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">fit</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/mkinfit.html">mkinfit</a></span>(<span class="no">SFO_SFO</span>, <span class="no">FOCUS_2006_D</span>, <span class="kw">quiet</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
 <pre><code>## Warning in mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE): Observations with value
@@ -175,85 +175,83 @@
 <p><img src="FOCUS_D_files/figure-html/plot_2-1.png" width="768"></p>
 <p>A comprehensive report of the results is obtained using the <code>summary</code> method for <code>mkinfit</code> objects.</p>
 <div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">fit</span>)</pre></body></html></div>
-<pre><code>## mkin version used for fitting:    0.9.49.11 
+<pre><code>## mkin version used for fitting:    0.9.50 
 ## R version used for fitting:       4.0.0 
-## Date of fit:     Thu May  7 08:59:27 2020 
-## Date of summary: Thu May  7 08:59:27 2020 
+## Date of fit:     Mon May 11 05:14:41 2020 
+## Date of summary: Mon May 11 05:14:41 2020 
 ## 
 ## Equations:
-## d_parent/dt = - k_parent_sink * parent - k_parent_m1 * parent
-## d_m1/dt = + k_parent_m1 * parent - k_m1_sink * m1
+## d_parent/dt = - k_parent * parent
+## d_m1/dt = + f_parent_to_m1 * k_parent * parent - k_m1 * m1
 ## 
-## Model predictions using solution type deSolve 
+## Model predictions using solution type analytical 
 ## 
-## Fitted using 389 model solutions performed in 1.031 s
+## Fitted using 421 model solutions performed in 0.167 s
 ## 
 ## Error model: Constant variance 
 ## 
 ## Error model algorithm: OLS 
 ## 
 ## Starting values for parameters to be optimised:
-##                  value   type
-## parent_0      100.7500  state
-## k_parent_sink   0.1000 deparm
-## k_parent_m1     0.1001 deparm
-## k_m1_sink       0.1002 deparm
+##                   value   type
+## parent_0       100.7500  state
+## k_parent         0.1000 deparm
+## k_m1             0.1001 deparm
+## f_parent_to_m1   0.5000 deparm
 ## 
 ## Starting values for the transformed parameters actually optimised:
-##                        value lower upper
-## parent_0          100.750000  -Inf   Inf
-## log_k_parent_sink  -2.302585  -Inf   Inf
-## log_k_parent_m1    -2.301586  -Inf   Inf
-## log_k_m1_sink      -2.300587  -Inf   Inf
+##                     value lower upper
+## parent_0       100.750000  -Inf   Inf
+## log_k_parent    -2.302585  -Inf   Inf
+## log_k_m1        -2.301586  -Inf   Inf
+## f_parent_ilr_1   0.000000  -Inf   Inf
 ## 
 ## Fixed parameter values:
 ##      value  type
 ## m1_0     0 state
 ## 
+## Results:
+## 
+##        AIC      BIC    logLik
+##   204.4486 212.6365 -97.22429
+## 
 ## Optimised, transformed parameters with symmetric confidence intervals:
-##                   Estimate Std. Error  Lower   Upper
-## parent_0            99.600    1.57000 96.400 102.800
-## log_k_parent_sink   -3.038    0.07626 -3.193  -2.883
-## log_k_parent_m1     -2.980    0.04033 -3.062  -2.898
-## log_k_m1_sink       -5.248    0.13320 -5.518  -4.977
-## sigma                3.126    0.35850  2.396   3.855
+##                Estimate Std. Error    Lower    Upper
+## parent_0       99.60000    1.57000 96.40000 102.8000
+## log_k_parent   -2.31600    0.04087 -2.39900  -2.2330
+## log_k_m1       -5.24800    0.13320 -5.51800  -4.9770
+## f_parent_ilr_1  0.04096    0.06312 -0.08746   0.1694
+## sigma           3.12600    0.35850  2.39600   3.8550
 ## 
 ## Parameter correlation:
-##                     parent_0 log_k_parent_sink log_k_parent_m1 log_k_m1_sink
-## parent_0           1.000e+00         6.067e-01      -6.372e-02    -1.688e-01
-## log_k_parent_sink  6.067e-01         1.000e+00      -8.550e-02    -6.252e-01
-## log_k_parent_m1   -6.372e-02        -8.550e-02       1.000e+00     4.731e-01
-## log_k_m1_sink     -1.688e-01        -6.252e-01       4.731e-01     1.000e+00
-## sigma              5.287e-10         3.306e-09       4.421e-08    -3.319e-10
-##                        sigma
-## parent_0           5.287e-10
-## log_k_parent_sink  3.306e-09
-## log_k_parent_m1    4.421e-08
-## log_k_m1_sink     -3.319e-10
-## sigma              1.000e+00
+##                  parent_0 log_k_parent   log_k_m1 f_parent_ilr_1      sigma
+## parent_0        1.000e+00    5.174e-01 -1.688e-01     -5.471e-01 -3.214e-07
+## log_k_parent    5.174e-01    1.000e+00 -3.263e-01     -5.426e-01  3.168e-07
+## log_k_m1       -1.688e-01   -3.263e-01  1.000e+00      7.478e-01 -1.410e-07
+## f_parent_ilr_1 -5.471e-01   -5.426e-01  7.478e-01      1.000e+00  5.093e-10
+## sigma          -3.214e-07    3.168e-07 -1.410e-07      5.093e-10  1.000e+00
 ## 
 ## Backtransformed parameters:
 ## Confidence intervals for internally transformed parameters are asymmetric.
 ## t-test (unrealistically) based on the assumption of normal distribution
 ## for estimators of untransformed parameters.
-##                Estimate t value    Pr(&gt;t)     Lower     Upper
-## parent_0      99.600000  63.430 2.298e-36 96.400000 1.028e+02
-## k_parent_sink  0.047920  13.110 6.126e-15  0.041030 5.596e-02
-## k_parent_m1    0.050780  24.800 3.269e-23  0.046780 5.512e-02
-## k_m1_sink      0.005261   7.510 6.165e-09  0.004012 6.898e-03
-## sigma          3.126000   8.718 2.235e-10  2.396000 3.855e+00
+##                 Estimate t value    Pr(&gt;t)     Lower     Upper
+## parent_0       99.600000  63.430 2.298e-36 96.400000 1.028e+02
+## k_parent        0.098700  24.470 4.955e-23  0.090820 1.073e-01
+## k_m1            0.005261   7.510 6.165e-09  0.004012 6.898e-03
+## f_parent_to_m1  0.514500  23.070 3.104e-22  0.469100 5.596e-01
+## sigma           3.126000   8.718 2.235e-10  2.396000 3.855e+00
 ## 
 ## FOCUS Chi2 error levels in percent:
 ##          err.min n.optim df
 ## All data   6.398       4 15
-## parent     6.827       3  6
-## m1         4.490       1  9
+## parent     6.459       2  7
+## m1         4.690       2  8
 ## 
 ## Resulting formation fractions:
 ##                 ff
-## parent_sink 0.4855
 ## parent_m1   0.5145
-## m1_sink     1.0000
+## parent_sink 0.4855
 ## 
 ## Estimated disappearance times:
 ##           DT50   DT90
@@ -266,10 +264,10 @@
 ##     0   parent   102.04  99.59848  2.442e+00
 ##     1   parent    93.50  90.23787  3.262e+00
 ##     1   parent    92.50  90.23787  2.262e+00
-##     3   parent    63.23  74.07320 -1.084e+01
-##     3   parent    68.99  74.07320 -5.083e+00
-##     7   parent    52.32  49.91207  2.408e+00
-##     7   parent    55.13  49.91207  5.218e+00
+##     3   parent    63.23  74.07319 -1.084e+01
+##     3   parent    68.99  74.07319 -5.083e+00
+##     7   parent    52.32  49.91206  2.408e+00
+##     7   parent    55.13  49.91206  5.218e+00
 ##    14   parent    27.27  25.01257  2.257e+00
 ##    14   parent    26.64  25.01257  1.627e+00
 ##    21   parent    11.50  12.53462 -1.035e+00
@@ -279,7 +277,7 @@
 ##    50   parent     0.69   0.71624 -2.624e-02
 ##    50   parent     0.63   0.71624 -8.624e-02
 ##    75   parent     0.05   0.06074 -1.074e-02
-##    75   parent     0.06   0.06074 -7.382e-04
+##    75   parent     0.06   0.06074 -7.381e-04
 ##     1       m1     4.84   4.80296  3.704e-02
 ##     1       m1     5.64   4.80296  8.370e-01
 ##     3       m1    12.91  13.02400 -1.140e-01

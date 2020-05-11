@@ -85,13 +85,14 @@ is 1e-10, much lower than in \code{\link{lsoda}}.}
 
 \item{map_output}{Boolean to specify if the output should list values for
 the observed variables (default) or for all state variables (if set to
-FALSE).}
+FALSE). Setting this to FALSE has no effect for analytical solutions,
+as these always return mapped output.}
 
 \item{\dots}{Further arguments passed to the ode solver in case such a
 solver is used.}
 }
 \value{
-A data frame with the solution in wide format
+A matrix with the numeric solution in wide format
 }
 \description{
 This function produces a time series for all the observed variables in a
@@ -129,7 +130,7 @@ mkinpredict(SFO, c(k_degradinol = 0.3), c(degradinol = 100),
 mkinpredict(SFO, c(k_degradinol = 0.3), c(degradinol = 100),
       seq(0, 20, by = 0.01))[2001,]
 
-# Check compiled model versions - they are faster than the eigenvalue based solutions!
+# Comparison of the performance of solution types
 SFO_SFO = mkinmod(parent = list(type = "SFO", to = "m1"),
                   m1 = list(type = "SFO"), use_of_ff = "max")
 if(require(rbenchmark)) {
@@ -151,15 +152,11 @@ if(require(rbenchmark)) {
       c(parent = 100, m1 = 0), seq(0, 20, by = 0.1),
       solution_type = "analytical", use_compiled = FALSE)[201,])
 }
-    analytical = mkinpredict(SFO_SFO,
-      c(k_parent = 0.15, f_parent_to_m1 = 0.5, k_m1 = 0.01),
-      c(parent = 100, m1 = 0), seq(0, 20, by = 0.1),
-      solution_type = "analytical", use_compiled = FALSE)[201,]
 
 \dontrun{
   # Predict from a fitted model
   f <- mkinfit(SFO_SFO, FOCUS_2006_C, quiet = TRUE)
-  f <- mkinfit(SFO_SFO, FOCUS_2006_C, quiet = TRUE, solution_type = "analytical")
+  f <- mkinfit(SFO_SFO, FOCUS_2006_C, quiet = TRUE, solution_type = "deSolve")
   head(mkinpredict(f))
 }
 

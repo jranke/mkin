@@ -148,6 +148,7 @@ plot.mkinfit <- function(x, fit = x,
              solution_type = solution_type, atol = fit$atol, rtol = fit$rtol,
              use_compiled = FALSE)
   }
+  out <- as.data.frame(out)
 
   names(col_obs) <- names(pch_obs) <- names(lty_obs) <- obs_vars
 
