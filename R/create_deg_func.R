@@ -16,7 +16,14 @@
 #'   benchmark(
 #'     analytical = mkinfit(SFO_SFO, FOCUS_D, solution_type = "analytical", quiet = TRUE),
 #'     deSolve = mkinfit(SFO_SFO, FOCUS_D, solution_type = "deSolve", quiet = TRUE),
-#'     replications = 1)
+#'     replications = 2)
+#'   DFOP_SFO <- mkinmod(
+#'     parent = mkinsub("DFOP", "m1"),
+#'     m1 = mkinsub("SFO"))
+#'   benchmark(
+#'     analytical = mkinfit(DFOP_SFO, FOCUS_D, solution_type = "analytical", quiet = TRUE),
+#'     deSolve = mkinfit(DFOP_SFO, FOCUS_D, solution_type = "deSolve", quiet = TRUE),
+#'     replications = 2)
 #' }
 create_deg_func <- function(spec, use_of_ff = c("min", "max")) {
 
@@ -94,6 +101,21 @@ create_deg_func <- function(spec, use_of_ff = c("min", "max")) {
         "(((", k2, "-", k12, "-", k10, ")*", n20, "-", k12, "*", n10, ")*exp(-", k2, "*t)+",
         k12, "*", n10, "*exp(-(", k_parent, ")*t))/(", k2, "-(", k_parent, "))")
     }
+
+    # dfop_f12_sfo
+    if (all(use_of_ff == "max", spec[[1]]$sink == TRUE, length(obs_vars) == 2,
+        spec[[1]]$type == "DFOP", spec[[2]]$type == "SFO")) {
+      supported <- TRUE
+      f12 <- paste0("f_", n1, "_to_", n2)
+      k2 <- paste0("k_", n2)
+      predicted_text[n2] <- paste0(
+        "((", f12, "* g - ", f12, ") * k2 * ", n10, " * exp(- k2 * t))/(k2 - ", k2, ") - ",
+        "((", f12, "* g) * k1 * ", n10, " * exp(- k1 * t))/(k1 - ", k2, ") + ",
+        "(((k1 - ", k2, ") * k2 - ", k2, "* k1 + ", k2, "^2) * ", n20, "+",
+        "((", f12, "* k1 + (", f12, "*g - ", f12, ") * ", k2, ") * k2 - ", f12, " * g * ", k2, " * k1) * ", n10, ") * ",
+        "exp( - ", k2, " * t)/((k1 - ", k2, ") * k2 - ", k2, " * k1 + ", k2, "^2)")
+    }
+
   }
 
 
