@@ -40,7 +40,8 @@ test_that("The analytical solutions for SFO-SFO are correct", {
     solution_type = "deSolve", quiet = TRUE)
   expect_equal(
     parms(f_sfo_sfo.ff),
-    parms(f_sfo_sfo.ff_desolve)
+    parms(f_sfo_sfo.ff_desolve),
+    tolerance = 5e-6
   )
 
 })
