@@ -53,7 +53,7 @@ names as the original parameters.
 \description{
 The transformations are intended to map parameters that should only take on
 restricted values to the full scale of real numbers. For kinetic rate
-constants and other paramters that can only take on positive values, a
+constants and other parameters that can only take on positive values, a
 simple log transformation is used. For compositional parameters, such as the
 formations fractions that should always sum up to 1 and can not be negative,
 the \code{\link{ilr}} transformation is used.

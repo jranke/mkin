@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50.2</span>
       </span>
     </div>
 
@@ -97,7 +97,7 @@
       <h1 data-toc-skip>Introduction to mkin</h1>
                         <h4 class="author">Johannes Ranke</h4>
             
-            <h4 class="date">2020-05-11</h4>
+            <h4 class="date">2020-05-12</h4>
       
       <small class="dont-index">Source: <a href="http://github.com/jranke/mkin/blob/master/vignettes/mkin.Rmd"><code>vignettes/mkin.Rmd</code></a></small>
       <div class="hidden name"><code>mkin.Rmd</code></div>
@@ -156,7 +156,7 @@
 <a href="#derived-software-tools" class="anchor"></a>Derived software tools</h2>
 <p>Soon after the publication of <code>mkin</code>, two derived tools were published, namely KinGUII (available from Bayer Crop Science) and CAKE (commissioned to Tessella by Syngenta), which added a graphical user interface (GUI), and added fitting by iteratively reweighted least squares (IRLS) and characterisation of likely parameter distributions by Markov Chain Monte Carlo (MCMC) sampling.</p>
 <p>CAKE focuses on a smooth use experience, sacrificing some flexibility in the model definition, originally allowing only two primary metabolites in parallel. The current version 3.3 of CAKE release in March 2016 uses a basic scheme for up to six metabolites in a flexible arrangement, but does not support back-reactions (non-instantaneous equilibria) or biphasic kinetics for metabolites.</p>
-<p>KinGUI offers an even more flexible widget for specifying complex kinetic models. Back-reactions (non-instanteneous equilibria) were supported early on, but until 2014, only simple first-order models could be specified for transformation products. Starting with KinGUII version 2.1, biphasic modelling of metabolites was also available in KinGUII.</p>
+<p>KinGUI offers an even more flexible widget for specifying complex kinetic models. Back-reactions (non-instantaneous equilibria) were supported early on, but until 2014, only simple first-order models could be specified for transformation products. Starting with KinGUII version 2.1, biphasic modelling of metabolites was also available in KinGUII.</p>
 <p>A further graphical user interface (GUI) that has recently been brought to a decent degree of maturity is the browser based GUI named <code>gmkin</code>. Please see its <a href="https://pkgdown.jrwb.de/gmkin">documentation page</a> and <a href="https://pkgdown.jrwb.de/gmkin/articles/gmkin_manual.html">manual</a> for further information.</p>
 <p>A comparison of scope, usability and numerical results obtained with these tools has been recently been published by <span class="citation">Ranke, Wöltjen, and Meinecke (2018)</span>.</p>
 </div>
@@ -177,7 +177,7 @@
 <div id="confidence-intervals-based-on-transformed-parameters" class="section level2">
 <h2 class="hasAnchor">
 <a href="#confidence-intervals-based-on-transformed-parameters" class="anchor"></a>Confidence intervals based on transformed parameters</h2>
-<p>In the first attempt at providing improved parameter confidence intervals introduced to <code>mkin</code> in 2013, confidence intervals obtained from FME on the transformed parameters were simply all backtransformed one by one to yield asymetric confidence intervals for the backtransformed parameters.</p>
+<p>In the first attempt at providing improved parameter confidence intervals introduced to <code>mkin</code> in 2013, confidence intervals obtained from FME on the transformed parameters were simply all backtransformed one by one to yield asymmetric confidence intervals for the backtransformed parameters.</p>
 <p>However, while there is a 1:1 relation between the rate constants in the model and the transformed parameters fitted in the model, the parameters obtained by the isometric logratio transformation are calculated from the set of formation fractions that quantify the paths to each of the compounds formed from a specific parent compound, and no such 1:1 relation exists.</p>
 <p>Therefore, parameter confidence intervals for formation fractions obtained with this method only appear valid for the case of a single transformation product, where only one formation fraction is to be estimated, directly corresponding to one component of the ilr transformed parameter.</p>
 <p>The confidence intervals obtained by backtransformation for the cases where a 1:1 relation between transformed and original parameter exist are considered by the author of this vignette to be more accurate than those obtained using a re-estimation of the Hessian matrix after backtransformation, as implemented in the FME package.</p>

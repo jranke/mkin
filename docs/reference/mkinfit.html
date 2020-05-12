@@ -42,7 +42,7 @@
 <meta property="og:title" content="Fit a kinetic model to data with one or more state variables — mkinfit" />
 <meta property="og:description" content="This function maximises the likelihood of the observed data using the Port
 algorithm nlminb, and the specified initial or fixed
-parameters and starting values.  In each step of the optimsation, the
+parameters and starting values.  In each step of the optimisation, the
 kinetic model is solved using the function mkinpredict. The
 parameters of the selected error model are fitted simultaneously with the
 degradation model parameters, as both of them are arguments of the
@@ -78,7 +78,7 @@ likelihood function." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50.2</span>
       </span>
     </div>
 
@@ -149,7 +149,7 @@ likelihood function." />
     <div class="ref-description">
     <p>This function maximises the likelihood of the observed data using the Port
 algorithm <code><a href='https://rdrr.io/r/stats/nlminb.html'>nlminb</a></code>, and the specified initial or fixed
-parameters and starting values.  In each step of the optimsation, the
+parameters and starting values.  In each step of the optimisation, the
 kinetic model is solved using the function <code><a href='mkinpredict.html'>mkinpredict</a></code>. The
 parameters of the selected error model are fitted simultaneously with the
 degradation model parameters, as both of them are arguments of the
@@ -420,17 +420,17 @@ Degradation Data. <em>Environments</em> 6(12) 124
     <pre class="examples"><div class='input'>
 <span class='co'># Use shorthand notation for parent only degradation</span>
 <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='st'>"FOMC"</span>, <span class='no'>FOCUS_2006_C</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.50.1 
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.50.2 
 #&gt; R version used for fitting:       4.0.0 
-#&gt; Date of fit:     Tue May 12 08:36:07 2020 
-#&gt; Date of summary: Tue May 12 08:36:07 2020 
+#&gt; Date of fit:     Tue May 12 10:55:39 2020 
+#&gt; Date of summary: Tue May 12 10:55:39 2020 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent
 #&gt; 
 #&gt; Model predictions using solution type analytical 
 #&gt; 
-#&gt; Fitted using 222 model solutions performed in 0.047 s
+#&gt; Fitted using 222 model solutions performed in 0.043 s
 #&gt; 
 #&gt; Error model: Constant variance 
 #&gt; 
@@ -507,7 +507,7 @@ Degradation Data. <em>Environments</em> 6(12) 124
   <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='co'># Fit the model to the FOCUS example dataset D using defaults</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>,
                            <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"eigen"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)))</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='output co'>#&gt;        User      System verstrichen 
-#&gt;       0.408       0.008       0.416 </div><div class='input'><span class='fu'><a href='parms.html'>parms</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt;       parent_0       k_parent           k_m1 f_parent_to_m1          sigma 
+#&gt;       0.408       0.001       0.410 </div><div class='input'><span class='fu'><a href='parms.html'>parms</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt;       parent_0       k_parent           k_m1 f_parent_to_m1          sigma 
 #&gt;   99.598483222    0.098697734    0.005260651    0.514475962    3.125503875 </div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; $ff
 #&gt;   parent_m1 parent_sink 
 #&gt;    0.514476    0.485524 
@@ -597,7 +597,7 @@ Degradation Data. <em>Environments</em> 6(12) 124
 #&gt; Sum of squared residuals at call 166: 371.2134
 #&gt; Sum of squared residuals at call 168: 371.2134
 #&gt; Negative log-likelihood at call 178: 97.22429</div><div class='output co'>#&gt; <span class='message'>Optimisation successfully terminated.</span></div><div class='output co'>#&gt;        User      System verstrichen 
-#&gt;       0.350       0.001       0.351 </div><div class='input'><span class='fu'><a href='parms.html'>parms</a></span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt;       parent_0       k_parent           k_m1 f_parent_to_m1          sigma 
+#&gt;       0.353       0.000       0.352 </div><div class='input'><span class='fu'><a href='parms.html'>parms</a></span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt;       parent_0       k_parent           k_m1 f_parent_to_m1          sigma 
 #&gt;   99.598480759    0.098697739    0.005260651    0.514475958    3.125503874 </div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt; $ff
 #&gt;   parent_m1 parent_sink 
 #&gt;    0.514476    0.485524 
@@ -629,10 +629,10 @@ Degradation Data. <em>Environments</em> 6(12) 124
 <span class='co'># \dontrun{</span>
 <span class='co'># Weighted fits, including IRLS (error_model = "obs")</span>
 <span class='no'>SFO_SFO.ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>),
-                      <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='no'>f.noweight</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>f.noweight</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.50.1 
+                      <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='no'>f.noweight</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>f.noweight</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.50.2 
 #&gt; R version used for fitting:       4.0.0 
-#&gt; Date of fit:     Tue May 12 08:36:12 2020 
-#&gt; Date of summary: Tue May 12 08:36:12 2020 
+#&gt; Date of fit:     Tue May 12 10:55:44 2020 
+#&gt; Date of summary: Tue May 12 10:55:44 2020 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -640,7 +640,7 @@ Degradation Data. <em>Environments</em> 6(12) 124
 #&gt; 
 #&gt; Model predictions using solution type analytical 
 #&gt; 
-#&gt; Fitted using 421 model solutions performed in 0.146 s
+#&gt; Fitted using 421 model solutions performed in 0.147 s
 #&gt; 
 #&gt; Error model: Constant variance 
 #&gt; 
@@ -751,10 +751,10 @@ Degradation Data. <em>Environments</em> 6(12) 124
 #&gt;   100       m1    31.04  31.98163 -9.416e-01
 #&gt;   100       m1    33.13  31.98163  1.148e+00
 #&gt;   120       m1    25.15  28.78984 -3.640e+00
-#&gt;   120       m1    33.31  28.78984  4.520e+00</div><div class='input'><span class='no'>f.obs</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"obs"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>f.obs</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.50.1 
+#&gt;   120       m1    33.31  28.78984  4.520e+00</div><div class='input'><span class='no'>f.obs</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"obs"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>f.obs</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.50.2 
 #&gt; R version used for fitting:       4.0.0 
-#&gt; Date of fit:     Tue May 12 08:36:13 2020 
-#&gt; Date of summary: Tue May 12 08:36:13 2020 
+#&gt; Date of fit:     Tue May 12 10:55:44 2020 
+#&gt; Date of summary: Tue May 12 10:55:44 2020 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -762,7 +762,7 @@ Degradation Data. <em>Environments</em> 6(12) 124
 #&gt; 
 #&gt; Model predictions using solution type analytical 
 #&gt; 
-#&gt; Fitted using 978 model solutions performed in 0.337 s
+#&gt; Fitted using 978 model solutions performed in 0.334 s
 #&gt; 
 #&gt; Error model: Variance unique to each observed variable 
 #&gt; 
@@ -888,10 +888,10 @@ Degradation Data. <em>Environments</em> 6(12) 124
 #&gt;   100       m1    31.04  31.98773 -9.477e-01
 #&gt;   100       m1    33.13  31.98773  1.142e+00
 #&gt;   120       m1    25.15  28.80429 -3.654e+00
-#&gt;   120       m1    33.31  28.80429  4.506e+00</div><div class='input'><span class='no'>f.tc</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"tc"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>f.tc</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.50.1 
+#&gt;   120       m1    33.31  28.80429  4.506e+00</div><div class='input'><span class='no'>f.tc</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"tc"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>f.tc</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.50.2 
 #&gt; R version used for fitting:       4.0.0 
-#&gt; Date of fit:     Tue May 12 08:36:14 2020 
-#&gt; Date of summary: Tue May 12 08:36:14 2020 
+#&gt; Date of fit:     Tue May 12 10:55:45 2020 
+#&gt; Date of summary: Tue May 12 10:55:45 2020 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -899,7 +899,7 @@ Degradation Data. <em>Environments</em> 6(12) 124
 #&gt; 
 #&gt; Model predictions using solution type analytical 
 #&gt; 
-#&gt; Fitted using 1875 model solutions performed in 0.647 s
+#&gt; Fitted using 1875 model solutions performed in 0.643 s
 #&gt; 
 #&gt; Error model: Two-component variance function 
 #&gt; 

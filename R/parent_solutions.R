@@ -191,7 +191,7 @@ SFORB.solution = function(t, parent_0, k_12, k_21, k_1output) {
 #' @family parent solutions
 #' @inherit SFO.solution 
 #' @param kmax Maximum rate constant.
-#' @param k0 Minumum rate constant effective at time zero.
+#' @param k0 Minimum rate constant effective at time zero.
 #' @param r Growth rate of the increase in the rate constant.
 #' @note The solution of the logistic model reduces to the
 #'   \code{\link{SFO.solution}} if \code{k0} is equal to \code{kmax}.

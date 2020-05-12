@@ -13,7 +13,7 @@ logistic.solution(t, parent_0, kmax, k0, r)
 
 \item{kmax}{Maximum rate constant.}
 
-\item{k0}{Minumum rate constant effective at time zero.}
+\item{k0}{Minimum rate constant effective at time zero.}
 
 \item{r}{Growth rate of the increase in the rate constant.}
 }

@@ -57,7 +57,7 @@ parameters are used for the prediction.}
 kinetic model, which is generally defined as a set of ordinary
 differential equations.}
 
-\item{odeini}{A numeric vectory containing the initial values of the state
+\item{odeini}{A numeric vector containing the initial values of the state
 variables of the model. Note that the state variables can differ from the
 observed variables, for example in the case of the SFORB model.}
 

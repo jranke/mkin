@@ -28,7 +28,7 @@ detailed guidance and helpful tools have been developed as detailed in
 
 ## Usage
 
-For a start, have a look a the code examples provided for
+For a start, have a look at the code examples provided for
 [`plot.mkinfit`](https://pkgdown.jrwb.de/mkin/reference/plot.mkinfit.html)
 and
 [`plot.mmkin`](https://pkgdown.jrwb.de/mkin/reference/plot.mmkin.html), and
@@ -146,7 +146,7 @@ The first `mkin` code was
 on 18 May 2010.
 
 In 2011, Bayer Crop Science started to distribute an R based successor to KinGUI named
-KinGUII whose R code is based on `mkin`, but which added, amongst other
+KinGUII whose R code is based on `mkin`, but which added, among other
 refinements, a closed source graphical user interface (GUI), iteratively
 reweighted least squares (IRLS) optimisation of the variance for each of the
 observed variables, and Markov Chain Monte Carlo (MCMC) simulation

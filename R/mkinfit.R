@@ -4,7 +4,7 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #'
 #' This function maximises the likelihood of the observed data using the Port
 #' algorithm \code{\link{nlminb}}, and the specified initial or fixed
-#' parameters and starting values.  In each step of the optimsation, the
+#' parameters and starting values.  In each step of the optimisation, the
 #' kinetic model is solved using the function \code{\link{mkinpredict}}. The
 #' parameters of the selected error model are fitted simultaneously with the
 #' degradation model parameters, as both of them are arguments of the
