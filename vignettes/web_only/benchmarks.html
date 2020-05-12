@@ -1649,18 +1649,18 @@ SFO_lin_a &lt;- synthetic_data_for_UBA_2014[[1]]$data
 
 DFOP_par_c &lt;- synthetic_data_for_UBA_2014[[12]]$data
 
-t6 &lt;- system.time(mmkin_bench(list(m_synth_SFO_lin), list(SFO_lin_a)))[&quot;elapsed&quot;]
-t7 &lt;- system.time(mmkin_bench(list(m_synth_DFOP_par), list(DFOP_par_c)))[&quot;elapsed&quot;]
+t6 &lt;- system.time(mmkin_bench(list(m_synth_SFO_lin), list(SFO_lin_a)))[[&quot;elapsed&quot;]]
+t7 &lt;- system.time(mmkin_bench(list(m_synth_DFOP_par), list(DFOP_par_c)))[[&quot;elapsed&quot;]]
 
 t8 &lt;- system.time(mmkin_bench(list(m_synth_SFO_lin), list(SFO_lin_a),
-    error_model = &quot;tc&quot;))[&quot;elapsed&quot;]
+    error_model = &quot;tc&quot;))[[&quot;elapsed&quot;]]
 t9 &lt;- system.time(mmkin_bench(list(m_synth_DFOP_par), list(DFOP_par_c),
-    error_model = &quot;tc&quot;))[&quot;elapsed&quot;]
+    error_model = &quot;tc&quot;))[[&quot;elapsed&quot;]]
 
 t10 &lt;- system.time(mmkin_bench(list(m_synth_SFO_lin), list(SFO_lin_a),
-    error_model = &quot;obs&quot;))[&quot;elapsed&quot;]
+    error_model = &quot;obs&quot;))[[&quot;elapsed&quot;]]
 t11 &lt;- system.time(mmkin_bench(list(m_synth_DFOP_par), list(DFOP_par_c),
-    error_model = &quot;obs&quot;))[&quot;elapsed&quot;]</code></pre>
+    error_model = &quot;obs&quot;))[[&quot;elapsed&quot;]]</code></pre>
 <pre class="r"><code>mkin_benchmarks[system_string, paste0(&quot;t&quot;, 1:11)] &lt;-
   c(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11)
 save(mkin_benchmarks, file = &quot;~/git/mkin/vignettes/web_only/mkin_benchmarks.rda&quot;)</code></pre>
@@ -1668,42 +1668,180 @@ save(mkin_benchmarks, file = &quot;~/git/mkin/vignettes/web_only/mkin_benchmarks
 <div id="results" class="section level2">
 <h2>Results</h2>
 <p>Currently, we only have benchmark information on one system, therefore only the mkin version is shown with the results below. Timings are in seconds, shorter is better.</p>
+<pre class="r"><code>rownames(mkin_benchmarks) &lt;- as.character(mkin_benchmarks$mkin)</code></pre>
 <p>Benchmarks for all available error models are shown.</p>
 <div id="parent-only" class="section level3">
 <h3>Parent only</h3>
 <p>Constant variance and two-component error model:</p>
-<pre class="r"><code>print(mkin_benchmarks[, c(&quot;mkin&quot;, &quot;t1&quot;, &quot;t2&quot;)], row.names = FALSE)</code></pre>
-<pre><code>##      mkin    t1     t2
-##  0.9.48.1 3.610 11.019
-##  0.9.49.1 8.184 22.889
-##  0.9.49.2 7.064 12.558
-##  0.9.49.3 7.296 21.239
-##  0.9.49.4 5.936 20.545
-##  0.9.50.2 1.547  3.955</code></pre>
+<pre class="r"><code>kable(mkin_benchmarks[, c(&quot;t1&quot;, &quot;t2&quot;)])</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">t1</th>
+<th align="right">t2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0.9.48.1</td>
+<td align="right">3.610</td>
+<td align="right">11.019</td>
+</tr>
+<tr class="even">
+<td>0.9.49.1</td>
+<td align="right">8.184</td>
+<td align="right">22.889</td>
+</tr>
+<tr class="odd">
+<td>0.9.49.2</td>
+<td align="right">7.064</td>
+<td align="right">12.558</td>
+</tr>
+<tr class="even">
+<td>0.9.49.3</td>
+<td align="right">7.296</td>
+<td align="right">21.239</td>
+</tr>
+<tr class="odd">
+<td>0.9.49.4</td>
+<td align="right">5.936</td>
+<td align="right">20.545</td>
+</tr>
+<tr class="even">
+<td>0.9.50.2</td>
+<td align="right">1.559</td>
+<td align="right">3.929</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="one-metabolite" class="section level3">
 <h3>One metabolite</h3>
 <p>Constant variance, variance by variable and two-component error model:</p>
-<pre class="r"><code>print(mkin_benchmarks[, c(&quot;mkin&quot;, &quot;t3&quot;, &quot;t4&quot;, &quot;t5&quot;)], row.names = FALSE)</code></pre>
-<pre><code>##      mkin    t3     t4    t5
-##  0.9.48.1 3.764 14.347 9.495
-##  0.9.49.1 4.649 13.789 6.395
-##  0.9.49.2 4.786  8.461 5.675
-##  0.9.49.3 4.510 13.805 7.386
-##  0.9.49.4 4.446 15.335 6.002
-##  0.9.50.2 1.379  6.176 2.713</code></pre>
+<pre class="r"><code>kable(mkin_benchmarks[, c(&quot;t3&quot;, &quot;t4&quot;, &quot;t5&quot;)])</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">t3</th>
+<th align="right">t4</th>
+<th align="right">t5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0.9.48.1</td>
+<td align="right">3.764</td>
+<td align="right">14.347</td>
+<td align="right">9.495</td>
+</tr>
+<tr class="even">
+<td>0.9.49.1</td>
+<td align="right">4.649</td>
+<td align="right">13.789</td>
+<td align="right">6.395</td>
+</tr>
+<tr class="odd">
+<td>0.9.49.2</td>
+<td align="right">4.786</td>
+<td align="right">8.461</td>
+<td align="right">5.675</td>
+</tr>
+<tr class="even">
+<td>0.9.49.3</td>
+<td align="right">4.510</td>
+<td align="right">13.805</td>
+<td align="right">7.386</td>
+</tr>
+<tr class="odd">
+<td>0.9.49.4</td>
+<td align="right">4.446</td>
+<td align="right">15.335</td>
+<td align="right">6.002</td>
+</tr>
+<tr class="even">
+<td>0.9.50.2</td>
+<td align="right">1.352</td>
+<td align="right">6.110</td>
+<td align="right">2.841</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="two-metabolites" class="section level3">
 <h3>Two metabolites</h3>
 <p>Two different datasets, for each constant variance, variance by variable and two-component error model are shown:</p>
-<pre class="r"><code>print(mkin_benchmarks[, c(&quot;mkin&quot;, paste0(&quot;t&quot;, 6:11))], row.names = FALSE)</code></pre>
-<pre><code>##      mkin    t6    t7    t8     t9   t10    t11
-##  0.9.48.1 2.623 4.587 7.525 16.621 8.576 31.267
-##  0.9.49.1 2.542 4.128 4.632  8.171 3.676  5.636
-##  0.9.49.2 2.723 4.478 4.862  7.618 3.579  5.574
-##  0.9.49.3 2.643 4.374  7.02 11.124 5.388  7.365
-##  0.9.49.4 2.635 4.259 4.737  7.763 3.427  5.626
-##  0.9.50.2 0.742 1.202 1.269   2.97 2.028  2.959</code></pre>
+<pre class="r"><code>kable(mkin_benchmarks[, paste0(&quot;t&quot;, 6:11)])</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">t6</th>
+<th align="right">t7</th>
+<th align="right">t8</th>
+<th align="right">t9</th>
+<th align="right">t10</th>
+<th align="right">t11</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0.9.48.1</td>
+<td align="right">2.623</td>
+<td align="right">4.587</td>
+<td align="right">7.525</td>
+<td align="right">16.621</td>
+<td align="right">8.576</td>
+<td align="right">31.267</td>
+</tr>
+<tr class="even">
+<td>0.9.49.1</td>
+<td align="right">2.542</td>
+<td align="right">4.128</td>
+<td align="right">4.632</td>
+<td align="right">8.171</td>
+<td align="right">3.676</td>
+<td align="right">5.636</td>
+</tr>
+<tr class="odd">
+<td>0.9.49.2</td>
+<td align="right">2.723</td>
+<td align="right">4.478</td>
+<td align="right">4.862</td>
+<td align="right">7.618</td>
+<td align="right">3.579</td>
+<td align="right">5.574</td>
+</tr>
+<tr class="even">
+<td>0.9.49.3</td>
+<td align="right">2.643</td>
+<td align="right">4.374</td>
+<td align="right">7.020</td>
+<td align="right">11.124</td>
+<td align="right">5.388</td>
+<td align="right">7.365</td>
+</tr>
+<tr class="odd">
+<td>0.9.49.4</td>
+<td align="right">2.635</td>
+<td align="right">4.259</td>
+<td align="right">4.737</td>
+<td align="right">7.763</td>
+<td align="right">3.427</td>
+<td align="right">5.626</td>
+</tr>
+<tr class="even">
+<td>0.9.50.2</td>
+<td align="right">0.759</td>
+<td align="right">1.204</td>
+<td align="right">1.275</td>
+<td align="right">2.837</td>
+<td align="right">2.026</td>
+<td align="right">2.976</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 

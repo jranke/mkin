@@ -92,18 +92,18 @@ SFO_lin_a <- synthetic_data_for_UBA_2014[[1]]$data
 
 DFOP_par_c <- synthetic_data_for_UBA_2014[[12]]$data
 
-t6 <- system.time(mmkin_bench(list(m_synth_SFO_lin), list(SFO_lin_a)))["elapsed"]
-t7 <- system.time(mmkin_bench(list(m_synth_DFOP_par), list(DFOP_par_c)))["elapsed"]
+t6 <- system.time(mmkin_bench(list(m_synth_SFO_lin), list(SFO_lin_a)))[["elapsed"]]
+t7 <- system.time(mmkin_bench(list(m_synth_DFOP_par), list(DFOP_par_c)))[["elapsed"]]
 
 t8 <- system.time(mmkin_bench(list(m_synth_SFO_lin), list(SFO_lin_a),
-    error_model = "tc"))["elapsed"]
+    error_model = "tc"))[["elapsed"]]
 t9 <- system.time(mmkin_bench(list(m_synth_DFOP_par), list(DFOP_par_c),
-    error_model = "tc"))["elapsed"]
+    error_model = "tc"))[["elapsed"]]
 
 t10 <- system.time(mmkin_bench(list(m_synth_SFO_lin), list(SFO_lin_a),
-    error_model = "obs"))["elapsed"]
+    error_model = "obs"))[["elapsed"]]
 t11 <- system.time(mmkin_bench(list(m_synth_DFOP_par), list(DFOP_par_c),
-    error_model = "obs"))["elapsed"]
+    error_model = "obs"))[["elapsed"]]
 ```
 
 ```{r results}
@@ -117,6 +117,11 @@ save(mkin_benchmarks, file = "~/git/mkin/vignettes/web_only/mkin_benchmarks.rda"
 Currently, we only have benchmark information on one system, therefore only the mkin
 version is shown with the results below. Timings are in seconds, shorter is better.
 
+```{r}
+rownames(mkin_benchmarks) <- as.character(mkin_benchmarks$mkin)
+```
+
+
 Benchmarks for all available error models are shown.
 
 ### Parent only
@@ -124,7 +129,7 @@ Benchmarks for all available error models are shown.
 Constant variance and two-component error model:
 
 ```{r}
-print(mkin_benchmarks[, c("mkin", "t1", "t2")], row.names = FALSE)
+kable(mkin_benchmarks[, c("t1", "t2")])
 ```
 
 ### One metabolite
@@ -132,7 +137,7 @@ print(mkin_benchmarks[, c("mkin", "t1", "t2")], row.names = FALSE)
 Constant variance, variance by variable and two-component error model:
 
 ```{r}
-print(mkin_benchmarks[, c("mkin", "t3", "t4", "t5")], row.names = FALSE)
+kable(mkin_benchmarks[, c("t3", "t4", "t5")])
 ```
 
 ### Two metabolites
@@ -141,5 +146,5 @@ Two different datasets, for each constant variance, variance by variable and
 two-component error model are shown:
 
 ```{r}
-print(mkin_benchmarks[, c("mkin", paste0("t", 6:11))], row.names = FALSE)
+kable(mkin_benchmarks[, paste0("t", 6:11)])
 ```
