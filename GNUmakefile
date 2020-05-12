@@ -103,6 +103,10 @@ pd: roxygen
 	"$(RBIN)/Rscript" -e "pkgdown::build_site(run_dont_run = TRUE, lazy = TRUE)"
 	git add -A
 
+pd_release: roxygen
+	"$(RBIN)/Rscript" -e "pkgdown::build_site(run_dont_run = TRUE)"
+	git add -A
+
 r-forge:
 	git archive master > $(HOME)/git/mkin/mkin.tar;\
 	cd $(RFDIR) && rm -r `ls` && tar -xf $(HOME)/git/mkin/mkin.tar;\

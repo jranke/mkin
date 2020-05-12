@@ -154,7 +154,6 @@ nlme.mmkin <- function(model, data = sys.frame(sys.parent()),
 #' @export
 #' @rdname nlme.mmkin
 #' @param x An nlme.mmkin object to print
-#' @param data Should the data be printed?
 #' @param ... Further arguments as in the generic
 print.nlme.mmkin <- function(x, ...) {
   x$call$data <- "Not shown"

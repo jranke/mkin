@@ -56,51 +56,56 @@ issuing
 Sys.getenv("HOME")
 ```
 
-## Comparison with Eigenvalue based solutions
+## Comparison with other solution methods
 
-First, we build a simple degradation model for a parent compound with one metabolite.
+First, we build a simple degradation model for a parent compound with one metabolite,
+and we remove zero values from the dataset.
 
 ```{r create_SFO_SFO}
 library("mkin", quietly = TRUE)
 SFO_SFO <- mkinmod(
   parent = mkinsub("SFO", "m1"),
   m1 = mkinsub("SFO"))
+FOCUS_D <- subset(FOCUS_2006_D, value != 0)
 ```
 
 We can compare the performance of the Eigenvalue based solution against the
 compiled version and the R implementation of the differential equations using
 the benchmark package. In the output of below code, the warnings about zero
-being removed from the FOCUS D dataset are suppressed.
+being removed from the FOCUS D dataset are suppressed. Since mkin version
+0.9.49.11, an analytical solution is also implemented, which is included
+in the tests below.
 
 ```{r benchmark_SFO_SFO, fig.height = 3, message = FALSE, warning = FALSE}
 if (require(rbenchmark)) {
   b.1 <- benchmark(
-    "deSolve, not compiled" = mkinfit(SFO_SFO, FOCUS_2006_D,
-                                      solution_type = "deSolve",
-                                      use_compiled = FALSE, quiet = TRUE),
-    "Eigenvalue based" = mkinfit(SFO_SFO, FOCUS_2006_D,
-                                 solution_type = "eigen", quiet = TRUE),
-    "deSolve, compiled" = mkinfit(SFO_SFO, FOCUS_2006_D,
-                                  solution_type = "deSolve", quiet = TRUE),
-    replications = 3)
+    "deSolve, not compiled" = mkinfit(SFO_SFO, FOCUS_D,
+       solution_type = "deSolve",
+       use_compiled = FALSE, quiet = TRUE),
+    "Eigenvalue based" = mkinfit(SFO_SFO, FOCUS_D,
+       solution_type = "eigen", quiet = TRUE),
+    "deSolve, compiled" = mkinfit(SFO_SFO, FOCUS_D,
+       solution_type = "deSolve", quiet = TRUE),
+    "analytical" = mkinfit(SFO_SFO, FOCUS_D,
+       solution_type = "analytical",
+       use_compiled = FALSE, quiet = TRUE),
+    replications = 1, order = "relative",
+    columns = c("test", "replications", "relative", "elapsed"))
   print(b.1)
-  factor_SFO_SFO <- round(b.1["1", "relative"])
 } else {
-  factor_SFO_SFO <- NA
   print("R package rbenchmark is not available")
 }
 ```
 
-We see that using the compiled model is by a factor of around
-`r factor_SFO_SFO`
-faster than using the R version with the default ode solver, and it is even
-faster than the Eigenvalue based solution implemented in R which does not need
-iterative solution of the ODEs.
+We see that using the compiled model is by more than a factor of 10 faster
+than using deSolve without compiled code.
 
+## Model without analytical solution
 
-## Model that can not be solved with Eigenvalues
-
-This evaluation is also taken from the example section of mkinfit.
+This evaluation is also taken from the example section of mkinfit. No analytical
+solution is available for this system, and now Eigenvalue based solution
+is possible, so only deSolve using with or without compiled code is
+available.
 
 ```{r benchmark_FOMC_SFO, fig.height = 3, warning = FALSE}
 if (require(rbenchmark)) {
@@ -109,10 +114,11 @@ if (require(rbenchmark)) {
     m1 = mkinsub( "SFO"))
 
   b.2 <- benchmark(
-    "deSolve, not compiled" = mkinfit(FOMC_SFO, FOCUS_2006_D,
+    "deSolve, not compiled" = mkinfit(FOMC_SFO, FOCUS_D,
                                       use_compiled = FALSE, quiet = TRUE),
-    "deSolve, compiled" = mkinfit(FOMC_SFO, FOCUS_2006_D, quiet = TRUE),
-    replications = 3)
+    "deSolve, compiled" = mkinfit(FOMC_SFO, FOCUS_D, quiet = TRUE),
+    replications = 1, order = "relative",
+    columns = c("test", "replications", "relative", "elapsed"))
   print(b.2)
   factor_FOMC_SFO <- round(b.2["1", "relative"])
 } else {

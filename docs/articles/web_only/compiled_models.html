@@ -6,19 +6,19 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Performance benefit by using compiled model definitions in mkin • mkin</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../../pkgdown.css" rel="stylesheet">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../../bootstrap-toc.css">
+<script src="../../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../../pkgdown.css" rel="stylesheet">
 <script src="../../pkgdown.js"></script><meta property="og:title" content="Performance benefit by using compiled model definitions in mkin">
-<meta property="og:description" content="">
-<meta name="twitter:card" content="summary">
+<meta property="og:description" content="mkin">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body>
+<body data-spy="scroll" data-target="#toc">
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.49.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50.2</span>
       </span>
     </div>
 
@@ -74,7 +74,14 @@
   <a href="../../news/index.html">News</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="http://github.com/jranke/mkin/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -87,12 +94,12 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>Performance benefit by using compiled model definitions in mkin</h1>
+      <h1 data-toc-skip>Performance benefit by using compiled model definitions in mkin</h1>
                         <h4 class="author">Johannes Ranke</h4>
             
-            <h4 class="date">2020-04-04</h4>
+            <h4 class="date">2020-05-12</h4>
       
-      
+      <small class="dont-index">Source: <a href="http://github.com/jranke/mkin/blob/master/vignettes/web_only/compiled_models.Rmd"><code>vignettes/web_only/compiled_models.Rmd</code></a></small>
       <div class="hidden name"><code>compiled_models.Rmd</code></div>
 
     </div>
@@ -103,99 +110,90 @@
 <h2 class="hasAnchor">
 <a href="#how-to-benefit-from-compiled-models" class="anchor"></a>How to benefit from compiled models</h2>
 <p>When using an mkin version equal to or greater than 0.9-36 and a C compiler is available, you will see a message that the model is being compiled from autogenerated C code when defining a model using mkinmod. Starting from version 0.9.49.9, the <code><a href="../../reference/mkinmod.html">mkinmod()</a></code> function checks for presence of a compiler using</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">pkgbuild<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/pkgbuild/man/has_compiler.html">has_compiler</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="kw pkg">pkgbuild</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/pkgbuild/man/has_compiler.html">has_compiler</a></span>()</pre></body></html></div>
 <p>In previous versions, it used <code><a href="https://rdrr.io/r/base/Sys.which.html">Sys.which("gcc")</a></code> for this check.</p>
 <p>On Linux, you need to have the essential build tools like make and gcc or clang installed. On Debian based linux distributions, these will be pulled in by installing the build-essential package.</p>
 <p>On MacOS, which I do not use personally, I have had reports that a compiler is available by default.</p>
 <p>On Windows, you need to install Rtools and have the path to its bin directory in your PATH variable. You do not need to modify the PATH variable when installing Rtools. Instead, I would recommend to put the line</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv</a></span>(<span class="dt">PATH =</span> <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"C:/Rtools/bin"</span>, <span class="kw"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span>(<span class="st">"PATH"</span>), <span class="dt">sep=</span><span class="st">";"</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv</a></span>(<span class="kw">PATH</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"C:/Rtools/bin"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span>(<span class="st">"PATH"</span>), <span class="kw">sep</span><span class="kw">=</span><span class="st">";"</span>))</pre></body></html></div>
 <p>into your .Rprofile startup file. This is just a text file with some R code that is executed when your R session starts. It has to be named .Rprofile and has to be located in your home directory, which will generally be your Documents folder. You can check the location of the home directory used by R by issuing</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span>(<span class="st">"HOME"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span>(<span class="st">"HOME"</span>)</pre></body></html></div>
 </div>
-<div id="comparison-with-eigenvalue-based-solutions" class="section level2">
+<div id="comparison-with-other-solution-methods" class="section level2">
 <h2 class="hasAnchor">
-<a href="#comparison-with-eigenvalue-based-solutions" class="anchor"></a>Comparison with Eigenvalue based solutions</h2>
-<p>First, we build a simple degradation model for a parent compound with one metabolite.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st">"mkin"</span>, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb4-2" title="2">SFO_SFO &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(</a>
-<a class="sourceLine" id="cb4-3" title="3">  <span class="dt">parent =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"m1"</span>),</a>
-<a class="sourceLine" id="cb4-4" title="4">  <span class="dt">m1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>))</a></code></pre></div>
+<a href="#comparison-with-other-solution-methods" class="anchor"></a>Comparison with other solution methods</h2>
+<p>First, we build a simple degradation model for a parent compound with one metabolite, and we remove zero values from the dataset.</p>
+<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="st">"mkin"</span>, <span class="kw">quietly</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
+<span class="no">SFO_SFO</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span>(
+  <span class="kw">parent</span> <span class="kw">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"m1"</span>),
+  <span class="kw">m1</span> <span class="kw">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>))</pre></body></html></div>
 <pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
-<p>We can compare the performance of the Eigenvalue based solution against the compiled version and the R implementation of the differential equations using the benchmark package. In the output of below code, the warnings about zero being removed from the FOCUS D dataset are suppressed.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="cf">if</span> (<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span>(rbenchmark)) {</a>
-<a class="sourceLine" id="cb6-2" title="2">  b<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/rbenchmark/man/benchmark.html">benchmark</a></span>(</a>
-<a class="sourceLine" id="cb6-3" title="3">    <span class="st">"deSolve, not compiled"</span> =<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(SFO_SFO, FOCUS_<span class="dv">2006</span>_D,</a>
-<a class="sourceLine" id="cb6-4" title="4">                                      <span class="dt">solution_type =</span> <span class="st">"deSolve"</span>,</a>
-<a class="sourceLine" id="cb6-5" title="5">                                      <span class="dt">use_compiled =</span> <span class="ot">FALSE</span>, <span class="dt">quiet =</span> <span class="ot">TRUE</span>),</a>
-<a class="sourceLine" id="cb6-6" title="6">    <span class="st">"Eigenvalue based"</span> =<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(SFO_SFO, FOCUS_<span class="dv">2006</span>_D,</a>
-<a class="sourceLine" id="cb6-7" title="7">                                 <span class="dt">solution_type =</span> <span class="st">"eigen"</span>, <span class="dt">quiet =</span> <span class="ot">TRUE</span>),</a>
-<a class="sourceLine" id="cb6-8" title="8">    <span class="st">"deSolve, compiled"</span> =<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(SFO_SFO, FOCUS_<span class="dv">2006</span>_D,</a>
-<a class="sourceLine" id="cb6-9" title="9">                                  <span class="dt">solution_type =</span> <span class="st">"deSolve"</span>, <span class="dt">quiet =</span> <span class="ot">TRUE</span>),</a>
-<a class="sourceLine" id="cb6-10" title="10">    <span class="dt">replications =</span> <span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb6-11" title="11">  <span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(b<span class="fl">.1</span>)</a>
-<a class="sourceLine" id="cb6-12" title="12">  factor_SFO_SFO &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(b<span class="fl">.1</span>[<span class="st">"1"</span>, <span class="st">"relative"</span>])</a>
-<a class="sourceLine" id="cb6-13" title="13">} <span class="cf">else</span> {</a>
-<a class="sourceLine" id="cb6-14" title="14">  factor_SFO_SFO &lt;-<span class="st"> </span><span class="ot">NA</span></a>
-<a class="sourceLine" id="cb6-15" title="15">  <span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="st">"R package rbenchmark is not available"</span>)</a>
-<a class="sourceLine" id="cb6-16" title="16">}</a></code></pre></div>
-<pre><code>##                    test replications elapsed relative user.self sys.self
-## 3     deSolve, compiled            3   3.107    1.000     3.105        0
-## 1 deSolve, not compiled            3  28.765    9.258    28.749        0
-## 2      Eigenvalue based            3   4.446    1.431     4.445        0
-##   user.child sys.child
-## 3          0         0
-## 1          0         0
-## 2          0         0</code></pre>
-<p>We see that using the compiled model is by a factor of around 9 faster than using the R version with the default ode solver, and it is even faster than the Eigenvalue based solution implemented in R which does not need iterative solution of the ODEs.</p>
+<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">FOCUS_D</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="no">FOCUS_2006_D</span>, <span class="no">value</span> <span class="kw">!=</span> <span class="fl">0</span>)</pre></body></html></div>
+<p>We can compare the performance of the Eigenvalue based solution against the compiled version and the R implementation of the differential equations using the benchmark package. In the output of below code, the warnings about zero being removed from the FOCUS D dataset are suppressed. Since mkin version 0.9.49.11, an analytical solution is also implemented, which is included in the tests below.</p>
+<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="kw">if</span> (<span class="fu"><a href="https://rdrr.io/r/base/library.html">require</a></span>(<span class="no">rbenchmark</span>)) {
+  <span class="no">b.1</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rbenchmark/man/benchmark.html">benchmark</a></span>(
+    <span class="st">"deSolve, not compiled"</span> <span class="kw">=</span> <span class="fu"><a href="../../reference/mkinfit.html">mkinfit</a></span>(<span class="no">SFO_SFO</span>, <span class="no">FOCUS_D</span>,
+       <span class="kw">solution_type</span> <span class="kw">=</span> <span class="st">"deSolve"</span>,
+       <span class="kw">use_compiled</span> <span class="kw">=</span> <span class="fl">FALSE</span>, <span class="kw">quiet</span> <span class="kw">=</span> <span class="fl">TRUE</span>),
+    <span class="st">"Eigenvalue based"</span> <span class="kw">=</span> <span class="fu"><a href="../../reference/mkinfit.html">mkinfit</a></span>(<span class="no">SFO_SFO</span>, <span class="no">FOCUS_D</span>,
+       <span class="kw">solution_type</span> <span class="kw">=</span> <span class="st">"eigen"</span>, <span class="kw">quiet</span> <span class="kw">=</span> <span class="fl">TRUE</span>),
+    <span class="st">"deSolve, compiled"</span> <span class="kw">=</span> <span class="fu"><a href="../../reference/mkinfit.html">mkinfit</a></span>(<span class="no">SFO_SFO</span>, <span class="no">FOCUS_D</span>,
+       <span class="kw">solution_type</span> <span class="kw">=</span> <span class="st">"deSolve"</span>, <span class="kw">quiet</span> <span class="kw">=</span> <span class="fl">TRUE</span>),
+    <span class="st">"analytical"</span> <span class="kw">=</span> <span class="fu"><a href="../../reference/mkinfit.html">mkinfit</a></span>(<span class="no">SFO_SFO</span>, <span class="no">FOCUS_D</span>,
+       <span class="kw">solution_type</span> <span class="kw">=</span> <span class="st">"analytical"</span>,
+       <span class="kw">use_compiled</span> <span class="kw">=</span> <span class="fl">FALSE</span>, <span class="kw">quiet</span> <span class="kw">=</span> <span class="fl">TRUE</span>),
+    <span class="kw">replications</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">order</span> <span class="kw">=</span> <span class="st">"relative"</span>,
+    <span class="kw">columns</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"test"</span>, <span class="st">"replications"</span>, <span class="st">"relative"</span>, <span class="st">"elapsed"</span>))
+  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">b.1</span>)
+} <span class="kw">else</span> {
+  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="st">"R package rbenchmark is not available"</span>)
+}</pre></body></html></div>
+<pre><code>##                    test replications relative elapsed
+## 4            analytical            1    1.000   0.190
+## 3     deSolve, compiled            1    1.774   0.337
+## 2      Eigenvalue based            1    2.105   0.400
+## 1 deSolve, not compiled            1   42.763   8.125</code></pre>
+<p>We see that using the compiled model is by more than a factor of 10 faster than using deSolve without compiled code.</p>
 </div>
-<div id="model-that-can-not-be-solved-with-eigenvalues" class="section level2">
+<div id="model-without-analytical-solution" class="section level2">
 <h2 class="hasAnchor">
-<a href="#model-that-can-not-be-solved-with-eigenvalues" class="anchor"></a>Model that can not be solved with Eigenvalues</h2>
-<p>This evaluation is also taken from the example section of mkinfit.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="cf">if</span> (<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span>(rbenchmark)) {</a>
-<a class="sourceLine" id="cb8-2" title="2">  FOMC_SFO &lt;-<span class="st"> </span><span class="kw"><a href="../../reference/mkinmod.html">mkinmod</a></span>(</a>
-<a class="sourceLine" id="cb8-3" title="3">    <span class="dt">parent =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"FOMC"</span>, <span class="st">"m1"</span>),</a>
-<a class="sourceLine" id="cb8-4" title="4">    <span class="dt">m1 =</span> <span class="kw"><a href="../../reference/mkinsub.html">mkinsub</a></span>( <span class="st">"SFO"</span>))</a>
-<a class="sourceLine" id="cb8-5" title="5"></a>
-<a class="sourceLine" id="cb8-6" title="6">  b<span class="fl">.2</span> &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/rbenchmark/man/benchmark.html">benchmark</a></span>(</a>
-<a class="sourceLine" id="cb8-7" title="7">    <span class="st">"deSolve, not compiled"</span> =<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(FOMC_SFO, FOCUS_<span class="dv">2006</span>_D,</a>
-<a class="sourceLine" id="cb8-8" title="8">                                      <span class="dt">use_compiled =</span> <span class="ot">FALSE</span>, <span class="dt">quiet =</span> <span class="ot">TRUE</span>),</a>
-<a class="sourceLine" id="cb8-9" title="9">    <span class="st">"deSolve, compiled"</span> =<span class="st"> </span><span class="kw"><a href="../../reference/mkinfit.html">mkinfit</a></span>(FOMC_SFO, FOCUS_<span class="dv">2006</span>_D, <span class="dt">quiet =</span> <span class="ot">TRUE</span>),</a>
-<a class="sourceLine" id="cb8-10" title="10">    <span class="dt">replications =</span> <span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb8-11" title="11">  <span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(b<span class="fl">.2</span>)</a>
-<a class="sourceLine" id="cb8-12" title="12">  factor_FOMC_SFO &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(b<span class="fl">.2</span>[<span class="st">"1"</span>, <span class="st">"relative"</span>])</a>
-<a class="sourceLine" id="cb8-13" title="13">} <span class="cf">else</span> {</a>
-<a class="sourceLine" id="cb8-14" title="14">  factor_FOMC_SFO &lt;-<span class="st"> </span><span class="ot">NA</span></a>
-<a class="sourceLine" id="cb8-15" title="15">  <span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="st">"R package benchmark is not available"</span>)</a>
-<a class="sourceLine" id="cb8-16" title="16">}</a></code></pre></div>
+<a href="#model-without-analytical-solution" class="anchor"></a>Model without analytical solution</h2>
+<p>This evaluation is also taken from the example section of mkinfit. No analytical solution is available for this system, and now Eigenvalue based solution is possible, so only deSolve using with or without compiled code is available.</p>
+<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="kw">if</span> (<span class="fu"><a href="https://rdrr.io/r/base/library.html">require</a></span>(<span class="no">rbenchmark</span>)) {
+  <span class="no">FOMC_SFO</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span>(
+    <span class="kw">parent</span> <span class="kw">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"FOMC"</span>, <span class="st">"m1"</span>),
+    <span class="kw">m1</span> <span class="kw">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span>( <span class="st">"SFO"</span>))
+
+  <span class="no">b.2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rbenchmark/man/benchmark.html">benchmark</a></span>(
+    <span class="st">"deSolve, not compiled"</span> <span class="kw">=</span> <span class="fu"><a href="../../reference/mkinfit.html">mkinfit</a></span>(<span class="no">FOMC_SFO</span>, <span class="no">FOCUS_D</span>,
+                                      <span class="kw">use_compiled</span> <span class="kw">=</span> <span class="fl">FALSE</span>, <span class="kw">quiet</span> <span class="kw">=</span> <span class="fl">TRUE</span>),
+    <span class="st">"deSolve, compiled"</span> <span class="kw">=</span> <span class="fu"><a href="../../reference/mkinfit.html">mkinfit</a></span>(<span class="no">FOMC_SFO</span>, <span class="no">FOCUS_D</span>, <span class="kw">quiet</span> <span class="kw">=</span> <span class="fl">TRUE</span>),
+    <span class="kw">replications</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">order</span> <span class="kw">=</span> <span class="st">"relative"</span>,
+    <span class="kw">columns</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"test"</span>, <span class="st">"replications"</span>, <span class="st">"relative"</span>, <span class="st">"elapsed"</span>))
+  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">b.2</span>)
+  <span class="no">factor_FOMC_SFO</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(<span class="no">b.2</span>[<span class="st">"1"</span>, <span class="st">"relative"</span>])
+} <span class="kw">else</span> {
+  <span class="no">factor_FOMC_SFO</span> <span class="kw">&lt;-</span> <span class="fl">NA</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="st">"R package benchmark is not available"</span>)
+}</pre></body></html></div>
 <pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
-<pre><code>##                    test replications elapsed relative user.self sys.self
-## 2     deSolve, compiled            3   4.844    1.000     4.842        0
-## 1 deSolve, not compiled            3  53.833   11.113    53.807        0
-##   user.child sys.child
-## 2          0         0
-## 1          0         0</code></pre>
-<p>Here we get a performance benefit of a factor of 11 using the version of the differential equation model compiled from C code!</p>
-<p>This vignette was built with mkin 0.9.49.9 on</p>
-<pre><code>## R version 3.6.3 (2020-02-29)
+<pre><code>##                    test replications relative elapsed
+## 2     deSolve, compiled            1    1.000   0.476
+## 1 deSolve, not compiled            1   30.103  14.329</code></pre>
+<p>Here we get a performance benefit of a factor of 30 using the version of the differential equation model compiled from C code!</p>
+<p>This vignette was built with mkin 0.9.50.2 on</p>
+<pre><code>## R version 4.0.0 (2020-04-24)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
 ## Running under: Debian GNU/Linux 10 (buster)</code></pre>
 <pre><code>## CPU model: AMD Ryzen 7 1700 Eight-Core Processor</code></pre>
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <div id="tocnav">
-      <h2 class="hasAnchor">
-<a href="#tocnav" class="anchor"></a>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-<li><a href="#how-to-benefit-from-compiled-models">How to benefit from compiled models</a></li>
-      <li><a href="#comparison-with-eigenvalue-based-solutions">Comparison with Eigenvalue based solutions</a></li>
-      <li><a href="#model-that-can-not-be-solved-with-eigenvalues">Model that can not be solved with Eigenvalues</a></li>
-      </ul>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
 </div>
-      </div>
 
 </div>
 
@@ -206,7 +204,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>
