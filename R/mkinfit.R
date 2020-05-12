@@ -68,12 +68,11 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #'   coefficient matrix in cases that this is possible. If set to "deSolve", a
 #'   numerical ode solver from package \code{\link{deSolve}} is used. If set to
 #'   "analytical", an analytical solution of the model is used. This is only
-#'   implemented for simple degradation experiments with only one state
-#'   variable, i.e. with no metabolites. The default is "auto", which uses
-#'   "analytical" if possible, otherwise "deSolve" if a compiler is present,
-#'   and "eigen" if no compiler is present and the model can be expressed using
-#'   eigenvalues and eigenvectors.  This argument is passed on to the helper
-#'   function \code{\link{mkinpredict}}.
+#'   implemented for relatively simple degradation models.  The default is
+#'   "auto", which uses "analytical" if possible, otherwise "deSolve" if a
+#'   compiler is present, and "eigen" if no compiler is present and the model
+#'   can be expressed using eigenvalues and eigenvectors.  This argument is
+#'   passed on to the helper function \code{\link{mkinpredict}}.
 #' @param method.ode The solution method passed via \code{\link{mkinpredict}}
 #'   to \code{\link{ode}} in case the solution type is "deSolve". The default
 #'   "lsoda" is performant, but sometimes fails to converge.
@@ -118,9 +117,9 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #'   least squares fitting ("OLS") is selected. If the error model is "obs", or
 #'   "tc", the "d_3" algorithm is selected.
 #'
-#'   The algorithm "d_3" will directly minimize the negative log-likelihood and
-#'   - independently - also use the three step algorithm described below. The
-#'   fit with the higher likelihood is returned.
+#'   The algorithm "d_3" will directly minimize the negative log-likelihood 
+#'   and independently also use the three step algorithm described below.
+#'   The fit with the higher likelihood is returned.
 #'
 #'   The algorithm "direct" will directly minimize the negative log-likelihood.
 #'
