@@ -50,7 +50,7 @@ be passed on to \code{\link{legend}}.}
 }
 \value{
 Nothing is returned by this function, as it is called for its side
-  effect, namely to produce a plot.
+effect, namely to produce a plot.
 }
 \description{
 This function plots the squared residuals for the specified subset of the
@@ -70,7 +70,7 @@ mkinerrplot(fit)
 }
 \seealso{
 \code{\link{mkinplot}}, for a way to plot the data and the fitted
-  lines of the mkinfit object.
+lines of the mkinfit object.
 }
 \author{
 Johannes Ranke

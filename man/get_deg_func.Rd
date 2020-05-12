@@ -8,7 +8,7 @@ get_deg_func()
 }
 \value{
 A function that was likely previously assigned from within
-  nlme.mmkin
+nlme.mmkin
 }
 \description{
 Retrieve a degradation function from the mmkin namespace

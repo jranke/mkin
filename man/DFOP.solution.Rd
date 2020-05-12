@@ -32,15 +32,15 @@ two exponential decline functions.
 }
 \references{
 FOCUS (2006) \dQuote{Guidance Document on Estimating Persistence
-  and Degradation Kinetics from Environmental Fate Studies on Pesticides in
-  EU Registration} Report of the FOCUS Work Group on Degradation Kinetics,
-  EC Document Reference Sanco/10058/2005 version 2.0, 434 pp,
-  \url{http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics}
+and Degradation Kinetics from Environmental Fate Studies on Pesticides in
+EU Registration} Report of the FOCUS Work Group on Degradation Kinetics,
+EC Document Reference Sanco/10058/2005 version 2.0, 434 pp,
+\url{http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics}
 FOCUS (2014) \dQuote{Generic guidance for Estimating Persistence
-  and Degradation Kinetics from Environmental Fate Studies on Pesticides in
-  EU Registration} Report of the FOCUS Work Group on Degradation Kinetics,
-  Version 1.1, 18 December 2014
-  \url{http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics}
+and Degradation Kinetics from Environmental Fate Studies on Pesticides in
+EU Registration} Report of the FOCUS Work Group on Degradation Kinetics,
+Version 1.1, 18 December 2014
+\url{http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics}
 }
 \seealso{
 Other parent solutions: 

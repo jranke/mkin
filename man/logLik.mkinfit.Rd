@@ -13,8 +13,8 @@
 }
 \value{
 An object of class \code{\link{logLik}} with the number of estimated
-  parameters (degradation model parameters plus variance model parameters)
-  as attribute.
+parameters (degradation model parameters plus variance model parameters)
+as attribute.
 }
 \description{
 This function returns the product of the likelihood densities of each
@@ -45,7 +45,7 @@ and the fitted error model parameters.
 }
 \seealso{
 Compare the AIC of columns of \code{\link{mmkin}} objects using
-  \code{\link{AIC.mmkin}}.
+\code{\link{AIC.mmkin}}.
 }
 \author{
 Johannes Ranke

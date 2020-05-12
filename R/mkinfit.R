@@ -165,8 +165,12 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #'
 #'   Fitting of several models to several datasets in a single call to
 #'   \code{\link{mmkin}}.
-#' @source Rocke, David M. und Lorenzato, Stefan (1995) A two-component model
-#'   for measurement error in analytical chemistry. Technometrics 37(2), 176-184.
+#' @references Rocke DM and Lorenzato S (1995) A two-component model
+#'   for measurement error in analytical chemistry. *Technometrics* 37(2), 176-184.
+#'
+#'   Ranke J and Meinecke S (2019) Error Models for the Kinetic Evaluation of Chemical
+#'   Degradation Data. *Environments* 6(12) 124 
+#'   [doi:10.3390/environments6120124](https://doi.org/10.3390/environments6120124).
 #' @examples
 #'
 #' # Use shorthand notation for parent only degradation
@@ -217,7 +221,7 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #' }
 #'
 #' \dontrun{
-#' # Weighted fits, including IRLS
+#' # Weighted fits, including IRLS (error_model = "obs")
 #' SFO_SFO.ff <- mkinmod(parent = mkinsub("SFO", "m1"),
 #'                       m1 = mkinsub("SFO"), use_of_ff = "max")
 #' f.noweight <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, quiet = TRUE)

@@ -33,8 +33,8 @@ for parallel execution.}
 }
 \value{
 A two-dimensional \code{\link{array}} of \code{\link{mkinfit}}
-  objects that can be indexed using the model names for the first index (row index) 
-  and the dataset names for the second index (column index).
+objects that can be indexed using the model names for the first index (row index)
+and the dataset names for the second index (column index).
 }
 \description{
 This function calls \code{\link{mkinfit}} on all combinations of models and
@@ -79,7 +79,7 @@ plot(fits.0[1, 1])
 }
 \seealso{
 \code{\link{[.mmkin}} for subsetting, \code{\link{plot.mmkin}} for
-  plotting.
+plotting.
 }
 \author{
 Johannes Ranke

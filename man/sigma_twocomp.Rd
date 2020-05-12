@@ -33,9 +33,9 @@ y.
 }
 \references{
 Werner, Mario, Brooks, Samuel H., and Knott, Lancaster B. (1978)
-  Additive, Multiplicative, and Mixed Analytical Errors. Clinical Chemistry
-  24(11), 1895-1898.
+Additive, Multiplicative, and Mixed Analytical Errors. Clinical Chemistry
+24(11), 1895-1898.
 
-  Rocke, David M. and Lorenzato, Stefan (1995) A two-component model for
-  measurement error in analytical chemistry. Technometrics 37(2), 176-184.
+Rocke, David M. and Lorenzato, Stefan (1995) A two-component model for
+measurement error in analytical chemistry. Technometrics 37(2), 176-184.
 }

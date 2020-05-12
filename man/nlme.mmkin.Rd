@@ -67,7 +67,7 @@ parameters taken from the mmkin object are used}
 }
 \value{
 Upon success, a fitted nlme.mmkin object, which is an nlme object
-  with additional elements
+with additional elements
 }
 \description{
 This functions sets up a nonlinear mixed effects model for an mmkin row

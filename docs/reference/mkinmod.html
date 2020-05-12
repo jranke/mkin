@@ -75,7 +75,7 @@ list of lists can be given in the speclist argument." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50.1</span>
       </span>
     </div>
 
@@ -205,15 +205,18 @@ applicable to give detailed information about the C function being built.</p></t
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A list of class <code>mkinmod</code> for use with <code><a href='mkinfit.html'>mkinfit</a></code>,
-  containing, among others,</p>
+containing, among others,</p>
 <dt>diffs</dt><dd><p>A vector of string representations of differential equations, one for
-    each modelling variable.</p></dd>
-  <dt>map</dt><dd><p>A list containing named character vectors for each observed variable,
-    specifying the modelling variables by which it is represented.</p></dd>
-  <dt>use_of_ff</dt><dd><p>The content of <code>use_of_ff</code> is passed on in this list component.</p></dd>
-  <dt>coefmat</dt><dd><p>The coefficient matrix, if the system of differential equations can be
-    represented by one.</p></dd>
-  <dt>cf</dt><dd><p>If generated, the compiled function as returned by cfunction.</p></dd>
+each modelling variable.</p></dd>
+<dt>map</dt><dd><p>A list containing named character vectors for each observed variable,
+specifying the modelling variables by which it is represented.</p></dd>
+<dt>use_of_ff</dt><dd><p>The content of <code>use_of_ff</code> is passed on in this list component.</p></dd>
+<dt>deg_func</dt><dd><p>If generated, a function containing the solution of the degradation
+model.</p></dd>
+<dt>coefmat</dt><dd><p>The coefficient matrix, if the system of differential equations can be
+represented by one.</p></dd>
+<dt>cf</dt><dd><p>If generated, a compiled function calculating the derivatives as
+returned by cfunction.</p></dd>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
@@ -222,17 +225,17 @@ in the FOCUS and NAFTA guidance documents are used.</p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
     <p>The IORE submodel is not well tested for metabolites. When using this
-  model for metabolites, you may want to read the second note in the help
-  page to <code><a href='mkinfit.html'>mkinfit</a></code>.</p>
+model for metabolites, you may want to read the second note in the help
+page to <code><a href='mkinfit.html'>mkinfit</a></code>.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>FOCUS (2006) &#8220;Guidance Document on Estimating Persistence
-  and Degradation Kinetics from Environmental Fate Studies on Pesticides in
-  EU Registration&#8221; Report of the FOCUS Work Group on Degradation Kinetics,
-  EC Document Reference Sanco/10058/2005 version 2.0, 434 pp,
-  <a href='http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics'>http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics</a></p>
+and Degradation Kinetics from Environmental Fate Studies on Pesticides in
+EU Registration&#8221; Report of the FOCUS Work Group on Degradation Kinetics,
+EC Document Reference Sanco/10058/2005 version 2.0, 434 pp,
+<a href='http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics'>http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics</a></p>
 <p>NAFTA Technical Working Group on Pesticides (not dated) Guidance for
-  Evaluating and Calculating Degradation Kinetics in Environmental Media</p>
+Evaluating and Calculating Degradation Kinetics in Environmental Media</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
@@ -252,7 +255,7 @@ in the FOCUS and NAFTA guidance documents are used.</p>
 <span class='no'>SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinmod</span>(
   <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>),
   <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; Compilation argument:
-#&gt;  /usr/lib/R/bin/R CMD SHLIB file1a1abf38df.c 2&gt; file1a1abf38df.c.err.txt 
+#&gt;  /usr/lib/R/bin/R CMD SHLIB file15d32c282a7d.c 2&gt; file15d32c282a7d.c.err.txt 
 #&gt; Program source:
 #&gt;   1: #include &lt;R.h&gt;
 #&gt;   2: 

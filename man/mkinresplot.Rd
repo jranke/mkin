@@ -54,7 +54,7 @@ be passed on to \code{\link{legend}}.}
 }
 \value{
 Nothing is returned by this function, as it is called for its side
-  effect, namely to produce a plot.
+effect, namely to produce a plot.
 }
 \description{
 This function plots the residuals for the specified subset of the observed
@@ -71,8 +71,8 @@ mkinresplot(fit, "m1")
 }
 \seealso{
 \code{\link{mkinplot}}, for a way to plot the data and the fitted
-  lines of the mkinfit object, and \code{\link{plot_res}} for a function
-  combining the plot of the fit and the residual plot.
+lines of the mkinfit object, and \code{\link{plot_res}} for a function
+combining the plot of the fit and the residual plot.
 }
 \author{
 Johannes Ranke

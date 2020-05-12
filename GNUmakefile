@@ -100,7 +100,6 @@ articles: vignettes/web_only/FOCUS_Z.html vignettes/web_only/compiled_models.htm
 pd: roxygen
 	"$(RBIN)/Rscript" -e "pkgdown::build_site(run_dont_run = TRUE, lazy = TRUE)"
 	git add -A
-	git commit -m 'Static documentation rebuilt by pkgdown' -e
 
 r-forge:
 	git archive master > $(HOME)/git/mkin/mkin.tar;\

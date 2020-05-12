@@ -44,25 +44,30 @@ applicable to give detailed information about the C function being built.}
 }
 \value{
 A list of class \code{mkinmod} for use with \code{\link{mkinfit}},
-  containing, among others,
-  \item{diffs}{
-    A vector of string representations of differential equations, one for
-    each modelling variable.
-  }
-  \item{map}{
-    A list containing named character vectors for each observed variable,
-    specifying the modelling variables by which it is represented.
-  }
-  \item{use_of_ff}{
-    The content of \code{use_of_ff} is passed on in this list component.
-  }
-  \item{coefmat}{
-    The coefficient matrix, if the system of differential equations can be
-    represented by one.
-  }
-  \item{cf}{
-    If generated, the compiled function as returned by cfunction.
-  }
+containing, among others,
+\item{diffs}{
+A vector of string representations of differential equations, one for
+each modelling variable.
+}
+\item{map}{
+A list containing named character vectors for each observed variable,
+specifying the modelling variables by which it is represented.
+}
+\item{use_of_ff}{
+The content of \code{use_of_ff} is passed on in this list component.
+}
+\item{deg_func}{
+If generated, a function containing the solution of the degradation
+model.
+}
+\item{coefmat}{
+The coefficient matrix, if the system of differential equations can be
+represented by one.
+}
+\item{cf}{
+If generated, a compiled function calculating the derivatives as
+returned by cfunction.
+}
 }
 \description{
 The function usually takes several expressions, each assigning a compound
@@ -76,8 +81,8 @@ in the FOCUS and NAFTA guidance documents are used.
 }
 \note{
 The IORE submodel is not well tested for metabolites. When using this
-  model for metabolites, you may want to read the second note in the help
-  page to \code{\link{mkinfit}}.
+model for metabolites, you may want to read the second note in the help
+page to \code{\link{mkinfit}}.
 }
 \examples{
 
@@ -115,13 +120,13 @@ fit_DFOP_par_c <- mkinfit(m_synth_DFOP_par,
 }
 \references{
 FOCUS (2006) \dQuote{Guidance Document on Estimating Persistence
-  and Degradation Kinetics from Environmental Fate Studies on Pesticides in
-  EU Registration} Report of the FOCUS Work Group on Degradation Kinetics,
-  EC Document Reference Sanco/10058/2005 version 2.0, 434 pp,
-  \url{http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics}
+and Degradation Kinetics from Environmental Fate Studies on Pesticides in
+EU Registration} Report of the FOCUS Work Group on Degradation Kinetics,
+EC Document Reference Sanco/10058/2005 version 2.0, 434 pp,
+\url{http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics}
 
-  NAFTA Technical Working Group on Pesticides (not dated) Guidance for
-  Evaluating and Calculating Degradation Kinetics in Environmental Media
+NAFTA Technical Working Group on Pesticides (not dated) Guidance for
+Evaluating and Calculating Degradation Kinetics in Environmental Media
 }
 \author{
 Johannes Ranke

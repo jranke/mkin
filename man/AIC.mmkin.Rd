@@ -19,7 +19,7 @@ column.}
 }
 \value{
 As in the generic method (a numeric value for single fits, or a
-  dataframe if there are several fits in the column).
+dataframe if there are several fits in the column).
 }
 \description{
 Provides a convenient way to compare different kinetic models fitted to the

@@ -48,12 +48,17 @@
 #'   \item{use_of_ff}{
 #'     The content of \code{use_of_ff} is passed on in this list component.
 #'   }
+#'   \item{deg_func}{
+#'     If generated, a function containing the solution of the degradation
+#'     model.
+#'   }
 #'   \item{coefmat}{
 #'     The coefficient matrix, if the system of differential equations can be
 #'     represented by one.
 #'   }
 #'   \item{cf}{
-#'     If generated, the compiled function as returned by cfunction.
+#'     If generated, a compiled function calculating the derivatives as
+#'     returned by cfunction.
 #'   }
 #' @note The IORE submodel is not well tested for metabolites. When using this
 #'   model for metabolites, you may want to read the second note in the help

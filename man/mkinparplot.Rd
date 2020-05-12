@@ -11,7 +11,7 @@ mkinparplot(object)
 }
 \value{
 Nothing is returned by this function, as it is called for its side
-  effect, namely to produce a plot.
+effect, namely to produce a plot.
 }
 \description{
 This function plots the confidence intervals for the parameters fitted using

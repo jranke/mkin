@@ -6,15 +6,15 @@
 \title{Evaluate parent kinetics using the NAFTA guidance}
 \source{
 NAFTA (2011) Guidance for evaluating and calculating degradation
-  kinetics in environmental media. NAFTA Technical Working Group on
-  Pesticides
-  \url{https://www.epa.gov/pesticide-science-and-assessing-pesticide-risks/guidance-evaluating-and-calculating-degradation}
-  accessed 2019-02-22
+kinetics in environmental media. NAFTA Technical Working Group on
+Pesticides
+\url{https://www.epa.gov/pesticide-science-and-assessing-pesticide-risks/guidance-evaluating-and-calculating-degradation}
+accessed 2019-02-22
 
-  US EPA (2015) Standard Operating Procedure for Using the NAFTA Guidance to
-  Calculate Representative Half-life Values and Characterizing Pesticide
-  Degradation
-  \url{https://www.epa.gov/pesticide-science-and-assessing-pesticide-risks/standard-operating-procedure-using-nafta-guidance}
+US EPA (2015) Standard Operating Procedure for Using the NAFTA Guidance to
+Calculate Representative Half-life Values and Characterizing Pesticide
+Degradation
+\url{https://www.epa.gov/pesticide-science-and-assessing-pesticide-risks/standard-operating-procedure-using-nafta-guidance}
 }
 \usage{
 nafta(ds, title = NA, quiet = FALSE, ...)
@@ -41,9 +41,9 @@ dissipation times.}
 }
 \value{
 An list of class \code{nafta}. The list element named "mmkin" is the
-  \code{\link{mmkin}} object containing the fits of the three models. The
-  list element named "title" contains the title of the dataset used. The
-  list element "data" contains the dataset used in the fits.
+\code{\link{mmkin}} object containing the fits of the three models. The
+list element named "title" contains the title of the dataset used. The
+list element "data" contains the dataset used in the fits.
 }
 \description{
 The function fits the SFO, IORE and DFOP models using \code{\link{mmkin}}

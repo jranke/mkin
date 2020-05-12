@@ -36,7 +36,7 @@ values, with the error model, using \code{\link{mkinerrplot}}.}
 
 \item{standardized}{Should the residuals be standardized? This option
 is passed to \code{\link{mkinresplot}}, it only takes effect if
-`resplot = "time"`.}
+\code{resplot = "time"}.}
 
 \item{show_errmin}{Should the chi2 error level be shown on top of the plots
 to the left?}

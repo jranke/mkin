@@ -3,10 +3,6 @@
 \name{mkinfit}
 \alias{mkinfit}
 \title{Fit a kinetic model to data with one or more state variables}
-\source{
-Rocke, David M. und Lorenzato, Stefan (1995) A two-component model
-  for measurement error in analytical chemistry. Technometrics 37(2), 176-184.
-}
 \usage{
 mkinfit(
   mkinmod,
@@ -53,16 +49,16 @@ not observed in degradation data, because there is a lower limit of
 detection.}
 
 \item{parms.ini}{A named vector of initial values for the parameters,
-  including parameters to be optimised and potentially also fixed parameters
-  as indicated by \code{fixed_parms}.  If set to "auto", initial values for
-  rate constants are set to default values.  Using parameter names that are
-  not in the model gives an error.
+including parameters to be optimised and potentially also fixed parameters
+as indicated by \code{fixed_parms}.  If set to "auto", initial values for
+rate constants are set to default values.  Using parameter names that are
+not in the model gives an error.
 
-  It is possible to only specify a subset of the parameters that the model
-  needs. You can use the parameter lists "bparms.ode" from a previously
-  fitted model, which contains the differential equation parameters from
-  this model.  This works nicely if the models are nested. An example is
-  given below.}
+It is possible to only specify a subset of the parameters that the model
+needs. You can use the parameter lists "bparms.ode" from a previously
+fitted model, which contains the differential equation parameters from
+this model.  This works nicely if the models are nested. An example is
+given below.}
 
 \item{state.ini}{A named vector of initial values for the state variables of
 the model. In case the observed variables are represented by more than one
@@ -141,48 +137,50 @@ is 1e-8, lower than in \code{\link{lsoda}}.}
 is 1e-10, much lower than in \code{\link{lsoda}}.}
 
 \item{error_model}{If the error model is "const", a constant standard
-  deviation is assumed.
+deviation is assumed.
 
-  If the error model is "obs", each observed variable is assumed to have its
-  own variance.
+If the error model is "obs", each observed variable is assumed to have its
+own variance.
 
-  If the error model is "tc" (two-component error model), a two component
-  error model similar to the one described by Rocke and Lorenzato (1995) is
-  used for setting up the likelihood function.  Note that this model
-  deviates from the model by Rocke and Lorenzato, as their model implies
-  that the errors follow a lognormal distribution for large values, not a
-  normal distribution as assumed by this method.}
+If the error model is "tc" (two-component error model), a two component
+error model similar to the one described by Rocke and Lorenzato (1995) is
+used for setting up the likelihood function.  Note that this model
+deviates from the model by Rocke and Lorenzato, as their model implies
+that the errors follow a lognormal distribution for large values, not a
+normal distribution as assumed by this method.}
 
 \item{error_model_algorithm}{If "auto", the selected algorithm depends on
-  the error model.  If the error model is "const", unweighted nonlinear
-  least squares fitting ("OLS") is selected. If the error model is "obs", or
-  "tc", the "d_3" algorithm is selected.
+the error model.  If the error model is "const", unweighted nonlinear
+least squares fitting ("OLS") is selected. If the error model is "obs", or
+"tc", the "d_3" algorithm is selected.
 
-  The algorithm "d_3" will directly minimize the negative log-likelihood and
-  - independently - also use the three step algorithm described below. The
-  fit with the higher likelihood is returned.
+The algorithm "d_3" will directly minimize the negative log-likelihood and
+\itemize{
+\item independently - also use the three step algorithm described below. The
+fit with the higher likelihood is returned.
+}
 
-  The algorithm "direct" will directly minimize the negative log-likelihood.
+The algorithm "direct" will directly minimize the negative log-likelihood.
 
-  The algorithm "twostep" will minimize the negative log-likelihood after an
-  initial unweighted least squares optimisation step.
+The algorithm "twostep" will minimize the negative log-likelihood after an
+initial unweighted least squares optimisation step.
 
-  The algorithm "threestep" starts with unweighted least squares, then
-  optimizes only the error model using the degradation model parameters
-  found, and then minimizes the negative log-likelihood with free
-  degradation and error model parameters.
+The algorithm "threestep" starts with unweighted least squares, then
+optimizes only the error model using the degradation model parameters
+found, and then minimizes the negative log-likelihood with free
+degradation and error model parameters.
 
-  The algorithm "fourstep" starts with unweighted least squares, then
-  optimizes only the error model using the degradation model parameters
-  found, then optimizes the degradation model again with fixed error model
-  parameters, and finally minimizes the negative log-likelihood with free
-  degradation and error model parameters.
+The algorithm "fourstep" starts with unweighted least squares, then
+optimizes only the error model using the degradation model parameters
+found, then optimizes the degradation model again with fixed error model
+parameters, and finally minimizes the negative log-likelihood with free
+degradation and error model parameters.
 
-  The algorithm "IRLS" (Iteratively Reweighted Least Squares) starts with
-  unweighted least squares, and then iterates optimization of the error
-  model parameters and subsequent optimization of the degradation model
-  using those error model parameters, until the error model parameters
-  converge.}
+The algorithm "IRLS" (Iteratively Reweighted Least Squares) starts with
+unweighted least squares, and then iterates optimization of the error
+model parameters and subsequent optimization of the degradation model
+using those error model parameters, until the error model parameters
+converge.}
 
 \item{reweight.tol}{Tolerance for the convergence criterion calculated from
 the error model parameters in IRLS fits.}
@@ -196,7 +194,7 @@ the error model parameters in IRLS fits.}
 }
 \value{
 A list with "mkinfit" in the class attribute.  A summary can be
-  obtained by \code{\link{summary.mkinfit}}.
+obtained by \code{\link{summary.mkinfit}}.
 }
 \description{
 This function maximises the likelihood of the observed data using the Port
@@ -214,9 +212,9 @@ estimators.
 }
 \note{
 When using the "IORE" submodel for metabolites, fitting with
-  "transform_rates = TRUE" (the default) often leads to failures of the
-  numerical ODE solver. In this situation it may help to switch off the
-  internal rate transformation.
+"transform_rates = TRUE" (the default) often leads to failures of the
+numerical ODE solver. In this situation it may help to switch off the
+internal rate transformation.
 }
 \examples{
 
@@ -268,7 +266,7 @@ fit.SFORB_SFO <- mkinfit(SFORB_SFO, FOCUS_2006_D, parms.ini = fit.SFORB$bparms.o
 }
 
 \dontrun{
-# Weighted fits, including IRLS
+# Weighted fits, including IRLS (error_model = "obs")
 SFO_SFO.ff <- mkinmod(parent = mkinsub("SFO", "m1"),
                       m1 = mkinsub("SFO"), use_of_ff = "max")
 f.noweight <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, quiet = TRUE)
@@ -281,15 +279,23 @@ summary(f.tc)
 
 
 }
+\references{
+Rocke DM and Lorenzato S (1995) A two-component model
+for measurement error in analytical chemistry. \emph{Technometrics} 37(2), 176-184.
+
+Ranke J and Meinecke S (2019) Error Models for the Kinetic Evaluation of Chemical
+Degradation Data. \emph{Environments} 6(12) 124
+\href{https://doi.org/10.3390/environments6120124}{doi:10.3390/environments6120124}.
+}
 \seealso{
 Plotting methods \code{\link{plot.mkinfit}} and
-  \code{\link{mkinparplot}}.
+\code{\link{mkinparplot}}.
 
-  Comparisons of models fitted to the same data can be made using
-  \code{\link{AIC}} by virtue of the method \code{\link{logLik.mkinfit}}.
+Comparisons of models fitted to the same data can be made using
+\code{\link{AIC}} by virtue of the method \code{\link{logLik.mkinfit}}.
 
-  Fitting of several models to several datasets in a single call to
-  \code{\link{mmkin}}.
+Fitting of several models to several datasets in a single call to
+\code{\link{mmkin}}.
 }
 \author{
 Johannes Ranke

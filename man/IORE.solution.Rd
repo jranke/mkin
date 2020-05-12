@@ -25,9 +25,9 @@ a concentration dependent rate constant.
 }
 \note{
 The solution of the IORE kinetic model reduces to the
-  \code{\link{SFO.solution}} if N = 1.  The parameters of the IORE model can
-  be transformed to equivalent parameters of the FOMC mode - see the NAFTA
-  guidance for details.
+\code{\link{SFO.solution}} if N = 1.  The parameters of the IORE model can
+be transformed to equivalent parameters of the FOMC mode - see the NAFTA
+guidance for details.
 }
 \examples{
 
@@ -46,7 +46,7 @@ The solution of the IORE kinetic model reduces to the
 }
 \references{
 NAFTA Technical Working Group on Pesticides (not dated) Guidance
-  for Evaluating and Calculating Degradation Kinetics in Environmental Media
+for Evaluating and Calculating Degradation Kinetics in Environmental Media
 }
 \seealso{
 Other parent solutions: 

@@ -48,7 +48,7 @@ fitting procedure.}
 }
 \value{
 A vector of transformed or backtransformed parameters with the same
-  names as the original parameters.
+names as the original parameters.
 }
 \description{
 The transformations are intended to map parameters that should only take on

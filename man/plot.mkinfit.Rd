@@ -85,7 +85,7 @@ fits is shown, the residual plot is in the lower third of the plot.
 Otherwise, i.e. if "sep_obs" is given, the residual plots will be located
 to the right of the plots of the fitted curves. If this is set to
 'standardized', a plot of the residuals divided by the standard deviation
- given by the fitted error model will be shown.}
+given by the fitted error model will be shown.}
 
 \item{show_errplot}{Should squared residuals and the error model be shown?
 If only one plot of the fits is shown, this plot is in the lower third of

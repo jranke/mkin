@@ -13,9 +13,9 @@ endpoints(fit)
 }
 \value{
 A list with a matrix of dissipation times named distimes,
-  and, if applicable, a vector of formation fractions named ff
-  and, if the SFORB model was in use, a vector of eigenvalues
-  of these SFORB models, equivalent to DFOP rate constants
+and, if applicable, a vector of formation fractions named ff
+and, if the SFORB model was in use, a vector of eigenvalues
+of these SFORB models, equivalent to DFOP rate constants
 }
 \description{
 This function calculates DT50 and DT90 values as well as formation fractions

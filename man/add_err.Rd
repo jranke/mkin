@@ -40,7 +40,7 @@ seed is not set.}
 }
 \value{
 A list of datasets compatible with \code{\link{mmkin}}, i.e. the
-  components of the list are datasets compatible with \code{\link{mkinfit}}.
+components of the list are datasets compatible with \code{\link{mkinfit}}.
 }
 \description{
 Normally distributed errors are added to data predicted for a specific

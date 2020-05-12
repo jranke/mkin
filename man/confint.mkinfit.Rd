@@ -45,7 +45,7 @@ applied to the likelihood based on the transformed parameters?}
 transformed parameters, should we backtransform the parameters with
 their confidence intervals?}
 
-\item{cores}{The number of cores to be used for multicore processing. 
+\item{cores}{The number of cores to be used for multicore processing.
 On Windows machines, cores > 1 is currently not supported.}
 
 \item{quiet}{Should we suppress the message "Profiling the likelihood"}
@@ -54,7 +54,7 @@ On Windows machines, cores > 1 is currently not supported.}
 }
 \value{
 A matrix with columns giving lower and upper confidence limits for
-  each parameter.
+each parameter.
 }
 \description{
 The default method 'quadratic' is based on the quadratic approximation of
@@ -143,10 +143,10 @@ confint(f_tc_2, "parent_0", method = "quadratic")
 \references{
 Bates DM and Watts GW (1988) Nonlinear regression analysis & its applications
 
-  Pawitan Y (2013) In all likelihood - Statistical modelling and
-  inference using likelihood. Clarendon Press, Oxford.
+Pawitan Y (2013) In all likelihood - Statistical modelling and
+inference using likelihood. Clarendon Press, Oxford.
 
-  Venzon DJ and Moolgavkar SH (1988) A Method for Computing
-  Profile-Likelihood Based Confidence Intervals, Applied Statistics, 37,
-  87–94.
+Venzon DJ and Moolgavkar SH (1988) A Method for Computing
+Profile-Likelihood Based Confidence Intervals, Applied Statistics, 37,
+87–94.
 }

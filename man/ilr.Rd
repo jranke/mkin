@@ -15,8 +15,8 @@ sensible for vectors with all elements being greater than zero.}
 }
 \value{
 The result of the forward or backward transformation. The returned
-  components always sum to 1 for the case of the inverse log-ratio
-  transformation.
+components always sum to 1 for the case of the inverse log-ratio
+transformation.
 }
 \description{
 This implementation is a special case of the class of isometric log-ratio
@@ -48,11 +48,11 @@ ilr(c(b[1:3], 1 - sum(b[1:3]))) # Gives c(0.1, 0.3, 0.5)
 }
 \references{
 Peter Filzmoser, Karel Hron (2008) Outlier Detection for
-  Compositional Data Using Robust Methods. Math Geosci 40 233-248
+Compositional Data Using Robust Methods. Math Geosci 40 233-248
 }
 \seealso{
 Another implementation can be found in R package
-  \code{robCompositions}.
+\code{robCompositions}.
 }
 \author{
 René Lehmann and Johannes Ranke

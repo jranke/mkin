@@ -48,8 +48,8 @@ factor (f_twa) is calculated.}
 }
 \value{
 For \code{max_twa_parent}, a numeric vector, named using the
-  \code{windows} argument.  For the other functions, a numeric vector of
-  length one (also known as 'a number').
+\code{windows} argument.  For the other functions, a numeric vector of
+length one (also known as 'a number').
 }
 \description{
 This function calculates maximum moving window time weighted average
@@ -66,10 +66,10 @@ soil section of the FOCUS guidance.
 }
 \references{
 FOCUS (2006) \dQuote{Guidance Document on Estimating Persistence
-  and Degradation Kinetics from Environmental Fate Studies on Pesticides in
-  EU Registration} Report of the FOCUS Work Group on Degradation Kinetics,
-  EC Document Reference Sanco/10058/2005 version 2.0, 434 pp,
-  \url{http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics}
+and Degradation Kinetics from Environmental Fate Studies on Pesticides in
+EU Registration} Report of the FOCUS Work Group on Degradation Kinetics,
+EC Document Reference Sanco/10058/2005 version 2.0, 434 pp,
+\url{http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics}
 }
 \author{
 Johannes Ranke
