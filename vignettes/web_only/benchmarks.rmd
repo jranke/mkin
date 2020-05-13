@@ -20,9 +20,11 @@ library("mkin")
 ```
 
 Each system is characterized by its CPU type, the operating system type and the
-mkin version. Currently only values for one system are available.
+mkin version. Currently only values for one system are available. A compiler
+was available, so if no analytical solution was available, compiled ODE models are
+used.
 
-```{r}
+```{r include = FALSE}
 cpu_model <- benchmarkme::get_cpu()$model_name
 operating_system <- Sys.info()[["sysname"]]
 mkin_version <- as.character(packageVersion("mkin"))
@@ -58,7 +60,7 @@ t2 <- system.time(mmkin_bench(c("SFO", "FOMC", "DFOP", "HS"), parent_datasets,
 
 One metabolite:
 
-```{r one_metabolite}
+```{r one_metabolite, message = FALSE}
 SFO_SFO <- mkinmod(
   parent = mkinsub("SFO", "m1"),
   m1 = mkinsub("SFO"))
@@ -77,7 +79,7 @@ t5 <- system.time(mmkin_bench(list(SFO_SFO, FOMC_SFO, DFOP_SFO), list(FOCUS_D),
 
 Two metabolites, synthetic data:
 
-```{r two_metabolites}
+```{r two_metabolites, message = FALSE}
 m_synth_SFO_lin <- mkinmod(parent = mkinsub("SFO", "M1"),
                            M1 = mkinsub("SFO", "M2"),
                            M2 = mkinsub("SFO"),
@@ -116,9 +118,11 @@ save(mkin_benchmarks, file = "~/git/mkin/vignettes/web_only/mkin_benchmarks.rda"
 
 Currently, we only have benchmark information on one system, therefore only the mkin
 version is shown with the results below. Timings are in seconds, shorter is better.
+All results were obtained by serial, i.e. not using multiple computing cores.
 
-```{r}
-rownames(mkin_benchmarks) <- as.character(mkin_benchmarks$mkin)
+```{r, include = FALSE}
+dimnames(mkin_benchmarks) <- list(as.character(mkin_benchmarks$mkin),
+  c("CPU", "OS", "mkin version", paste0("t", 1:11, " [s]")))
 ```
 
 
@@ -126,25 +130,28 @@ Benchmarks for all available error models are shown.
 
 ### Parent only
 
-Constant variance and two-component error model:
+Constant variance (t1) and two-component error model (t2) for four models
+fitted to two datasets, i.e. eight fits for each test.
 
-```{r}
-kable(mkin_benchmarks[, c("t1", "t2")])
+```{r, echo = FALSE}
+kable(mkin_benchmarks[, 4:5], rownames = "mkin version")
 ```
 
 ### One metabolite
 
-Constant variance, variance by variable and two-component error model:
+Constant variance (t3), two-component error model (t4), and variance by variable (t5)
+for three models fitted to one dataset, i.e. three fits for each test.
 
-```{r}
-kable(mkin_benchmarks[, c("t3", "t4", "t5")])
+```{r, echo = FALSE}
+kable(mkin_benchmarks[, 6:8], rownames = "mkin version")
 ```
 
 ### Two metabolites
 
-Two different datasets, for each constant variance, variance by variable and
-two-component error model are shown:
+Constant variance (t6 and t7), two-component error model (t8 and t9), and
+variance by variable (t10 and t11) for one model fitted to one dataset, i.e.
+one fit for each test.
 
-```{r}
-kable(mkin_benchmarks[, paste0("t", 6:11)])
+```{r, echo = FALSE}
+kable(mkin_benchmarks[, 9:14], rownames = "mkin version")
 ```

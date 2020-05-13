@@ -89,15 +89,15 @@ testcheck: test check
 README.html: README.md
 	"$(RBIN)/Rscript" -e "rmarkdown::render('README.md', output_format = 'html_document', output_options = list(mathjax = NULL))"
 
-vignettes/%.html: vignettes/mkin_vignettes.css vignettes/references.bib vignettes/%.Rmd
-	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/$*.Rmd', dir = 'vignettes')"
+vignettes/%.html: vignettes/mkin_vignettes.css vignettes/references.bib vignettes/%.rmd
+	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/$*.rmd', dir = 'vignettes')"
 
 vignettes: vignettes/mkin.html vignettes/FOCUS_D.html vignettes/FOCUS_L.html vignettes/twa.html
 
-vignettes/web_only/%.html: vignettes/references.bib vignettes/web_only/%.Rmd
-	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/web_only/$*.Rmd', dir = 'vignettes/web_only')"
+vignettes/web_only/%.html: vignettes/references.bib vignettes/web_only/%.rmd
+	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/web_only/$*.rmd', dir = 'vignettes/web_only')"
 
-articles: vignettes/web_only/FOCUS_Z.html vignettes/web_only/compiled_models.html
+articles: vignettes/web_only/FOCUS_Z.html vignettes/web_only/compiled_models.html vignettes/web_only/benchmarks.html
 
 pd: roxygen
 	"$(RBIN)/Rscript" -e "pkgdown::build_site(run_dont_run = TRUE, lazy = TRUE)"
