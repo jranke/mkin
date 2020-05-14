@@ -1,3 +1,7 @@
+# mkin 0.9.50.3 (unreleased)
+
+- 'parms': Add a method for mmkin objects
+
 # mkin 0.9.50.2 (2020-05-12)
 
 - Increase tolerance for a platform specific test results on the Solaris test machine on CRAN

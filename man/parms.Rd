@@ -3,14 +3,18 @@
 \name{parms}
 \alias{parms}
 \alias{parms.mkinfit}
+\alias{parms.mmkin}
 \title{Extract model parameters from mkinfit models}
 \usage{
 parms(object, ...)
 
 \method{parms}{mkinfit}(object, transformed = FALSE, ...)
+
+\method{parms}{mmkin}(object, transformed = FALSE, ...)
 }
 \arguments{
-\item{object}{A fitted model object}
+\item{object}{A fitted model object. Methods are implemented for
+\code{\link[=mkinfit]{mkinfit()}} objects and for \code{\link[=mmkin]{mmkin()}} objects.}
 
 \item{\dots}{Not used}
 
@@ -18,7 +22,10 @@ parms(object, ...)
 as used internally during the optimisation?}
 }
 \value{
-A numeric vector of fitted model parameters
+For mkinfit objects, a numeric vector of fitted model parameters.
+For mmkin row objects, a matrix with the parameters with a
+row for each dataset. If the mmkin object has more than one row, a list of
+such matrices is returned.
 }
 \description{
 This function always returns degradation model parameters as well as error
@@ -29,4 +36,12 @@ considering the error structure that was assumed for the fit.
 fit <- mkinfit("SFO", FOCUS_2006_C)
 parms(fit)
 parms(fit, transformed = TRUE)
+ds <- lapply(experimental_data_for_UBA_2019[6:10],
+ function(x) subset(x$data[c("name", "time", "value")]))
+names(ds) <- paste("Dataset", 6:10)
+fits <- mmkin(c("SFO", "FOMC", "DFOP"), ds, quiet = TRUE)
+parms(fits["SFO", ])
+parms(fits[, 2])
+parms(fits)
+parms(fits, transformed = TRUE)
 }
