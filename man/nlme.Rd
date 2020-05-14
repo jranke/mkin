@@ -31,7 +31,7 @@ A \code{\link{groupedData}} object
 These functions facilitate setting up a nonlinear mixed effects model for
 an mmkin row object. An mmkin row object is essentially a list of mkinfit
 objects that have been obtained by fitting the same model to a list of
-datasets.
+datasets. They are used internally by the \code{\link[=nlme.mmkin]{nlme.mmkin()}} method.
 }
 \examples{
 sampling_times = c(0, 1, 3, 7, 14, 28, 60, 90, 120)
