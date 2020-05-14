@@ -11,6 +11,21 @@
 #'  For mmkin row objects, a matrix with the parameters with a
 #'  row for each dataset. If the mmkin object has more than one row, a list of
 #'  such matrices is returned.
+#' @examples
+#' # mkinfit objects
+#' fit <- mkinfit("SFO", FOCUS_2006_C, quiet = TRUE)
+#' parms(fit)
+#' parms(fit, transformed = TRUE)
+#'
+#' # mmkin objects
+#' ds <- lapply(experimental_data_for_UBA_2019[6:10],
+#'  function(x) subset(x$data[c("name", "time", "value")]))
+#' names(ds) <- paste("Dataset", 6:10)
+#' fits <- mmkin(c("SFO", "FOMC", "DFOP"), ds, quiet = TRUE)
+#' parms(fits["SFO", ])
+#' parms(fits[, 2])
+#' parms(fits)
+#' parms(fits, transformed = TRUE)
 #' @export
 parms <- function(object, ...)
 {
@@ -20,10 +35,6 @@ parms <- function(object, ...)
 #' @param transformed Should the parameters be returned
 #'   as used internally during the optimisation?
 #' @rdname parms
-#' @examples
-#' fit <- mkinfit("SFO", FOCUS_2006_C)
-#' parms(fit)
-#' parms(fit, transformed = TRUE)
 #' @export
 parms.mkinfit <- function(object, transformed = FALSE, ...)
 {
@@ -32,15 +43,6 @@ parms.mkinfit <- function(object, transformed = FALSE, ...)
 }
 
 #' @rdname parms
-#' @examples
-#' ds <- lapply(experimental_data_for_UBA_2019[6:10],
-#'  function(x) subset(x$data[c("name", "time", "value")]))
-#' names(ds) <- paste("Dataset", 6:10)
-#' fits <- mmkin(c("SFO", "FOMC", "DFOP"), ds, quiet = TRUE)
-#' parms(fits["SFO", ])
-#' parms(fits[, 2])
-#' parms(fits)
-#' parms(fits, transformed = TRUE)
 #' @export
 parms.mmkin <- function(object, transformed = FALSE, ...)
 {

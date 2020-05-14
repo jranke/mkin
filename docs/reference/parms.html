@@ -74,7 +74,7 @@ considering the error structure that was assumed for the fit." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50.3</span>
       </span>
     </div>
 
@@ -186,21 +186,13 @@ row for each dataset. If the mmkin object has more than one row, a list of
 such matrices is returned.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='st'>"SFO"</span>, <span class='no'>FOCUS_2006_C</span>)</div><div class='output co'>#&gt; <span class='message'>Ordinary least squares optimisation</span></div><div class='output co'>#&gt; Sum of squared residuals at call 1: 2388.077
-#&gt; Sum of squared residuals at call 3: 2388.077
-#&gt; Sum of squared residuals at call 4: 247.1962
-#&gt; Sum of squared residuals at call 7: 200.6791
-#&gt; Sum of squared residuals at call 10: 197.7231
-#&gt; Sum of squared residuals at call 11: 197.0872
-#&gt; Sum of squared residuals at call 14: 196.535
-#&gt; Sum of squared residuals at call 15: 196.535
-#&gt; Sum of squared residuals at call 16: 196.535
-#&gt; Sum of squared residuals at call 17: 196.5334
-#&gt; Sum of squared residuals at call 20: 196.5334
-#&gt; Sum of squared residuals at call 25: 196.5334
-#&gt; Negative log-likelihood at call 31: 26.64668</div><div class='output co'>#&gt; <span class='message'>Optimisation successfully terminated.</span></div><div class='input'><span class='fu'>parms</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt;      parent_0 k_parent_sink         sigma 
+    <pre class="examples"><div class='input'><span class='co'># mkinfit objects</span>
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='st'>"SFO"</span>, <span class='no'>FOCUS_2006_C</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'>parms</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt;      parent_0 k_parent_sink         sigma 
 #&gt;    82.4921598     0.3060633     4.6730124 </div><div class='input'><span class='fu'>parms</span>(<span class='no'>fit</span>, <span class='kw'>transformed</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;          parent_0 log_k_parent_sink             sigma 
-#&gt;         82.492160         -1.183963          4.673012 </div><div class='input'><span class='no'>ds</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span>(<span class='no'>experimental_data_for_UBA_2019</span>[<span class='fl'>6</span>:<span class='fl'>10</span>],
+#&gt;         82.492160         -1.183963          4.673012 </div><div class='input'>
+<span class='co'># mmkin objects</span>
+<span class='no'>ds</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span>(<span class='no'>experimental_data_for_UBA_2019</span>[<span class='fl'>6</span>:<span class='fl'>10</span>],
  <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>x</span>$<span class='no'>data</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"name"</span>, <span class='st'>"time"</span>, <span class='st'>"value"</span>)]))
 <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>ds</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"Dataset"</span>, <span class='fl'>6</span>:<span class='fl'>10</span>)
 <span class='no'>fits</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"FOMC"</span>, <span class='st'>"DFOP"</span>), <span class='no'>ds</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)

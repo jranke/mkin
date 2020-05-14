@@ -33,9 +33,12 @@ model parameters, in order to avoid working with a fitted model without
 considering the error structure that was assumed for the fit.
 }
 \examples{
-fit <- mkinfit("SFO", FOCUS_2006_C)
+# mkinfit objects
+fit <- mkinfit("SFO", FOCUS_2006_C, quiet = TRUE)
 parms(fit)
 parms(fit, transformed = TRUE)
+
+# mmkin objects
 ds <- lapply(experimental_data_for_UBA_2019[6:10],
  function(x) subset(x$data[c("name", "time", "value")]))
 names(ds) <- paste("Dataset", 6:10)
