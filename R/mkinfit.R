@@ -3,9 +3,11 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #' Fit a kinetic model to data with one or more state variables
 #'
 #' This function maximises the likelihood of the observed data using the Port
-#' algorithm \code{\link{nlminb}}, and the specified initial or fixed
+#' algorithm [stats::nlminb()], and the specified initial or fixed
 #' parameters and starting values.  In each step of the optimisation, the
-#' kinetic model is solved using the function \code{\link{mkinpredict}}. The
+#' kinetic model is solved using the function [mkinpredict()], except
+#' if an analytical solution is implemented, in which case the model is solved
+#' using the degradation function in the [mkinmod] object. The
 #' parameters of the selected error model are fitted simultaneously with the
 #' degradation model parameters, as both of them are arguments of the
 #' likelihood function.
@@ -14,7 +16,7 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #' order to better satisfy the assumption of a normal distribution of their
 #' estimators.
 #'
-#' @param mkinmod A list of class \code{\link{mkinmod}}, containing the kinetic
+#' @param mkinmod A list of class [mkinmod], containing the kinetic
 #'   model to be fitted to the data, or one of the shorthand names ("SFO",
 #'   "FOMC", "DFOP", "HS", "SFORB", "IORE"). If a shorthand name is given, a
 #'   parent only degradation model is generated for the variable with the
@@ -42,7 +44,7 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #' @param state.ini A named vector of initial values for the state variables of
 #'   the model. In case the observed variables are represented by more than one
 #'   model variable, the names will differ from the names of the observed
-#'   variables (see \code{map} component of \code{\link{mkinmod}}). The default
+#'   variables (see \code{map} component of [mkinmod]). The default
 #'   is to set the initial value of the first model variable to the mean of the
 #'   time zero values for the variable with the maximum observed value, and all
 #'   others to 0.  If this variable has no time zero observations, its initial
@@ -66,20 +68,19 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #' @param solution_type If set to "eigen", the solution of the system of
 #'   differential equations is based on the spectral decomposition of the
 #'   coefficient matrix in cases that this is possible. If set to "deSolve", a
-#'   numerical ode solver from package \code{\link{deSolve}} is used. If set to
-#'   "analytical", an analytical solution of the model is used. This is only
-#'   implemented for relatively simple degradation models.  The default is
+#'   numerical [ode solver from package deSolve][deSolve::ode()] is used. If
+#'   set to "analytical", an analytical solution of the model is used. This is
+#'   only implemented for relatively simple degradation models.  The default is
 #'   "auto", which uses "analytical" if possible, otherwise "deSolve" if a
 #'   compiler is present, and "eigen" if no compiler is present and the model
-#'   can be expressed using eigenvalues and eigenvectors.  This argument is
-#'   passed on to the helper function \code{\link{mkinpredict}}.
-#' @param method.ode The solution method passed via \code{\link{mkinpredict}}
-#'   to \code{\link{ode}} in case the solution type is "deSolve". The default
+#'   can be expressed using eigenvalues and eigenvectors.
+#' @param method.ode The solution method passed via [mkinpredict()]
+#'   to [deSolve::ode()] in case the solution type is "deSolve". The default
 #'   "lsoda" is performant, but sometimes fails to converge.
 #' @param use_compiled If set to \code{FALSE}, no compiled version of the
-#'   \code{\link{mkinmod}} model is used in the calls to
-#'   \code{\link{mkinpredict}} even if a compiled version is present.
-#' @param control A list of control arguments passed to \code{\link{nlminb}}.
+#'   [mkinmod] model is used in the calls to [mkinpredict()] even if a compiled
+#'   version is present.
+#' @param control A list of control arguments passed to [stats::nlminb()].
 #' @param transform_rates Boolean specifying if kinetic rate constants should
 #'   be transformed in the model specification used in the fitting for better
 #'   compliance with the assumption of normal distribution of the estimator. If
@@ -93,13 +94,14 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #'   of the estimator. The default (TRUE) is to do transformations. If TRUE,
 #'   the g parameter of the DFOP and HS models are also transformed, as they
 #'   can also be seen as compositional data. The transformation used for these
-#'   transformations is the \code{\link{ilr}} transformation.
+#'   transformations is the [ilr()] transformation.
 #' @param quiet Suppress printing out the current value of the negative
 #'   log-likelihood after each improvement?
-#' @param atol Absolute error tolerance, passed to \code{\link{ode}}. Default
-#'   is 1e-8, lower than in \code{\link{lsoda}}.
-#' @param rtol Absolute error tolerance, passed to \code{\link{ode}}. Default
-#'   is 1e-10, much lower than in \code{\link{lsoda}}.
+#' @param atol Absolute error tolerance, passed to [deSolve::ode()]. Default
+#'   is 1e-8, which is lower than the default in the [deSolve::lsoda()] 
+#'   function which is used per default.
+#' @param rtol Absolute error tolerance, passed to [deSolve::ode()]. Default
+#'   is 1e-10, much lower than in [deSolve::lsoda()].
 #' @param error_model If the error model is "const", a constant standard
 #'   deviation is assumed.
 #'
@@ -147,17 +149,15 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #' @param reweight.max.iter Maximum number of iterations in IRLS fits.
 #' @param trace_parms Should a trace of the parameter values be listed?
 #' @param \dots Further arguments that will be passed on to
-#'   \code{\link{deSolve}}.
+#'   [deSolve::ode()].
 #' @importFrom stats nlminb aggregate dist
-#' @return A list with "mkinfit" in the class attribute.  A summary can be
-#'   obtained by \code{\link{summary.mkinfit}}.
+#' @return A list with "mkinfit" in the class attribute.
 #' @note When using the "IORE" submodel for metabolites, fitting with
 #'   "transform_rates = TRUE" (the default) often leads to failures of the
 #'   numerical ODE solver. In this situation it may help to switch off the
 #'   internal rate transformation.
 #' @author Johannes Ranke
-#' @seealso Plotting methods \code{\link{plot.mkinfit}} and
-#'   \code{\link{mkinparplot}}.
+#' @seealso [summary.mkinfit], [plot.mkinfit], [parms] and [lrtest].
 #'
 #'   Comparisons of models fitted to the same data can be made using
 #'   \code{\link{AIC}} by virtue of the method \code{\link{logLik.mkinfit}}.
