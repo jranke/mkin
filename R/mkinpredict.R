@@ -138,7 +138,8 @@ mkinpredict.mkinmod <- function(x,
   out_obs[, "time"] <- outtimes
 
   if (solution_type == "analytical") {
-    # This is clumsy, as we wanted fast analytical predictions for mkinfit
+    # This is clumsy, as we wanted fast analytical predictions for mkinfit,
+    # which bypasses mkinpredict in the case of analytical solutions
     pseudo_observed <-
       data.frame(name = rep(obs_vars, each = length(outtimes)),
       time = rep(outtimes, length(obs_vars)))
