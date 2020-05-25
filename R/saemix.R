@@ -7,6 +7,7 @@
 #'
 #' @param object An mmkin row object containing several fits of the same model to different datasets
 #' @rdname saemix
+#' @importFrom saemix saemixData saemixModel
 #' @examples
 #' ds <- lapply(experimental_data_for_UBA_2019[6:10],
 #'  function(x) subset(x$data[c("name", "time", "value")]))
@@ -14,13 +15,11 @@
 #' sfo_sfo <- mkinmod(parent = mkinsub("SFO", "A1"),
 #'   A1 = mkinsub("SFO"))
 #' f_mmkin <- mmkin(list("SFO-SFO" = sfo_sfo), ds, quiet = TRUE, cores = 5)
+#' m_saemix <- saemix_model(f_mmkin)
+#' d_saemix <- saemix_data(f_mmkin)
+#' saemix_options <- list(seed = 123456, save = FALSE, save.graphs = FALSE)
 #' \dontrun{
-#' if (require(saemix)) {
-#'   m_saemix <- saemix_model(f_mmkin)
-#'   d_saemix <- saemix_data(f_mmkin)
-#'   saemix_options <- list(seed = 123456, save = FALSE, save.graphs = FALSE)
-#'     saemix(m_saemix, d_saemix, saemix_options)
-#' }
+#'   saemix(m_saemix, d_saemix, saemix_options)
 #' }
 #' @return An [saemix::SaemixModel] object.
 #' @export

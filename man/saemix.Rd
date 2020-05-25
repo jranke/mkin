@@ -32,12 +32,10 @@ names(ds) <- paste("Dataset", 6:10)
 sfo_sfo <- mkinmod(parent = mkinsub("SFO", "A1"),
   A1 = mkinsub("SFO"))
 f_mmkin <- mmkin(list("SFO-SFO" = sfo_sfo), ds, quiet = TRUE, cores = 5)
+m_saemix <- saemix_model(f_mmkin)
+d_saemix <- saemix_data(f_mmkin)
+saemix_options <- list(seed = 123456, save = FALSE, save.graphs = FALSE)
 \dontrun{
-if (require(saemix)) {
-  m_saemix <- saemix_model(f_mmkin)
-  d_saemix <- saemix_data(f_mmkin)
-  saemix_options <- list(seed = 123456, save = FALSE, save.graphs = FALSE)
-    saemix(m_saemix, d_saemix, saemix_options)
-}
+  saemix(m_saemix, d_saemix, saemix_options)
 }
 }
