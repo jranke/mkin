@@ -2,6 +2,8 @@
 
 - 'parms': Add a method for mmkin objects
 
+- 'saemix_model', 'saemix_data': Helper functions to fit nonlinear mixed-effects models for mmkin row objects using the saemix package
+
 # mkin 0.9.50.2 (2020-05-12)
 
 - Increase tolerance for a platform specific test results on the Solaris test machine on CRAN
