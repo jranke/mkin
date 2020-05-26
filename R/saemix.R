@@ -5,25 +5,37 @@
 #' list of mkinfit objects that have been obtained by fitting the same model to
 #' a list of datasets.
 #'
+#' Starting values for the fixed effects (population mean parameters, argument psi0 of
+#' [saemix::saemixModel()] are the mean values of the parameters found using
+#' mmkin. Starting variances of the random effects (argument omega.init) are the
+#' variances of the deviations of the parameters from these mean values.
+#'
 #' @param object An mmkin row object containing several fits of the same model to different datasets
+#' @param cores The number of cores to be used for multicore processing.
+#'   On Windows machines, cores > 1 is currently not supported.
 #' @rdname saemix
 #' @importFrom saemix saemixData saemixModel
+#' @importFrom stats var
 #' @examples
 #' ds <- lapply(experimental_data_for_UBA_2019[6:10],
 #'  function(x) subset(x$data[c("name", "time", "value")]))
 #' names(ds) <- paste("Dataset", 6:10)
 #' sfo_sfo <- mkinmod(parent = mkinsub("SFO", "A1"),
 #'   A1 = mkinsub("SFO"))
-#' f_mmkin <- mmkin(list("SFO-SFO" = sfo_sfo), ds, quiet = TRUE, cores = 5)
+#' \dontrun{
+#' f_mmkin <- mmkin(list("SFO-SFO" = sfo_sfo), ds, quiet = TRUE)
+#' library(saemix)
 #' m_saemix <- saemix_model(f_mmkin)
 #' d_saemix <- saemix_data(f_mmkin)
-#' saemix_options <- list(seed = 123456, save = FALSE, save.graphs = FALSE)
-#' \dontrun{
-#'   saemix(m_saemix, d_saemix, saemix_options)
+#' saemix_options <- list(seed = 123456,
+#'   save = FALSE, save.graphs = FALSE, displayProgress = FALSE,
+#'   nbiter.saemix = c(200, 80))
+#' f_saemix <- saemix(m_saemix, d_saemix, saemix_options)
+#' plot(f_saemix, plot.type = "convergence")
 #' }
 #' @return An [saemix::SaemixModel] object.
 #' @export
-saemix_model <- function(object) {
+saemix_model <- function(object, cores = parallel::detectCores()) {
   if (nrow(object) > 1) stop("Only row objects allowed")
 
   mkin_model <- object[[1]]$mkinmod
@@ -81,14 +93,19 @@ saemix_model <- function(object) {
           out_values <- out_wide[out_index]
         }
         return(out_values)
-      }, mc.cores = 15)
+      }, mc.cores = cores)
       res <- unlist(res_list)
       return(res)
   }
 
+  raneff_0 <- mean_degparms(object, random = TRUE)$random$ds
+  var_raneff_0 <- apply(raneff_0, 2, var)
+
   res <- saemixModel(model_function, psi0,
     "Mixed model generated from mmkin object",
-    transform.par = rep(0, length(degparms_optim)))
+    transform.par = rep(0, length(degparms_optim)),
+    omega.init = diag(var_raneff_0)
+  )
   return(res)
 }
 

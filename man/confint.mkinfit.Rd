@@ -13,7 +13,8 @@
   method = c("quadratic", "profile"),
   transformed = TRUE,
   backtransform = TRUE,
-  cores = round(detectCores()/2),
+  cores = parallel::detectCores(),
+  rel_tol = 0.01,
   quiet = FALSE,
   ...
 )
@@ -47,6 +48,10 @@ their confidence intervals?}
 
 \item{cores}{The number of cores to be used for multicore processing.
 On Windows machines, cores > 1 is currently not supported.}
+
+\item{rel_tol}{If the method is 'profile', what should be the accuracy
+of the lower and upper bounds, relative to the estimate obtained from
+the quadratic method?}
 
 \item{quiet}{Should we suppress the message "Profiling the likelihood"}
 

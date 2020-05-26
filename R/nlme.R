@@ -125,7 +125,7 @@ nlme_function <- function(object) {
 #' @return If random is FALSE (default), a named vector containing mean values
 #'   of the fitted degradation model parameters. If random is TRUE, a list with
 #'   fixed and random effects, in the format required by the start argument of
-#'   nlme for the case of a single grouping variable ds?
+#'   nlme for the case of a single grouping variable ds.
 #' @param random Should a list with fixed and random effects be returned?
 #' @export
 mean_degparms <- function(object, random = FALSE) {

@@ -27,7 +27,10 @@
 #' @param backtransform If we approximate the likelihood in terms of the
 #'   transformed parameters, should we backtransform the parameters with
 #'   their confidence intervals?
-#' @param cores The number of cores to be used for multicore processing. 
+#' @param rel_tol If the method is 'profile', what should be the accuracy
+#'   of the lower and upper bounds, relative to the estimate obtained from
+#'   the quadratic method?
+#' @param cores The number of cores to be used for multicore processing.
 #'   On Windows machines, cores > 1 is currently not supported.
 #' @param quiet Should we suppress the message "Profiling the likelihood"
 #' @return A matrix with columns giving lower and upper confidence limits for
@@ -121,7 +124,7 @@ confint.mkinfit <- function(object, parm,
   level = 0.95, alpha = 1 - level, cutoff,
   method = c("quadratic", "profile"),
   transformed = TRUE, backtransform = TRUE,
-  cores = round(detectCores()/2), quiet = FALSE, ...)
+  cores = parallel::detectCores(), rel_tol = 0.01, quiet = FALSE, ...)
 {
   tparms <- parms(object, transformed = TRUE)
   bparms <- parms(object, transformed = FALSE)
@@ -140,50 +143,50 @@ confint.mkinfit <- function(object, parm,
 
   a <- c(alpha / 2, 1 - (alpha / 2))
 
-  if (method == "quadratic") {
+  quantiles <- qt(a, object$df.residual)
 
-    quantiles <- qt(a, object$df.residual)
-
-    covar_pnames <- if (missing(parm)) {
-      if (transformed) tpnames else bpnames
-    } else {
-      parm
-    }
-
-    return_parms <- if (backtransform) bparms[return_pnames]
-      else tparms[return_pnames]
-
-    covar_parms <- if (transformed) tparms[covar_pnames]
-      else bparms[covar_pnames]
-
-    if (transformed) {
-      covar <- try(solve(object$hessian), silent = TRUE)
-    } else {
-      covar <- try(solve(object$hessian_notrans), silent = TRUE)
-    }
-
-    # If inverting the covariance matrix failed or produced NA values
-    if (!is.numeric(covar) | is.na(covar[1])) {
-      ses <- lci <- uci <- rep(NA, p)
-    } else {
-      ses     <- sqrt(diag(covar))[covar_pnames]
-      lci    <- covar_parms + quantiles[1] * ses
-      uci    <- covar_parms + quantiles[2] * ses
-      if (transformed & backtransform) {
-        lci_back <- backtransform_odeparms(lci,
-          object$mkinmod, object$transform_rates, object$transform_fractions)
-        uci_back <- backtransform_odeparms(uci,
-          object$mkinmod, object$transform_rates, object$transform_fractions)
-
-        return_errparm_names <- intersect(names(object$errparms), return_pnames)
-        lci <- c(lci_back, lci[return_errparm_names])
-        uci <- c(uci_back, uci[return_errparm_names])
-      }
-    }
-    ci <- cbind(lower = lci, upper = uci)
+  covar_pnames <- if (missing(parm)) {
+    if (transformed) tpnames else bpnames
+  } else {
+    parm
   }
 
+  return_parms <- if (backtransform) bparms[return_pnames]
+    else tparms[return_pnames]
+
+  covar_parms <- if (transformed) tparms[covar_pnames]
+    else bparms[covar_pnames]
+
+  if (transformed) {
+    covar <- try(solve(object$hessian), silent = TRUE)
+  } else {
+    covar <- try(solve(object$hessian_notrans), silent = TRUE)
+  }
+
+  # If inverting the covariance matrix failed or produced NA values
+  if (!is.numeric(covar) | is.na(covar[1])) {
+    ses <- lci <- uci <- rep(NA, p)
+  } else {
+    ses     <- sqrt(diag(covar))[covar_pnames]
+    lci    <- covar_parms + quantiles[1] * ses
+    uci    <- covar_parms + quantiles[2] * ses
+    if (transformed & backtransform) {
+      lci_back <- backtransform_odeparms(lci,
+        object$mkinmod, object$transform_rates, object$transform_fractions)
+      uci_back <- backtransform_odeparms(uci,
+        object$mkinmod, object$transform_rates, object$transform_fractions)
+
+      return_errparm_names <- intersect(names(object$errparms), return_pnames)
+      lci <- c(lci_back, lci[return_errparm_names])
+      uci <- c(uci_back, uci[return_errparm_names])
+    }
+  }
+  ci <- cbind(lower = lci, upper = uci)
+
   if (method == "profile") {
+
+    ci_quadratic <- ci
+
     if (!quiet) message("Profiling the likelihood")
 
     lci <- uci <- rep(NA, p)
@@ -215,9 +218,14 @@ confint.mkinfit <- function(object, parm,
         (cutoff - (object$logLik - profile_ll(x)))^2
       }
 
-      lci_pname <- optimize(cost, lower = 0, upper = all_parms[pname])$minimum
+      lower_quadratic <- ci_quadratic["lower"][pname]
+      upper_quadratic <- ci_quadratic["upper"][pname]
+      ltol <- if (!is.na(lower_quadratic)) rel_tol * lower_quadratic else .Machine$double.eps^0.25
+      utol <- if (!is.na(upper_quadratic)) rel_tol * upper_quadratic else .Machine$double.eps^0.25
+      lci_pname <- optimize(cost, lower = 0, upper = all_parms[pname], tol = ltol)$minimum
       uci_pname <- optimize(cost, lower = all_parms[pname],
-        upper = ifelse(grepl("^f_|^g$", pname), 1, 15 * all_parms[pname]))$minimum
+        upper = ifelse(grepl("^f_|^g$", pname), 1, 15 * all_parms[pname]),
+        tol = utol)$minimum
       return(c(lci_pname, uci_pname))
     }
     ci <- t(parallel::mcmapply(get_ci, profile_pnames, mc.cores = cores))

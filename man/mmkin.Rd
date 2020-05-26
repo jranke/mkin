@@ -8,7 +8,7 @@ more datasets}
 mmkin(
   models = c("SFO", "FOMC", "DFOP"),
   datasets,
-  cores = round(detectCores()/2),
+  cores = detectCores(),
   cluster = NULL,
   ...
 )
@@ -24,7 +24,8 @@ data for \code{\link{mkinfit}}.}
 \item{cores}{The number of cores to be used for multicore processing. This
 is only used when the \code{cluster} argument is \code{NULL}. On Windows
 machines, cores > 1 is not supported, you need to use the \code{cluster}
-argument to use multiple logical processors.}
+argument to use multiple logical processors. Per default, all cores
+detected by \code{\link[parallel:detectCores]{parallel::detectCores()}} are used.}
 
 \item{cluster}{A cluster as returned by \code{\link{makeCluster}} to be used
 for parallel execution.}

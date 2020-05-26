@@ -5,12 +5,15 @@
 \alias{saemix_data}
 \title{Create saemix models from mmkin row objects}
 \usage{
-saemix_model(object)
+saemix_model(object, cores = parallel::detectCores())
 
 saemix_data(object, ...)
 }
 \arguments{
 \item{object}{An mmkin row object containing several fits of the same model to different datasets}
+
+\item{cores}{The number of cores to be used for multicore processing.
+On Windows machines, cores > 1 is currently not supported.}
 
 \item{\dots}{Further parameters passed to \link[saemix:saemixData]{saemix::saemixData}}
 }
@@ -25,17 +28,27 @@ object for use with the saemix package. An mmkin row object is essentially a
 list of mkinfit objects that have been obtained by fitting the same model to
 a list of datasets.
 }
+\details{
+Starting values for the fixed effects (population mean parameters, argument psi0 of
+\code{\link[saemix:saemixModel]{saemix::saemixModel()}} are the mean values of the parameters found using
+mmkin. Starting variances of the random effects (argument omega.init) are the
+variances of the deviations of the parameters from these mean values.
+}
 \examples{
 ds <- lapply(experimental_data_for_UBA_2019[6:10],
  function(x) subset(x$data[c("name", "time", "value")]))
 names(ds) <- paste("Dataset", 6:10)
 sfo_sfo <- mkinmod(parent = mkinsub("SFO", "A1"),
   A1 = mkinsub("SFO"))
-f_mmkin <- mmkin(list("SFO-SFO" = sfo_sfo), ds, quiet = TRUE, cores = 5)
+\dontrun{
+f_mmkin <- mmkin(list("SFO-SFO" = sfo_sfo), ds, quiet = TRUE)
+library(saemix)
 m_saemix <- saemix_model(f_mmkin)
 d_saemix <- saemix_data(f_mmkin)
-saemix_options <- list(seed = 123456, save = FALSE, save.graphs = FALSE)
-\dontrun{
-  saemix(m_saemix, d_saemix, saemix_options)
+saemix_options <- list(seed = 123456,
+  save = FALSE, save.graphs = FALSE, displayProgress = FALSE,
+  nbiter.saemix = c(200, 80))
+f_saemix <- saemix(m_saemix, d_saemix, saemix_options)
+plot(f_saemix, plot.type = "convergence")
 }
 }

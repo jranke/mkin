@@ -75,7 +75,7 @@ datasets specified in its first two arguments." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50.3</span>
       </span>
     </div>
 
@@ -111,6 +111,9 @@ datasets specified in its first two arguments." />
     </li>
     <li>
       <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/benchmarks.html">Some benchmark timings</a>
     </li>
   </ul>
 </li>
@@ -152,7 +155,7 @@ datasets specified in its first two arguments.</p>
     <pre class="usage"><span class='fu'>mmkin</span>(
   <span class='kw'>models</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"FOMC"</span>, <span class='st'>"DFOP"</span>),
   <span class='no'>datasets</span>,
-  <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span>(<span class='fu'>detectCores</span>()/<span class='fl'>2</span>),
+  <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fu'>detectCores</span>(),
   <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='no'>...</span>
 )</pre>
@@ -176,7 +179,8 @@ data for <code><a href='mkinfit.html'>mkinfit</a></code>.</p></td>
       <td><p>The number of cores to be used for multicore processing. This
 is only used when the <code>cluster</code> argument is <code>NULL</code>. On Windows
 machines, cores &gt; 1 is not supported, you need to use the <code>cluster</code>
-argument to use multiple logical processors.</p></td>
+argument to use multiple logical processors. Per default, all cores
+detected by <code><a href='https://rdrr.io/r/parallel/detectCores.html'>parallel::detectCores()</a></code> are used.</p></td>
     </tr>
     <tr>
       <th>cluster</th>
@@ -215,9 +219,9 @@ plotting.</p></div>
 <span class='no'>time_default</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='no'>fits.0</span> <span class='kw'>&lt;-</span> <span class='fu'>mmkin</span>(<span class='no'>models</span>, <span class='no'>datasets</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))
 <span class='no'>time_1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='no'>fits.4</span> <span class='kw'>&lt;-</span> <span class='fu'>mmkin</span>(<span class='no'>models</span>, <span class='no'>datasets</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt; <span class='warning'>Warning: Optimisation did not converge:</span>
 #&gt; <span class='warning'>false convergence (8)</span></div><div class='input'>
-<span class='no'>time_default</span></div><div class='output co'>#&gt;        User      System verstrichen 
-#&gt;       4.520       0.374       1.284 </div><div class='input'><span class='no'>time_1</span></div><div class='output co'>#&gt;        User      System verstrichen 
-#&gt;       5.076       0.004       5.083 </div><div class='input'>
+<span class='no'>time_default</span></div><div class='output co'>#&gt;    user  system elapsed 
+#&gt;   4.457   0.561   1.328 </div><div class='input'><span class='no'>time_1</span></div><div class='output co'>#&gt;    user  system elapsed 
+#&gt;   5.031   0.004   5.038 </div><div class='input'>
 <span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fits.0</span><span class='kw'>[[</span><span class='st'>"SFO_lin"</span>, <span class='fl'>2</span>]])</div><div class='output co'>#&gt; $ff
 #&gt;   parent_M1 parent_sink       M1_M2     M1_sink 
 #&gt;   0.7340478   0.2659522   0.7505691   0.2494309 

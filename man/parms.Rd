@@ -42,9 +42,11 @@ parms(fit, transformed = TRUE)
 ds <- lapply(experimental_data_for_UBA_2019[6:10],
  function(x) subset(x$data[c("name", "time", "value")]))
 names(ds) <- paste("Dataset", 6:10)
-fits <- mmkin(c("SFO", "FOMC", "DFOP"), ds, quiet = TRUE)
+\dontrun{
+fits <- mmkin(c("SFO", "FOMC", "DFOP"), ds, quiet = TRUE, cores = 1)
 parms(fits["SFO", ])
 parms(fits[, 2])
 parms(fits)
 parms(fits, transformed = TRUE)
+}
 }

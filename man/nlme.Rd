@@ -23,7 +23,7 @@ A function that can be used with nlme
 If random is FALSE (default), a named vector containing mean values
 of the fitted degradation model parameters. If random is TRUE, a list with
 fixed and random effects, in the format required by the start argument of
-nlme for the case of a single grouping variable ds?
+nlme for the case of a single grouping variable ds.
 
 A \code{\link{groupedData}} object
 }

@@ -12,7 +12,8 @@
 #' @param cores The number of cores to be used for multicore processing. This
 #'   is only used when the \code{cluster} argument is \code{NULL}. On Windows
 #'   machines, cores > 1 is not supported, you need to use the \code{cluster}
-#'   argument to use multiple logical processors.
+#'   argument to use multiple logical processors. Per default, all cores
+#'   detected by [parallel::detectCores()] are used.
 #' @param cluster A cluster as returned by \code{\link{makeCluster}} to be used
 #'   for parallel execution.
 #' @param \dots Further arguments that will be passed to \code{\link{mkinfit}}.
@@ -62,7 +63,7 @@
 #'
 #' @export mmkin
 mmkin <- function(models = c("SFO", "FOMC", "DFOP"), datasets,
-                  cores = round(detectCores()/2), cluster = NULL, ...)
+  cores = detectCores(), cluster = NULL, ...)
 {
   parent_models_available = c("SFO", "FOMC", "DFOP", "HS", "SFORB", "IORE", "logistic")
   n.m <- length(models)

@@ -153,7 +153,7 @@ list of mkinfit objects that have been obtained by fitting the same model to
 a list of datasets.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>saemix_model</span>(<span class='no'>object</span>)
+    <pre class="usage"><span class='fu'>saemix_model</span>(<span class='no'>object</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='kw pkg'>parallel</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/r/parallel/detectCores.html'>detectCores</a></span>())
 
 <span class='fu'>saemix_data</span>(<span class='no'>object</span>, <span class='no'>...</span>)</pre>
 
@@ -165,6 +165,11 @@ a list of datasets.</p>
       <td><p>An mmkin row object containing several fits of the same model to different datasets</p></td>
     </tr>
     <tr>
+      <th>cores</th>
+      <td><p>The number of cores to be used for multicore processing.
+On Windows machines, cores &gt; 1 is currently not supported.</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>Further parameters passed to <a href='https://rdrr.io/pkg/saemix/man/saemixData.html'>saemix::saemixData</a></p></td>
     </tr>
@@ -174,21 +179,22 @@ a list of datasets.</p>
 
     <p>An <a href='https://rdrr.io/pkg/saemix/man/SaemixModel-class.html'>saemix::SaemixModel</a> object.</p>
 <p>An <a href='https://rdrr.io/pkg/saemix/man/SaemixData-class.html'>saemix::SaemixData</a> object.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Starting values for the fixed effects (population mean parameters, argument psi0 of
+<code><a href='https://rdrr.io/pkg/saemix/man/saemixModel.html'>saemix::saemixModel()</a></code> are the mean values of the parameters found using
+mmkin. Starting variances of the random effects (argument omega.init) are the
+variances of the deviations of the parameters from these mean values.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>ds</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span>(<span class='no'>experimental_data_for_UBA_2019</span>[<span class='fl'>6</span>:<span class='fl'>10</span>],
  <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>x</span>$<span class='no'>data</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"name"</span>, <span class='st'>"time"</span>, <span class='st'>"value"</span>)]))
 <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>ds</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"Dataset"</span>, <span class='fl'>6</span>:<span class='fl'>10</span>)
 <span class='no'>sfo_sfo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"A1"</span>),
-  <span class='kw'>A1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='no'>f_mmkin</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='st'>"SFO-SFO"</span> <span class='kw'>=</span> <span class='no'>sfo_sfo</span>), <span class='no'>ds</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>5</span>)
-<span class='co'># \dontrun{</span>
-<span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/library.html'>require</a></span>(<span class='no'>saemix</span>)) {
-  <span class='no'>m_saemix</span> <span class='kw'>&lt;-</span> <span class='fu'>saemix_model</span>(<span class='no'>f_mmkin</span>)
-  <span class='no'>d_saemix</span> <span class='kw'>&lt;-</span> <span class='fu'>saemix_data</span>(<span class='no'>f_mmkin</span>)
-  <span class='no'>saemix_options</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>123456</span>, <span class='kw'>save</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>save.graphs</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-    <span class='fu'><a href='https://rdrr.io/pkg/saemix/man/saemix.html'>saemix</a></span>(<span class='no'>m_saemix</span>, <span class='no'>d_saemix</span>, <span class='no'>saemix_options</span>)
-}</div><div class='output co'>#&gt; <span class='message'>Loading required package: saemix</span></div><div class='output co'>#&gt; <span class='message'>Package saemix, version 3.1.9000</span>
-#&gt; <span class='message'>  please direct bugs, questions and feedback to emmanuelle.comets@inserm.fr</span></div><div class='output co'>#&gt; 
+  <span class='kw'>A1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='co'># \dontrun{</span>
+<span class='no'>f_mmkin</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='st'>"SFO-SFO"</span> <span class='kw'>=</span> <span class='no'>sfo_sfo</span>), <span class='no'>ds</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>saemix</span>)</div><div class='output co'>#&gt; <span class='message'>Package saemix, version 3.1.9000</span>
+#&gt; <span class='message'>  please direct bugs, questions and feedback to emmanuelle.comets@inserm.fr</span></div><div class='input'><span class='no'>m_saemix</span> <span class='kw'>&lt;-</span> <span class='fu'>saemix_model</span>(<span class='no'>f_mmkin</span>)</div><div class='output co'>#&gt; 
 #&gt; 
 #&gt; The following SaemixModel object was successfully created:
 #&gt; 
@@ -224,12 +230,12 @@ a list of datasets.</p>
 #&gt;             out_values &lt;- out_wide[out_index]
 #&gt;         }
 #&gt;         return(out_values)
-#&gt;     }, mc.cores = 15)
+#&gt;     }, mc.cores = cores)
 #&gt;     res &lt;- unlist(res_list)
 #&gt;     return(res)
 #&gt; }
-#&gt; &lt;bytecode: 0x555559875398&gt;
-#&gt; &lt;environment: 0x55555973a248&gt;
+#&gt; &lt;bytecode: 0x555559668108&gt;
+#&gt; &lt;environment: 0x555559677c08&gt;
 #&gt;   Nb of parameters: 4 
 #&gt;       parameter names:  parent_0 log_k_parent log_k_A1 f_parent_ilr_1 
 #&gt;       distribution:
@@ -248,8 +254,7 @@ a list of datasets.</p>
 #&gt;     No covariate in the model.
 #&gt;     Initial values
 #&gt;              parent_0 log_k_parent  log_k_A1 f_parent_ilr_1
-#&gt; Pop.CondInit 86.53449    -3.207005 -3.060308      -1.920449
-#&gt; 
+#&gt; Pop.CondInit 86.53449    -3.207005 -3.060308      -1.920449</div><div class='input'><span class='no'>d_saemix</span> <span class='kw'>&lt;-</span> <span class='fu'>saemix_data</span>(<span class='no'>f_mmkin</span>)</div><div class='output co'>#&gt; 
 #&gt; 
 #&gt; The following SaemixData object was successfully created:
 #&gt; 
@@ -257,12 +262,14 @@ a list of datasets.</p>
 #&gt;     longitudinal data for use with the SAEM algorithm
 #&gt; Dataset ds_saemix 
 #&gt;     Structured data: value ~ time + name | ds 
-#&gt;     X variable for graphs: time () 
-#&gt; Running main SAEM algorithm
-#&gt; [1] "Mon May 25 12:48:51 2020"
-#&gt; .</div><div class='img'><img src='saemix-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; .</div><div class='img'><img src='saemix-2.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; .</div><div class='img'><img src='saemix-3.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; .</div><div class='img'><img src='saemix-4.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; 
+#&gt;     X variable for graphs: time () </div><div class='input'><span class='no'>saemix_options</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>123456</span>,
+  <span class='kw'>save</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>save.graphs</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>displayProgress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>nbiter.saemix</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>200</span>, <span class='fl'>80</span>))
+<span class='no'>f_saemix</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/saemix/man/saemix.html'>saemix</a></span>(<span class='no'>m_saemix</span>, <span class='no'>d_saemix</span>, <span class='no'>saemix_options</span>)</div><div class='output co'>#&gt; Running main SAEM algorithm
+#&gt; [1] "Tue May 26 18:25:16 2020"
+#&gt; ..
 #&gt;     Minimisation finished
-#&gt; [1] "Mon May 25 12:56:39 2020"</div><div class='output co'>#&gt; Nonlinear mixed-effects model fit by the SAEM algorithm
+#&gt; [1] "Tue May 26 18:31:09 2020"</div><div class='img'><img src='saemix-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Nonlinear mixed-effects model fit by the SAEM algorithm
 #&gt; -----------------------------------
 #&gt; ----          Data             ----
 #&gt; -----------------------------------
@@ -322,12 +329,12 @@ a list of datasets.</p>
 #&gt;             out_values &lt;- out_wide[out_index]
 #&gt;         }
 #&gt;         return(out_values)
-#&gt;     }, mc.cores = 15)
+#&gt;     }, mc.cores = cores)
 #&gt;     res &lt;- unlist(res_list)
 #&gt;     return(res)
 #&gt; }
-#&gt; &lt;bytecode: 0x555559875398&gt;
-#&gt; &lt;environment: 0x55555973a248&gt;
+#&gt; &lt;bytecode: 0x555559668108&gt;
+#&gt; &lt;environment: 0x555559677c08&gt;
 #&gt;   Nb of parameters: 4 
 #&gt;       parameter names:  parent_0 log_k_parent log_k_A1 f_parent_ilr_1 
 #&gt;       distribution:
@@ -353,7 +360,7 @@ a list of datasets.</p>
 #&gt;     Estimation of individual parameters (MAP)
 #&gt;     Estimation of standard errors and linearised log-likelihood
 #&gt;     Estimation of log-likelihood by importance sampling
-#&gt;     Number of iterations:  K1=300, K2=100 
+#&gt;     Number of iterations:  K1=200, K2=80 
 #&gt;     Number of chains:  10 
 #&gt;     Seed:  123456 
 #&gt;     Number of MCMC iterations for IS:  5000 
@@ -369,19 +376,19 @@ a list of datasets.</p>
 #&gt; -----------------  Fixed effects  ------------------
 #&gt; ----------------------------------------------------
 #&gt;      Parameter      Estimate SE   CV(%)
-#&gt; [1,] parent_0       86.21    1.51  1.7 
+#&gt; [1,] parent_0       86.14    1.61  1.9 
 #&gt; [2,] log_k_parent   -3.21    0.59 18.5 
-#&gt; [3,] log_k_A1       -4.64    0.29  6.3 
-#&gt; [4,] f_parent_ilr_1 -0.32    0.30 93.2 
-#&gt; [5,] a.1             4.69    0.27  5.8 
+#&gt; [3,] log_k_A1       -4.66    0.30  6.4 
+#&gt; [4,] f_parent_ilr_1 -0.33    0.30 91.7 
+#&gt; [5,] a.1             4.68    0.27  5.8 
 #&gt; ----------------------------------------------------
 #&gt; -----------  Variance of random effects  -----------
 #&gt; ----------------------------------------------------
 #&gt;                Parameter             Estimate SE   CV(%)
-#&gt; parent_0       omega2.parent_0       6.07     7.08 117  
-#&gt; log_k_parent   omega2.log_k_parent   1.75     1.11  63  
+#&gt; parent_0       omega2.parent_0       7.71     8.14 106  
+#&gt; log_k_parent   omega2.log_k_parent   1.76     1.12  63  
 #&gt; log_k_A1       omega2.log_k_A1       0.26     0.26 101  
-#&gt; f_parent_ilr_1 omega2.f_parent_ilr_1 0.38     0.27  71  
+#&gt; f_parent_ilr_1 omega2.f_parent_ilr_1 0.39     0.28  71  
 #&gt; ----------------------------------------------------
 #&gt; ------  Correlation matrix of random effects  ------
 #&gt; ----------------------------------------------------
@@ -399,66 +406,16 @@ a list of datasets.</p>
 #&gt; ---------------  Statistical criteria  -------------
 #&gt; ----------------------------------------------------
 #&gt; Likelihood computed by linearisation
-#&gt;       -2LL= 1064.397 
-#&gt;       AIC = 1082.397 
-#&gt;       BIC = 1078.882 
+#&gt;       -2LL= 1064.364 
+#&gt;       AIC = 1082.364 
+#&gt;       BIC = 1078.848 
 #&gt; 
 #&gt; Likelihood computed by importance sampling
-#&gt;       -2LL= 1063.161 
-#&gt;       AIC = 1081.161 
-#&gt;       BIC = 1077.646 
-#&gt; ----------------------------------------------------</div><div class='output co'>#&gt; Nonlinear mixed-effects model fit by the SAEM algorithm
-#&gt; -----------------------------------------
-#&gt; ----         Data and Model          ----
-#&gt; -----------------------------------------
-#&gt; Data
-#&gt;     Dataset ds_saemix 
-#&gt;     Longitudinal data: value ~ time + name | ds 
-#&gt; 
-#&gt; Model:
-#&gt;     Mixed model generated from mmkin object 
-#&gt;      4 parameters: parent_0 log_k_parent log_k_A1 f_parent_ilr_1 
-#&gt;      error model: constant 
-#&gt;      No covariate
-#&gt; 
-#&gt; Key options
-#&gt;     Estimation of individual parameters (MAP)
-#&gt;     Estimation of standard errors and linearised log-likelihood
-#&gt;     Estimation of log-likelihood by importance sampling
-#&gt;     Number of iterations:  K1=300, K2=100 
-#&gt;     Number of chains:  10 
-#&gt;     Seed:  123456 
-#&gt;     Number of MCMC iterations for IS:  5000 
-#&gt;     Input/output
-#&gt;         results not saved
-#&gt;         no graphs
-#&gt; ----------------------------------------------------
-#&gt; ----                  Results                   ----
-#&gt; Fixed effects
-#&gt;  Parameter      Estimate   SE   CV(%)
-#&gt;  parent_0       86.214   1.506  1.75 
-#&gt;  log_k_parent   -3.210   0.593 18.47 
-#&gt;  log_k_A1       -4.643   0.294  6.34 
-#&gt;  f_parent_ilr_1 -0.322   0.300 93.24 
-#&gt;  a.1             4.689   0.270  5.76 
-#&gt; 
-#&gt; Variance of random effects
-#&gt;  Parameter             Estimate   SE   CV(%)
-#&gt;  omega2.parent_0       6.068    7.078 116.7 
-#&gt;  omega2.log_k_parent   1.752    1.111  63.4 
-#&gt;  omega2.log_k_A1       0.256    0.257 100.5 
-#&gt;  omega2.f_parent_ilr_1 0.385    0.273  70.8 
-#&gt; 
-#&gt; Statistical criteria
-#&gt; Likelihood computed by linearisation
-#&gt;       -2LL= 1064.397 
-#&gt;        AIC= 1082.397 
-#&gt;        BIC= 1078.882 
-#&gt; Likelihood computed by importance sampling
-#&gt;       -2LL= 1063.161 
-#&gt;        AIC= 1081.161 
-#&gt;        BIC= 1077.646 </div><div class='input'># }
-</div><div class='img'><img src='saemix-5.png' alt='' width='700' height='433' /></div></pre>
+#&gt;       -2LL= 1063.462 
+#&gt;       AIC = 1081.462 
+#&gt;       BIC = 1077.947 
+#&gt; ----------------------------------------------------</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/saemix/man/plot-SaemixObject-method.html'>plot</a></span>(<span class='no'>f_saemix</span>, <span class='kw'>plot.type</span> <span class='kw'>=</span> <span class='st'>"convergence"</span>)</div><div class='output co'>#&gt; Plotting convergence plots</div><div class='img'><img src='saemix-2.png' alt='' width='700' height='433' /></div><div class='input'># }
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
