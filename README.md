@@ -38,10 +38,10 @@ at the package vignettes
 
 ## Documentation
 
-The HTML documentation is available at
-[jrwb.de](https://pkgdown.jrwb.de/mkin), at
-[github](http://jranke.github.io/mkin)
-and at [R-Forge](http://kinfit.r-forge.r-project.org/mkin_static/index.html).
+The HTML documentation of the latest version released to CRAN is available at
+[jrwb.de](https://pkgdown.jrwb.de/mkin) and
+[github](http://jranke.github.io/mkin). Documentation of the development
+version is found in the ['dev' subdirectory](https://pkgdown.jrwb.de/mkin/dev).
 
 ## Features
 
