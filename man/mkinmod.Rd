@@ -13,19 +13,19 @@ mkinmod(
 )
 }
 \arguments{
-\item{...}{For each observed variable, a list has to be specified as an
-argument, containing at least a component \code{type}, specifying the type
-of kinetics to use for the variable. Currently, single first order
-kinetics "SFO", indeterminate order rate equation kinetics "IORE", or
-single first order with reversible binding "SFORB" are implemented for all
-variables, while "FOMC", "DFOP" and "HS" can additionally be chosen for
-the first variable which is assumed to be the source compartment.
-Additionally, each component of the list can include a character vector
-\code{to}, specifying names of variables to which a transfer is to be
-assumed in the model.  If the argument \code{use_of_ff} is set to "min"
+\item{...}{For each observed variable, a list as obtained by \code{\link[=mkinsub]{mkinsub()}}
+has to be specified as an argument (see examples).  Currently, single
+first order kinetics "SFO", indeterminate order rate equation kinetics
+"IORE", or single first order with reversible binding "SFORB" are
+implemented for all variables, while "FOMC", "DFOP", "HS" and "logistic"
+can additionally be chosen for the first variable which is assumed to be
+the source compartment.
+Additionally, \code{\link[=mkinsub]{mkinsub()}} has an argument \code{to}, specifying names of
+variables to which a transfer is to be assumed in the model.
+If the argument \code{use_of_ff} is set to "min"
 (default) and the model for the compartment is "SFO" or "SFORB", an
-additional component of the list can be "sink=FALSE" effectively fixing
-the flux to sink to zero.}
+additional \code{\link[=mkinsub]{mkinsub()}} argument can be \code{sink = FALSE}, effectively
+fixing the flux to sink to zero.}
 
 \item{use_of_ff}{Specification of the use of formation fractions in the
 model equations and, if applicable, the coefficient matrix. If "min", a
@@ -39,11 +39,11 @@ argument. Default is NULL.}
 
 \item{quiet}{Should messages be suppressed?}
 
-\item{verbose}{If \code{TRUE}, passed to \code{\link{cfunction}} if
+\item{verbose}{If \code{TRUE}, passed to \code{\link[inline:cfunction]{inline::cfunction()}} if
 applicable to give detailed information about the C function being built.}
 }
 \value{
-A list of class \code{mkinmod} for use with \code{\link{mkinfit}},
+A list of class \code{mkinmod} for use with \code{\link[=mkinfit]{mkinfit()}},
 containing, among others,
 \item{diffs}{
 A vector of string representations of differential equations, one for
@@ -70,19 +70,27 @@ returned by cfunction.
 }
 }
 \description{
-The function usually takes several expressions, each assigning a compound
-name to a list, specifying the kinetic model type and reaction or transfer
-to other observed compartments. Instead of specifying several expressions, a
-list of lists can be given in the speclist argument.
+This function is usually called using a call to \code{\link[=mkinsub]{mkinsub()}} for each observed
+variable, specifying the corresponding submodel as well as outgoing pathways
+(see examples).
 }
 \details{
 For the definition of model types and their parameters, the equations given
 in the FOCUS and NAFTA guidance documents are used.
+
+For kinetic models with more than one observed variable, a symbolic solution
+of the system of differential equations is included in the resulting
+mkinmod object in some cases, speeding up the solution.
+
+If a C compiler is found by \code{\link[pkgbuild:has_compiler]{pkgbuild::has_compiler()}} and there
+is more than one observed variable in the specification, C code is generated
+for evaluating the differential equations, compiled using
+\code{\link[inline:cfunction]{inline::cfunction()}} and added to the resulting mkinmod object.
 }
 \note{
 The IORE submodel is not well tested for metabolites. When using this
-model for metabolites, you may want to read the second note in the help
-page to \code{\link{mkinfit}}.
+model for metabolites, you may want to read the note in the help
+page to \link{mkinfit}.
 }
 \examples{
 
@@ -105,16 +113,21 @@ SFO_SFO <- mkinmod(
   parent = mkinsub("SFO", "m1"),
   m1 = mkinsub("SFO"), verbose = TRUE)
 
+# The symbolic solution which is available in this case is not
+# made for human reading but for speed of computation
+SFO_SFO$deg_func
+
 # If we have several parallel metabolites
 # (compare tests/testthat/test_synthetic_data_for_UBA_2014.R)
-m_synth_DFOP_par <- mkinmod(parent = mkinsub("DFOP", c("M1", "M2")),
-                           M1 = mkinsub("SFO"),
-                           M2 = mkinsub("SFO"),
-                           use_of_ff = "max", quiet = TRUE)
+m_synth_DFOP_par <- mkinmod(
+ parent = mkinsub("DFOP", c("M1", "M2")),
+ M1 = mkinsub("SFO"),
+ M2 = mkinsub("SFO"),
+ use_of_ff = "max", quiet = TRUE)
 
 fit_DFOP_par_c <- mkinfit(m_synth_DFOP_par,
-                          synthetic_data_for_UBA_2014[[12]]$data,
-                          quiet = TRUE)
+  synthetic_data_for_UBA_2014[[12]]$data,
+  quiet = TRUE)
 }
 
 }
