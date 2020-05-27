@@ -74,7 +74,7 @@ have been obtained by fitting the same model to a list of datasets." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50.2</span>
       </span>
     </div>
 
@@ -110,9 +110,6 @@ have been obtained by fitting the same model to a list of datasets." />
     </li>
     <li>
       <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
-    </li>
-    <li>
-      <a href="../articles/web_only/benchmarks.html">Some benchmark timings</a>
     </li>
   </ul>
 </li>
@@ -184,7 +181,7 @@ have been obtained by fitting the same model to a list of datasets.</p>
     </tr>
     <tr>
       <th>data</th>
-      <td><p>Ignored, data are taken from the mmkin model</p></td>
+      <td><p>Should the data be printed?</p></td>
     </tr>
     <tr>
       <th>fixed</th>
@@ -274,19 +271,19 @@ with additional elements</p>
 #&gt;   Log-likelihood: -307.5269
 #&gt;   Fixed: list(parent_0 ~ 1, log_k_parent_sink ~ 1) 
 #&gt;          parent_0 log_k_parent_sink 
-#&gt;         85.541149         -3.229596 
+#&gt;         85.540979         -3.229602 
 #&gt; 
 #&gt; Random effects:
 #&gt;  Formula: list(parent_0 ~ 1, log_k_parent_sink ~ 1)
 #&gt;  Level: ds
 #&gt;  Structure: Diagonal
 #&gt;         parent_0 log_k_parent_sink Residual
-#&gt; StdDev:  1.30857          1.288591 6.304906
+#&gt; StdDev: 1.308245          1.288586 6.304923
 #&gt; 
 #&gt; Number of Observations: 90
 #&gt; Number of Groups: 5 </div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>f_nlme</span>)</div><div class='output co'>#&gt; $distimes
 #&gt;            DT50     DT90
-#&gt; parent 17.51545 58.18505
+#&gt; parent 17.51556 58.18543
 #&gt; </div><div class='input'><span class='co'># \dontrun{</span>
   <span class='no'>f_nlme_2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span>(<span class='no'>f</span>, <span class='kw'>start</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>parent_0</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>log_k_parent_sink</span> <span class='kw'>=</span> <span class='fl'>0.1</span>))
   <span class='fu'><a href='https://rdrr.io/r/stats/update.html'>update</a></span>(<span class='no'>f_nlme_2</span>, <span class='kw'>random</span> <span class='kw'>=</span> <span class='no'>parent_0</span> ~ <span class='fl'>1</span>)</div><div class='output co'>#&gt; Nonlinear mixed-effects model fit by maximum likelihood
@@ -300,7 +297,7 @@ with additional elements</p>
 #&gt; Random effects:
 #&gt;  Formula: parent_0 ~ 1 | ds
 #&gt;            parent_0 Residual
-#&gt; StdDev: 0.002416792 21.63027
+#&gt; StdDev: 0.002416802 21.63027
 #&gt; 
 #&gt; Number of Observations: 90
 #&gt; Number of Groups: 5 </div><div class='input'>  <span class='co'># Test on some real data</span>
@@ -332,88 +329,88 @@ with additional elements</p>
   <span class='no'>f_nlme_fomc_sfo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span>(<span class='no'>f_2</span>[<span class='st'>"FOMC-SFO"</span>, ],
     <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>pnlsMaxIter</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>tolerance</span> <span class='kw'>=</span> <span class='fl'>1e-4</span>), <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; 
 #&gt; **Iteration 1
-#&gt; LME step: Loglik: -394.1603, nlminb iterations: 3
+#&gt; LME step: Loglik: -394.1603, nlminb iterations: 2
 #&gt; reStruct  parameters:
 #&gt;        ds1        ds2        ds3        ds4        ds5 
-#&gt; -0.2079793  0.8563830  1.7454105  1.0917354  1.2756825 
+#&gt; -0.2079863  0.8563823  1.7454253  1.0917707  1.2756955 
 #&gt;  Beginning PNLS step: ..  completed fit_nlme() step.
-#&gt; PNLS step: RSS =  643.8803 
-#&gt;  fixed effects: 94.17379  -5.473193  -0.6970236  -0.2025091  2.103883  
+#&gt; PNLS step: RSS =  643.8814 
+#&gt;  fixed effects: 94.17379  -5.473189  -0.6970234  -0.202509  2.103883  
 #&gt;  iterations: 100 
 #&gt; Convergence crit. (must all become &lt;= tolerance = 0.0001):
 #&gt;     fixed  reStruct 
-#&gt; 0.7960134 0.1447728 
+#&gt; 0.7959873 0.1447512 
 #&gt; 
 #&gt; **Iteration 2
 #&gt; LME step: Loglik: -396.3824, nlminb iterations: 7
 #&gt; reStruct  parameters:
 #&gt;           ds1           ds2           ds3           ds4           ds5 
-#&gt; -1.712404e-01 -2.432655e-05  1.842120e+00  1.073975e+00  1.322925e+00 
+#&gt; -1.712406e-01 -2.278541e-05  1.842120e+00  1.073975e+00  1.322924e+00 
 #&gt;  Beginning PNLS step: ..  completed fit_nlme() step.
-#&gt; PNLS step: RSS =  643.8035 
-#&gt;  fixed effects: 94.17385  -5.473487  -0.6970404  -0.2025137  2.103871  
+#&gt; PNLS step: RSS =  643.8025 
+#&gt;  fixed effects: 94.17385  -5.473491  -0.6970406  -0.2025139  2.103871  
 #&gt;  iterations: 100 
 #&gt; Convergence crit. (must all become &lt;= tolerance = 0.0001):
-#&gt;        fixed     reStruct 
-#&gt; 5.382757e-05 1.236667e-03 
+#&gt;       fixed    reStruct 
+#&gt; 5.51758e-05 1.26861e-03 
 #&gt; 
 #&gt; **Iteration 3
 #&gt; LME step: Loglik: -396.3825, nlminb iterations: 7
 #&gt; reStruct  parameters:
 #&gt;           ds1           ds2           ds3           ds4           ds5 
-#&gt; -0.1712499044 -0.0001499831  1.8420971364  1.0739799123  1.3229167796 
+#&gt; -0.1712500923 -0.0001515734  1.8420972550  1.0739796967  1.3229177241 
 #&gt;  Beginning PNLS step: ..  completed fit_nlme() step.
-#&gt; PNLS step: RSS =  643.7948 
-#&gt;  fixed effects: 94.17386  -5.473521  -0.6970422  -0.2025144  2.10387  
+#&gt; PNLS step: RSS =  643.7941 
+#&gt;  fixed effects: 94.17386  -5.473523  -0.6970424  -0.2025146  2.103869  
 #&gt;  iterations: 100 
 #&gt; Convergence crit. (must all become &lt;= tolerance = 0.0001):
 #&gt;        fixed     reStruct 
-#&gt; 6.072817e-06 1.400857e-04 
+#&gt; 5.792621e-06 1.335434e-04 
 #&gt; 
 #&gt; **Iteration 4
 #&gt; LME step: Loglik: -396.3825, nlminb iterations: 7
 #&gt; reStruct  parameters:
 #&gt;           ds1           ds2           ds3           ds4           ds5 
-#&gt; -0.1712529502 -0.0001641277  1.8420957542  1.0739797181  1.3229173076 
+#&gt; -0.1712517206 -0.0001651603  1.8420950864  1.0739800294  1.3229173529 
 #&gt;  Beginning PNLS step: ..  completed fit_nlme() step.
-#&gt; PNLS step: RSS =  643.7936 
-#&gt;  fixed effects: 94.17386  -5.473526  -0.6970426  -0.2025146  2.103869  
+#&gt; PNLS step: RSS =  643.7949 
+#&gt;  fixed effects: 94.17386  -5.473521  -0.6970423  -0.2025145  2.10387  
 #&gt;  iterations: 100 
 #&gt; Convergence crit. (must all become &lt;= tolerance = 0.0001):
 #&gt;        fixed     reStruct 
-#&gt; 1.027451e-06 2.275704e-05 </div><div class='input'>  <span class='no'>f_nlme_dfop_sfo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span>(<span class='no'>f_2</span>[<span class='st'>"DFOP-SFO"</span>, ],
+#&gt; 4.025781e-07 9.628656e-06 </div><div class='input'>  <span class='no'>f_nlme_dfop_sfo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span>(<span class='no'>f_2</span>[<span class='st'>"DFOP-SFO"</span>, ],
     <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>pnlsMaxIter</span> <span class='kw'>=</span> <span class='fl'>120</span>, <span class='kw'>tolerance</span> <span class='kw'>=</span> <span class='fl'>5e-4</span>), <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; 
 #&gt; **Iteration 1
-#&gt; LME step: Loglik: -404.9582, nlminb iterations: 1
+#&gt; LME step: Loglik: -404.9583, nlminb iterations: 1
 #&gt; reStruct  parameters:
 #&gt;        ds1        ds2        ds3        ds4        ds5        ds6 
-#&gt; -0.4114355  0.9798697  1.6990037  0.7293315  0.3354323  1.7113046 
+#&gt; -0.4114357  0.9798641  1.6990035  0.7293314  0.3354323  1.7113047 
 #&gt;  Beginning PNLS step: ..  completed fit_nlme() step.
-#&gt; PNLS step: RSS =  630.3644 
-#&gt;  fixed effects: 93.82269  -5.455991  -0.6788957  -1.862196  -4.199671  0.05532828  
+#&gt; PNLS step: RSS =  630.3642 
+#&gt;  fixed effects: 93.82269  -5.455991  -0.6788957  -1.862196  -4.199671  0.0553284  
 #&gt;  iterations: 120 
 #&gt; Convergence crit. (must all become &lt;= tolerance = 0.0005):
 #&gt;     fixed  reStruct 
-#&gt; 0.7885368 0.5822683 
+#&gt; 0.7879730 0.5822574 
 #&gt; 
 #&gt; **Iteration 2
 #&gt; LME step: Loglik: -407.7755, nlminb iterations: 11
 #&gt; reStruct  parameters:
 #&gt;          ds1          ds2          ds3          ds4          ds5          ds6 
-#&gt; -0.371224133  0.003056179  1.789939402  0.724671158  0.301602977  1.754200729 
+#&gt; -0.371224105  0.003056163  1.789939431  0.724671132  0.301602942  1.754200482 
 #&gt;  Beginning PNLS step: ..  completed fit_nlme() step.
-#&gt; PNLS step: RSS =  630.3633 
-#&gt;  fixed effects: 93.82269  -5.455992  -0.6788958  -1.862196  -4.199671  0.05532831  
+#&gt; PNLS step: RSS =  630.364 
+#&gt;  fixed effects: 93.82269  -5.455991  -0.6788958  -1.862196  -4.199671  0.05532834  
 #&gt;  iterations: 120 
 #&gt; Convergence crit. (must all become &lt;= tolerance = 0.0005):
 #&gt;        fixed     reStruct 
-#&gt; 4.789774e-07 2.200661e-05 </div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>f_2</span>[<span class='st'>"FOMC-SFO"</span>, <span class='fl'>3</span>:<span class='fl'>4</span>])</div><div class='img'><img src='nlme.mmkin-4.png' alt='' width='700' height='433' /></div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>f_nlme_fomc_sfo</span>, <span class='fl'>3</span>:<span class='fl'>4</span>)</div><div class='img'><img src='nlme.mmkin-5.png' alt='' width='700' height='433' /></div><div class='input'>
+#&gt; 9.814652e-07 1.059239e-05 </div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>f_2</span>[<span class='st'>"FOMC-SFO"</span>, <span class='fl'>3</span>:<span class='fl'>4</span>])</div><div class='img'><img src='nlme.mmkin-4.png' alt='' width='700' height='433' /></div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>f_nlme_fomc_sfo</span>, <span class='fl'>3</span>:<span class='fl'>4</span>)</div><div class='img'><img src='nlme.mmkin-5.png' alt='' width='700' height='433' /></div><div class='input'>
   <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>f_2</span>[<span class='st'>"DFOP-SFO"</span>, <span class='fl'>3</span>:<span class='fl'>4</span>])</div><div class='img'><img src='nlme.mmkin-6.png' alt='' width='700' height='433' /></div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>f_nlme_dfop_sfo</span>, <span class='fl'>3</span>:<span class='fl'>4</span>)</div><div class='img'><img src='nlme.mmkin-7.png' alt='' width='700' height='433' /></div><div class='input'>
   <span class='fu'><a href='https://rdrr.io/r/stats/anova.html'>anova</a></span>(<span class='no'>f_nlme_dfop_sfo</span>, <span class='no'>f_nlme_fomc_sfo</span>, <span class='no'>f_nlme_sfo_sfo</span>)</div><div class='output co'>#&gt;                 Model df       AIC       BIC    logLik   Test   L.Ratio p-value
-#&gt; f_nlme_dfop_sfo     1 13  843.8547  884.6201 -408.9273                         
-#&gt; f_nlme_fomc_sfo     2 11  818.5149  853.0087 -398.2575 1 vs 2  21.33975  &lt;.0001
-#&gt; f_nlme_sfo_sfo      3  9 1085.1821 1113.4043 -533.5910 2 vs 3 270.66716  &lt;.0001</div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/stats/anova.html'>anova</a></span>(<span class='no'>f_nlme_dfop_sfo</span>, <span class='no'>f_nlme_sfo_sfo</span>) <span class='co'># if we ignore FOMC</span></div><div class='output co'>#&gt;                 Model df       AIC       BIC    logLik   Test  L.Ratio p-value
-#&gt; f_nlme_dfop_sfo     1 13  843.8547  884.6201 -408.9273                        
+#&gt; f_nlme_dfop_sfo     1 13  843.8547  884.6201 -408.9274                         
+#&gt; f_nlme_fomc_sfo     2 11  818.5151  853.0089 -398.2576 1 vs 2  21.33957  &lt;.0001
+#&gt; f_nlme_sfo_sfo      3  9 1085.1821 1113.4043 -533.5910 2 vs 3 270.66697  &lt;.0001</div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/stats/anova.html'>anova</a></span>(<span class='no'>f_nlme_dfop_sfo</span>, <span class='no'>f_nlme_sfo_sfo</span>) <span class='co'># if we ignore FOMC</span></div><div class='output co'>#&gt;                 Model df       AIC       BIC    logLik   Test  L.Ratio p-value
+#&gt; f_nlme_dfop_sfo     1 13  843.8547  884.6201 -408.9274                        
 #&gt; f_nlme_sfo_sfo      2  9 1085.1821 1113.4043 -533.5910 1 vs 2 249.3274  &lt;.0001</div><div class='input'>
   <span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>f_nlme_sfo_sfo</span>)</div><div class='output co'>#&gt; $ff
 #&gt; parent_sink   parent_A1     A1_sink 
@@ -430,7 +427,7 @@ with additional elements</p>
 #&gt; $distimes
 #&gt;             DT50     DT90  DT50_k1  DT50_k2
 #&gt; parent  11.07091 104.6320 4.462384 46.20825
-#&gt; A1     162.30536 539.1667       NA       NA
+#&gt; A1     162.30518 539.1661       NA       NA
 #&gt; </div><div class='input'># }
 </div></pre>
   </div>

@@ -74,7 +74,7 @@ considering the error structure that was assumed for the fit." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50.2</span>
       </span>
     </div>
 
@@ -110,9 +110,6 @@ considering the error structure that was assumed for the fit." />
     </li>
     <li>
       <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
-    </li>
-    <li>
-      <a href="../articles/web_only/benchmarks.html">Some benchmark timings</a>
     </li>
   </ul>
 </li>
@@ -154,9 +151,6 @@ considering the error structure that was assumed for the fit.</p>
     <pre class="usage"><span class='fu'>parms</span>(<span class='no'>object</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for mkinfit</span>
-<span class='fu'>parms</span>(<span class='no'>object</span>, <span class='kw'>transformed</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
-
-<span class='co'># S3 method for mmkin</span>
 <span class='fu'>parms</span>(<span class='no'>object</span>, <span class='kw'>transformed</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -164,8 +158,7 @@ considering the error structure that was assumed for the fit.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>object</th>
-      <td><p>A fitted model object. Methods are implemented for
-<code><a href='mkinfit.html'>mkinfit()</a></code> objects and for <code><a href='mmkin.html'>mmkin()</a></code> objects.</p></td>
+      <td><p>A fitted model object</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -180,88 +173,24 @@ as used internally during the optimisation?</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>For mkinfit objects, a numeric vector of fitted model parameters.
-For mmkin row objects, a matrix with the parameters with a
-row for each dataset. If the mmkin object has more than one row, a list of
-such matrices is returned.</p>
+    <p>A numeric vector of fitted model parameters</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># mkinfit objects</span>
-<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='st'>"SFO"</span>, <span class='no'>FOCUS_2006_C</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>parms</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt;      parent_0 k_parent_sink         sigma 
+    <pre class="examples"><div class='input'><span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='st'>"SFO"</span>, <span class='no'>FOCUS_2006_C</span>)</div><div class='output co'>#&gt; <span class='message'>Ordinary least squares optimisation</span></div><div class='output co'>#&gt; Sum of squared residuals at call 1: 2388.077
+#&gt; Sum of squared residuals at call 3: 2388.077
+#&gt; Sum of squared residuals at call 4: 247.1962
+#&gt; Sum of squared residuals at call 7: 200.6791
+#&gt; Sum of squared residuals at call 10: 197.7231
+#&gt; Sum of squared residuals at call 11: 197.0872
+#&gt; Sum of squared residuals at call 14: 196.535
+#&gt; Sum of squared residuals at call 15: 196.535
+#&gt; Sum of squared residuals at call 16: 196.535
+#&gt; Sum of squared residuals at call 17: 196.5334
+#&gt; Sum of squared residuals at call 20: 196.5334
+#&gt; Sum of squared residuals at call 25: 196.5334
+#&gt; Negative log-likelihood at call 31: 26.64668</div><div class='output co'>#&gt; <span class='message'>Optimisation successfully terminated.</span></div><div class='input'><span class='fu'>parms</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt;      parent_0 k_parent_sink         sigma 
 #&gt;    82.4921598     0.3060633     4.6730124 </div><div class='input'><span class='fu'>parms</span>(<span class='no'>fit</span>, <span class='kw'>transformed</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;          parent_0 log_k_parent_sink             sigma 
-#&gt;         82.492160         -1.183963          4.673012 </div><div class='input'>
-<span class='co'># mmkin objects</span>
-<span class='no'>ds</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span>(<span class='no'>experimental_data_for_UBA_2019</span>[<span class='fl'>6</span>:<span class='fl'>10</span>],
- <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>x</span>$<span class='no'>data</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"name"</span>, <span class='st'>"time"</span>, <span class='st'>"value"</span>)]))
-<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>ds</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"Dataset"</span>, <span class='fl'>6</span>:<span class='fl'>10</span>)
-<span class='co'># \dontrun{</span>
-<span class='no'>fits</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"FOMC"</span>, <span class='st'>"DFOP"</span>), <span class='no'>ds</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>)
-<span class='fu'>parms</span>(<span class='no'>fits</span>[<span class='st'>"SFO"</span>, ])</div><div class='output co'>#&gt;                 Dataset 6    Dataset 7  Dataset 8  Dataset 9  Dataset 10
-#&gt; parent_0      88.52275400 82.666781678 86.8547308 91.7779306 82.14809450
-#&gt; k_parent_sink  0.05794659  0.009647805  0.2102974  0.1232258  0.00720421
-#&gt; sigma          5.15274487  7.040168584  3.6769645  6.4669234  6.50457673</div><div class='input'><span class='fu'>parms</span>(<span class='no'>fits</span>[, <span class='fl'>2</span>])</div><div class='output co'>#&gt; $SFO
-#&gt;                  Dataset 7
-#&gt; parent_0      82.666781678
-#&gt; k_parent_sink  0.009647805
-#&gt; sigma          7.040168584
-#&gt; 
-#&gt; $FOMC
-#&gt;           Dataset 7
-#&gt; parent_0 92.6837649
-#&gt; alpha     0.4967832
-#&gt; beta     14.1451255
-#&gt; sigma     1.9167519
-#&gt; 
-#&gt; $DFOP
-#&gt;             Dataset 7
-#&gt; parent_0 91.058971503
-#&gt; k1        0.044946770
-#&gt; k2        0.002868336
-#&gt; g         0.526942415
-#&gt; sigma     2.221302196
-#&gt; </div><div class='input'><span class='fu'>parms</span>(<span class='no'>fits</span>)</div><div class='output co'>#&gt; $SFO
-#&gt;                 Dataset 6    Dataset 7  Dataset 8  Dataset 9  Dataset 10
-#&gt; parent_0      88.52275400 82.666781678 86.8547308 91.7779306 82.14809450
-#&gt; k_parent_sink  0.05794659  0.009647805  0.2102974  0.1232258  0.00720421
-#&gt; sigma          5.15274487  7.040168584  3.6769645  6.4669234  6.50457673
-#&gt; 
-#&gt; $FOMC
-#&gt;          Dataset 6  Dataset 7 Dataset 8 Dataset 9 Dataset 10
-#&gt; parent_0 95.558575 92.6837649 90.719787 98.383939 94.8481458
-#&gt; alpha     1.338667  0.4967832  1.639099  1.074460  0.2805272
-#&gt; beta     13.033315 14.1451255  5.007077  4.397126  6.9052224
-#&gt; sigma     1.847671  1.9167519  1.066063  3.146056  1.6222778
-#&gt; 
-#&gt; $DFOP
-#&gt;            Dataset 6    Dataset 7   Dataset 8   Dataset 9   Dataset 10
-#&gt; parent_0 96.55213663 91.058971503 90.34509469 98.14858850 94.311323409
-#&gt; k1        0.21954589  0.044946770  0.41232289  0.31697588  0.080663853
-#&gt; k2        0.02957934  0.002868336  0.07581767  0.03260384  0.003425417
-#&gt; g         0.44845068  0.526942415  0.66091965  0.65322767  0.342652880
-#&gt; sigma     1.35690468  2.221302196  1.34169076  2.87159846  1.942067831
-#&gt; </div><div class='input'><span class='fu'>parms</span>(<span class='no'>fits</span>, <span class='kw'>transformed</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; $SFO
-#&gt;                   Dataset 6 Dataset 7 Dataset 8 Dataset 9 Dataset 10
-#&gt; parent_0          88.522754 82.666782 86.854731 91.777931  82.148094
-#&gt; log_k_parent_sink -2.848234 -4.641025 -1.559232 -2.093737  -4.933090
-#&gt; sigma              5.152745  7.040169  3.676964  6.466923   6.504577
-#&gt; 
-#&gt; $FOMC
-#&gt;            Dataset 6  Dataset 7  Dataset 8   Dataset 9 Dataset 10
-#&gt; parent_0  95.5585751 92.6837649 90.7197870 98.38393897  94.848146
-#&gt; log_alpha  0.2916741 -0.6996015  0.4941466  0.07181816  -1.271085
-#&gt; log_beta   2.5675088  2.6493701  1.6108523  1.48095106   1.932278
-#&gt; sigma      1.8476712  1.9167519  1.0660627  3.14605557   1.622278
-#&gt; 
-#&gt; $DFOP
-#&gt;           Dataset 6   Dataset 7  Dataset 8  Dataset 9 Dataset 10
-#&gt; parent_0 96.5521366 91.05897150 90.3450947 98.1485885  94.311323
-#&gt; log_k1   -1.5161940 -3.10227638 -0.8859485 -1.1489296  -2.517465
-#&gt; log_k2   -3.5206791 -5.85402317 -2.5794240 -3.4233253  -5.676532
-#&gt; g_ilr    -0.1463234  0.07627854  0.4719196  0.4477805  -0.460676
-#&gt; sigma     1.3569047  2.22130220  1.3416908  2.8715985   1.942068
-#&gt; </div><div class='input'># }
-</div></pre>
+#&gt;         82.492160         -1.183963          4.673012 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

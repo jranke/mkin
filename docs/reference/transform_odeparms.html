@@ -77,7 +77,7 @@ the ilr transformation is used." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50.2</span>
       </span>
     </div>
 
@@ -113,9 +113,6 @@ the ilr transformation is used." />
     </li>
     <li>
       <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
-    </li>
-    <li>
-      <a href="../articles/web_only/benchmarks.html">Some benchmark timings</a>
     </li>
   </ul>
 </li>
@@ -214,12 +211,19 @@ fitting procedure.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A vector of transformed or backtransformed parameters</p>
+    <p>A vector of transformed or backtransformed parameters with the same
+names as the original parameters.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The transformation of sets of formation fractions is fragile, as it supposes
 the same ordering of the components in forward and backward transformation.
 This is no problem for the internal use in <code><a href='mkinfit.html'>mkinfit</a></code>.</p>
+    <h2 class="hasAnchor" id="functions"><a class="anchor" href="#functions"></a>Functions</h2>
+
+    
+<ul>
+<li><p><code>backtransform_odeparms</code>: Backtransform the set of transformed parameters</p></li>
+</ul>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
@@ -241,7 +245,7 @@ This is no problem for the internal use in <code><a href='mkinfit.html'>mkinfit<
 #&gt; sigma           3.12550    0.35852    8.72 2.24e-10  2.39609   3.8549</div><div class='input'>
 <span class='co'># \dontrun{</span>
 <span class='co'># Compare to the version without transforming rate parameters</span>
-<span class='no'>fit.2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>transform_rates</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='output co'>#&gt; <span class='error'>Error in if (cost &lt; cost.current) {    assign("cost.current", cost, inherits = TRUE)    if (!quiet)         cat(ifelse(OLS, "Sum of squared residuals", "Negative log-likelihood"),             " at call ", calls, ": ", cost.current, "\n", sep = "")}: missing value where TRUE/FALSE needed</span></div><div class='output co'>#&gt; <span class='message'>Timing stopped at: 0.002 0.001 0.002</span></div><div class='input'><span class='no'>fit.2.s</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>fit.2</span>)</div><div class='output co'>#&gt; <span class='error'>Error in summary(fit.2): object 'fit.2' not found</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>fit.2.s</span>$<span class='no'>par</span>, <span class='fl'>3</span>)</div><div class='output co'>#&gt; <span class='error'>Error in print(fit.2.s$par, 3): object 'fit.2.s' not found</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>fit.2.s</span>$<span class='no'>bpar</span>, <span class='fl'>3</span>)</div><div class='output co'>#&gt; <span class='error'>Error in print(fit.2.s$bpar, 3): object 'fit.2.s' not found</span></div><div class='input'><span class='co'># }</span>
+<span class='no'>fit.2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>transform_rates</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='output co'>#&gt; <span class='error'>Error in if (cost &lt; cost.current) {    assign("cost.current", cost, inherits = TRUE)    if (!quiet)         cat(ifelse(OLS, "Sum of squared residuals", "Negative log-likelihood"),             " at call ", calls, ": ", cost.current, "\n", sep = "")}: missing value where TRUE/FALSE needed</span></div><div class='output co'>#&gt; <span class='message'>Timing stopped at: 0.002 0 0.002</span></div><div class='input'><span class='no'>fit.2.s</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>fit.2</span>)</div><div class='output co'>#&gt; <span class='error'>Error in summary(fit.2): object 'fit.2' not found</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>fit.2.s</span>$<span class='no'>par</span>, <span class='fl'>3</span>)</div><div class='output co'>#&gt; <span class='error'>Error in print(fit.2.s$par, 3): object 'fit.2.s' not found</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>fit.2.s</span>$<span class='no'>bpar</span>, <span class='fl'>3</span>)</div><div class='output co'>#&gt; <span class='error'>Error in print(fit.2.s$bpar, 3): object 'fit.2.s' not found</span></div><div class='input'><span class='co'># }</span>
 
 <span class='no'>initials</span> <span class='kw'>&lt;-</span> <span class='no'>fit</span>$<span class='no'>start</span>$<span class='no'>value</span>
 <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>initials</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span>(<span class='no'>fit</span>$<span class='no'>start</span>)
