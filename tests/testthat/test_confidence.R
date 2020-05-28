@@ -67,9 +67,9 @@ test_that("Likelihood profile based confidence intervals work", {
    f <- fits[["SFO", "FOCUS_C"]]
 
    # negative log-likelihood for use with mle
-   f_nll <- function(parent_0, k_parent_sink, sigma) {
+   f_nll <- function(parent_0, k_parent, sigma) {
      - f$ll(c(parent_0 = as.numeric(parent_0),
-         k_parent_sink = as.numeric(k_parent_sink),
+         k_parent = as.numeric(k_parent),
          sigma = as.numeric(sigma)))
    }
    f_mle <- stats4::mle(f_nll, start = as.list(parms(f)), nobs = nrow(FOCUS_2006_C))

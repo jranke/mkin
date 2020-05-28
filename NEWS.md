@@ -8,6 +8,8 @@
 
 - 'confint(method = 'profile'): Choose accuracy based on 'rel_tol' argument, relative to the bounds obtained by the quadratic approximation
 
+- 'mkinfit': Make 'use_of_ff' = "max" also the default for models specified using short names like "SFO" or "FOMC"
+
 # mkin 0.9.50.2 (2020-05-12)
 
 - Increase tolerance for a platform specific test results on the Solaris test machine on CRAN

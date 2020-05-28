@@ -51,10 +51,10 @@ test_that("nlme_function works correctly", {
 
   m_nlme_mmkin <- nlme(f)
 
-  m_nlme_raw_2 <- nlme(value ~ SSasymp(time, 0, parent_0, log_k_parent_sink),
+  m_nlme_raw_2 <- nlme(value ~ SSasymp(time, 0, parent_0, log_k_parent),
     data = grouped_data,
-    fixed = parent_0 + log_k_parent_sink ~ 1,
-    random = pdDiag(parent_0 + log_k_parent_sink ~ 1),
+    fixed = parent_0 + log_k_parent ~ 1,
+    random = pdDiag(parent_0 + log_k_parent ~ 1),
     start = mean_degparms(f, random = TRUE))
 
   expect_equal(m_nlme_raw_2$coefficients, m_nlme_mmkin$coefficients)
