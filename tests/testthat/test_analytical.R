@@ -1,5 +1,8 @@
 context("Analytical solutions for coupled models")
 
+# We do not want the warnings due to non-normality of residuals here
+warn_option <- options(warn=-1)
+
 test_that("The analytical solutions for SFO-SFO are correct", {
   # No sink, no formation fractions
   SFO_SFO_nosink <- mkinmod(
@@ -58,3 +61,5 @@ test_that("The analytical solution for DFOP-SFO are correct", {
     tolerance = 5e-6
   )
 })
+
+options(warn = warn_option$warn)

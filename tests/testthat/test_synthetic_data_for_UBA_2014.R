@@ -7,8 +7,8 @@ test_that("Results are correct for SFO_lin_a", {
                              M1 = mkinsub("SFO", "M2"),
                              M2 = mkinsub("SFO"),
                              use_of_ff = "max", quiet = TRUE)
-  fit_SFO_lin_a <- mkinfit(m_synth_SFO_lin, 
-                           synthetic_data_for_UBA_2014[[1]]$data, 
+  fit_SFO_lin_a <- mkinfit(m_synth_SFO_lin,
+                           synthetic_data_for_UBA_2014[[1]]$data,
                            quiet = TRUE)
   # Results for SFO_lin_a from p. 48
 
@@ -21,19 +21,18 @@ test_that("Results are correct for SFO_lin_a", {
 # Results for DFOP_par_c from p. 54
 
 test_that("Results are correct for DFOP_par_c", {
-  skip_on_cran()          
-  m_synth_DFOP_par <- mkinmod(parent = mkinsub("DFOP", c("M1", "M2")),
-                             M1 = mkinsub("SFO"),
-                             M2 = mkinsub("SFO"),
-                             use_of_ff = "max", quiet = TRUE)
+  skip_on_cran()
 
-
-  fit_DFOP_par_c <- mkinfit(m_synth_DFOP_par, 
-                            synthetic_data_for_UBA_2014[[12]]$data,
-                            quiet = TRUE)
+  # Supress warning about non-normal residuals, the data were generated
+  # using a different error model, so no wonder
+  suppressWarnings(
+    fit_DFOP_par_c <- mkinfit(m_synth_DFOP_par,
+      synthetic_data_for_UBA_2014[[12]]$data,
+      quiet = TRUE)
+  )
 
   parms <- round(fit_DFOP_par_c$bparms.optim, c(1, 4, 4, 4, 4, 4, 4, 4))
-  expect_equal(parms, c(parent_0 = 103.0, 
+  expect_equal(parms, c(parent_0 = 103.0,
                         k_M1 = 0.0389, k_M2 = 0.0095,
                         f_parent_to_M1 = 0.5565, f_parent_to_M2 = 0.3784,
                         k1 = 0.3263, k2 = 0.0202, g = 0.7130))

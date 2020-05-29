@@ -28,8 +28,11 @@ test_that("Test data from Appendix B are correctly evaluated", {
 })
 
 test_that("Test data from Appendix D are correctly evaluated", {
+  # We are not interested in the warnings about non-normal residuals here
+  suppressWarnings(
   res <- nafta(NAFTA_SOP_Appendix_D, "MRID 555555", 
-                              cores = 1, quiet = TRUE)
+    cores = 1, quiet = TRUE)
+  )
 
   # From Figure D.1
   dtx_sop <- matrix(c(407, 541, 429, 1352, 5192066, 2383), nrow = 3, ncol = 2)

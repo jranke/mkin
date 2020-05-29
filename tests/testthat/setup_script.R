@@ -57,18 +57,26 @@ DFOP_SFO <- mkinmod(parent = mkinsub("DFOP", to = "m1"),
 # Avoid warning when fitting a dataset where zero value is removed
 FOCUS_D <- subset(FOCUS_2006_D, value != 0)
 
+# We do not want warnings about non-normality of residuals here
+suppressWarnings(
 f_sfo_sfo_desolve <- mkinfit(SFO_SFO, FOCUS_D,
   solution_type = "deSolve", quiet = TRUE)
+)
+suppressWarnings(
 f_sfo_sfo_eigen <- mkinfit(SFO_SFO, FOCUS_D,
   solution_type = "eigen", quiet = TRUE)
-
+)
+suppressWarnings(
 f_sfo_sfo.ff <- mkinfit(SFO_SFO.ff, FOCUS_D,
   quiet = TRUE)
+)
 
 SFO_lin_a <- synthetic_data_for_UBA_2014[[1]]$data
 DFOP_par_c <- synthetic_data_for_UBA_2014[[12]]$data
 
-f_2_mkin <- mkinfit("DFOP", DFOP_par_c, quiet = TRUE)
+# We also suppress the warning about non-normality of residuals here, the data
+# were generated with a different error model, so no wonder!
+f_2_mkin <- suppressWarnings(mkinfit("DFOP", DFOP_par_c, quiet = TRUE))
 f_2_nls <- nls(value ~ SSbiexp(time, A1, lrc1, A2, lrc2), data = subset(DFOP_par_c, name == "parent"))
 f_2_anova <- lm(value ~ as.factor(time), data = subset(DFOP_par_c, name == "parent"))
 
@@ -86,9 +94,9 @@ m_synth_DFOP_par <- mkinmod(parent = mkinsub("DFOP", c("M1", "M2")),
 
 fit_nw_1 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, quiet = TRUE)
 
-# We know direct optimization is OK and direct needs 4 sec versus 5.5 for threestep and 6 for IRLS
+# We know direct optimization is OK and direct is faster than the default d_3
 fit_obs_1 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, error_model = "obs", quiet = TRUE,
   error_model_algorithm = "direct")
-# We know threestep is OK, and threestep (and IRLS) need 4.8 se versus 5.6 for direct
+# We know threestep is OK, and threestep (and IRLS) is faster here
 fit_tc_1 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, error_model = "tc", quiet = TRUE,
   error_model_algorithm = "threestep")

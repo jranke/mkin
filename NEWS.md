@@ -10,6 +10,8 @@
 
 - 'mkinfit': Make 'use_of_ff' = "max" also the default for models specified using short names like "SFO" or "FOMC"
 
+- 'mkinfit': Run 'stats::shapiro.test()' on standardized residuals and warn if p < 0.05
+
 # mkin 0.9.50.2 (2020-05-12)
 
 - Increase tolerance for a platform specific test results on the Solaris test machine on CRAN

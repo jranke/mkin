@@ -214,69 +214,6 @@ When using the "IORE" submodel for metabolites, fitting with
 numerical ODE solver. In this situation it may help to switch off the
 internal rate transformation.
 }
-\examples{
-
-# Use shorthand notation for parent only degradation
-fit <- mkinfit("FOMC", FOCUS_2006_C, quiet = TRUE)
-summary(fit)
-
-# One parent compound, one metabolite, both single first order.
-# Use mkinsub for convenience in model formulation. Pathway to sink included per default.
-SFO_SFO <- mkinmod(
-  parent = mkinsub("SFO", "m1"),
-  m1 = mkinsub("SFO"))
-# Fit the model to the FOCUS example dataset D using defaults
-print(system.time(fit <- mkinfit(SFO_SFO, FOCUS_2006_D,
-                           solution_type = "eigen", quiet = TRUE)))
-parms(fit)
-endpoints(fit)
-\dontrun{
-# deSolve is slower when no C compiler (gcc) was available during model generation
-print(system.time(fit.deSolve <- mkinfit(SFO_SFO, FOCUS_2006_D,
-                           solution_type = "deSolve")))
-parms(fit.deSolve)
-endpoints(fit.deSolve)
-}
-
-# Use stepwise fitting, using optimised parameters from parent only fit, FOMC
-\dontrun{
-FOMC_SFO <- mkinmod(
-  parent = mkinsub("FOMC", "m1"),
-  m1 = mkinsub("SFO"))
-# Fit the model to the FOCUS example dataset D using defaults
-fit.FOMC_SFO <- mkinfit(FOMC_SFO, FOCUS_2006_D, quiet = TRUE)
-# Use starting parameters from parent only FOMC fit
-fit.FOMC = mkinfit("FOMC", FOCUS_2006_D, quiet = TRUE)
-fit.FOMC_SFO <- mkinfit(FOMC_SFO, FOCUS_2006_D, quiet = TRUE,
-  parms.ini = fit.FOMC$bparms.ode)
-
-# Use stepwise fitting, using optimised parameters from parent only fit, SFORB
-SFORB_SFO <- mkinmod(
-  parent = list(type = "SFORB", to = "m1", sink = TRUE),
-  m1 = list(type = "SFO"))
-# Fit the model to the FOCUS example dataset D using defaults
-fit.SFORB_SFO <- mkinfit(SFORB_SFO, FOCUS_2006_D, quiet = TRUE)
-fit.SFORB_SFO.deSolve <- mkinfit(SFORB_SFO, FOCUS_2006_D, solution_type = "deSolve",
-                                 quiet = TRUE)
-# Use starting parameters from parent only SFORB fit (not really needed in this case)
-fit.SFORB = mkinfit("SFORB", FOCUS_2006_D, quiet = TRUE)
-fit.SFORB_SFO <- mkinfit(SFORB_SFO, FOCUS_2006_D, parms.ini = fit.SFORB$bparms.ode, quiet = TRUE)
-}
-
-\dontrun{
-# Weighted fits, including IRLS (error_model = "obs")
-SFO_SFO.ff <- mkinmod(parent = mkinsub("SFO", "m1"),
-                      m1 = mkinsub("SFO"), use_of_ff = "max")
-f.noweight <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, quiet = TRUE)
-summary(f.noweight)
-f.obs <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, error_model = "obs", quiet = TRUE)
-summary(f.obs)
-f.tc <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, error_model = "tc", quiet = TRUE)
-summary(f.tc)
-}
-
-
-}
 \references{
 Rocke DM and Lorenzato S (1995) A two-component model
 for measurement error in analytical chemistry. \emph{Technometrics} 37(2), 176-184.

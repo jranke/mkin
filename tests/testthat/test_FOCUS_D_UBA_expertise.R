@@ -2,11 +2,10 @@ context("Results for FOCUS D established in expertise for UBA (Ranke 2014)")
 
 # Results are from p. 40
 
-# Avoid warnings due to the zero value in the data for m1 at time zero
-FOCUS_D <- subset(FOCUS_2006_D, value != 0)
-
 test_that("Fits without formation fractions are correct for FOCUS D", {
-  fit.noff <- mkinfit(SFO_SFO, FOCUS_D, quiet = TRUE)
+  expect_warning(
+    fit.noff <- mkinfit(SFO_SFO, FOCUS_D, quiet = TRUE),
+    "p-value.*Shapiro-Wilk")
 
   expect_equal(round(as.numeric(endpoints(fit.noff)$distimes["parent", ]), 2),
                c(7.02, 23.33))
@@ -16,8 +15,7 @@ test_that("Fits without formation fractions are correct for FOCUS D", {
 })
 
 test_that("Fits with formation fractions are correct for FOCUS D", {
-  skip_on_cran()
-  fit.ff <- mkinfit(SFO_SFO.ff, FOCUS_D, quiet = TRUE)
+  fit.ff <- f_sfo_sfo.ff
   expect_equivalent(round(fit.ff$bparms.optim, c(2, 4, 4, 4)),
                     c(99.60, 0.0987, 0.0053, 0.5145))
 

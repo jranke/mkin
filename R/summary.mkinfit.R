@@ -165,6 +165,7 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
   }
 
   ans$bparms.ode <- object$bparms.ode
+  ans$shapiro.p <- object$shapiro.p
   ep <- endpoints(object)
   if (length(ep$ff) != 0)
     ans$ff <- ep$ff
@@ -226,6 +227,10 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
     cat("\nResults:\n\n")
     print(data.frame(AIC = x$AIC, BIC = x$BIC, logLik = x$logLik,
       row.names = " "))
+  }
+
+  if (!is.null(x$shapiro.p) && x$shapiro.p < 0.05) {
+    warning("The p-value for the Shapiro-Wilk test of normality on standardized residuals is < 0.05")
   }
 
   cat("\nOptimised, transformed parameters with symmetric confidence intervals:\n")

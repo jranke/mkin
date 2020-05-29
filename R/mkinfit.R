@@ -98,7 +98,7 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #' @param quiet Suppress printing out the current value of the negative
 #'   log-likelihood after each improvement?
 #' @param atol Absolute error tolerance, passed to [deSolve::ode()]. Default
-#'   is 1e-8, which is lower than the default in the [deSolve::lsoda()] 
+#'   is 1e-8, which is lower than the default in the [deSolve::lsoda()]
 #'   function which is used per default.
 #' @param rtol Absolute error tolerance, passed to [deSolve::ode()]. Default
 #'   is 1e-10, much lower than in [deSolve::lsoda()].
@@ -119,7 +119,7 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #'   least squares fitting ("OLS") is selected. If the error model is "obs", or
 #'   "tc", the "d_3" algorithm is selected.
 #'
-#'   The algorithm "d_3" will directly minimize the negative log-likelihood 
+#'   The algorithm "d_3" will directly minimize the negative log-likelihood
 #'   and independently also use the three step algorithm described below.
 #'   The fit with the higher likelihood is returned.
 #'
@@ -150,7 +150,7 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #' @param trace_parms Should a trace of the parameter values be listed?
 #' @param \dots Further arguments that will be passed on to
 #'   [deSolve::ode()].
-#' @importFrom stats nlminb aggregate dist
+#' @importFrom stats nlminb aggregate dist shapiro.test
 #' @return A list with "mkinfit" in the class attribute.
 #' @note When using the "IORE" submodel for metabolites, fitting with
 #'   "transform_rates = TRUE" (the default) often leads to failures of the
@@ -168,7 +168,7 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #'   for measurement error in analytical chemistry. *Technometrics* 37(2), 176-184.
 #'
 #'   Ranke J and Meinecke S (2019) Error Models for the Kinetic Evaluation of Chemical
-#'   Degradation Data. *Environments* 6(12) 124 
+#'   Degradation Data. *Environments* 6(12) 124
 #'   [doi:10.3390/environments6120124](https://doi.org/10.3390/environments6120124).
 #' @examples
 #'
@@ -177,60 +177,62 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #' summary(fit)
 #'
 #' # One parent compound, one metabolite, both single first order.
+#' # We remove zero values from FOCUS dataset D in order to avoid warnings
+#' FOCUS_D <- subset(FOCUS_2006_D, value != 0)
 #' # Use mkinsub for convenience in model formulation. Pathway to sink included per default.
 #' SFO_SFO <- mkinmod(
 #'   parent = mkinsub("SFO", "m1"),
 #'   m1 = mkinsub("SFO"))
-#' # Fit the model to the FOCUS example dataset D using defaults
-#' print(system.time(fit <- mkinfit(SFO_SFO, FOCUS_2006_D,
-#'                            solution_type = "eigen", quiet = TRUE)))
-#' parms(fit)
-#' endpoints(fit)
+#'
+#' # Fit the model quietly to the FOCUS example dataset D using defaults
+#' fit <- mkinfit(SFO_SFO, FOCUS_D, quiet = TRUE)
+#' # Since mkin 0.9.50.3, we get a warning about non-normality of residuals,
+#' # so we try an alternative error model
+#' fit.tc <- mkinfit(SFO_SFO, FOCUS_D, quiet = TRUE, error_model = "tc")
+#' # This avoids the warning, and the likelihood ratio test confirms it is preferable
+#' lrtest(fit.tc, fit)
+#' # We can also allow for different variances of parent and metabolite as error model
+#' fit.obs <- mkinfit(SFO_SFO, FOCUS_D, quiet = TRUE, error_model = "obs")
+#' # This also avoids the warning about non-normality, but the two-component error model
+#' # has significantly higher likelihood
+#' lrtest(fit.obs, fit.tc)
+#' parms(fit.tc)
+#' endpoints(fit.tc)
+#'
+#' # We can show a quick (only one replication) benchmark for this case, as we
+#' # have several alternative solution methods for the model. We skip
+#' # uncompiled deSolve, as it is so slow. More benchmarks are found in the
+#' # benchmark vignette
 #' \dontrun{
-#' # deSolve is slower when no C compiler (gcc) was available during model generation
-#' print(system.time(fit.deSolve <- mkinfit(SFO_SFO, FOCUS_2006_D,
-#'                            solution_type = "deSolve")))
-#' parms(fit.deSolve)
-#' endpoints(fit.deSolve)
+#' if(require(rbenchmark)) {
+#'   benchmark(replications = 1, order = "relative", columns = c("test", "relative", "elapsed"),
+#'     deSolve_compiled = mkinfit(SFO_SFO, FOCUS_D, quiet = TRUE, error_model = "tc",
+#'       solution_type = "deSolve", use_compiled = TRUE),
+#'     eigen = mkinfit(SFO_SFO, FOCUS_D, quiet = TRUE, error_model = "tc",
+#'       solution_type = "eigen"),
+#'     analytical = mkinfit(SFO_SFO, FOCUS_D, quiet = TRUE, error_model = "tc",
+#'       solution_type = "analytical"))
+#' }
 #' }
 #'
-#' # Use stepwise fitting, using optimised parameters from parent only fit, FOMC
+#' # Use stepwise fitting, using optimised parameters from parent only fit, FOMC-SFO
 #' \dontrun{
 #' FOMC_SFO <- mkinmod(
 #'   parent = mkinsub("FOMC", "m1"),
 #'   m1 = mkinsub("SFO"))
-#' # Fit the model to the FOCUS example dataset D using defaults
-#' fit.FOMC_SFO <- mkinfit(FOMC_SFO, FOCUS_2006_D, quiet = TRUE)
-#' # Use starting parameters from parent only FOMC fit
-#' fit.FOMC = mkinfit("FOMC", FOCUS_2006_D, quiet = TRUE)
-#' fit.FOMC_SFO <- mkinfit(FOMC_SFO, FOCUS_2006_D, quiet = TRUE,
-#'   parms.ini = fit.FOMC$bparms.ode)
+#' fit.FOMC_SFO <- mkinfit(FOMC_SFO, FOCUS_D, quiet = TRUE)
+#' # Again, we get a warning and try a more sophisticated error model
+#' fit.FOMC_SFO.tc <- mkinfit(FOMC_SFO, FOCUS_D, quiet = TRUE, error_model = "tc")
+#' # This model has a higher likelihood, but not significantly so
+#' lrtest(fit.tc, fit.FOMC_SFO.tc)
+#' # Also, the missing standard error for log_beta and the t-tests for alpha
+#' # and beta indicate overparameterisation
+#' summary(fit.FOMC_SFO.tc, data = FALSE)
 #'
-#' # Use stepwise fitting, using optimised parameters from parent only fit, SFORB
-#' SFORB_SFO <- mkinmod(
-#'   parent = list(type = "SFORB", to = "m1", sink = TRUE),
-#'   m1 = list(type = "SFO"))
-#' # Fit the model to the FOCUS example dataset D using defaults
-#' fit.SFORB_SFO <- mkinfit(SFORB_SFO, FOCUS_2006_D, quiet = TRUE)
-#' fit.SFORB_SFO.deSolve <- mkinfit(SFORB_SFO, FOCUS_2006_D, solution_type = "deSolve",
-#'                                  quiet = TRUE)
-#' # Use starting parameters from parent only SFORB fit (not really needed in this case)
-#' fit.SFORB = mkinfit("SFORB", FOCUS_2006_D, quiet = TRUE)
-#' fit.SFORB_SFO <- mkinfit(SFORB_SFO, FOCUS_2006_D, parms.ini = fit.SFORB$bparms.ode, quiet = TRUE)
-#' }
-#'
-#' \dontrun{
-#' # Weighted fits, including IRLS (error_model = "obs")
-#' SFO_SFO.ff <- mkinmod(parent = mkinsub("SFO", "m1"),
-#'                       m1 = mkinsub("SFO"), use_of_ff = "max")
-#' f.noweight <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, quiet = TRUE)
-#' summary(f.noweight)
-#' f.obs <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, error_model = "obs", quiet = TRUE)
-#' summary(f.obs)
-#' f.tc <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, error_model = "tc", quiet = TRUE)
-#' summary(f.tc)
-#' }
-#'
+#' # We can easily use starting parameters from the parent only fit (only for illustration)
+#' fit.FOMC = mkinfit("FOMC", FOCUS_2006_D, quiet = TRUE, error_model = "tc")
+#' fit.FOMC_SFO <- mkinfit(FOMC_SFO, FOCUS_D, quiet = TRUE,
+#'   parms.ini = fit.FOMC$bparms.ode, error_model = "tc")
 #'
 #' @export
 mkinfit <- function(mkinmod, observed,
@@ -716,6 +718,7 @@ mkinfit <- function(mkinmod, observed,
         errparms <- fit_direct$par[errparms_index]
       } else {
         cost.current <- Inf # reset to avoid conflict with the OLS step
+        data_direct <- current_data # We need this later if it was better
       }
     }
     if (error_model_algorithm != "direct") {
@@ -785,6 +788,7 @@ mkinfit <- function(mkinmod, observed,
             fit$d_3_message <- d_3_messages["direct"]
             degparms <- fit$par[degparms_index]
             errparms <- fit$par[errparms_index]
+            current_data  <- data_direct
           }
         }
       }
@@ -913,6 +917,10 @@ mkinfit <- function(mkinmod, observed,
 
   fit$errparms <- errparms
   fit$df.residual <- n_observed - length(c(degparms, errparms))
+
+  # Check for normal distribution of residuals
+  fit$shapiro.p <- shapiro.test(residuals.mkinfit(fit, standardized = TRUE))$p.value
+  if (fit$shapiro.p < 0.05) warning("The p-value for the Shapiro-Wilk test of normality on standardized residuals is < 0.05")
 
   fit$date <- date()
   fit$version <- as.character(utils::packageVersion("mkin"))

@@ -1,5 +1,8 @@
 context("Fitting the SFORB model")
 
+# We do not want the warnings due to non-normality of residuals here
+warn_option <- options(warn=-1)
+
 test_that("Fitting the SFORB model is equivalent to fitting DFOP", {
   f_sforb <- mkinfit("SFORB", FOCUS_2006_C, quiet = TRUE)
   f_dfop <- mkinfit("DFOP", FOCUS_2006_C, quiet = TRUE)
@@ -32,3 +35,5 @@ test_that("Fitting the SFORB model is equivalent to fitting DFOP", {
   expect_equivalent(endpoints(f_sforb_sfo_eigen)$distimes, endpoints(f_dfop_sfo)$distimes,
     tolerance = 1e-6)
 })
+
+options(warn = warn_option$warn)
