@@ -5,7 +5,7 @@ context("Results for FOCUS D established in expertise for UBA (Ranke 2014)")
 test_that("Fits without formation fractions are correct for FOCUS D", {
   expect_warning(
     fit.noff <- mkinfit(SFO_SFO, FOCUS_D, quiet = TRUE),
-    "p-value.*Shapiro-Wilk")
+    "Shapiro-Wilk")
 
   expect_equal(round(as.numeric(endpoints(fit.noff)$distimes["parent", ]), 2),
                c(7.02, 23.33))

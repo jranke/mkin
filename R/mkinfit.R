@@ -233,7 +233,7 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #' fit.FOMC = mkinfit("FOMC", FOCUS_2006_D, quiet = TRUE, error_model = "tc")
 #' fit.FOMC_SFO <- mkinfit(FOMC_SFO, FOCUS_D, quiet = TRUE,
 #'   parms.ini = fit.FOMC$bparms.ode, error_model = "tc")
-#'
+#' }
 #' @export
 mkinfit <- function(mkinmod, observed,
   parms.ini = "auto",
@@ -257,6 +257,8 @@ mkinfit <- function(mkinmod, observed,
   ...)
 {
   call <- match.call()
+
+  summary_warnings <- character()
 
   # Derive the name used for the model
   if (is.character(mkinmod)) mkinmod_name <- mkinmod
@@ -289,7 +291,9 @@ mkinfit <- function(mkinmod, observed,
 
   # Also remove zero values to avoid instabilities (e.g. of the 'tc' error model)
   if (any(observed$value == 0)) {
-    warning("Observations with value of zero were removed from the data")
+    zero_warning <- "Observations with value of zero were removed from the data"
+    summary_warnings <- c(summary_warnings, zero_warning)
+    warning(zero_warning)
     observed <- subset(observed, value != 0)
   }
 
@@ -848,8 +852,9 @@ mkinfit <- function(mkinmod, observed,
   fit$error_model_algorithm <- error_model_algorithm
 
   if (fit$convergence != 0) {
-    fit$warning = paste0("Optimisation did not converge:\n", fit$message)
-    warning(fit$warning)
+    convergence_warning = paste0("Optimisation did not converge:\n", fit$message)
+    summary_warnings <- c(warnings, convergence_warning)
+    warning(convergence_warning)
   } else {
     if(!quiet) message("Optimisation successfully terminated.\n")
   }
@@ -918,14 +923,22 @@ mkinfit <- function(mkinmod, observed,
   fit$errparms <- errparms
   fit$df.residual <- n_observed - length(c(degparms, errparms))
 
+  # Assign the class here so method dispatch works for residuals
+  class(fit) <- c("mkinfit")
+
   # Check for normal distribution of residuals
-  fit$shapiro.p <- shapiro.test(residuals.mkinfit(fit, standardized = TRUE))$p.value
-  if (fit$shapiro.p < 0.05) warning("The p-value for the Shapiro-Wilk test of normality on standardized residuals is < 0.05")
+  fit$shapiro.p <- shapiro.test(residuals(fit, standardized = TRUE))$p.value
+  if (fit$shapiro.p < 0.05) {
+    shapiro_warning <- paste("Shapiro-Wilk test for standardized residuals: p = ", signif(fit$shapiro.p, 3))
+    warning(shapiro_warning)
+    summary_warnings <- c(summary_warnings, shapiro_warning)
+  }
+
+  fit$summary_warnings <- summary_warnings
 
   fit$date <- date()
   fit$version <- as.character(utils::packageVersion("mkin"))
   fit$Rversion <- paste(R.version$major, R.version$minor, sep=".")
 
-  class(fit) <- c("mkinfit")
   return(fit)
 }

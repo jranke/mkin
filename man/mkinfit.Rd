@@ -214,6 +214,71 @@ When using the "IORE" submodel for metabolites, fitting with
 numerical ODE solver. In this situation it may help to switch off the
 internal rate transformation.
 }
+\examples{
+
+# Use shorthand notation for parent only degradation
+fit <- mkinfit("FOMC", FOCUS_2006_C, quiet = TRUE)
+summary(fit)
+
+# One parent compound, one metabolite, both single first order.
+# We remove zero values from FOCUS dataset D in order to avoid warnings
+FOCUS_D <- subset(FOCUS_2006_D, value != 0)
+# Use mkinsub for convenience in model formulation. Pathway to sink included per default.
+SFO_SFO <- mkinmod(
+  parent = mkinsub("SFO", "m1"),
+  m1 = mkinsub("SFO"))
+
+# Fit the model quietly to the FOCUS example dataset D using defaults
+fit <- mkinfit(SFO_SFO, FOCUS_D, quiet = TRUE)
+# Since mkin 0.9.50.3, we get a warning about non-normality of residuals,
+# so we try an alternative error model
+fit.tc <- mkinfit(SFO_SFO, FOCUS_D, quiet = TRUE, error_model = "tc")
+# This avoids the warning, and the likelihood ratio test confirms it is preferable
+lrtest(fit.tc, fit)
+# We can also allow for different variances of parent and metabolite as error model
+fit.obs <- mkinfit(SFO_SFO, FOCUS_D, quiet = TRUE, error_model = "obs")
+# This also avoids the warning about non-normality, but the two-component error model
+# has significantly higher likelihood
+lrtest(fit.obs, fit.tc)
+parms(fit.tc)
+endpoints(fit.tc)
+
+# We can show a quick (only one replication) benchmark for this case, as we
+# have several alternative solution methods for the model. We skip
+# uncompiled deSolve, as it is so slow. More benchmarks are found in the
+# benchmark vignette
+\dontrun{
+if(require(rbenchmark)) {
+  benchmark(replications = 1, order = "relative", columns = c("test", "relative", "elapsed"),
+    deSolve_compiled = mkinfit(SFO_SFO, FOCUS_D, quiet = TRUE, error_model = "tc",
+      solution_type = "deSolve", use_compiled = TRUE),
+    eigen = mkinfit(SFO_SFO, FOCUS_D, quiet = TRUE, error_model = "tc",
+      solution_type = "eigen"),
+    analytical = mkinfit(SFO_SFO, FOCUS_D, quiet = TRUE, error_model = "tc",
+      solution_type = "analytical"))
+}
+}
+
+# Use stepwise fitting, using optimised parameters from parent only fit, FOMC-SFO
+\dontrun{
+FOMC_SFO <- mkinmod(
+  parent = mkinsub("FOMC", "m1"),
+  m1 = mkinsub("SFO"))
+fit.FOMC_SFO <- mkinfit(FOMC_SFO, FOCUS_D, quiet = TRUE)
+# Again, we get a warning and try a more sophisticated error model
+fit.FOMC_SFO.tc <- mkinfit(FOMC_SFO, FOCUS_D, quiet = TRUE, error_model = "tc")
+# This model has a higher likelihood, but not significantly so
+lrtest(fit.tc, fit.FOMC_SFO.tc)
+# Also, the missing standard error for log_beta and the t-tests for alpha
+# and beta indicate overparameterisation
+summary(fit.FOMC_SFO.tc, data = FALSE)
+
+# We can easily use starting parameters from the parent only fit (only for illustration)
+fit.FOMC = mkinfit("FOMC", FOCUS_2006_D, quiet = TRUE, error_model = "tc")
+fit.FOMC_SFO <- mkinfit(FOMC_SFO, FOCUS_D, quiet = TRUE,
+  parms.ini = fit.FOMC$bparms.ode, error_model = "tc")
+}
+}
 \references{
 Rocke DM and Lorenzato S (1995) A two-component model
 for measurement error in analytical chemistry. \emph{Technometrics} 37(2), 176-184.
