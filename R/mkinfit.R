@@ -853,7 +853,7 @@ mkinfit <- function(mkinmod, observed,
 
   if (fit$convergence != 0) {
     convergence_warning = paste0("Optimisation did not converge:\n", fit$message)
-    summary_warnings <- c(warnings, convergence_warning)
+    summary_warnings <- c(summary_warnings, convergence_warning)
     warning(convergence_warning)
   } else {
     if(!quiet) message("Optimisation successfully terminated.\n")
