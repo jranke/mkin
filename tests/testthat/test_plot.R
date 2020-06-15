@@ -21,6 +21,7 @@ test_that("Plotting mkinfit and mmkin objects is reproducible", {
   plot_errmod_fit_obs_1 <- function() plot_err(fit_obs_1, sep_obs = FALSE)
   plot_errmod_fit_tc_1 <- function() plot_err(fit_tc_1, sep_obs = FALSE)
 
+  skip_if(getRversion() < "4.1.0")
   vdiffr::expect_doppelganger("mkinfit plot for FOCUS C with defaults", plot_default_FOCUS_C_SFO)
   vdiffr::expect_doppelganger("mkinfit plot for FOCUS C with residuals like in gmkin", plot_res_FOCUS_C_SFO)
   vdiffr::expect_doppelganger("plot_res for FOCUS C", plot_res_FOCUS_C_SFO_2)

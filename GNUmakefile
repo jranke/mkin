@@ -10,6 +10,7 @@ WINBIN  := $(PKGSRC)_$(PKGVERS).zip
 # If no alternate bin folder is specified, the default is to use the folder
 # containing the first instance of R on the PATH.
 RBIN ?= $(shell dirname "`which R`")
+#RBIN=/home/jranke/svn/R/r-devel/build/bin
 
 # Specify package and static documentation directories for subversion on r-forge
 RFSVN ?= $(HOME)/svn/r-forge/kinfit
@@ -82,7 +83,7 @@ slowtests: install
 	sed -i -e "s/\r.*\r//" tests_slow.log
 
 vdiffr:
-	"$(RBIN)/Rscript" -e 'vdiffr::manage_cases(filter = "plots|nafta")'
+	/home/jranke/svn/R/r-devel/build/bin/Rscript -e 'vdiffr::manage_cases(filter = "plot|nafta")'
 
 testcheck: test check
 

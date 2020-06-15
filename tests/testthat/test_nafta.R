@@ -22,6 +22,7 @@ test_that("Test data from Appendix B are correctly evaluated", {
 
   plot_nafta <- function() plot(res)
   if(requireNamespace("vdiffr", quietly = TRUE)) {
+    skip_if(getRversion() < "4.1.0")
     vdiffr::expect_doppelganger("NAFTA SOP Appendix B", plot_nafta)
   }
 })
@@ -49,6 +50,7 @@ test_that("Test data from Appendix D are correctly evaluated", {
 
   plot_nafta <- function() plot(res)
   if(requireNamespace("vdiffr", quietly = TRUE)) {
+    skip_if(getRversion() < "4.1.0")
     vdiffr::expect_doppelganger("Plot NAFTA analysis", plot_nafta)
   }
 })
