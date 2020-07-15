@@ -95,7 +95,7 @@ mmkin <- function(models = c("SFO", "FOMC", "DFOP"), datasets,
     w <- which(fit_indices == fit_index, arr.ind = TRUE)
     model_index <- w[1]
     dataset_index <- w[2]
-    mkinfit(models[[model_index]], datasets[[dataset_index]], ...)
+    res <- try(mkinfit(models[[model_index]], datasets[[dataset_index]], ...))
   }
 
   if (is.null(cluster)) {
