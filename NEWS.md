@@ -12,6 +12,10 @@
 
 - 'mkinfit': Run 'stats::shapiro.test()' on standardized residuals and warn if p < 0.05
 
+- 'mkinfit': 'error_model_algorithm' = 'd_3' does not fail if direct fitting fails, but reports that the results for the threestep algorithm are returned
+
+- 'mmkin': Do not fail any more if one of the fits fails, but assign the try-error to the respective position in the mmkin object
+
 # mkin 0.9.50.2 (2020-05-12)
 
 - Increase tolerance for a platform specific test results on the Solaris test machine on CRAN

@@ -712,17 +712,17 @@ mkinfit <- function(mkinmod, observed,
     if (error_model_algorithm == "d_3") {
       if (!quiet) message("Directly optimising the complete model")
       parms.start <- c(degparms, errparms)
-      fit_direct <- nlminb(parms.start, cost_function,
+      fit_direct <- try(nlminb(parms.start, cost_function,
         lower = lower[names(parms.start)],
         upper = upper[names(parms.start)],
-        control = control, ...)
-      fit_direct$logLik <- - cost.current
-      if (error_model_algorithm == "direct") {
-        degparms <- fit_direct$par[degparms_index]
-        errparms <- fit_direct$par[errparms_index]
-      } else {
+        control = control, ...))
+      if (!inherits(fit_direct, "try-error")) {
+        fit_direct$logLik <- - cost.current
         cost.current <- Inf # reset to avoid conflict with the OLS step
         data_direct <- current_data # We need this later if it was better
+        direct_failed = FALSE
+      } else {
+        direct_failed = TRUE
       }
     }
     if (error_model_algorithm != "direct") {
@@ -775,24 +775,30 @@ mkinfit <- function(mkinmod, observed,
 
       if (error_model_algorithm == "d_3") {
         d_3_messages = c(
+           direct_failed = "Direct fitting failed, results of three-step fitting are returned",
            same = "Direct fitting and three-step fitting yield approximately the same likelihood",
            threestep = "Three-step fitting yielded a higher likelihood than direct fitting",
            direct = "Direct fitting yielded a higher likelihood than three-step fitting")
-        rel_diff <- abs((fit_direct$logLik - fit$logLik))/-mean(c(fit_direct$logLik, fit$logLik))
-        if (rel_diff < 0.0001) {
-          if (!quiet) message(d_3_messages["same"])
-          fit$d_3_message <- d_3_messages["same"]
+        if (direct_failed) {
+          if (!quiet) message(d_3_messages["direct_failed"])
+          fit$d_3_message <- d_3_messages["direct_failed"]
         } else {
-          if (fit$logLik > fit_direct$logLik) {
-            if (!quiet) message(d_3_messages["threestep"])
-            fit$d_3_message <- d_3_messages["threestep"]
+          rel_diff <- abs((fit_direct$logLik - fit$logLik))/-mean(c(fit_direct$logLik, fit$logLik))
+          if (rel_diff < 0.0001) {
+            if (!quiet) message(d_3_messages["same"])
+            fit$d_3_message <- d_3_messages["same"]
           } else {
-            if (!quiet) message(d_3_messages["direct"])
-            fit <- fit_direct
-            fit$d_3_message <- d_3_messages["direct"]
-            degparms <- fit$par[degparms_index]
-            errparms <- fit$par[errparms_index]
-            current_data  <- data_direct
+            if (fit$logLik > fit_direct$logLik) {
+              if (!quiet) message(d_3_messages["threestep"])
+              fit$d_3_message <- d_3_messages["threestep"]
+            } else {
+              if (!quiet) message(d_3_messages["direct"])
+              fit <- fit_direct
+              fit$d_3_message <- d_3_messages["direct"]
+              degparms <- fit$par[degparms_index]
+              errparms <- fit$par[errparms_index]
+              current_data  <- data_direct
+            }
           }
         }
       }
