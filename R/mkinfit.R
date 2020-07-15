@@ -637,7 +637,7 @@ mkinfit <- function(mkinmod, observed,
       if (cost < cost.current) {
         assign("cost.current", cost, inherits = TRUE)
         if (!quiet) cat(ifelse(OLS, "Sum of squared residuals", "Negative log-likelihood"),
-                        " at call ", calls, ": ", cost.current, "\n", sep = "")
+                        " at call ", calls, ": ", signif(cost.current, 6), "\n", sep = "")
       }
     }
     return(cost)
