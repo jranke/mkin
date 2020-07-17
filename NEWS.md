@@ -16,6 +16,8 @@
 
 - 'mmkin': Do not fail any more if one of the fits fails, but assign the try-error to the respective position in the mmkin object
 
+- 'mkinfit': Ignore components of state.ini that do not correspond to state variables in the model
+
 # mkin 0.9.50.2 (2020-05-12)
 
 - Increase tolerance for a platform specific test results on the Solaris test machine on CRAN

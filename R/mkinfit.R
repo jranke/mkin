@@ -424,7 +424,8 @@ mkinfit <- function(mkinmod, observed,
     state.ini_used <- state.ini_auto
   } else {
     state.ini_used <- state.ini_auto
-    state.ini_used[names(state.ini)] <- state.ini
+    state.ini_good <- intersect(names(mkinmod$diffs), names(state.ini))
+    state.ini_used[state.ini_good] <- state.ini[state.ini_good]
   }
   state.ini <- state.ini_used
 
