@@ -22,8 +22,10 @@
 #'   fit <- mkinfit("FOMC", FOCUS_2006_C, quiet = TRUE)
 #'   endpoints(fit)
 #'   \dontrun{
-#'     fit_2 <- mkinfit("SFORB", FOCUS_2006_C, quiet = TRUE)
+#'     fit_2 <- mkinfit("DFOP", FOCUS_2006_C, quiet = TRUE)
 #'     endpoints(fit_2)
+#'     fit_3 <- mkinfit("SFORB", FOCUS_2006_C, quiet = TRUE)
+#'     endpoints(fit_3)
 #'   }
 #'
 #' @export
@@ -135,7 +137,9 @@ endpoints <- function(fit) {
                   silent = TRUE)
       if (inherits(DT50, "try-error")) DT50 = NA
       if (inherits(DT90, "try-error")) DT90 = NA
+      DT50_back = DT90 / (log(10)/log(2)) # Backcalculated DT50 as recommended in FOCUS 2011
 
+      ep$distimes[obs_var, c("DT50back")] = DT50_back
       ep$distimes[obs_var, c("DT50_k1")] = DT50_k1
       ep$distimes[obs_var, c("DT50_k2")] = DT50_k2
     }
@@ -152,8 +156,10 @@ endpoints <- function(fit) {
       }
       DT50 <- DTx(50)
       DT90 <- DTx(90)
+      DT50_back = DT90 / (log(10)/log(2)) # Backcalculated DT50 as recommended in FOCUS 2011
       DT50_k1 = log(2)/k1
       DT50_k2 = log(2)/k2
+      ep$distimes[obs_var, c("DT50back")] = DT50_back
       ep$distimes[obs_var, c("DT50_k1")] = DT50_k1
       ep$distimes[obs_var, c("DT50_k2")] = DT50_k2
     }
@@ -191,6 +197,8 @@ endpoints <- function(fit) {
       DT90 = if (inherits(log_DT90, "try-error")) NA
              else exp(log_DT90)
 
+      DT50_back = DT90 / (log(10)/log(2)) # Backcalculated DT50 as recommended in FOCUS 2011
+
       for (k_out_name in k_out_names)
       {
         ep$ff[[sub("k_", "", k_out_name)]] = parms.all[[k_out_name]] / k_1output
@@ -200,6 +208,7 @@ endpoints <- function(fit) {
       ep$SFORB[[paste(obs_var, "b1", sep="_")]] = b1
       ep$SFORB[[paste(obs_var, "b2", sep="_")]] = b2
 
+      ep$distimes[obs_var, c("DT50back")] = DT50_back
       ep$distimes[obs_var, c(paste("DT50", obs_var, "b1", sep = "_"))] = DT50_b1
       ep$distimes[obs_var, c(paste("DT50", obs_var, "b2", sep = "_"))] = DT50_b2
     }

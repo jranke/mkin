@@ -18,6 +18,8 @@
 
 - 'mkinfit': Ignore components of state.ini that do not correspond to state variables in the model
 
+- 'endpoints': Back-calculate DT50 value from DT90 also for the biphasic models DFOP, HS and SFORB
+
 # mkin 0.9.50.2 (2020-05-12)
 
 - Increase tolerance for a platform specific test results on the Solaris test machine on CRAN
