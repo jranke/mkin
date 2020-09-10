@@ -18,9 +18,9 @@ On Windows machines, cores > 1 is currently not supported.}
 \item{\dots}{Further parameters passed to \link[saemix:saemixData]{saemix::saemixData}}
 }
 \value{
-An \link[saemix:SaemixModel]{saemix::SaemixModel} object.
+An \link[saemix:SaemixModel-class]{saemix::SaemixModel} object.
 
-An \link[saemix:SaemixData]{saemix::SaemixData} object.
+An \link[saemix:SaemixData-class]{saemix::SaemixData} object.
 }
 \description{
 This function sets up a nonlinear mixed effects model for an mmkin row

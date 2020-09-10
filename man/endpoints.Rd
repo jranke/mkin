@@ -32,8 +32,10 @@ The function is used internally by \code{\link{summary.mkinfit}}.
   fit <- mkinfit("FOMC", FOCUS_2006_C, quiet = TRUE)
   endpoints(fit)
   \dontrun{
-    fit_2 <- mkinfit("SFORB", FOCUS_2006_C, quiet = TRUE)
+    fit_2 <- mkinfit("DFOP", FOCUS_2006_C, quiet = TRUE)
     endpoints(fit_2)
+    fit_3 <- mkinfit("SFORB", FOCUS_2006_C, quiet = TRUE)
+    endpoints(fit_3)
   }
 
 }
