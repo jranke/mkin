@@ -101,7 +101,7 @@
       <h1 data-toc-skip>Example evaluation of FOCUS Laboratory Data L1 to L3</h1>
                         <h4 class="author">Johannes Ranke</h4>
             
-            <h4 class="date">2020-05-27</h4>
+            <h4 class="date">2020-10-08</h4>
       
       <small class="dont-index">Source: <a href="http://github.com/jranke/mkin/blob/master/vignettes/FOCUS_L.rmd"><code>vignettes/FOCUS_L.rmd</code></a></small>
       <div class="hidden name"><code>FOCUS_L.rmd</code></div>
@@ -126,30 +126,30 @@
 <div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="no">m.L1.SFO</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/mkinfit.html">mkinfit</a></span>(<span class="st">"SFO"</span>, <span class="no">FOCUS_2006_L1_mkin</span>, <span class="kw">quiet</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m.L1.SFO</span>)</pre></body></html></div>
 <pre><code>## mkin version used for fitting:    0.9.50.3 
-## R version used for fitting:       4.0.0 
-## Date of fit:     Wed May 27 07:51:39 2020 
-## Date of summary: Wed May 27 07:51:39 2020 
+## R version used for fitting:       4.0.2 
+## Date of fit:     Thu Oct  8 09:14:05 2020 
+## Date of summary: Thu Oct  8 09:14:05 2020 
 ## 
 ## Equations:
-## d_parent/dt = - k_parent_sink * parent
+## d_parent/dt = - k_parent * parent
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted using 133 model solutions performed in 0.031 s
+## Fitted using 133 model solutions performed in 0.032 s
 ## 
 ## Error model: Constant variance 
 ## 
 ## Error model algorithm: OLS 
 ## 
 ## Starting values for parameters to be optimised:
-##               value   type
-## parent_0      89.85  state
-## k_parent_sink  0.10 deparm
+##          value   type
+## parent_0 89.85  state
+## k_parent  0.10 deparm
 ## 
 ## Starting values for the transformed parameters actually optimised:
-##                       value lower upper
-## parent_0          89.850000  -Inf   Inf
-## log_k_parent_sink -2.302585  -Inf   Inf
+##                  value lower upper
+## parent_0     89.850000  -Inf   Inf
+## log_k_parent -2.302585  -Inf   Inf
 ## 
 ## Fixed parameter values:
 ## None
@@ -160,25 +160,25 @@
 ##   93.88778 96.5589 -43.94389
 ## 
 ## Optimised, transformed parameters with symmetric confidence intervals:
-##                   Estimate Std. Error  Lower  Upper
-## parent_0            92.470    1.28200 89.740 95.200
-## log_k_parent_sink   -2.347    0.03763 -2.428 -2.267
-## sigma                2.780    0.46330  1.792  3.767
+##              Estimate Std. Error  Lower  Upper
+## parent_0       92.470    1.28200 89.740 95.200
+## log_k_parent   -2.347    0.03763 -2.428 -2.267
+## sigma           2.780    0.46330  1.792  3.767
 ## 
 ## Parameter correlation:
-##                     parent_0 log_k_parent_sink      sigma
-## parent_0           1.000e+00         6.186e-01 -1.712e-09
-## log_k_parent_sink  6.186e-01         1.000e+00 -3.237e-09
-## sigma             -1.712e-09        -3.237e-09  1.000e+00
+##                parent_0 log_k_parent      sigma
+## parent_0      1.000e+00    6.186e-01 -1.516e-09
+## log_k_parent  6.186e-01    1.000e+00 -3.124e-09
+## sigma        -1.516e-09   -3.124e-09  1.000e+00
 ## 
 ## Backtransformed parameters:
 ## Confidence intervals for internally transformed parameters are asymmetric.
 ## t-test (unrealistically) based on the assumption of normal distribution
 ## for estimators of untransformed parameters.
-##               Estimate t value    Pr(&gt;t)    Lower   Upper
-## parent_0      92.47000   72.13 8.824e-21 89.74000 95.2000
-## k_parent_sink  0.09561   26.57 2.487e-14  0.08824  0.1036
-## sigma          2.78000    6.00 1.216e-05  1.79200  3.7670
+##          Estimate t value    Pr(&gt;t)    Lower   Upper
+## parent_0 92.47000   72.13 8.824e-21 89.74000 95.2000
+## k_parent  0.09561   26.57 2.487e-14  0.08824  0.1036
+## sigma     2.78000    6.00 1.216e-05  1.79200  3.7670
 ## 
 ## FOCUS Chi2 error levels in percent:
 ##          err.min n.optim df
@@ -227,21 +227,16 @@
 <pre><code>## Warning in cov2cor(ans$covar): diag(.) had 0 or NA entries; non-finite result is
 ## doubtful</code></pre>
 <pre><code>## mkin version used for fitting:    0.9.50.3 
-## R version used for fitting:       4.0.0 
-## Date of fit:     Wed May 27 07:51:39 2020 
-## Date of summary: Wed May 27 07:51:39 2020 
-## 
-## 
-## Warning: Optimisation did not converge:
-## false convergence (8) 
-## 
+## R version used for fitting:       4.0.2 
+## Date of fit:     Thu Oct  8 09:14:05 2020 
+## Date of summary: Thu Oct  8 09:14:05 2020 
 ## 
 ## Equations:
 ## d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted using 899 model solutions performed in 0.204 s
+## Fitted using 380 model solutions performed in 0.088 s
 ## 
 ## Error model: Constant variance 
 ## 
@@ -262,34 +257,39 @@
 ## Fixed parameter values:
 ## None
 ## 
+## 
+## Warning(s): 
+## Optimisation did not converge:
+## false convergence (8)
+## 
 ## Results:
 ## 
 ##        AIC      BIC    logLik
-##   95.88835 99.44984 -43.94418
+##   95.88778 99.44927 -43.94389
 ## 
 ## Optimised, transformed parameters with symmetric confidence intervals:
 ##           Estimate Std. Error  Lower  Upper
-## parent_0     92.47     1.2800 89.730 95.220
-## log_alpha    10.58        NaN    NaN    NaN
-## log_beta     12.93        NaN    NaN    NaN
-## sigma         2.78     0.4507  1.813  3.747
+## parent_0     92.47     1.2820 89.720 95.220
+## log_alpha    16.92        NaN    NaN    NaN
+## log_beta     19.26        NaN    NaN    NaN
+## sigma         2.78     0.4501  1.814  3.745
 ## 
 ## Parameter correlation:
-##           parent_0 log_alpha log_beta   sigma
-## parent_0   1.00000       NaN      NaN 0.01452
-## log_alpha      NaN         1      NaN     NaN
-## log_beta       NaN       NaN        1     NaN
-## sigma      0.01452       NaN      NaN 1.00000
+##           parent_0 log_alpha log_beta    sigma
+## parent_0  1.000000       NaN      NaN 0.002218
+## log_alpha      NaN         1      NaN      NaN
+## log_beta       NaN       NaN        1      NaN
+## sigma     0.002218       NaN      NaN 1.000000
 ## 
 ## Backtransformed parameters:
 ## Confidence intervals for internally transformed parameters are asymmetric.
 ## t-test (unrealistically) based on the assumption of normal distribution
 ## for estimators of untransformed parameters.
-##           Estimate  t value    Pr(&gt;t)  Lower  Upper
-## parent_0     92.47 72.13000 1.052e-19 89.730 95.220
-## alpha     39440.00  0.02397 4.906e-01     NA     NA
-## beta     412500.00  0.02397 4.906e-01     NA     NA
-## sigma         2.78  6.00000 1.628e-05  1.813  3.747
+##           Estimate t value Pr(&gt;t)  Lower  Upper
+## parent_0 9.247e+01      NA     NA 89.720 95.220
+## alpha    2.223e+07      NA     NA     NA     NA
+## beta     2.325e+08      NA     NA     NA     NA
+## sigma    2.780e+00      NA     NA  1.814  3.745
 ## 
 ## FOCUS Chi2 error levels in percent:
 ##          err.min n.optim df
@@ -297,8 +297,8 @@
 ## parent     3.619       3  6
 ## 
 ## Estimated disappearance times:
-##         DT50  DT90 DT50back
-## parent 7.249 24.08    7.249</code></pre>
+##        DT50  DT90 DT50back
+## parent 7.25 24.08     7.25</code></pre>
 <p>We get a warning that the default optimisation algorithm <code>Port</code> did not converge, which is an indication that the model is overparameterised, <em>i.e.</em> contains too many parameters that are ill-defined as a consequence.</p>
 <p>And in fact, due to the higher number of parameters, and the lower number of degrees of freedom of the fit, the <span class="math inline">\(\chi^2\)</span> error level is actually higher for the FOMC model (3.6%) than for the SFO model (3.4%). Additionally, the parameters <code>log_alpha</code> and <code>log_beta</code> internally fitted in the model have excessive confidence intervals, that span more than 25 orders of magnitude (!) when backtransformed to the scale of <code>alpha</code> and <code>beta</code>. Also, the t-test for significant difference from zero does not indicate such a significant difference, with p-values greater than 0.1, and finally, the parameter correlation of <code>log_alpha</code> and <code>log_beta</code> is 1.000, clearly indicating that the model is overparameterised.</p>
 <p>The <span class="math inline">\(\chi^2\)</span> error levels reported in Appendix 3 and Appendix 7 to the FOCUS kinetics report are rounded to integer percentages and partly deviate by one percentage point from the results calculated by mkin. The reason for this is not known. However, mkin gives the same <span class="math inline">\(\chi^2\)</span> error levels as the kinfit package and the calculation routines of the kinfit package have been extensively compared to the results obtained by the KinGUI software, as documented in the kinfit package vignette. KinGUI was the first widely used standard package in this field. Also, the calculation of <span class="math inline">\(\chi^2\)</span> error levels was compared with KinGUII, CAKE and DegKin manager in a project sponsored by the German Umweltbundesamt <span class="citation">(Ranke 2014)</span>.</p>
@@ -335,16 +335,16 @@
 <p><img src="FOCUS_L_files/figure-html/unnamed-chunk-9-1.png" width="672"></p>
 <div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m.L2.FOMC</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
 <pre><code>## mkin version used for fitting:    0.9.50.3 
-## R version used for fitting:       4.0.0 
-## Date of fit:     Wed May 27 07:51:40 2020 
-## Date of summary: Wed May 27 07:51:40 2020 
+## R version used for fitting:       4.0.2 
+## Date of fit:     Thu Oct  8 09:14:06 2020 
+## Date of summary: Thu Oct  8 09:14:06 2020 
 ## 
 ## Equations:
 ## d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted using 239 model solutions performed in 0.048 s
+## Fitted using 239 model solutions performed in 0.049 s
 ## 
 ## Error model: Constant variance 
 ## 
@@ -379,10 +379,10 @@
 ## 
 ## Parameter correlation:
 ##             parent_0  log_alpha   log_beta      sigma
-## parent_0   1.000e+00 -1.151e-01 -2.085e-01 -7.637e-09
+## parent_0   1.000e+00 -1.151e-01 -2.085e-01 -7.436e-09
 ## log_alpha -1.151e-01  1.000e+00  9.741e-01 -1.617e-07
-## log_beta  -2.085e-01  9.741e-01  1.000e+00 -1.387e-07
-## sigma     -7.637e-09 -1.617e-07 -1.387e-07  1.000e+00
+## log_beta  -2.085e-01  9.741e-01  1.000e+00 -1.386e-07
+## sigma     -7.436e-09 -1.617e-07 -1.386e-07  1.000e+00
 ## 
 ## Backtransformed parameters:
 ## Confidence intervals for internally transformed parameters are asymmetric.
@@ -414,9 +414,9 @@
 <p><img src="FOCUS_L_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
 <div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m.L2.DFOP</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
 <pre><code>## mkin version used for fitting:    0.9.50.3 
-## R version used for fitting:       4.0.0 
-## Date of fit:     Wed May 27 07:51:40 2020 
-## Date of summary: Wed May 27 07:51:40 2020 
+## R version used for fitting:       4.0.2 
+## Date of fit:     Thu Oct  8 09:14:06 2020 
+## Date of summary: Thu Oct  8 09:14:06 2020 
 ## 
 ## Equations:
 ## d_parent/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *
@@ -425,7 +425,7 @@
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted using 572 model solutions performed in 0.131 s
+## Fitted using 572 model solutions performed in 0.136 s
 ## 
 ## Error model: Constant variance 
 ## 
@@ -456,18 +456,18 @@
 ## Optimised, transformed parameters with symmetric confidence intervals:
 ##          Estimate Std. Error      Lower     Upper
 ## parent_0  93.9500  9.998e-01    91.5900   96.3100
-## log_k1     3.1370  2.376e+03 -5616.0000 5622.0000
+## log_k1     3.1370  2.376e+03 -5615.0000 5622.0000
 ## log_k2    -1.0880  6.285e-02    -1.2370   -0.9394
 ## g_ilr     -0.2821  7.033e-02    -0.4484   -0.1158
 ## sigma      1.4140  2.886e-01     0.7314    2.0960
 ## 
 ## Parameter correlation:
 ##            parent_0     log_k1     log_k2      g_ilr      sigma
-## parent_0  1.000e+00  5.155e-07  2.371e-09  2.665e-01 -6.849e-09
-## log_k1    5.155e-07  1.000e+00  8.434e-05 -1.659e-04 -7.791e-06
-## log_k2    2.371e-09  8.434e-05  1.000e+00 -7.903e-01 -1.262e-08
-## g_ilr     2.665e-01 -1.659e-04 -7.903e-01  1.000e+00  3.241e-08
-## sigma    -6.849e-09 -7.791e-06 -1.262e-08  3.241e-08  1.000e+00
+## parent_0  1.000e+00  5.157e-07  2.376e-09  2.665e-01 -6.837e-09
+## log_k1    5.157e-07  1.000e+00  8.434e-05 -1.659e-04 -7.786e-06
+## log_k2    2.376e-09  8.434e-05  1.000e+00 -7.903e-01 -1.263e-08
+## g_ilr     2.665e-01 -1.659e-04 -7.903e-01  1.000e+00  3.248e-08
+## sigma    -6.837e-09 -7.786e-06 -1.263e-08  3.248e-08  1.000e+00
 ## 
 ## Backtransformed parameters:
 ## Confidence intervals for internally transformed parameters are asymmetric.
@@ -486,8 +486,8 @@
 ## parent      2.53       4  2
 ## 
 ## Estimated disappearance times:
-##          DT50  DT90 DT50_k1 DT50_k2
-## parent 0.5335 5.311 0.03009   2.058</code></pre>
+##          DT50  DT90 DT50back DT50_k1 DT50_k2
+## parent 0.5335 5.311    1.599 0.03009   2.058</code></pre>
 <p>Here, the DFOP model is clearly the best-fit model for dataset L2 based on the chi^2 error level criterion. However, the failure to calculate the covariance matrix indicates that the parameter estimates correlate excessively. Therefore, the FOMC model may be preferred for this dataset.</p>
 </div>
 </div>
@@ -517,9 +517,9 @@
 <p>We can extract the summary and plot for <em>e.g.</em> the DFOP fit, using square brackets for indexing which will result in the use of the summary and plot functions working on mkinfit objects.</p>
 <div class="sourceCode" id="cb24"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mm.L3</span><span class="kw">[[</span><span class="st">"DFOP"</span>, <span class="fl">1</span>]])</pre></body></html></div>
 <pre><code>## mkin version used for fitting:    0.9.50.3 
-## R version used for fitting:       4.0.0 
-## Date of fit:     Wed May 27 07:51:41 2020 
-## Date of summary: Wed May 27 07:51:41 2020 
+## R version used for fitting:       4.0.2 
+## Date of fit:     Thu Oct  8 09:14:07 2020 
+## Date of summary: Thu Oct  8 09:14:07 2020 
 ## 
 ## Equations:
 ## d_parent/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *
@@ -528,7 +528,7 @@
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted using 373 model solutions performed in 0.079 s
+## Fitted using 373 model solutions performed in 0.086 s
 ## 
 ## Error model: Constant variance 
 ## 
@@ -566,11 +566,11 @@
 ## 
 ## Parameter correlation:
 ##            parent_0     log_k1     log_k2      g_ilr      sigma
-## parent_0  1.000e+00  1.732e-01  2.282e-02  4.009e-01 -6.872e-07
-## log_k1    1.732e-01  1.000e+00  4.945e-01 -5.809e-01  3.200e-07
-## log_k2    2.282e-02  4.945e-01  1.000e+00 -6.812e-01  7.673e-07
-## g_ilr     4.009e-01 -5.809e-01 -6.812e-01  1.000e+00 -8.731e-07
-## sigma    -6.872e-07  3.200e-07  7.673e-07 -8.731e-07  1.000e+00
+## parent_0  1.000e+00  1.732e-01  2.282e-02  4.009e-01 -6.868e-07
+## log_k1    1.732e-01  1.000e+00  4.945e-01 -5.809e-01  3.175e-07
+## log_k2    2.282e-02  4.945e-01  1.000e+00 -6.812e-01  7.631e-07
+## g_ilr     4.009e-01 -5.809e-01 -6.812e-01  1.000e+00 -8.694e-07
+## sigma    -6.868e-07  3.175e-07  7.631e-07 -8.694e-07  1.000e+00
 ## 
 ## Backtransformed parameters:
 ## Confidence intervals for internally transformed parameters are asymmetric.
@@ -589,8 +589,8 @@
 ## parent     2.225       4  4
 ## 
 ## Estimated disappearance times:
-##         DT50 DT90 DT50_k1 DT50_k2
-## parent 7.464  123   1.343   50.37
+##         DT50 DT90 DT50back DT50_k1 DT50_k2
+## parent 7.464  123    37.03   1.343   50.37
 ## 
 ## Data:
 ##  time variable observed predicted residual
@@ -626,30 +626,30 @@
 <p>The <span class="math inline">\(\chi^2\)</span> error level of 3.3% as well as the plot suggest that the SFO model fits very well. The error level at which the <span class="math inline">\(\chi^2\)</span> test passes is slightly lower for the FOMC model. However, the difference appears negligible.</p>
 <div class="sourceCode" id="cb29"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mm.L4</span><span class="kw">[[</span><span class="st">"SFO"</span>, <span class="fl">1</span>]], <span class="kw">data</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
 <pre><code>## mkin version used for fitting:    0.9.50.3 
-## R version used for fitting:       4.0.0 
-## Date of fit:     Wed May 27 07:51:41 2020 
-## Date of summary: Wed May 27 07:51:41 2020 
+## R version used for fitting:       4.0.2 
+## Date of fit:     Thu Oct  8 09:14:07 2020 
+## Date of summary: Thu Oct  8 09:14:07 2020 
 ## 
 ## Equations:
-## d_parent/dt = - k_parent_sink * parent
+## d_parent/dt = - k_parent * parent
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted using 142 model solutions performed in 0.028 s
+## Fitted using 142 model solutions performed in 0.03 s
 ## 
 ## Error model: Constant variance 
 ## 
 ## Error model algorithm: OLS 
 ## 
 ## Starting values for parameters to be optimised:
-##               value   type
-## parent_0       96.6  state
-## k_parent_sink   0.1 deparm
+##          value   type
+## parent_0  96.6  state
+## k_parent   0.1 deparm
 ## 
 ## Starting values for the transformed parameters actually optimised:
-##                       value lower upper
-## parent_0          96.600000  -Inf   Inf
-## log_k_parent_sink -2.302585  -Inf   Inf
+##                  value lower upper
+## parent_0     96.600000  -Inf   Inf
+## log_k_parent -2.302585  -Inf   Inf
 ## 
 ## Fixed parameter values:
 ## None
@@ -660,25 +660,25 @@
 ##   47.12133 47.35966 -20.56067
 ## 
 ## Optimised, transformed parameters with symmetric confidence intervals:
-##                   Estimate Std. Error  Lower   Upper
-## parent_0            96.440    1.69900 92.070 100.800
-## log_k_parent_sink   -5.030    0.07059 -5.211  -4.848
-## sigma                3.162    0.79050  1.130   5.194
+##              Estimate Std. Error  Lower   Upper
+## parent_0       96.440    1.69900 92.070 100.800
+## log_k_parent   -5.030    0.07059 -5.211  -4.848
+## sigma           3.162    0.79050  1.130   5.194
 ## 
 ## Parameter correlation:
-##                    parent_0 log_k_parent_sink     sigma
-## parent_0          1.000e+00         5.938e-01 3.440e-07
-## log_k_parent_sink 5.938e-01         1.000e+00 5.885e-07
-## sigma             3.440e-07         5.885e-07 1.000e+00
+##               parent_0 log_k_parent     sigma
+## parent_0     1.000e+00    5.938e-01 3.387e-07
+## log_k_parent 5.938e-01    1.000e+00 5.830e-07
+## sigma        3.387e-07    5.830e-07 1.000e+00
 ## 
 ## Backtransformed parameters:
 ## Confidence intervals for internally transformed parameters are asymmetric.
 ## t-test (unrealistically) based on the assumption of normal distribution
 ## for estimators of untransformed parameters.
-##                Estimate t value    Pr(&gt;t)     Lower     Upper
-## parent_0      96.440000   56.77 1.604e-08 92.070000 1.008e+02
-## k_parent_sink  0.006541   14.17 1.578e-05  0.005455 7.842e-03
-## sigma          3.162000    4.00 5.162e-03  1.130000 5.194e+00
+##           Estimate t value    Pr(&gt;t)     Lower     Upper
+## parent_0 96.440000   56.77 1.604e-08 92.070000 1.008e+02
+## k_parent  0.006541   14.17 1.578e-05  0.005455 7.842e-03
+## sigma     3.162000    4.00 5.162e-03  1.130000 5.194e+00
 ## 
 ## FOCUS Chi2 error levels in percent:
 ##          err.min n.optim df
@@ -690,16 +690,16 @@
 ## parent  106  352</code></pre>
 <div class="sourceCode" id="cb31"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">mm.L4</span><span class="kw">[[</span><span class="st">"FOMC"</span>, <span class="fl">1</span>]], <span class="kw">data</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
 <pre><code>## mkin version used for fitting:    0.9.50.3 
-## R version used for fitting:       4.0.0 
-## Date of fit:     Wed May 27 07:51:41 2020 
-## Date of summary: Wed May 27 07:51:41 2020 
+## R version used for fitting:       4.0.2 
+## Date of fit:     Thu Oct  8 09:14:07 2020 
+## Date of summary: Thu Oct  8 09:14:07 2020 
 ## 
 ## Equations:
 ## d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted using 224 model solutions performed in 0.044 s
+## Fitted using 224 model solutions performed in 0.046 s
 ## 
 ## Error model: Constant variance 
 ## 
@@ -734,10 +734,10 @@
 ## 
 ## Parameter correlation:
 ##             parent_0  log_alpha   log_beta      sigma
-## parent_0   1.000e+00 -4.696e-01 -5.543e-01 -2.563e-07
-## log_alpha -4.696e-01  1.000e+00  9.889e-01  4.066e-08
-## log_beta  -5.543e-01  9.889e-01  1.000e+00  6.818e-08
-## sigma     -2.563e-07  4.066e-08  6.818e-08  1.000e+00
+## parent_0   1.000e+00 -4.696e-01 -5.543e-01 -2.456e-07
+## log_alpha -4.696e-01  1.000e+00  9.889e-01  2.169e-08
+## log_beta  -5.543e-01  9.889e-01  1.000e+00  4.910e-08
+## sigma     -2.456e-07  2.169e-08  4.910e-08  1.000e+00
 ## 
 ## Backtransformed parameters:
 ## Confidence intervals for internally transformed parameters are asymmetric.

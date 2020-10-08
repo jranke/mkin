@@ -516,7 +516,7 @@
 
 # mkin 0.9-27 (2014-05-10)
 
-- Fork the GUI into a separate package [gmkin](http://github.com/jranke/gmkin)
+- Fork the GUI into a separate package [gmkin](https://github.com/jranke/gmkin)
 
 - DESCRIPTION, NAMESPACE, TODO: Adapt and add copyright information
 

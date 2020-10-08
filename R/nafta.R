@@ -1,9 +1,9 @@
 #' Evaluate parent kinetics using the NAFTA guidance
-#' 
+#'
 #' The function fits the SFO, IORE and DFOP models using \code{\link{mmkin}}
 #' and returns an object of class \code{nafta} that has methods for printing
 #' and plotting.
-#' 
+#'
 #' @param ds A dataframe that must contain one variable called "time" with the
 #'   time values specified by the \code{time} argument, one column called
 #'   "name" with the grouping of the observed values, and finally one column of
@@ -23,17 +23,17 @@
 #'   Pesticides
 #'   \url{https://www.epa.gov/pesticide-science-and-assessing-pesticide-risks/guidance-evaluating-and-calculating-degradation}
 #'   accessed 2019-02-22
-#' 
+#'
 #'   US EPA (2015) Standard Operating Procedure for Using the NAFTA Guidance to
 #'   Calculate Representative Half-life Values and Characterizing Pesticide
 #'   Degradation
 #'   \url{https://www.epa.gov/pesticide-science-and-assessing-pesticide-risks/standard-operating-procedure-using-nafta-guidance}
 #' @examples
-#' 
+#'
 #'   nafta_evaluation <- nafta(NAFTA_SOP_Appendix_D, cores = 1)
 #'   print(nafta_evaluation)
 #'   plot(nafta_evaluation)
-#' 
+#'
 #' @export
 nafta <- function(ds, title = NA, quiet = FALSE, ...) {
   if (length(levels(ds$name)) > 1) {
@@ -51,7 +51,7 @@ nafta <- function(ds, title = NA, quiet = FALSE, ...) {
     dimnames = list(models, c("DT50", "DT90", "DT50_rep")))
   result$distimes["SFO", ] <- distimes[[1]][c(1, 2, 1)]
   result$distimes["IORE", ] <- distimes[[2]][c(1, 2, 3)]
-  result$distimes["DFOP", ] <- distimes[[3]][c(1, 2, 4)]
+  result$distimes["DFOP", ] <- distimes[[3]][c(1, 2, 5)]
 
   # Get parameters with statistics
   result$parameters <- lapply(result$mmkin, function(x) {
@@ -75,13 +75,13 @@ nafta <- function(ds, title = NA, quiet = FALSE, ...) {
   return(result)
 }
 
-#' Plot the results of the three models used in the NAFTA scheme. 
-#' 
+#' Plot the results of the three models used in the NAFTA scheme.
+#'
 #' The plots are ordered with increasing complexity of the model in this
 #' function (SFO, then IORE, then DFOP).
-#' 
+#'
 #' Calls \code{\link{plot.mmkin}}.
-#' 
+#'
 #' @param x An object of class \code{\link{nafta}}.
 #' @param legend Should a legend be added?
 #' @param main Possibility to override the main title of the plot.
@@ -98,10 +98,10 @@ plot.nafta <- function(x, legend = FALSE, main = "auto", ...) {
 }
 
 #' Print nafta objects
-#' 
+#'
 #' Print nafta objects. The results for the three models are printed in the
 #' order of increasing model complexity, i.e. SFO, then IORE, and finally DFOP.
-#' 
+#'
 #' @param x An \code{\link{nafta}} object.
 #' @param digits Number of digits to be used for printing parameters and
 #'   dissipation times.

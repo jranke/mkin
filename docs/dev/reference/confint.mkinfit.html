@@ -258,15 +258,15 @@ Profile-Likelihood Based Confidence Intervals, Applied Statistics, 37,
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='st'>"SFO"</span>, <span class='no'>FOCUS_2006_C</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"quadratic"</span>)</div><div class='output co'>#&gt;                     2.5%      97.5%
-#&gt; parent_0      71.8242430 93.1600766
-#&gt; k_parent_sink  0.2109541  0.4440528
-#&gt; sigma          1.9778868  7.3681380</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"quadratic"</span>)</div><div class='output co'>#&gt;                2.5%      97.5%
+#&gt; parent_0 71.8242430 93.1600766
+#&gt; k_parent  0.2109541  0.4440528
+#&gt; sigma     1.9778868  7.3681380</div><div class='input'>
 <span class='co'># \dontrun{</span>
-<span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"profile"</span>)</div><div class='output co'>#&gt; <span class='message'>Profiling the likelihood</span></div><div class='output co'>#&gt;                     2.5%      97.5%
-#&gt; parent_0      73.0641834 92.1392181
-#&gt; k_parent_sink  0.2170293  0.4235348
-#&gt; sigma          3.1307772  8.0628314</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"profile"</span>)</div><div class='output co'>#&gt; <span class='message'>Profiling the likelihood</span></div><div class='output co'>#&gt;                2.5%      97.5%
+#&gt; parent_0 73.0641834 92.1392181
+#&gt; k_parent  0.2170293  0.4235348
+#&gt; sigma     3.1307772  8.0628314</div><div class='input'>
 <span class='co'># Set the number of cores for the profiling method for further examples</span>
 <span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span>(<span class='st'>"NOT_CRAN"</span>), <span class='st'>"true"</span>)) {
   <span class='no'>n_cores</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>parallel</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/r/parallel/detectCores.html'>detectCores</a></span>() - <span class='fl'>1</span>
@@ -279,30 +279,29 @@ Profile-Likelihood Based Confidence Intervals, Applied Statistics, 37,
 <span class='no'>SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>), <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='no'>SFO_SFO.ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>), <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>),
   <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='no'>f_d_1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO</span>, <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>FOCUS_2006_D</span>, <span class='no'>value</span> <span class='kw'>!=</span> <span class='fl'>0</span>), <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='no'>ci_profile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_d_1</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"profile"</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   3.610   1.071   3.378 </div><div class='input'><span class='co'># Using more cores does not save much time here, as parent_0 takes up most of the time</span>
+<span class='no'>f_d_1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO</span>, <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>FOCUS_2006_D</span>, <span class='no'>value</span> <span class='kw'>!=</span> <span class='fl'>0</span>), <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Shapiro-Wilk test for standardized residuals: p =  0.0165</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='no'>ci_profile</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_d_1</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"profile"</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt;    user  system elapsed 
+#&gt;   3.810   0.964   3.430 </div><div class='input'><span class='co'># Using more cores does not save much time here, as parent_0 takes up most of the time</span>
 <span class='co'># If we additionally exclude parent_0 (the confidence of which is often of</span>
 <span class='co'># minor interest), we get a nice performance improvement from about 50</span>
 <span class='co'># seconds to about 12 seconds if we use at least four cores</span>
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='no'>ci_profile_no_parent_0</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_d_1</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"profile"</span>,
-  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"k_parent_sink"</span>, <span class='st'>"k_parent_m1"</span>, <span class='st'>"k_m1_sink"</span>, <span class='st'>"sigma"</span>), <span class='kw'>cores</span> <span class='kw'>=</span> <span class='no'>n_cores</span>))</div><div class='output co'>#&gt; <span class='message'>Profiling the likelihood</span></div><div class='output co'>#&gt; <span class='warning'>Warning: scheduled cores 2, 1, 3 encountered errors in user code, all values of the jobs will be affected</span></div><div class='output co'>#&gt; <span class='error'>Error in dimnames(x) &lt;- dn: length of 'dimnames' [2] not equal to array extent</span></div><div class='output co'>#&gt; <span class='message'>Timing stopped at: 0.005 0.04 0.206</span></div><div class='input'><span class='no'>ci_profile</span></div><div class='output co'>#&gt;                        2.5%        97.5%
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"k_parent_sink"</span>, <span class='st'>"k_parent_m1"</span>, <span class='st'>"k_m1_sink"</span>, <span class='st'>"sigma"</span>), <span class='kw'>cores</span> <span class='kw'>=</span> <span class='no'>n_cores</span>))</div><div class='output co'>#&gt; <span class='message'>Profiling the likelihood</span></div><div class='output co'>#&gt; <span class='warning'>Warning: scheduled cores 2, 1, 3 encountered errors in user code, all values of the jobs will be affected</span></div><div class='output co'>#&gt; <span class='error'>Error in dimnames(x) &lt;- dn: length of 'dimnames' [2] not equal to array extent</span></div><div class='output co'>#&gt; <span class='message'>Timing stopped at: 0.015 0.029 0.198</span></div><div class='input'><span class='no'>ci_profile</span></div><div class='output co'>#&gt;                        2.5%        97.5%
 #&gt; parent_0       96.456003640 1.027703e+02
 #&gt; k_parent        0.090911032 1.071578e-01
 #&gt; k_m1            0.003892605 6.702778e-03
 #&gt; f_parent_to_m1  0.471328495 5.611550e-01
 #&gt; sigma           2.535612399 3.985263e+00</div><div class='input'><span class='no'>ci_quadratic_transformed</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_d_1</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"quadratic"</span>)
 <span class='no'>ci_quadratic_transformed</span></div><div class='output co'>#&gt;                        2.5%        97.5%
-#&gt; parent_0       96.403839476 1.027931e+02
+#&gt; parent_0       96.403839460 1.027931e+02
 #&gt; k_parent        0.090823790 1.072543e-01
 #&gt; k_m1            0.004012216 6.897547e-03
 #&gt; f_parent_to_m1  0.469118713 5.595960e-01
 #&gt; sigma           2.396089689 3.854918e+00</div><div class='input'><span class='no'>ci_quadratic_untransformed</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_d_1</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"quadratic"</span>, <span class='kw'>transformed</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 <span class='no'>ci_quadratic_untransformed</span></div><div class='output co'>#&gt;                        2.5%        97.5%
-#&gt; parent_0       96.403839429 1.027931e+02
+#&gt; parent_0       96.403839413 1.027931e+02
 #&gt; k_parent        0.090491931 1.069035e-01
 #&gt; k_m1            0.003835483 6.685819e-03
-#&gt; f_parent_to_m1  0.469113364 5.598386e-01
+#&gt; f_parent_to_m1  0.469113365 5.598386e-01
 #&gt; sigma           2.396089689 3.854918e+00</div><div class='input'><span class='co'># Against the expectation based on Bates and Watts (1988), the confidence</span>
 <span class='co'># intervals based on the internal parameter transformation are less</span>
 <span class='co'># congruent with the likelihood based intervals. Note the superiority of the</span>
@@ -314,7 +313,7 @@ Profile-Likelihood Based Confidence Intervals, Applied Statistics, 37,
 #&gt; k_parent        TRUE  TRUE
 #&gt; k_m1           FALSE FALSE
 #&gt; f_parent_to_m1  TRUE FALSE
-#&gt; sigma          FALSE  TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Round.html'>signif</a></span>(<span class='no'>rel_diffs_transformed</span>, <span class='fl'>3</span>)</div><div class='output co'>#&gt;                    2.5%    97.5%
+#&gt; sigma          FALSE FALSE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Round.html'>signif</a></span>(<span class='no'>rel_diffs_transformed</span>, <span class='fl'>3</span>)</div><div class='output co'>#&gt;                    2.5%    97.5%
 #&gt; parent_0       0.000541 0.000222
 #&gt; k_parent       0.000960 0.000900
 #&gt; k_m1           0.030700 0.029100
@@ -327,24 +326,23 @@ Profile-Likelihood Based Confidence Intervals, Applied Statistics, 37,
 #&gt; sigma          0.055000 0.032700</div><div class='input'>
 
 <span class='co'># Investigate a case with formation fractions</span>
-<span class='no'>f_d_2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO.ff</span>, <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>FOCUS_2006_D</span>, <span class='no'>value</span> <span class='kw'>!=</span> <span class='fl'>0</span>), <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='no'>ci_profile_ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_d_2</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"profile"</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='no'>n_cores</span>)</div><div class='output co'>#&gt; <span class='message'>Profiling the likelihood</span></div><div class='input'><span class='no'>ci_profile_ff</span></div><div class='output co'>#&gt;                        2.5%        97.5%
+<span class='no'>f_d_2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO.ff</span>, <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>FOCUS_2006_D</span>, <span class='no'>value</span> <span class='kw'>!=</span> <span class='fl'>0</span>), <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Shapiro-Wilk test for standardized residuals: p =  0.0165</span></div><div class='input'><span class='no'>ci_profile_ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_d_2</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"profile"</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='no'>n_cores</span>)</div><div class='output co'>#&gt; <span class='message'>Profiling the likelihood</span></div><div class='input'><span class='no'>ci_profile_ff</span></div><div class='output co'>#&gt;                        2.5%        97.5%
 #&gt; parent_0       96.456003640 1.027703e+02
 #&gt; k_parent        0.090911032 1.071578e-01
 #&gt; k_m1            0.003892605 6.702778e-03
 #&gt; f_parent_to_m1  0.471328495 5.611550e-01
 #&gt; sigma           2.535612399 3.985263e+00</div><div class='input'><span class='no'>ci_quadratic_transformed_ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_d_2</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"quadratic"</span>)
 <span class='no'>ci_quadratic_transformed_ff</span></div><div class='output co'>#&gt;                        2.5%        97.5%
-#&gt; parent_0       96.403839476 1.027931e+02
+#&gt; parent_0       96.403839460 1.027931e+02
 #&gt; k_parent        0.090823790 1.072543e-01
 #&gt; k_m1            0.004012216 6.897547e-03
 #&gt; f_parent_to_m1  0.469118713 5.595960e-01
 #&gt; sigma           2.396089689 3.854918e+00</div><div class='input'><span class='no'>ci_quadratic_untransformed_ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_d_2</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"quadratic"</span>, <span class='kw'>transformed</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 <span class='no'>ci_quadratic_untransformed_ff</span></div><div class='output co'>#&gt;                        2.5%        97.5%
-#&gt; parent_0       96.403839429 1.027931e+02
+#&gt; parent_0       96.403839413 1.027931e+02
 #&gt; k_parent        0.090491931 1.069035e-01
 #&gt; k_m1            0.003835483 6.685819e-03
-#&gt; f_parent_to_m1  0.469113364 5.598386e-01
+#&gt; f_parent_to_m1  0.469113365 5.598386e-01
 #&gt; sigma           2.396089689 3.854918e+00</div><div class='input'><span class='no'>rel_diffs_transformed_ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span>((<span class='no'>ci_quadratic_transformed_ff</span> - <span class='no'>ci_profile_ff</span>)/<span class='no'>ci_profile_ff</span>)
 <span class='no'>rel_diffs_untransformed_ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>abs</a></span>((<span class='no'>ci_quadratic_untransformed_ff</span> - <span class='no'>ci_profile_ff</span>)/<span class='no'>ci_profile_ff</span>)
 <span class='co'># While the confidence interval for the parent rate constant is closer to</span>
@@ -356,17 +354,17 @@ Profile-Likelihood Based Confidence Intervals, Applied Statistics, 37,
 #&gt; k_parent        TRUE  TRUE
 #&gt; k_m1           FALSE FALSE
 #&gt; f_parent_to_m1  TRUE FALSE
-#&gt; sigma          FALSE  TRUE</div><div class='input'><span class='no'>rel_diffs_transformed_ff</span></div><div class='output co'>#&gt;                        2.5%        97.5%
-#&gt; parent_0       0.0005408078 0.0002217796
+#&gt; sigma          FALSE FALSE</div><div class='input'><span class='no'>rel_diffs_transformed_ff</span></div><div class='output co'>#&gt;                        2.5%        97.5%
+#&gt; parent_0       0.0005408080 0.0002217794
 #&gt; k_parent       0.0009596417 0.0009003876
-#&gt; k_m1           0.0307277372 0.0290579184
-#&gt; f_parent_to_m1 0.0046884131 0.0027782558
-#&gt; sigma          0.0550252516 0.0327066836</div><div class='input'><span class='no'>rel_diffs_untransformed_ff</span></div><div class='output co'>#&gt;                        2.5%       97.5%
-#&gt; parent_0       0.0005408083 0.000221780
-#&gt; k_parent       0.0046100096 0.002373023
-#&gt; k_m1           0.0146746467 0.002530101
-#&gt; f_parent_to_m1 0.0046997600 0.002346022
-#&gt; sigma          0.0550252516 0.032706684</div><div class='input'>
+#&gt; k_m1           0.0307277370 0.0290579182
+#&gt; f_parent_to_m1 0.0046884130 0.0027782556
+#&gt; sigma          0.0550252516 0.0327066836</div><div class='input'><span class='no'>rel_diffs_untransformed_ff</span></div><div class='output co'>#&gt;                        2.5%        97.5%
+#&gt; parent_0       0.0005408085 0.0002217799
+#&gt; k_parent       0.0046100096 0.0023730229
+#&gt; k_m1           0.0146746469 0.0025301011
+#&gt; f_parent_to_m1 0.0046997599 0.0023460223
+#&gt; sigma          0.0550252516 0.0327066836</div><div class='input'>
 <span class='co'># The profiling for the following fit does not finish in a reasonable time,</span>
 <span class='co'># therefore we use the quadratic approximation</span>
 <span class='no'>m_synth_DFOP_par</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"DFOP"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"M1"</span>, <span class='st'>"M2"</span>)),
@@ -375,19 +373,19 @@ Profile-Likelihood Based Confidence Intervals, Applied Statistics, 37,
   <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='no'>DFOP_par_c</span> <span class='kw'>&lt;-</span> <span class='no'>synthetic_data_for_UBA_2014</span><span class='kw'>[[</span><span class='fl'>12</span>]]$<span class='no'>data</span>
 <span class='no'>f_tc_2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>m_synth_DFOP_par</span>, <span class='no'>DFOP_par_c</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"tc"</span>,
-  <span class='kw'>error_model_algorithm</span> <span class='kw'>=</span> <span class='st'>"direct"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Optimisation did not converge:</span>
-#&gt; <span class='warning'>iteration limit reached without convergence (10)</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_tc_2</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"quadratic"</span>)</div><div class='output co'>#&gt;                        2.5%        97.5%
-#&gt; parent_0       95.654015524 105.79279749
-#&gt; k_M1            0.037723773   0.04447598
-#&gt; k_M2            0.008586438   0.01078076
-#&gt; f_parent_to_M1  0.230403596   0.61953014
-#&gt; f_parent_to_M2  0.162909765   0.38019017
-#&gt; k1              0.275434628   0.33331386
-#&gt; k2              0.018602188   0.02249211
-#&gt; g               0.675149759   0.73520889
-#&gt; sigma_low       0.251416929   0.84272023
-#&gt; rsd_high        0.040371818   0.07666540</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_tc_2</span>, <span class='st'>"parent_0"</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"quadratic"</span>)</div><div class='output co'>#&gt;              2.5%    97.5%
-#&gt; parent_0 95.65402 105.7928</div><div class='input'># }
+  <span class='kw'>error_model_algorithm</span> <span class='kw'>=</span> <span class='st'>"direct"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_tc_2</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"quadratic"</span>)</div><div class='output co'>#&gt;                       2.5%        97.5%
+#&gt; parent_0       94.59613833 106.19939215
+#&gt; k_M1            0.03760542   0.04490759
+#&gt; k_M2            0.00856874   0.01087675
+#&gt; f_parent_to_M1  0.02146166   0.62023888
+#&gt; f_parent_to_M2  0.01516502   0.37975343
+#&gt; k1              0.27389751   0.33388078
+#&gt; k2              0.01861456   0.02250379
+#&gt; g               0.67194349   0.73583256
+#&gt; sigma_low       0.25128383   0.83992146
+#&gt; rsd_high        0.04041100   0.07662001</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span>(<span class='no'>f_tc_2</span>, <span class='st'>"parent_0"</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"quadratic"</span>)</div><div class='output co'>#&gt;              2.5%    97.5%
+#&gt; parent_0 94.59614 106.1994</div><div class='input'># }
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

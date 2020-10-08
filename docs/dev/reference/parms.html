@@ -188,23 +188,22 @@ such matrices is returned.</p>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># mkinfit objects</span>
 <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='st'>"SFO"</span>, <span class='no'>FOCUS_2006_C</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>parms</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt;      parent_0 k_parent_sink         sigma 
-#&gt;    82.4921598     0.3060633     4.6730124 </div><div class='input'><span class='fu'>parms</span>(<span class='no'>fit</span>, <span class='kw'>transformed</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;          parent_0 log_k_parent_sink             sigma 
-#&gt;         82.492160         -1.183963          4.673012 </div><div class='input'>
+<span class='fu'>parms</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt;   parent_0   k_parent      sigma 
+#&gt; 82.4921598  0.3060633  4.6730124 </div><div class='input'><span class='fu'>parms</span>(<span class='no'>fit</span>, <span class='kw'>transformed</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt;     parent_0 log_k_parent        sigma 
+#&gt;    82.492160    -1.183963     4.673012 </div><div class='input'>
 <span class='co'># mmkin objects</span>
 <span class='no'>ds</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span>(<span class='no'>experimental_data_for_UBA_2019</span>[<span class='fl'>6</span>:<span class='fl'>10</span>],
  <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>x</span>$<span class='no'>data</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"name"</span>, <span class='st'>"time"</span>, <span class='st'>"value"</span>)]))
 <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>ds</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"Dataset"</span>, <span class='fl'>6</span>:<span class='fl'>10</span>)
 <span class='co'># \dontrun{</span>
-<span class='no'>fits</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"FOMC"</span>, <span class='st'>"DFOP"</span>), <span class='no'>ds</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>)
-<span class='fu'>parms</span>(<span class='no'>fits</span>[<span class='st'>"SFO"</span>, ])</div><div class='output co'>#&gt;                 Dataset 6    Dataset 7  Dataset 8  Dataset 9  Dataset 10
-#&gt; parent_0      88.52275400 82.666781678 86.8547308 91.7779306 82.14809450
-#&gt; k_parent_sink  0.05794659  0.009647805  0.2102974  0.1232258  0.00720421
-#&gt; sigma          5.15274487  7.040168584  3.6769645  6.4669234  6.50457673</div><div class='input'><span class='fu'>parms</span>(<span class='no'>fits</span>[, <span class='fl'>2</span>])</div><div class='output co'>#&gt; $SFO
-#&gt;                  Dataset 7
-#&gt; parent_0      82.666781678
-#&gt; k_parent_sink  0.009647805
-#&gt; sigma          7.040168584
+<span class='no'>fits</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"FOMC"</span>, <span class='st'>"DFOP"</span>), <span class='no'>ds</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Shapiro-Wilk test for standardized residuals: p =  0.0195</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Shapiro-Wilk test for standardized residuals: p =  0.00408</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Shapiro-Wilk test for standardized residuals: p =  0.0492</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Shapiro-Wilk test for standardized residuals: p =  0.00985</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Shapiro-Wilk test for standardized residuals: p =  0.00815</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Shapiro-Wilk test for standardized residuals: p =  0.011</span></div><div class='input'><span class='fu'>parms</span>(<span class='no'>fits</span>[<span class='st'>"SFO"</span>, ])</div><div class='output co'>#&gt;            Dataset 6    Dataset 7  Dataset 8  Dataset 9  Dataset 10
+#&gt; parent_0 88.52275400 82.666781678 86.8547308 91.7779306 82.14809450
+#&gt; k_parent  0.05794659  0.009647805  0.2102974  0.1232258  0.00720421
+#&gt; sigma     5.15274487  7.040168584  3.6769645  6.4669234  6.50457673</div><div class='input'><span class='fu'>parms</span>(<span class='no'>fits</span>[, <span class='fl'>2</span>])</div><div class='output co'>#&gt; $SFO
+#&gt;             Dataset 7
+#&gt; parent_0 82.666781678
+#&gt; k_parent  0.009647805
+#&gt; sigma     7.040168584
 #&gt; 
 #&gt; $FOMC
 #&gt;           Dataset 7
@@ -221,10 +220,10 @@ such matrices is returned.</p>
 #&gt; g         0.526942415
 #&gt; sigma     2.221302196
 #&gt; </div><div class='input'><span class='fu'>parms</span>(<span class='no'>fits</span>)</div><div class='output co'>#&gt; $SFO
-#&gt;                 Dataset 6    Dataset 7  Dataset 8  Dataset 9  Dataset 10
-#&gt; parent_0      88.52275400 82.666781678 86.8547308 91.7779306 82.14809450
-#&gt; k_parent_sink  0.05794659  0.009647805  0.2102974  0.1232258  0.00720421
-#&gt; sigma          5.15274487  7.040168584  3.6769645  6.4669234  6.50457673
+#&gt;            Dataset 6    Dataset 7  Dataset 8  Dataset 9  Dataset 10
+#&gt; parent_0 88.52275400 82.666781678 86.8547308 91.7779306 82.14809450
+#&gt; k_parent  0.05794659  0.009647805  0.2102974  0.1232258  0.00720421
+#&gt; sigma     5.15274487  7.040168584  3.6769645  6.4669234  6.50457673
 #&gt; 
 #&gt; $FOMC
 #&gt;          Dataset 6  Dataset 7 Dataset 8 Dataset 9 Dataset 10
@@ -241,15 +240,15 @@ such matrices is returned.</p>
 #&gt; g         0.44845068  0.526942415  0.66091965  0.65322767  0.342652880
 #&gt; sigma     1.35690468  2.221302196  1.34169076  2.87159846  1.942067831
 #&gt; </div><div class='input'><span class='fu'>parms</span>(<span class='no'>fits</span>, <span class='kw'>transformed</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; $SFO
-#&gt;                   Dataset 6 Dataset 7 Dataset 8 Dataset 9 Dataset 10
-#&gt; parent_0          88.522754 82.666782 86.854731 91.777931  82.148094
-#&gt; log_k_parent_sink -2.848234 -4.641025 -1.559232 -2.093737  -4.933090
-#&gt; sigma              5.152745  7.040169  3.676964  6.466923   6.504577
+#&gt;              Dataset 6 Dataset 7 Dataset 8 Dataset 9 Dataset 10
+#&gt; parent_0     88.522754 82.666782 86.854731 91.777931  82.148094
+#&gt; log_k_parent -2.848234 -4.641025 -1.559232 -2.093737  -4.933090
+#&gt; sigma         5.152745  7.040169  3.676964  6.466923   6.504577
 #&gt; 
 #&gt; $FOMC
 #&gt;            Dataset 6  Dataset 7  Dataset 8   Dataset 9 Dataset 10
-#&gt; parent_0  95.5585751 92.6837649 90.7197870 98.38393896  94.848146
-#&gt; log_alpha  0.2916741 -0.6996015  0.4941466  0.07181817  -1.271085
+#&gt; parent_0  95.5585751 92.6837649 90.7197870 98.38393897  94.848146
+#&gt; log_alpha  0.2916741 -0.6996015  0.4941466  0.07181816  -1.271085
 #&gt; log_beta   2.5675088  2.6493701  1.6108523  1.48095106   1.932278
 #&gt; sigma      1.8476712  1.9167519  1.0660627  3.14605557   1.622278
 #&gt; 

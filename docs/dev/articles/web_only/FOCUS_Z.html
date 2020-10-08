@@ -101,7 +101,7 @@
       <h1 data-toc-skip>Example evaluation of FOCUS dataset Z</h1>
                         <h4 class="author">Johannes Ranke</h4>
             
-            <h4 class="date">2020-05-27</h4>
+            <h4 class="date">2020-10-08</h4>
       
       <small class="dont-index">Source: <a href="http://github.com/jranke/mkin/blob/master/vignettes/web_only/FOCUS_Z.rmd"><code>vignettes/web_only/FOCUS_Z.rmd</code></a></small>
       <div class="hidden name"><code>FOCUS_Z.rmd</code></div>
@@ -217,25 +217,25 @@
 <div class="sourceCode" id="cb33"><html><body><pre class="r"><span class="fu"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(<span class="no">m.Z.FOCUS</span>)</pre></body></html></div>
 <p><img src="FOCUS_Z_files/figure-html/FOCUS_2006_Z_fits_6-1.png" width="700"></p>
 <div class="sourceCode" id="cb34"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="no">m.Z.FOCUS</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="fl">FALSE</span>)$<span class="no">bpar</span></pre></body></html></div>
-<pre><code>##             Estimate se_notrans t value     Pr(&gt;t)     Lower     Upper
-## Z0_0       96.840695   1.994285 48.5591 4.0254e-42 92.828744 100.85265
-## k_Z0        2.215467   0.118463 18.7018 1.0417e-23  1.989524   2.46707
-## k_Z1        0.478325   0.028259 16.9265 6.2441e-22  0.424725   0.53869
-## k_Z2        0.451638   0.042139 10.7177 1.6309e-14  0.374346   0.54489
-## k_Z3        0.058692   0.015245  3.8498 1.7807e-04  0.034806   0.09897
-## f_Z2_to_Z3  0.471484   0.058348  8.0805 9.6599e-11  0.357736   0.58827
-## sigma       3.984431   0.383402 10.3923 4.5576e-14  3.213126   4.75574</code></pre>
+<pre><code>##             Estimate se_notrans t value     Pr(&gt;t)     Lower      Upper
+## Z0_0       96.838721   1.994275 48.5584 4.0283e-42 92.826878 100.850563
+## k_Z0        2.215400   0.118459 18.7019 1.0414e-23  1.989462   2.466998
+## k_Z1        0.478301   0.028257 16.9267 6.2411e-22  0.424705   0.538662
+## k_Z2        0.451623   0.042138 10.7176 1.6313e-14  0.374336   0.544867
+## k_Z3        0.058694   0.015246  3.8499 1.7804e-04  0.034809   0.098967
+## f_Z2_to_Z3  0.471510   0.058352  8.0804 9.6640e-11  0.357775   0.588283
+## sigma       3.984431   0.383402 10.3923 4.5575e-14  3.213126   4.755736</code></pre>
 <div class="sourceCode" id="cb36"><html><body><pre class="r"><span class="fu"><a href="../../reference/endpoints.html">endpoints</a></span>(<span class="no">m.Z.FOCUS</span>)</pre></body></html></div>
 <pre><code>## $ff
 ##   Z2_Z3 Z2_sink 
-## 0.47148 0.52852 
+## 0.47151 0.52849 
 ## 
 ## $distimes
 ##        DT50    DT90
-## Z0  0.31287  1.0393
-## Z1  1.44911  4.8138
-## Z2  1.53474  5.0983
-## Z3 11.80989 39.2316</code></pre>
+## Z0  0.31288  1.0394
+## Z1  1.44919  4.8141
+## Z2  1.53479  5.0985
+## Z3 11.80955 39.2305</code></pre>
 <p>This fit corresponds to the final result chosen in Appendix 7 of the FOCUS report. Confidence intervals returned by mkin are based on internally transformed parameters, however.</p>
 </div>
 <div id="using-the-sforb-model" class="section level1">
@@ -277,51 +277,57 @@
                       <span class="kw">quiet</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
 <pre><code>## Warning in mkinfit(Z.mkin.4, FOCUS_2006_Z_mkin, parms.ini = m.Z.mkin.
 ## 3$bparms.ode, : Observations with value of zero were removed from the data</code></pre>
-<div class="sourceCode" id="cb54"><html><body><pre class="r"><span class="fu"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(<span class="no">m.Z.mkin.4</span>)</pre></body></html></div>
+<pre><code>## Warning in mkinfit(Z.mkin.4, FOCUS_2006_Z_mkin, parms.ini = m.Z.mkin.
+## 3$bparms.ode, : Shapiro-Wilk test for standardized residuals: p = 0.0449</code></pre>
+<div class="sourceCode" id="cb55"><html><body><pre class="r"><span class="fu"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(<span class="no">m.Z.mkin.4</span>)</pre></body></html></div>
 <p><img src="FOCUS_Z_files/figure-html/FOCUS_2006_Z_fits_10-1.png" width="700"></p>
 <p>The error level of the fit, but especially of metabolite Z3, can be improved if the SFORB model is chosen for this metabolite, as this model is capable of representing the tailing of the metabolite decline phase.</p>
-<div class="sourceCode" id="cb55"><html><body><pre class="r"><span class="no">Z.mkin.5</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span>(<span class="kw">Z0</span> <span class="kw">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFORB"</span>, <span class="st">"Z1"</span>, <span class="kw">sink</span> <span class="kw">=</span> <span class="fl">FALSE</span>),
+<div class="sourceCode" id="cb56"><html><body><pre class="r"><span class="no">Z.mkin.5</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span>(<span class="kw">Z0</span> <span class="kw">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFORB"</span>, <span class="st">"Z1"</span>, <span class="kw">sink</span> <span class="kw">=</span> <span class="fl">FALSE</span>),
                     <span class="kw">Z1</span> <span class="kw">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z2"</span>, <span class="kw">sink</span> <span class="kw">=</span> <span class="fl">FALSE</span>),
                     <span class="kw">Z2</span> <span class="kw">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFO"</span>, <span class="st">"Z3"</span>),
                     <span class="kw">Z3</span> <span class="kw">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span>(<span class="st">"SFORB"</span>))</pre></body></html></div>
 <pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
-<div class="sourceCode" id="cb57"><html><body><pre class="r"><span class="no">m.Z.mkin.5</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../../reference/mkinfit.html">mkinfit</a></span>(<span class="no">Z.mkin.5</span>, <span class="no">FOCUS_2006_Z_mkin</span>,
+<div class="sourceCode" id="cb58"><html><body><pre class="r"><span class="no">m.Z.mkin.5</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../../reference/mkinfit.html">mkinfit</a></span>(<span class="no">Z.mkin.5</span>, <span class="no">FOCUS_2006_Z_mkin</span>,
                       <span class="kw">parms.ini</span> <span class="kw">=</span> <span class="no">m.Z.mkin.4</span>$<span class="no">bparms.ode</span>[<span class="fl">1</span>:<span class="fl">4</span>],
                       <span class="kw">quiet</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
 <pre><code>## Warning in mkinfit(Z.mkin.5, FOCUS_2006_Z_mkin, parms.ini = m.Z.mkin.
 ## 4$bparms.ode[1:4], : Observations with value of zero were removed from the data</code></pre>
-<div class="sourceCode" id="cb59"><html><body><pre class="r"><span class="fu"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(<span class="no">m.Z.mkin.5</span>)</pre></body></html></div>
+<pre><code>## Warning in mkinfit(Z.mkin.5, FOCUS_2006_Z_mkin, parms.ini = m.Z.mkin.
+## 4$bparms.ode[1:4], : Shapiro-Wilk test for standardized residuals: p = 0.00785</code></pre>
+<div class="sourceCode" id="cb61"><html><body><pre class="r"><span class="fu"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(<span class="no">m.Z.mkin.5</span>)</pre></body></html></div>
 <p><img src="FOCUS_Z_files/figure-html/FOCUS_2006_Z_fits_11-1.png" width="700"></p>
 <p>The summary view of the backtransformed parameters shows that we get no confidence intervals due to overparameterisation. As the optimized  is excessively small, it seems reasonable to fix it to zero.</p>
-<div class="sourceCode" id="cb60"><html><body><pre class="r"><span class="no">m.Z.mkin.5a</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../../reference/mkinfit.html">mkinfit</a></span>(<span class="no">Z.mkin.5</span>, <span class="no">FOCUS_2006_Z_mkin</span>,
+<div class="sourceCode" id="cb62"><html><body><pre class="r"><span class="no">m.Z.mkin.5a</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../../reference/mkinfit.html">mkinfit</a></span>(<span class="no">Z.mkin.5</span>, <span class="no">FOCUS_2006_Z_mkin</span>,
                        <span class="kw">parms.ini</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="no">m.Z.mkin.5</span>$<span class="no">bparms.ode</span>[<span class="fl">1</span>:<span class="fl">7</span>],
                                      <span class="kw">k_Z3_bound_free</span> <span class="kw">=</span> <span class="fl">0</span>),
                        <span class="kw">fixed_parms</span> <span class="kw">=</span> <span class="st">"k_Z3_bound_free"</span>,
                        <span class="kw">quiet</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
 <pre><code>## Warning in mkinfit(Z.mkin.5, FOCUS_2006_Z_mkin, parms.ini = c(m.Z.mkin.
 ## 5$bparms.ode[1:7], : Observations with value of zero were removed from the data</code></pre>
-<div class="sourceCode" id="cb62"><html><body><pre class="r"><span class="fu"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(<span class="no">m.Z.mkin.5a</span>)</pre></body></html></div>
+<pre><code>## Warning in mkinfit(Z.mkin.5, FOCUS_2006_Z_mkin, parms.ini = c(m.Z.mkin.
+## 5$bparms.ode[1:7], : Shapiro-Wilk test for standardized residuals: p = 0.00785</code></pre>
+<div class="sourceCode" id="cb65"><html><body><pre class="r"><span class="fu"><a href="../../reference/plot.mkinfit.html">plot_sep</a></span>(<span class="no">m.Z.mkin.5a</span>)</pre></body></html></div>
 <p><img src="FOCUS_Z_files/figure-html/FOCUS_2006_Z_fits_11a-1.png" width="700"></p>
 <p>As expected, the residual plots for Z0 and Z3 are more random than in the case of the all SFO model for which they were shown above. In conclusion, the model  is proposed as the best-fit model for the dataset from Appendix 7 of the FOCUS report.</p>
 <p>A graphical representation of the confidence intervals can finally be obtained.</p>
-<div class="sourceCode" id="cb63"><html><body><pre class="r"><span class="fu"><a href="../../reference/mkinparplot.html">mkinparplot</a></span>(<span class="no">m.Z.mkin.5a</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb66"><html><body><pre class="r"><span class="fu"><a href="../../reference/mkinparplot.html">mkinparplot</a></span>(<span class="no">m.Z.mkin.5a</span>)</pre></body></html></div>
 <p><img src="FOCUS_Z_files/figure-html/FOCUS_2006_Z_fits_11b-1.png" width="700"></p>
 <p>The endpoints obtained with this model are</p>
-<div class="sourceCode" id="cb64"><html><body><pre class="r"><span class="fu"><a href="../../reference/endpoints.html">endpoints</a></span>(<span class="no">m.Z.mkin.5a</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb67"><html><body><pre class="r"><span class="fu"><a href="../../reference/endpoints.html">endpoints</a></span>(<span class="no">m.Z.mkin.5a</span>)</pre></body></html></div>
 <pre><code>## $ff
 ## Z0_free   Z2_Z3 Z2_sink Z3_free 
 ## 1.00000 0.53656 0.46344 1.00000 
 ## 
 ## $SFORB
 ##     Z0_b1     Z0_b2     Z3_b1     Z3_b2 
-## 2.4471337 0.0075125 0.0800071 0.0000000 
+## 2.4471358 0.0075126 0.0800073 0.0000000 
 ## 
 ## $distimes
-##      DT50   DT90 DT50_Z0_b1 DT50_Z0_b2 DT50_Z3_b1 DT50_Z3_b2
-## Z0 0.3043 1.1848    0.28325     92.266         NA         NA
-## Z1 1.5148 5.0320         NA         NA         NA         NA
-## Z2 1.6414 5.4526         NA         NA         NA         NA
-## Z3     NA     NA         NA         NA     8.6636        Inf</code></pre>
+##      DT50   DT90 DT50back DT50_Z0_b1 DT50_Z0_b2 DT50_Z3_b1 DT50_Z3_b2
+## Z0 0.3043 1.1848  0.35666    0.28325     92.265         NA         NA
+## Z1 1.5148 5.0320       NA         NA         NA         NA         NA
+## Z2 1.6414 5.4526       NA         NA         NA         NA         NA
+## Z3     NA     NA       NA         NA         NA     8.6636        Inf</code></pre>
 <p>It is clear the degradation rate of Z3 towards the end of the experiment is very low as DT50_Z3_b2 (the second Eigenvalue of the system of two differential equations representing the SFORB system for Z3, corresponding to the slower rate constant of the DFOP model) is reported to be infinity. However, this appears to be a feature of the data.</p>
 </div>
 <div id="references" class="section level1">

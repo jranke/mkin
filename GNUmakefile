@@ -80,7 +80,7 @@ test: install
 
 devtest: install
 	"$(RDEVBIN)/Rscript" -e 'devtools::test()' 2>&1 | tee test_dev.log
-	sed -i -e "s/\r.*\r//" test.log
+	sed -i -e "s/\r.*\r//" test_dev.log
 
 slowtests: install
 	NOT_CRAN=true "$(RBIN)/Rscript" -e 'library(mkin); testthat::test_dir("tests/testthat/slow")' 2>&1 | tee tests_slow.log

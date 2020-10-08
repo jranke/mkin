@@ -11,7 +11,7 @@
 
 <meta name="author" content="Johannes Ranke" />
 
-<meta name="date" content="2020-05-26" />
+<meta name="date" content="2020-10-08" />
 
 <title>Introduction to mkin</title>
 
@@ -1583,12 +1583,12 @@ div.tocify {
 
 <h1 class="title toc-ignore">Introduction to mkin</h1>
 <h4 class="author">Johannes Ranke</h4>
-<h4 class="date">2020-05-26</h4>
+<h4 class="date">2020-10-08</h4>
 
 </div>
 
 
-<p><a href="http://www.jrwb.de">Wissenschaftlicher Berater, Kronacher Str. 12, 79639 Grenzach-Wyhlen, Germany</a><br /> <a href="http://chem.uft.uni-bremen.de/ranke">Privatdozent at the University of Bremen</a></p>
+<p><a href="https://www.jrwb.de">Wissenschaftlicher Berater, Kronacher Str. 12, 79639 Grenzach-Wyhlen, Germany</a><br /> <a href="http://chem.uft.uni-bremen.de/ranke/">Privatdozent at the University of Bremen</a></p>
 <div id="abstract" class="section level1">
 <h1>Abstract</h1>
 <p>In the regulatory evaluation of chemical substances like plant protection products (pesticides), biocides and other chemicals, degradation data play an important role. For the evaluation of pesticide degradation experiments, detailed guidance has been developed, based on nonlinear optimisation. The <code>R</code> add-on package <code>mkin</code> implements fitting some of the models recommended in this guidance from within R and calculates some statistical measures for data series within one or more compartments, for parent and metabolites.</p>
@@ -1627,7 +1627,7 @@ plot_sep(f_SFO_SFO_SFO, lpos = c(&quot;topright&quot;, &quot;bottomright&quot;, 
 <p>Many approaches are possible regarding the evaluation of chemical degradation data.</p>
 <p>The <code>mkin</code> package <span class="citation">(Ranke 2019)</span> implements the approach recommended in the kinetics report provided by the FOrum for Co-ordination of pesticide fate models and their USe <span class="citation">(FOCUS Work Group on Degradation Kinetics 2006, 2014)</span> for simple decline data series, data series with transformation products, commonly termed metabolites, and for data series for more than one compartment. It is also possible to include back reactions, so equilibrium reactions and equilibrium partitioning can be specified, although this oftentimes leads to an overparameterisation of the model.</p>
 <p>When the first <code>mkin</code> code was published in 2010, the most commonly used tools for fitting more complex kinetic degradation models to experimental data were KinGUI <span class="citation">(Schäfer et al. 2007)</span>, a MATLAB based tool with a graphical user interface that was specifically tailored to the task and included some output as proposed by the FOCUS Kinetics Workgroup, and ModelMaker, a general purpose compartment based tool providing infrastructure for fitting dynamic simulation models based on differential equations to data.</p>
-<p>The code was first uploaded to the BerliOS platform. When this was taken down, the version control history was imported into the R-Forge site (see <em>e.g.</em> <a href="http://cgit.jrwb.de/mkin/commit/?id=30cbb4092f6d2d3beff5800603374a0d009ad770">the initial commit on 11 May 2010</a>), where the code is still occasionally updated.</p>
+<p>The code was first uploaded to the BerliOS platform. When this was taken down, the version control history was imported into the R-Forge site (see <em>e.g.</em> <a href="https://cgit.jrwb.de/mkin/commit/?id=30cbb4092f6d2d3beff5800603374a0d009ad770">the initial commit on 11 May 2010</a>), where the code is still occasionally updated.</p>
 <p>At that time, the R package <code>FME</code> (Flexible Modelling Environment) <span class="citation">(Soetaert and Petzoldt 2010)</span> was already available, and provided a good basis for developing a package specifically tailored to the task. The remaining challenge was to make it as easy as possible for the users (including the author of this vignette) to specify the system of differential equations and to include the output requested by the FOCUS guidance, such as the relative standard deviation that has to be assumed for the residuals, such that the <span class="math inline">\(\chi^2\)</span> goodness-of-fit test as defined by the FOCUS kinetics workgroup would pass using an significance level <span class="math inline">\(\alpha\)</span> of 0.05. This relative error, expressed as a percentage, is often termed <span class="math inline">\(\chi^2\)</span> error level or similar.</p>
 <p>Also, <code>mkin</code> introduced using analytical solutions for parent only kinetics for improved optimization speed. Later, Eigenvalue based solutions were introduced to <code>mkin</code> for the case of linear differential equations (<em>i.e.</em> where the FOMC or DFOP models were not used for the parent compound), greatly improving the optimization speed for these cases. This, however, has become somehow obsolete, as the use of compiled code described below gives even smaller execution times.</p>
 <p>The possibility to specify back-reactions and a biphasic model (SFORB) for metabolites were present in <code>mkin</code> from the very beginning.</p>
@@ -1636,7 +1636,7 @@ plot_sep(f_SFO_SFO_SFO, lpos = c(&quot;topright&quot;, &quot;bottomright&quot;, 
 <p>Soon after the publication of <code>mkin</code>, two derived tools were published, namely KinGUII (available from Bayer Crop Science) and CAKE (commissioned to Tessella by Syngenta), which added a graphical user interface (GUI), and added fitting by iteratively reweighted least squares (IRLS) and characterisation of likely parameter distributions by Markov Chain Monte Carlo (MCMC) sampling.</p>
 <p>CAKE focuses on a smooth use experience, sacrificing some flexibility in the model definition, originally allowing only two primary metabolites in parallel. The current version 3.3 of CAKE release in March 2016 uses a basic scheme for up to six metabolites in a flexible arrangement, but does not support back-reactions (non-instantaneous equilibria) or biphasic kinetics for metabolites.</p>
 <p>KinGUI offers an even more flexible widget for specifying complex kinetic models. Back-reactions (non-instantaneous equilibria) were supported early on, but until 2014, only simple first-order models could be specified for transformation products. Starting with KinGUII version 2.1, biphasic modelling of metabolites was also available in KinGUII.</p>
-<p>A further graphical user interface (GUI) that has recently been brought to a decent degree of maturity is the browser based GUI named <code>gmkin</code>. Please see its <a href="https://pkgdown.jrwb.de/gmkin">documentation page</a> and <a href="https://pkgdown.jrwb.de/gmkin/articles/gmkin_manual.html">manual</a> for further information.</p>
+<p>A further graphical user interface (GUI) that has recently been brought to a decent degree of maturity is the browser based GUI named <code>gmkin</code>. Please see its <a href="https://pkgdown.jrwb.de/gmkin/">documentation page</a> and <a href="https://pkgdown.jrwb.de/gmkin/articles/gmkin_manual.html">manual</a> for further information.</p>
 <p>A comparison of scope, usability and numerical results obtained with these tools has been recently been published by <span class="citation">Ranke, Wöltjen, and Meinecke (2018)</span>.</p>
 </div>
 <div id="recent-developments" class="section level2">
@@ -1697,7 +1697,7 @@ plot_sep(f_SFO_SFO_SFO, lpos = c(&quot;topright&quot;, &quot;bottomright&quot;, 
 <p>Schäfer, D., B. Mikolasch, P. Rainbird, and B. Harvey. 2007. “KinGUI: A New Kinetic Software Tool for Evaluations According to FOCUS Degradation Kinetics.” In <em>Proceedings of the Xiii Symposium Pesticide Chemistry</em>, edited by Del Re A. A. M., Capri E., Fragoulis G., and Trevisan M., 916–23. Piacenza.</p>
 </div>
 <div id="ref-soetaert2010">
-<p>Soetaert, Karline, and Thomas Petzoldt. 2010. “Inverse Modelling, Sensitivity and Monte Carlo Analysis in R Using Package FME.” <em>Journal of Statistical Software</em> 33 (3): 1–28. <a href="http://www.jstatsoft.org/v33/i03/" class="uri">http://www.jstatsoft.org/v33/i03/</a>.</p>
+<p>Soetaert, Karline, and Thomas Petzoldt. 2010. “Inverse Modelling, Sensitivity and Monte Carlo Analysis in R Using Package FME.” <em>Journal of Statistical Software</em> 33 (3): 1–28. <a href="https://www.jstatsoft.org/v33/i03/" class="uri">https://www.jstatsoft.org/v33/i03/</a>.</p>
 </div>
 </div>
 </div>
