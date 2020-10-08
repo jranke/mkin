@@ -62,6 +62,9 @@ quickinstall: build-no-vignettes
 check: roxygen build
 	_R_CHECK_CRAN_INCOMING_REMOTE_=false "$(RBIN)/R" CMD check --as-cran --no-tests $(TGZ) 2>&1 | tee check.log
 
+devcheck: roxygen build
+	_R_CHECK_CRAN_INCOMING_REMOTE_=false "$(RDEVBIN)/R" CMD check --as-cran --no-tests $(TGZ) 2>&1 | tee check_dev.log
+
 quickcheck: roxygen build-no-vignettes
 	mv $(TGZVNR) $(TGZ)
 	"$(RBIN)/R" CMD check --no-tests --no-build-vignettes --no-vignettes $(TGZ)
