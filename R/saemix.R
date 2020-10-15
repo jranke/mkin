@@ -35,7 +35,7 @@
 #' }
 #' # Synthetic data with two-component error
 #' sampling_times = c(0, 1, 3, 7, 14, 28, 60, 90, 120)
-#' dt50_sfo_in <- c(800, 900, 1000, 1111.11, 1250)
+#' dt50_sfo_in <- c(80, 90, 100, 111.111, 125)
 #' k_in <- log(2) / dt50_sfo_in
 #'
 #' SFO <- mkinmod(parent = mkinsub("SFO"))
@@ -53,6 +53,7 @@
 #'  })
 #' \dontrun{
 #' f_mmkin_syn <- mmkin("SFO", ds_sfo_syn, error_model = "tc", quiet = TRUE)
+#' # plot(f_mmkin_syn)
 #' m_saemix_tc <- saemix_model(f_mmkin_syn, cores = 1)
 #' d_saemix_tc <- saemix_data(f_mmkin_syn)
 #' f_saemix_tc <- saemix(m_saemix_tc, d_saemix_tc, saemix_options)
