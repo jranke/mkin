@@ -69,10 +69,11 @@ ds_sfo_syn <- lapply(ds_sfo_mean, function(ds) {
   add_err(ds, sdfunc = function(value) sqrt(1^2 + value^2 * 0.07^2),
      n = 1)[[1]]
  })
+\dontrun{
 f_mmkin_syn <- mmkin("SFO", ds_sfo_syn, error_model = "tc", quiet = TRUE)
 m_saemix_tc <- saemix_model(f_mmkin_syn, cores = 1)
 d_saemix_tc <- saemix_data(f_mmkin_syn)
 f_saemix_tc <- saemix(m_saemix_tc, d_saemix_tc, saemix_options)
 plot(f_saemix_tc, plot.type = "convergence")
-
+}
 }
