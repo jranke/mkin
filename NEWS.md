@@ -1,4 +1,8 @@
-# mkin 0.9.50.3
+# mkin 0.9.50.4 (unreleased)
+
+- 'saemix_model', 'saemix_data': Helper functions to fit nonlinear mixed-effects models for mmkin row objects using the saemix package
+
+# mkin 0.9.50.3 (2020-10-08)
 
 - 'parms': Add a method for mmkin objects
 
