@@ -78,7 +78,7 @@ advantage that the SFORB model can also be used for metabolites." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.9.50.3</span>
+        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.9.50.4</span>
       </span>
     </div>
 
@@ -126,7 +126,7 @@ advantage that the SFORB model can also be used for metabolites." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/jranke/mkin/">
+  <a href="https://github.com/jranke/mkin/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -146,7 +146,7 @@ advantage that the SFORB model can also be used for metabolites." />
     <div class="page-header">
     <h1>Function to calculate endpoints for further use from kinetic models fitted
 with mkinfit</h1>
-    <small class="dont-index">Source: <a href='http://github.com/jranke/mkin/blob/master/R/endpoints.R'><code>R/endpoints.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/jranke/mkin/blob/master/R/endpoints.R'><code>R/endpoints.R</code></a></small>
     <div class="hidden name"><code>endpoints.Rd</code></div>
     </div>
 
@@ -158,7 +158,7 @@ are equivalent to the rate constants of the DFOP model, but with the
 advantage that the SFORB model can also be used for metabolites.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>endpoints</span>(<span class='no'>fit</span>)</pre>
+    <pre class="usage"><span class='fu'>endpoints</span><span class='op'>(</span><span class='va'>fit</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -179,20 +179,26 @@ of these SFORB models, equivalent to DFOP rate constants</p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
     <p>The function is used internally by <code><a href='summary.mkinfit.html'>summary.mkinfit</a></code>.</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Johannes Ranke</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-  <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='st'>"FOMC"</span>, <span class='no'>FOCUS_2006_C</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-  <span class='fu'>endpoints</span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; $distimes
+  <span class='va'>fit</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='st'>"FOMC"</span>, <span class='va'>FOCUS_2006_C</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+  <span class='fu'>endpoints</span><span class='op'>(</span><span class='va'>fit</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $distimes
 #&gt;            DT50    DT90 DT50back
 #&gt; parent 1.785233 15.1479 4.559973
 #&gt; </div><div class='input'>  <span class='co'># \dontrun{</span>
-    <span class='no'>fit_2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='st'>"DFOP"</span>, <span class='no'>FOCUS_2006_C</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-    <span class='fu'>endpoints</span>(<span class='no'>fit_2</span>)</div><div class='output co'>#&gt; $distimes
+    <span class='va'>fit_2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='st'>"DFOP"</span>, <span class='va'>FOCUS_2006_C</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+    <span class='fu'>endpoints</span><span class='op'>(</span><span class='va'>fit_2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $distimes
 #&gt;            DT50     DT90 DT50back  DT50_k1  DT50_k2
 #&gt; parent 1.886925 21.25106 6.397207 1.508293 38.83438
-#&gt; </div><div class='input'>    <span class='no'>fit_3</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='st'>"SFORB"</span>, <span class='no'>FOCUS_2006_C</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-    <span class='fu'>endpoints</span>(<span class='no'>fit_3</span>)</div><div class='output co'>#&gt; $ff
+#&gt; </div><div class='input'>    <span class='va'>fit_3</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='st'>"SFORB"</span>, <span class='va'>FOCUS_2006_C</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+    <span class='fu'>endpoints</span><span class='op'>(</span><span class='va'>fit_3</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $ff
 #&gt; parent_free 
 #&gt;           1 
 #&gt; 
@@ -203,7 +209,7 @@ of these SFORB models, equivalent to DFOP rate constants</p>
 #&gt; $distimes
 #&gt;            DT50     DT90 DT50back DT50_parent_b1 DT50_parent_b2
 #&gt; parent 1.886925 21.25106 6.397208       1.508293       38.83438
-#&gt; </div><div class='input'>  # }
+#&gt; </div><div class='input'>  <span class='co'># }</span>
 
 </div></pre>
   </div>
@@ -221,7 +227,7 @@ of these SFORB models, equivalent to DFOP rate constants</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
