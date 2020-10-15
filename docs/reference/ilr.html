@@ -73,7 +73,7 @@ transformations." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50.3</span>
       </span>
     </div>
 
@@ -110,6 +110,9 @@ transformations." />
     <li>
       <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
+    <li>
+      <a href="../articles/web_only/benchmarks.html">Some benchmark timings</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -118,7 +121,7 @@ transformations." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/jranke/mkin/">
+  <a href="https://github.com/jranke/mkin/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -137,7 +140,7 @@ transformations." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Function to perform isometric log-ratio transformation</h1>
-    <small class="dont-index">Source: <a href='http://github.com/jranke/mkin/blob/master/R/ilr.R'><code>R/ilr.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/jranke/mkin/blob/master/R/ilr.R'><code>R/ilr.R</code></a></small>
     <div class="hidden name"><code>ilr.Rd</code></div>
     </div>
 
@@ -146,9 +149,9 @@ transformations." />
 transformations.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ilr</span>(<span class='no'>x</span>)
+    <pre class="usage"><span class='fu'>ilr</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
 
-<span class='fu'>invilr</span>(<span class='no'>x</span>)</pre>
+<span class='fu'>invilr</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -173,19 +176,33 @@ Compositional Data Using Robust Methods. Math Geosci 40 233-248</p>
 
     <div class='dont-index'><p>Another implementation can be found in R package
 <code>robCompositions</code>.</p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>René Lehmann and Johannes Ranke</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='co'># Order matters</span>
-<span class='fu'>ilr</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.1</span>, <span class='fl'>1</span>, <span class='fl'>10</span>))</div><div class='output co'>#&gt; [1] -1.628174 -2.820079</div><div class='input'><span class='fu'>ilr</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>10</span>, <span class='fl'>1</span>, <span class='fl'>0.1</span>))</div><div class='output co'>#&gt; [1] 1.628174 2.820079</div><div class='input'><span class='co'># Equal entries give ilr transformations with zeros as elements</span>
-<span class='fu'>ilr</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>3</span>, <span class='fl'>3</span>, <span class='fl'>3</span>))</div><div class='output co'>#&gt; [1] 0 0</div><div class='input'><span class='co'># Almost equal entries give small numbers</span>
-<span class='fu'>ilr</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.3</span>, <span class='fl'>0.4</span>, <span class='fl'>0.3</span>))</div><div class='output co'>#&gt; [1] -0.2034219  0.1174457</div><div class='input'><span class='co'># Only the ratio between the numbers counts, not their sum</span>
-<span class='fu'>invilr</span>(<span class='fu'>ilr</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.7</span>, <span class='fl'>0.29</span>, <span class='fl'>0.01</span>)))</div><div class='output co'>#&gt; [1] 0.70 0.29 0.01</div><div class='input'><span class='fu'>invilr</span>(<span class='fu'>ilr</span>(<span class='fl'>2.1</span> * <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.7</span>, <span class='fl'>0.29</span>, <span class='fl'>0.01</span>)))</div><div class='output co'>#&gt; [1] 0.70 0.29 0.01</div><div class='input'><span class='co'># Inverse transformation of larger numbers gives unequal elements</span>
-<span class='fu'>invilr</span>(-<span class='fl'>10</span>)</div><div class='output co'>#&gt; [1] 7.213536e-07 9.999993e-01</div><div class='input'><span class='fu'>invilr</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(-<span class='fl'>10</span>, <span class='fl'>0</span>))</div><div class='output co'>#&gt; [1] 7.207415e-07 9.991507e-01 8.486044e-04</div><div class='input'><span class='co'># The sum of the elements of the inverse ilr is 1</span>
-<span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='fu'>invilr</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(-<span class='fl'>10</span>, <span class='fl'>0</span>)))</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='co'># This is why we do not need all elements of the inverse transformation to go back:</span>
-<span class='no'>a</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.1</span>, <span class='fl'>0.3</span>, <span class='fl'>0.5</span>)
-<span class='no'>b</span> <span class='kw'>&lt;-</span> <span class='fu'>invilr</span>(<span class='no'>a</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span>(<span class='no'>b</span>) <span class='co'># Four elements</span></div><div class='output co'>#&gt; [1] 4</div><div class='input'><span class='fu'>ilr</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>b</span>[<span class='fl'>1</span>:<span class='fl'>3</span>], <span class='fl'>1</span> - <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='no'>b</span>[<span class='fl'>1</span>:<span class='fl'>3</span>]))) <span class='co'># Gives c(0.1, 0.3, 0.5)</span></div><div class='output co'>#&gt; [1] 0.1 0.3 0.5</div><div class='input'>
+<span class='fu'>ilr</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.1</span>, <span class='fl'>1</span>, <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] -1.628174 -2.820079</div><div class='input'><span class='fu'>ilr</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>1</span>, <span class='fl'>0.1</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 1.628174 2.820079</div><div class='input'><span class='co'># Equal entries give ilr transformations with zeros as elements</span>
+<span class='fu'>ilr</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>3</span>, <span class='fl'>3</span>, <span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0 0</div><div class='input'><span class='co'># Almost equal entries give small numbers</span>
+<span class='fu'>ilr</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.3</span>, <span class='fl'>0.4</span>, <span class='fl'>0.3</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] -0.2034219  0.1174457</div><div class='input'><span class='co'># Only the ratio between the numbers counts, not their sum</span>
+<span class='fu'>invilr</span><span class='op'>(</span><span class='fu'>ilr</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.7</span>, <span class='fl'>0.29</span>, <span class='fl'>0.01</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.70 0.29 0.01</div><div class='input'><span class='fu'>invilr</span><span class='op'>(</span><span class='fu'>ilr</span><span class='op'>(</span><span class='fl'>2.1</span> <span class='op'>*</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.7</span>, <span class='fl'>0.29</span>, <span class='fl'>0.01</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.70 0.29 0.01</div><div class='input'><span class='co'># Inverse transformation of larger numbers gives unequal elements</span>
+<span class='fu'>invilr</span><span class='op'>(</span><span class='op'>-</span><span class='fl'>10</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 7.213536e-07 9.999993e-01</div><div class='input'><span class='fu'>invilr</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>10</span>, <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 7.207415e-07 9.991507e-01 8.486044e-04</div><div class='input'><span class='co'># The sum of the elements of the inverse ilr is 1</span>
+<span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='fu'>invilr</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>10</span>, <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='co'># This is why we do not need all elements of the inverse transformation to go back:</span>
+<span class='va'>a</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.1</span>, <span class='fl'>0.3</span>, <span class='fl'>0.5</span><span class='op'>)</span>
+<span class='va'>b</span> <span class='op'>&lt;-</span> <span class='fu'>invilr</span><span class='op'>(</span><span class='va'>a</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>b</span><span class='op'>)</span> <span class='co'># Four elements</span>
+</div><div class='output co'>#&gt; [1] 4</div><div class='input'><span class='fu'>ilr</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>b</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>]</span>, <span class='fl'>1</span> <span class='op'>-</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>b</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># Gives c(0.1, 0.3, 0.5)</span>
+</div><div class='output co'>#&gt; [1] 0.1 0.3 0.5</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -202,7 +219,7 @@ Compositional Data Using Robust Methods. Math Geosci 40 233-248</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

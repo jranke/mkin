@@ -76,7 +76,7 @@ order of increasing model complexity, i.e. SFO, then IORE, and finally DFOP." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50.3</span>
       </span>
     </div>
 
@@ -113,6 +113,9 @@ order of increasing model complexity, i.e. SFO, then IORE, and finally DFOP." />
     <li>
       <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
+    <li>
+      <a href="../articles/web_only/benchmarks.html">Some benchmark timings</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -121,7 +124,7 @@ order of increasing model complexity, i.e. SFO, then IORE, and finally DFOP." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/jranke/mkin/">
+  <a href="https://github.com/jranke/mkin/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -140,7 +143,7 @@ order of increasing model complexity, i.e. SFO, then IORE, and finally DFOP." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Evaluate parent kinetics using the NAFTA guidance</h1>
-    <small class="dont-index">Source: <a href='http://github.com/jranke/mkin/blob/master/R/nafta.R'><code>R/nafta.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/jranke/mkin/blob/master/R/nafta.R'><code>R/nafta.R</code></a></small>
     <div class="hidden name"><code>nafta.Rd</code></div>
     </div>
 
@@ -152,10 +155,10 @@ and plotting.</p>
 order of increasing model complexity, i.e. SFO, then IORE, and finally DFOP.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>nafta</span>(<span class='no'>ds</span>, <span class='kw'>title</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>nafta</span><span class='op'>(</span><span class='va'>ds</span>, title <span class='op'>=</span> <span class='cn'>NA</span>, quiet <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for nafta</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>x</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='no'>...</span>)</pre>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>x</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span>, digits <span class='op'>=</span> <span class='fl'>3</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -208,10 +211,15 @@ Degradation
 <code><a href='mmkin.html'>mmkin</a></code> object containing the fits of the three models. The
 list element named "title" contains the title of the dataset used. The
 list element "data" contains the dataset used in the fits.</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Johannes Ranke</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-  <span class='no'>nafta_evaluation</span> <span class='kw'>&lt;-</span> <span class='fu'>nafta</span>(<span class='no'>NAFTA_SOP_Appendix_D</span>, <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>)</div><div class='output co'>#&gt; <span class='message'>The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</span></div><div class='output co'>#&gt; <span class='message'>The representative half-life of the IORE model is longer than the one corresponding</span></div><div class='output co'>#&gt; <span class='message'>to the terminal degradation rate found with the DFOP model.</span></div><div class='output co'>#&gt; <span class='message'>The representative half-life obtained from the DFOP model may be used</span></div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>nafta_evaluation</span>)</div><div class='output co'>#&gt; Sums of squares:
+  <span class='va'>nafta_evaluation</span> <span class='op'>&lt;-</span> <span class='fu'>nafta</span><span class='op'>(</span><span class='va'>NAFTA_SOP_Appendix_D</span>, cores <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Shapiro-Wilk test for standardized residuals: p =  0.00192</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Shapiro-Wilk test for standardized residuals: p =  0.00258</span></div><div class='output co'>#&gt; <span class='message'>The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</span></div><div class='output co'>#&gt; <span class='message'>The representative half-life of the IORE model is longer than the one corresponding</span></div><div class='output co'>#&gt; <span class='message'>to the terminal degradation rate found with the DFOP model.</span></div><div class='output co'>#&gt; <span class='message'>The representative half-life obtained from the DFOP model may be used</span></div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>nafta_evaluation</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Sums of squares:
 #&gt;       SFO      IORE      DFOP 
 #&gt; 1378.6832  615.7730  517.8836 
 #&gt; 
@@ -220,17 +228,17 @@ list element "data" contains the dataset used in the fits.</p>
 #&gt; 
 #&gt; Parameters:
 #&gt; $SFO
-#&gt;               Estimate   Pr(&gt;t)    Lower   Upper
-#&gt; parent_0       83.7558 1.80e-14 77.18268 90.3288
-#&gt; k_parent_sink   0.0017 7.43e-05  0.00112  0.0026
-#&gt; sigma           8.7518 1.22e-05  5.64278 11.8608
+#&gt;          Estimate   Pr(&gt;t)    Lower   Upper
+#&gt; parent_0  83.7558 1.80e-14 77.18268 90.3288
+#&gt; k_parent   0.0017 7.43e-05  0.00112  0.0026
+#&gt; sigma      8.7518 1.22e-05  5.64278 11.8608
 #&gt; 
 #&gt; $IORE
-#&gt;                     Estimate Pr(&gt;t)    Lower    Upper
-#&gt; parent_0            9.69e+01     NA 8.88e+01 1.05e+02
-#&gt; k__iore_parent_sink 8.40e-14     NA 1.79e-18 3.94e-09
-#&gt; N_parent            6.68e+00     NA 4.19e+00 9.17e+00
-#&gt; sigma               5.85e+00     NA 3.76e+00 7.94e+00
+#&gt;                Estimate Pr(&gt;t)    Lower    Upper
+#&gt; parent_0       9.69e+01     NA 8.88e+01 1.05e+02
+#&gt; k__iore_parent 8.40e-14     NA 1.79e-18 3.94e-09
+#&gt; N_parent       6.68e+00     NA 4.19e+00 9.17e+00
+#&gt; sigma          5.85e+00     NA 3.76e+00 7.94e+00
 #&gt; 
 #&gt; $DFOP
 #&gt;          Estimate   Pr(&gt;t)    Lower    Upper
@@ -248,7 +256,8 @@ list element "data" contains the dataset used in the fits.</p>
 #&gt; DFOP  429    2380      841
 #&gt; 
 #&gt; Representative half-life:
-#&gt; [1] 841.41</div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>nafta_evaluation</span>)</div><div class='img'><img src='nafta-1.png' alt='' width='700' height='433' /></div><div class='input'>
+#&gt; [1] 841.41</div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>nafta_evaluation</span><span class='op'>)</span>
+</div><div class='img'><img src='nafta-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -265,7 +274,7 @@ list element "data" contains the dataset used in the fits.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

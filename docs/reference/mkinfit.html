@@ -41,9 +41,11 @@
 
 <meta property="og:title" content="Fit a kinetic model to data with one or more state variables — mkinfit" />
 <meta property="og:description" content="This function maximises the likelihood of the observed data using the Port
-algorithm nlminb, and the specified initial or fixed
+algorithm stats::nlminb(), and the specified initial or fixed
 parameters and starting values.  In each step of the optimisation, the
-kinetic model is solved using the function mkinpredict. The
+kinetic model is solved using the function mkinpredict(), except
+if an analytical solution is implemented, in which case the model is solved
+using the degradation function in the mkinmod object. The
 parameters of the selected error model are fitted simultaneously with the
 degradation model parameters, as both of them are arguments of the
 likelihood function." />
@@ -78,7 +80,7 @@ likelihood function." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50.3</span>
       </span>
     </div>
 
@@ -115,6 +117,9 @@ likelihood function." />
     <li>
       <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
+    <li>
+      <a href="../articles/web_only/benchmarks.html">Some benchmark timings</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -123,7 +128,7 @@ likelihood function." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/jranke/mkin/">
+  <a href="https://github.com/jranke/mkin/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -142,53 +147,55 @@ likelihood function." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Fit a kinetic model to data with one or more state variables</h1>
-    <small class="dont-index">Source: <a href='http://github.com/jranke/mkin/blob/master/R/mkinfit.R'><code>R/mkinfit.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/jranke/mkin/blob/master/R/mkinfit.R'><code>R/mkinfit.R</code></a></small>
     <div class="hidden name"><code>mkinfit.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>This function maximises the likelihood of the observed data using the Port
-algorithm <code><a href='https://rdrr.io/r/stats/nlminb.html'>nlminb</a></code>, and the specified initial or fixed
+algorithm <code><a href='https://rdrr.io/r/stats/nlminb.html'>stats::nlminb()</a></code>, and the specified initial or fixed
 parameters and starting values.  In each step of the optimisation, the
-kinetic model is solved using the function <code><a href='mkinpredict.html'>mkinpredict</a></code>. The
+kinetic model is solved using the function <code><a href='mkinpredict.html'>mkinpredict()</a></code>, except
+if an analytical solution is implemented, in which case the model is solved
+using the degradation function in the <a href='mkinmod.html'>mkinmod</a> object. The
 parameters of the selected error model are fitted simultaneously with the
 degradation model parameters, as both of them are arguments of the
 likelihood function.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>mkinfit</span>(
-  <span class='no'>mkinmod</span>,
-  <span class='no'>observed</span>,
-  <span class='kw'>parms.ini</span> <span class='kw'>=</span> <span class='st'>"auto"</span>,
-  <span class='kw'>state.ini</span> <span class='kw'>=</span> <span class='st'>"auto"</span>,
-  <span class='kw'>err.ini</span> <span class='kw'>=</span> <span class='st'>"auto"</span>,
-  <span class='kw'>fixed_parms</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>fixed_initials</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>mkinmod</span>$<span class='no'>diffs</span>)[-<span class='fl'>1</span>],
-  <span class='kw'>from_max_mean</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"auto"</span>, <span class='st'>"analytical"</span>, <span class='st'>"eigen"</span>, <span class='st'>"deSolve"</span>),
-  <span class='kw'>method.ode</span> <span class='kw'>=</span> <span class='st'>"lsoda"</span>,
-  <span class='kw'>use_compiled</span> <span class='kw'>=</span> <span class='st'>"auto"</span>,
-  <span class='kw'>control</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>eval.max</span> <span class='kw'>=</span> <span class='fl'>300</span>, <span class='kw'>iter.max</span> <span class='kw'>=</span> <span class='fl'>200</span>),
-  <span class='kw'>transform_rates</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>transform_fractions</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>atol</span> <span class='kw'>=</span> <span class='fl'>1e-08</span>,
-  <span class='kw'>rtol</span> <span class='kw'>=</span> <span class='fl'>1e-10</span>,
-  <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"const"</span>, <span class='st'>"obs"</span>, <span class='st'>"tc"</span>),
-  <span class='kw'>error_model_algorithm</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"auto"</span>, <span class='st'>"d_3"</span>, <span class='st'>"direct"</span>, <span class='st'>"twostep"</span>, <span class='st'>"threestep"</span>,
-    <span class='st'>"fourstep"</span>, <span class='st'>"IRLS"</span>, <span class='st'>"OLS"</span>),
-  <span class='kw'>reweight.tol</span> <span class='kw'>=</span> <span class='fl'>1e-08</span>,
-  <span class='kw'>reweight.max.iter</span> <span class='kw'>=</span> <span class='fl'>10</span>,
-  <span class='kw'>trace_parms</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='no'>...</span>
-)</pre>
+    <pre class="usage"><span class='fu'>mkinfit</span><span class='op'>(</span>
+  <span class='va'>mkinmod</span>,
+  <span class='va'>observed</span>,
+  parms.ini <span class='op'>=</span> <span class='st'>"auto"</span>,
+  state.ini <span class='op'>=</span> <span class='st'>"auto"</span>,
+  err.ini <span class='op'>=</span> <span class='st'>"auto"</span>,
+  fixed_parms <span class='op'>=</span> <span class='cn'>NULL</span>,
+  fixed_initials <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>mkinmod</span><span class='op'>$</span><span class='va'>diffs</span><span class='op'>)</span><span class='op'>[</span><span class='op'>-</span><span class='fl'>1</span><span class='op'>]</span>,
+  from_max_mean <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  solution_type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"auto"</span>, <span class='st'>"analytical"</span>, <span class='st'>"eigen"</span>, <span class='st'>"deSolve"</span><span class='op'>)</span>,
+  method.ode <span class='op'>=</span> <span class='st'>"lsoda"</span>,
+  use_compiled <span class='op'>=</span> <span class='st'>"auto"</span>,
+  control <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>eval.max <span class='op'>=</span> <span class='fl'>300</span>, iter.max <span class='op'>=</span> <span class='fl'>200</span><span class='op'>)</span>,
+  transform_rates <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  transform_fractions <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  quiet <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  atol <span class='op'>=</span> <span class='fl'>1e-08</span>,
+  rtol <span class='op'>=</span> <span class='fl'>1e-10</span>,
+  error_model <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"const"</span>, <span class='st'>"obs"</span>, <span class='st'>"tc"</span><span class='op'>)</span>,
+  error_model_algorithm <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"auto"</span>, <span class='st'>"d_3"</span>, <span class='st'>"direct"</span>, <span class='st'>"twostep"</span>, <span class='st'>"threestep"</span>,
+    <span class='st'>"fourstep"</span>, <span class='st'>"IRLS"</span>, <span class='st'>"OLS"</span><span class='op'>)</span>,
+  reweight.tol <span class='op'>=</span> <span class='fl'>1e-08</span>,
+  reweight.max.iter <span class='op'>=</span> <span class='fl'>10</span>,
+  trace_parms <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>mkinmod</th>
-      <td><p>A list of class <code><a href='mkinmod.html'>mkinmod</a></code>, containing the kinetic
+      <td><p>A list of class <a href='mkinmod.html'>mkinmod</a>, containing the kinetic
 model to be fitted to the data, or one of the shorthand names ("SFO",
 "FOMC", "DFOP", "HS", "SFORB", "IORE"). If a shorthand name is given, a
 parent only degradation model is generated for the variable with the
@@ -224,7 +231,7 @@ given below.</p></td>
       <td><p>A named vector of initial values for the state variables of
 the model. In case the observed variables are represented by more than one
 model variable, the names will differ from the names of the observed
-variables (see <code>map</code> component of <code><a href='mkinmod.html'>mkinmod</a></code>). The default
+variables (see <code>map</code> component of <a href='mkinmod.html'>mkinmod</a>). The default
 is to set the initial value of the first model variable to the mean of the
 time zero values for the variable with the maximum observed value, and all
 others to 0.  If this variable has no time zero observations, its initial
@@ -263,30 +270,28 @@ observed mean value is the new time zero.</p></td>
       <td><p>If set to "eigen", the solution of the system of
 differential equations is based on the spectral decomposition of the
 coefficient matrix in cases that this is possible. If set to "deSolve", a
-numerical ode solver from package <code>deSolve</code> is used. If set to
-"analytical", an analytical solution of the model is used. This is only
-implemented for simple degradation experiments with only one state
-variable, i.e. with no metabolites. The default is "auto", which uses
-"analytical" if possible, otherwise "deSolve" if a compiler is present,
-and "eigen" if no compiler is present and the model can be expressed using
-eigenvalues and eigenvectors.  This argument is passed on to the helper
-function <code><a href='mkinpredict.html'>mkinpredict</a></code>.</p></td>
+numerical <a href='https://rdrr.io/pkg/deSolve/man/ode.html'>ode solver from package deSolve</a> is used. If
+set to "analytical", an analytical solution of the model is used. This is
+only implemented for relatively simple degradation models.  The default is
+"auto", which uses "analytical" if possible, otherwise "deSolve" if a
+compiler is present, and "eigen" if no compiler is present and the model
+can be expressed using eigenvalues and eigenvectors.</p></td>
     </tr>
     <tr>
       <th>method.ode</th>
-      <td><p>The solution method passed via <code><a href='mkinpredict.html'>mkinpredict</a></code>
-to <code>ode</code> in case the solution type is "deSolve". The default
+      <td><p>The solution method passed via <code><a href='mkinpredict.html'>mkinpredict()</a></code>
+to <code><a href='https://rdrr.io/pkg/deSolve/man/ode.html'>deSolve::ode()</a></code> in case the solution type is "deSolve". The default
 "lsoda" is performant, but sometimes fails to converge.</p></td>
     </tr>
     <tr>
       <th>use_compiled</th>
       <td><p>If set to <code>FALSE</code>, no compiled version of the
-<code><a href='mkinmod.html'>mkinmod</a></code> model is used in the calls to
-<code><a href='mkinpredict.html'>mkinpredict</a></code> even if a compiled version is present.</p></td>
+<a href='mkinmod.html'>mkinmod</a> model is used in the calls to <code><a href='mkinpredict.html'>mkinpredict()</a></code> even if a compiled
+version is present.</p></td>
     </tr>
     <tr>
       <th>control</th>
-      <td><p>A list of control arguments passed to <code><a href='https://rdrr.io/r/stats/nlminb.html'>nlminb</a></code>.</p></td>
+      <td><p>A list of control arguments passed to <code><a href='https://rdrr.io/r/stats/nlminb.html'>stats::nlminb()</a></code>.</p></td>
     </tr>
     <tr>
       <th>transform_rates</th>
@@ -306,7 +311,7 @@ fitting for better compliance with the assumption of normal distribution
 of the estimator. The default (TRUE) is to do transformations. If TRUE,
 the g parameter of the DFOP and HS models are also transformed, as they
 can also be seen as compositional data. The transformation used for these
-transformations is the <code><a href='ilr.html'>ilr</a></code> transformation.</p></td>
+transformations is the <code><a href='ilr.html'>ilr()</a></code> transformation.</p></td>
     </tr>
     <tr>
       <th>quiet</th>
@@ -315,13 +320,14 @@ log-likelihood after each improvement?</p></td>
     </tr>
     <tr>
       <th>atol</th>
-      <td><p>Absolute error tolerance, passed to <code>ode</code>. Default
-is 1e-8, lower than in <code>lsoda</code>.</p></td>
+      <td><p>Absolute error tolerance, passed to <code><a href='https://rdrr.io/pkg/deSolve/man/ode.html'>deSolve::ode()</a></code>. Default
+is 1e-8, which is lower than the default in the <code><a href='https://rdrr.io/pkg/deSolve/man/lsoda.html'>deSolve::lsoda()</a></code>
+function which is used per default.</p></td>
     </tr>
     <tr>
       <th>rtol</th>
-      <td><p>Absolute error tolerance, passed to <code>ode</code>. Default
-is 1e-10, much lower than in <code>lsoda</code>.</p></td>
+      <td><p>Absolute error tolerance, passed to <code><a href='https://rdrr.io/pkg/deSolve/man/ode.html'>deSolve::ode()</a></code>. Default
+is 1e-10, much lower than in <code><a href='https://rdrr.io/pkg/deSolve/man/lsoda.html'>deSolve::lsoda()</a></code>.</p></td>
     </tr>
     <tr>
       <th>error_model</th>
@@ -342,11 +348,9 @@ normal distribution as assumed by this method.</p></td>
 the error model.  If the error model is "const", unweighted nonlinear
 least squares fitting ("OLS") is selected. If the error model is "obs", or
 "tc", the "d_3" algorithm is selected.</p>
-<p>The algorithm "d_3" will directly minimize the negative log-likelihood and</p><ul>
-<li><p>independently - also use the three step algorithm described below. The
-fit with the higher likelihood is returned.</p></li>
-</ul>
-
+<p>The algorithm "d_3" will directly minimize the negative log-likelihood
+and independently also use the three step algorithm described below.
+The fit with the higher likelihood is returned.</p>
 <p>The algorithm "direct" will directly minimize the negative log-likelihood.</p>
 <p>The algorithm "twostep" will minimize the negative log-likelihood after an
 initial unweighted least squares optimisation step.</p>
@@ -381,14 +385,13 @@ the error model parameters in IRLS fits.</p></td>
     <tr>
       <th>...</th>
       <td><p>Further arguments that will be passed on to
-<code>deSolve</code>.</p></td>
+<code><a href='https://rdrr.io/pkg/deSolve/man/ode.html'>deSolve::ode()</a></code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list with "mkinfit" in the class attribute.  A summary can be
-obtained by <code><a href='summary.mkinfit.html'>summary.mkinfit</a></code>.</p>
+    <p>A list with "mkinfit" in the class attribute.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Per default, parameters in the kinetic models are internally transformed in
@@ -409,28 +412,31 @@ Degradation Data. <em>Environments</em> 6(12) 124
 <a href='https://doi.org/10.3390/environments6120124'>doi:10.3390/environments6120124</a>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Plotting methods <code><a href='plot.mkinfit.html'>plot.mkinfit</a></code> and
-<code><a href='mkinparplot.html'>mkinparplot</a></code>.</p>
+    <div class='dont-index'><p><a href='summary.mkinfit.html'>summary.mkinfit</a>, <a href='plot.mkinfit.html'>plot.mkinfit</a>, <a href='parms.html'>parms</a> and <a href='https://rdrr.io/pkg/lmtest/man/lrtest.html'>lrtest</a>.</p>
 <p>Comparisons of models fitted to the same data can be made using
 <code><a href='https://rdrr.io/r/stats/AIC.html'>AIC</a></code> by virtue of the method <code><a href='logLik.mkinfit.html'>logLik.mkinfit</a></code>.</p>
 <p>Fitting of several models to several datasets in a single call to
 <code><a href='mmkin.html'>mmkin</a></code>.</p></div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Johannes Ranke</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='co'># Use shorthand notation for parent only degradation</span>
-<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='st'>"FOMC"</span>, <span class='no'>FOCUS_2006_C</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.50.2 
-#&gt; R version used for fitting:       4.0.0 
-#&gt; Date of fit:     Wed May 27 07:03:45 2020 
-#&gt; Date of summary: Wed May 27 07:03:45 2020 
+<span class='va'>fit</span> <span class='op'>&lt;-</span> <span class='fu'>mkinfit</span><span class='op'>(</span><span class='st'>"FOMC"</span>, <span class='va'>FOCUS_2006_C</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>fit</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.50.3 
+#&gt; R version used for fitting:       4.0.3 
+#&gt; Date of fit:     Thu Oct 15 12:40:10 2020 
+#&gt; Date of summary: Thu Oct 15 12:40:10 2020 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent
 #&gt; 
 #&gt; Model predictions using solution type analytical 
 #&gt; 
-#&gt; Fitted using 222 model solutions performed in 0.043 s
+#&gt; Fitted using 222 model solutions performed in 0.045 s
 #&gt; 
 #&gt; Error model: Constant variance 
 #&gt; 
@@ -465,10 +471,10 @@ Degradation Data. <em>Environments</em> 6(12) 124
 #&gt; 
 #&gt; Parameter correlation:
 #&gt;             parent_0  log_alpha   log_beta     sigma
-#&gt; parent_0   1.000e+00 -1.565e-01 -3.142e-01 4.770e-08
-#&gt; log_alpha -1.565e-01  1.000e+00  9.564e-01 9.974e-08
-#&gt; log_beta  -3.142e-01  9.564e-01  1.000e+00 8.468e-08
-#&gt; sigma      4.770e-08  9.974e-08  8.468e-08 1.000e+00
+#&gt; parent_0   1.000e+00 -1.565e-01 -3.142e-01 4.758e-08
+#&gt; log_alpha -1.565e-01  1.000e+00  9.564e-01 1.007e-07
+#&gt; log_beta  -3.142e-01  9.564e-01  1.000e+00 8.568e-08
+#&gt; sigma      4.758e-08  1.007e-07  8.568e-08 1.000e+00
 #&gt; 
 #&gt; Backtransformed parameters:
 #&gt; Confidence intervals for internally transformed parameters are asymmetric.
@@ -501,426 +507,129 @@ Degradation Data. <em>Environments</em> 6(12) 124
 #&gt;    91   parent      3.9     1.441   2.4590
 #&gt;   119   parent      0.6     1.092  -0.4919</div><div class='input'>
 <span class='co'># One parent compound, one metabolite, both single first order.</span>
+<span class='co'># We remove zero values from FOCUS dataset D in order to avoid warnings</span>
+<span class='va'>FOCUS_D</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>FOCUS_2006_D</span>, <span class='va'>value</span> <span class='op'>!=</span> <span class='fl'>0</span><span class='op'>)</span>
 <span class='co'># Use mkinsub for convenience in model formulation. Pathway to sink included per default.</span>
-<span class='no'>SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(
-  <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>),
-  <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='co'># Fit the model to the FOCUS example dataset D using defaults</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>,
-                           <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"eigen"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)))</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   0.400   0.004   0.404 </div><div class='input'><span class='fu'><a href='parms.html'>parms</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt;       parent_0       k_parent           k_m1 f_parent_to_m1          sigma 
-#&gt;   99.598481046    0.098697740    0.005260651    0.514475962    3.125503875 </div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; $ff
+<span class='va'>SFO_SFO</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span><span class='op'>(</span>
+  parent <span class='op'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='st'>"m1"</span><span class='op'>)</span>,
+  m1 <span class='op'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span><span class='op'>(</span><span class='st'>"SFO"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
+<span class='co'># Fit the model quietly to the FOCUS example dataset D using defaults</span>
+<span class='va'>fit</span> <span class='op'>&lt;-</span> <span class='fu'>mkinfit</span><span class='op'>(</span><span class='va'>SFO_SFO</span>, <span class='va'>FOCUS_D</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Shapiro-Wilk test for standardized residuals: p =  0.0165</span></div><div class='input'><span class='co'># Since mkin 0.9.50.3, we get a warning about non-normality of residuals,</span>
+<span class='co'># so we try an alternative error model</span>
+<span class='va'>fit.tc</span> <span class='op'>&lt;-</span> <span class='fu'>mkinfit</span><span class='op'>(</span><span class='va'>SFO_SFO</span>, <span class='va'>FOCUS_D</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span>, error_model <span class='op'>=</span> <span class='st'>"tc"</span><span class='op'>)</span>
+<span class='co'># This avoids the warning, and the likelihood ratio test confirms it is preferable</span>
+<span class='fu'><a href='https://rdrr.io/pkg/lmtest/man/lrtest.html'>lrtest</a></span><span class='op'>(</span><span class='va'>fit.tc</span>, <span class='va'>fit</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Likelihood ratio test
+#&gt; 
+#&gt; Model 1: SFO_SFO with error model tc and fixed parameter(s) m1_0
+#&gt; Model 2: SFO_SFO with error model const and fixed parameter(s) m1_0
+#&gt;   #Df  LogLik Df  Chisq Pr(&gt;Chisq)    
+#&gt; 1   6 -64.983                         
+#&gt; 2   5 -97.224 -1 64.483  9.737e-16 ***
+#&gt; ---
+#&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</div><div class='input'><span class='co'># We can also allow for different variances of parent and metabolite as error model</span>
+<span class='va'>fit.obs</span> <span class='op'>&lt;-</span> <span class='fu'>mkinfit</span><span class='op'>(</span><span class='va'>SFO_SFO</span>, <span class='va'>FOCUS_D</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span>, error_model <span class='op'>=</span> <span class='st'>"obs"</span><span class='op'>)</span>
+<span class='co'># This also avoids the warning about non-normality, but the two-component error model</span>
+<span class='co'># has significantly higher likelihood</span>
+<span class='fu'><a href='https://rdrr.io/pkg/lmtest/man/lrtest.html'>lrtest</a></span><span class='op'>(</span><span class='va'>fit.obs</span>, <span class='va'>fit.tc</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Likelihood ratio test
+#&gt; 
+#&gt; Model 1: SFO_SFO with error model tc and fixed parameter(s) m1_0
+#&gt; Model 2: SFO_SFO with error model obs and fixed parameter(s) m1_0
+#&gt;   #Df  LogLik Df  Chisq Pr(&gt;Chisq)    
+#&gt; 1   6 -64.983                         
+#&gt; 2   6 -96.936  0 63.907  &lt; 2.2e-16 ***
+#&gt; ---
+#&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</div><div class='input'><span class='fu'><a href='parms.html'>parms</a></span><span class='op'>(</span><span class='va'>fit.tc</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;       parent_0       k_parent           k_m1 f_parent_to_m1      sigma_low 
+#&gt;   1.007343e+02   1.005562e-01   5.166712e-03   5.083933e-01   3.049891e-03 
+#&gt;       rsd_high 
+#&gt;   7.928117e-02 </div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span><span class='op'>(</span><span class='va'>fit.tc</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $ff
 #&gt;   parent_m1 parent_sink 
-#&gt;    0.514476    0.485524 
+#&gt;   0.5083933   0.4916067 
 #&gt; 
 #&gt; $distimes
-#&gt;              DT50      DT90
-#&gt; parent   7.022929  23.32966
-#&gt; m1     131.760724 437.69965
-#&gt; </div><div class='input'><span class='co'># \dontrun{</span>
-<span class='co'># deSolve is slower when no C compiler (gcc) was available during model generation</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span>(<span class='no'>fit.deSolve</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>,
-                           <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"deSolve"</span>)))</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='output co'>#&gt; <span class='message'>Ordinary least squares optimisation</span></div><div class='output co'>#&gt; Sum of squared residuals at call 1: 15156.12
-#&gt; Sum of squared residuals at call 2: 15156.12
-#&gt; Sum of squared residuals at call 6: 8243.645
-#&gt; Sum of squared residuals at call 12: 6290.712
-#&gt; Sum of squared residuals at call 13: 6290.683
-#&gt; Sum of squared residuals at call 15: 6290.452
-#&gt; Sum of squared residuals at call 18: 1700.749
-#&gt; Sum of squared residuals at call 20: 1700.611
-#&gt; Sum of squared residuals at call 24: 1190.923
-#&gt; Sum of squared residuals at call 26: 1190.922
-#&gt; Sum of squared residuals at call 29: 1017.417
-#&gt; Sum of squared residuals at call 31: 1017.417
-#&gt; Sum of squared residuals at call 33: 1017.416
-#&gt; Sum of squared residuals at call 34: 644.0472
-#&gt; Sum of squared residuals at call 36: 644.047
-#&gt; Sum of squared residuals at call 38: 644.047
-#&gt; Sum of squared residuals at call 39: 590.5025
-#&gt; Sum of squared residuals at call 41: 590.5022
-#&gt; Sum of squared residuals at call 43: 590.5016
-#&gt; Sum of squared residuals at call 44: 543.2196
-#&gt; Sum of squared residuals at call 45: 543.2193
-#&gt; Sum of squared residuals at call 46: 543.2192
-#&gt; Sum of squared residuals at call 50: 391.348
-#&gt; Sum of squared residuals at call 51: 391.3479
-#&gt; Sum of squared residuals at call 56: 386.479
-#&gt; Sum of squared residuals at call 58: 386.479
-#&gt; Sum of squared residuals at call 60: 386.4779
-#&gt; Sum of squared residuals at call 61: 384.0686
-#&gt; Sum of squared residuals at call 63: 384.0686
-#&gt; Sum of squared residuals at call 66: 382.7813
-#&gt; Sum of squared residuals at call 68: 382.7813
-#&gt; Sum of squared residuals at call 70: 382.7813
-#&gt; Sum of squared residuals at call 71: 378.9273
-#&gt; Sum of squared residuals at call 73: 378.9273
-#&gt; Sum of squared residuals at call 75: 378.9272
-#&gt; Sum of squared residuals at call 76: 377.4847
-#&gt; Sum of squared residuals at call 78: 377.4846
-#&gt; Sum of squared residuals at call 81: 375.9738
-#&gt; Sum of squared residuals at call 83: 375.9738
-#&gt; Sum of squared residuals at call 86: 375.3387
-#&gt; Sum of squared residuals at call 88: 375.3387
-#&gt; Sum of squared residuals at call 91: 374.5774
-#&gt; Sum of squared residuals at call 93: 374.5774
-#&gt; Sum of squared residuals at call 95: 374.5774
-#&gt; Sum of squared residuals at call 96: 373.5438
-#&gt; Sum of squared residuals at call 100: 373.5438
-#&gt; Sum of squared residuals at call 102: 373.265
-#&gt; Sum of squared residuals at call 104: 373.265
-#&gt; Sum of squared residuals at call 107: 372.6825
-#&gt; Sum of squared residuals at call 111: 372.6825
-#&gt; Sum of squared residuals at call 114: 372.6356
-#&gt; Sum of squared residuals at call 116: 372.6356
-#&gt; Sum of squared residuals at call 119: 372.6199
-#&gt; Sum of squared residuals at call 121: 372.6199
-#&gt; Sum of squared residuals at call 123: 372.6199
-#&gt; Sum of squared residuals at call 124: 372.5881
-#&gt; Sum of squared residuals at call 126: 372.5881
-#&gt; Sum of squared residuals at call 129: 372.5418
-#&gt; Sum of squared residuals at call 130: 372.4866
-#&gt; Sum of squared residuals at call 131: 372.2242
-#&gt; Sum of squared residuals at call 132: 371.5237
-#&gt; Sum of squared residuals at call 134: 371.5237
-#&gt; Sum of squared residuals at call 137: 371.292
-#&gt; Sum of squared residuals at call 139: 371.292
-#&gt; Sum of squared residuals at call 143: 371.2256
-#&gt; Sum of squared residuals at call 144: 371.2256
-#&gt; Sum of squared residuals at call 146: 371.2256
-#&gt; Sum of squared residuals at call 149: 371.2194
-#&gt; Sum of squared residuals at call 150: 371.2147
-#&gt; Sum of squared residuals at call 153: 371.2147
-#&gt; Sum of squared residuals at call 155: 371.2137
-#&gt; Sum of squared residuals at call 156: 371.2137
-#&gt; Sum of squared residuals at call 157: 371.2137
-#&gt; Sum of squared residuals at call 160: 371.2134
-#&gt; Sum of squared residuals at call 164: 371.2134
-#&gt; Sum of squared residuals at call 165: 371.2134
-#&gt; Sum of squared residuals at call 167: 371.2134
-#&gt; Negative log-likelihood at call 177: 97.22429</div><div class='output co'>#&gt; <span class='message'>Optimisation successfully terminated.</span></div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   0.360   0.000   0.361 </div><div class='input'><span class='fu'><a href='parms.html'>parms</a></span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt;       parent_0       k_parent           k_m1 f_parent_to_m1          sigma 
-#&gt;   99.598480300    0.098697739    0.005260651    0.514475968    3.125503874 </div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit.deSolve</span>)</div><div class='output co'>#&gt; $ff
-#&gt;   parent_m1 parent_sink 
-#&gt;    0.514476    0.485524 
-#&gt; 
-#&gt; $distimes
-#&gt;              DT50      DT90
-#&gt; parent   7.022929  23.32966
-#&gt; m1     131.760721 437.69964
-#&gt; </div><div class='input'><span class='co'># }</span>
-
-<span class='co'># Use stepwise fitting, using optimised parameters from parent only fit, FOMC</span>
+#&gt;             DT50      DT90
+#&gt; parent   6.89313  22.89848
+#&gt; m1     134.15635 445.65776
+#&gt; </div><div class='input'>
+<span class='co'># We can show a quick (only one replication) benchmark for this case, as we</span>
+<span class='co'># have several alternative solution methods for the model. We skip</span>
+<span class='co'># uncompiled deSolve, as it is so slow. More benchmarks are found in the</span>
+<span class='co'># benchmark vignette</span>
 <span class='co'># \dontrun{</span>
-<span class='no'>FOMC_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(
-  <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"FOMC"</span>, <span class='st'>"m1"</span>),
-  <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='co'># Fit the model to the FOCUS example dataset D using defaults</span>
-<span class='no'>fit.FOMC_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>FOMC_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='co'># Use starting parameters from parent only FOMC fit</span>
-<span class='no'>fit.FOMC</span> <span class='kw'>=</span> <span class='fu'>mkinfit</span>(<span class='st'>"FOMC"</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='no'>fit.FOMC_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>FOMC_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>parms.ini</span> <span class='kw'>=</span> <span class='no'>fit.FOMC</span>$<span class='no'>bparms.ode</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'>
-<span class='co'># Use stepwise fitting, using optimised parameters from parent only fit, SFORB</span>
-<span class='no'>SFORB_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(
-  <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFORB"</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"m1"</span>, <span class='kw'>sink</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>),
-  <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='co'># Fit the model to the FOCUS example dataset D using defaults</span>
-<span class='no'>fit.SFORB_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFORB_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='no'>fit.SFORB_SFO.deSolve</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFORB_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"deSolve"</span>,
-                                 <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='co'># Use starting parameters from parent only SFORB fit (not really needed in this case)</span>
-<span class='no'>fit.SFORB</span> <span class='kw'>=</span> <span class='fu'>mkinfit</span>(<span class='st'>"SFORB"</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='no'>fit.SFORB_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFORB_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>parms.ini</span> <span class='kw'>=</span> <span class='no'>fit.SFORB</span>$<span class='no'>bparms.ode</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Initial parameter(s) k_parent_free_sink not used in the model</span></div><div class='input'><span class='co'># }</span>
+<span class='kw'>if</span><span class='op'>(</span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>require</a></span><span class='op'>(</span><span class='va'><a href='http://rbenchmark.googlecode.com'>rbenchmark</a></span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
+  <span class='fu'><a href='https://rdrr.io/pkg/rbenchmark/man/benchmark.html'>benchmark</a></span><span class='op'>(</span>replications <span class='op'>=</span> <span class='fl'>1</span>, order <span class='op'>=</span> <span class='st'>"relative"</span>, columns <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"test"</span>, <span class='st'>"relative"</span>, <span class='st'>"elapsed"</span><span class='op'>)</span>,
+    deSolve_compiled <span class='op'>=</span> <span class='fu'>mkinfit</span><span class='op'>(</span><span class='va'>SFO_SFO</span>, <span class='va'>FOCUS_D</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span>, error_model <span class='op'>=</span> <span class='st'>"tc"</span>,
+      solution_type <span class='op'>=</span> <span class='st'>"deSolve"</span>, use_compiled <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,
+    eigen <span class='op'>=</span> <span class='fu'>mkinfit</span><span class='op'>(</span><span class='va'>SFO_SFO</span>, <span class='va'>FOCUS_D</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span>, error_model <span class='op'>=</span> <span class='st'>"tc"</span>,
+      solution_type <span class='op'>=</span> <span class='st'>"eigen"</span><span class='op'>)</span>,
+    analytical <span class='op'>=</span> <span class='fu'>mkinfit</span><span class='op'>(</span><span class='va'>SFO_SFO</span>, <span class='va'>FOCUS_D</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span>, error_model <span class='op'>=</span> <span class='st'>"tc"</span>,
+      solution_type <span class='op'>=</span> <span class='st'>"analytical"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div><div class='output co'>#&gt;               test relative elapsed
+#&gt; 3       analytical    1.000   0.752
+#&gt; 1 deSolve_compiled    2.294   1.725
+#&gt; 2            eigen    2.727   2.051</div><div class='input'><span class='co'># }</span>
 
+<span class='co'># Use stepwise fitting, using optimised parameters from parent only fit, FOMC-SFO</span>
 <span class='co'># \dontrun{</span>
-<span class='co'># Weighted fits, including IRLS (error_model = "obs")</span>
-<span class='no'>SFO_SFO.ff</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>),
-                      <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='no'>f.noweight</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>f.noweight</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.50.2 
-#&gt; R version used for fitting:       4.0.0 
-#&gt; Date of fit:     Wed May 27 07:03:50 2020 
-#&gt; Date of summary: Wed May 27 07:03:50 2020 
+<span class='va'>FOMC_SFO</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span><span class='op'>(</span>
+  parent <span class='op'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span><span class='op'>(</span><span class='st'>"FOMC"</span>, <span class='st'>"m1"</span><span class='op'>)</span>,
+  m1 <span class='op'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span><span class='op'>(</span><span class='st'>"SFO"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='va'>fit.FOMC_SFO</span> <span class='op'>&lt;-</span> <span class='fu'>mkinfit</span><span class='op'>(</span><span class='va'>FOMC_SFO</span>, <span class='va'>FOCUS_D</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Shapiro-Wilk test for standardized residuals: p =  0.0499</span></div><div class='input'><span class='co'># Again, we get a warning and try a more sophisticated error model</span>
+<span class='va'>fit.FOMC_SFO.tc</span> <span class='op'>&lt;-</span> <span class='fu'>mkinfit</span><span class='op'>(</span><span class='va'>FOMC_SFO</span>, <span class='va'>FOCUS_D</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span>, error_model <span class='op'>=</span> <span class='st'>"tc"</span><span class='op'>)</span>
+<span class='co'># This model has a higher likelihood, but not significantly so</span>
+<span class='fu'><a href='https://rdrr.io/pkg/lmtest/man/lrtest.html'>lrtest</a></span><span class='op'>(</span><span class='va'>fit.tc</span>, <span class='va'>fit.FOMC_SFO.tc</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Likelihood ratio test
+#&gt; 
+#&gt; Model 1: FOMC_SFO with error model tc and fixed parameter(s) m1_0
+#&gt; Model 2: SFO_SFO with error model tc and fixed parameter(s) m1_0
+#&gt;   #Df  LogLik Df  Chisq Pr(&gt;Chisq)
+#&gt; 1   7 -64.829                     
+#&gt; 2   6 -64.983 -1 0.3075     0.5792</div><div class='input'><span class='co'># Also, the missing standard error for log_beta and the t-tests for alpha</span>
+<span class='co'># and beta indicate overparameterisation</span>
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>fit.FOMC_SFO.tc</span>, data <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NaNs produced</span></div><div class='output co'>#&gt; <span class='warning'>Warning: diag(.) had 0 or NA entries; non-finite result is doubtful</span></div><div class='output co'>#&gt; mkin version used for fitting:    0.9.50.3 
+#&gt; R version used for fitting:       4.0.3 
+#&gt; Date of fit:     Thu Oct 15 12:40:24 2020 
+#&gt; Date of summary: Thu Oct 15 12:40:24 2020 
 #&gt; 
 #&gt; Equations:
-#&gt; d_parent/dt = - k_parent * parent
-#&gt; d_m1/dt = + f_parent_to_m1 * k_parent * parent - k_m1 * m1
+#&gt; d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent
+#&gt; d_m1/dt = + f_parent_to_m1 * (alpha/beta) * 1/((time/beta) + 1) *
+#&gt;            parent - k_m1 * m1
 #&gt; 
-#&gt; Model predictions using solution type analytical 
+#&gt; Model predictions using solution type deSolve 
 #&gt; 
-#&gt; Fitted using 421 model solutions performed in 0.129 s
-#&gt; 
-#&gt; Error model: Constant variance 
-#&gt; 
-#&gt; Error model algorithm: OLS 
-#&gt; 
-#&gt; Starting values for parameters to be optimised:
-#&gt;                   value   type
-#&gt; parent_0       100.7500  state
-#&gt; k_parent         0.1000 deparm
-#&gt; k_m1             0.1001 deparm
-#&gt; f_parent_to_m1   0.5000 deparm
-#&gt; 
-#&gt; Starting values for the transformed parameters actually optimised:
-#&gt;                     value lower upper
-#&gt; parent_0       100.750000  -Inf   Inf
-#&gt; log_k_parent    -2.302585  -Inf   Inf
-#&gt; log_k_m1        -2.301586  -Inf   Inf
-#&gt; f_parent_ilr_1   0.000000  -Inf   Inf
-#&gt; 
-#&gt; Fixed parameter values:
-#&gt;      value  type
-#&gt; m1_0     0 state
-#&gt; 
-#&gt; Results:
-#&gt; 
-#&gt;        AIC      BIC    logLik
-#&gt;   204.4486 212.6365 -97.22429
-#&gt; 
-#&gt; Optimised, transformed parameters with symmetric confidence intervals:
-#&gt;                Estimate Std. Error    Lower    Upper
-#&gt; parent_0       99.60000    1.57000 96.40000 102.8000
-#&gt; log_k_parent   -2.31600    0.04087 -2.39900  -2.2330
-#&gt; log_k_m1       -5.24800    0.13320 -5.51800  -4.9770
-#&gt; f_parent_ilr_1  0.04096    0.06312 -0.08746   0.1694
-#&gt; sigma           3.12600    0.35850  2.39600   3.8550
-#&gt; 
-#&gt; Parameter correlation:
-#&gt;                  parent_0 log_k_parent   log_k_m1 f_parent_ilr_1      sigma
-#&gt; parent_0        1.000e+00    5.174e-01 -1.688e-01     -5.471e-01 -3.190e-07
-#&gt; log_k_parent    5.174e-01    1.000e+00 -3.263e-01     -5.426e-01  3.168e-07
-#&gt; log_k_m1       -1.688e-01   -3.263e-01  1.000e+00      7.478e-01 -1.406e-07
-#&gt; f_parent_ilr_1 -5.471e-01   -5.426e-01  7.478e-01      1.000e+00 -1.587e-10
-#&gt; sigma          -3.190e-07    3.168e-07 -1.406e-07     -1.587e-10  1.000e+00
-#&gt; 
-#&gt; Backtransformed parameters:
-#&gt; Confidence intervals for internally transformed parameters are asymmetric.
-#&gt; t-test (unrealistically) based on the assumption of normal distribution
-#&gt; for estimators of untransformed parameters.
-#&gt;                 Estimate t value    Pr(&gt;t)     Lower     Upper
-#&gt; parent_0       99.600000  63.430 2.298e-36 96.400000 1.028e+02
-#&gt; k_parent        0.098700  24.470 4.955e-23  0.090820 1.073e-01
-#&gt; k_m1            0.005261   7.510 6.165e-09  0.004012 6.898e-03
-#&gt; f_parent_to_m1  0.514500  23.070 3.104e-22  0.469100 5.596e-01
-#&gt; sigma           3.126000   8.718 2.235e-10  2.396000 3.855e+00
-#&gt; 
-#&gt; FOCUS Chi2 error levels in percent:
-#&gt;          err.min n.optim df
-#&gt; All data   6.398       4 15
-#&gt; parent     6.459       2  7
-#&gt; m1         4.690       2  8
-#&gt; 
-#&gt; Resulting formation fractions:
-#&gt;                 ff
-#&gt; parent_m1   0.5145
-#&gt; parent_sink 0.4855
-#&gt; 
-#&gt; Estimated disappearance times:
-#&gt;           DT50   DT90
-#&gt; parent   7.023  23.33
-#&gt; m1     131.761 437.70
-#&gt; 
-#&gt; Data:
-#&gt;  time variable observed predicted   residual
-#&gt;     0   parent    99.46  99.59848 -1.385e-01
-#&gt;     0   parent   102.04  99.59848  2.442e+00
-#&gt;     1   parent    93.50  90.23787  3.262e+00
-#&gt;     1   parent    92.50  90.23787  2.262e+00
-#&gt;     3   parent    63.23  74.07319 -1.084e+01
-#&gt;     3   parent    68.99  74.07319 -5.083e+00
-#&gt;     7   parent    52.32  49.91206  2.408e+00
-#&gt;     7   parent    55.13  49.91206  5.218e+00
-#&gt;    14   parent    27.27  25.01257  2.257e+00
-#&gt;    14   parent    26.64  25.01257  1.627e+00
-#&gt;    21   parent    11.50  12.53462 -1.035e+00
-#&gt;    21   parent    11.64  12.53462 -8.946e-01
-#&gt;    35   parent     2.85   3.14787 -2.979e-01
-#&gt;    35   parent     2.91   3.14787 -2.379e-01
-#&gt;    50   parent     0.69   0.71624 -2.624e-02
-#&gt;    50   parent     0.63   0.71624 -8.624e-02
-#&gt;    75   parent     0.05   0.06074 -1.074e-02
-#&gt;    75   parent     0.06   0.06074 -7.381e-04
-#&gt;     1       m1     4.84   4.80296  3.704e-02
-#&gt;     1       m1     5.64   4.80296  8.370e-01
-#&gt;     3       m1    12.91  13.02400 -1.140e-01
-#&gt;     3       m1    12.96  13.02400 -6.400e-02
-#&gt;     7       m1    22.97  25.04476 -2.075e+00
-#&gt;     7       m1    24.47  25.04476 -5.748e-01
-#&gt;    14       m1    41.69  36.69002  5.000e+00
-#&gt;    14       m1    33.21  36.69002 -3.480e+00
-#&gt;    21       m1    44.37  41.65310  2.717e+00
-#&gt;    21       m1    46.44  41.65310  4.787e+00
-#&gt;    35       m1    41.22  43.31312 -2.093e+00
-#&gt;    35       m1    37.95  43.31312 -5.363e+00
-#&gt;    50       m1    41.19  41.21831 -2.831e-02
-#&gt;    50       m1    40.01  41.21831 -1.208e+00
-#&gt;    75       m1    40.09  36.44703  3.643e+00
-#&gt;    75       m1    33.85  36.44703 -2.597e+00
-#&gt;   100       m1    31.04  31.98163 -9.416e-01
-#&gt;   100       m1    33.13  31.98163  1.148e+00
-#&gt;   120       m1    25.15  28.78984 -3.640e+00
-#&gt;   120       m1    33.31  28.78984  4.520e+00</div><div class='input'><span class='no'>f.obs</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"obs"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>f.obs</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.50.2 
-#&gt; R version used for fitting:       4.0.0 
-#&gt; Date of fit:     Wed May 27 07:03:50 2020 
-#&gt; Date of summary: Wed May 27 07:03:50 2020 
-#&gt; 
-#&gt; Equations:
-#&gt; d_parent/dt = - k_parent * parent
-#&gt; d_m1/dt = + f_parent_to_m1 * k_parent * parent - k_m1 * m1
-#&gt; 
-#&gt; Model predictions using solution type analytical 
-#&gt; 
-#&gt; Fitted using 978 model solutions performed in 0.407 s
-#&gt; 
-#&gt; Error model: Variance unique to each observed variable 
-#&gt; 
-#&gt; Error model algorithm: d_3 
-#&gt; Direct fitting and three-step fitting yield approximately the same likelihood 
-#&gt; 
-#&gt; Starting values for parameters to be optimised:
-#&gt;                   value   type
-#&gt; parent_0       100.7500  state
-#&gt; k_parent         0.1000 deparm
-#&gt; k_m1             0.1001 deparm
-#&gt; f_parent_to_m1   0.5000 deparm
-#&gt; sigma_parent     3.0000  error
-#&gt; sigma_m1         3.0000  error
-#&gt; 
-#&gt; Starting values for the transformed parameters actually optimised:
-#&gt;                     value lower upper
-#&gt; parent_0       100.750000  -Inf   Inf
-#&gt; log_k_parent    -2.302585  -Inf   Inf
-#&gt; log_k_m1        -2.301586  -Inf   Inf
-#&gt; f_parent_ilr_1   0.000000  -Inf   Inf
-#&gt; sigma_parent     3.000000     0   Inf
-#&gt; sigma_m1         3.000000     0   Inf
-#&gt; 
-#&gt; Fixed parameter values:
-#&gt;      value  type
-#&gt; m1_0     0 state
-#&gt; 
-#&gt; Results:
-#&gt; 
-#&gt;        AIC      BIC    logLik
-#&gt;   205.8727 215.6982 -96.93634
-#&gt; 
-#&gt; Optimised, transformed parameters with symmetric confidence intervals:
-#&gt;                Estimate Std. Error    Lower    Upper
-#&gt; parent_0       99.65000    1.70200 96.19000 103.1000
-#&gt; log_k_parent   -2.31300    0.04376 -2.40200  -2.2240
-#&gt; log_k_m1       -5.25000    0.12430 -5.50400  -4.9970
-#&gt; f_parent_ilr_1  0.03861    0.06171 -0.08708   0.1643
-#&gt; sigma_parent    3.40100    0.56820  2.24400   4.5590
-#&gt; sigma_m1        2.85500    0.45240  1.93400   3.7770
-#&gt; 
-#&gt; Parameter correlation:
-#&gt;                parent_0 log_k_parent log_k_m1 f_parent_ilr_1 sigma_parent
-#&gt; parent_0        1.00000      0.51078 -0.19133       -0.59997     0.035670
-#&gt; log_k_parent    0.51078      1.00000 -0.37458       -0.59239     0.069833
-#&gt; log_k_m1       -0.19133     -0.37458  1.00000        0.74398    -0.026158
-#&gt; f_parent_ilr_1 -0.59997     -0.59239  0.74398        1.00000    -0.041369
-#&gt; sigma_parent    0.03567      0.06983 -0.02616       -0.04137     1.000000
-#&gt; sigma_m1       -0.03385     -0.06627  0.02482        0.03926    -0.004628
-#&gt;                 sigma_m1
-#&gt; parent_0       -0.033847
-#&gt; log_k_parent   -0.066265
-#&gt; log_k_m1        0.024823
-#&gt; f_parent_ilr_1  0.039256
-#&gt; sigma_parent   -0.004628
-#&gt; sigma_m1        1.000000
-#&gt; 
-#&gt; Backtransformed parameters:
-#&gt; Confidence intervals for internally transformed parameters are asymmetric.
-#&gt; t-test (unrealistically) based on the assumption of normal distribution
-#&gt; for estimators of untransformed parameters.
-#&gt;                 Estimate t value    Pr(&gt;t)     Lower     Upper
-#&gt; parent_0       99.650000  58.560 2.004e-34 96.190000 1.031e+02
-#&gt; k_parent        0.098970  22.850 1.099e-21  0.090530 1.082e-01
-#&gt; k_m1            0.005245   8.046 1.732e-09  0.004072 6.756e-03
-#&gt; f_parent_to_m1  0.513600  23.560 4.352e-22  0.469300 5.578e-01
-#&gt; sigma_parent    3.401000   5.985 5.662e-07  2.244000 4.559e+00
-#&gt; sigma_m1        2.855000   6.311 2.215e-07  1.934000 3.777e+00
-#&gt; 
-#&gt; FOCUS Chi2 error levels in percent:
-#&gt;          err.min n.optim df
-#&gt; All data   6.398       4 15
-#&gt; parent     6.464       2  7
-#&gt; m1         4.682       2  8
-#&gt; 
-#&gt; Resulting formation fractions:
-#&gt;                 ff
-#&gt; parent_m1   0.5136
-#&gt; parent_sink 0.4864
-#&gt; 
-#&gt; Estimated disappearance times:
-#&gt;           DT50   DT90
-#&gt; parent   7.003  23.26
-#&gt; m1     132.154 439.01
-#&gt; 
-#&gt; Data:
-#&gt;  time variable observed predicted   residual
-#&gt;     0   parent    99.46  99.65417 -1.942e-01
-#&gt;     0   parent   102.04  99.65417  2.386e+00
-#&gt;     1   parent    93.50  90.26332  3.237e+00
-#&gt;     1   parent    92.50  90.26332  2.237e+00
-#&gt;     3   parent    63.23  74.05306 -1.082e+01
-#&gt;     3   parent    68.99  74.05306 -5.063e+00
-#&gt;     7   parent    52.32  49.84325  2.477e+00
-#&gt;     7   parent    55.13  49.84325  5.287e+00
-#&gt;    14   parent    27.27  24.92971  2.340e+00
-#&gt;    14   parent    26.64  24.92971  1.710e+00
-#&gt;    21   parent    11.50  12.46890 -9.689e-01
-#&gt;    21   parent    11.64  12.46890 -8.289e-01
-#&gt;    35   parent     2.85   3.11925 -2.692e-01
-#&gt;    35   parent     2.91   3.11925 -2.092e-01
-#&gt;    50   parent     0.69   0.70679 -1.679e-02
-#&gt;    50   parent     0.63   0.70679 -7.679e-02
-#&gt;    75   parent     0.05   0.05952 -9.523e-03
-#&gt;    75   parent     0.06   0.05952  4.772e-04
-#&gt;     1       m1     4.84   4.81075  2.925e-02
-#&gt;     1       m1     5.64   4.81075  8.292e-01
-#&gt;     3       m1    12.91  13.04196 -1.320e-01
-#&gt;     3       m1    12.96  13.04196 -8.196e-02
-#&gt;     7       m1    22.97  25.06847 -2.098e+00
-#&gt;     7       m1    24.47  25.06847 -5.985e-01
-#&gt;    14       m1    41.69  36.70308  4.987e+00
-#&gt;    14       m1    33.21  36.70308 -3.493e+00
-#&gt;    21       m1    44.37  41.65115  2.719e+00
-#&gt;    21       m1    46.44  41.65115  4.789e+00
-#&gt;    35       m1    41.22  43.29465 -2.075e+00
-#&gt;    35       m1    37.95  43.29465 -5.345e+00
-#&gt;    50       m1    41.19  41.19948 -9.479e-03
-#&gt;    50       m1    40.01  41.19948 -1.189e+00
-#&gt;    75       m1    40.09  36.44035  3.650e+00
-#&gt;    75       m1    33.85  36.44035 -2.590e+00
-#&gt;   100       m1    31.04  31.98773 -9.477e-01
-#&gt;   100       m1    33.13  31.98773  1.142e+00
-#&gt;   120       m1    25.15  28.80429 -3.654e+00
-#&gt;   120       m1    33.31  28.80429  4.506e+00</div><div class='input'><span class='no'>f.tc</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinfit</span>(<span class='no'>SFO_SFO.ff</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"tc"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>f.tc</span>)</div><div class='output co'>#&gt; mkin version used for fitting:    0.9.50.2 
-#&gt; R version used for fitting:       4.0.0 
-#&gt; Date of fit:     Wed May 27 07:03:51 2020 
-#&gt; Date of summary: Wed May 27 07:03:51 2020 
-#&gt; 
-#&gt; Equations:
-#&gt; d_parent/dt = - k_parent * parent
-#&gt; d_m1/dt = + f_parent_to_m1 * k_parent * parent - k_m1 * m1
-#&gt; 
-#&gt; Model predictions using solution type analytical 
-#&gt; 
-#&gt; Fitted using 2088 model solutions performed in 0.722 s
+#&gt; Fitted using 3611 model solutions performed in 2.669 s
 #&gt; 
 #&gt; Error model: Two-component variance function 
 #&gt; 
 #&gt; Error model algorithm: d_3 
-#&gt; Direct fitting and three-step fitting yield approximately the same likelihood 
+#&gt; Three-step fitting yielded a higher likelihood than direct fitting 
 #&gt; 
 #&gt; Starting values for parameters to be optimised:
-#&gt;                   value   type
-#&gt; parent_0       100.7500  state
-#&gt; k_parent         0.1000 deparm
-#&gt; k_m1             0.1001 deparm
-#&gt; f_parent_to_m1   0.5000 deparm
-#&gt; sigma_low        0.1000  error
-#&gt; rsd_high         0.1000  error
+#&gt;                 value   type
+#&gt; parent_0       100.75  state
+#&gt; alpha            1.00 deparm
+#&gt; beta            10.00 deparm
+#&gt; k_m1             0.10 deparm
+#&gt; f_parent_to_m1   0.50 deparm
+#&gt; sigma_low        0.10  error
+#&gt; rsd_high         0.10  error
 #&gt; 
 #&gt; Starting values for the transformed parameters actually optimised:
 #&gt;                     value lower upper
 #&gt; parent_0       100.750000  -Inf   Inf
-#&gt; log_k_parent    -2.302585  -Inf   Inf
-#&gt; log_k_m1        -2.301586  -Inf   Inf
+#&gt; log_k_m1        -2.302585  -Inf   Inf
 #&gt; f_parent_ilr_1   0.000000  -Inf   Inf
+#&gt; log_alpha        0.000000  -Inf   Inf
+#&gt; log_beta         2.302585  -Inf   Inf
 #&gt; sigma_low        0.100000     0   Inf
 #&gt; rsd_high         0.100000     0   Inf
 #&gt; 
@@ -930,97 +639,70 @@ Degradation Data. <em>Environments</em> 6(12) 124
 #&gt; 
 #&gt; Results:
 #&gt; 
-#&gt;        AIC      BIC    logLik
-#&gt;   141.9656 151.7911 -64.98278
+#&gt;       AIC      BIC    logLik
+#&gt;   143.658 155.1211 -64.82902
 #&gt; 
 #&gt; Optimised, transformed parameters with symmetric confidence intervals:
-#&gt;                 Estimate Std. Error     Lower     Upper
-#&gt; parent_0       100.70000   2.621000 95.400000 106.10000
-#&gt; log_k_parent    -2.29700   0.008862 -2.315000  -2.27900
-#&gt; log_k_m1        -5.26600   0.091310 -5.452000  -5.08000
-#&gt; f_parent_ilr_1   0.02374   0.055300 -0.088900   0.13640
-#&gt; sigma_low        0.00305   0.004829 -0.006786   0.01289
-#&gt; rsd_high         0.07928   0.009418  0.060100   0.09847
+#&gt;                  Estimate Std. Error     Lower      Upper
+#&gt; parent_0       101.600000  2.6390000 96.240000 107.000000
+#&gt; log_k_m1        -5.284000  0.0928900 -5.473000  -5.095000
+#&gt; f_parent_ilr_1   0.001008  0.0541900 -0.109500   0.111500
+#&gt; log_alpha        5.522000  0.0077300  5.506000   5.538000
+#&gt; log_beta         7.806000        NaN       NaN        NaN
+#&gt; sigma_low        0.002488  0.0002431  0.001992   0.002984
+#&gt; rsd_high         0.079210  0.0093280  0.060180   0.098230
 #&gt; 
 #&gt; Parameter correlation:
-#&gt;                parent_0 log_k_parent log_k_m1 f_parent_ilr_1 sigma_low rsd_high
-#&gt; parent_0        1.00000      0.67644 -0.10215       -0.76822   0.14294 -0.08783
-#&gt; log_k_parent    0.67644      1.00000 -0.15102       -0.59491   0.34611 -0.08125
-#&gt; log_k_m1       -0.10215     -0.15102  1.00000        0.51808  -0.05236  0.01240
-#&gt; f_parent_ilr_1 -0.76822     -0.59491  0.51808        1.00000  -0.13900  0.03248
-#&gt; sigma_low       0.14294      0.34611 -0.05236       -0.13900   1.00000 -0.16546
-#&gt; rsd_high       -0.08783     -0.08125  0.01240        0.03248  -0.16546  1.00000
+#&gt;                 parent_0  log_k_m1 f_parent_ilr_1 log_alpha log_beta sigma_low
+#&gt; parent_0        1.000000 -0.094697       -0.76654   0.70525      NaN  0.016099
+#&gt; log_k_m1       -0.094697  1.000000        0.51404  -0.14347      NaN  0.001576
+#&gt; f_parent_ilr_1 -0.766543  0.514038        1.00000  -0.61368      NaN  0.015465
+#&gt; log_alpha       0.705247 -0.143468       -0.61368   1.00000      NaN  5.871780
+#&gt; log_beta             NaN       NaN            NaN       NaN        1       NaN
+#&gt; sigma_low       0.016099  0.001576        0.01546   5.87178      NaN  1.000000
+#&gt; rsd_high        0.006566 -0.011662       -0.05353   0.04845      NaN -0.652554
+#&gt;                 rsd_high
+#&gt; parent_0        0.006566
+#&gt; log_k_m1       -0.011662
+#&gt; f_parent_ilr_1 -0.053525
+#&gt; log_alpha       0.048451
+#&gt; log_beta             NaN
+#&gt; sigma_low      -0.652554
+#&gt; rsd_high        1.000000
 #&gt; 
 #&gt; Backtransformed parameters:
 #&gt; Confidence intervals for internally transformed parameters are asymmetric.
 #&gt; t-test (unrealistically) based on the assumption of normal distribution
 #&gt; for estimators of untransformed parameters.
-#&gt;                 Estimate  t value    Pr(&gt;t)     Lower     Upper
-#&gt; parent_0       1.007e+02  38.4300 1.180e-28 95.400000 1.061e+02
-#&gt; k_parent       1.006e-01 112.8000 1.718e-43  0.098760 1.024e-01
-#&gt; k_m1           5.167e-03  10.9500 1.171e-12  0.004290 6.223e-03
-#&gt; f_parent_to_m1 5.084e-01  26.0100 2.146e-23  0.468600 5.481e-01
-#&gt; sigma_low      3.050e-03   0.6314 2.661e-01 -0.006786 1.289e-02
-#&gt; rsd_high       7.928e-02   8.4170 6.418e-10  0.060100 9.847e-02
+#&gt;                 Estimate t value    Pr(&gt;t)     Lower     Upper
+#&gt; parent_0       1.016e+02 32.7800 6.312e-26 9.624e+01 1.070e+02
+#&gt; k_m1           5.072e-03 10.1200 1.216e-11 4.197e-03 6.130e-03
+#&gt; f_parent_to_m1 5.004e-01 20.8300 4.318e-20 4.614e-01 5.394e-01
+#&gt; alpha          2.502e+02  0.5624 2.889e-01 2.463e+02 2.542e+02
+#&gt; beta           2.455e+03  0.5549 2.915e-01        NA        NA
+#&gt; sigma_low      2.488e-03  0.4843 3.158e-01 1.992e-03 2.984e-03
+#&gt; rsd_high       7.921e-02  8.4300 8.001e-10 6.018e-02 9.823e-02
 #&gt; 
 #&gt; FOCUS Chi2 error levels in percent:
 #&gt;          err.min n.optim df
-#&gt; All data   6.475       4 15
-#&gt; parent     6.573       2  7
-#&gt; m1         4.671       2  8
+#&gt; All data   6.781       5 14
+#&gt; parent     7.141       3  6
+#&gt; m1         4.640       2  8
 #&gt; 
 #&gt; Resulting formation fractions:
 #&gt;                 ff
-#&gt; parent_m1   0.5084
-#&gt; parent_sink 0.4916
+#&gt; parent_m1   0.5004
+#&gt; parent_sink 0.4996
 #&gt; 
 #&gt; Estimated disappearance times:
-#&gt;           DT50  DT90
-#&gt; parent   6.893  22.9
-#&gt; m1     134.156 445.7
-#&gt; 
-#&gt; Data:
-#&gt;  time variable observed predicted   residual
-#&gt;     0   parent    99.46 100.73434  -1.274340
-#&gt;     0   parent   102.04 100.73434   1.305660
-#&gt;     1   parent    93.50  91.09751   2.402486
-#&gt;     1   parent    92.50  91.09751   1.402486
-#&gt;     3   parent    63.23  74.50141 -11.271410
-#&gt;     3   parent    68.99  74.50141  -5.511410
-#&gt;     7   parent    52.32  49.82880   2.491200
-#&gt;     7   parent    55.13  49.82880   5.301200
-#&gt;    14   parent    27.27  24.64809   2.621908
-#&gt;    14   parent    26.64  24.64809   1.991908
-#&gt;    21   parent    11.50  12.19232  -0.692315
-#&gt;    21   parent    11.64  12.19232  -0.552315
-#&gt;    35   parent     2.85   2.98327  -0.133266
-#&gt;    35   parent     2.91   2.98327  -0.073266
-#&gt;    50   parent     0.69   0.66013   0.029874
-#&gt;    50   parent     0.63   0.66013  -0.030126
-#&gt;    75   parent     0.05   0.05344  -0.003438
-#&gt;    75   parent     0.06   0.05344   0.006562
-#&gt;     1       m1     4.84   4.88645  -0.046451
-#&gt;     1       m1     5.64   4.88645   0.753549
-#&gt;     3       m1    12.91  13.22867  -0.318669
-#&gt;     3       m1    12.96  13.22867  -0.268669
-#&gt;     7       m1    22.97  25.36417  -2.394166
-#&gt;     7       m1    24.47  25.36417  -0.894166
-#&gt;    14       m1    41.69  37.00974   4.680263
-#&gt;    14       m1    33.21  37.00974  -3.799737
-#&gt;    21       m1    44.37  41.90133   2.468669
-#&gt;    21       m1    46.44  41.90133   4.538669
-#&gt;    35       m1    41.22  43.45691  -2.236913
-#&gt;    35       m1    37.95  43.45691  -5.506913
-#&gt;    50       m1    41.19  41.34199  -0.151985
-#&gt;    50       m1    40.01  41.34199  -1.331985
-#&gt;    75       m1    40.09  36.61471   3.475295
-#&gt;    75       m1    33.85  36.61471  -2.764705
-#&gt;   100       m1    31.04  32.20082  -1.160823
-#&gt;   100       m1    33.13  32.20082   0.929177
-#&gt;   120       m1    25.15  29.04130  -3.891304
-#&gt;   120       m1    33.31  29.04130   4.268696</div><div class='input'># }
-
-
+#&gt;           DT50  DT90 DT50back
+#&gt; parent   6.812  22.7    6.834
+#&gt; m1     136.661 454.0       NA</div><div class='input'>
+<span class='co'># We can easily use starting parameters from the parent only fit (only for illustration)</span>
+<span class='va'>fit.FOMC</span> <span class='op'>=</span> <span class='fu'>mkinfit</span><span class='op'>(</span><span class='st'>"FOMC"</span>, <span class='va'>FOCUS_2006_D</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span>, error_model <span class='op'>=</span> <span class='st'>"tc"</span><span class='op'>)</span>
+<span class='va'>fit.FOMC_SFO</span> <span class='op'>&lt;-</span> <span class='fu'>mkinfit</span><span class='op'>(</span><span class='va'>FOMC_SFO</span>, <span class='va'>FOCUS_D</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  parms.ini <span class='op'>=</span> <span class='va'>fit.FOMC</span><span class='op'>$</span><span class='va'>bparms.ode</span>, error_model <span class='op'>=</span> <span class='st'>"tc"</span><span class='op'>)</span>
+<span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -1037,7 +719,7 @@ Degradation Data. <em>Environments</em> 6(12) 124
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
