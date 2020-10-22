@@ -131,7 +131,7 @@ endpoints(f_nlme_dfop)
   endpoints(f_nlme_sfo_sfo)
   endpoints(f_nlme_dfop_sfo)
 
-  if (findFunction("varConstProp")) { # tc error model for nlme available
+  if (length(findFunction("varConstProp")) > 0) { # tc error model for nlme available
     # Attempts to fit metabolite kinetics with the tc error model
     #f_2_tc <- mmkin(list("SFO-SFO" = m_sfo_sfo,
     #  "SFO-SFO-ff" = m_sfo_sfo_ff,
@@ -156,6 +156,7 @@ endpoints(f_nlme_dfop)
    "DFOP-SFO" = m_dfop_sfo),
     ds_2, quiet = TRUE, error_model = "obs")
   f_nlme_sfo_sfo_obs <- nlme(f_2_obs["SFO-SFO", ])
+  print(f_nlme_sfo_sfo_obs)
   # The same with DFOP-SFO does not converge, apparently the variances of
   # parent and A1 are too similar in this case, so that the model is
   # overparameterised

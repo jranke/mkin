@@ -448,7 +448,7 @@ with additional elements</p>
 #&gt; parent  11.07091 104.6320 31.49738 4.462384 46.20825
 #&gt; A1     162.30536 539.1667       NA       NA       NA
 #&gt; </div><div class='input'>
-  <span class='kw'>if</span> <span class='op'>(</span><span class='fu'>findFunction</span><span class='op'>(</span><span class='st'>"varConstProp"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span> <span class='co'># tc error model for nlme available</span>
+  <span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='fu'>findFunction</span><span class='op'>(</span><span class='st'>"varConstProp"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>&gt;</span> <span class='fl'>0</span><span class='op'>)</span> <span class='op'>{</span> <span class='co'># tc error model for nlme available</span>
     <span class='co'># Attempts to fit metabolite kinetics with the tc error model</span>
     <span class='co'>#f_2_tc &lt;- mmkin(list("SFO-SFO" = m_sfo_sfo,</span>
     <span class='co'>#  "SFO-SFO-ff" = m_sfo_sfo_ff,</span>
@@ -469,11 +469,56 @@ with additional elements</p>
     <span class='fu'><a href='https://rdrr.io/r/stats/AIC.html'>AIC</a></span><span class='op'>(</span><span class='va'>f_nlme_sfo</span>, <span class='va'>f_nlme_sfo_tc</span>, <span class='va'>f_nlme_dfop</span>, <span class='va'>f_nlme_dfop_tc</span><span class='op'>)</span>
     <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop_tc</span><span class='op'>)</span>
   <span class='op'>}</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in if (findFunction("varConstProp")) {    f_tc &lt;- mmkin(c("SFO", "DFOP"), ds, quiet = TRUE, error_model = "tc")    f_nlme_sfo_tc &lt;- nlme(f_tc["SFO", ])    f_nlme_dfop_tc &lt;- nlme(f_tc["DFOP", ])    AIC(f_nlme_sfo, f_nlme_sfo_tc, f_nlme_dfop, f_nlme_dfop_tc)    print(f_nlme_dfop_tc)}: argument is not interpretable as logical</span></div><div class='input'>  <span class='va'>f_2_obs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"SFO-SFO"</span> <span class='op'>=</span> <span class='va'>m_sfo_sfo</span>,
+</div><div class='output co'>#&gt; Nonlinear mixed-effects model fit by maximum likelihood
+#&gt;   Model: value ~ (mkin::get_deg_func())(name, time, parent_0, log_k1,      log_k2, g_ilr) 
+#&gt;   Data: "Not shown" 
+#&gt;   Log-likelihood: -238.4298
+#&gt;   Fixed: list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_ilr ~ 1) 
+#&gt;    parent_0      log_k1      log_k2       g_ilr 
+#&gt; 94.04774463 -1.82339924 -4.16715509  0.04020161 
+#&gt; 
+#&gt; Random effects:
+#&gt;  Formula: list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_ilr ~ 1)
+#&gt;  Level: ds
+#&gt;  Structure: Diagonal
+#&gt;         parent_0    log_k1   log_k2     g_ilr Residual
+#&gt; StdDev: 2.473883 0.8499901 1.337187 0.3294411        1
+#&gt; 
+#&gt; Variance function:
+#&gt;  Structure: Constant plus proportion of variance covariate
+#&gt;  Formula: ~fitted(.) 
+#&gt;  Parameter estimates:
+#&gt;      const       prop 
+#&gt; 2.23222625 0.01262414 
+#&gt; Number of Observations: 90
+#&gt; Number of Groups: 5 </div><div class='input'>  <span class='va'>f_2_obs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"SFO-SFO"</span> <span class='op'>=</span> <span class='va'>m_sfo_sfo</span>,
    <span class='st'>"DFOP-SFO"</span> <span class='op'>=</span> <span class='va'>m_dfop_sfo</span><span class='op'>)</span>,
     <span class='va'>ds_2</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span>, error_model <span class='op'>=</span> <span class='st'>"obs"</span><span class='op'>)</span>
   <span class='va'>f_nlme_sfo_sfo_obs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f_2_obs</span><span class='op'>[</span><span class='st'>"SFO-SFO"</span>, <span class='op'>]</span><span class='op'>)</span>
-  <span class='co'># The same with DFOP-SFO does not converge, apparently the variances of</span>
+  <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>f_nlme_sfo_sfo_obs</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Nonlinear mixed-effects model fit by maximum likelihood
+#&gt;   Model: value ~ (mkin::get_deg_func())(name, time, parent_0, log_k_parent_sink,      log_k_parent_A1, log_k_A1_sink) 
+#&gt;   Data: "Not shown" 
+#&gt;   Log-likelihood: -472.976
+#&gt;   Fixed: list(parent_0 ~ 1, log_k_parent_sink ~ 1, log_k_parent_A1 ~ 1,      log_k_A1_sink ~ 1) 
+#&gt;          parent_0 log_k_parent_sink   log_k_parent_A1     log_k_A1_sink 
+#&gt;         87.975536         -3.669816         -4.164127         -4.645073 
+#&gt; 
+#&gt; Random effects:
+#&gt;  Formula: list(parent_0 ~ 1, log_k_parent_sink ~ 1, log_k_parent_A1 ~ 1,      log_k_A1_sink ~ 1)
+#&gt;  Level: ds
+#&gt;  Structure: Diagonal
+#&gt;         parent_0 log_k_parent_sink log_k_parent_A1 log_k_A1_sink Residual
+#&gt; StdDev: 3.992214           1.77702        1.054733     0.4821383 6.482585
+#&gt; 
+#&gt; Variance function:
+#&gt;  Structure: Different standard deviations per stratum
+#&gt;  Formula: ~1 | name 
+#&gt;  Parameter estimates:
+#&gt;    parent        A1 
+#&gt; 1.0000000 0.2050003 
+#&gt; Number of Observations: 170
+#&gt; Number of Groups: 5 </div><div class='input'>  <span class='co'># The same with DFOP-SFO does not converge, apparently the variances of</span>
   <span class='co'># parent and A1 are too similar in this case, so that the model is</span>
   <span class='co'># overparameterised</span>
   <span class='co'>#f_nlme_dfop_sfo_obs &lt;- nlme(f_2_obs["DFOP-SFO", ], control = list(maxIter = 100))</span>
