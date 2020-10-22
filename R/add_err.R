@@ -72,7 +72,7 @@
 #' 
 #' @export
 add_err <- function(prediction, sdfunc, secondary = c("M1", "M2"),
-  n = 1000, LOD = 0.1, reps = 2, digits = 1, seed = NA)
+  n = 10, LOD = 0.1, reps = 2, digits = 1, seed = NA)
 {
   if (!is.na(seed)) set.seed(seed)
 

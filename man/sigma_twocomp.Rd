@@ -31,6 +31,34 @@ proposed by Rocke and Lorenzato (1995) can be written in this form as well,
 but assumes approximate lognormal distribution of errors for high values of
 y.
 }
+\examples{
+times <- c(0, 1, 3, 7, 14, 28, 60, 90, 120)
+d_pred <- data.frame(time = times, parent = 100 * exp(- 0.03 * times))
+set.seed(123456)
+d_syn <- add_err(d_pred, function(y) sigma_twocomp(y, 1, 0.07),
+  reps = 2, n = 1)[[1]]
+f_nls <- nls(value ~ SSasymp(time, 0, parent_0, lrc), data = d_syn,
+ start = list(parent_0 = 100, lrc = -3))
+library(nlme)
+f_gnls <- gnls(value ~ SSasymp(time, 0, parent_0, lrc),
+  data = d_syn, na.action = na.omit,
+  start = list(parent_0 = 100, lrc = -3))
+if (length(findFunction("varConstProp")) > 0) {
+  f_gnls_tc <- gnls(value ~ SSasymp(time, 0, parent_0, lrc),
+    data = d_syn, na.action = na.omit,
+    start = list(parent_0 = 100, lrc = -3),
+    weights = varConstProp())
+  f_gnls_tc_sf <- gnls(value ~ SSasymp(time, 0, parent_0, lrc),
+    data = d_syn, na.action = na.omit,
+    start = list(parent_0 = 100, lrc = -3),
+    control = list(sigma = 1),
+    weights = varConstProp())
+}
+f_mkin <- mkinfit("SFO", d_syn, error_model = "const", quiet = TRUE)
+f_mkin_tc <- mkinfit("SFO", d_syn, error_model = "tc", quiet = TRUE)
+plot_res(f_mkin_tc, standardized = TRUE)
+AIC(f_nls, f_gnls, f_gnls_tc, f_gnls_tc_sf, f_mkin, f_mkin_tc)
+}
 \references{
 Werner, Mario, Brooks, Samuel H., and Knott, Lancaster B. (1978)
 Additive, Multiplicative, and Mixed Analytical Errors. Clinical Chemistry

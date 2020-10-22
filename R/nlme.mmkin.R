@@ -47,16 +47,16 @@ get_deg_func <- function() {
 #' @examples
 #' ds <- lapply(experimental_data_for_UBA_2019[6:10],
 #'  function(x) subset(x$data[c("name", "time", "value")], name == "parent"))
-#' f <- mmkin("SFO", ds, quiet = TRUE, cores = 1)
+#' f <- mmkin(c("SFO", "DFOP"), ds, quiet = TRUE, cores = 1)
 #' library(nlme)
-#' endpoints(f[[1]])
-#' f_nlme <- nlme(f)
-#' print(f_nlme)
-#' endpoints(f_nlme)
+#' f_nlme_sfo <- nlme(f["SFO", ])
+#' f_nlme_dfop <- nlme(f["DFOP", ])
+#' AIC(f_nlme_sfo, f_nlme_dfop)
+#' print(f_nlme_dfop)
+#' endpoints(f_nlme_dfop)
 #' \dontrun{
-#'   f_nlme_2 <- nlme(f, start = c(parent_0 = 100, log_k_parent_sink = 0.1))
+#'   f_nlme_2 <- nlme(f["SFO", ], start = c(parent_0 = 100, log_k_parent = 0.1))
 #'   update(f_nlme_2, random = parent_0 ~ 1)
-#'   # Test on some real data
 #'   ds_2 <- lapply(experimental_data_for_UBA_2019[6:10],
 #'    function(x) x$data[c("name", "time", "value")])
 #'   m_sfo_sfo <- mkinmod(parent = mkinsub("SFO", "A1"),
@@ -100,6 +100,36 @@ get_deg_func <- function() {
 #'
 #'   endpoints(f_nlme_sfo_sfo)
 #'   endpoints(f_nlme_dfop_sfo)
+#'
+#'   if (findFunction("varConstProp")) { # tc error model for nlme available
+#'     # Attempts to fit metabolite kinetics with the tc error model
+#'     #f_2_tc <- mmkin(list("SFO-SFO" = m_sfo_sfo,
+#'     #  "SFO-SFO-ff" = m_sfo_sfo_ff,
+#'     #  "FOMC-SFO" = m_fomc_sfo,
+#'     #  "DFOP-SFO" = m_dfop_sfo),
+#'     #   ds_2, quiet = TRUE,
+#'     #   error_model = "tc")
+#'     #f_nlme_sfo_sfo_tc <- nlme(f_2_tc["SFO-SFO", ], control = list(maxIter = 100))
+#'     #f_nlme_dfop_sfo_tc <- nlme(f_2_tc["DFOP-SFO", ])
+#'     #f_nlme_dfop_sfo_tc <- update(f_nlme_dfop_sfo, weights = varConstProp(),
+#'     #  control = list(sigma = 1, msMaxIter = 100, pnlsMaxIter = 15))
+#'     # Fitting metabolite kinetics with nlme.mmkin and the two-component
+#'     # error model currently does not work, at least not with these data.
+#'
+#'     f_tc <- mmkin(c("SFO", "DFOP"), ds, quiet = TRUE, error_model = "tc")
+#'     f_nlme_sfo_tc <- nlme(f_tc["SFO", ])
+#'     f_nlme_dfop_tc <- nlme(f_tc["DFOP", ])
+#'     AIC(f_nlme_sfo, f_nlme_sfo_tc, f_nlme_dfop, f_nlme_dfop_tc)
+#'     print(f_nlme_dfop_tc)
+#'   }
+#'   f_2_obs <- mmkin(list("SFO-SFO" = m_sfo_sfo,
+#'    "DFOP-SFO" = m_dfop_sfo),
+#'     ds_2, quiet = TRUE, error_model = "obs")
+#'   f_nlme_sfo_sfo_obs <- nlme(f_2_obs["SFO-SFO", ])
+#'   # The same with DFOP-SFO does not converge, apparently the variances of
+#'   # parent and A1 are too similar in this case, so that the model is
+#'   # overparameterised
+#'   #f_nlme_dfop_sfo_obs <- nlme(f_2_obs["DFOP-SFO", ], control = list(maxIter = 100))
 #' }
 nlme.mmkin <- function(model, data = sys.frame(sys.parent()),
   fixed, random = fixed,
@@ -143,6 +173,24 @@ nlme.mmkin <- function(model, data = sys.frame(sys.parent()),
 
   if (missing(random)) {
     thisCall[["random"]] <- pdDiag(thisCall[["fixed"]])
+  }
+
+  error_model <- model[[1]]$err_mod
+
+  if (missing(weights)) {
+    thisCall[["weights"]] <- switch(error_model,
+      const = NULL,
+      obs = varIdent(form = ~ 1 | name),
+      tc = varConstProp())
+    sigma <- switch(error_model,
+      tc = 1,
+      NULL)
+  }
+
+  control <- thisCall[["control"]]
+  if (error_model == "tc") {
+    control$sigma = 1
+    thisCall[["control"]] <- control
   }
 
   val <- do.call("nlme.formula", thisCall)

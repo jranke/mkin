@@ -8,7 +8,7 @@ add_err(
   prediction,
   sdfunc,
   secondary = c("M1", "M2"),
-  n = 1000,
+  n = 10,
   LOD = 0.1,
   reps = 2,
   digits = 1,
