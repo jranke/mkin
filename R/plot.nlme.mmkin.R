@@ -10,9 +10,7 @@ if(getRversion() >= '2.15.1') utils::globalVariables("ds")
 #' @param legends An index for the fits for which legends should be shown.
 #' @param standardized Should the residuals be standardized? Only takes effect if
 #'   `resplot = "time"`.
-#' @param cex Passed to the plot functions and \code{\link{mtext}}.
-#' @param rel.height.middle The relative height of the middle plot, if more
-#'   than two rows of plots are shown.
+#' @param rel.height.bottom The relative height of the bottom plot row
 #' @param ymax Vector of maximum y axis values
 #' @param \dots Further arguments passed to \code{\link{plot.mkinfit}} and
 #'   \code{\link{mkinresplot}}.
@@ -36,20 +34,20 @@ if(getRversion() >= '2.15.1') utils::globalVariables("ds")
 #' library(nlme)
 #' # For this fit we need to increase pnlsMaxiter, and we increase the
 #' # tolerance in order to speed up the fit for this example evaluation
-#' f_nlme <- nlme(f, control = list(pnlsMaxIter = 120, tolerance = 1e-4))
+#' f_nlme <- nlme(f, control = list(pnlsMaxIter = 120, tolerance = 1e-3))
 #' plot(f_nlme)
 #' @export
 plot.nlme.mmkin <- function(x, i = 1:ncol(x$mmkin_orig),
-  main = rownames(x$mmkin_orig),
+  main = NULL,
   obs_vars = names(x$mkinmod$map),
   standardized = TRUE,
-  xlab = "Time", ylab = "Observed",
+  xlab = "Time",
   xlim = range(x$data$time),
   legends = 1,
   lpos = "topright", inset = c(0.05, 0.05),
   resplot = c("predicted", "time"),
   ymax = "auto", maxabs = "auto",
-  cex = 0.7, rel.height.middle = 0.9,
+  rel.height.bottom = 1.1,
   pch_ds = 1:length(i),
   col_ds = pch_ds + 1,
   lty_ds = col_ds,
@@ -82,11 +80,7 @@ plot.nlme.mmkin <- function(x, i = 1:ncol(x$mmkin_orig),
 
   # Set relative plot heights, so the first and the last plot are the norm
   # and the middle plots (if n_plot_rows >2) are smaller by rel.height.middle
-  rel.heights <- if (n_plot_rows > 2) {
-    c(1, rep(rel.height.middle, n_plot_rows - 2), 1)
-  } else {
-    rep(1, n_plot_rows)
-  }
+  rel.heights <- if (n_plot_rows > 1) c(rep(1, n_plot_rows - 1), rel.height.bottom) else 1
 
   layout_matrix = matrix(1:n_plots,
     n_plot_rows, 2, byrow = TRUE)
@@ -145,31 +139,18 @@ plot.nlme.mmkin <- function(x, i = 1:ncol(x$mmkin_orig),
       ylim_row = c(0, ymax[plot_row])
     }
 
-    # Margins for top row of plots when we have more than one row
-    # Reduce bottom margin by 2.1 - hides x axis legend
-    if (plot_row == 1 & n_plot_rows > 1) {
-      par(mar = c(3.0, 4.1, 4.1, 2.1))
-    }
-
-    # Margins for middle rows of plots, if any
-    if (plot_row > 1 & plot_row < n_plot_rows) {
-      # Reduce top margin by 2 after the first plot as we have no main title,
-      # reduced plot height, therefore we need rel.height.middle in the layout
+    # Margins for bottom row of plots when we have more than one row
+    # This is the only row that needs to show the x axis legend
+    if (plot_row == n_plot_rows) {
+      par(mar = c(5.1, 4.1, 2.1, 2.1))
+    } else {
       par(mar = c(3.0, 4.1, 2.1, 2.1))
     }
 
-    # Margins for bottom row of plots when we have more than one row
-    if (plot_row == n_plot_rows & n_plot_rows > 1) {
-      # Restore bottom margin for last plot to show x axis legend
-      par(mar = c(5.1, 4.1, 2.1, 2.1))
-    }
-
     plot(pred_pop$time, pred_pop[[obs_var]],
-      main = obs_var,
       type = "l", lwd = 2,
       xlim = xlim, ylim = ylim_row,
-      xlab = xlab, ylab = ylab, frame = frame,
-      cex = cex)
+      xlab = xlab, ylab = obs_var, frame = frame)
 
     for (ds_i in seq_along(i)) {
       points(subset(observed_row, ds == ds_names[ds_i], c("time", "value")),
@@ -180,7 +161,7 @@ plot.nlme.mmkin <- function(x, i = 1:ncol(x$mmkin_orig),
 
     if (plot_row %in% legends) {
       legend(lpos, inset = inset,
-        legend = c("Population mean", ds_names[i]),
+        legend = c("Population", ds_names[i]),
         lty = c(1, lty_ds), lwd = c(2, rep(1, length(i))),
         col = c(1, col_ds),
         pch = c(NA, pch_ds))
@@ -193,9 +174,9 @@ plot.nlme.mmkin <- function(x, i = 1:ncol(x$mmkin_orig),
 
     if (identical(resplot, "time")) {
       plot(0, type = "n", xlim = xlim, xlab = "Time",
-        main = obs_var,
         ylim = c(-1.2 * maxabs, 1.2 * maxabs),
         ylab = if (standardized) "Standardized residual" else "Residual")
+
       abline(h = 0, lty = 2)
 
       for (ds_i in seq_along(i)) {
@@ -206,7 +187,6 @@ plot.nlme.mmkin <- function(x, i = 1:ncol(x$mmkin_orig),
 
     if (identical(resplot, "predicted")) {
       plot(0, type = "n",
-        main = obs_var,
         xlim = c(0, max(pred_ds[[obs_var]])),
         xlab = "Predicted",
         ylim = c(-1.2 * maxabs, 1.2 * maxabs),

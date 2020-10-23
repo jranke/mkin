@@ -7,11 +7,10 @@
 \method{plot}{nlme.mmkin}(
   x,
   i = 1:ncol(x$mmkin_orig),
-  main = rownames(x$mmkin_orig),
+  main = NULL,
   obs_vars = names(x$mkinmod$map),
   standardized = TRUE,
   xlab = "Time",
-  ylab = "Observed",
   xlim = range(x$data$time),
   legends = 1,
   lpos = "topright",
@@ -19,8 +18,7 @@
   resplot = c("predicted", "time"),
   ymax = "auto",
   maxabs = "auto",
-  cex = 0.7,
-  rel.height.middle = 0.9,
+  rel.height.bottom = 1.1,
   pch_ds = 1:length(i),
   col_ds = pch_ds + 1,
   lty_ds = col_ds,
@@ -45,8 +43,6 @@ variables in the model.}
 
 \item{xlab}{Label for the x axis.}
 
-\item{ylab}{Label for the y axis.}
-
 \item{xlim}{Plot range in x direction.}
 
 \item{legends}{An index for the fits for which legends should be shown.}
@@ -65,10 +61,7 @@ predicted values?}
 \item{maxabs}{Maximum absolute value of the residuals. This is used for the
 scaling of the y axis and defaults to "auto".}
 
-\item{cex}{Passed to the plot functions and \code{\link{mtext}}.}
-
-\item{rel.height.middle}{The relative height of the middle plot, if more
-than two rows of plots are shown.}
+\item{rel.height.bottom}{The relative height of the bottom plot row}
 
 \item{pch_ds}{Symbols to be used for plotting the data.}
 
@@ -99,7 +92,7 @@ plot(f[, 3:4], standardized = TRUE)
 library(nlme)
 # For this fit we need to increase pnlsMaxiter, and we increase the
 # tolerance in order to speed up the fit for this example evaluation
-f_nlme <- nlme(f, control = list(pnlsMaxIter = 120, tolerance = 1e-4))
+f_nlme <- nlme(f, control = list(pnlsMaxIter = 120, tolerance = 1e-3))
 plot(f_nlme)
 }
 \author{

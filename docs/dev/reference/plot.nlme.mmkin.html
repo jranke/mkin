@@ -151,11 +151,10 @@
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span>
   <span class='va'>x</span>,
   i <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>$</span><span class='va'>mmkin_orig</span><span class='op'>)</span>,
-  main <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>$</span><span class='va'>mmkin_orig</span><span class='op'>)</span>,
+  main <span class='op'>=</span> <span class='cn'>NULL</span>,
   obs_vars <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>$</span><span class='va'>mkinmod</span><span class='op'>$</span><span class='va'>map</span><span class='op'>)</span>,
   standardized <span class='op'>=</span> <span class='cn'>TRUE</span>,
   xlab <span class='op'>=</span> <span class='st'>"Time"</span>,
-  ylab <span class='op'>=</span> <span class='st'>"Observed"</span>,
   xlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/range.html'>range</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>$</span><span class='va'>data</span><span class='op'>$</span><span class='va'>time</span><span class='op'>)</span>,
   legends <span class='op'>=</span> <span class='fl'>1</span>,
   lpos <span class='op'>=</span> <span class='st'>"topright"</span>,
@@ -163,8 +162,7 @@
   resplot <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"predicted"</span>, <span class='st'>"time"</span><span class='op'>)</span>,
   ymax <span class='op'>=</span> <span class='st'>"auto"</span>,
   maxabs <span class='op'>=</span> <span class='st'>"auto"</span>,
-  cex <span class='op'>=</span> <span class='fl'>0.7</span>,
-  rel.height.middle <span class='op'>=</span> <span class='fl'>0.9</span>,
+  rel.height.bottom <span class='op'>=</span> <span class='fl'>1.1</span>,
   pch_ds <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>i</span><span class='op'>)</span>,
   col_ds <span class='op'>=</span> <span class='va'>pch_ds</span> <span class='op'>+</span> <span class='fl'>1</span>,
   lty_ds <span class='op'>=</span> <span class='va'>col_ds</span>,
@@ -204,10 +202,6 @@ variables in the model.</p></td>
       <td><p>Label for the x axis.</p></td>
     </tr>
     <tr>
-      <th>ylab</th>
-      <td><p>Label for the y axis.</p></td>
-    </tr>
-    <tr>
       <th>xlim</th>
       <td><p>Plot range in x direction.</p></td>
     </tr>
@@ -240,13 +234,8 @@ predicted values?</p></td>
 scaling of the y axis and defaults to "auto".</p></td>
     </tr>
     <tr>
-      <th>cex</th>
-      <td><p>Passed to the plot functions and <code><a href='https://rdrr.io/r/graphics/mtext.html'>mtext</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>rel.height.middle</th>
-      <td><p>The relative height of the middle plot, if more
-than two rows of plots are shown.</p></td>
+      <th>rel.height.bottom</th>
+      <td><p>The relative height of the bottom plot row</p></td>
     </tr>
     <tr>
       <th>pch_ds</th>
@@ -290,7 +279,7 @@ corresponding model prediction lines for the different datasets.</p></td>
 </div><div class='img'><img src='plot.nlme.mmkin-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://svn.r-project.org/R-packages/trunk/nlme/'>nlme</a></span><span class='op'>)</span>
 <span class='co'># For this fit we need to increase pnlsMaxiter, and we increase the</span>
 <span class='co'># tolerance in order to speed up the fit for this example evaluation</span>
-<span class='va'>f_nlme</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f</span>, control <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>pnlsMaxIter <span class='op'>=</span> <span class='fl'>120</span>, tolerance <span class='op'>=</span> <span class='fl'>1e-4</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>f_nlme</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f</span>, control <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>pnlsMaxIter <span class='op'>=</span> <span class='fl'>120</span>, tolerance <span class='op'>=</span> <span class='fl'>1e-3</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_nlme</span><span class='op'>)</span>
 </div><div class='img'><img src='plot.nlme.mmkin-2.png' alt='' width='700' height='433' /></div></pre>
   </div>
