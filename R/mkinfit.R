@@ -292,7 +292,7 @@ mkinfit <- function(mkinmod, observed,
   # Also remove zero values to avoid instabilities (e.g. of the 'tc' error model)
   if (any(observed$value == 0)) {
     zero_warning <- "Observations with value of zero were removed from the data"
-    summary_warnings <- c(summary_warnings, zero_warning)
+    summary_warnings <- c(summary_warnings, Z = zero_warning)
     warning(zero_warning)
     observed <- subset(observed, value != 0)
   }
@@ -860,7 +860,7 @@ mkinfit <- function(mkinmod, observed,
 
   if (fit$convergence != 0) {
     convergence_warning = paste0("Optimisation did not converge:\n", fit$message)
-    summary_warnings <- c(summary_warnings, convergence_warning)
+    summary_warnings <- c(summary_warnings, C = convergence_warning)
     warning(convergence_warning)
   } else {
     if(!quiet) message("Optimisation successfully terminated.\n")
@@ -938,7 +938,7 @@ mkinfit <- function(mkinmod, observed,
   if (fit$shapiro.p < 0.05) {
     shapiro_warning <- paste("Shapiro-Wilk test for standardized residuals: p = ", signif(fit$shapiro.p, 3))
     warning(shapiro_warning)
-    summary_warnings <- c(summary_warnings, shapiro_warning)
+    summary_warnings <- c(summary_warnings, S = shapiro_warning)
   }
 
   fit$summary_warnings <- summary_warnings
