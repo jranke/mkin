@@ -196,6 +196,8 @@ nlme.mmkin <- function(model, data = sys.frame(sys.parent()),
 
   val <- do.call("nlme.formula", thisCall)
   val$mmkin_orig <- model
+  val$data <- thisCall[["data"]]
+  val$mkinmod <- model[[1]]$mkinmod
   class(val) <- c("nlme.mmkin", "nlme", "lme")
   return(val)
 }

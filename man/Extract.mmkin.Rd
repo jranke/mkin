@@ -22,7 +22,7 @@ either a list of mkinfit objects or a single mkinfit object.}
 An object of class \code{\link{mmkin}}.
 }
 \description{
-Subsetting method for mmkin objects.
+Subsetting method for mmkin objects
 }
 \examples{
 
@@ -37,7 +37,6 @@ Subsetting method for mmkin objects.
     # This extracts an mkinfit object with lots of components
     fits[["FOMC", "B"]]
   )
-
 }
 \author{
 Johannes Ranke

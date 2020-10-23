@@ -54,12 +54,16 @@
 #'
 #' @export
 plot.mmkin <- function(x, main = "auto", legends = 1,
-                       resplot = c("time", "errmod"),
-                       standardized = FALSE,
-                       show_errmin = TRUE,
-                       errmin_var = "All data", errmin_digits = 3,
-                       cex = 0.7, rel.height.middle = 0.9,
-                       ymax = "auto", ...) {
+  resplot = c("time", "errmod"),
+  standardized = FALSE,
+  show_errmin = TRUE,
+  errmin_var = "All data", errmin_digits = 3,
+  cex = 0.7, rel.height.middle = 0.9,
+  ymax = "auto", ...)
+{
+
+  oldpar <- par(no.readonly = TRUE)
+
   n.m <- nrow(x)
   n.d <- ncol(x)
 
@@ -81,8 +85,6 @@ plot.mmkin <- function(x, main = "auto", legends = 1,
                   models = colnames(x),
                   datasets = rownames(x))
   }
-
-  oldpar <- par(no.readonly = TRUE)
 
   # Set relative plot heights, so the first and the last plot are the norm
   # and the middle plots (if n.fits >2) are smaller by rel.height.middle

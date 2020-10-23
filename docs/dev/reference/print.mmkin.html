@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Subsetting method for mmkin objects — [.mmkin • mkin</title>
+<title>Print method for mmkin objects — print.mmkin • mkin</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Subsetting method for mmkin objects — [.mmkin" />
-<meta property="og:description" content="Subsetting method for mmkin objects" />
+<meta property="og:title" content="Print method for mmkin objects — print.mmkin" />
+<meta property="og:description" content="Print method for mmkin objects" />
 
 
 <meta name="robots" content="noindex">
@@ -138,106 +138,32 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Subsetting method for mmkin objects</h1>
+    <h1>Print method for mmkin objects</h1>
     <small class="dont-index">Source: <a href='https://github.com/jranke/mkin/blob/master/R/mmkin.R'><code>R/mmkin.R</code></a></small>
-    <div class="hidden name"><code>Extract.mmkin.Rd</code></div>
+    <div class="hidden name"><code>print.mmkin.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Subsetting method for mmkin objects</p>
+    <p>Print method for mmkin objects</p>
     </div>
 
-    <pre class="usage"># S3 method for mmkin
-[(x, i, j, ..., drop = FALSE)</pre>
+    <pre class="usage"><span class='co'># S3 method for mmkin</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>An <code><a href='mmkin.html'>mmkin</a> object</code></p></td>
-    </tr>
-    <tr>
-      <th>i</th>
-      <td><p>Row index selecting the fits for specific models</p></td>
-    </tr>
-    <tr>
-      <th>j</th>
-      <td><p>Column index selecting the fits to specific datasets</p></td>
+      <td><p>An <a href='mmkin.html'>mmkin</a> object.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Not used, only there to satisfy the generic method definition</p></td>
-    </tr>
-    <tr>
-      <th>drop</th>
-      <td><p>If FALSE, the method always returns an mmkin object, otherwise
-either a list of mkinfit objects or a single mkinfit object.</p></td>
+      <td><p>Not used.</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An object of class <code><a href='mmkin.html'>mmkin</a></code>.</p>
-    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
-
-    <p>Johannes Ranke</p>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-  <span class='co'># Only use one core, to pass R CMD check --as-cran</span>
-  <span class='va'>fits</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='st'>"FOMC"</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>B <span class='op'>=</span> <span class='va'>FOCUS_2006_B</span>, C <span class='op'>=</span> <span class='va'>FOCUS_2006_C</span><span class='op'>)</span>,
-                cores <span class='op'>=</span> <span class='fl'>1</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-  <span class='va'>fits</span><span class='op'>[</span><span class='st'>"FOMC"</span>, <span class='op'>]</span>
-</div><div class='output co'>#&gt; &lt;mmkin&gt; object
-#&gt; Status of individual fits:
-#&gt; 
-#&gt;       dataset
-#&gt; model  B  C 
-#&gt;   FOMC OK OK
-#&gt; 
-#&gt; OK: No warnings</div><div class='input'>  <span class='va'>fits</span><span class='op'>[</span>, <span class='st'>"B"</span><span class='op'>]</span>
-</div><div class='output co'>#&gt; &lt;mmkin&gt; object
-#&gt; Status of individual fits:
-#&gt; 
-#&gt;       dataset
-#&gt; model  B 
-#&gt;   SFO  OK
-#&gt;   FOMC OK
-#&gt; 
-#&gt; OK: No warnings</div><div class='input'>  <span class='va'>fits</span><span class='op'>[</span><span class='st'>"SFO"</span>, <span class='st'>"B"</span><span class='op'>]</span>
-</div><div class='output co'>#&gt; &lt;mmkin&gt; object
-#&gt; Status of individual fits:
-#&gt; 
-#&gt;      dataset
-#&gt; model B 
-#&gt;   SFO OK
-#&gt; 
-#&gt; OK: No warnings</div><div class='input'>
-  <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span>
-    <span class='co'># This extracts an mkinfit object with lots of components</span>
-    <span class='va'>fits</span><span class='op'>[[</span><span class='st'>"FOMC"</span>, <span class='st'>"B"</span><span class='op'>]</span><span class='op'>]</span>
-  <span class='op'>)</span>
-</div><div class='output co'>#&gt; $par
-#&gt;  parent_0 log_alpha  log_beta     sigma 
-#&gt; 99.666193  2.549849  5.050586  1.890202 
-#&gt; 
-#&gt; $objective
-#&gt; [1] 28.58291
-#&gt; 
-#&gt; $convergence
-#&gt; [1] 0
-#&gt; 
-#&gt; $iterations
-#&gt; [1] 21
-#&gt; 
-#&gt; $evaluations
-#&gt; function gradient 
-#&gt;       25       78 
-#&gt; 
-#&gt; $message
-#&gt; [1] "both X-convergence and relative convergence (5)"
-#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

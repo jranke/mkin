@@ -7,16 +7,24 @@
 \method{plot}{nlme.mmkin}(
   x,
   i = 1:ncol(x$mmkin_orig),
-  main = "auto",
+  main = rownames(x$mmkin_orig),
+  obs_vars = names(x$mkinmod$map),
+  standardized = TRUE,
+  xlab = "Time",
+  ylab = "Observed",
+  xlim = range(x$data$time),
   legends = 1,
-  resplot = c("time", "errmod"),
-  standardized = FALSE,
-  show_errmin = TRUE,
-  errmin_var = "All data",
-  errmin_digits = 3,
+  lpos = "topright",
+  inset = c(0.05, 0.05),
+  resplot = c("predicted", "time"),
+  ymax = "auto",
+  maxabs = "auto",
   cex = 0.7,
   rel.height.middle = 0.9,
-  ymax = "auto",
+  pch_ds = 1:length(i),
+  col_ds = pch_ds + 1,
+  lty_ds = col_ds,
+  frame = TRUE,
   ...
 )
 }
@@ -28,31 +36,48 @@ in case plots get too large}
 
 \item{main}{The main title placed on the outer margin of the plot.}
 
-\item{legends}{An index for the fits for which legends should be shown.}
+\item{obs_vars}{A character vector of names of the observed variables for
+which the data and the model should be plotted. Defauls to all observed
+variables in the model.}
 
-\item{resplot}{Should the residuals plotted against time, using
-\code{\link{mkinresplot}}, or as squared residuals against predicted
-values, with the error model, using \code{\link{mkinerrplot}}.}
-
-\item{standardized}{Should the residuals be standardized? This option
-is passed to \code{\link{mkinresplot}}, it only takes effect if
+\item{standardized}{Should the residuals be standardized? Only takes effect if
 \code{resplot = "time"}.}
 
-\item{show_errmin}{Should the chi2 error level be shown on top of the plots
-to the left?}
+\item{xlab}{Label for the x axis.}
 
-\item{errmin_var}{The variable for which the FOCUS chi2 error value should
-be shown.}
+\item{ylab}{Label for the y axis.}
 
-\item{errmin_digits}{The number of significant digits for rounding the FOCUS
-chi2 error percentage.}
+\item{xlim}{Plot range in x direction.}
+
+\item{legends}{An index for the fits for which legends should be shown.}
+
+\item{lpos}{Position(s) of the legend(s). Passed to \code{\link{legend}} as
+the first argument.  If not length one, this should be of the same length
+as the obs_var argument.}
+
+\item{inset}{Passed to \code{\link{legend}} if applicable.}
+
+\item{resplot}{Should the residuals plotted against time or against
+predicted values?}
+
+\item{ymax}{Vector of maximum y axis values}
+
+\item{maxabs}{Maximum absolute value of the residuals. This is used for the
+scaling of the y axis and defaults to "auto".}
 
 \item{cex}{Passed to the plot functions and \code{\link{mtext}}.}
 
 \item{rel.height.middle}{The relative height of the middle plot, if more
 than two rows of plots are shown.}
 
-\item{ymax}{Maximum y axis value for \code{\link{plot.mkinfit}}.}
+\item{pch_ds}{Symbols to be used for plotting the data.}
+
+\item{col_ds}{Colors used for plotting the observed data and the
+corresponding model prediction lines for the different datasets.}
+
+\item{lty_ds}{Line types to be used for the model predictions.}
+
+\item{frame}{Should a frame be drawn around the plots?}
 
 \item{\dots}{Further arguments passed to \code{\link{plot.mkinfit}} and
 \code{\link{mkinresplot}}.}
@@ -65,15 +90,17 @@ Plot a fitted nonlinear mixed model obtained via an mmkin row object
 }
 \examples{
 ds <- lapply(experimental_data_for_UBA_2019[6:10],
- function(x) subset(x$data[c("name", "time", "value")], name == "parent"))
-f <- mmkin("SFO", ds, quiet = TRUE, cores = 1)
-#plot(f) # too many panels for pkgdown
-plot(f[, 3:4])
+ function(x) x$data[c("name", "time", "value")])
+names(ds) <- paste0("ds ", 6:10)
+dfop_sfo <- mkinmod(parent = mkinsub("DFOP", "A1"),
+  A1 = mkinsub("SFO"), quiet = TRUE)
+f <- mmkin(list("DFOP-SFO" = dfop_sfo), ds, quiet = TRUE, cores = 1)
+plot(f[, 3:4], standardized = TRUE)
 library(nlme)
-f_nlme <- nlme(f)
-
-#plot(f_nlme) # too many panels for pkgdown
-plot(f_nlme, 3:4)
+# For this fit we need to increase pnlsMaxiter, and we increase the
+# tolerance in order to speed up the fit for this example evaluation
+f_nlme <- nlme(f, control = list(pnlsMaxIter = 120, tolerance = 1e-4))
+plot(f_nlme)
 }
 \author{
 Johannes Ranke
