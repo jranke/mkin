@@ -83,6 +83,7 @@ f_nlme_sfo <- nlme(f["SFO", ])
 f_nlme_dfop <- nlme(f["DFOP", ])
 AIC(f_nlme_sfo, f_nlme_dfop)
 print(f_nlme_dfop)
+plot(f_nlme_dfop)
 endpoints(f_nlme_dfop)
 \dontrun{
   f_nlme_2 <- nlme(f["SFO", ], start = c(parent_0 = 100, log_k_parent = 0.1))
@@ -93,58 +94,36 @@ endpoints(f_nlme_dfop)
     A1 = mkinsub("SFO"), use_of_ff = "min", quiet = TRUE)
   m_sfo_sfo_ff <- mkinmod(parent = mkinsub("SFO", "A1"),
     A1 = mkinsub("SFO"), use_of_ff = "max", quiet = TRUE)
-  m_fomc_sfo <- mkinmod(parent = mkinsub("FOMC", "A1"),
-    A1 = mkinsub("SFO"), quiet = TRUE)
   m_dfop_sfo <- mkinmod(parent = mkinsub("DFOP", "A1"),
     A1 = mkinsub("SFO"), quiet = TRUE)
 
   f_2 <- mmkin(list("SFO-SFO" = m_sfo_sfo,
    "SFO-SFO-ff" = m_sfo_sfo_ff,
-   "FOMC-SFO" = m_fomc_sfo,
    "DFOP-SFO" = m_dfop_sfo),
     ds_2, quiet = TRUE)
-  plot(f_2["SFO-SFO", 3:4]) # Separate fits for datasets 3 and 4
 
   f_nlme_sfo_sfo <- nlme(f_2["SFO-SFO", ])
-  # plot(f_nlme_sfo_sfo) # not feasible with pkgdown figures
-  plot(f_nlme_sfo_sfo, 3:4) # Global mixed model: Fits for datasets 3 and 4
+  plot(f_nlme_sfo_sfo)
 
   # With formation fractions
   f_nlme_sfo_sfo_ff <- nlme(f_2["SFO-SFO-ff", ])
-  plot(f_nlme_sfo_sfo_ff, 3:4) # chi2 different due to different df attribution
+  plot(f_nlme_sfo_sfo_ff)
 
-  # For more parameters, we need to increase pnlsMaxIter and the tolerance
+  # For the following fit we need to increase pnlsMaxIter and the tolerance
   # to get convergence
-  f_nlme_fomc_sfo <- nlme(f_2["FOMC-SFO", ],
-    control = list(pnlsMaxIter = 100, tolerance = 1e-4), verbose = TRUE)
   f_nlme_dfop_sfo <- nlme(f_2["DFOP-SFO", ],
     control = list(pnlsMaxIter = 120, tolerance = 5e-4), verbose = TRUE)
-  plot(f_2["FOMC-SFO", 3:4])
-  plot(f_nlme_fomc_sfo, 3:4)
 
-  plot(f_2["DFOP-SFO", 3:4])
-  plot(f_nlme_dfop_sfo, 3:4)
+  plot(f_nlme_dfop_sfo)
 
-  anova(f_nlme_dfop_sfo, f_nlme_fomc_sfo, f_nlme_sfo_sfo)
-  anova(f_nlme_dfop_sfo, f_nlme_sfo_sfo) # if we ignore FOMC
+  anova(f_nlme_dfop_sfo, f_nlme_sfo_sfo)
 
   endpoints(f_nlme_sfo_sfo)
   endpoints(f_nlme_dfop_sfo)
 
   if (length(findFunction("varConstProp")) > 0) { # tc error model for nlme available
-    # Attempts to fit metabolite kinetics with the tc error model
-    #f_2_tc <- mmkin(list("SFO-SFO" = m_sfo_sfo,
-    #  "SFO-SFO-ff" = m_sfo_sfo_ff,
-    #  "FOMC-SFO" = m_fomc_sfo,
-    #  "DFOP-SFO" = m_dfop_sfo),
-    #   ds_2, quiet = TRUE,
-    #   error_model = "tc")
-    #f_nlme_sfo_sfo_tc <- nlme(f_2_tc["SFO-SFO", ], control = list(maxIter = 100))
-    #f_nlme_dfop_sfo_tc <- nlme(f_2_tc["DFOP-SFO", ])
-    #f_nlme_dfop_sfo_tc <- update(f_nlme_dfop_sfo, weights = varConstProp(),
-    #  control = list(sigma = 1, msMaxIter = 100, pnlsMaxIter = 15))
-    # Fitting metabolite kinetics with nlme.mmkin and the two-component
-    # error model currently does not work, at least not with these data.
+    # Attempts to fit metabolite kinetics with the tc error model are possible,
+    # but need tweeking of control values and sometimes do not converge
 
     f_tc <- mmkin(c("SFO", "DFOP"), ds, quiet = TRUE, error_model = "tc")
     f_nlme_sfo_tc <- nlme(f_tc["SFO", ])

@@ -99,7 +99,7 @@ plot.nlme.mmkin <- function(x, i = 1:ncol(x$mmkin_orig),
       transform_fractions = fit_1$transform_fractions)
 
     odeini <- degparms_all[ds_i, odeini_names]
-    names(odeini) <- gsub("_0", "", names(odeini))
+    names(odeini) <- gsub("_0", "", odeini_names)
 
     out <- mkinpredict(x$mkinmod, odeparms, odeini,
       outtimes, solution_type = solution_type,
@@ -116,7 +116,7 @@ plot.nlme.mmkin <- function(x, i = 1:ncol(x$mmkin_orig),
     transform_fractions = fit_1$transform_fractions)
 
   odeini_pop <- degparms_all_pop[odeini_names]
-  names(odeini_pop) <- gsub("_0", "", names(odeini_pop))
+  names(odeini_pop) <- gsub("_0", "", odeini_names)
 
   pred_pop <- as.data.frame(
     mkinpredict(x$mkinmod, odeparms_pop, odeini_pop,
@@ -170,7 +170,6 @@ plot.nlme.mmkin <- function(x, i = 1:ncol(x$mmkin_orig),
     if (identical(maxabs, "auto")) {
       maxabs = max(abs(observed_row$residual), na.rm = TRUE)
     }
-
 
     if (identical(resplot, "time")) {
       plot(0, type = "n", xlim = xlim, xlab = "Time",
