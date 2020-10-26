@@ -63,7 +63,9 @@ plot.nlme.mmkin <- function(x, i = 1:ncol(x$mmkin_orig),
   degparms_optim_names <- names(degparms_optim)
   degparms_fixed <- fit_1$fixed$value
   names(degparms_fixed) <- rownames(fit_1$fixed)
-  degparms_all <- cbind(as.matrix(degparms_optim), fit_1$bparms.fixed)
+  degparms_all <- cbind(as.matrix(degparms_optim),
+    matrix(rep(degparms_fixed, nrow(degparms_optim)),
+      ncol = length(degparms_fixed), byrow = TRUE))
   degparms_all_names <- c(degparms_optim_names, names(degparms_fixed))
   colnames(degparms_all) <- degparms_all_names
 
