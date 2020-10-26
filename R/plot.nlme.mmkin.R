@@ -5,11 +5,10 @@ if(getRversion() >= '2.15.1') utils::globalVariables("ds")
 #' @param x An object of class \code{\link{nlme.mmkin}}
 #' @param i A numeric index to select datasets for which to plot the nlme fit,
 #'   in case plots get too large
-#' @param main The main title placed on the outer margin of the plot.
 #' @inheritParams plot.mkinfit
-#' @param legends An index for the fits for which legends should be shown.
 #' @param standardized Should the residuals be standardized? Only takes effect if
 #'   `resplot = "time"`.
+#' @param rel.height.legend The relative height of the legend shown on top
 #' @param rel.height.bottom The relative height of the bottom plot row
 #' @param ymax Vector of maximum y axis values
 #' @param \dots Further arguments passed to \code{\link{plot.mkinfit}} and
@@ -31,6 +30,7 @@ if(getRversion() >= '2.15.1') utils::globalVariables("ds")
 #'   A1 = mkinsub("SFO"), quiet = TRUE)
 #' f <- mmkin(list("DFOP-SFO" = dfop_sfo), ds, quiet = TRUE, cores = 1)
 #' plot(f[, 3:4], standardized = TRUE)
+#'
 #' library(nlme)
 #' # For this fit we need to increase pnlsMaxiter, and we increase the
 #' # tolerance in order to speed up the fit for this example evaluation
@@ -38,15 +38,15 @@ if(getRversion() >= '2.15.1') utils::globalVariables("ds")
 #' plot(f_nlme)
 #' @export
 plot.nlme.mmkin <- function(x, i = 1:ncol(x$mmkin_orig),
-  main = NULL,
   obs_vars = names(x$mkinmod$map),
   standardized = TRUE,
   xlab = "Time",
   xlim = range(x$data$time),
-  legends = 1,
-  lpos = "topright", inset = c(0.05, 0.05),
   resplot = c("predicted", "time"),
   ymax = "auto", maxabs = "auto",
+  ncol.legend = ifelse(length(i) <= 3, length(i) + 1, ifelse(length(i) <= 8, 3, 4)),
+  nrow.legend = ceiling((length(i) + 1) / ncol.legend),
+  rel.height.legend = 0.03 + 0.08 * nrow.legend,
   rel.height.bottom = 1.1,
   pch_ds = 1:length(i),
   col_ds = pch_ds + 1,
@@ -65,7 +65,7 @@ plot.nlme.mmkin <- function(x, i = 1:ncol(x$mmkin_orig),
   names(degparms_fixed) <- rownames(fit_1$fixed)
   degparms_all <- cbind(as.matrix(degparms_optim),
     matrix(rep(degparms_fixed, nrow(degparms_optim)),
-      ncol = length(degparms_fixed), 
+      ncol = length(degparms_fixed),
       nrow = nrow(degparms_optim), byrow = TRUE))
   degparms_all_names <- c(degparms_optim_names, names(degparms_fixed))
   colnames(degparms_all) <- degparms_all_names
@@ -81,13 +81,26 @@ plot.nlme.mmkin <- function(x, i = 1:ncol(x$mmkin_orig),
   n_plot_rows = length(obs_vars)
   n_plots = n_plot_rows * 2
 
-  # Set relative plot heights, so the first and the last plot are the norm
-  # and the middle plots (if n_plot_rows >2) are smaller by rel.height.middle
-  rel.heights <- if (n_plot_rows > 1) c(rep(1, n_plot_rows - 1), rel.height.bottom) else 1
+  # Set relative plot heights, so the first plot row is the norm
+  rel.heights <- if (n_plot_rows > 1) {
+    c(rel.height.legend, c(rep(1, n_plot_rows - 1), rel.height.bottom))
+  } else {
+    c(rel.height.legend, 1)
+  }
 
-  layout_matrix = matrix(1:n_plots,
-    n_plot_rows, 2, byrow = TRUE)
+  layout_matrix = matrix(c(1, 1, 2:(n_plots + 1)),
+    n_plot_rows + 1, 2, byrow = TRUE)
   layout(layout_matrix, heights = rel.heights)
+
+  par(mar = c(0.1, 2.1, 0.6, 2.1))
+
+  plot(0, type = "n", axes = FALSE, ann = FALSE)
+  legend("center", bty = "n", ncol = ncol.legend,
+    legend = c("Population", ds_names[i]),
+    lty = c(1, lty_ds), lwd = c(2, rep(1, length(i))),
+    col = c(1, col_ds),
+    pch = c(NA, pch_ds))
+
 
   solution_type = fit_1$solution_type
 
@@ -96,6 +109,7 @@ plot.nlme.mmkin <- function(x, i = 1:ncol(x$mmkin_orig),
 
   pred_ds <- purrr::map_dfr(i, function(ds_i)   {
     odeparms_trans <- degparms_all[ds_i, odeparms_names]
+    names(odeparms_trans) <- odeparms_names # needed if only one odeparm
     odeparms <- backtransform_odeparms(odeparms_trans,
       x$mkinmod,
       transform_rates = fit_1$transform_rates,
@@ -162,14 +176,6 @@ plot.nlme.mmkin <- function(x, i = 1:ncol(x$mmkin_orig),
         col = col_ds[ds_i], lty = lty_ds[ds_i])
     }
 
-    if (plot_row %in% legends) {
-      legend(lpos, inset = inset,
-        legend = c("Population", ds_names[i]),
-        lty = c(1, lty_ds), lwd = c(2, rep(1, length(i))),
-        col = c(1, col_ds),
-        pch = c(NA, pch_ds))
-    }
-
     if (identical(maxabs, "auto")) {
       maxabs = max(abs(observed_row$residual), na.rm = TRUE)
     }
@@ -193,6 +199,8 @@ plot.nlme.mmkin <- function(x, i = 1:ncol(x$mmkin_orig),
         xlab = "Predicted",
         ylim = c(-1.2 * maxabs, 1.2 * maxabs),
         ylab = if (standardized) "Standardized residual" else "Residual")
+
+      abline(h = 0, lty = 2)
 
       for (ds_i in seq_along(i)) {
         observed_row_ds <- merge(

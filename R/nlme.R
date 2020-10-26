@@ -48,8 +48,12 @@
 #'   start = mean_dp)
 #' summary(m_nlme)
 #' plot(augPred(m_nlme, level = 0:1), layout = c(3, 1))
-#' # augPred does not seem to work on fits with more than one state
+#' # augPred does not work on fits with more than one state
 #' # variable
+#' #
+#' # The procedure is greatly simplified by the nlme.mmkin function
+#' f_nlme <- nlme(f)
+#' plot(f_nlme)
 #'
 #' @return A function that can be used with nlme
 #' @export

@@ -7,17 +7,16 @@
 \method{plot}{nlme.mmkin}(
   x,
   i = 1:ncol(x$mmkin_orig),
-  main = NULL,
   obs_vars = names(x$mkinmod$map),
   standardized = TRUE,
   xlab = "Time",
   xlim = range(x$data$time),
-  legends = 1,
-  lpos = "topright",
-  inset = c(0.05, 0.05),
   resplot = c("predicted", "time"),
   ymax = "auto",
   maxabs = "auto",
+  ncol.legend = ifelse(length(i) <= 3, length(i) + 1, ifelse(length(i) <= 8, 3, 4)),
+  nrow.legend = ceiling((length(i) + 1)/ncol.legend),
+  rel.height.legend = 0.03 + 0.08 * nrow.legend,
   rel.height.bottom = 1.1,
   pch_ds = 1:length(i),
   col_ds = pch_ds + 1,
@@ -32,8 +31,6 @@
 \item{i}{A numeric index to select datasets for which to plot the nlme fit,
 in case plots get too large}
 
-\item{main}{The main title placed on the outer margin of the plot.}
-
 \item{obs_vars}{A character vector of names of the observed variables for
 which the data and the model should be plotted. Defauls to all observed
 variables in the model.}
@@ -45,14 +42,6 @@ variables in the model.}
 
 \item{xlim}{Plot range in x direction.}
 
-\item{legends}{An index for the fits for which legends should be shown.}
-
-\item{lpos}{Position(s) of the legend(s). Passed to \code{\link{legend}} as
-the first argument.  If not length one, this should be of the same length
-as the obs_var argument.}
-
-\item{inset}{Passed to \code{\link{legend}} if applicable.}
-
 \item{resplot}{Should the residuals plotted against time or against
 predicted values?}
 
@@ -60,6 +49,8 @@ predicted values?}
 
 \item{maxabs}{Maximum absolute value of the residuals. This is used for the
 scaling of the y axis and defaults to "auto".}
+
+\item{rel.height.legend}{The relative height of the legend shown on top}
 
 \item{rel.height.bottom}{The relative height of the bottom plot row}
 
@@ -89,6 +80,7 @@ dfop_sfo <- mkinmod(parent = mkinsub("DFOP", "A1"),
   A1 = mkinsub("SFO"), quiet = TRUE)
 f <- mmkin(list("DFOP-SFO" = dfop_sfo), ds, quiet = TRUE, cores = 1)
 plot(f[, 3:4], standardized = TRUE)
+
 library(nlme)
 # For this fit we need to increase pnlsMaxiter, and we increase the
 # tolerance in order to speed up the fit for this example evaluation

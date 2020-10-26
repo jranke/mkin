@@ -85,6 +85,7 @@ AIC(f_nlme_sfo, f_nlme_dfop)
 print(f_nlme_dfop)
 plot(f_nlme_dfop)
 endpoints(f_nlme_dfop)
+
 \dontrun{
   f_nlme_2 <- nlme(f["SFO", ], start = c(parent_0 = 100, log_k_parent = 0.1))
   update(f_nlme_2, random = parent_0 ~ 1)
@@ -131,6 +132,7 @@ endpoints(f_nlme_dfop)
     AIC(f_nlme_sfo, f_nlme_sfo_tc, f_nlme_dfop, f_nlme_dfop_tc)
     print(f_nlme_dfop_tc)
   }
+
   f_2_obs <- mmkin(list("SFO-SFO" = m_sfo_sfo,
    "DFOP-SFO" = m_dfop_sfo),
     ds_2, quiet = TRUE, error_model = "obs")
