@@ -1,8 +1,6 @@
 # mkin 0.9.50.4 (unreleased)
 
-- 'plot' method for 'nlme.mmkin' objects
-
-- 'print' method for 'mmkin' objects
+- 'plot', 'summary' and 'print' methods for 'nlme.mmkin' objects
 
 - 'saemix_model', 'saemix_data': Helper functions to fit nonlinear mixed-effects models for mmkin row objects using the saemix package
 

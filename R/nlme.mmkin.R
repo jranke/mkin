@@ -42,6 +42,9 @@ get_deg_func <- function() {
 #' @importFrom stats na.fail as.formula
 #' @return Upon success, a fitted nlme.mmkin object, which is an nlme object
 #'   with additional elements
+#' @note As the object inherits from [nlme::nlme], there is a wealth of
+#'   methods that will automatically work on 'nlme.mmkin' objects, such as
+#'   [nlme::intervals()], [nlme::anova.lme()] and [nlme::coef.lme()].
 #' @export
 #' @seealso \code{\link{nlme_function}}
 #' @examples
@@ -141,8 +144,8 @@ nlme.mmkin <- function(model, data = sys.frame(sys.parent()),
 
   thisCall[["model"]] <- this_model
 
-  mean_dp <- mean_degparms(model)
-  dp_names <- names(mean_dp)
+  mean_dp_start <- mean_degparms(model)
+  dp_names <- names(mean_dp_start)
 
   thisCall[["data"]] <- nlme_data(model)
 
@@ -175,10 +178,21 @@ nlme.mmkin <- function(model, data = sys.frame(sys.parent()),
     thisCall[["control"]] <- control
   }
 
-  val <- do.call("nlme.formula", thisCall)
+  fit_time <- system.time(val <- do.call("nlme.formula", thisCall))
+  val$time <- fit_time
+
+  val$mean_dp_start <- mean_dp_start
   val$mmkin_orig <- model
   val$data <- thisCall[["data"]]
   val$mkinmod <- model[[1]]$mkinmod
+  val$err_mode <- error_model
+  val$transform_rates <- model[[1]]$transform_rates
+  val$transform_fractions <- model[[1]]$transform_fractions
+  val$solution_type <- model[[1]]$solution_type
+  val$date.fit <- date()
+  val$nlmeversion <- as.character(utils::packageVersion("nlme"))
+  val$mkinversion <- as.character(utils::packageVersion("mkin"))
+  val$Rversion <- paste(R.version$major, R.version$minor, sep=".")
   class(val) <- c("nlme.mmkin", "nlme", "lme")
   return(val)
 }
@@ -186,10 +200,30 @@ nlme.mmkin <- function(model, data = sys.frame(sys.parent()),
 #' @export
 #' @rdname nlme.mmkin
 #' @param x An nlme.mmkin object to print
-#' @param ... Further arguments as in the generic
 print.nlme.mmkin <- function(x, ...) {
-  x$call$data <- "Not shown"
-  NextMethod("print", x)
+  cat( "Kinetic nonlinear mixed-effects model fit by " )
+  cat( if(x$method == "REML") "REML\n" else "maximum likelihood\n")
+  cat("\nStructural model:\n")
+  diffs <- x$mmkin_orig[[1]]$mkinmod$diffs
+  nice_diffs <- gsub("^(d.*) =", "\\1/dt =", diffs)
+  writeLines(strwrap(nice_diffs, exdent = 11))
+  cat("\nData:\n")
+  cat(nrow(x$data), "observations of",
+    length(unique(x$data$name)), "variable(s) grouped in",
+    length(unique(x$data$ds)), "datasets\n")
+  cat("\nLog-", if(x$method == "REML") "restricted-" else "",
+      "likelihood: ", format(x$logLik), "\n", sep = "")
+  fixF <- x$call$fixed
+  cat("\nFixed effects:\n",
+      deparse(
+  if(inherits(fixF, "formula") || is.call(fixF) || is.name(fixF))
+    x$call$fixed
+  else
+    lapply(fixF, function(el) as.name(deparse(el)))), "\n")
+  print(fixef(x), ...)
+  cat("\n")
+  print(summary(x$modelStruct), sigma = x$sigma, ...)
+  invisible(x)
 }
 
 #' @export

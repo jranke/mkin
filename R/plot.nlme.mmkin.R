@@ -11,6 +11,8 @@ if(getRversion() >= '2.15.1') utils::globalVariables("ds")
 #' @param rel.height.legend The relative height of the legend shown on top
 #' @param rel.height.bottom The relative height of the bottom plot row
 #' @param ymax Vector of maximum y axis values
+#' @param ncol.legend Number of columns to use in the legend
+#' @param nrow.legend Number of rows to use in the legend
 #' @param \dots Further arguments passed to \code{\link{plot.mkinfit}} and
 #'   \code{\link{mkinresplot}}.
 #' @param resplot Should the residuals plotted against time or against
@@ -28,7 +30,8 @@ if(getRversion() >= '2.15.1') utils::globalVariables("ds")
 #' names(ds) <- paste0("ds ", 6:10)
 #' dfop_sfo <- mkinmod(parent = mkinsub("DFOP", "A1"),
 #'   A1 = mkinsub("SFO"), quiet = TRUE)
-#' f <- mmkin(list("DFOP-SFO" = dfop_sfo), ds, quiet = TRUE, cores = 1)
+#' \dontrun{
+#' f <- mmkin(list("DFOP-SFO" = dfop_sfo), ds, quiet = TRUE)
 #' plot(f[, 3:4], standardized = TRUE)
 #'
 #' library(nlme)
@@ -36,6 +39,7 @@ if(getRversion() >= '2.15.1') utils::globalVariables("ds")
 #' # tolerance in order to speed up the fit for this example evaluation
 #' f_nlme <- nlme(f, control = list(pnlsMaxIter = 120, tolerance = 1e-3))
 #' plot(f_nlme)
+#' }
 #' @export
 plot.nlme.mmkin <- function(x, i = 1:ncol(x$mmkin_orig),
   obs_vars = names(x$mkinmod$map),

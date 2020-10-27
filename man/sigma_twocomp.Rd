@@ -44,15 +44,8 @@ f_gnls <- gnls(value ~ SSasymp(time, 0, parent_0, lrc),
   data = d_syn, na.action = na.omit,
   start = list(parent_0 = 100, lrc = -3))
 if (length(findFunction("varConstProp")) > 0) {
-  f_gnls_tc <- gnls(value ~ SSasymp(time, 0, parent_0, lrc),
-    data = d_syn, na.action = na.omit,
-    start = list(parent_0 = 100, lrc = -3),
-    weights = varConstProp())
-  f_gnls_tc_sf <- gnls(value ~ SSasymp(time, 0, parent_0, lrc),
-    data = d_syn, na.action = na.omit,
-    start = list(parent_0 = 100, lrc = -3),
-    control = list(sigma = 1),
-    weights = varConstProp())
+  f_gnls_tc <- update(f_gnls, weights = varConstProp())
+  f_gnls_tc_sf <- update(f_gnls_tc, control = list(sigma = 1))
 }
 f_mkin <- mkinfit("SFO", d_syn, error_model = "const", quiet = TRUE)
 f_mkin_tc <- mkinfit("SFO", d_syn, error_model = "tc", quiet = TRUE)

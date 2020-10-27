@@ -74,6 +74,11 @@ This functions sets up a nonlinear mixed effects model for an mmkin row
 object. An mmkin row object is essentially a list of mkinfit objects that
 have been obtained by fitting the same model to a list of datasets.
 }
+\note{
+As the object inherits from \link[nlme:nlme]{nlme::nlme}, there is a wealth of
+methods that will automatically work on 'nlme.mmkin' objects, such as
+\code{\link[nlme:intervals]{nlme::intervals()}}, \code{\link[nlme:anova.lme]{nlme::anova.lme()}} and \code{\link[nlme:coef.lme]{nlme::coef.lme()}}.
+}
 \examples{
 ds <- lapply(experimental_data_for_UBA_2019[6:10],
  function(x) subset(x$data[c("name", "time", "value")], name == "parent"))

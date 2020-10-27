@@ -50,6 +50,10 @@ predicted values?}
 \item{maxabs}{Maximum absolute value of the residuals. This is used for the
 scaling of the y axis and defaults to "auto".}
 
+\item{ncol.legend}{Number of columns to use in the legend}
+
+\item{nrow.legend}{Number of rows to use in the legend}
+
 \item{rel.height.legend}{The relative height of the legend shown on top}
 
 \item{rel.height.bottom}{The relative height of the bottom plot row}
@@ -78,7 +82,8 @@ ds <- lapply(experimental_data_for_UBA_2019[6:10],
 names(ds) <- paste0("ds ", 6:10)
 dfop_sfo <- mkinmod(parent = mkinsub("DFOP", "A1"),
   A1 = mkinsub("SFO"), quiet = TRUE)
-f <- mmkin(list("DFOP-SFO" = dfop_sfo), ds, quiet = TRUE, cores = 1)
+\dontrun{
+f <- mmkin(list("DFOP-SFO" = dfop_sfo), ds, quiet = TRUE)
 plot(f[, 3:4], standardized = TRUE)
 
 library(nlme)
@@ -86,6 +91,7 @@ library(nlme)
 # tolerance in order to speed up the fit for this example evaluation
 f_nlme <- nlme(f, control = list(pnlsMaxIter = 120, tolerance = 1e-3))
 plot(f_nlme)
+}
 }
 \author{
 Johannes Ranke

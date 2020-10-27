@@ -152,7 +152,7 @@ have been obtained by fitting the same model to a list of datasets.</p>
     </div>
 
     <pre class="usage"><span class='co'># S3 method for mmkin</span>
-<span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span>
+<span class='fu'>nlme</span><span class='op'>(</span>
   <span class='va'>model</span>,
   data <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>sys.frame</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>sys.parent</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>,
   <span class='va'>fixed</span>,
@@ -255,6 +255,11 @@ parameters taken from the mmkin object are used</p></td>
 
     <p>Upon success, a fitted nlme.mmkin object, which is an nlme object
 with additional elements</p>
+    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
+
+    <p>As the object inherits from <a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme::nlme</a>, there is a wealth of
+methods that will automatically work on 'nlme.mmkin' objects, such as
+<code><a href='https://rdrr.io/pkg/nlme/man/intervals.html'>nlme::intervals()</a></code>, <code><a href='https://rdrr.io/pkg/nlme/man/anova.lme.html'>nlme::anova.lme()</a></code> and <code><a href='https://rdrr.io/pkg/nlme/man/coef.lme.html'>nlme::coef.lme()</a></code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='nlme_function.html'>nlme_function</a></code></p></div>
@@ -270,11 +275,20 @@ with additional elements</p>
 </div><div class='output co'>#&gt;             df      AIC
 #&gt; f_nlme_sfo   5 625.0539
 #&gt; f_nlme_dfop  9 495.1270</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Nonlinear mixed-effects model fit by maximum likelihood
-#&gt;   Model: value ~ (mkin::get_deg_func())(name, time, parent_0, log_k1,      log_k2, g_ilr) 
-#&gt;   Data: "Not shown" 
-#&gt;   Log-likelihood: -238.5635
-#&gt;   Fixed: list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_ilr ~ 1) 
+</div><div class='output co'>#&gt; Kinetic nonlinear mixed-effects model fit by maximum likelihood
+#&gt; 
+#&gt; Structural model:
+#&gt; d_parent/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *
+#&gt;            time)) / (g * exp(-k1 * time) + (1 - g) * exp(-k2 * time)))
+#&gt;            * parent
+#&gt; 
+#&gt; Data:
+#&gt; 90 observations of 1 variable(s) grouped in 5 datasets
+#&gt; 
+#&gt; Log-likelihood: -238.5635
+#&gt; 
+#&gt; Fixed effects:
+#&gt;  list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_ilr ~ 1) 
 #&gt;    parent_0      log_k1      log_k2       g_ilr 
 #&gt; 94.17015133 -1.80015306 -4.14738870  0.02290935 
 #&gt; 
@@ -284,9 +298,7 @@ with additional elements</p>
 #&gt;  Structure: Diagonal
 #&gt;         parent_0    log_k1  log_k2     g_ilr Residual
 #&gt; StdDev: 2.488249 0.8447273 1.32965 0.3289311 2.321364
-#&gt; 
-#&gt; Number of Observations: 90
-#&gt; Number of Groups: 5 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop</span><span class='op'>)</span>
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop</span><span class='op'>)</span>
 </div><div class='img'><img src='nlme.mmkin-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $distimes
 #&gt;            DT50     DT90 DT50back  DT50_k1  DT50_k2
@@ -295,11 +307,18 @@ with additional elements</p>
 <span class='co'># \dontrun{</span>
   <span class='va'>f_nlme_2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f</span><span class='op'>[</span><span class='st'>"SFO"</span>, <span class='op'>]</span>, start <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>parent_0 <span class='op'>=</span> <span class='fl'>100</span>, log_k_parent <span class='op'>=</span> <span class='fl'>0.1</span><span class='op'>)</span><span class='op'>)</span>
   <span class='fu'><a href='https://rdrr.io/r/stats/update.html'>update</a></span><span class='op'>(</span><span class='va'>f_nlme_2</span>, random <span class='op'>=</span> <span class='va'>parent_0</span> <span class='op'>~</span> <span class='fl'>1</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Nonlinear mixed-effects model fit by maximum likelihood
-#&gt;   Model: value ~ (mkin::get_deg_func())(name, time, parent_0, log_k_parent) 
-#&gt;   Data: "Not shown" 
-#&gt;   Log-likelihood: -404.3729
-#&gt;   Fixed: list(parent_0 ~ 1, log_k_parent ~ 1) 
+</div><div class='output co'>#&gt; Kinetic nonlinear mixed-effects model fit by maximum likelihood
+#&gt; 
+#&gt; Structural model:
+#&gt; d_parent/dt = - k_parent * parent
+#&gt; 
+#&gt; Data:
+#&gt;  observations of 0 variable(s) grouped in 0 datasets
+#&gt; 
+#&gt; Log-likelihood: -404.3729
+#&gt; 
+#&gt; Fixed effects:
+#&gt;  list(parent_0 ~ 1, log_k_parent ~ 1) 
 #&gt;     parent_0 log_k_parent 
 #&gt;    75.933480    -3.555983 
 #&gt; 
@@ -307,9 +326,7 @@ with additional elements</p>
 #&gt;  Formula: parent_0 ~ 1 | ds
 #&gt;            parent_0 Residual
 #&gt; StdDev: 0.002416792 21.63027
-#&gt; 
-#&gt; Number of Observations: 90
-#&gt; Number of Groups: 5 </div><div class='input'>  <span class='va'>ds_2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>experimental_data_for_UBA_2019</span><span class='op'>[</span><span class='fl'>6</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>]</span>,
+#&gt; </div><div class='input'>  <span class='va'>ds_2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>experimental_data_for_UBA_2019</span><span class='op'>[</span><span class='fl'>6</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>]</span>,
    <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='va'>x</span><span class='op'>$</span><span class='va'>data</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"name"</span>, <span class='st'>"time"</span>, <span class='st'>"value"</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>
   <span class='va'>m_sfo_sfo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span><span class='op'>(</span>parent <span class='op'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='st'>"A1"</span><span class='op'>)</span>,
     A1 <span class='op'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span><span class='op'>(</span><span class='st'>"SFO"</span><span class='op'>)</span>, use_of_ff <span class='op'>=</span> <span class='st'>"min"</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
@@ -395,11 +412,20 @@ with additional elements</p>
     <span class='fu'><a href='https://rdrr.io/r/stats/AIC.html'>AIC</a></span><span class='op'>(</span><span class='va'>f_nlme_sfo</span>, <span class='va'>f_nlme_sfo_tc</span>, <span class='va'>f_nlme_dfop</span>, <span class='va'>f_nlme_dfop_tc</span><span class='op'>)</span>
     <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop_tc</span><span class='op'>)</span>
   <span class='op'>}</span>
-</div><div class='output co'>#&gt; Nonlinear mixed-effects model fit by maximum likelihood
-#&gt;   Model: value ~ (mkin::get_deg_func())(name, time, parent_0, log_k1,      log_k2, g_ilr) 
-#&gt;   Data: "Not shown" 
-#&gt;   Log-likelihood: -238.4298
-#&gt;   Fixed: list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_ilr ~ 1) 
+</div><div class='output co'>#&gt; Kinetic nonlinear mixed-effects model fit by maximum likelihood
+#&gt; 
+#&gt; Structural model:
+#&gt; d_parent/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *
+#&gt;            time)) / (g * exp(-k1 * time) + (1 - g) * exp(-k2 * time)))
+#&gt;            * parent
+#&gt; 
+#&gt; Data:
+#&gt; 90 observations of 1 variable(s) grouped in 5 datasets
+#&gt; 
+#&gt; Log-likelihood: -238.4298
+#&gt; 
+#&gt; Fixed effects:
+#&gt;  list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_ilr ~ 1) 
 #&gt;    parent_0      log_k1      log_k2       g_ilr 
 #&gt; 94.04774463 -1.82339924 -4.16715509  0.04020161 
 #&gt; 
@@ -415,19 +441,25 @@ with additional elements</p>
 #&gt;  Formula: ~fitted(.) 
 #&gt;  Parameter estimates:
 #&gt;      const       prop 
-#&gt; 2.23222625 0.01262414 
-#&gt; Number of Observations: 90
-#&gt; Number of Groups: 5 </div><div class='input'>
+#&gt; 2.23222625 0.01262414 </div><div class='input'>
   <span class='va'>f_2_obs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"SFO-SFO"</span> <span class='op'>=</span> <span class='va'>m_sfo_sfo</span>,
    <span class='st'>"DFOP-SFO"</span> <span class='op'>=</span> <span class='va'>m_dfop_sfo</span><span class='op'>)</span>,
     <span class='va'>ds_2</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span>, error_model <span class='op'>=</span> <span class='st'>"obs"</span><span class='op'>)</span>
   <span class='va'>f_nlme_sfo_sfo_obs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f_2_obs</span><span class='op'>[</span><span class='st'>"SFO-SFO"</span>, <span class='op'>]</span><span class='op'>)</span>
   <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>f_nlme_sfo_sfo_obs</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Nonlinear mixed-effects model fit by maximum likelihood
-#&gt;   Model: value ~ (mkin::get_deg_func())(name, time, parent_0, log_k_parent_sink,      log_k_parent_A1, log_k_A1_sink) 
-#&gt;   Data: "Not shown" 
-#&gt;   Log-likelihood: -472.976
-#&gt;   Fixed: list(parent_0 ~ 1, log_k_parent_sink ~ 1, log_k_parent_A1 ~ 1,      log_k_A1_sink ~ 1) 
+</div><div class='output co'>#&gt; Kinetic nonlinear mixed-effects model fit by maximum likelihood
+#&gt; 
+#&gt; Structural model:
+#&gt; d_parent/dt = - k_parent_sink * parent - k_parent_A1 * parent
+#&gt; d_A1/dt = + k_parent_A1 * parent - k_A1_sink * A1
+#&gt; 
+#&gt; Data:
+#&gt; 170 observations of 2 variable(s) grouped in 5 datasets
+#&gt; 
+#&gt; Log-likelihood: -472.976
+#&gt; 
+#&gt; Fixed effects:
+#&gt;  list(parent_0 ~ 1, log_k_parent_sink ~ 1, log_k_parent_A1 ~ 1,      log_k_A1_sink ~ 1) 
 #&gt;          parent_0 log_k_parent_sink   log_k_parent_A1     log_k_A1_sink 
 #&gt;         87.975536         -3.669816         -4.164127         -4.645073 
 #&gt; 
@@ -443,9 +475,7 @@ with additional elements</p>
 #&gt;  Formula: ~1 | name 
 #&gt;  Parameter estimates:
 #&gt;    parent        A1 
-#&gt; 1.0000000 0.2050003 
-#&gt; Number of Observations: 170
-#&gt; Number of Groups: 5 </div><div class='input'>  <span class='co'># The same with DFOP-SFO does not converge, apparently the variances of</span>
+#&gt; 1.0000000 0.2050003 </div><div class='input'>  <span class='co'># The same with DFOP-SFO does not converge, apparently the variances of</span>
   <span class='co'># parent and A1 are too similar in this case, so that the model is</span>
   <span class='co'># overparameterised</span>
   <span class='co'>#f_nlme_dfop_sfo_obs &lt;- nlme(f_2_obs["DFOP-SFO", ], control = list(maxIter = 100))</span>
