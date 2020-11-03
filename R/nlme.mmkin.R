@@ -150,7 +150,7 @@ nlme.mmkin <- function(model, data = sys.frame(sys.parent()),
   thisCall[["data"]] <- nlme_data(model)
 
   if (missing(start)) {
-    thisCall[["start"]] <- mean_degparms(model, random = TRUE)
+    thisCall[["start"]] <- mean_degparms(model, random = FALSE)
   }
 
   thisCall[["fixed"]] <- lapply(as.list(dp_names), function(el)

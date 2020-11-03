@@ -28,6 +28,7 @@ mkinfit(
   reweight.tol = 1e-08,
   reweight.max.iter = 10,
   trace_parms = FALSE,
+  test_residuals = FALSE,
   ...
 )
 }
@@ -185,6 +186,8 @@ the error model parameters in IRLS fits.}
 \item{reweight.max.iter}{Maximum number of iterations in IRLS fits.}
 
 \item{trace_parms}{Should a trace of the parameter values be listed?}
+
+\item{test_residuals}{Should the residuals be tested for normal distribution?}
 
 \item{\dots}{Further arguments that will be passed on to
 \code{\link[deSolve:ode]{deSolve::ode()}}.}

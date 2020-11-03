@@ -148,6 +148,7 @@ if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
 #'   the error model parameters in IRLS fits.
 #' @param reweight.max.iter Maximum number of iterations in IRLS fits.
 #' @param trace_parms Should a trace of the parameter values be listed?
+#' @param test_residuals Should the residuals be tested for normal distribution?
 #' @param \dots Further arguments that will be passed on to
 #'   [deSolve::ode()].
 #' @importFrom stats nlminb aggregate dist shapiro.test
@@ -254,6 +255,7 @@ mkinfit <- function(mkinmod, observed,
   error_model_algorithm = c("auto", "d_3", "direct", "twostep", "threestep", "fourstep", "IRLS", "OLS"),
   reweight.tol = 1e-8, reweight.max.iter = 10,
   trace_parms = FALSE,
+  test_residuals = FALSE,
   ...)
 {
   call <- match.call()
@@ -933,12 +935,14 @@ mkinfit <- function(mkinmod, observed,
   # Assign the class here so method dispatch works for residuals
   class(fit) <- c("mkinfit")
 
-  # Check for normal distribution of residuals
-  fit$shapiro.p <- shapiro.test(residuals(fit, standardized = TRUE))$p.value
-  if (fit$shapiro.p < 0.05) {
-    shapiro_warning <- paste("Shapiro-Wilk test for standardized residuals: p = ", signif(fit$shapiro.p, 3))
-    warning(shapiro_warning)
-    summary_warnings <- c(summary_warnings, S = shapiro_warning)
+  if (test_residuals) {
+    # Check for normal distribution of residuals
+    fit$shapiro.p <- shapiro.test(residuals(fit, standardized = TRUE))$p.value
+    if (fit$shapiro.p < 0.05) {
+      shapiro_warning <- paste("Shapiro-Wilk test for standardized residuals: p = ", signif(fit$shapiro.p, 3))
+      warning(shapiro_warning)
+      summary_warnings <- c(summary_warnings, S = shapiro_warning)
+    }
   }
 
   fit$summary_warnings <- summary_warnings
