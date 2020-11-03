@@ -22,11 +22,9 @@
 #'
 #'   \dontrun{plot(function(x) SFO.solution(x, 100, 3), 0, 2)}
 #'
+#' @useDynLib mkin SFO_solution
 #' @export
-SFO.solution <- function(t, parent_0, k)
-{
-	parent = parent_0 * exp(-k * t)
-}
+SFO.solution <- function(t, parent_0, k) .Call(SFO_solution, as.double(t), as.double(parent_0), as.double(k))
 
 #' First-Order Multi-Compartment kinetics
 #' 
