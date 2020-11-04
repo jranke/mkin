@@ -11,8 +11,10 @@
 #' variances of the deviations of the parameters from these mean values.
 #'
 #' @param object An mmkin row object containing several fits of the same model to different datasets
-#' @param cores The number of cores to be used for multicore processing.
-#'   On Windows machines, cores > 1 is currently not supported.
+#' @param cores The number of cores to be used for multicore processing. Using
+#'   more than 1 core is experimental and may lead to uncontrolled forking,
+#'   apparently depending on the BLAS version used. On Windows machines, cores
+#'   > 1 is currently not supported.
 #' @rdname saemix
 #' @importFrom saemix saemixData saemixModel
 #' @importFrom stats var
@@ -61,7 +63,7 @@
 #' }
 #' @return An [saemix::SaemixModel] object.
 #' @export
-saemix_model <- function(object, cores = parallel::detectCores()) {
+saemix_model <- function(object, cores = 1) {
   if (nrow(object) > 1) stop("Only row objects allowed")
 
   mkin_model <- object[[1]]$mkinmod
