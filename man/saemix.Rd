@@ -5,15 +5,18 @@
 \alias{saemix_data}
 \title{Create saemix models from mmkin row objects}
 \usage{
-saemix_model(object, cores = parallel::detectCores())
+saemix_model(object, cores = 1)
 
 saemix_data(object, ...)
 }
 \arguments{
-\item{object}{An mmkin row object containing several fits of the same model to different datasets}
+\item{object}{An mmkin row object containing several fits of the same model
+to different datasets}
 
-\item{cores}{The number of cores to be used for multicore processing.
-On Windows machines, cores > 1 is currently not supported.}
+\item{cores}{The number of cores to be used for multicore processing using
+\code{\link[parallel:mclapply]{parallel::mclapply()}}. Using more than 1 core is experimental and may
+lead to uncontrolled forking, apparently depending on the BLAS version
+used.}
 
 \item{\dots}{Further parameters passed to \link[saemix:saemixData]{saemix::saemixData}}
 }

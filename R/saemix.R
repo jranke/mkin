@@ -10,11 +10,12 @@
 #' mmkin. Starting variances of the random effects (argument omega.init) are the
 #' variances of the deviations of the parameters from these mean values.
 #'
-#' @param object An mmkin row object containing several fits of the same model to different datasets
-#' @param cores The number of cores to be used for multicore processing. Using
-#'   more than 1 core is experimental and may lead to uncontrolled forking,
-#'   apparently depending on the BLAS version used. On Windows machines, cores
-#'   > 1 is currently not supported.
+#' @param object An mmkin row object containing several fits of the same model
+#' to different datasets
+#' @param cores The number of cores to be used for multicore processing using
+#'   [parallel::mclapply()]. Using more than 1 core is experimental and may
+#'   lead to uncontrolled forking, apparently depending on the BLAS version
+#'   used.
 #' @rdname saemix
 #' @importFrom saemix saemixData saemixModel
 #' @importFrom stats var
