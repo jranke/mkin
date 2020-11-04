@@ -59,12 +59,10 @@ test_that("nlme_function works correctly", {
 
   expect_equal(m_nlme_raw_2$coefficients, m_nlme_mmkin$coefficients)
 
-  anova_nlme <- anova(m_nlme_mmkin, m_nlme_raw) # mmkin needs to go first as we had
-  # to adapt the method due to
-  # https://bugs.r-project.org/bugzilla/show_bug.cgi?id=17761
+  anova_nlme <- anova(m_nlme_raw, m_nlme_mmkin)
 
   # We get a slightly lower AIC with the improved starting values used within
-  # nlme.mmkin
+  # nlme.mmkin, specifying also random effects
   expect_lt(anova_nlme["m_nlme_mmkin", "AIC"],
     anova_nlme["m_nlme_raw", "AIC"])
 
