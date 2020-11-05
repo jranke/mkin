@@ -28,7 +28,7 @@
 \method{update}{nlme.mmkin}(object, ...)
 }
 \arguments{
-\item{model}{An \code{\link{mmkin}} row object.}
+\item{model}{An \link{mmkin} row object.}
 
 \item{data}{Ignored, data are taken from the mmkin model}
 
@@ -150,5 +150,5 @@ endpoints(f_nlme_dfop)
 }
 }
 \seealso{
-\code{\link{nlme_function}}
+\code{\link[=nlme_function]{nlme_function()}}
 }

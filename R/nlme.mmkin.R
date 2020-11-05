@@ -22,7 +22,7 @@ get_deg_func <- function() {
 #' object. An mmkin row object is essentially a list of mkinfit objects that
 #' have been obtained by fitting the same model to a list of datasets.
 #'
-#' @param model An \code{\link{mmkin}} row object.
+#' @param model An [mmkin] row object.
 #' @param data Ignored, data are taken from the mmkin model
 #' @param fixed Ignored, all degradation parameters fitted in the
 #'   mmkin model are used as fixed parameters
@@ -46,7 +46,7 @@ get_deg_func <- function() {
 #'   methods that will automatically work on 'nlme.mmkin' objects, such as
 #'   [nlme::intervals()], [nlme::anova.lme()] and [nlme::coef.lme()].
 #' @export
-#' @seealso \code{\link{nlme_function}}
+#' @seealso [nlme_function()]
 #' @examples
 #' ds <- lapply(experimental_data_for_UBA_2019[6:10],
 #'  function(x) subset(x$data[c("name", "time", "value")], name == "parent"))

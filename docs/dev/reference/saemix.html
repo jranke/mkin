@@ -153,7 +153,7 @@ list of mkinfit objects that have been obtained by fitting the same model to
 a list of datasets.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>saemix_model</span><span class='op'>(</span><span class='va'>object</span>, cores <span class='op'>=</span> <span class='fu'>parallel</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/r/parallel/detectCores.html'>detectCores</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>saemix_model</span><span class='op'>(</span><span class='va'>object</span>, cores <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
 
 <span class='fu'>saemix_data</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
@@ -162,12 +162,15 @@ a list of datasets.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>object</th>
-      <td><p>An mmkin row object containing several fits of the same model to different datasets</p></td>
+      <td><p>An mmkin row object containing several fits of the same model
+to different datasets</p></td>
     </tr>
     <tr>
       <th>cores</th>
-      <td><p>The number of cores to be used for multicore processing.
-On Windows machines, cores &gt; 1 is currently not supported.</p></td>
+      <td><p>The number of cores to be used for multicore processing using
+<code><a href='https://rdrr.io/r/parallel/mclapply.html'>parallel::mclapply()</a></code>. Using more than 1 core is experimental and may
+lead to uncontrolled forking, apparently depending on the BLAS version
+used.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -237,8 +240,8 @@ variances of the deviations of the parameters from these mean values.</p>
 #&gt;     res &lt;- unlist(res_list)
 #&gt;     return(res)
 #&gt; }
-#&gt; &lt;bytecode: 0x555555c89340&gt;
-#&gt; &lt;environment: 0x555555c82680&gt;
+#&gt; &lt;bytecode: 0x55555d62aeb8&gt;
+#&gt; &lt;environment: 0x55555e35c170&gt;
 #&gt;   Nb of parameters: 4 
 #&gt;       parameter names:  parent_0 log_k_parent log_k_A1 f_parent_ilr_1 
 #&gt;       distribution:
@@ -271,10 +274,10 @@ variances of the deviations of the parameters from these mean values.</p>
   nbiter.saemix <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>200</span>, <span class='fl'>80</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>f_saemix</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/saemix/man/saemix.html'>saemix</a></span><span class='op'>(</span><span class='va'>m_saemix</span>, <span class='va'>d_saemix</span>, <span class='va'>saemix_options</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Running main SAEM algorithm
-#&gt; [1] "Thu Oct 15 14:51:26 2020"
+#&gt; [1] "Thu Nov  5 08:26:39 2020"
 #&gt; ..
 #&gt;     Minimisation finished
-#&gt; [1] "Thu Oct 15 14:53:18 2020"</div><div class='img'><img src='saemix-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Nonlinear mixed-effects model fit by the SAEM algorithm
+#&gt; [1] "Thu Nov  5 08:28:33 2020"</div><div class='img'><img src='saemix-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Nonlinear mixed-effects model fit by the SAEM algorithm
 #&gt; -----------------------------------
 #&gt; ----          Data             ----
 #&gt; -----------------------------------
@@ -338,8 +341,8 @@ variances of the deviations of the parameters from these mean values.</p>
 #&gt;     res &lt;- unlist(res_list)
 #&gt;     return(res)
 #&gt; }
-#&gt; &lt;bytecode: 0x555555c89340&gt;
-#&gt; &lt;environment: 0x555555c82680&gt;
+#&gt; &lt;bytecode: 0x55555d62aeb8&gt;
+#&gt; &lt;environment: 0x55555e35c170&gt;
 #&gt;   Nb of parameters: 4 
 #&gt;       parameter names:  parent_0 log_k_parent log_k_A1 f_parent_ilr_1 
 #&gt;       distribution:
@@ -483,8 +486,8 @@ variances of the deviations of the parameters from these mean values.</p>
 #&gt;     res &lt;- unlist(res_list)
 #&gt;     return(res)
 #&gt; }
-#&gt; &lt;bytecode: 0x555555c89340&gt;
-#&gt; &lt;environment: 0x55555df58cf8&gt;
+#&gt; &lt;bytecode: 0x55555d62aeb8&gt;
+#&gt; &lt;environment: 0x55555cd8e028&gt;
 #&gt;   Nb of parameters: 2 
 #&gt;       parameter names:  parent_0 log_k_parent 
 #&gt;       distribution:
@@ -510,10 +513,10 @@ variances of the deviations of the parameters from these mean values.</p>
 #&gt;     Structured data: value ~ time + name | ds 
 #&gt;     X variable for graphs: time () </div><div class='input'><span class='va'>f_saemix_tc</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/saemix/man/saemix.html'>saemix</a></span><span class='op'>(</span><span class='va'>m_saemix_tc</span>, <span class='va'>d_saemix_tc</span>, <span class='va'>saemix_options</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Running main SAEM algorithm
-#&gt; [1] "Thu Oct 15 14:53:35 2020"
+#&gt; [1] "Thu Nov  5 08:28:50 2020"
 #&gt; ..
 #&gt;     Minimisation finished
-#&gt; [1] "Thu Oct 15 14:54:25 2020"</div><div class='output co'>#&gt; Nonlinear mixed-effects model fit by the SAEM algorithm
+#&gt; [1] "Thu Nov  5 08:29:41 2020"</div><div class='output co'>#&gt; Nonlinear mixed-effects model fit by the SAEM algorithm
 #&gt; -----------------------------------
 #&gt; ----          Data             ----
 #&gt; -----------------------------------
@@ -577,8 +580,8 @@ variances of the deviations of the parameters from these mean values.</p>
 #&gt;     res &lt;- unlist(res_list)
 #&gt;     return(res)
 #&gt; }
-#&gt; &lt;bytecode: 0x555555c89340&gt;
-#&gt; &lt;environment: 0x55555df58cf8&gt;
+#&gt; &lt;bytecode: 0x55555d62aeb8&gt;
+#&gt; &lt;environment: 0x55555cd8e028&gt;
 #&gt;   Nb of parameters: 2 
 #&gt;       parameter names:  parent_0 log_k_parent 
 #&gt;       distribution:
