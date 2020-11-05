@@ -1,8 +1,8 @@
 context("Complex test case from Schaefer et al. (2007) Piacenza paper")
 
 test_that("Complex test case from Schaefer (2007) can be reproduced (10% tolerance)", {
-  
-  skip_on_cran()         
+
+  skip_on_cran()
   schaefer07_complex_model <- mkinmod(
     parent = list(type = "SFO", to = c("A1", "B1", "C1"), sink = FALSE),
     A1 = list(type = "SFO", to = "A2"),

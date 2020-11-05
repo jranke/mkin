@@ -5,19 +5,19 @@
 #' constants and other parameters that can only take on positive values, a
 #' simple log transformation is used. For compositional parameters, such as the
 #' formations fractions that should always sum up to 1 and can not be negative,
-#' the \code{\link{ilr}} transformation is used.
+#' the [ilr] transformation is used.
 #'
 #' The transformation of sets of formation fractions is fragile, as it supposes
 #' the same ordering of the components in forward and backward transformation.
-#' This is no problem for the internal use in \code{\link{mkinfit}}.
+#' This is no problem for the internal use in [mkinfit].
 #'
 #' @param parms Parameters of kinetic models as used in the differential
 #'   equations.
 #' @param transparms Transformed parameters of kinetic models as used in the
 #'   fitting procedure.
-#' @param mkinmod The kinetic model of class \code{\link{mkinmod}}, containing
+#' @param mkinmod The kinetic model of class [mkinmod], containing
 #'   the names of the model variables that are needed for grouping the
-#'   formation fractions before \code{\link{ilr}} transformation, the parameter
+#'   formation fractions before [ilr] transformation, the parameter
 #'   names and the information if the pathway to sink is included in the model.
 #' @param transform_rates Boolean specifying if kinetic rate constants should
 #'   be transformed in the model specification used in the fitting for better
@@ -28,11 +28,15 @@
 #' @param transform_fractions Boolean specifying if formation fractions
 #'   constants should be transformed in the model specification used in the
 #'   fitting for better compliance with the assumption of normal distribution
-#'   of the estimator. The default (TRUE) is to do transformations. The g
-#'   parameter of the DFOP and HS models are also transformed, as they can also
-#'   be seen as compositional data. The transformation used for these
-#'   transformations is the \code{\link{ilr}} transformation.
+#'   of the estimator. The default (TRUE) is to do transformations.
+#'   The g parameter of the DFOP model is also seen as a fraction.
+#'   If a single fraction is transformed (g parameter of DFOP or only a single
+#'   target variable e.g. a single metabolite plus a pathway to sink), a
+#'   logistic transformation is used [stats::qlogis()]. In other cases, i.e. if
+#'   two or more formation fractions need to be transformed whose sum cannot
+#'   exceed one, the [ilr] transformation is used.
 #' @return A vector of transformed or backtransformed parameters
+#' @importFrom stats plogis qlogis
 #' @author Johannes Ranke
 #' @examples
 #'
@@ -91,8 +95,7 @@
 #'
 #' @export transform_odeparms
 transform_odeparms <- function(parms, mkinmod,
-                               transform_rates = TRUE,
-                               transform_fractions = TRUE)
+  transform_rates = TRUE, transform_fractions = TRUE)
 {
   # We need the model specification for the names of the model
   # variables and the information on the sink
@@ -119,8 +122,7 @@ transform_odeparms <- function(parms, mkinmod,
   N <- parms[grep("^N", names(parms))]
   transparms[names(N)] <- N
 
-  # Go through state variables and apply isometric logratio transformation to
-  # formation fractions if requested
+  # Go through state variables and transform formation fractions if requested
   mod_vars = names(spec)
   for (box in mod_vars) {
     f <- parms[grep(paste("^f", box, sep = "_"), names(parms))]
@@ -128,9 +130,14 @@ transform_odeparms <- function(parms, mkinmod,
     if (length(f) > 0) {
       if(transform_fractions) {
         if (spec[[box]]$sink) {
-          trans_f <- ilr(c(f, 1 - sum(f)))
-          trans_f_names <- paste("f", box, "ilr", 1:length(trans_f), sep = "_")
-          transparms[trans_f_names] <- trans_f
+          if (length(f) == 1) {
+            trans_f_name <- paste("f", box, "qlogis", sep = "_")
+            transparms[trans_f_name] <- qlogis(f)
+          } else {
+            trans_f <- ilr(c(f, 1 - sum(f)))
+            trans_f_names <- paste("f", box, "ilr", 1:length(trans_f), sep = "_")
+            transparms[trans_f_names] <- trans_f
+          }
         } else {
           if (length(f) > 1) {
             trans_f <- ilr(f)
@@ -161,7 +168,7 @@ transform_odeparms <- function(parms, mkinmod,
   if (!is.na(parms["g"])) {
     g <- parms["g"]
     if (transform_fractions) {
-      transparms["g_ilr"] <- ilr(c(g, 1 - g))
+      transparms["g_qlogis"] <- qlogis(g)
     } else {
       transparms["g"] <- g
     }
@@ -207,20 +214,25 @@ backtransform_odeparms <- function(transparms, mkinmod,
   N <- transparms[grep("^N", names(transparms))]
   parms[names(N)] <- N
 
-  # Go through state variables and apply inverse isometric logratio transformation
+  # Go through state variables and apply inverse transformations to formation fractions
   mod_vars = names(spec)
   for (box in mod_vars) {
     # Get the names as used in the model
     f_names = grep(paste("^f", box, sep = "_"), mkinmod$parms, value = TRUE)
+
     # Get the formation fraction parameters
     trans_f = transparms[grep(paste("^f", box, sep = "_"), names(transparms))]
     if (length(trans_f) > 0) {
       if(transform_fractions) {
-        f <- invilr(trans_f)
-        if (spec[[box]]$sink) {
-          parms[f_names] <- f[1:length(f)-1]
+        if (any(grepl("qlogis", names(trans_f)))) {
+          parms[f_names] <- plogis(trans_f)
         } else {
-          parms[f_names] <- f
+          f <- invilr(trans_f)
+          if (spec[[box]]$sink) {
+            parms[f_names] <- f[1:length(f)-1]
+          } else {
+            parms[f_names] <- f
+          }
         }
       } else {
         parms[names(trans_f)] <- trans_f
@@ -242,7 +254,12 @@ backtransform_odeparms <- function(transparms, mkinmod,
     }
   }
 
-  # DFOP parameter g is treated as a fraction
+  # DFOP parameter g is now transformed using qlogis
+  if (!is.na(transparms["g_qlogis"])) {
+    g_qlogis <- transparms["g_qlogis"]
+    parms["g"] <- plogis(g_qlogis)
+  }
+  # In earlier times we used ilr for g, so we keep this around
   if (!is.na(transparms["g_ilr"])) {
     g_ilr <- transparms["g_ilr"]
     parms["g"] <- invilr(g_ilr)[1]

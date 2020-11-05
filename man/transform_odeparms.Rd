@@ -23,9 +23,9 @@ backtransform_odeparms(
 \item{parms}{Parameters of kinetic models as used in the differential
 equations.}
 
-\item{mkinmod}{The kinetic model of class \code{\link{mkinmod}}, containing
+\item{mkinmod}{The kinetic model of class \link{mkinmod}, containing
 the names of the model variables that are needed for grouping the
-formation fractions before \code{\link{ilr}} transformation, the parameter
+formation fractions before \link{ilr} transformation, the parameter
 names and the information if the pathway to sink is included in the model.}
 
 \item{transform_rates}{Boolean specifying if kinetic rate constants should
@@ -38,10 +38,13 @@ models and the break point tb of the HS model.}
 \item{transform_fractions}{Boolean specifying if formation fractions
 constants should be transformed in the model specification used in the
 fitting for better compliance with the assumption of normal distribution
-of the estimator. The default (TRUE) is to do transformations. The g
-parameter of the DFOP and HS models are also transformed, as they can also
-be seen as compositional data. The transformation used for these
-transformations is the \code{\link{ilr}} transformation.}
+of the estimator. The default (TRUE) is to do transformations.
+The g parameter of the DFOP model is also seen as a fraction.
+If a single fraction is transformed (g parameter of DFOP or only a single
+target variable e.g. a single metabolite plus a pathway to sink), a
+logistic transformation is used \code{\link[stats:Logistic]{stats::qlogis()}}. In other cases, i.e. if
+two or more formation fractions need to be transformed whose sum cannot
+exceed one, the \link{ilr} transformation is used.}
 
 \item{transparms}{Transformed parameters of kinetic models as used in the
 fitting procedure.}
@@ -55,12 +58,12 @@ restricted values to the full scale of real numbers. For kinetic rate
 constants and other parameters that can only take on positive values, a
 simple log transformation is used. For compositional parameters, such as the
 formations fractions that should always sum up to 1 and can not be negative,
-the \code{\link{ilr}} transformation is used.
+the \link{ilr} transformation is used.
 }
 \details{
 The transformation of sets of formation fractions is fragile, as it supposes
 the same ordering of the components in forward and backward transformation.
-This is no problem for the internal use in \code{\link{mkinfit}}.
+This is no problem for the internal use in \link{mkinfit}.
 }
 \examples{
 

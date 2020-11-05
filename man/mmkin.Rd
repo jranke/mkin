@@ -8,7 +8,7 @@ more datasets}
 mmkin(
   models = c("SFO", "FOMC", "DFOP"),
   datasets,
-  cores = detectCores(),
+  cores = parallel::detectCores(),
   cluster = NULL,
   ...
 )

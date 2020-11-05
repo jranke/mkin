@@ -107,7 +107,7 @@ mkinerrmin <- function(fit, alpha = 0.05)
     if (obs_var == fit$obs_vars[[1]]) {
       special_parms = c("alpha", "log_alpha", "beta", "log_beta",
                         "k1", "log_k1", "k2", "log_k2",
-                        "g", "g_ilr", "tb", "log_tb")
+                        "g", "g_ilr", "g_qlogis", "tb", "log_tb")
       n.optim <- n.optim + length(intersect(special_parms, names(parms.optim)))
     }
 

@@ -119,12 +119,11 @@ models and the break point tb of the HS model.  If FALSE, zero is used as
 a lower bound for the rates in the optimisation.}
 
 \item{transform_fractions}{Boolean specifying if formation fractions
-constants should be transformed in the model specification used in the
-fitting for better compliance with the assumption of normal distribution
-of the estimator. The default (TRUE) is to do transformations. If TRUE,
-the g parameter of the DFOP and HS models are also transformed, as they
-can also be seen as compositional data. The transformation used for these
-transformations is the \code{\link[=ilr]{ilr()}} transformation.}
+should be transformed in the model specification used in the fitting for
+better compliance with the assumption of normal distribution of the
+estimator. The default (TRUE) is to do transformations. If TRUE,
+the g parameter of the DFOP model is also transformed. Transformations
+are described in \link{transform_odeparms}.}
 
 \item{quiet}{Suppress printing out the current value of the negative
 log-likelihood after each improvement?}
@@ -233,15 +232,14 @@ SFO_SFO <- mkinmod(
 
 # Fit the model quietly to the FOCUS example dataset D using defaults
 fit <- mkinfit(SFO_SFO, FOCUS_D, quiet = TRUE)
-# Since mkin 0.9.50.3, we get a warning about non-normality of residuals,
-# so we try an alternative error model
+plot_sep(fit)
+# As lower parent values appear to have lower variance, we try an alternative error model
 fit.tc <- mkinfit(SFO_SFO, FOCUS_D, quiet = TRUE, error_model = "tc")
 # This avoids the warning, and the likelihood ratio test confirms it is preferable
 lrtest(fit.tc, fit)
 # We can also allow for different variances of parent and metabolite as error model
 fit.obs <- mkinfit(SFO_SFO, FOCUS_D, quiet = TRUE, error_model = "obs")
-# This also avoids the warning about non-normality, but the two-component error model
-# has significantly higher likelihood
+# The two-component error model has significantly higher likelihood
 lrtest(fit.obs, fit.tc)
 parms(fit.tc)
 endpoints(fit.tc)

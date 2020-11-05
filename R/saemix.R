@@ -20,47 +20,40 @@
 #' @importFrom saemix saemixData saemixModel
 #' @importFrom stats var
 #' @examples
+#' \dontrun{
+#' library(saemix)
 #' ds <- lapply(experimental_data_for_UBA_2019[6:10],
 #'  function(x) subset(x$data[c("name", "time", "value")]))
 #' names(ds) <- paste("Dataset", 6:10)
-#' sfo_sfo <- mkinmod(parent = mkinsub("SFO", "A1"),
+#' f_mmkin_parent_p0_fixed <- mmkin("FOMC", ds, cores = 1,
+#'   state.ini = c(parent = 100), fixed_initials = "parent", quiet = TRUE)
+#' m_saemix_p0_fixed <- saemix_model(f_mmkin_parent_p0_fixed["FOMC", ])
+#' d_saemix_parent <- saemix_data(f_mmkin_parent_p0_fixed)
+#' saemix_options <- list(seed = 123456, displayProgress = FALSE,
+#'   save = FALSE, save.graphs = FALSE, nbiter.saemix = c(200, 80))
+#' f_saemix_p0_fixed <- saemix(m_saemix_p0_fixed, d_saemix_parent, saemix_options)
+#'
+#' f_mmkin_parent <- mmkin(c("SFO", "FOMC", "DFOP"), ds, quiet = TRUE)
+#' m_saemix_sfo <- saemix_model(f_mmkin_parent["SFO", ])
+#' m_saemix_fomc <- saemix_model(f_mmkin_parent["FOMC", ])
+#' m_saemix_dfop <- saemix_model(f_mmkin_parent["DFOP", ])
+#' d_saemix_parent <- saemix_data(f_mmkin_parent["SFO", ])
+#' f_saemix_sfo <- saemix(m_saemix_sfo, d_saemix_parent, saemix_options)
+#' f_saemix_fomc <- saemix(m_saemix_fomc, d_saemix_parent, saemix_options)
+#' f_saemix_dfop <- saemix(m_saemix_dfop, d_saemix_parent, saemix_options)
+#' compare.saemix(list(f_saemix_sfo, f_saemix_fomc, f_saemix_dfop))
+#' f_mmkin_parent_tc <- update(f_mmkin_parent, error_model = "tc")
+#' m_saemix_fomc_tc <- saemix_model(f_mmkin_parent_tc["FOMC", ])
+#' f_saemix_fomc_tc <- saemix(m_saemix_fomc_tc, d_saemix_parent, saemix_options)
+#' compare.saemix(list(f_saemix_fomc, f_saemix_fomc_tc))
+#'
+#' dfop_sfo <- mkinmod(parent = mkinsub("DFOP", "A1"),
 #'   A1 = mkinsub("SFO"))
-#' \dontrun{
-#' f_mmkin <- mmkin(list("SFO-SFO" = sfo_sfo), ds, quiet = TRUE)
-#' library(saemix)
-#' m_saemix <- saemix_model(f_mmkin, cores = 1)
+#' f_mmkin <- mmkin(list("DFOP-SFO" = dfop_sfo), ds, quiet = TRUE)
+#' m_saemix <- saemix_model(f_mmkin)
 #' d_saemix <- saemix_data(f_mmkin)
-#' saemix_options <- list(seed = 123456,
-#'   save = FALSE, save.graphs = FALSE, displayProgress = FALSE,
-#'   nbiter.saemix = c(200, 80))
 #' f_saemix <- saemix(m_saemix, d_saemix, saemix_options)
-#' plot(f_saemix, plot.type = "convergence")
-#' }
-#' # Synthetic data with two-component error
-#' sampling_times = c(0, 1, 3, 7, 14, 28, 60, 90, 120)
-#' dt50_sfo_in <- c(80, 90, 100, 111.111, 125)
-#' k_in <- log(2) / dt50_sfo_in
 #'
-#' SFO <- mkinmod(parent = mkinsub("SFO"))
-#'
-#' pred_sfo <- function(k) {
-#'   mkinpredict(SFO, c(k_parent = k),
-#'     c(parent = 100), sampling_times)
-#' }
-#'
-#' ds_sfo_mean <- lapply(k_in, pred_sfo)
-#' set.seed(123456L)
-#' ds_sfo_syn <- lapply(ds_sfo_mean, function(ds) {
-#'   add_err(ds, sdfunc = function(value) sqrt(1^2 + value^2 * 0.07^2),
-#'      n = 1)[[1]]
-#'  })
-#' \dontrun{
-#' f_mmkin_syn <- mmkin("SFO", ds_sfo_syn, error_model = "tc", quiet = TRUE)
-#' # plot(f_mmkin_syn)
-#' m_saemix_tc <- saemix_model(f_mmkin_syn, cores = 1)
-#' d_saemix_tc <- saemix_data(f_mmkin_syn)
-#' f_saemix_tc <- saemix(m_saemix_tc, d_saemix_tc, saemix_options)
-#' plot(f_saemix_tc, plot.type = "convergence")
 #' }
 #' @return An [saemix::SaemixModel] object.
 #' @export
@@ -68,13 +61,13 @@ saemix_model <- function(object, cores = 1) {
   if (nrow(object) > 1) stop("Only row objects allowed")
 
   mkin_model <- object[[1]]$mkinmod
-  analytical <- is.function(mkin_model$deg_func)
+  solution_type <- object[[1]]$solution_type
 
   degparms_optim <-  mean_degparms(object)
-  psi0 <- matrix(degparms_optim, nrow = 1)
-  colnames(psi0) <- names(degparms_optim)
-
   degparms_fixed <- object[[1]]$bparms.fixed
+
+  # Transformations are done in the degradation function
+  transform.par = rep(0, length(degparms_optim))
 
   odeini_optim_parm_names <- grep('_0$', names(degparms_optim), value = TRUE)
   odeini_fixed_parm_names <- grep('_0$', names(degparms_fixed), value = TRUE)
@@ -85,50 +78,114 @@ saemix_model <- function(object, cores = 1) {
   odeini_fixed <- degparms_fixed[odeini_fixed_parm_names]
   names(odeini_fixed) <- gsub('_0$', '', odeini_fixed_parm_names)
 
-  model_function <- function(psi, id, xidep) {
+  model_function <- FALSE
 
-    uid <- unique(id)
-
-    res_list <- parallel::mclapply(uid, function(i) {
-        transparms_optim <- psi[i, ]
-        names(transparms_optim) <- names(degparms_optim)
-
-        odeini_optim <- transparms_optim[odeini_optim_parm_names]
-        names(odeini_optim) <- gsub('_0$', '', odeini_optim_parm_names)
-
-        odeini <- c(odeini_optim, odeini_fixed)[names(mkin_model$diffs)]
-
-        ode_transparms_optim_names <- setdiff(names(transparms_optim), odeini_optim_parm_names)
-        odeparms_optim <- backtransform_odeparms(transparms_optim[ode_transparms_optim_names], mkin_model,
-          transform_rates = object[[1]]$transform_rates,
-          transform_fractions = object[[1]]$transform_fractions)
-        odeparms <- c(odeparms_optim, odeparms_fixed)
-
-        xidep_i <- subset(xidep, id == i)
-
-        if (analytical) {
-          out_values <- mkin_model$deg_func(xidep_i, odeini, odeparms)
-        } else {
-
-          i_time <- xidep_i$time
-          i_name <- xidep_i$name
-
-          out_wide <- mkinpredict(mkin_model,
-            odeparms = odeparms, odeini = odeini,
-            solution_type = object[[1]]$solution_type,
-            outtimes = sort(unique(i_time)))
-
-          out_index <- cbind(as.character(i_time), as.character(i_name))
-          out_values <- out_wide[out_index]
+  if (length(mkin_model$spec) == 1 & mkin_model$use_of_ff == "max") {
+    parent_type <- mkin_model$spec[[1]]$type
+    if (length(odeini_fixed) == 1) {
+      if (parent_type == "SFO") {
+        stop("saemix needs at least two parameters to work on.")
+      }
+      if (parent_type == "FOMC") {
+        model_function <- function(psi, id, xidep) {
+          odeini_fixed / (xidep[, "time"]/exp(psi[id, 2]) + 1)^exp(psi[id, 1])
         }
-        return(out_values)
-      }, mc.cores = cores)
-      res <- unlist(res_list)
-      return(res)
+      }
+      if (parent_type == "DFOP") {
+        model_function <- function(psi, id, xidep) {
+          g <- plogis(psi[id, 3])
+          t = xidep[, "time"]
+          odeini_fixed * (g * exp(- exp(psi[id, 1]) * t) +
+            (1 - g) * exp(- exp(psi[id, 2]) * t))
+        }
+      }
+      if (parent_type == "HS") {
+        model_function <- function(psi, id, xidep) {
+          tb <- exp(psi[id, 3])
+          t = xidep[, "time"]
+          k1 = exp(psi[id, 1])
+          odeini_fixed * ifelse(t <= tb,
+            exp(- k1 * t),
+            exp(- k1 * t) * exp(- exp(psi[id, 2]) * (t - tb)))
+        }
+      }
+    } else {
+      if (length(odeparms_fixed) == 0) {
+        if (parent_type == "SFO") {
+          model_function <- function(psi, id, xidep) {
+            psi[id, 1] * exp( - exp(psi[id, 2]) * xidep[, "time"])
+          }
+        }
+        if (parent_type == "FOMC") {
+          model_function <- function(psi, id, xidep) {
+            psi[id, 1] / (xidep[, "time"]/exp(psi[id, 3]) + 1)^exp(psi[id, 2])
+          }
+        }
+        if (parent_type == "DFOP") {
+          model_function <- function(psi, id, xidep) {
+            g <- plogis(psi[id, 4])
+            t = xidep[, "time"]
+            psi[id, 1] * (g * exp(- exp(psi[id, 2]) * t) +
+              (1 - g) * exp(- exp(psi[id, 3]) * t))
+          }
+        }
+        if (parent_type == "HS") {
+          model_function <- function(psi, id, xidep) {
+            tb <- exp(psi[id, 4])
+            t = xidep[, "time"]
+            k1 = exp(psi[id, 2])
+            psi[id, 1] * ifelse(t <= tb,
+              exp(- k1 * t),
+              exp(- k1 * t) * exp(- exp(psi[id, 3]) * (t - tb)))
+          }
+        }
+      }
+    }
   }
 
-  raneff_0 <- mean_degparms(object, random = TRUE)$random$ds
-  var_raneff_0 <- apply(raneff_0, 2, var)
+  if (!is.function(model_function)) {
+    model_function <- function(psi, id, xidep) {
+
+      uid <- unique(id)
+
+      res_list <- parallel::mclapply(uid, function(i) {
+          transparms_optim <- psi[i, ]
+          names(transparms_optim) <- names(degparms_optim)
+
+          odeini_optim <- transparms_optim[odeini_optim_parm_names]
+          names(odeini_optim) <- gsub('_0$', '', odeini_optim_parm_names)
+
+          odeini <- c(odeini_optim, odeini_fixed)[names(mkin_model$diffs)]
+
+          ode_transparms_optim_names <- setdiff(names(transparms_optim), odeini_optim_parm_names)
+          odeparms_optim <- backtransform_odeparms(transparms_optim[ode_transparms_optim_names], mkin_model,
+            transform_rates = object[[1]]$transform_rates,
+            transform_fractions = object[[1]]$transform_fractions)
+          odeparms <- c(odeparms_optim, odeparms_fixed)
+
+          xidep_i <- subset(xidep, id == i)
+
+          if (solution_type == "analytical") {
+            out_values <- mkin_model$deg_func(xidep_i, odeini, odeparms)
+          } else {
+
+            i_time <- xidep_i$time
+            i_name <- xidep_i$name
+
+            out_wide <- mkinpredict(mkin_model,
+              odeparms = odeparms, odeini = odeini,
+              solution_type = solution_type,
+              outtimes = sort(unique(i_time)))
+
+            out_index <- cbind(as.character(i_time), as.character(i_name))
+            out_values <- out_wide[out_index]
+          }
+          return(out_values)
+        }, mc.cores = cores)
+        res <- unlist(res_list)
+        return(res)
+    }
+  }
 
   error.model <- switch(object[[1]]$err_mod,
     const = "constant",
@@ -136,7 +193,7 @@ saemix_model <- function(object, cores = 1) {
     obs = "constant")
 
   if (object[[1]]$err_mod == "obs") {
-    warning("The error model 'obs' (variance by variable) was not transferred to the saemix model")
+    warning("The error model 'obs' (variance by variable) can currently not be transferred to an saemix model")
   }
 
   error.init <- switch(object[[1]]$err_mod,
@@ -145,11 +202,15 @@ saemix_model <- function(object, cores = 1) {
       b = mean(sapply(object, function(x) x$errparms[2]))),
     obs = c(a = mean(sapply(object, function(x) x$errparms)), b = 1))
 
-  res <- saemixModel(model_function, psi0,
+  psi0_matrix <- matrix(degparms_optim, nrow = 1)
+  colnames(psi0_matrix) <- names(degparms_optim)
+
+  res <- saemixModel(model_function,
+    psi0 = psi0_matrix,
     "Mixed model generated from mmkin object",
-    transform.par = rep(0, length(degparms_optim)),
-    error.model = error.model, error.init = error.init,
-    omega.init = diag(var_raneff_0)
+    transform.par = transform.par,
+    error.model = error.model,
+    error.init = error.init
   )
   return(res)
 }

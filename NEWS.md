@@ -1,5 +1,9 @@
 # mkin 0.9.50.4 (unreleased)
 
+- 'transform_odeparms', 'backtransform_odeparms': Use logit transformation for solitary fractions like the g parameter of the DFOP model, or formation fractions for a pathway to only one target variable
+
+- 'update' method for 'mmkin' objects
+
 - 'plot', 'summary' and 'print' methods for 'nlme.mmkin' objects
 
 - 'saemix_model', 'saemix_data': Helper functions to fit nonlinear mixed-effects models for mmkin row objects using the saemix package

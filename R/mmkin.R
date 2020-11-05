@@ -64,8 +64,9 @@
 #'
 #' @export mmkin
 mmkin <- function(models = c("SFO", "FOMC", "DFOP"), datasets,
-  cores = detectCores(), cluster = NULL, ...)
+  cores = parallel::detectCores(), cluster = NULL, ...)
 {
+  call <- match.call()
   parent_models_available = c("SFO", "FOMC", "DFOP", "HS", "SFORB", "IORE", "logistic")
   n.m <- length(models)
   n.d <- length(datasets)
@@ -100,12 +101,14 @@ mmkin <- function(models = c("SFO", "FOMC", "DFOP"), datasets,
   }
 
   if (is.null(cluster)) {
-    results <- parallel::mclapply(as.list(1:n.fits), fit_function, mc.cores = cores)
+    results <- parallel::mclapply(as.list(1:n.fits), fit_function,
+      mc.cores = cores, mc.preschedule = FALSE)
   } else {
     results <- parallel::parLapply(cluster, as.list(1:n.fits), fit_function)
   }
 
   attributes(results) <- attributes(fit_indices)
+  attr(results, "call") <- call
   class(results) <- "mmkin"
   return(results)
 }
@@ -186,4 +189,29 @@ print.mmkin <- function(x, ...) {
     cat(names(u_w)[i], ": ", u_w[i], "\n", sep = "")
   }
 
+}
+
+#' @export
+update.mmkin <- function(object, ..., evaluate = TRUE)
+{
+  call <- attr(object, "call")
+
+  update_arguments <- match.call(expand.dots = FALSE)$...
+
+  if (length(update_arguments) > 0) {
+    update_arguments_in_call <- !is.na(match(names(update_arguments), names(call)))
+  }
+
+  for (a in names(update_arguments)[update_arguments_in_call]) {
+    call[[a]] <- update_arguments[[a]]
+  }
+
+  update_arguments_not_in_call <- !update_arguments_in_call
+  if(any(update_arguments_not_in_call)) {
+    call <- c(as.list(call), update_arguments[update_arguments_not_in_call])
+    call <- as.call(call)
+  }
+
+  if(evaluate) eval(call, parent.frame())
+  else call
 }
