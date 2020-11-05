@@ -134,12 +134,14 @@ nlme_function <- function(object) {
 #' @export
 mean_degparms <- function(object, random = FALSE) {
   if (nrow(object) > 1) stop("Only row objects allowed")
-  degparm_mat_trans <- sapply(object, parms, transformed = TRUE)
-  mean_degparm_names <- setdiff(rownames(degparm_mat_trans), names(object[[1]]$errparms))
-  fixed <- apply(degparm_mat_trans[mean_degparm_names, ], 1, mean)
+  parm_mat_trans <- sapply(object, parms, transformed = TRUE)
+  mean_degparm_names <- setdiff(rownames(parm_mat_trans), names(object[[1]]$errparms))
+  degparm_mat_trans <- parm_mat_trans[mean_degparm_names, , drop = FALSE]
+  fixed <- apply(degparm_mat_trans, 1, mean)
   if (random) {
-    degparm_mat_trans[mean_degparm_names, ]
-    random <- t(apply(degparm_mat_trans[mean_degparm_names, ], 2, function(column) column - fixed))
+    random <- t(apply(degparm_mat_trans[mean_degparm_names, , drop = FALSE], 2, function(column) column - fixed))
+    # If we only have one parameter, apply returns a vector so we get a single row
+    if (nrow(degparm_mat_trans) == 1) random <- t(random)
     rownames(random) <- levels(nlme_data(object)$ds)
     return(list(fixed = fixed, random = list(ds = random)))
   } else {
