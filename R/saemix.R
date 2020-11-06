@@ -1,63 +1,91 @@
-#' Create saemix models from mmkin row objects
+#' Create saemix models
 #'
-#' This function sets up a nonlinear mixed effects model for an mmkin row
-#' object for use with the saemix package. An mmkin row object is essentially a
-#' list of mkinfit objects that have been obtained by fitting the same model to
+#' The saemix function defined in this package is an S3 generic function
+#' using [saemix::saemix()] as its method for [saemix::SaemixModel] objects.
+#'
+#' The method for mmkin row objects sets up a nonlinear mixed effects model for
+#' use with the saemix package. An mmkin row object is essentially a list of
+#' mkinfit objects that have been obtained by fitting the same model to
 #' a list of datasets.
 #'
 #' Starting values for the fixed effects (population mean parameters, argument psi0 of
 #' [saemix::saemixModel()] are the mean values of the parameters found using
-#' mmkin. Starting variances of the random effects (argument omega.init) are the
-#' variances of the deviations of the parameters from these mean values.
+#' [mmkin].
 #'
-#' @param object An mmkin row object containing several fits of the same model
-#' to different datasets
-#' @param cores The number of cores to be used for multicore processing using
-#'   [parallel::mclapply()]. Using more than 1 core is experimental and may
-#'   lead to uncontrolled forking, apparently depending on the BLAS version
-#'   used.
-#' @rdname saemix
-#' @importFrom saemix saemixData saemixModel
-#' @importFrom stats var
+#' @param model For the default method, this is an [saemix::saemixModel] object.
+#'  If this is an [mmkin] row object, the [saemix::saemixModel] is created
+#'  internally from the [mmkin] object.
+#' @param object An [mmkin] row object containing several fits of the same
+#'   [mkinmod] model to different datasets
+#' @param verbose Should we print information about created objects?
+#' @param \dots Further parameters passed to [saemix::saemixData]
+#'   and [saemix::saemixModel].
+#' @return An [saemix::SaemixObject].
 #' @examples
 #' \dontrun{
-#' library(saemix)
+#' # We do not load the saemix package, as this would override our saemix
+#' # generic
 #' ds <- lapply(experimental_data_for_UBA_2019[6:10],
 #'  function(x) subset(x$data[c("name", "time", "value")]))
 #' names(ds) <- paste("Dataset", 6:10)
 #' f_mmkin_parent_p0_fixed <- mmkin("FOMC", ds, cores = 1,
 #'   state.ini = c(parent = 100), fixed_initials = "parent", quiet = TRUE)
-#' m_saemix_p0_fixed <- saemix_model(f_mmkin_parent_p0_fixed["FOMC", ])
-#' d_saemix_parent <- saemix_data(f_mmkin_parent_p0_fixed)
-#' saemix_options <- list(seed = 123456, displayProgress = FALSE,
-#'   save = FALSE, save.graphs = FALSE, nbiter.saemix = c(200, 80))
-#' f_saemix_p0_fixed <- saemix(m_saemix_p0_fixed, d_saemix_parent, saemix_options)
+#' f_saemix_p0_fixed <- saemix(f_mmkin_parent_p0_fixed)
 #'
 #' f_mmkin_parent <- mmkin(c("SFO", "FOMC", "DFOP"), ds, quiet = TRUE)
-#' m_saemix_sfo <- saemix_model(f_mmkin_parent["SFO", ])
-#' m_saemix_fomc <- saemix_model(f_mmkin_parent["FOMC", ])
-#' m_saemix_dfop <- saemix_model(f_mmkin_parent["DFOP", ])
-#' d_saemix_parent <- saemix_data(f_mmkin_parent["SFO", ])
-#' f_saemix_sfo <- saemix(m_saemix_sfo, d_saemix_parent, saemix_options)
-#' f_saemix_fomc <- saemix(m_saemix_fomc, d_saemix_parent, saemix_options)
-#' f_saemix_dfop <- saemix(m_saemix_dfop, d_saemix_parent, saemix_options)
-#' compare.saemix(list(f_saemix_sfo, f_saemix_fomc, f_saemix_dfop))
+#' f_saemix_sfo <- saemix(f_mmkin_parent["SFO", ])
+#' f_saemix_fomc <- saemix(f_mmkin_parent["FOMC", ])
+#' f_saemix_dfop <- saemix(f_mmkin_parent["DFOP", ])
+#'
+#' # We can use functions from the saemix package by prepending saemix::
+#' saemix::compare.saemix(list(f_saemix_sfo, f_saemix_fomc, f_saemix_dfop))
+#'
 #' f_mmkin_parent_tc <- update(f_mmkin_parent, error_model = "tc")
-#' m_saemix_fomc_tc <- saemix_model(f_mmkin_parent_tc["FOMC", ])
-#' f_saemix_fomc_tc <- saemix(m_saemix_fomc_tc, d_saemix_parent, saemix_options)
-#' compare.saemix(list(f_saemix_fomc, f_saemix_fomc_tc))
+#' f_saemix_fomc_tc <- saemix(f_mmkin_parent_tc["FOMC", ])
+#' saemix::compare.saemix(list(f_saemix_fomc, f_saemix_fomc_tc))
 #'
 #' dfop_sfo <- mkinmod(parent = mkinsub("DFOP", "A1"),
 #'   A1 = mkinsub("SFO"))
 #' f_mmkin <- mmkin(list("DFOP-SFO" = dfop_sfo), ds, quiet = TRUE)
-#' m_saemix <- saemix_model(f_mmkin)
-#' d_saemix <- saemix_data(f_mmkin)
-#' f_saemix <- saemix(m_saemix, d_saemix, saemix_options)
+#' f_saemix <- saemix(f_mmkin)
 #'
 #' }
+#' @export
+saemix <- function(model, data, control, ...) UseMethod("saemix")
+
+#' @rdname saemix
+#' @export
+saemix.mmkin <- function(model, data,
+  control = list(displayProgress = FALSE, print = FALSE,
+    save = FALSE, save.graphs = FALSE),
+  verbose = FALSE, suppressPlot = TRUE, ...)
+{
+  m_saemix <- saemix_model(model, verbose = verbose)
+  d_saemix <- saemix_data(model, verbose = verbose)
+  if (suppressPlot) {
+    # We suppress the log-likelihood curve that saemix currently
+    # produces at the end of the fit by plotting to a file
+    # that we discard afterwards
+    tmp <- tempfile()
+    png(tmp)
+  }
+  result <- saemix::saemix(m_saemix, d_saemix, control)
+  if (suppressPlot) {
+    dev.off()
+    unlink(tmp)
+  }
+  class(result) <- c("saemix.mmkin", "saemix")
+  return(result)
+}
+
+#' @rdname saemix
+#' @param cores The number of cores to be used for multicore processing using
+#'   [parallel::mclapply()]. Using more than 1 core is experimental and may
+#'   lead to uncontrolled forking, apparently depending on the BLAS version
+#'   used.
 #' @return An [saemix::SaemixModel] object.
 #' @export
-saemix_model <- function(object, cores = 1) {
+saemix_model <- function(object, cores = 1, verbose = FALSE, ...) {
   if (nrow(object) > 1) stop("Only row objects allowed")
 
   mkin_model <- object[[1]]$mkinmod
@@ -205,21 +233,21 @@ saemix_model <- function(object, cores = 1) {
   psi0_matrix <- matrix(degparms_optim, nrow = 1)
   colnames(psi0_matrix) <- names(degparms_optim)
 
-  res <- saemixModel(model_function,
+  res <- saemix::saemixModel(model_function,
     psi0 = psi0_matrix,
     "Mixed model generated from mmkin object",
     transform.par = transform.par,
     error.model = error.model,
-    error.init = error.init
+    error.init = error.init,
+    verbose = verbose
   )
   return(res)
 }
 
 #' @rdname saemix
-#' @param \dots Further parameters passed to [saemix::saemixData]
 #' @return An [saemix::SaemixData] object.
 #' @export
-saemix_data <- function(object, ...) {
+saemix_data <- function(object, verbose = FALSE, ...) {
   if (nrow(object) > 1) stop("Only row objects allowed")
   ds_names <- colnames(object)
 
@@ -232,9 +260,11 @@ saemix_data <- function(object, ...) {
     value = ds_saemix_all$observed,
     stringsAsFactors = FALSE)
 
-  res <- saemixData(ds_saemix,
+  res <- saemix::saemixData(ds_saemix,
     name.group = "ds",
     name.predictors = c("time", "name"),
-    name.response = "value", ...)
+    name.response = "value",
+    verbose = verbose,
+    ...)
   return(res)
 }
