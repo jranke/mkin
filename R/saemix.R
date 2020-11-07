@@ -1,20 +1,16 @@
-#' Create saemix models
+#' Fit nonlinear mixed models with SAEM
 #'
-#' The saemix function defined in this package is an S3 generic function
-#' using [saemix::saemix()] as its method for [saemix::SaemixModel] objects.
+#' This function uses [saemix::saemix()] as a backend for fitting nonlinear mixed
+#' effects models created from [mmkin] row objects using the stochastic approximation
+#' to the expectation maximisation algorithm (SAEM).
 #'
-#' The method for mmkin row objects sets up a nonlinear mixed effects model for
-#' use with the saemix package. An mmkin row object is essentially a list of
-#' mkinfit objects that have been obtained by fitting the same model to
-#' a list of datasets.
+#' An mmkin row object is essentially a list of mkinfit objects that have been
+#' obtained by fitting the same model to a list of datasets using [mkinfit].
 #'
-#' Starting values for the fixed effects (population mean parameters, argument psi0 of
-#' [saemix::saemixModel()] are the mean values of the parameters found using
-#' [mmkin].
+#' Starting values for the fixed effects (population mean parameters, argument
+#' psi0 of [saemix::saemixModel()] are the mean values of the parameters found
+#' using [mmkin].
 #'
-#' @param model For the default method, this is an [saemix::saemixModel] object.
-#'  If this is an [mmkin] row object, the [saemix::saemixModel] is created
-#'  internally from the [mmkin] object.
 #' @param object An [mmkin] row object containing several fits of the same
 #'   [mkinmod] model to different datasets
 #' @param verbose Should we print information about created objects?
@@ -22,75 +18,84 @@
 #'   [parallel::mclapply()]. Using more than 1 core is experimental and may
 #'   lead to uncontrolled forking, apparently depending on the BLAS version
 #'   used.
+#' @param suppressPlot Should we suppress any plotting that is done
+#'   by the saemix function?
+#' @param control Passed to [saemix::saemix]
 #' @param \dots Further parameters passed to [saemix::saemixData]
 #'   and [saemix::saemixModel].
 #' @return An [saemix::SaemixObject].
 #' @examples
 #' \dontrun{
-#' # We can load saemix, but should exclude the saemix function
-#' # as it would mask our generic version of it
-#' library(saemix, exclude = "saemix")
 #' ds <- lapply(experimental_data_for_UBA_2019[6:10],
 #'  function(x) subset(x$data[c("name", "time", "value")]))
 #' names(ds) <- paste("Dataset", 6:10)
 #' f_mmkin_parent_p0_fixed <- mmkin("FOMC", ds, cores = 1,
 #'   state.ini = c(parent = 100), fixed_initials = "parent", quiet = TRUE)
-#' f_saemix_p0_fixed <- saemix(f_mmkin_parent_p0_fixed)
+#' f_saem_p0_fixed <- saem(f_mmkin_parent_p0_fixed)
 #'
 #' f_mmkin_parent <- mmkin(c("SFO", "FOMC", "DFOP"), ds, quiet = TRUE)
-#' f_saemix_sfo <- saemix(f_mmkin_parent["SFO", ])
-#' f_saemix_fomc <- saemix(f_mmkin_parent["FOMC", ])
-#' f_saemix_dfop <- saemix(f_mmkin_parent["DFOP", ])
+#' f_saem_sfo <- saem(f_mmkin_parent["SFO", ])
+#' f_saem_fomc <- saem(f_mmkin_parent["FOMC", ])
+#' f_saem_dfop <- saem(f_mmkin_parent["DFOP", ])
 #'
-#' # As this returns an SaemixObject, we can use functions from saemix
-#' compare.saemix(list(f_saemix_sfo, f_saemix_fomc, f_saemix_dfop))
+#' # The returned saem.mmkin object contains an SaemixObject, we can use
+#' # functions from saemix
+#' library(saemix)
+#' compare.saemix(list(f_saem_sfo$so, f_saem_fomc$so, f_saem_dfop$so))
 #'
 #' f_mmkin_parent_tc <- update(f_mmkin_parent, error_model = "tc")
-#' f_saemix_fomc_tc <- saemix(f_mmkin_parent_tc["FOMC", ])
-#' compare.saemix(list(f_saemix_fomc, f_saemix_fomc_tc))
+#' f_saem_fomc_tc <- saem(f_mmkin_parent_tc["FOMC", ])
+#' compare.saemix(list(f_saem_fomc$so, f_saem_fomc_tc$so))
 #'
 #' dfop_sfo <- mkinmod(parent = mkinsub("DFOP", "A1"),
 #'   A1 = mkinsub("SFO"))
 #' f_mmkin <- mmkin(list("DFOP-SFO" = dfop_sfo), ds, quiet = TRUE, solution_type = "analytical")
 #' # This takes about 4 minutes on my system
-#' f_saemix <- saemix(f_mmkin)
+#' f_saem <- saem(f_mmkin)
 #'
-#' # Using a single core, it takes about 6 minutes, using 10 cores it is slower
-#' # instead of faster
 #' f_mmkin_des <- mmkin(list("DFOP-SFO" = dfop_sfo), ds, quiet = TRUE, solution_type = "deSolve")
-#' f_saemix_des <- saemix(f_mmkin_des, cores = 1)
-#' compare.saemix(list(f_saemix, f_saemix_des))
-#'
+#' # Using a single core, the following takes about 6 minutes, using 10 cores
+#' # it is slower instead of faster
+#' f_saem_des <- saem(f_mmkin_des, cores = 1)
+#' compare.saemix(list(f_saemix$so, f_saemix_des$so))
 #' }
 #' @export
-saemix <- function(model, data, control, ...) UseMethod("saemix")
+saem <- function(object, control, ...) UseMethod("saem")
 
-#' @rdname saemix
+#' @rdname saem
 #' @export
-saemix.mmkin <- function(model, data,
+saem.mmkin <- function(object,
   control = list(displayProgress = FALSE, print = FALSE,
     save = FALSE, save.graphs = FALSE),
   cores = 1,
   verbose = FALSE, suppressPlot = TRUE, ...)
 {
-  m_saemix <- saemix_model(model, cores = cores, verbose = verbose)
-  d_saemix <- saemix_data(model, verbose = verbose)
+  m_saemix <- saemix_model(object, cores = cores, verbose = verbose)
+  d_saemix <- saemix_data(object, verbose = verbose)
   if (suppressPlot) {
     # We suppress the log-likelihood curve that saemix currently
     # produces at the end of the fit by plotting to a file
     # that we discard afterwards
     tmp <- tempfile()
-    png(tmp)
+    grDevices::png(tmp)
   }
-  result <- saemix::saemix(m_saemix, d_saemix, control)
+  f_saemix <- saemix::saemix(m_saemix, d_saemix, control)
   if (suppressPlot) {
-    dev.off()
+    grDevices::dev.off()
     unlink(tmp)
   }
+  result <- list(
+    mkinmod = object[[1]]$mkinmod,
+    mmkin = object,
+    solution_type = object[[1]]$solution_type,
+    transform_rates = object[[1]]$transform_rates,
+    transform_fractions = object[[1]]$transform_fractions,
+    so = f_saemix)
+  class(result) <- "saem.mmkin"
   return(result)
 }
 
-#' @rdname saemix
+#' @rdname saem
 #' @return An [saemix::SaemixModel] object.
 #' @export
 saemix_model <- function(object, cores = 1, verbose = FALSE, ...) {
@@ -254,7 +259,7 @@ saemix_model <- function(object, cores = 1, verbose = FALSE, ...) {
   return(res)
 }
 
-#' @rdname saemix
+#' @rdname saem
 #' @return An [saemix::SaemixData] object.
 #' @export
 saemix_data <- function(object, verbose = FALSE, ...) {

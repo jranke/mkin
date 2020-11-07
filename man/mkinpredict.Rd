@@ -6,19 +6,7 @@
 \alias{mkinpredict.mkinfit}
 \title{Produce predictions from a kinetic model using specific parameters}
 \usage{
-mkinpredict(
-  x,
-  odeparms,
-  odeini,
-  outtimes = seq(0, 120, by = 0.1),
-  solution_type = "deSolve",
-  use_compiled = "auto",
-  method.ode = "lsoda",
-  atol = 1e-08,
-  rtol = 1e-10,
-  map_output = TRUE,
-  ...
-)
+mkinpredict(x, odeparms, odeini, outtimes, ...)
 
 \method{mkinpredict}{mkinmod}(
   x,
@@ -30,8 +18,8 @@ mkinpredict(
   method.ode = "lsoda",
   atol = 1e-08,
   rtol = 1e-10,
-  na_stop = TRUE,
   map_output = TRUE,
+  na_stop = TRUE,
   ...
 )
 
@@ -65,6 +53,9 @@ observed variables, for example in the case of the SFORB model.}
 \item{outtimes}{A numeric vector specifying the time points for which model
 predictions should be generated.}
 
+\item{\dots}{Further arguments passed to the ode solver in case such a
+solver is used.}
+
 \item{solution_type}{The method that should be used for producing the
 predictions. This should generally be "analytical" if there is only one
 observed variable, and usually "deSolve" in the case of several observed
@@ -88,9 +79,6 @@ is 1e-10, much lower than in \code{\link{lsoda}}.}
 the observed variables (default) or for all state variables (if set to
 FALSE). Setting this to FALSE has no effect for analytical solutions,
 as these always return mapped output.}
-
-\item{\dots}{Further arguments passed to the ode solver in case such a
-solver is used.}
 
 \item{na_stop}{Should it be an error if deSolve::ode returns NaN values}
 }

@@ -103,12 +103,7 @@
 #' }
 #'
 #' @export
-mkinpredict <- function(x, odeparms, odeini,
-  outtimes = seq(0, 120, by = 0.1),
-  solution_type = "deSolve",
-  use_compiled = "auto",
-  method.ode = "lsoda", atol = 1e-8, rtol = 1e-10,
-  map_output = TRUE, ...)
+mkinpredict <- function(x, odeparms, odeini, outtimes, ...)
 {
   UseMethod("mkinpredict", x)
 }
@@ -122,8 +117,9 @@ mkinpredict.mkinmod <- function(x,
   solution_type = "deSolve",
   use_compiled = "auto",
   method.ode = "lsoda", atol = 1e-8, rtol = 1e-10,
+  map_output = TRUE, 
   na_stop = TRUE,
-  map_output = TRUE, ...)
+  ...)
 {
 
   # Names of state variables and observed variables
