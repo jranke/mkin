@@ -30,6 +30,7 @@ mkinpredict(
   method.ode = "lsoda",
   atol = 1e-08,
   rtol = 1e-10,
+  na_stop = TRUE,
   map_output = TRUE,
   ...
 )
@@ -90,6 +91,8 @@ as these always return mapped output.}
 
 \item{\dots}{Further arguments passed to the ode solver in case such a
 solver is used.}
+
+\item{na_stop}{Should it be an error if deSolve::ode returns NaN values}
 }
 \value{
 A matrix with the numeric solution in wide format

@@ -34,6 +34,7 @@
 #'   the observed variables (default) or for all state variables (if set to
 #'   FALSE). Setting this to FALSE has no effect for analytical solutions,
 #'   as these always return mapped output.
+#' @param na_stop Should it be an error if deSolve::ode returns NaN values
 #' @param \dots Further arguments passed to the ode solver in case such a
 #'   solver is used.
 #' @import deSolve
@@ -121,6 +122,7 @@ mkinpredict.mkinmod <- function(x,
   solution_type = "deSolve",
   use_compiled = "auto",
   method.ode = "lsoda", atol = 1e-8, rtol = 1e-10,
+  na_stop = TRUE,
   map_output = TRUE, ...)
 {
 
@@ -208,9 +210,16 @@ mkinpredict.mkinmod <- function(x,
         ...
       )
     }
-    if (sum(is.na(out)) > 0) {
+    n_out_na <- sum(is.na(out))
+    if (n_out_na > 0 & na_stop) {
+      cat("odeini:\n")
+      print(odeini)
+      cat("odeparms:\n")
+      print(odeparms)
+      cat("out:\n")
+      print(out)
       stop("Differential equations were not integrated for all output times because\n",
-     "NaN values occurred in output from ode()")
+        n_out_na, " NaN values occurred in output from ode()")
     }
   }
 

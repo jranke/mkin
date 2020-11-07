@@ -14,7 +14,9 @@ saemix(model, data, control, ...)
   data,
   control = list(displayProgress = FALSE, print = FALSE, save = FALSE, save.graphs =
     FALSE),
+  cores = 1,
   verbose = FALSE,
+  suppressPlot = TRUE,
   ...
 )
 
@@ -30,15 +32,15 @@ internally from the \link{mmkin} object.}
 \item{\dots}{Further parameters passed to \link[saemix:saemixData]{saemix::saemixData}
 and \link[saemix:saemixModel]{saemix::saemixModel}.}
 
-\item{verbose}{Should we print information about created objects?}
-
-\item{object}{An \link{mmkin} row object containing several fits of the same
-\link{mkinmod} model to different datasets}
-
 \item{cores}{The number of cores to be used for multicore processing using
 \code{\link[parallel:mclapply]{parallel::mclapply()}}. Using more than 1 core is experimental and may
 lead to uncontrolled forking, apparently depending on the BLAS version
 used.}
+
+\item{verbose}{Should we print information about created objects?}
+
+\item{object}{An \link{mmkin} row object containing several fits of the same
+\link{mkinmod} model to different datasets}
 }
 \value{
 An \link[saemix:SaemixObject-class]{saemix::SaemixObject}.
@@ -63,39 +65,39 @@ Starting values for the fixed effects (population mean parameters, argument psi0
 }
 \examples{
 \dontrun{
-library(saemix)
+# We can load saemix, but should exclude the saemix function
+# as it would mask our generic version of it
+library(saemix, exclude = "saemix")
 ds <- lapply(experimental_data_for_UBA_2019[6:10],
  function(x) subset(x$data[c("name", "time", "value")]))
 names(ds) <- paste("Dataset", 6:10)
 f_mmkin_parent_p0_fixed <- mmkin("FOMC", ds, cores = 1,
   state.ini = c(parent = 100), fixed_initials = "parent", quiet = TRUE)
 f_saemix_p0_fixed <- saemix(f_mmkin_parent_p0_fixed)
-m_saemix_p0_fixed <- saemix_model(f_mmkin_parent_p0_fixed["FOMC", ])
-d_saemix_parent <- saemix_data(f_mmkin_parent_p0_fixed)
-saemix_options <- list(seed = 123456, displayProgress = FALSE,
-  save = FALSE, save.graphs = FALSE, nbiter.saemix = c(200, 80))
-f_saemix_p0_fixed <- saemix(m_saemix_p0_fixed, d_saemix_parent, saemix_options)
 
 f_mmkin_parent <- mmkin(c("SFO", "FOMC", "DFOP"), ds, quiet = TRUE)
-m_saemix_sfo <- saemix_model(f_mmkin_parent["SFO", ])
-m_saemix_fomc <- saemix_model(f_mmkin_parent["FOMC", ])
-m_saemix_dfop <- saemix_model(f_mmkin_parent["DFOP", ])
-d_saemix_parent <- saemix_data(f_mmkin_parent["SFO", ])
-f_saemix_sfo <- saemix(m_saemix_sfo, d_saemix_parent, saemix_options)
-f_saemix_fomc <- saemix(m_saemix_fomc, d_saemix_parent, saemix_options)
-f_saemix_dfop <- saemix(m_saemix_dfop, d_saemix_parent, saemix_options)
+f_saemix_sfo <- saemix(f_mmkin_parent["SFO", ])
+f_saemix_fomc <- saemix(f_mmkin_parent["FOMC", ])
+f_saemix_dfop <- saemix(f_mmkin_parent["DFOP", ])
+
+# As this returns an SaemixObject, we can use functions from saemix
 compare.saemix(list(f_saemix_sfo, f_saemix_fomc, f_saemix_dfop))
+
 f_mmkin_parent_tc <- update(f_mmkin_parent, error_model = "tc")
-m_saemix_fomc_tc <- saemix_model(f_mmkin_parent_tc["FOMC", ])
-f_saemix_fomc_tc <- saemix(m_saemix_fomc_tc, d_saemix_parent, saemix_options)
+f_saemix_fomc_tc <- saemix(f_mmkin_parent_tc["FOMC", ])
 compare.saemix(list(f_saemix_fomc, f_saemix_fomc_tc))
 
 dfop_sfo <- mkinmod(parent = mkinsub("DFOP", "A1"),
   A1 = mkinsub("SFO"))
-f_mmkin <- mmkin(list("DFOP-SFO" = dfop_sfo), ds, quiet = TRUE)
-m_saemix <- saemix_model(f_mmkin)
-d_saemix <- saemix_data(f_mmkin)
-f_saemix <- saemix(m_saemix, d_saemix, saemix_options)
+f_mmkin <- mmkin(list("DFOP-SFO" = dfop_sfo), ds, quiet = TRUE, solution_type = "analytical")
+# This takes about 4 minutes on my system
+f_saemix <- saemix(f_mmkin)
+
+# Using a single core, it takes about 6 minutes, using 10 cores it is slower
+# instead of faster
+f_mmkin_des <- mmkin(list("DFOP-SFO" = dfop_sfo), ds, quiet = TRUE, solution_type = "deSolve")
+f_saemix_des <- saemix(f_mmkin_des, cores = 1)
+compare.saemix(list(f_saemix, f_saemix_des))
 
 }
 }

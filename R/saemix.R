@@ -18,13 +18,18 @@
 #' @param object An [mmkin] row object containing several fits of the same
 #'   [mkinmod] model to different datasets
 #' @param verbose Should we print information about created objects?
+#' @param cores The number of cores to be used for multicore processing using
+#'   [parallel::mclapply()]. Using more than 1 core is experimental and may
+#'   lead to uncontrolled forking, apparently depending on the BLAS version
+#'   used.
 #' @param \dots Further parameters passed to [saemix::saemixData]
 #'   and [saemix::saemixModel].
 #' @return An [saemix::SaemixObject].
 #' @examples
 #' \dontrun{
-#' # We do not load the saemix package, as this would override our saemix
-#' # generic
+#' # We can load saemix, but should exclude the saemix function
+#' # as it would mask our generic version of it
+#' library(saemix, exclude = "saemix")
 #' ds <- lapply(experimental_data_for_UBA_2019[6:10],
 #'  function(x) subset(x$data[c("name", "time", "value")]))
 #' names(ds) <- paste("Dataset", 6:10)
@@ -37,17 +42,24 @@
 #' f_saemix_fomc <- saemix(f_mmkin_parent["FOMC", ])
 #' f_saemix_dfop <- saemix(f_mmkin_parent["DFOP", ])
 #'
-#' # We can use functions from the saemix package by prepending saemix::
-#' saemix::compare.saemix(list(f_saemix_sfo, f_saemix_fomc, f_saemix_dfop))
+#' # As this returns an SaemixObject, we can use functions from saemix
+#' compare.saemix(list(f_saemix_sfo, f_saemix_fomc, f_saemix_dfop))
 #'
 #' f_mmkin_parent_tc <- update(f_mmkin_parent, error_model = "tc")
 #' f_saemix_fomc_tc <- saemix(f_mmkin_parent_tc["FOMC", ])
-#' saemix::compare.saemix(list(f_saemix_fomc, f_saemix_fomc_tc))
+#' compare.saemix(list(f_saemix_fomc, f_saemix_fomc_tc))
 #'
 #' dfop_sfo <- mkinmod(parent = mkinsub("DFOP", "A1"),
 #'   A1 = mkinsub("SFO"))
-#' f_mmkin <- mmkin(list("DFOP-SFO" = dfop_sfo), ds, quiet = TRUE)
+#' f_mmkin <- mmkin(list("DFOP-SFO" = dfop_sfo), ds, quiet = TRUE, solution_type = "analytical")
+#' # This takes about 4 minutes on my system
 #' f_saemix <- saemix(f_mmkin)
+#'
+#' # Using a single core, it takes about 6 minutes, using 10 cores it is slower
+#' # instead of faster
+#' f_mmkin_des <- mmkin(list("DFOP-SFO" = dfop_sfo), ds, quiet = TRUE, solution_type = "deSolve")
+#' f_saemix_des <- saemix(f_mmkin_des, cores = 1)
+#' compare.saemix(list(f_saemix, f_saemix_des))
 #'
 #' }
 #' @export
@@ -58,9 +70,10 @@ saemix <- function(model, data, control, ...) UseMethod("saemix")
 saemix.mmkin <- function(model, data,
   control = list(displayProgress = FALSE, print = FALSE,
     save = FALSE, save.graphs = FALSE),
+  cores = 1,
   verbose = FALSE, suppressPlot = TRUE, ...)
 {
-  m_saemix <- saemix_model(model, verbose = verbose)
+  m_saemix <- saemix_model(model, cores = cores, verbose = verbose)
   d_saemix <- saemix_data(model, verbose = verbose)
   if (suppressPlot) {
     # We suppress the log-likelihood curve that saemix currently
@@ -74,15 +87,10 @@ saemix.mmkin <- function(model, data,
     dev.off()
     unlink(tmp)
   }
-  class(result) <- c("saemix.mmkin", "saemix")
   return(result)
 }
 
 #' @rdname saemix
-#' @param cores The number of cores to be used for multicore processing using
-#'   [parallel::mclapply()]. Using more than 1 core is experimental and may
-#'   lead to uncontrolled forking, apparently depending on the BLAS version
-#'   used.
 #' @return An [saemix::SaemixModel] object.
 #' @export
 saemix_model <- function(object, cores = 1, verbose = FALSE, ...) {
@@ -203,7 +211,9 @@ saemix_model <- function(object, cores = 1, verbose = FALSE, ...) {
             out_wide <- mkinpredict(mkin_model,
               odeparms = odeparms, odeini = odeini,
               solution_type = solution_type,
-              outtimes = sort(unique(i_time)))
+              outtimes = sort(unique(i_time)),
+              na_stop = FALSE
+            )
 
             out_index <- cbind(as.character(i_time), as.character(i_name))
             out_values <- out_wide[out_index]
