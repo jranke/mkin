@@ -7,16 +7,22 @@
 #' are equivalent to the rate constants of the DFOP model, but with the
 #' advantage that the SFORB model can also be used for metabolites.
 #'
-#' @param fit An object of class \code{\link{mkinfit}} or
-#'   \code{\link{nlme.mmkin}}
+#' Additional DT50 values are calculated from the FOMC DT90 and k1 and k2 from
+#' HS and DFOP, as well as from Eigenvalues b1 and b2 of any SFORB models
+#'
+#' @param fit An object of class [mkinfit], [nlme.mmkin] or
+#'  [saem.mmkin]. Or another object that has list components
+#'  mkinmod containing an [mkinmod] degradation model, and two numeric vectors,
+#'  bparms.optim and bparms.fixed, that contain parameter values
+#'  for that model.
 #' @importFrom stats optimize
 #' @return A list with a matrix of dissipation times named distimes,
 #'   and, if applicable, a vector of formation fractions named ff
 #'   and, if the SFORB model was in use, a vector of eigenvalues
 #'   of these SFORB models, equivalent to DFOP rate constants
-#' @note The function is used internally by \code{\link{summary.mkinfit}}.
+#' @note The function is used internally by [summary.mkinfit],
+#'   [summary.nlme.mmkin] and [summary.saem.mmkin].
 #' @author Johannes Ranke
-#' @keywords manip
 #' @examples
 #'
 #'   fit <- mkinfit("FOMC", FOCUS_2006_C, quiet = TRUE)
@@ -30,26 +36,9 @@
 #'
 #' @export
 endpoints <- function(fit) {
-  # Calculate dissipation times DT50 and DT90 and formation
-  # fractions as well as SFORB eigenvalues from optimised parameters
-  # Additional DT50 values are calculated from the FOMC DT90 and k1 and k2 from
-  # HS and DFOP, as well as from Eigenvalues b1 and b2 of any SFORB models
   ep <- list()
-  if (inherits(fit, "mkinfit")) {
-    mkinmod <- fit$mkinmod
-    parms.all <- c(fit$bparms.optim, fit$bparms.fixed)
-  } else {
-    if (inherits(fit, "nlme.mmkin")) {
-      mkinmod <- fit$mmkin_orig[[1]]$mkinmod
-      bparms.optim <- backtransform_odeparms(fit$coefficients$fixed,
-        mkinmod,
-        transform_rates = fit$mmkin_orig[[1]]$transform_rates,
-        transform_fractions = fit$mmkin_orig[[1]]$transform_fractions)
-      parms.all <- c(bparms.optim, fit$bparms.fixed)
-    } else {
-      stop("Only implemented for mkinfit and nlme.mmkin objects")
-    }
-  }
+  mkinmod <- fit$mkinmod
+  degparms <- c(fit$bparms.optim, fit$bparms.fixed)
   obs_vars <- names(mkinmod$spec)
   ep$ff <- vector()
   ep$SFORB <- vector()
@@ -61,9 +50,9 @@ endpoints <- function(fit) {
     type = names(mkinmod$map[[obs_var]])[1]
 
     # Get formation fractions if directly fitted, and calculate remaining fraction to sink
-    f_names = grep(paste("^f", obs_var, sep = "_"), names(parms.all), value=TRUE)
+    f_names = grep(paste("^f", obs_var, sep = "_"), names(degparms), value=TRUE)
     if (length(f_names) > 0) {
-      f_values = parms.all[f_names]
+      f_values = degparms[f_names]
       f_to_sink = 1 - sum(f_values)
       names(f_to_sink) = ifelse(type == "SFORB",
         paste(obs_var, "free", "sink", sep = "_"),
@@ -76,34 +65,34 @@ endpoints <- function(fit) {
 
     # Get the rest
     if (type == "SFO") {
-      k_names = grep(paste("^k", obs_var, sep="_"), names(parms.all), value=TRUE)
-      k_tot = sum(parms.all[k_names])
+      k_names = grep(paste("^k", obs_var, sep="_"), names(degparms), value=TRUE)
+      k_tot = sum(degparms[k_names])
       DT50 = log(2)/k_tot
       DT90 = log(10)/k_tot
       if (mkinmod$use_of_ff == "min" && length(obs_vars) > 1) {
         for (k_name in k_names)
         {
-          ep$ff[[sub("k_", "", k_name)]] = parms.all[[k_name]] / k_tot
+          ep$ff[[sub("k_", "", k_name)]] = degparms[[k_name]] / k_tot
         }
       }
     }
     if (type == "FOMC") {
-      alpha = parms.all["alpha"]
-      beta = parms.all["beta"]
+      alpha = degparms["alpha"]
+      beta = degparms["beta"]
       DT50 = beta * (2^(1/alpha) - 1)
       DT90 = beta * (10^(1/alpha) - 1)
       DT50_back = DT90 / (log(10)/log(2)) # Backcalculated DT50 as recommended in FOCUS 2011
       ep$distimes[obs_var, c("DT50back")] = DT50_back
     }
     if (type == "IORE") {
-      k_names = grep(paste("^k__iore", obs_var, sep="_"), names(parms.all), value=TRUE)
-      k_tot = sum(parms.all[k_names])
+      k_names = grep(paste("^k__iore", obs_var, sep="_"), names(degparms), value=TRUE)
+      k_tot = sum(degparms[k_names])
       # From the NAFTA kinetics guidance, p. 5
-      n = parms.all[paste("N", obs_var, sep = "_")]
+      n = degparms[paste("N", obs_var, sep = "_")]
       k = k_tot
       # Use the initial concentration of the parent compound
       source_name = mkinmod$map[[1]][[1]]
-      c0 = parms.all[paste(source_name, "0", sep = "_")]
+      c0 = degparms[paste(source_name, "0", sep = "_")]
       alpha = 1 / (n - 1)
       beta = (c0^(1 - n))/(k * (n - 1))
       DT50 = beta * (2^(1/alpha) - 1)
@@ -113,14 +102,14 @@ endpoints <- function(fit) {
       if (mkinmod$use_of_ff == "min") {
         for (k_name in k_names)
         {
-          ep$ff[[sub("k_", "", k_name)]] = parms.all[[k_name]] / k_tot
+          ep$ff[[sub("k_", "", k_name)]] = degparms[[k_name]] / k_tot
         }
       }
     }
     if (type == "DFOP") {
-      k1 = parms.all["k1"]
-      k2 = parms.all["k2"]
-      g = parms.all["g"]
+      k1 = degparms["k1"]
+      k2 = degparms["k2"]
+      g = degparms["g"]
       f <- function(log_t, x) {
         t <- exp(log_t)
         fraction <- g * exp( - k1 * t) + (1 - g) * exp( - k2 * t)
@@ -144,9 +133,9 @@ endpoints <- function(fit) {
       ep$distimes[obs_var, c("DT50_k2")] = DT50_k2
     }
     if (type == "HS") {
-      k1 = parms.all["k1"]
-      k2 = parms.all["k2"]
-      tb = parms.all["tb"]
+      k1 = degparms["k1"]
+      k2 = degparms["k2"]
+      tb = degparms["tb"]
       DTx <- function(x) {
         DTx.a <- (log(100/(100 - x)))/k1
         DTx.b <- tb + (log(100/(100 - x)) - k1 * tb)/k2
@@ -165,11 +154,11 @@ endpoints <- function(fit) {
     }
     if (type == "SFORB") {
       # FOCUS kinetics (2006), p. 60 f
-      k_out_names = grep(paste("^k", obs_var, "free", sep="_"), names(parms.all), value=TRUE)
+      k_out_names = grep(paste("^k", obs_var, "free", sep="_"), names(degparms), value=TRUE)
       k_out_names = setdiff(k_out_names, paste("k", obs_var, "free", "bound", sep="_"))
-      k_1output = sum(parms.all[k_out_names])
-      k_12 = parms.all[paste("k", obs_var, "free", "bound", sep="_")]
-      k_21 = parms.all[paste("k", obs_var, "bound", "free", sep="_")]
+      k_1output = sum(degparms[k_out_names])
+      k_12 = degparms[paste("k", obs_var, "free", "bound", sep="_")]
+      k_21 = degparms[paste("k", obs_var, "bound", "free", sep="_")]
 
       sqrt_exp = sqrt(1/4 * (k_12 + k_21 + k_1output)^2 + k_12 * k_21 - (k_12 + k_1output) * k_21)
       b1 = 0.5 * (k_12 + k_21 + k_1output) + sqrt_exp
@@ -201,7 +190,7 @@ endpoints <- function(fit) {
 
       for (k_out_name in k_out_names)
       {
-        ep$ff[[sub("k_", "", k_out_name)]] = parms.all[[k_out_name]] / k_1output
+        ep$ff[[sub("k_", "", k_out_name)]] = degparms[[k_out_name]] / k_1output
       }
 
       # Return the eigenvalues for comparison with DFOP rate constants
@@ -214,9 +203,9 @@ endpoints <- function(fit) {
     }
     if (type == "logistic") {
       # FOCUS kinetics (2014) p. 67
-      kmax = parms.all["kmax"]
-      k0 = parms.all["k0"]
-      r = parms.all["r"]
+      kmax = degparms["kmax"]
+      k0 = degparms["k0"]
+      r = degparms["r"]
       DT50 = (1/r) * log(1 - ((kmax/k0) * (1 - 2^(r/kmax))))
       DT90 = (1/r) * log(1 - ((kmax/k0) * (1 - 10^(r/kmax))))
 

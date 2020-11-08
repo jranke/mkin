@@ -43,7 +43,8 @@ used.}
 by the saemix function?}
 }
 \value{
-An \link[saemix:SaemixObject-class]{saemix::SaemixObject}.
+An S3 object of class 'saem.mmkin', containing the fitted
+\link[saemix:SaemixObject-class]{saemix::SaemixObject} as a list component named 'so'.
 
 An \link[saemix:SaemixModel-class]{saemix::SaemixModel} object.
 
@@ -51,8 +52,8 @@ An \link[saemix:SaemixData-class]{saemix::SaemixData} object.
 }
 \description{
 This function uses \code{\link[saemix:saemix]{saemix::saemix()}} as a backend for fitting nonlinear mixed
-effects models created from \link{mmkin} row objects using the stochastic approximation
-to the expectation maximisation algorithm (SAEM).
+effects models created from \link{mmkin} row objects using the Stochastic Approximation
+Expectation Maximisation algorithm (SAEM).
 }
 \details{
 An mmkin row object is essentially a list of mkinfit objects that have been
@@ -95,6 +96,9 @@ f_mmkin_des <- mmkin(list("DFOP-SFO" = dfop_sfo), ds, quiet = TRUE, solution_typ
 # Using a single core, the following takes about 6 minutes, using 10 cores
 # it is slower instead of faster
 f_saem_des <- saem(f_mmkin_des, cores = 1)
-compare.saemix(list(f_saemix$so, f_saemix_des$so))
+compare.saemix(list(f_saem$so, f_saem_des$so))
 }
+}
+\seealso{
+\link{summary.saem.mmkin}
 }

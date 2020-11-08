@@ -1,4 +1,4 @@
-#' Summary method for class "nlme.mmkin"
+#' Summary method for class "saem.mmkin"
 #'
 #' Lists model equations, initial parameter values, optimised parameters
 #' for fixed effects (population), random effects (deviations from the
@@ -6,20 +6,18 @@
 #' endpoints such as formation fractions and DT50 values. Optionally
 #' (default is FALSE), the data are listed in full.
 #'
-#' @param object an object of class [nlme.mmkin]
-#' @param x an object of class [summary.nlme.mmkin]
+#' @param object an object of class [saem.mmkin]
+#' @param x an object of class [summary.saem.mmkin]
 #' @param data logical, indicating whether the full data should be included in
 #'   the summary.
 #' @param verbose Should the summary be verbose?
 #' @param distimes logical, indicating whether DT50 and DT90 values should be
 #'   included.
-#' @param alpha error level for confidence interval estimation from the t
-#'   distribution
 #' @param digits Number of digits to use for printing
 #' @param \dots optional arguments passed to methods like \code{print}.
-#' @return The summary function returns a list based on the [nlme] object
+#' @return The summary function returns a list based on the [saemix::SaemixObject]
 #'   obtained in the fit, with at least the following additional components
-#'   \item{nlmeversion, mkinversion, Rversion}{The nlme, mkin and R versions used}
+#'   \item{saemixversion, mkinversion, Rversion}{The saemix, mkin and R versions used}
 #'   \item{date.fit, date.summary}{The dates where the fit and the summary were
 #'     produced}
 #'   \item{diffs}{The differential equations used in the degradation model}
@@ -32,11 +30,10 @@
 #'   \item{distimes}{The DT50 and DT90 values for each observed variable.}
 #'   \item{SFORB}{If applicable, eigenvalues of SFORB components of the model.}
 #'   The print method is called for its side effect, i.e. printing the summary.
-#' @importFrom stats predict
+#' @importFrom stats predict vcov
 #' @author Johannes Ranke for the mkin specific parts
-#'   José Pinheiro and Douglas Bates for the components inherited from nlme
+#'   saemix authors for the parts inherited from saemix.
 #' @examples
-#'
 #' # Generate five datasets following SFO kinetics
 #' sampling_times = c(0, 1, 3, 7, 14, 28, 60, 90, 120)
 #' dt50_sfo_in_pop <- 50
@@ -61,32 +58,47 @@
 #'     n = 1)[[1]]
 #' })
 #'
-#' # Evaluate using mmkin and nlme
-#' library(nlme)
+#' \dontrun{
+#' # Evaluate using mmkin and saem
 #' f_mmkin <- mmkin("SFO", ds_sfo_syn, quiet = TRUE, error_model = "tc", cores = 1)
-#' f_nlme <- nlme(f_mmkin)
-#' summary(f_nlme, data = TRUE)
+#' f_saem <- saem(f_mmkin)
+#' summary(f_saem, data = TRUE)
+#' }
 #'
 #' @export
-summary.nlme.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes = TRUE, alpha = 0.05, ...) {
+summary.saem.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes = TRUE, ...) {
 
   mod_vars <- names(object$mkinmod$diffs)
 
-  confint_trans <- intervals(object, which = "fixed", level = 1 - alpha)$fixed
-  attr(confint_trans, "label") <- NULL
-  pnames <- rownames(confint_trans)
+  pnames <- names(object$mean_dp_start)
+  np <- length(pnames)
+
+  conf.int <- object$so@results@conf.int
+  rownames(conf.int) <- conf.int$name
+  confint_trans <- as.matrix(conf.int[pnames, c("estimate", "lower", "upper")])
+  colnames(confint_trans)[1] <- "est."
 
   bp <- backtransform_odeparms(confint_trans[, "est."], object$mkinmod,
     object$transform_rates, object$transform_fractions)
   bpnames <- names(bp)
 
-  #  variance-covariance estimates for fixed effects (from summary.lme)
-  fixed <- fixef(object)
-  stdFixed <- sqrt(diag(as.matrix(object$varFix)))
+  #  Correlation of fixed effects (inspired by summary.nlme)
+  varFix <- vcov(object$so)[1:np, 1:np]
+  stdFix <- sqrt(diag(varFix))
   object$corFixed <- array(
-    t(object$varFix/stdFixed)/stdFixed,
-    dim(object$varFix),
-    list(names(fixed), names(fixed)))
+    t(varFix/stdFix)/stdFix,
+    dim(varFix),
+    list(pnames, pnames))
+
+  # Random effects
+  rnames <- paste0("SD.", pnames)
+  confint_ranef <- as.matrix(conf.int[rnames, c("estimate", "lower", "upper")])
+  colnames(confint_ranef)[1] <- "est."
+
+  # Error model
+  enames <- object$so@results@name.sigma
+  confint_errmod <- as.matrix(conf.int[enames, c("estimate", "lower", "upper")])
+  colnames(confint_errmod)[1] <- "est."
 
   # Transform boundaries of CI for one parameter at a time,
   # with the exception of sets of formation fractions (single fractions are OK).
@@ -118,6 +130,8 @@ summary.nlme.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes =
   }
 
   object$confint_trans <- confint_trans
+  object$confint_ranef <- confint_ranef
+  object$confint_errmod <- confint_errmod
   object$confint_back <- confint_back
 
   object$date.summary = date()
@@ -127,32 +141,33 @@ summary.nlme.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes =
 
   object$diffs <- object$mkinmod$diffs
   object$print_data <- data
+  so_pred <- object$so@results@predictions
+
   object$data[["observed"]] <- object$data[["value"]]
   object$data[["value"]] <- NULL
-  object$data[["predicted"]] <- predict(object)
-  object$data[["residual"]] <- residuals(object, type = "response")
-  object$data[["std"]] <- object$sigma <- 1/attr(object$modelStruct$varStruct, "weights")
-  object$data[["standardized"]] <- residuals(object, type = "pearson")
+  object$data[["predicted"]] <- so_pred$ipred
+  object$data[["residual"]] <- so_pred$ires
+  object$data[["standardized"]] <- so_pred$iwres
   object$verbose <- verbose
 
   object$fixed <- object$mmkin_orig[[1]]$fixed
-  object$AIC = AIC(object)
-  object$BIC = BIC(object)
-  object$logLik = logLik(object)
+  object$AIC = AIC(object$so)
+  object$BIC = BIC(object$so)
+  object$logLik = logLik(object$so, method = "is")
 
   ep <- endpoints(object)
   if (length(ep$ff) != 0)
     object$ff <- ep$ff
   if (distimes) object$distimes <- ep$distimes
   if (length(ep$SFORB) != 0) object$SFORB <- ep$SFORB
-  class(object) <- c("summary.nlme.mmkin", "nlme.mmkin", "nlme", "lme")
+  class(object) <- c("summary.saem.mmkin")
   return(object)
 }
 
-#' @rdname summary.nlme.mmkin
+#' @rdname summary.saem.mmkin
 #' @export
-print.summary.nlme.mmkin <- function(x, digits = max(3, getOption("digits") - 3), verbose = x$verbose, ...) {
-  cat("nlme version used for fitting:     ", x$nlmeversion, "\n")
+print.summary.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3), verbose = x$verbose, ...) {
+  cat("saemix version used for fitting:     ", x$saemixversion, "\n")
   cat("mkin version used for pre-fitting: ", x$mkinversion, "\n")
   cat("R version used for fitting:        ", x$Rversion, "\n")
 
@@ -170,7 +185,7 @@ print.summary.nlme.mmkin <- function(x, digits = max(3, getOption("digits") - 3)
 
   cat("\nModel predictions using solution type", x$solution_type, "\n")
 
-  cat("\nFitted in", x$time[["elapsed"]],  "s using", x$numIter, "iterations\n")
+  cat("\nFitted in", x$time[["elapsed"]],  "s using", paste(x$so@options$nbiter.saemix, collapse = ", "), "iterations\n")
 
   cat("\nVariance model: ")
   cat(switch(x$err_mod,
@@ -186,6 +201,7 @@ print.summary.nlme.mmkin <- function(x, digits = max(3, getOption("digits") - 3)
   else print(x$fixed)
 
   cat("\nResults:\n\n")
+  cat("Likelihood computed by importance sampling\n")
   print(data.frame(AIC = x$AIC, BIC = x$BIC, logLik = x$logLik,
       row.names = " "))
 
@@ -198,13 +214,14 @@ print.summary.nlme.mmkin <- function(x, digits = max(3, getOption("digits") - 3)
     print(corr, title = "\nCorrelation:", ...)
   }
 
-  cat("\n") # Random effects
-  print(summary(x$modelStruct), sigma = x$sigma,
-        reEstimates = x$coef$random, verbose = verbose, ...)
+  cat("\nRandom effects:\n")
+  print(x$confint_ranef)
+
+  cat("\nVariance model:\n")
+  print(x$confint_errmod)
 
   cat("\nBacktransformed parameters with asymmetric confidence intervals:\n")
   print(x$confint_back)
-
 
   printSFORB <- !is.null(x$SFORB)
   if(printSFORB){

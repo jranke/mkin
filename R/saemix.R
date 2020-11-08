@@ -1,8 +1,8 @@
 #' Fit nonlinear mixed models with SAEM
 #'
 #' This function uses [saemix::saemix()] as a backend for fitting nonlinear mixed
-#' effects models created from [mmkin] row objects using the stochastic approximation
-#' to the expectation maximisation algorithm (SAEM).
+#' effects models created from [mmkin] row objects using the Stochastic Approximation
+#' Expectation Maximisation algorithm (SAEM).
 #'
 #' An mmkin row object is essentially a list of mkinfit objects that have been
 #' obtained by fitting the same model to a list of datasets using [mkinfit].
@@ -23,7 +23,9 @@
 #' @param control Passed to [saemix::saemix]
 #' @param \dots Further parameters passed to [saemix::saemixData]
 #'   and [saemix::saemixModel].
-#' @return An [saemix::SaemixObject].
+#' @return An S3 object of class 'saem.mmkin', containing the fitted
+#'   [saemix::SaemixObject] as a list component named 'so'.
+#' @seealso [summary.saem.mmkin]
 #' @examples
 #' \dontrun{
 #' ds <- lapply(experimental_data_for_UBA_2019[6:10],
@@ -57,7 +59,7 @@
 #' # Using a single core, the following takes about 6 minutes, using 10 cores
 #' # it is slower instead of faster
 #' f_saem_des <- saem(f_mmkin_des, cores = 1)
-#' compare.saemix(list(f_saemix$so, f_saemix_des$so))
+#' compare.saemix(list(f_saem$so, f_saem_des$so))
 #' }
 #' @export
 saem <- function(object, control, ...) UseMethod("saem")
@@ -79,18 +81,40 @@ saem.mmkin <- function(object,
     tmp <- tempfile()
     grDevices::png(tmp)
   }
-  f_saemix <- saemix::saemix(m_saemix, d_saemix, control)
+  fit_time <- system.time({
+    f_saemix <- saemix::saemix(m_saemix, d_saemix, control)
+    f_saemix <- saemix::saemix.predict(f_saemix)
+  })
   if (suppressPlot) {
     grDevices::dev.off()
     unlink(tmp)
   }
+  transparms_optim = f_saemix@results@fixed.effects
+  names(transparms_optim) = f_saemix@results@name.fixed
+  bparms_optim <- backtransform_odeparms(transparms_optim,
+    object[[1]]$mkinmod,
+    object[[1]]$transform_rates,
+    object[[1]]$transform_fractions)
+
   result <- list(
     mkinmod = object[[1]]$mkinmod,
     mmkin = object,
     solution_type = object[[1]]$solution_type,
     transform_rates = object[[1]]$transform_rates,
     transform_fractions = object[[1]]$transform_fractions,
-    so = f_saemix)
+    so = f_saemix,
+    time = fit_time,
+    mean_dp_start = attr(m_saemix, "mean_dp_start"),
+    bparms.optim = bparms_optim,
+    bparms.fixed = object[[1]]$bparms.fixed,
+    data = nlme_data(object),
+    err_mod = object[[1]]$err_mod,
+    date.fit = date(),
+    saemixversion = as.character(utils::packageVersion("saemix")),
+    mkinversion = as.character(utils::packageVersion("mkin")),
+    Rversion = paste(R.version$major, R.version$minor, sep=".")
+  )
+
   class(result) <- "saem.mmkin"
   return(result)
 }
@@ -256,6 +280,7 @@ saemix_model <- function(object, cores = 1, verbose = FALSE, ...) {
     error.init = error.init,
     verbose = verbose
   )
+  attr(res, "mean_dp_start") <- degparms_optim
   return(res)
 }
 

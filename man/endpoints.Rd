@@ -8,8 +8,11 @@ with mkinfit}
 endpoints(fit)
 }
 \arguments{
-\item{fit}{An object of class \code{\link{mkinfit}} or
-\code{\link{nlme.mmkin}}}
+\item{fit}{An object of class \link{mkinfit}, \link{nlme.mmkin} or
+\link{saem.mmkin}. Or another object that has list components
+mkinmod containing an \link{mkinmod} degradation model, and two numeric vectors,
+bparms.optim and bparms.fixed, that contain parameter values
+for that model.}
 }
 \value{
 A list with a matrix of dissipation times named distimes,
@@ -24,8 +27,13 @@ for one of the parents or metabolites, the Eigenvalues are returned. These
 are equivalent to the rate constants of the DFOP model, but with the
 advantage that the SFORB model can also be used for metabolites.
 }
+\details{
+Additional DT50 values are calculated from the FOMC DT90 and k1 and k2 from
+HS and DFOP, as well as from Eigenvalues b1 and b2 of any SFORB models
+}
 \note{
-The function is used internally by \code{\link{summary.mkinfit}}.
+The function is used internally by \link{summary.mkinfit},
+\link{summary.nlme.mmkin} and \link{summary.saem.mmkin}.
 }
 \examples{
 
@@ -42,4 +50,3 @@ The function is used internally by \code{\link{summary.mkinfit}}.
 \author{
 Johannes Ranke
 }
-\keyword{manip}

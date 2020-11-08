@@ -181,14 +181,21 @@ nlme.mmkin <- function(model, data = sys.frame(sys.parent()),
   fit_time <- system.time(val <- do.call("nlme.formula", thisCall))
   val$time <- fit_time
 
-  val$mean_dp_start <- mean_dp_start
-  val$mmkin_orig <- model
-  val$data <- thisCall[["data"]]
   val$mkinmod <- model[[1]]$mkinmod
-  val$err_mode <- error_model
+  val$data <- thisCall[["data"]]
+  val$mmkin_orig <- model
+  val$mean_dp_start <- mean_dp_start
   val$transform_rates <- model[[1]]$transform_rates
   val$transform_fractions <- model[[1]]$transform_fractions
   val$solution_type <- model[[1]]$solution_type
+  val$err_mode <- error_model
+
+  val$bparms.optim <- backtransform_odeparms(val$coefficients$fixed,
+    val$mkinmod,
+    transform_rates = val$transform_rates,
+    transform_fractions = val$transform_fractions)
+
+  val$bparms.fixed <- model[[1]]$bparms.fixed
   val$date.fit <- date()
   val$nlmeversion <- as.character(utils::packageVersion("nlme"))
   val$mkinversion <- as.character(utils::packageVersion("mkin"))
