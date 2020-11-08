@@ -83,14 +83,14 @@ saem.mmkin <- function(object,
   }
   fit_time <- system.time({
     f_saemix <- saemix::saemix(m_saemix, d_saemix, control)
-    f_saemix <- saemix::saemix.predict(f_saemix)
+    f_saemix <- try(saemix::saemix.predict(f_saemix), silent = TRUE)
   })
   if (suppressPlot) {
     grDevices::dev.off()
     unlink(tmp)
   }
-  transparms_optim = f_saemix@results@fixed.effects
-  names(transparms_optim) = f_saemix@results@name.fixed
+  transparms_optim <- f_saemix@results@fixed.effects
+  names(transparms_optim) <- f_saemix@results@name.fixed
   bparms_optim <- backtransform_odeparms(transparms_optim,
     object[[1]]$mkinmod,
     object[[1]]$transform_rates,
