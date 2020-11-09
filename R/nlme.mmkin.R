@@ -6,6 +6,9 @@
 # following environment will be in the mkin namespace.
 .nlme_env <- new.env(parent = emptyenv())
 
+#' @export
+nlme::nlme
+
 #' Retrieve a degradation function from the mmkin namespace
 #'
 #' @importFrom utils getFromNamespace
