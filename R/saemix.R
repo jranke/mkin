@@ -40,7 +40,7 @@
 #' f_saem_fomc <- saem(f_mmkin_parent["FOMC", ])
 #' f_saem_dfop <- saem(f_mmkin_parent["DFOP", ])
 #'
-#' # The returned saem.mmkin object contains an SaemixObject, we can use
+#' # The returned saem.mmkin object contains an SaemixObject, therefore we can use
 #' # functions from saemix
 #' library(saemix)
 #' compare.saemix(list(f_saem_sfo$so, f_saem_fomc$so, f_saem_dfop$so))
@@ -49,17 +49,26 @@
 #' f_saem_fomc_tc <- saem(f_mmkin_parent_tc["FOMC", ])
 #' compare.saemix(list(f_saem_fomc$so, f_saem_fomc_tc$so))
 #'
+#' sfo_sfo <- mkinmod(parent = mkinsub("SFO", "A1"),
+#'   A1 = mkinsub("SFO"))
+#' fomc_sfo <- mkinmod(parent = mkinsub("FOMC", "A1"),
+#'   A1 = mkinsub("SFO"))
 #' dfop_sfo <- mkinmod(parent = mkinsub("DFOP", "A1"),
 #'   A1 = mkinsub("SFO"))
-#' f_mmkin <- mmkin(list("DFOP-SFO" = dfop_sfo), ds, quiet = TRUE, solution_type = "analytical")
-#' # This takes about 4 minutes on my system
-#' f_saem <- saem(f_mmkin)
+#' # The following fit uses analytical solutions for SFO-SFO and DFOP-SFO,
+#' # and compiled ODEs for FOMC, both are fast
+#' f_mmkin <- mmkin(list(
+#'     "SFO-SFO" = sfo_sfo, "FOMC-SFO" = fomc_sfo, "DFOP-SFO" = dfop_sfo),
+#'   ds, quiet = TRUE)
+#' # These take about five seconds each on this system, as we use
+#' # analytical solutions written for saemix. When using the analytical
+#' # solutions written for mkin this took around four minutes
+#' f_saem_sfo_sfo <- saem(f_mmkin["SFO-SFO", ])
+#' f_saem_dfop_sfo <- saem(f_mmkin["SFO-SFO", ])
 #'
-#' f_mmkin_des <- mmkin(list("DFOP-SFO" = dfop_sfo), ds, quiet = TRUE, solution_type = "deSolve")
 #' # Using a single core, the following takes about 6 minutes, using 10 cores
 #' # it is slower instead of faster
-#' f_saem_des <- saem(f_mmkin_des, cores = 1)
-#' compare.saemix(list(f_saem$so, f_saem_des$so))
+#' f_saem_fomc <- saem(f_mmkin["FOMC-SFO", ], cores = 1)
 #' }
 #' @export
 saem <- function(object, control, ...) UseMethod("saem")
@@ -83,7 +92,12 @@ saem.mmkin <- function(object,
   }
   fit_time <- system.time({
     f_saemix <- saemix::saemix(m_saemix, d_saemix, control)
-    f_saemix <- try(saemix::saemix.predict(f_saemix), silent = TRUE)
+    f_pred <- try(saemix::saemix.predict(f_saemix), silent = TRUE)
+    if (!inherits(f_pred, "try-error")) {
+      f_saemix <- f_pred
+    } else {
+      warning("Creating predictions from the saemix model failed")
+    }
   })
   if (suppressPlot) {
     grDevices::dev.off()
@@ -145,37 +159,43 @@ saemix_model <- function(object, cores = 1, verbose = FALSE, ...) {
 
   model_function <- FALSE
 
-  if (length(mkin_model$spec) == 1 & mkin_model$use_of_ff == "max") {
-    parent_type <- mkin_model$spec[[1]]$type
-    if (length(odeini_fixed) == 1) {
-      if (parent_type == "SFO") {
-        stop("saemix needs at least two parameters to work on.")
-      }
-      if (parent_type == "FOMC") {
-        model_function <- function(psi, id, xidep) {
-          odeini_fixed / (xidep[, "time"]/exp(psi[id, 2]) + 1)^exp(psi[id, 1])
+  # Model functions with analytical solutions
+  # Fixed parameters, use_of_ff = "min" and turning off sinks currently not supported here
+  # In general, we need to consider exactly how the parameters in mkinfit were specified,
+  # as the parameters are currently mapped by position in these solutions
+  sinks <- sapply(mkin_model$spec, function(x) x$sink)
+  if (length(odeparms_fixed) == 0 & mkin_model$use_of_ff == "max" & all(sinks)) {
+    # Parent only
+    if (length(mkin_model$spec) == 1) {
+      parent_type <- mkin_model$spec[[1]]$type
+      if (length(odeini_fixed) == 1) {
+        if (parent_type == "SFO") {
+          stop("saemix needs at least two parameters to work on.")
         }
-      }
-      if (parent_type == "DFOP") {
-        model_function <- function(psi, id, xidep) {
-          g <- plogis(psi[id, 3])
-          t = xidep[, "time"]
-          odeini_fixed * (g * exp(- exp(psi[id, 1]) * t) +
-            (1 - g) * exp(- exp(psi[id, 2]) * t))
+        if (parent_type == "FOMC") {
+          model_function <- function(psi, id, xidep) {
+            odeini_fixed / (xidep[, "time"]/exp(psi[id, 2]) + 1)^exp(psi[id, 1])
+          }
         }
-      }
-      if (parent_type == "HS") {
-        model_function <- function(psi, id, xidep) {
-          tb <- exp(psi[id, 3])
-          t = xidep[, "time"]
-          k1 = exp(psi[id, 1])
-          odeini_fixed * ifelse(t <= tb,
-            exp(- k1 * t),
-            exp(- k1 * t) * exp(- exp(psi[id, 2]) * (t - tb)))
+        if (parent_type == "DFOP") {
+          model_function <- function(psi, id, xidep) {
+            g <- plogis(psi[id, 3])
+            t <- xidep[, "time"]
+            odeini_fixed * (g * exp(- exp(psi[id, 1]) * t) +
+              (1 - g) * exp(- exp(psi[id, 2]) * t))
+          }
         }
-      }
-    } else {
-      if (length(odeparms_fixed) == 0) {
+        if (parent_type == "HS") {
+          model_function <- function(psi, id, xidep) {
+            tb <- exp(psi[id, 3])
+            t <- xidep[, "time"]
+            k1 = exp(psi[id, 1])
+            odeini_fixed * ifelse(t <= tb,
+              exp(- k1 * t),
+              exp(- k1 * t) * exp(- exp(psi[id, 2]) * (t - tb)))
+          }
+        }
+      } else {
         if (parent_type == "SFO") {
           model_function <- function(psi, id, xidep) {
             psi[id, 1] * exp( - exp(psi[id, 2]) * xidep[, "time"])
@@ -189,7 +209,7 @@ saemix_model <- function(object, cores = 1, verbose = FALSE, ...) {
         if (parent_type == "DFOP") {
           model_function <- function(psi, id, xidep) {
             g <- plogis(psi[id, 4])
-            t = xidep[, "time"]
+            t <- xidep[, "time"]
             psi[id, 1] * (g * exp(- exp(psi[id, 2]) * t) +
               (1 - g) * exp(- exp(psi[id, 3]) * t))
           }
@@ -197,7 +217,7 @@ saemix_model <- function(object, cores = 1, verbose = FALSE, ...) {
         if (parent_type == "HS") {
           model_function <- function(psi, id, xidep) {
             tb <- exp(psi[id, 4])
-            t = xidep[, "time"]
+            t <- xidep[, "time"]
             k1 = exp(psi[id, 2])
             psi[id, 1] * ifelse(t <= tb,
               exp(- k1 * t),
@@ -206,9 +226,57 @@ saemix_model <- function(object, cores = 1, verbose = FALSE, ...) {
         }
       }
     }
+
+    # Parent with one metabolite
+    # Parameter names used in the model functions are as in
+    # https://nbviewer.jupyter.org/urls/jrwb.de/nb/Symbolic%20ODE%20solutions%20for%20mkin.ipynb
+    if (length(mkin_model$spec) == 2) {
+      types <- unname(sapply(mkin_model$spec, function(x) x$type))
+      # Initial value for the metabolite (n20) must be fixed
+      if (names(odeini_fixed) == names(mkin_model$spec)[2]) {
+        n20 <- odeini_fixed
+        parent_name <- names(mkin_model$spec)[1]
+        if (identical(types, c("SFO", "SFO"))) {
+          model_function <- function(psi, id, xidep) {
+            t <- xidep[, "time"]
+            n10 <- psi[id, 1]
+            k1 <- exp(psi[id, 2])
+            k2 <- exp(psi[id, 3])
+            f12 <- plogis(psi[id, 4])
+            ifelse(xidep[, "name"] == parent_name,
+              n10 * exp(- k1 * t),
+              (((k2 - k1) * n20 - f12 * k1 * n10) * exp(- k2 * t)) / (k2 - k1) +
+                (f12 * k1 * n10 * exp(- k1 * t)) / (k2 - k1)
+            )
+          }
+        }
+        if (identical(types, c("DFOP", "SFO"))) {
+          model_function <- function(psi, id, xidep) {
+            t <- xidep[, "time"]
+            n10 <- psi[id, 1]
+            k2 <- exp(psi[id, 2])
+            f12 <- plogis(psi[id, 3])
+            l1 <- exp(psi[id, 4])
+            l2 <- exp(psi[id, 5])
+            g <- plogis(psi[id, 6])
+            ifelse(xidep[, "name"] == parent_name,
+              n10 * (g * exp(- l1 * t) + (1 - g) * exp(- l2 * t)),
+              ((f12 * g - f12) * l2 * n10 * exp(- l2 * t)) / (l2 - k2) -
+                (f12 * g * l1 * n10 * exp(- l1 * t)) / (l1 - k2) +
+                ((((l1 - k2) * l2 - k2 * l1 + k2^2) * n20 +
+                    ((f12 * l1 + (f12 * g - f12) * k2) * l2 -
+                      f12 * g * k2 * l1) * n10) * exp( - k2 * t)) /
+                ((l1 - k2) * l2 - k2 * l1 + k2^2)
+            )
+          }
+        }
+      }
+    }
   }
 
-  if (!is.function(model_function)) {
+  if (is.function(model_function)) {
+    solution_type = "analytical saemix"
+  } else {
     model_function <- function(psi, id, xidep) {
 
       uid <- unique(id)

@@ -96,7 +96,7 @@ summary.saem.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes =
   colnames(confint_ranef)[1] <- "est."
 
   # Error model
-  enames <- object$so@results@name.sigma
+  enames <- if (object$err_mod == "const") "a.1" else c("a.1", "b.1")
   confint_errmod <- as.matrix(conf.int[enames, c("estimate", "lower", "upper")])
   colnames(confint_errmod)[1] <- "est."
 

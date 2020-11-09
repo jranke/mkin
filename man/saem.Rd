@@ -77,7 +77,7 @@ f_saem_sfo <- saem(f_mmkin_parent["SFO", ])
 f_saem_fomc <- saem(f_mmkin_parent["FOMC", ])
 f_saem_dfop <- saem(f_mmkin_parent["DFOP", ])
 
-# The returned saem.mmkin object contains an SaemixObject, we can use
+# The returned saem.mmkin object contains an SaemixObject, therefore we can use
 # functions from saemix
 library(saemix)
 compare.saemix(list(f_saem_sfo$so, f_saem_fomc$so, f_saem_dfop$so))
@@ -86,17 +86,26 @@ f_mmkin_parent_tc <- update(f_mmkin_parent, error_model = "tc")
 f_saem_fomc_tc <- saem(f_mmkin_parent_tc["FOMC", ])
 compare.saemix(list(f_saem_fomc$so, f_saem_fomc_tc$so))
 
+sfo_sfo <- mkinmod(parent = mkinsub("SFO", "A1"),
+  A1 = mkinsub("SFO"))
+fomc_sfo <- mkinmod(parent = mkinsub("FOMC", "A1"),
+  A1 = mkinsub("SFO"))
 dfop_sfo <- mkinmod(parent = mkinsub("DFOP", "A1"),
   A1 = mkinsub("SFO"))
-f_mmkin <- mmkin(list("DFOP-SFO" = dfop_sfo), ds, quiet = TRUE, solution_type = "analytical")
-# This takes about 4 minutes on my system
-f_saem <- saem(f_mmkin)
+# The following fit uses analytical solutions for SFO-SFO and DFOP-SFO,
+# and compiled ODEs for FOMC, both are fast
+f_mmkin <- mmkin(list(
+    "SFO-SFO" = sfo_sfo, "FOMC-SFO" = fomc_sfo, "DFOP-SFO" = dfop_sfo),
+  ds, quiet = TRUE)
+# These take about five seconds each on this system, as we use
+# analytical solutions written for saemix. When using the analytical
+# solutions written for mkin this took around four minutes
+f_saem_sfo_sfo <- saem(f_mmkin["SFO-SFO", ])
+f_saem_dfop_sfo <- saem(f_mmkin["SFO-SFO", ])
 
-f_mmkin_des <- mmkin(list("DFOP-SFO" = dfop_sfo), ds, quiet = TRUE, solution_type = "deSolve")
 # Using a single core, the following takes about 6 minutes, using 10 cores
 # it is slower instead of faster
-f_saem_des <- saem(f_mmkin_des, cores = 1)
-compare.saemix(list(f_saem$so, f_saem_des$so))
+f_saem_fomc <- saem(f_mmkin["FOMC-SFO", ], cores = 1)
 }
 }
 \seealso{
