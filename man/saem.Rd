@@ -81,6 +81,10 @@ f_saem_dfop <- saem(f_mmkin_parent["DFOP", ])
 # functions from saemix
 library(saemix)
 compare.saemix(list(f_saem_sfo$so, f_saem_fomc$so, f_saem_dfop$so))
+plot(f_saem_fomc$so, plot.type = "convergence")
+plot(f_saem_fomc$so, plot.type = "individual.fit")
+plot(f_saem_fomc$so, plot.type = "npde")
+plot(f_saem_fomc$so, plot.type = "vpc")
 
 f_mmkin_parent_tc <- update(f_mmkin_parent, error_model = "tc")
 f_saem_fomc_tc <- saem(f_mmkin_parent_tc["FOMC", ])
@@ -101,11 +105,12 @@ f_mmkin <- mmkin(list(
 # analytical solutions written for saemix. When using the analytical
 # solutions written for mkin this took around four minutes
 f_saem_sfo_sfo <- saem(f_mmkin["SFO-SFO", ])
-f_saem_dfop_sfo <- saem(f_mmkin["SFO-SFO", ])
+f_saem_dfop_sfo <- saem(f_mmkin["DFOP-SFO", ])
+summary(f_saem_dfop_sfo, data = FALSE)
 
 # Using a single core, the following takes about 6 minutes, using 10 cores
 # it is slower instead of faster
-f_saem_fomc <- saem(f_mmkin["FOMC-SFO", ], cores = 1)
+#f_saem_fomc <- saem(f_mmkin["FOMC-SFO", ], cores = 1)
 }
 }
 \seealso{

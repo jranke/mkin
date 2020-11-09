@@ -34,25 +34,34 @@
 #' @author Johannes Ranke for the mkin specific parts
 #'   saemix authors for the parts inherited from saemix.
 #' @examples
-#' # Generate five datasets following SFO kinetics
+#' # Generate five datasets following DFOP-SFO kinetics
 #' sampling_times = c(0, 1, 3, 7, 14, 28, 60, 90, 120)
-#' dt50_sfo_in_pop <- 50
-#' k_in_pop <- log(2) / dt50_sfo_in_pop
+#' dfop_sfo <- mkinmod(parent = mkinsub("DFOP", "m1"),
+#'  m1 = mkinsub("SFO"), quiet = TRUE)
 #' set.seed(1234)
-#' k_in <- rlnorm(5, log(k_in_pop), 0.5)
-#' SFO <- mkinmod(parent = mkinsub("SFO"))
+#' k1_in <- rlnorm(5, log(0.1), 0.3)
+#' k2_in <- rlnorm(5, log(0.02), 0.3)
+#' g_in <- plogis(rnorm(5, qlogis(0.5), 0.3))
+#' f_parent_to_m1_in <- plogis(rnorm(5, qlogis(0.3), 0.3))
+#' k_m1_in <- rlnorm(5, log(0.02), 0.3)
 #'
-#' pred_sfo <- function(k) {
-#'   mkinpredict(SFO,
-#'     c(k_parent = k),
-#'     c(parent = 100),
+#' pred_dfop_sfo <- function(k1, k2, g, f_parent_to_m1, k_m1) {
+#'   mkinpredict(dfop_sfo,
+#'     c(k1 = k1, k2 = k2, g = g, f_parent_to_m1 = f_parent_to_m1, k_m1 = k_m1),
+#'     c(parent = 100, m1 = 0),
 #'     sampling_times)
 #' }
 #'
-#' ds_sfo_mean <- lapply(k_in, pred_sfo)
-#' names(ds_sfo_mean) <- paste("ds", 1:5)
+#' ds_mean_dfop_sfo <- lapply(1:5, function(i) {
+#'   mkinpredict(dfop_sfo,
+#'     c(k1 = k1_in[i], k2 = k2_in[i], g = g_in[i],
+#'       f_parent_to_m1 = f_parent_to_m1_in[i], k_m1 = k_m1_in[i]),
+#'     c(parent = 100, m1 = 0),
+#'     sampling_times)
+#' })
+#' names(ds_mean_dfop_sfo) <- paste("ds", 1:5)
 #'
-#' ds_sfo_syn <- lapply(ds_sfo_mean, function(ds) {
+#' ds_syn_dfop_sfo <- lapply(ds_mean_dfop_sfo, function(ds) {
 #'   add_err(ds,
 #'     sdfunc = function(value) sqrt(1^2 + value^2 * 0.07^2),
 #'     n = 1)[[1]]
@@ -60,9 +69,9 @@
 #'
 #' \dontrun{
 #' # Evaluate using mmkin and saem
-#' f_mmkin <- mmkin("SFO", ds_sfo_syn, quiet = TRUE, error_model = "tc", cores = 1)
-#' f_saem <- saem(f_mmkin)
-#' summary(f_saem, data = TRUE)
+#' f_mmkin_dfop_sfo <- mmkin(list(dfop_sfo), ds_syn_dfop_sfo, quiet = TRUE, error_model = "tc", cores = 5)
+#' f_saem_dfop_sfo <- saem(f_mmkin_dfop_sfo)
+#' summary(f_saem_dfop_sfo, data = TRUE)
 #' }
 #'
 #' @export
