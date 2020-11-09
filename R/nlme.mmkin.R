@@ -49,8 +49,7 @@ get_deg_func <- function() {
 #'   methods that will automatically work on 'nlme.mmkin' objects, such as
 #'   [nlme::intervals()], [nlme::anova.lme()] and [nlme::coef.lme()].
 #' @export
-#' @seealso [nlme_function()], [plot.mixed.mmkin], [summary.nlme.mmkin],
-#'  [parms.nlme.mmkin]
+#' @seealso [nlme_function()], [plot.mixed.mmkin], [summary.nlme.mmkin]
 #' @examples
 #' ds <- lapply(experimental_data_for_UBA_2019[6:10],
 #'  function(x) subset(x$data[c("name", "time", "value")], name == "parent"))
