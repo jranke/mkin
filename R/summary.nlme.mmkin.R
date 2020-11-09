@@ -131,7 +131,11 @@ summary.nlme.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes =
   object$data[["value"]] <- NULL
   object$data[["predicted"]] <- predict(object)
   object$data[["residual"]] <- residuals(object, type = "response")
-  object$data[["std"]] <- object$sigma <- 1/attr(object$modelStruct$varStruct, "weights")
+  if (is.null(object$modelStruct$varStruct)) {
+    object$data[["std"]] <- object$sigma
+  } else {
+    object$data[["std"]] <- 1/attr(object$modelStruct$varStruct, "weights")
+  }
   object$data[["standardized"]] <- residuals(object, type = "pearson")
   object$verbose <- verbose
 
