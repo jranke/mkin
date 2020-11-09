@@ -37,6 +37,7 @@ produced}
 \item{data}{The data}
 \item{confint_trans}{Transformed parameters as used in the optimisation, with confidence intervals}
 \item{confint_back}{Backtransformed parameters, with confidence intervals if available}
+\item{confint_errmod}{Error model parameters with confidence intervals}
 \item{ff}{The estimated formation fractions derived from the fitted
 model.}
 \item{distimes}{The DT50 and DT90 values for each observed variable.}
