@@ -24,8 +24,9 @@
 #' @param \dots Further parameters passed to [saemix::saemixData]
 #'   and [saemix::saemixModel].
 #' @return An S3 object of class 'saem.mmkin', containing the fitted
-#'   [saemix::SaemixObject] as a list component named 'so'.
-#' @seealso [summary.saem.mmkin]
+#'   [saemix::SaemixObject] as a list component named 'so'. The
+#'   object also inherits from 'mixed.mmkin'.
+#' @seealso [summary.saem.mmkin] [plot.mixed.mmkin]
 #' @examples
 #' \dontrun{
 #' ds <- lapply(experimental_data_for_UBA_2019[6:10],
@@ -134,7 +135,7 @@ saem.mmkin <- function(object,
     Rversion = paste(R.version$major, R.version$minor, sep=".")
   )
 
-  class(result) <- "saem.mmkin"
+  class(result) <- c("saem.mmkin", "mixed.mmkin")
   return(result)
 }
 

@@ -43,13 +43,14 @@ get_deg_func <- function() {
 #' @param control passed to nlme
 #' @param verbose passed to nlme
 #' @importFrom stats na.fail as.formula
-#' @return Upon success, a fitted nlme.mmkin object, which is an nlme object
-#'   with additional elements
+#' @return Upon success, a fitted 'nlme.mmkin' object, which is an nlme object
+#'   with additional elements. It also inherits from 'mixed.mmkin'.
 #' @note As the object inherits from [nlme::nlme], there is a wealth of
 #'   methods that will automatically work on 'nlme.mmkin' objects, such as
 #'   [nlme::intervals()], [nlme::anova.lme()] and [nlme::coef.lme()].
 #' @export
-#' @seealso [nlme_function()]
+#' @seealso [nlme_function()], [plot.mixed.mmkin], [summary.nlme.mmkin],
+#'  [parms.nlme.mmkin]
 #' @examples
 #' ds <- lapply(experimental_data_for_UBA_2019[6:10],
 #'  function(x) subset(x$data[c("name", "time", "value")], name == "parent"))
@@ -203,7 +204,7 @@ nlme.mmkin <- function(model, data = sys.frame(sys.parent()),
   val$nlmeversion <- as.character(utils::packageVersion("nlme"))
   val$mkinversion <- as.character(utils::packageVersion("mkin"))
   val$Rversion <- paste(R.version$major, R.version$minor, sep=".")
-  class(val) <- c("nlme.mmkin", "nlme", "lme")
+  class(val) <- c("nlme.mmkin", "mixed.mmkin", "nlme", "lme")
   return(val)
 }
 

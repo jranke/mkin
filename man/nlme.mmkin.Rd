@@ -66,8 +66,8 @@ parameters taken from the mmkin object are used}
 \item{object}{An nlme.mmkin object to update}
 }
 \value{
-Upon success, a fitted nlme.mmkin object, which is an nlme object
-with additional elements
+Upon success, a fitted 'nlme.mmkin' object, which is an nlme object
+with additional elements. It also inherits from 'mixed.mmkin'.
 }
 \description{
 This functions sets up a nonlinear mixed effects model for an mmkin row
@@ -150,5 +150,6 @@ endpoints(f_nlme_dfop)
 }
 }
 \seealso{
-\code{\link[=nlme_function]{nlme_function()}}
+\code{\link[=nlme_function]{nlme_function()}}, \link{plot.mixed.mmkin}, \link{summary.nlme.mmkin},
+\link{parms.nlme.mmkin}
 }

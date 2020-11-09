@@ -1,6 +1,8 @@
 # mkin 0.9.50.4 (unreleased)
 
-- 'saem' generic function to fit saemix models, with a method 'saem.mmkin' and a corresponding 'summary.saem.mmkin'
+- 'plot.mixed.mmkin' method used for 'nlme.mmkin' and 'saem.mmkin', both inheriting from 'mixed.mmkin' (currently virtual)
+
+- 'saem' generic function to fit saemix models, with a generator 'saem.mmkin', summary and plot methods
 
 - 'transform_odeparms', 'backtransform_odeparms': Use logit transformation for solitary fractions like the g parameter of the DFOP model, or formation fractions for a pathway to only one target variable
 

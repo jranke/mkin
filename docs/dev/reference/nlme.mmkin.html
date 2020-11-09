@@ -152,7 +152,7 @@ have been obtained by fitting the same model to a list of datasets.</p>
     </div>
 
     <pre class="usage"><span class='co'># S3 method for mmkin</span>
-<span class='fu'>nlme</span><span class='op'>(</span>
+<span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span>
   <span class='va'>model</span>,
   data <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>sys.frame</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>sys.parent</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>,
   <span class='va'>fixed</span>,
@@ -253,8 +253,8 @@ parameters taken from the mmkin object are used</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Upon success, a fitted nlme.mmkin object, which is an nlme object
-with additional elements</p>
+    <p>Upon success, a fitted 'nlme.mmkin' object, which is an nlme object
+with additional elements. It also inherits from 'mixed.mmkin'.</p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
     <p>As the object inherits from <a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme::nlme</a>, there is a wealth of
@@ -262,7 +262,8 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
 <code><a href='https://rdrr.io/pkg/nlme/man/intervals.html'>nlme::intervals()</a></code>, <code><a href='https://rdrr.io/pkg/nlme/man/anova.lme.html'>nlme::anova.lme()</a></code> and <code><a href='https://rdrr.io/pkg/nlme/man/coef.lme.html'>nlme::coef.lme()</a></code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='nlme_function.html'>nlme_function()</a></code></p></div>
+    <div class='dont-index'><p><code><a href='nlme_function.html'>nlme_function()</a></code>, <a href='plot.mixed.mmkin.html'>plot.mixed.mmkin</a>, <a href='summary.nlme.mmkin.html'>summary.nlme.mmkin</a>,
+parms.nlme.mmkin</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>ds</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>experimental_data_for_UBA_2019</span><span class='op'>[</span><span class='fl'>6</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>]</span>,
@@ -288,21 +289,21 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
 #&gt; Log-likelihood: -238.5635
 #&gt; 
 #&gt; Fixed effects:
-#&gt;  list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_ilr ~ 1) 
-#&gt;    parent_0      log_k1      log_k2       g_ilr 
-#&gt; 94.17015133 -1.80015306 -4.14738870  0.02290935 
+#&gt;  list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_qlogis ~ 1) 
+#&gt;    parent_0      log_k1      log_k2    g_qlogis 
+#&gt; 94.17015185 -1.80015278 -4.14738834  0.03239833 
 #&gt; 
 #&gt; Random effects:
-#&gt;  Formula: list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_ilr ~ 1)
+#&gt;  Formula: list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_qlogis ~ 1)
 #&gt;  Level: ds
 #&gt;  Structure: Diagonal
-#&gt;         parent_0    log_k1  log_k2     g_ilr Residual
-#&gt; StdDev: 2.488249 0.8447273 1.32965 0.3289311 2.321364
+#&gt;         parent_0    log_k1  log_k2  g_qlogis Residual
+#&gt; StdDev: 2.488249 0.8447275 1.32965 0.4651789 2.321364
 #&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop</span><span class='op'>)</span>
 </div><div class='img'><img src='nlme.mmkin-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $distimes
 #&gt;            DT50     DT90 DT50back  DT50_k1  DT50_k2
-#&gt; parent 10.79857 100.7937 30.34193 4.193938 43.85443
+#&gt; parent 10.79857 100.7937 30.34192 4.193937 43.85442
 #&gt; </div><div class='input'>
 <span class='co'># \dontrun{</span>
   <span class='va'>f_nlme_2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f</span><span class='op'>[</span><span class='st'>"SFO"</span>, <span class='op'>]</span>, start <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>parent_0 <span class='op'>=</span> <span class='fl'>100</span>, log_k_parent <span class='op'>=</span> <span class='fl'>0.1</span><span class='op'>)</span><span class='op'>)</span>
@@ -353,35 +354,35 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
     control <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>pnlsMaxIter <span class='op'>=</span> <span class='fl'>120</span>, tolerance <span class='op'>=</span> <span class='fl'>5e-4</span><span class='op'>)</span>, verbose <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 
 #&gt; **Iteration 1
-#&gt; LME step: Loglik: -404.9582, nlminb iterations: 1
+#&gt; LME step: Loglik: -404.9583, nlminb iterations: 1
 #&gt; reStruct  parameters:
 #&gt;        ds1        ds2        ds3        ds4        ds5        ds6 
-#&gt; -0.4114355  0.9798697  1.6990037  0.7293315  0.3354323  1.7113046 
+#&gt; -0.4114356  0.9798646  1.3524300  0.7293315  0.3354323  1.3647313 
 #&gt;  Beginning PNLS step: ..  completed fit_nlme() step.
-#&gt; PNLS step: RSS =  630.3644 
-#&gt;  fixed effects: 93.82269  -5.455991  -0.6788957  -1.862196  -4.199671  0.05532828  
+#&gt; PNLS step: RSS =  630.3633 
+#&gt;  fixed effects: 93.82269  -5.455993  -0.9601037  -1.862196  -4.199671  0.07824609  
 #&gt;  iterations: 120 
 #&gt; Convergence crit. (must all become &lt;= tolerance = 0.0005):
 #&gt;     fixed  reStruct 
-#&gt; 0.7885368 0.5822683 
+#&gt; 0.7897284 0.5822782 
 #&gt; 
 #&gt; **Iteration 2
 #&gt; LME step: Loglik: -407.7755, nlminb iterations: 11
 #&gt; reStruct  parameters:
-#&gt;          ds1          ds2          ds3          ds4          ds5          ds6 
-#&gt; -0.371224133  0.003056179  1.789939402  0.724671158  0.301602977  1.754200729 
+#&gt;         ds1         ds2         ds3         ds4         ds5         ds6 
+#&gt; -0.37122411  0.00305562  1.44336560  0.72467122  0.30160310  1.40762692 
 #&gt;  Beginning PNLS step: ..  completed fit_nlme() step.
-#&gt; PNLS step: RSS =  630.3633 
-#&gt;  fixed effects: 93.82269  -5.455992  -0.6788958  -1.862196  -4.199671  0.05532831  
+#&gt; PNLS step: RSS =  630.3637 
+#&gt;  fixed effects: 93.82269  -5.455992  -0.9601036  -1.862196  -4.199671  0.0782462  
 #&gt;  iterations: 120 
 #&gt; Convergence crit. (must all become &lt;= tolerance = 0.0005):
 #&gt;        fixed     reStruct 
-#&gt; 4.789774e-07 2.200661e-05 </div><div class='input'>
+#&gt; 1.375673e-06 9.758294e-06 </div><div class='input'>
   <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop_sfo</span><span class='op'>)</span>
 </div><div class='img'><img src='nlme.mmkin-4.png' alt='' width='700' height='433' /></div><div class='input'>
   <span class='fu'><a href='https://rdrr.io/r/stats/anova.html'>anova</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop_sfo</span>, <span class='va'>f_nlme_sfo_sfo</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                 Model df       AIC       BIC    logLik   Test  L.Ratio p-value
-#&gt; f_nlme_dfop_sfo     1 13  843.8547  884.6201 -408.9273                        
+#&gt; f_nlme_dfop_sfo     1 13  843.8547  884.6201 -408.9274                        
 #&gt; f_nlme_sfo_sfo      2  9 1085.1821 1113.4043 -533.5910 1 vs 2 249.3274  &lt;.0001</div><div class='input'>
   <span class='fu'><a href='endpoints.html'>endpoints</a></span><span class='op'>(</span><span class='va'>f_nlme_sfo_sfo</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $ff
@@ -400,7 +401,7 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
 #&gt; $distimes
 #&gt;             DT50     DT90 DT50back  DT50_k1  DT50_k2
 #&gt; parent  11.07091 104.6320 31.49738 4.462384 46.20825
-#&gt; A1     162.30536 539.1667       NA       NA       NA
+#&gt; A1     162.30523 539.1663       NA       NA       NA
 #&gt; </div><div class='input'>
   <span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='fu'>findFunction</span><span class='op'>(</span><span class='st'>"varConstProp"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>&gt;</span> <span class='fl'>0</span><span class='op'>)</span> <span class='op'>{</span> <span class='co'># tc error model for nlme available</span>
     <span class='co'># Attempts to fit metabolite kinetics with the tc error model are possible,</span>
@@ -425,23 +426,23 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
 #&gt; Log-likelihood: -238.4298
 #&gt; 
 #&gt; Fixed effects:
-#&gt;  list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_ilr ~ 1) 
-#&gt;    parent_0      log_k1      log_k2       g_ilr 
-#&gt; 94.04774463 -1.82339924 -4.16715509  0.04020161 
+#&gt;  list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_qlogis ~ 1) 
+#&gt;    parent_0      log_k1      log_k2    g_qlogis 
+#&gt; 94.04774566 -1.82339808 -4.16715311  0.05685186 
 #&gt; 
 #&gt; Random effects:
-#&gt;  Formula: list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_ilr ~ 1)
+#&gt;  Formula: list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_qlogis ~ 1)
 #&gt;  Level: ds
 #&gt;  Structure: Diagonal
-#&gt;         parent_0    log_k1   log_k2     g_ilr Residual
-#&gt; StdDev: 2.473883 0.8499901 1.337187 0.3294411        1
+#&gt;         parent_0    log_k1   log_k2  g_qlogis Residual
+#&gt; StdDev: 2.473881 0.8499884 1.337185 0.4659005        1
 #&gt; 
 #&gt; Variance function:
 #&gt;  Structure: Constant plus proportion of variance covariate
 #&gt;  Formula: ~fitted(.) 
 #&gt;  Parameter estimates:
 #&gt;      const       prop 
-#&gt; 2.23222625 0.01262414 </div><div class='input'>
+#&gt; 2.23224114 0.01262341 </div><div class='input'>
   <span class='va'>f_2_obs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"SFO-SFO"</span> <span class='op'>=</span> <span class='va'>m_sfo_sfo</span>,
    <span class='st'>"DFOP-SFO"</span> <span class='op'>=</span> <span class='va'>m_dfop_sfo</span><span class='op'>)</span>,
     <span class='va'>ds_2</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span>, error_model <span class='op'>=</span> <span class='st'>"obs"</span><span class='op'>)</span>

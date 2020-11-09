@@ -44,7 +44,8 @@ by the saemix function?}
 }
 \value{
 An S3 object of class 'saem.mmkin', containing the fitted
-\link[saemix:SaemixObject-class]{saemix::SaemixObject} as a list component named 'so'.
+\link[saemix:SaemixObject-class]{saemix::SaemixObject} as a list component named 'so'. The
+object also inherits from 'mixed.mmkin'.
 
 An \link[saemix:SaemixModel-class]{saemix::SaemixModel} object.
 
@@ -114,5 +115,5 @@ summary(f_saem_dfop_sfo, data = FALSE)
 }
 }
 \seealso{
-\link{summary.saem.mmkin}
+\link{summary.saem.mmkin} \link{plot.mixed.mmkin}
 }

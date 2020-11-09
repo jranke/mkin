@@ -2,7 +2,6 @@ if(getRversion() >= '2.15.1') utils::globalVariables("ds")
 
 #' Plot predictions from a fitted nonlinear mixed model obtained via an mmkin row object
 #'
-#' @name plot_mixed
 #' @param x An object of class [saem.mmkin] or [nlme.mmkin]
 #' @param i A numeric index to select datasets for which to plot the individual predictions,
 #'   in case plots get too large
@@ -21,7 +20,7 @@ if(getRversion() >= '2.15.1') utils::globalVariables("ds")
 #' @param pch_ds Symbols to be used for plotting the data.
 #' @param lty_ds Line types to be used for the model predictions.
 #' @importFrom stats coefficients
-#' @return The functions are called for their side effect.
+#' @return The function is called for its side effect.
 #' @author Johannes Ranke
 #' @examples
 #' ds <- lapply(experimental_data_for_UBA_2019[6:10],
@@ -33,7 +32,6 @@ if(getRversion() >= '2.15.1') utils::globalVariables("ds")
 #' f <- mmkin(list("DFOP-SFO" = dfop_sfo), ds, quiet = TRUE)
 #' plot(f[, 3:4], standardized = TRUE)
 #'
-#' library(nlme)
 #' # For this fit we need to increase pnlsMaxiter, and we increase the
 #' # tolerance in order to speed up the fit for this example evaluation
 #' f_nlme <- nlme(f, control = list(pnlsMaxIter = 120, tolerance = 1e-3))
@@ -42,9 +40,9 @@ if(getRversion() >= '2.15.1') utils::globalVariables("ds")
 #' f_saem <- saem(f)
 #' plot(f_saem)
 #' }
-#' @rdname plot_mixed
 #' @export
-plot.saem.mmkin <- function(x, i = 1:ncol(x$mmkin),
+plot.mixed.mmkin <- function(x,
+  i = 1:ncol(x$mmkin),
   obs_vars = names(x$mkinmod$map),
   standardized = TRUE,
   xlab = "Time",
@@ -58,89 +56,30 @@ plot.saem.mmkin <- function(x, i = 1:ncol(x$mmkin),
   pch_ds = 1:length(i),
   col_ds = pch_ds + 1,
   lty_ds = col_ds,
-  frame = TRUE, ...)
+  frame = TRUE, ...
+)
 {
+  # Prepare parameters and data
   fit_1 <- x$mmkin[[1]]
   ds_names <- colnames(x$mmkin)
 
-  degparms_optim <- saemix::psi(x$so)
-  rownames(degparms_optim) <- ds_names
-  degparms_optim_names <- setdiff(names(fit_1$par), names(fit_1$errparms))
-  colnames(degparms_optim) <- degparms_optim_names
+  if (inherits(x, "nlme.mmkin")) {
+    degparms_optim <- coefficients(x)
+    degparms_pop <- nlme::fixef(x)
+    residuals <- residuals(x,
+      type = ifelse(standardized, "pearson", "response"))
+  }
 
-  residual_type = ifelse(standardized, "iwres", "ires")
-
-  residuals <- x$so@results@predictions[[residual_type]]
-
-  degparms_pop <- x$so@results@fixed.effects
-  names(degparms_pop) <- degparms_optim_names
-
-  .plot_mixed(x, i,
-    degparms_optim, degparms_pop, residuals,
-    obs_vars, standardized, xlab, xlim,
-    resplot, ymax, maxabs,
-    ncol.legend, nrow.legend,
-    rel.height.legend, rel.height.bottom,
-    pch_ds, col_ds, lty_ds, frame, ...)
-}
-
-#' @rdname plot_mixed
-#' @export
-plot.nlme.mmkin <- function(x, i = 1:ncol(x$mmkin),
-  obs_vars = names(x$mkinmod$map),
-  standardized = TRUE,
-  xlab = "Time",
-  xlim = range(x$data$time),
-  resplot = c("predicted", "time"),
-  ymax = "auto", maxabs = "auto",
-  ncol.legend = ifelse(length(i) <= 3, length(i) + 1, ifelse(length(i) <= 8, 3, 4)),
-  nrow.legend = ceiling((length(i) + 1) / ncol.legend),
-  rel.height.legend = 0.03 + 0.08 * nrow.legend,
-  rel.height.bottom = 1.1,
-  pch_ds = 1:length(i),
-  col_ds = pch_ds + 1,
-  lty_ds = col_ds,
-  frame = TRUE, ...)
-{
-  degparms_optim <- coefficients(x)
-  degparms_pop <- nlme::fixef(x)
-
-  residuals <- residuals(x,
-    type = ifelse(standardized, "pearson", "response"))
-
-  .plot_mixed(x, i,
-    degparms_optim, degparms_pop, residuals,
-    obs_vars, standardized, xlab, xlim,
-    resplot, ymax, maxabs,
-    ncol.legend, nrow.legend,
-    rel.height.legend, rel.height.bottom,
-    pch_ds, col_ds, lty_ds, frame, ...)
-}
-
-.plot_mixed <- function(x, i = 1:ncol(x$mmkin),
-  degparms_optim,
-  degparms_pop,
-  residuals,
-  obs_vars = names(x$mkinmod$map),
-  standardized = TRUE,
-  xlab = "Time",
-  xlim = range(x$data$time),
-  resplot = c("predicted", "time"),
-  ymax = "auto", maxabs = "auto",
-  ncol.legend = ifelse(length(i) <= 3, length(i) + 1, ifelse(length(i) <= 8, 3, 4)),
-  nrow.legend = ceiling((length(i) + 1) / ncol.legend),
-  rel.height.legend = 0.03 + 0.08 * nrow.legend,
-  rel.height.bottom = 1.1,
-  pch_ds = 1:length(i),
-  col_ds = pch_ds + 1,
-  lty_ds = col_ds,
-  frame = TRUE, ...)
-{
-
-  oldpar <- par(no.readonly = TRUE)
-
-  fit_1 <- x$mmkin[[1]]
-  ds_names <- colnames(x$mmkin)
+  if (inherits(x, "saem.mmkin")) {
+    degparms_optim <- saemix::psi(x$so)
+    rownames(degparms_optim) <- ds_names
+    degparms_optim_names <- setdiff(names(fit_1$par), names(fit_1$errparms))
+    colnames(degparms_optim) <- degparms_optim_names
+    residual_type = ifelse(standardized, "iwres", "ires")
+    residuals <- x$so@results@predictions[[residual_type]]
+    degparms_pop <- x$so@results@fixed.effects
+    names(degparms_pop) <- degparms_optim_names
+  }
 
   degparms_fixed <- fit_1$fixed$value
   names(degparms_fixed) <- rownames(fit_1$fixed)
@@ -160,29 +99,6 @@ plot.nlme.mmkin <- function(x, i = 1:ncol(x$mmkin),
 
   observed <- cbind(x$data,
     residual = residuals)
-
-  n_plot_rows = length(obs_vars)
-  n_plots = n_plot_rows * 2
-
-  # Set relative plot heights, so the first plot row is the norm
-  rel.heights <- if (n_plot_rows > 1) {
-    c(rel.height.legend, c(rep(1, n_plot_rows - 1), rel.height.bottom))
-  } else {
-    c(rel.height.legend, 1)
-  }
-
-  layout_matrix = matrix(c(1, 1, 2:(n_plots + 1)),
-    n_plot_rows + 1, 2, byrow = TRUE)
-  layout(layout_matrix, heights = rel.heights)
-
-  par(mar = c(0.1, 2.1, 0.6, 2.1))
-
-  plot(0, type = "n", axes = FALSE, ann = FALSE)
-  legend("center", bty = "n", ncol = ncol.legend,
-    legend = c("Population", ds_names[i]),
-    lty = c(1, lty_ds), lwd = c(2, rep(1, length(i))),
-    col = c(1, col_ds),
-    pch = c(NA, pch_ds))
 
   solution_type = fit_1$solution_type
 
@@ -219,6 +135,32 @@ plot.nlme.mmkin <- function(x, i = 1:ncol(x$mmkin),
     mkinpredict(x$mkinmod, odeparms_pop, odeini_pop,
       outtimes, solution_type = solution_type,
       atol = fit_1$atol, rtol = fit_1$rtol))
+
+  # Start of graphical section
+  oldpar <- par(no.readonly = TRUE)
+
+  n_plot_rows = length(obs_vars)
+  n_plots = n_plot_rows * 2
+
+  # Set relative plot heights, so the first plot row is the norm
+  rel.heights <- if (n_plot_rows > 1) {
+    c(rel.height.legend, c(rep(1, n_plot_rows - 1), rel.height.bottom))
+  } else {
+    c(rel.height.legend, 1)
+  }
+
+  layout_matrix = matrix(c(1, 1, 2:(n_plots + 1)),
+    n_plot_rows + 1, 2, byrow = TRUE)
+  layout(layout_matrix, heights = rel.heights)
+
+  par(mar = c(0.1, 2.1, 0.6, 2.1))
+
+  plot(0, type = "n", axes = FALSE, ann = FALSE)
+  legend("center", bty = "n", ncol = ncol.legend,
+    legend = c("Population", ds_names[i]),
+    lty = c(1, lty_ds), lwd = c(2, rep(1, length(i))),
+    col = c(1, col_ds),
+    pch = c(NA, pch_ds))
 
   resplot <- match.arg(resplot)
 
