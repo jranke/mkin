@@ -122,8 +122,8 @@ summary.nlme.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes =
 
   object$date.summary = date()
   object$use_of_ff = object$mkinmod$use_of_ff
-  object$error_model_algorithm = object$mmkin_orig[[1]]$error_model_algorithm
-  err_mod = object$mmkin_orig[[1]]$err_mod
+  object$error_model_algorithm = object$mmkin[[1]]$error_model_algorithm
+  err_mod = object$mmkin[[1]]$err_mod
 
   object$diffs <- object$mkinmod$diffs
   object$print_data <- data
@@ -139,7 +139,7 @@ summary.nlme.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes =
   object$data[["standardized"]] <- residuals(object, type = "pearson")
   object$verbose <- verbose
 
-  object$fixed <- object$mmkin_orig[[1]]$fixed
+  object$fixed <- object$mmkin[[1]]$fixed
   object$AIC = AIC(object)
   object$BIC = BIC(object)
   object$logLik = logLik(object)

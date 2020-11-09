@@ -13,8 +13,6 @@ if(getRversion() >= '2.15.1') utils::globalVariables("ds")
 #' @param ymax Vector of maximum y axis values
 #' @param ncol.legend Number of columns to use in the legend
 #' @param nrow.legend Number of rows to use in the legend
-#' @param \dots Further arguments passed to \code{\link{plot.mkinfit}} and
-#'   \code{\link{mkinresplot}}.
 #' @param resplot Should the residuals plotted against time or against
 #'   predicted values?
 #' @param col_ds Colors used for plotting the observed data and the
@@ -41,7 +39,7 @@ if(getRversion() >= '2.15.1') utils::globalVariables("ds")
 #' plot(f_nlme)
 #' }
 #' @export
-plot.nlme.mmkin <- function(x, i = 1:ncol(x$mmkin_orig),
+plot.nlme.mmkin <- function(x, i = 1:ncol(x$mmkin),
   obs_vars = names(x$mkinmod$map),
   standardized = TRUE,
   xlab = "Time",
@@ -55,13 +53,13 @@ plot.nlme.mmkin <- function(x, i = 1:ncol(x$mmkin_orig),
   pch_ds = 1:length(i),
   col_ds = pch_ds + 1,
   lty_ds = col_ds,
-  frame = TRUE, ...)
+  frame = TRUE)
 {
 
   oldpar <- par(no.readonly = TRUE)
 
-  fit_1 = x$mmkin_orig[[1]]
-  ds_names <- colnames(x$mmkin_orig)
+  fit_1 = x$mmkin[[1]]
+  ds_names <- colnames(x$mmkin)
 
   degparms_optim <- coefficients(x)
   degparms_optim_names <- names(degparms_optim)

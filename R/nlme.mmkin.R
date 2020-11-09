@@ -183,7 +183,7 @@ nlme.mmkin <- function(model, data = sys.frame(sys.parent()),
 
   val$mkinmod <- model[[1]]$mkinmod
   val$data <- thisCall[["data"]]
-  val$mmkin_orig <- model
+  val$mmkin <- model
   val$mean_dp_start <- mean_dp_start
   val$transform_rates <- model[[1]]$transform_rates
   val$transform_fractions <- model[[1]]$transform_fractions
@@ -211,7 +211,7 @@ print.nlme.mmkin <- function(x, ...) {
   cat( "Kinetic nonlinear mixed-effects model fit by " )
   cat( if(x$method == "REML") "REML\n" else "maximum likelihood\n")
   cat("\nStructural model:\n")
-  diffs <- x$mmkin_orig[[1]]$mkinmod$diffs
+  diffs <- x$mmkin[[1]]$mkinmod$diffs
   nice_diffs <- gsub("^(d.*) =", "\\1/dt =", diffs)
   writeLines(strwrap(nice_diffs, exdent = 11))
   cat("\nData:\n")
@@ -239,7 +239,7 @@ print.nlme.mmkin <- function(x, ...) {
 #' @param ... Update specifications passed to update.nlme
 update.nlme.mmkin <- function(object, ...) {
   res <- NextMethod()
-  res$mmkin_orig <- object$mmkin_orig
+  res$mmkin <- object$mmkin
   class(res) <- c("nlme.mmkin", "nlme", "lme")
   return(res)
 }
