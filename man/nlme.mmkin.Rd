@@ -23,7 +23,7 @@
   verbose = FALSE
 )
 
-\method{print}{nlme.mmkin}(x, ...)
+\method{print}{nlme.mmkin}(x, digits = max(3, getOption("digits") - 3), ...)
 
 \method{update}{nlme.mmkin}(object, ...)
 }
@@ -60,6 +60,8 @@ parameters taken from the mmkin object are used}
 \item{verbose}{passed to nlme}
 
 \item{x}{An nlme.mmkin object to print}
+
+\item{digits}{Number of digits to use for printing}
 
 \item{...}{Update specifications passed to update.nlme}
 
@@ -150,6 +152,5 @@ endpoints(f_nlme_dfop)
 }
 }
 \seealso{
-\code{\link[=nlme_function]{nlme_function()}}, \link{plot.mixed.mmkin}, \link{summary.nlme.mmkin},
-\link{parms.nlme.mmkin}
+\code{\link[=nlme_function]{nlme_function()}}, \link{plot.mixed.mmkin}, \link{summary.nlme.mmkin}
 }

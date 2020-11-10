@@ -139,6 +139,36 @@ saem.mmkin <- function(object,
   return(result)
 }
 
+#' @export
+#' @rdname saem
+#' @param x An saem.mmkin object to print
+#' @param digits Number of digits to use for printing
+print.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3), ...) {
+  cat( "Kinetic nonlinear mixed-effects model fit by SAEM" )
+  cat("\nStructural model:\n")
+  diffs <- x$mmkin[[1]]$mkinmod$diffs
+  nice_diffs <- gsub("^(d.*) =", "\\1/dt =", diffs)
+  writeLines(strwrap(nice_diffs, exdent = 11))
+  cat("\nData:\n")
+  cat(nrow(x$data), "observations of",
+    length(unique(x$data$name)), "variable(s) grouped in",
+    length(unique(x$data$ds)), "datasets\n")
+
+  cat("\nLikelihood computed by importance sampling\n")
+  print(data.frame(
+      AIC = AIC(x$so, type = "is"),
+      BIC = BIC(x$so, type = "is"),
+      logLik = logLik(x$so, type = "is"),
+      row.names = " "), digits = digits)
+
+  cat("\nFitted parameters:\n")
+  conf.int <- x$so@results@conf.int[c("estimate", "lower", "upper")]
+  rownames(conf.int) <- x$so@results@conf.int[["name"]]
+  print(conf.int, digits = digits)
+
+  invisible(x)
+}
+
 #' @rdname saem
 #' @return An [saemix::SaemixModel] object.
 #' @export

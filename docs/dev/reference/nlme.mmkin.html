@@ -170,7 +170,7 @@ have been obtained by fitting the same model to a list of datasets.</p>
 <span class='op'>)</span>
 
 <span class='co'># S3 method for nlme.mmkin</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>x</span>, digits <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='fl'>3</span>, <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"digits"</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>3</span><span class='op'>)</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for nlme.mmkin</span>
 <span class='fu'><a href='https://rdrr.io/r/stats/update.html'>update</a></span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span></pre>
@@ -242,6 +242,10 @@ parameters taken from the mmkin object are used</p></td>
       <td><p>An nlme.mmkin object to print</p></td>
     </tr>
     <tr>
+      <th>digits</th>
+      <td><p>Number of digits to use for printing</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>Update specifications passed to update.nlme</p></td>
     </tr>
@@ -262,8 +266,7 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
 <code><a href='https://rdrr.io/pkg/nlme/man/intervals.html'>nlme::intervals()</a></code>, <code><a href='https://rdrr.io/pkg/nlme/man/anova.lme.html'>nlme::anova.lme()</a></code> and <code><a href='https://rdrr.io/pkg/nlme/man/coef.lme.html'>nlme::coef.lme()</a></code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='nlme_function.html'>nlme_function()</a></code>, <a href='plot.mixed.mmkin.html'>plot.mixed.mmkin</a>, <a href='summary.nlme.mmkin.html'>summary.nlme.mmkin</a>,
-parms.nlme.mmkin</p></div>
+    <div class='dont-index'><p><code><a href='nlme_function.html'>nlme_function()</a></code>, <a href='plot.mixed.mmkin.html'>plot.mixed.mmkin</a>, <a href='summary.nlme.mmkin.html'>summary.nlme.mmkin</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>ds</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>experimental_data_for_UBA_2019</span><span class='op'>[</span><span class='fl'>6</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>]</span>,
@@ -290,15 +293,15 @@ parms.nlme.mmkin</p></div>
 #&gt; 
 #&gt; Fixed effects:
 #&gt;  list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_qlogis ~ 1) 
-#&gt;    parent_0      log_k1      log_k2    g_qlogis 
-#&gt; 94.17015185 -1.80015278 -4.14738834  0.03239833 
+#&gt; parent_0   log_k1   log_k2 g_qlogis 
+#&gt;  94.1702  -1.8002  -4.1474   0.0324 
 #&gt; 
 #&gt; Random effects:
 #&gt;  Formula: list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_qlogis ~ 1)
 #&gt;  Level: ds
 #&gt;  Structure: Diagonal
-#&gt;         parent_0    log_k1  log_k2  g_qlogis Residual
-#&gt; StdDev: 2.488249 0.8447275 1.32965 0.4651789 2.321364
+#&gt;         parent_0 log_k1 log_k2 g_qlogis Residual
+#&gt; StdDev:    2.488 0.8447   1.33   0.4652    2.321
 #&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop</span><span class='op'>)</span>
 </div><div class='img'><img src='nlme.mmkin-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $distimes
@@ -321,12 +324,12 @@ parms.nlme.mmkin</p></div>
 #&gt; Fixed effects:
 #&gt;  list(parent_0 ~ 1, log_k_parent ~ 1) 
 #&gt;     parent_0 log_k_parent 
-#&gt;    75.933480    -3.555983 
+#&gt;       75.933       -3.556 
 #&gt; 
 #&gt; Random effects:
 #&gt;  Formula: parent_0 ~ 1 | ds
-#&gt;            parent_0 Residual
-#&gt; StdDev: 0.002416792 21.63027
+#&gt;         parent_0 Residual
+#&gt; StdDev: 0.002417    21.63
 #&gt; </div><div class='input'>  <span class='va'>ds_2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>experimental_data_for_UBA_2019</span><span class='op'>[</span><span class='fl'>6</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>]</span>,
    <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='va'>x</span><span class='op'>$</span><span class='va'>data</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"name"</span>, <span class='st'>"time"</span>, <span class='st'>"value"</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>
   <span class='va'>m_sfo_sfo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span><span class='op'>(</span>parent <span class='op'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='st'>"A1"</span><span class='op'>)</span>,
@@ -427,15 +430,15 @@ parms.nlme.mmkin</p></div>
 #&gt; 
 #&gt; Fixed effects:
 #&gt;  list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_qlogis ~ 1) 
-#&gt;    parent_0      log_k1      log_k2    g_qlogis 
-#&gt; 94.04774566 -1.82339808 -4.16715311  0.05685186 
+#&gt; parent_0   log_k1   log_k2 g_qlogis 
+#&gt; 94.04775 -1.82340 -4.16715  0.05685 
 #&gt; 
 #&gt; Random effects:
 #&gt;  Formula: list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_qlogis ~ 1)
 #&gt;  Level: ds
 #&gt;  Structure: Diagonal
-#&gt;         parent_0    log_k1   log_k2  g_qlogis Residual
-#&gt; StdDev: 2.473881 0.8499884 1.337185 0.4659005        1
+#&gt;         parent_0 log_k1 log_k2 g_qlogis Residual
+#&gt; StdDev:    2.474   0.85  1.337   0.4659        1
 #&gt; 
 #&gt; Variance function:
 #&gt;  Structure: Constant plus proportion of variance covariate
@@ -462,14 +465,14 @@ parms.nlme.mmkin</p></div>
 #&gt; Fixed effects:
 #&gt;  list(parent_0 ~ 1, log_k_parent_sink ~ 1, log_k_parent_A1 ~ 1,      log_k_A1_sink ~ 1) 
 #&gt;          parent_0 log_k_parent_sink   log_k_parent_A1     log_k_A1_sink 
-#&gt;         87.975536         -3.669816         -4.164127         -4.645073 
+#&gt;            87.976            -3.670            -4.164            -4.645 
 #&gt; 
 #&gt; Random effects:
 #&gt;  Formula: list(parent_0 ~ 1, log_k_parent_sink ~ 1, log_k_parent_A1 ~ 1,      log_k_A1_sink ~ 1)
 #&gt;  Level: ds
 #&gt;  Structure: Diagonal
 #&gt;         parent_0 log_k_parent_sink log_k_parent_A1 log_k_A1_sink Residual
-#&gt; StdDev: 3.992214           1.77702        1.054733     0.4821383 6.482585
+#&gt; StdDev:    3.992             1.777           1.055        0.4821    6.483
 #&gt; 
 #&gt; Variance function:
 #&gt;  Structure: Different standard deviations per stratum

@@ -3,6 +3,7 @@
 \name{saem}
 \alias{saem}
 \alias{saem.mmkin}
+\alias{print.saem.mmkin}
 \alias{saemix_model}
 \alias{saemix_data}
 \title{Fit nonlinear mixed models with SAEM}
@@ -18,6 +19,8 @@ saem(object, control, ...)
   suppressPlot = TRUE,
   ...
 )
+
+\method{print}{saem.mmkin}(x, digits = max(3, getOption("digits") - 3), ...)
 
 saemix_model(object, cores = 1, verbose = FALSE, ...)
 
@@ -41,6 +44,10 @@ used.}
 
 \item{suppressPlot}{Should we suppress any plotting that is done
 by the saemix function?}
+
+\item{x}{An saem.mmkin object to print}
+
+\item{digits}{Number of digits to use for printing}
 }
 \value{
 An S3 object of class 'saem.mmkin', containing the fitted

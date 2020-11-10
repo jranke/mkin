@@ -210,7 +210,8 @@ nlme.mmkin <- function(model, data = sys.frame(sys.parent()),
 #' @export
 #' @rdname nlme.mmkin
 #' @param x An nlme.mmkin object to print
-print.nlme.mmkin <- function(x, ...) {
+#' @param digits Number of digits to use for printing
+print.nlme.mmkin <- function(x, digits = max(3, getOption("digits") - 3), ...) {
   cat( "Kinetic nonlinear mixed-effects model fit by " )
   cat( if(x$method == "REML") "REML\n" else "maximum likelihood\n")
   cat("\nStructural model:\n")
@@ -230,9 +231,9 @@ print.nlme.mmkin <- function(x, ...) {
     x$call$fixed
   else
     lapply(fixF, function(el) as.name(deparse(el)))), "\n")
-  print(fixef(x), ...)
+  print(fixef(x), digits = digits, ...)
   cat("\n")
-  print(summary(x$modelStruct), sigma = x$sigma, ...)
+  print(summary(x$modelStruct), sigma = x$sigma, digits = digits, ...)
   invisible(x)
 }
 

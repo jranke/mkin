@@ -191,10 +191,10 @@ print.summary.nlme.mmkin <- function(x, digits = max(3, getOption("digits") - 3)
 
   cat("\nResults:\n\n")
   print(data.frame(AIC = x$AIC, BIC = x$BIC, logLik = x$logLik,
-      row.names = " "))
+      row.names = " "), ...)
 
   cat("\nOptimised, transformed parameters with symmetric confidence intervals:\n")
-  print(x$confint_trans)
+  print(x$confint_trans, digits = digits, ...)
 
   if (nrow(x$confint_trans) > 1) {
     corr <- x$corFixed
@@ -204,28 +204,28 @@ print.summary.nlme.mmkin <- function(x, digits = max(3, getOption("digits") - 3)
 
   cat("\n") # Random effects
   print(summary(x$modelStruct), sigma = x$sigma,
-        reEstimates = x$coef$random, verbose = verbose, ...)
+        reEstimates = x$coef$random, digits = digits, verbose = verbose, ...)
 
   cat("\nBacktransformed parameters with asymmetric confidence intervals:\n")
-  print(x$confint_back)
+  print(x$confint_back, digits = digits, ...)
 
 
   printSFORB <- !is.null(x$SFORB)
   if(printSFORB){
     cat("\nEstimated Eigenvalues of SFORB model(s):\n")
-    print(x$SFORB, digits=digits,...)
+    print(x$SFORB, digits = digits,...)
   }
 
   printff <- !is.null(x$ff)
   if(printff){
     cat("\nResulting formation fractions:\n")
-    print(data.frame(ff = x$ff), digits=digits,...)
+    print(data.frame(ff = x$ff), ...)
   }
 
   printdistimes <- !is.null(x$distimes)
   if(printdistimes){
     cat("\nEstimated disappearance times:\n")
-    print(x$distimes, digits=digits,...)
+    print(x$distimes, digits = digits, ...)
   }
 
   if (x$print_data){
