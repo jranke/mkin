@@ -24,11 +24,7 @@
 #' @param suppressPlot Should we suppress any plotting that is done
 #'   by the saemix function?
 #' @param control Passed to [saemix::saemix]
-#' @param transform.par Vector of 0 or 1 values. If all 0,
-#'   parameter transformations are done by [transform_odeparms].
-#'
-#' @param \dots Further parameters passed to [saemix::saemixData]
-#'   and [saemix::saemixModel].
+#' @param \dots Further parameters passed to [saemix::saemixModel].
 #' @return An S3 object of class 'saem.mmkin', containing the fitted
 #'   [saemix::SaemixObject] as a list component named 'so'. The
 #'   object also inherits from 'mixed.mmkin'.
@@ -96,7 +92,7 @@ saem.mmkin <- function(object,
   cores = 1,
   verbose = FALSE, suppressPlot = TRUE, quiet = FALSE, ...)
 {
-  m_saemix <- saemix_model(object, cores = cores, verbose = verbose)
+  m_saemix <- saemix_model(object, cores = cores, verbose = verbose, ...)
   d_saemix <- saemix_data(object, verbose = verbose)
   if (suppressPlot) {
     # We suppress the log-likelihood curve that saemix currently
