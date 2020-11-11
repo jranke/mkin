@@ -29,16 +29,20 @@
 }
 \examples{
   SFO_SFO_SFO <- mkinmod(T245 = list(type = "SFO", to = "phenol"),
-                         phenol = list(type = "SFO", to = "anisole"),
-                         anisole = list(type = "SFO"))
+    phenol = list(type = "SFO", to = "anisole"),
+    anisole = list(type = "SFO"))
   \dontrun{
     fit.1 <- mkinfit(SFO_SFO_SFO, subset(mccall81_245T, soil == "Commerce"), quiet = TRUE)
     summary(fit.1)$bpar
     endpoints(fit.1)
-    # k_phenol_sink is really small, therefore fix it to zero
-    fit.2 <- mkinfit(SFO_SFO_SFO, subset(mccall81_245T, soil == "Commerce"),
-                   parms.ini = c(k_phenol_sink = 0),
-                   fixed_parms = "k_phenol_sink", quiet = TRUE)
+    # formation fraction from phenol to anisol is practically 1. As we cannot
+    # fix formation fractions when using the ilr transformation, we can turn of
+    # the sink in the model generation
+    SFO_SFO_SFO_2 <- mkinmod(T245 = list(type = "SFO", to = "phenol"),
+      phenol = list(type = "SFO", to = "anisole", sink = FALSE),
+      anisole = list(type = "SFO"))
+    fit.2 <- mkinfit(SFO_SFO_SFO_2, subset(mccall81_245T, soil == "Commerce"),
+      quiet = TRUE)
     summary(fit.2)$bpar
     endpoints(fit.1)
     plot_sep(fit.2)
