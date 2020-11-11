@@ -13,14 +13,20 @@
 #'
 #' @param object An [mmkin] row object containing several fits of the same
 #'   [mkinmod] model to different datasets
-#' @param verbose Should we print information about created objects?
+#' @param verbose Should we print information about created objects of
+#'   type [saemix::SaemixModel] and [saemix::SaemixData]?
+#' @param quiet Should we suppress the messages saemix prints at the beginning
+#'   and the end of the optimisation process?
 #' @param cores The number of cores to be used for multicore processing using
 #'   [parallel::mclapply()]. Using more than 1 core is experimental and may
-#'   lead to uncontrolled forking, apparently depending on the BLAS version
+#'   lead to excessive forking, apparently depending on the BLAS version
 #'   used.
 #' @param suppressPlot Should we suppress any plotting that is done
 #'   by the saemix function?
 #' @param control Passed to [saemix::saemix]
+#' @param transform.par Vector of 0 or 1 values. If all 0,
+#'   parameter transformations are done by [transform_odeparms].
+#'
 #' @param \dots Further parameters passed to [saemix::saemixData]
 #'   and [saemix::saemixModel].
 #' @return An S3 object of class 'saem.mmkin', containing the fitted
@@ -88,7 +94,7 @@ saem.mmkin <- function(object,
   control = list(displayProgress = FALSE, print = FALSE,
     save = FALSE, save.graphs = FALSE),
   cores = 1,
-  verbose = FALSE, suppressPlot = TRUE, ...)
+  verbose = FALSE, suppressPlot = TRUE, quiet = FALSE, ...)
 {
   m_saemix <- saemix_model(object, cores = cores, verbose = verbose)
   d_saemix <- saemix_data(object, verbose = verbose)
@@ -100,7 +106,7 @@ saem.mmkin <- function(object,
     grDevices::png(tmp)
   }
   fit_time <- system.time({
-    f_saemix <- saemix::saemix(m_saemix, d_saemix, control)
+    capture.output(f_saemix <- saemix::saemix(m_saemix, d_saemix, control), split = !quiet)
     f_pred <- try(saemix::saemix.predict(f_saemix), silent = TRUE)
     if (!inherits(f_pred, "try-error")) {
       f_saemix <- f_pred
