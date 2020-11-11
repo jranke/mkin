@@ -2,6 +2,7 @@ context("Plotting")
 
 test_that("Plotting mkinfit and mmkin objects is reproducible", {
   skip_on_cran()
+  skip_on_travis()
   plot_default_FOCUS_C_SFO <- function() plot(fits[["SFO", "FOCUS_C"]])
   plot_res_FOCUS_C_SFO <- function() plot(fits[["SFO", "FOCUS_C"]], show_residuals = TRUE)
   plot_res_FOCUS_C_SFO_2 <- function() plot_res(fits[["SFO", "FOCUS_C"]])
