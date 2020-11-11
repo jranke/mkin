@@ -70,10 +70,13 @@
 #' # solutions written for mkin this took around four minutes
 #' f_saem_sfo_sfo <- saem(f_mmkin["SFO-SFO", ])
 #' f_saem_dfop_sfo <- saem(f_mmkin["DFOP-SFO", ])
+#' # We can use print, plot and summary methods to check the results
+#' print(f_saem_dfop_sfo)
+#' plot(f_saem_dfop_sfo)
 #' summary(f_saem_dfop_sfo, data = FALSE)
 #'
-#' # Using a single core, the following takes about 6 minutes, using 10 cores
-#' # it is slower instead of faster
+#' # Using a single core, the following takes about 6 minutes as we do not have an
+#' # analytical solution. Using 10 cores it is slower instead of faster
 #' #f_saem_fomc <- saem(f_mmkin["FOMC-SFO", ], cores = 1)
 #' }
 #' @export
@@ -381,7 +384,6 @@ saemix_model <- function(object, cores = 1, verbose = FALSE, ...) {
     "Mixed model generated from mmkin object",
     transform.par = transform.par,
     error.model = error.model,
-    error.init = error.init,
     verbose = verbose
   )
   attr(res, "mean_dp_start") <- degparms_optim
