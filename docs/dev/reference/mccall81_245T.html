@@ -74,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.9.50.3</span>
+        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.9.50.4</span>
       </span>
     </div>
 
@@ -122,7 +122,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/jranke/mkin/">
+  <a href="https://github.com/jranke/mkin/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -151,12 +151,12 @@
  extracts.</p>
     </div>
 
-    <pre class="usage"><span class='no'>mccall81_245T</span></pre>
+    <pre class="usage"><span class='va'>mccall81_245T</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A dataframe containing the following variables.</p><dl'>
+    <p>A dataframe containing the following variables.</p><dl>
     <dt><code>name</code></dt><dd><p>the name of the compound observed. Note that T245 is used as
                        an acronym for 2,4,5-T. T245 is a legitimate object name
                        in R, which is necessary for specifying models using
@@ -174,46 +174,71 @@
   <a href='http://dx.doi.org/10.1021/jf00103a026'>http://dx.doi.org/10.1021/jf00103a026</a></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>  <span class='no'>SFO_SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>T245</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"phenol"</span>),
-                         <span class='kw'>phenol</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"anisole"</span>),
-                         <span class='kw'>anisole</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>  <span class='co'># \dontrun{</span>
-    <span class='no'>fit.1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO_SFO</span>, <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>mccall81_245T</span>, <span class='no'>soil</span> <span class='kw'>==</span> <span class='st'>"Commerce"</span>), <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'>    <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>fit.1</span>)$<span class='no'>bpar</span></div><div class='output co'>#&gt;                         Estimate  se_notrans   t value       Pr(&gt;t)
-#&gt; T245_0              1.038550e+02 2.184707514 47.537272 4.472189e-18
-#&gt; k_T245              4.337042e-02 0.001898397 22.845818 2.276912e-13
-#&gt; k_phenol            4.050581e-01 0.298699428  1.356073 9.756994e-02
-#&gt; k_anisole           6.678742e-03 0.000802144  8.326114 2.623179e-07
-#&gt; f_T245_to_phenol    6.227599e-01 0.398534167  1.562626 6.949418e-02
-#&gt; f_phenol_to_anisole 1.000000e+00 0.671844168  1.488440 7.867794e-02
-#&gt; sigma               2.514628e+00 0.490755943  5.123989 6.233164e-05
+    <pre class="examples"><div class='input'>  <span class='va'>SFO_SFO_SFO</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span><span class='op'>(</span>T245 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span>, to <span class='op'>=</span> <span class='st'>"phenol"</span><span class='op'>)</span>,
+    phenol <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span>, to <span class='op'>=</span> <span class='st'>"anisole"</span><span class='op'>)</span>,
+    anisole <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>  <span class='co'># \dontrun{</span>
+    <span class='va'>fit.1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='va'>SFO_SFO_SFO</span>, <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>mccall81_245T</span>, <span class='va'>soil</span> <span class='op'>==</span> <span class='st'>"Commerce"</span><span class='op'>)</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'>    <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>fit.1</span><span class='op'>)</span><span class='op'>$</span><span class='va'>bpar</span>
+</div><div class='output co'>#&gt;                         Estimate   se_notrans   t value       Pr(&gt;t)
+#&gt; T245_0              1.038550e+02 2.1847074888 47.537272 4.472189e-18
+#&gt; k_T245              4.337042e-02 0.0018983965 22.845818 2.276911e-13
+#&gt; k_phenol            4.050581e-01 0.2986993400  1.356073 9.756988e-02
+#&gt; k_anisole           6.678742e-03 0.0008021439  8.326114 2.623176e-07
+#&gt; f_T245_to_phenol    6.227599e-01 0.3985340295  1.562627 6.949412e-02
+#&gt; f_phenol_to_anisole 1.000000e+00 0.6718439378  1.488441 7.867787e-02
+#&gt; sigma               2.514628e+00 0.4907558750  5.123989 6.233156e-05
 #&gt;                            Lower        Upper
-#&gt; T245_0              99.246061371 1.084640e+02
+#&gt; T245_0              99.246061370 1.084640e+02
 #&gt; k_T245               0.039631621 4.746194e-02
 #&gt; k_phenol             0.218013878 7.525762e-01
 #&gt; k_anisole            0.005370739 8.305299e-03
-#&gt; f_T245_to_phenol     0.547559082 6.924813e-01
+#&gt; f_T245_to_phenol     0.547559083 6.924813e-01
 #&gt; f_phenol_to_anisole  0.000000000 1.000000e+00
-#&gt; sigma                1.706607296 3.322649e+00</div><div class='input'>    <span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit.1</span>)</div><div class='output co'>#&gt; $ff
+#&gt; sigma                1.706607296 3.322649e+00</div><div class='input'>    <span class='fu'><a href='endpoints.html'>endpoints</a></span><span class='op'>(</span><span class='va'>fit.1</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $ff
 #&gt;    T245_phenol      T245_sink phenol_anisole    phenol_sink 
-#&gt;   6.227599e-01   3.772401e-01   1.000000e+00   1.748047e-10 
+#&gt;   6.227599e-01   3.772401e-01   1.000000e+00   6.894640e-11 
 #&gt; 
 #&gt; $distimes
 #&gt;               DT50      DT90
 #&gt; T245     15.982025  53.09114
 #&gt; phenol    1.711229   5.68458
 #&gt; anisole 103.784092 344.76329
-#&gt; </div><div class='input'>    <span class='co'># k_phenol_sink is really small, therefore fix it to zero</span>
-    <span class='no'>fit.2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO_SFO</span>, <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>mccall81_245T</span>, <span class='no'>soil</span> <span class='kw'>==</span> <span class='st'>"Commerce"</span>),
-                   <span class='kw'>parms.ini</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='kw'>k_phenol_sink</span> <span class='kw'>=</span> <span class='fl'>0</span>),
-                   <span class='kw'>fixed_parms</span> <span class='kw'>=</span> <span class='st'>"k_phenol_sink"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Initial parameter(s) k_phenol_sink not used in the model</span></div><div class='output co'>#&gt; <span class='error'>Error in data.frame(value = c(state.ini.fixed, parms.fixed)): row names contain missing values</span></div><div class='input'>    <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>fit.2</span>)$<span class='no'>bpar</span></div><div class='output co'>#&gt; <span class='error'>Error in summary(fit.2): object 'fit.2' not found</span></div><div class='input'>    <span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit.1</span>)</div><div class='output co'>#&gt; $ff
+#&gt; </div><div class='input'>    <span class='co'># formation fraction from phenol to anisol is practically 1. As we cannot</span>
+    <span class='co'># fix formation fractions when using the ilr transformation, we can turn of</span>
+    <span class='co'># the sink in the model generation</span>
+    <span class='va'>SFO_SFO_SFO_2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span><span class='op'>(</span>T245 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span>, to <span class='op'>=</span> <span class='st'>"phenol"</span><span class='op'>)</span>,
+      phenol <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span>, to <span class='op'>=</span> <span class='st'>"anisole"</span>, sink <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>,
+      anisole <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>    <span class='va'>fit.2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='va'>SFO_SFO_SFO_2</span>, <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>mccall81_245T</span>, <span class='va'>soil</span> <span class='op'>==</span> <span class='st'>"Commerce"</span><span class='op'>)</span>,
+      quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'>    <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>fit.2</span><span class='op'>)</span><span class='op'>$</span><span class='va'>bpar</span>
+</div><div class='output co'>#&gt;                      Estimate   se_notrans   t value       Pr(&gt;t)        Lower
+#&gt; T245_0           1.038550e+02 2.1623653027 48.028439 4.993108e-19 99.271020526
+#&gt; k_T245           4.337042e-02 0.0018343666 23.643268 3.573555e-14  0.039650977
+#&gt; k_phenol         4.050582e-01 0.1177237248  3.440752 1.679252e-03  0.218746585
+#&gt; k_anisole        6.678741e-03 0.0006829745  9.778903 1.872894e-08  0.005377083
+#&gt; f_T245_to_phenol 6.227599e-01 0.0342197865 18.198825 2.039410e-12  0.547975628
+#&gt; sigma            2.514628e+00 0.3790944250  6.633250 2.875782e-06  1.710983655
+#&gt;                         Upper
+#&gt; T245_0           108.43904097
+#&gt; k_T245             0.04743877
+#&gt; k_phenol           0.75005577
+#&gt; k_anisole          0.00829550
+#&gt; f_T245_to_phenol   0.69212306
+#&gt; sigma              3.31827222</div><div class='input'>    <span class='fu'><a href='endpoints.html'>endpoints</a></span><span class='op'>(</span><span class='va'>fit.1</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $ff
 #&gt;    T245_phenol      T245_sink phenol_anisole    phenol_sink 
-#&gt;   6.227599e-01   3.772401e-01   1.000000e+00   1.748047e-10 
+#&gt;   6.227599e-01   3.772401e-01   1.000000e+00   6.894640e-11 
 #&gt; 
 #&gt; $distimes
 #&gt;               DT50      DT90
 #&gt; T245     15.982025  53.09114
 #&gt; phenol    1.711229   5.68458
 #&gt; anisole 103.784092 344.76329
-#&gt; </div><div class='input'>    <span class='fu'><a href='plot.mkinfit.html'>plot_sep</a></span>(<span class='no'>fit.2</span>)</div><div class='output co'>#&gt; <span class='error'>Error in identical(fit$err_mod, "const"): object 'fit.2' not found</span></div><div class='input'>  # }
+#&gt; </div><div class='input'>    <span class='fu'><a href='plot.mkinfit.html'>plot_sep</a></span><span class='op'>(</span><span class='va'>fit.2</span><span class='op'>)</span>
+</div><div class='img'><img src='mccall81_245T-1.png' alt='' width='700' height='433' /></div><div class='input'>  <span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -230,7 +255,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

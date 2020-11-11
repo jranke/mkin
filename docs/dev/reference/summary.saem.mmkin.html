@@ -156,7 +156,7 @@ endpoints such as formation fractions and DT50 values. Optionally
     </div>
 
     <pre class="usage"><span class='co'># S3 method for saem.mmkin</span>
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>object</span>, data <span class='op'>=</span> <span class='cn'>FALSE</span>, verbose <span class='op'>=</span> <span class='cn'>FALSE</span>, distimes <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/pkg/saemix/man/summary-methods.html'>summary</a></span><span class='op'>(</span><span class='va'>object</span>, data <span class='op'>=</span> <span class='cn'>FALSE</span>, verbose <span class='op'>=</span> <span class='cn'>FALSE</span>, distimes <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for summary.saem.mmkin</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>x</span>, digits <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='fl'>3</span>, <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"digits"</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>3</span><span class='op'>)</span>, verbose <span class='op'>=</span> <span class='va'>x</span><span class='op'>$</span><span class='va'>verbose</span>, <span class='va'>...</span><span class='op'>)</span></pre>
@@ -256,18 +256,20 @@ saemix authors for the parts inherited from saemix.</p>
 
 <span class='co'># \dontrun{</span>
 <span class='co'># Evaluate using mmkin and saem</span>
-<span class='va'>f_mmkin_dfop_sfo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>dfop_sfo</span><span class='op'>)</span>, <span class='va'>ds_syn_dfop_sfo</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span>, error_model <span class='op'>=</span> <span class='st'>"tc"</span>, cores <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span>
+<span class='va'>f_mmkin_dfop_sfo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>dfop_sfo</span><span class='op'>)</span>, <span class='va'>ds_syn_dfop_sfo</span>,
+  quiet <span class='op'>=</span> <span class='cn'>TRUE</span>, error_model <span class='op'>=</span> <span class='st'>"tc"</span>, cores <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span>
 <span class='va'>f_saem_dfop_sfo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='saem.html'>saem</a></span><span class='op'>(</span><span class='va'>f_mmkin_dfop_sfo</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Running main SAEM algorithm
-#&gt; [1] "Mon Nov  9 09:24:08 2020"
+#&gt; [1] "Wed Nov 11 19:48:36 2020"
 #&gt; ....
 #&gt;     Minimisation finished
-#&gt; [1] "Mon Nov  9 09:24:21 2020"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>f_saem_dfop_sfo</span>, data <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; saemix version used for fitting:      3.1.9000 
+#&gt; [1] "Wed Nov 11 19:48:48 2020"</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/saemix/man/summary-methods.html'>summary</a></span><span class='op'>(</span><span class='va'>f_saem_dfop_sfo</span>, data <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                           
+#&gt; LL by is "-401.01 (df=14)"</div><div class='output co'>#&gt; saemix version used for fitting:      3.1.9000 
 #&gt; mkin version used for pre-fitting:  0.9.50.4 
 #&gt; R version used for fitting:         4.0.3 
-#&gt; Date of fit:     Mon Nov  9 09:24:22 2020 
-#&gt; Date of summary: Mon Nov  9 09:24:22 2020 
+#&gt; Date of fit:     Wed Nov 11 19:48:49 2020 
+#&gt; Date of summary: Wed Nov 11 19:48:49 2020 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *
@@ -282,7 +284,7 @@ saemix authors for the parts inherited from saemix.</p>
 #&gt; 
 #&gt; Model predictions using solution type analytical 
 #&gt; 
-#&gt; Fitted in 13.457 s using 300, 100 iterations
+#&gt; Fitted in 13.272 s using 300, 100 iterations
 #&gt; 
 #&gt; Variance model: Two-component variance function 
 #&gt; 
@@ -298,232 +300,232 @@ saemix authors for the parts inherited from saemix.</p>
 #&gt; Results:
 #&gt; 
 #&gt; Likelihood computed by importance sampling
-#&gt;        AIC     BIC   logLik
-#&gt;   828.8639 823.396 -400.432
+#&gt;   AIC   BIC logLik
+#&gt;   830 824.5   -401
 #&gt; 
 #&gt; Optimised, transformed parameters with symmetric confidence intervals:
-#&gt;                         est.      lower       upper
-#&gt; parent_0        101.35835807 97.8846505 104.8320657
-#&gt; log_k_m1         -4.06644838 -4.1861445  -3.9467523
-#&gt; f_parent_qlogis  -0.94818070 -1.3124706  -0.5838908
-#&gt; log_k1           -2.92096208 -3.7684319  -2.0734922
-#&gt; log_k2           -3.54529352 -4.2532018  -2.8373852
-#&gt; g_qlogis         -0.09254475 -0.9675848   0.7824953
+#&gt;                     est.  lower    upper
+#&gt; parent_0        101.4423 97.862 105.0224
+#&gt; log_k_m1         -4.0703 -4.191  -3.9495
+#&gt; f_parent_qlogis  -0.9539 -1.313  -0.5949
+#&gt; log_k1           -2.9724 -3.811  -2.1342
+#&gt; log_k2           -3.4977 -4.206  -2.7895
+#&gt; g_qlogis         -0.0449 -1.116   1.0262
 #&gt; 
 #&gt; Correlation: 
 #&gt;                 prnt_0 lg_k_1 f_prn_ log_k1 log_k2
-#&gt; log_k_m1        -0.217                            
-#&gt; f_parent_qlogis -0.153  0.203                     
-#&gt; log_k1           0.066 -0.067 -0.035              
-#&gt; log_k2           0.002  0.010  0.001 -0.041       
-#&gt; g_qlogis        -0.014  0.005  0.015 -0.163 -0.106
+#&gt; log_k_m1        -0.207                            
+#&gt; f_parent_qlogis -0.148  0.202                     
+#&gt; log_k1           0.040 -0.038 -0.022              
+#&gt; log_k2           0.022 -0.015 -0.009  0.001       
+#&gt; g_qlogis        -0.012  0.005  0.011 -0.173 -0.130
 #&gt; 
 #&gt; Random effects:
-#&gt;                          est.      lower     upper
-#&gt; SD.parent_0        2.70034095 -0.7003441 6.1010260
-#&gt; SD.log_k_m1        0.08269959 -0.0456860 0.2110852
-#&gt; SD.f_parent_qlogis 0.39452161  0.1376650 0.6513782
-#&gt; SD.log_k1          0.90605744  0.2946394 1.5174755
-#&gt; SD.log_k2          0.77604374  0.2646031 1.2874844
-#&gt; SD.g_qlogis        0.37531563 -0.6836568 1.4342881
+#&gt;                       est.   lower  upper
+#&gt; SD.parent_0        2.88564 -0.5163 6.2876
+#&gt; SD.log_k_m1        0.08502 -0.0427 0.2127
+#&gt; SD.f_parent_qlogis 0.38857  0.1350 0.6421
+#&gt; SD.log_k1          0.92338  0.3296 1.5172
+#&gt; SD.log_k2          0.78644  0.2817 1.2912
+#&gt; SD.g_qlogis        0.34614 -0.8727 1.5650
 #&gt; 
 #&gt; Variance model:
-#&gt;           est.      lower      upper
-#&gt; a.1 0.65736042 0.48750246 0.82721839
-#&gt; b.1 0.06424086 0.05011127 0.07837046
+#&gt;        est.   lower   upper
+#&gt; a.1 0.65859 0.49250 0.82469
+#&gt; b.1 0.06411 0.05006 0.07817
 #&gt; 
 #&gt; Backtransformed parameters with asymmetric confidence intervals:
-#&gt;                        est.       lower        upper
-#&gt; parent_0       101.35835807 97.88465048 104.83206565
-#&gt; k_m1             0.01713815  0.01520479   0.01931734
-#&gt; f_parent_to_m1   0.27925085  0.21207372   0.35803781
-#&gt; k1               0.05388182  0.02308824   0.12574588
-#&gt; k2               0.02886015  0.01421864   0.05857864
-#&gt; g                0.47688031  0.27536216   0.68621766
+#&gt;                     est.    lower     upper
+#&gt; parent_0       101.44231 97.86220 105.02241
+#&gt; k_m1             0.01707  0.01513   0.01926
+#&gt; f_parent_to_m1   0.27811  0.21201   0.35551
+#&gt; k1               0.05118  0.02213   0.11834
+#&gt; k2               0.03027  0.01491   0.06145
+#&gt; g                0.48878  0.24675   0.73618
 #&gt; 
 #&gt; Resulting formation fractions:
 #&gt;                 ff
-#&gt; parent_m1   0.2793
-#&gt; parent_sink 0.7207
+#&gt; parent_m1   0.2781
+#&gt; parent_sink 0.7219
 #&gt; 
 #&gt; Estimated disappearance times:
 #&gt;         DT50   DT90 DT50back DT50_k1 DT50_k2
-#&gt; parent 17.57  63.28    19.05   12.86   24.02
-#&gt; m1     40.44 134.35       NA      NA      NA
+#&gt; parent 17.53  61.64    18.55   13.54    22.9
+#&gt; m1     40.60 134.88       NA      NA      NA
 #&gt; 
 #&gt; Data:
-#&gt;    ds   name time observed  predicted  residual standardized
-#&gt;  ds 1 parent    0     89.8  9.848e+01  -8.68339     1.243323
-#&gt;  ds 1 parent    0    104.1  9.848e+01   5.61661    -0.804209
-#&gt;  ds 1 parent    1     88.7  9.403e+01  -5.32943     0.795687
-#&gt;  ds 1 parent    1     95.5  9.403e+01   1.47057    -0.219557
-#&gt;  ds 1 parent    3     81.8  8.584e+01  -4.04129     0.654791
-#&gt;  ds 1 parent    3     94.5  8.584e+01   8.65871    -1.402929
-#&gt;  ds 1 parent    7     71.5  7.196e+01  -0.46034     0.087182
-#&gt;  ds 1 parent    7     70.3  7.196e+01  -1.66034     0.314448
-#&gt;  ds 1 parent   14     54.2  5.384e+01   0.36125    -0.087766
-#&gt;  ds 1 parent   14     49.6  5.384e+01  -4.23875     1.029821
-#&gt;  ds 1 parent   28     31.5  3.220e+01  -0.69922     0.256514
-#&gt;  ds 1 parent   28     28.8  3.220e+01  -3.39922     1.247025
-#&gt;  ds 1 parent   60     12.1  1.264e+01  -0.53539     0.364441
-#&gt;  ds 1 parent   60     13.6  1.264e+01   0.96461    -0.656614
-#&gt;  ds 1 parent   90      6.2  6.081e+00   0.11929    -0.113824
-#&gt;  ds 1 parent   90      8.3  6.081e+00   2.21929    -2.117659
-#&gt;  ds 1 parent  120      2.2  3.055e+00  -0.85531     1.001955
-#&gt;  ds 1 parent  120      2.4  3.055e+00  -0.65531     0.767664
-#&gt;  ds 1     m1    1      0.3  1.115e+00  -0.81540     1.118502
-#&gt;  ds 1     m1    1      0.2  1.115e+00  -0.91540     1.255673
-#&gt;  ds 1     m1    3      2.2  3.111e+00  -0.91095     1.062691
-#&gt;  ds 1     m1    3      3.0  3.111e+00  -0.11095     0.129432
-#&gt;  ds 1     m1    7      6.5  6.292e+00   0.20799    -0.195930
-#&gt;  ds 1     m1    7      5.0  6.292e+00  -1.29201     1.217079
-#&gt;  ds 1     m1   14     10.2  9.886e+00   0.31362    -0.242650
-#&gt;  ds 1     m1   14      9.5  9.886e+00  -0.38638     0.298948
-#&gt;  ds 1     m1   28     12.2  1.259e+01  -0.39388     0.268603
-#&gt;  ds 1     m1   28     13.4  1.259e+01   0.80612    -0.549726
-#&gt;  ds 1     m1   60     11.8  1.092e+01   0.87659    -0.644982
-#&gt;  ds 1     m1   60     13.2  1.092e+01   2.27659    -1.675083
-#&gt;  ds 1     m1   90      6.6  7.814e+00  -1.21445     1.047509
-#&gt;  ds 1     m1   90      9.3  7.814e+00   1.48555    -1.281347
-#&gt;  ds 1     m1  120      3.5  5.275e+00  -1.77526     1.781944
-#&gt;  ds 1     m1  120      5.4  5.275e+00   0.12474    -0.125213
-#&gt;  ds 2 parent    0    118.0  1.045e+02  13.54366    -1.838241
-#&gt;  ds 2 parent    0     99.8  1.045e+02  -4.65634     0.631992
-#&gt;  ds 2 parent    1     90.2  9.872e+01  -8.51733     1.216927
-#&gt;  ds 2 parent    1     94.6  9.872e+01  -4.11733     0.588270
-#&gt;  ds 2 parent    3     96.1  8.872e+01   7.38009    -1.160975
-#&gt;  ds 2 parent    3     78.4  8.872e+01 -10.31991     1.623443
-#&gt;  ds 2 parent    7     77.9  7.337e+01   4.52584    -0.842647
-#&gt;  ds 2 parent    7     77.7  7.337e+01   4.32584    -0.805409
-#&gt;  ds 2 parent   14     56.0  5.616e+01  -0.15795     0.037034
-#&gt;  ds 2 parent   14     54.7  5.616e+01  -1.45795     0.341841
-#&gt;  ds 2 parent   28     36.6  3.859e+01  -1.99435     0.635813
-#&gt;  ds 2 parent   28     36.8  3.859e+01  -1.79435     0.572052
-#&gt;  ds 2 parent   60     22.1  2.113e+01   0.97273    -0.482843
-#&gt;  ds 2 parent   60     24.7  2.113e+01   3.57273    -1.773425
-#&gt;  ds 2 parent   90     12.4  1.258e+01  -0.17909     0.122205
-#&gt;  ds 2 parent   90     10.8  1.258e+01  -1.77909     1.214019
-#&gt;  ds 2 parent  120      6.8  7.509e+00  -0.70864     0.621767
-#&gt;  ds 2 parent  120      7.9  7.509e+00   0.39136    -0.343380
-#&gt;  ds 2     m1    1      1.3  1.466e+00  -0.16566     0.220431
-#&gt;  ds 2     m1    3      3.7  3.947e+00  -0.24719     0.271357
-#&gt;  ds 2     m1    3      4.7  3.947e+00   0.75281    -0.826421
-#&gt;  ds 2     m1    7      8.1  7.501e+00   0.59910    -0.525881
-#&gt;  ds 2     m1    7      7.9  7.501e+00   0.39910    -0.350323
-#&gt;  ds 2     m1   14     10.1  1.082e+01  -0.71564     0.529253
-#&gt;  ds 2     m1   14     10.3  1.082e+01  -0.51564     0.381342
-#&gt;  ds 2     m1   28     10.7  1.248e+01  -1.78322     1.221977
-#&gt;  ds 2     m1   28     12.2  1.248e+01  -0.28322     0.194082
-#&gt;  ds 2     m1   60     10.7  1.058e+01   0.12295    -0.091967
-#&gt;  ds 2     m1   60     12.5  1.058e+01   1.92295    -1.438427
-#&gt;  ds 2     m1   90      9.1  8.029e+00   1.07074    -0.912688
-#&gt;  ds 2     m1   90      7.4  8.029e+00  -0.62926     0.536381
-#&gt;  ds 2     m1  120      6.1  5.816e+00   0.28391    -0.275375
-#&gt;  ds 2     m1  120      4.5  5.816e+00  -1.31609     1.276529
-#&gt;  ds 3 parent    0    106.2  1.048e+02   1.43237    -0.193885
-#&gt;  ds 3 parent    0    106.9  1.048e+02   2.13237    -0.288636
-#&gt;  ds 3 parent    1    107.4  9.616e+01  11.23530    -1.643774
-#&gt;  ds 3 parent    1     96.1  9.616e+01  -0.06470     0.009466
-#&gt;  ds 3 parent    3     79.4  8.238e+01  -2.97800     0.500554
-#&gt;  ds 3 parent    3     82.6  8.238e+01   0.22200    -0.037315
-#&gt;  ds 3 parent    7     63.9  6.427e+01  -0.36601     0.076477
-#&gt;  ds 3 parent    7     62.4  6.427e+01  -1.86601     0.389900
-#&gt;  ds 3 parent   14     51.0  4.825e+01   2.74941    -0.731807
-#&gt;  ds 3 parent   14     47.1  4.825e+01  -1.15059     0.306250
-#&gt;  ds 3 parent   28     36.1  3.501e+01   1.09474    -0.376700
-#&gt;  ds 3 parent   28     36.6  3.501e+01   1.59474    -0.548750
-#&gt;  ds 3 parent   60     20.1  2.050e+01  -0.40214     0.203675
-#&gt;  ds 3 parent   60     19.8  2.050e+01  -0.70214     0.355617
-#&gt;  ds 3 parent   90     11.3  1.257e+01  -1.27210     0.868328
-#&gt;  ds 3 parent   90     10.7  1.257e+01  -1.87210     1.277883
-#&gt;  ds 3 parent  120      8.2  7.710e+00   0.48984    -0.424960
-#&gt;  ds 3 parent  120      7.3  7.710e+00  -0.41016     0.355837
-#&gt;  ds 3     m1    0      0.8 -1.421e-13   0.80000    -1.216988
-#&gt;  ds 3     m1    1      1.8  1.928e+00  -0.12842     0.164382
-#&gt;  ds 3     m1    1      2.3  1.928e+00   0.37158    -0.475623
-#&gt;  ds 3     m1    3      4.2  4.925e+00  -0.72511     0.744654
-#&gt;  ds 3     m1    3      4.1  4.925e+00  -0.82511     0.847349
-#&gt;  ds 3     m1    7      6.8  8.542e+00  -1.74215     1.444429
-#&gt;  ds 3     m1    7     10.1  8.542e+00   1.55785    -1.291627
-#&gt;  ds 3     m1   14     11.4  1.096e+01   0.44492    -0.326877
-#&gt;  ds 3     m1   14     12.8  1.096e+01   1.84492    -1.355438
-#&gt;  ds 3     m1   28     11.5  1.122e+01   0.27920    -0.202587
-#&gt;  ds 3     m1   28     10.6  1.122e+01  -0.62080     0.450442
-#&gt;  ds 3     m1   60      7.5  8.912e+00  -1.41171     1.147867
-#&gt;  ds 3     m1   60      8.6  8.912e+00  -0.31171     0.253453
-#&gt;  ds 3     m1   90      7.3  6.683e+00   0.61657    -0.567369
-#&gt;  ds 3     m1   90      8.1  6.683e+00   1.41657    -1.303536
-#&gt;  ds 3     m1  120      5.3  4.825e+00   0.47527    -0.491339
-#&gt;  ds 3     m1  120      3.8  4.825e+00  -1.02473     1.059361
-#&gt;  ds 4 parent    0    104.7  9.956e+01   5.14415    -0.729366
-#&gt;  ds 4 parent    0     88.3  9.956e+01 -11.25585     1.595915
-#&gt;  ds 4 parent    1     94.2  9.639e+01  -2.19462     0.320391
-#&gt;  ds 4 parent    1     94.6  9.639e+01  -1.79462     0.261995
-#&gt;  ds 4 parent    3     78.1  9.044e+01 -12.34368     1.908558
-#&gt;  ds 4 parent    3     96.5  9.044e+01   6.05632    -0.936418
-#&gt;  ds 4 parent    7     76.2  7.988e+01  -3.67799     0.635364
-#&gt;  ds 4 parent    7     77.8  7.988e+01  -2.07799     0.358968
-#&gt;  ds 4 parent   14     70.8  6.492e+01   5.88059    -1.218059
-#&gt;  ds 4 parent   14     67.3  6.492e+01   2.38059    -0.493097
-#&gt;  ds 4 parent   28     43.1  4.442e+01  -1.32411     0.377111
-#&gt;  ds 4 parent   28     45.1  4.442e+01   0.67589    -0.192494
-#&gt;  ds 4 parent   60     21.3  2.136e+01  -0.06143     0.030267
-#&gt;  ds 4 parent   60     23.5  2.136e+01   2.13857    -1.053671
-#&gt;  ds 4 parent   90     11.8  1.187e+01  -0.06548     0.046122
-#&gt;  ds 4 parent   90     12.1  1.187e+01   0.23452    -0.165204
-#&gt;  ds 4 parent  120      7.0  6.864e+00   0.13645    -0.124240
-#&gt;  ds 4 parent  120      6.2  6.864e+00  -0.66355     0.604171
-#&gt;  ds 4     m1    0      1.6  8.811e-13   1.60000    -2.433977
-#&gt;  ds 4     m1    1      0.9  6.943e-01   0.20568    -0.293006
-#&gt;  ds 4     m1    3      3.7  1.964e+00   1.73568    -2.215152
-#&gt;  ds 4     m1    3      2.0  1.964e+00   0.03568    -0.045539
-#&gt;  ds 4     m1    7      3.6  4.082e+00  -0.48184     0.523977
-#&gt;  ds 4     m1    7      3.8  4.082e+00  -0.28184     0.306486
-#&gt;  ds 4     m1   14      7.1  6.694e+00   0.40571    -0.373099
-#&gt;  ds 4     m1   14      6.6  6.694e+00  -0.09429     0.086710
-#&gt;  ds 4     m1   28      9.5  9.147e+00   0.35343    -0.283895
-#&gt;  ds 4     m1   28      9.3  9.147e+00   0.15343    -0.123245
-#&gt;  ds 4     m1   60      8.3  8.788e+00  -0.48803     0.399399
-#&gt;  ds 4     m1   60      9.0  8.788e+00   0.21197    -0.173474
-#&gt;  ds 4     m1   90      6.6  6.644e+00  -0.04431     0.040866
-#&gt;  ds 4     m1   90      7.7  6.644e+00   1.05569    -0.973711
-#&gt;  ds 4     m1  120      3.7  4.667e+00  -0.96735     1.010605
-#&gt;  ds 4     m1  120      3.5  4.667e+00  -1.16735     1.219548
-#&gt;  ds 5 parent    0    110.4  1.020e+02   8.37855    -1.161863
-#&gt;  ds 5 parent    0    112.1  1.020e+02  10.07855    -1.397604
-#&gt;  ds 5 parent    1     93.5  9.494e+01  -1.43722     0.212725
-#&gt;  ds 5 parent    1     91.0  9.494e+01  -3.93722     0.582755
-#&gt;  ds 5 parent    3     71.0  8.280e+01 -11.80256     1.974773
-#&gt;  ds 5 parent    3     89.7  8.280e+01   6.89744    -1.154061
-#&gt;  ds 5 parent    7     60.4  6.485e+01  -4.45291     0.923157
-#&gt;  ds 5 parent    7     59.1  6.485e+01  -5.75291     1.192667
-#&gt;  ds 5 parent   14     56.5  4.626e+01  10.24038    -2.821727
-#&gt;  ds 5 parent   14     47.0  4.626e+01   0.74038    -0.204011
-#&gt;  ds 5 parent   28     30.2  3.034e+01  -0.13506     0.051824
-#&gt;  ds 5 parent   28     23.9  3.034e+01  -6.43506     2.469220
-#&gt;  ds 5 parent   60     17.0  1.795e+01  -0.95206     0.525822
-#&gt;  ds 5 parent   60     18.7  1.795e+01   0.74794    -0.413085
-#&gt;  ds 5 parent   90     11.3  1.186e+01  -0.56163     0.395692
-#&gt;  ds 5 parent   90     11.9  1.186e+01   0.03837    -0.027033
-#&gt;  ds 5 parent  120      9.0  7.866e+00   1.13427    -0.975579
-#&gt;  ds 5 parent  120      8.1  7.866e+00   0.23427    -0.201493
-#&gt;  ds 5     m1    0      0.7 -4.263e-14   0.70000    -1.064865
-#&gt;  ds 5     m1    1      3.0  3.169e+00  -0.16908     0.196384
-#&gt;  ds 5     m1    1      2.6  3.169e+00  -0.56908     0.660990
-#&gt;  ds 5     m1    3      5.1  8.455e+00  -3.35479     2.794486
-#&gt;  ds 5     m1    3      7.5  8.455e+00  -0.95479     0.795325
-#&gt;  ds 5     m1    7     16.5  1.577e+01   0.73235    -0.438460
-#&gt;  ds 5     m1    7     19.0  1.577e+01   3.23235    -1.935208
-#&gt;  ds 5     m1   14     22.9  2.202e+01   0.88393    -0.426673
-#&gt;  ds 5     m1   14     23.2  2.202e+01   1.18393    -0.571482
-#&gt;  ds 5     m1   28     22.2  2.399e+01  -1.79091     0.814583
-#&gt;  ds 5     m1   28     24.4  2.399e+01   0.40909    -0.186073
-#&gt;  ds 5     m1   60     15.5  1.872e+01  -3.21988     1.731175
-#&gt;  ds 5     m1   60     19.8  1.872e+01   1.08012    -0.580725
-#&gt;  ds 5     m1   90     14.9  1.383e+01   1.06749    -0.690500
-#&gt;  ds 5     m1   90     14.2  1.383e+01   0.36749    -0.237710
-#&gt;  ds 5     m1  120     10.9  1.004e+01   0.85568    -0.656897
-#&gt;  ds 5     m1  120     10.4  1.004e+01   0.35568    -0.273054</div><div class='input'><span class='co'># }</span>
+#&gt;    ds   name time observed  predicted   residual standardized
+#&gt;  ds 1 parent    0     89.8  9.869e+01  -8.894553     1.273163
+#&gt;  ds 1 parent    0    104.1  9.869e+01   5.405447    -0.773734
+#&gt;  ds 1 parent    1     88.7  9.413e+01  -5.426448     0.810727
+#&gt;  ds 1 parent    1     95.5  9.413e+01   1.373552    -0.205213
+#&gt;  ds 1 parent    3     81.8  8.576e+01  -3.961821     0.643463
+#&gt;  ds 1 parent    3     94.5  8.576e+01   8.738179    -1.419220
+#&gt;  ds 1 parent    7     71.5  7.168e+01  -0.184828     0.035175
+#&gt;  ds 1 parent    7     70.3  7.168e+01  -1.384828     0.263550
+#&gt;  ds 1 parent   14     54.2  5.351e+01   0.688235    -0.168298
+#&gt;  ds 1 parent   14     49.6  5.351e+01  -3.911765     0.956565
+#&gt;  ds 1 parent   28     31.5  3.209e+01  -0.590445     0.217395
+#&gt;  ds 1 parent   28     28.8  3.209e+01  -3.290445     1.211502
+#&gt;  ds 1 parent   60     12.1  1.272e+01  -0.618158     0.419377
+#&gt;  ds 1 parent   60     13.6  1.272e+01   0.881842    -0.598269
+#&gt;  ds 1 parent   90      6.2  6.085e+00   0.115212    -0.109861
+#&gt;  ds 1 parent   90      8.3  6.085e+00   2.215212    -2.112329
+#&gt;  ds 1 parent  120      2.2  3.009e+00  -0.809439     0.950563
+#&gt;  ds 1 parent  120      2.4  3.009e+00  -0.609439     0.715693
+#&gt;  ds 1     m1    1      0.3  1.129e+00  -0.828817     1.133869
+#&gt;  ds 1     m1    1      0.2  1.129e+00  -0.928817     1.270675
+#&gt;  ds 1     m1    3      2.2  3.141e+00  -0.940880     1.094093
+#&gt;  ds 1     m1    3      3.0  3.141e+00  -0.140880     0.163821
+#&gt;  ds 1     m1    7      6.5  6.326e+00   0.174162    -0.163662
+#&gt;  ds 1     m1    7      5.0  6.326e+00  -1.325838     1.245901
+#&gt;  ds 1     m1   14     10.2  9.883e+00   0.317417    -0.245642
+#&gt;  ds 1     m1   14      9.5  9.883e+00  -0.382583     0.296072
+#&gt;  ds 1     m1   28     12.2  1.251e+01  -0.309856     0.212138
+#&gt;  ds 1     m1   28     13.4  1.251e+01   0.890144    -0.609422
+#&gt;  ds 1     m1   60     11.8  1.086e+01   0.940009    -0.693807
+#&gt;  ds 1     m1   60     13.2  1.086e+01   2.340009    -1.727126
+#&gt;  ds 1     m1   90      6.6  7.823e+00  -1.222977     1.054158
+#&gt;  ds 1     m1   90      9.3  7.823e+00   1.477023    -1.273135
+#&gt;  ds 1     m1  120      3.5  5.315e+00  -1.815201     1.816354
+#&gt;  ds 1     m1  120      5.4  5.315e+00   0.084799    -0.084853
+#&gt;  ds 2 parent    0    118.0  1.031e+02  14.876736    -2.046284
+#&gt;  ds 2 parent    0     99.8  1.031e+02  -3.323264     0.457112
+#&gt;  ds 2 parent    1     90.2  9.757e+01  -7.371379     1.066126
+#&gt;  ds 2 parent    1     94.6  9.757e+01  -2.971379     0.429752
+#&gt;  ds 2 parent    3     96.1  8.788e+01   8.222746    -1.306721
+#&gt;  ds 2 parent    3     78.4  8.788e+01  -9.477254     1.506081
+#&gt;  ds 2 parent    7     77.9  7.293e+01   4.972272    -0.932149
+#&gt;  ds 2 parent    7     77.7  7.293e+01   4.772272    -0.894656
+#&gt;  ds 2 parent   14     56.0  5.602e+01  -0.016773     0.003947
+#&gt;  ds 2 parent   14     54.7  5.602e+01  -1.316773     0.309830
+#&gt;  ds 2 parent   28     36.6  3.855e+01  -1.945779     0.621680
+#&gt;  ds 2 parent   28     36.8  3.855e+01  -1.745779     0.557779
+#&gt;  ds 2 parent   60     22.1  2.101e+01   1.086693    -0.541771
+#&gt;  ds 2 parent   60     24.7  2.101e+01   3.686693    -1.838002
+#&gt;  ds 2 parent   90     12.4  1.246e+01  -0.058759     0.040319
+#&gt;  ds 2 parent   90     10.8  1.246e+01  -1.658759     1.138195
+#&gt;  ds 2 parent  120      6.8  7.406e+00  -0.606226     0.534861
+#&gt;  ds 2 parent  120      7.9  7.406e+00   0.493774    -0.435647
+#&gt;  ds 2     m1    1      1.3  1.438e+00  -0.138236     0.184118
+#&gt;  ds 2     m1    3      3.7  3.879e+00  -0.178617     0.196874
+#&gt;  ds 2     m1    3      4.7  3.879e+00   0.821383    -0.905344
+#&gt;  ds 2     m1    7      8.1  7.389e+00   0.710951    -0.627868
+#&gt;  ds 2     m1    7      7.9  7.389e+00   0.510951    -0.451240
+#&gt;  ds 2     m1   14     10.1  1.069e+01  -0.593533     0.441556
+#&gt;  ds 2     m1   14     10.3  1.069e+01  -0.393533     0.292767
+#&gt;  ds 2     m1   28     10.7  1.240e+01  -1.703647     1.171837
+#&gt;  ds 2     m1   28     12.2  1.240e+01  -0.203647     0.140077
+#&gt;  ds 2     m1   60     10.7  1.055e+01   0.147672    -0.110605
+#&gt;  ds 2     m1   60     12.5  1.055e+01   1.947672    -1.458786
+#&gt;  ds 2     m1   90      9.1  8.010e+00   1.090041    -0.929963
+#&gt;  ds 2     m1   90      7.4  8.010e+00  -0.609959     0.520383
+#&gt;  ds 2     m1  120      6.1  5.793e+00   0.306797    -0.297858
+#&gt;  ds 2     m1  120      4.5  5.793e+00  -1.293203     1.255523
+#&gt;  ds 3 parent    0    106.2  1.035e+02   2.712344    -0.371886
+#&gt;  ds 3 parent    0    106.9  1.035e+02   3.412344    -0.467862
+#&gt;  ds 3 parent    1    107.4  9.548e+01  11.924044    -1.758752
+#&gt;  ds 3 parent    1     96.1  9.548e+01   0.624044    -0.092044
+#&gt;  ds 3 parent    3     79.4  8.246e+01  -3.056105     0.514055
+#&gt;  ds 3 parent    3     82.6  8.246e+01   0.143895    -0.024204
+#&gt;  ds 3 parent    7     63.9  6.489e+01  -0.991141     0.205676
+#&gt;  ds 3 parent    7     62.4  6.489e+01  -2.491141     0.516947
+#&gt;  ds 3 parent   14     51.0  4.869e+01   2.306824    -0.610198
+#&gt;  ds 3 parent   14     47.1  4.869e+01  -1.593176     0.421425
+#&gt;  ds 3 parent   28     36.1  3.480e+01   1.304261    -0.451388
+#&gt;  ds 3 parent   28     36.6  3.480e+01   1.804261    -0.624431
+#&gt;  ds 3 parent   60     20.1  1.988e+01   0.221952    -0.114821
+#&gt;  ds 3 parent   60     19.8  1.988e+01  -0.078048     0.040376
+#&gt;  ds 3 parent   90     11.3  1.194e+01  -0.642458     0.451083
+#&gt;  ds 3 parent   90     10.7  1.194e+01  -1.242458     0.872355
+#&gt;  ds 3 parent  120      8.2  7.176e+00   1.023847    -0.915231
+#&gt;  ds 3 parent  120      7.3  7.176e+00   0.123847    -0.110709
+#&gt;  ds 3     m1    0      0.8  8.527e-13   0.800000    -1.214712
+#&gt;  ds 3     m1    1      1.8  1.856e+00  -0.055925     0.071921
+#&gt;  ds 3     m1    1      2.3  1.856e+00   0.444075    -0.571099
+#&gt;  ds 3     m1    3      4.2  4.780e+00  -0.580164     0.601168
+#&gt;  ds 3     m1    3      4.1  4.780e+00  -0.680164     0.704788
+#&gt;  ds 3     m1    7      6.8  8.410e+00  -1.609920     1.344090
+#&gt;  ds 3     m1    7     10.1  8.410e+00   1.690080    -1.411014
+#&gt;  ds 3     m1   14     11.4  1.098e+01   0.424444    -0.311572
+#&gt;  ds 3     m1   14     12.8  1.098e+01   1.824444    -1.339271
+#&gt;  ds 3     m1   28     11.5  1.142e+01   0.079336    -0.057043
+#&gt;  ds 3     m1   28     10.6  1.142e+01  -0.820664     0.590065
+#&gt;  ds 3     m1   60      7.5  9.110e+00  -1.610231     1.295778
+#&gt;  ds 3     m1   60      8.6  9.110e+00  -0.510231     0.410591
+#&gt;  ds 3     m1   90      7.3  6.799e+00   0.501085    -0.457825
+#&gt;  ds 3     m1   90      8.1  6.799e+00   1.301085    -1.188759
+#&gt;  ds 3     m1  120      5.3  4.868e+00   0.431505    -0.444518
+#&gt;  ds 3     m1  120      3.8  4.868e+00  -1.068495     1.100718
+#&gt;  ds 4 parent    0    104.7  9.926e+01   5.444622    -0.775351
+#&gt;  ds 4 parent    0     88.3  9.926e+01 -10.955378     1.560119
+#&gt;  ds 4 parent    1     94.2  9.618e+01  -1.978413     0.289883
+#&gt;  ds 4 parent    1     94.6  9.618e+01  -1.578413     0.231274
+#&gt;  ds 4 parent    3     78.1  9.037e+01 -12.268550     1.901399
+#&gt;  ds 4 parent    3     96.5  9.037e+01   6.131450    -0.950262
+#&gt;  ds 4 parent    7     76.2  7.999e+01  -3.794958     0.655739
+#&gt;  ds 4 parent    7     77.8  7.999e+01  -2.194958     0.379272
+#&gt;  ds 4 parent   14     70.8  6.518e+01   5.624996    -1.162874
+#&gt;  ds 4 parent   14     67.3  6.518e+01   2.124996    -0.439307
+#&gt;  ds 4 parent   28     43.1  4.462e+01  -1.517860     0.431312
+#&gt;  ds 4 parent   28     45.1  4.462e+01   0.482140    -0.137004
+#&gt;  ds 4 parent   60     21.3  2.130e+01   0.003305    -0.001633
+#&gt;  ds 4 parent   60     23.5  2.130e+01   2.203305    -1.088598
+#&gt;  ds 4 parent   90     11.8  1.180e+01  -0.002834     0.002002
+#&gt;  ds 4 parent   90     12.1  1.180e+01   0.297166    -0.209966
+#&gt;  ds 4 parent  120      7.0  6.868e+00   0.132251    -0.120348
+#&gt;  ds 4 parent  120      6.2  6.868e+00  -0.667749     0.607650
+#&gt;  ds 4     m1    0      1.6  0.000e+00   1.600000    -2.429424
+#&gt;  ds 4     m1    1      0.9  6.826e-01   0.217363    -0.309476
+#&gt;  ds 4     m1    3      3.7  1.935e+00   1.765082    -2.255277
+#&gt;  ds 4     m1    3      2.0  1.935e+00   0.065082    -0.083157
+#&gt;  ds 4     m1    7      3.6  4.035e+00  -0.434805     0.474018
+#&gt;  ds 4     m1    7      3.8  4.035e+00  -0.234805     0.255981
+#&gt;  ds 4     m1   14      7.1  6.652e+00   0.448187    -0.413053
+#&gt;  ds 4     m1   14      6.6  6.652e+00  -0.051813     0.047751
+#&gt;  ds 4     m1   28      9.5  9.156e+00   0.343805    -0.276011
+#&gt;  ds 4     m1   28      9.3  9.156e+00   0.143805    -0.115448
+#&gt;  ds 4     m1   60      8.3  8.848e+00  -0.547762     0.446843
+#&gt;  ds 4     m1   60      9.0  8.848e+00   0.152238    -0.124190
+#&gt;  ds 4     m1   90      6.6  6.674e+00  -0.073979     0.068090
+#&gt;  ds 4     m1   90      7.7  6.674e+00   1.026021    -0.944353
+#&gt;  ds 4     m1  120      3.7  4.668e+00  -0.967537     1.010122
+#&gt;  ds 4     m1  120      3.5  4.668e+00  -1.167537     1.218925
+#&gt;  ds 5 parent    0    110.4  1.022e+02   8.170986    -1.132847
+#&gt;  ds 5 parent    0    112.1  1.022e+02   9.870986    -1.368539
+#&gt;  ds 5 parent    1     93.5  9.513e+01  -1.630764     0.241319
+#&gt;  ds 5 parent    1     91.0  9.513e+01  -4.130764     0.611268
+#&gt;  ds 5 parent    3     71.0  8.296e+01 -11.964279     2.001495
+#&gt;  ds 5 parent    3     89.7  8.296e+01   6.735721    -1.126813
+#&gt;  ds 5 parent    7     60.4  6.495e+01  -4.547441     0.942951
+#&gt;  ds 5 parent    7     59.1  6.495e+01  -5.847441     1.212518
+#&gt;  ds 5 parent   14     56.5  4.626e+01  10.241319    -2.825682
+#&gt;  ds 5 parent   14     47.0  4.626e+01   0.741319    -0.204537
+#&gt;  ds 5 parent   28     30.2  3.026e+01  -0.058478     0.022504
+#&gt;  ds 5 parent   28     23.9  3.026e+01  -6.358478     2.446932
+#&gt;  ds 5 parent   60     17.0  1.792e+01  -0.919046     0.508481
+#&gt;  ds 5 parent   60     18.7  1.792e+01   0.780954    -0.432079
+#&gt;  ds 5 parent   90     11.3  1.187e+01  -0.573917     0.404206
+#&gt;  ds 5 parent   90     11.9  1.187e+01   0.026083    -0.018370
+#&gt;  ds 5 parent  120      9.0  7.898e+00   1.102089    -0.946039
+#&gt;  ds 5 parent  120      8.1  7.898e+00   0.202089    -0.173474
+#&gt;  ds 5     m1    0      0.7 -1.421e-14   0.700000    -1.062873
+#&gt;  ds 5     m1    1      3.0  3.144e+00  -0.143526     0.166865
+#&gt;  ds 5     m1    1      2.6  3.144e+00  -0.543526     0.631910
+#&gt;  ds 5     m1    3      5.1  8.390e+00  -3.290265     2.749870
+#&gt;  ds 5     m1    3      7.5  8.390e+00  -0.890265     0.744048
+#&gt;  ds 5     m1    7     16.5  1.566e+01   0.841368    -0.506082
+#&gt;  ds 5     m1    7     19.0  1.566e+01   3.341368    -2.009830
+#&gt;  ds 5     m1   14     22.9  2.188e+01   1.017753    -0.493689
+#&gt;  ds 5     m1   14     23.2  2.188e+01   1.317753    -0.639212
+#&gt;  ds 5     m1   28     22.2  2.386e+01  -1.655914     0.756794
+#&gt;  ds 5     m1   28     24.4  2.386e+01   0.544086    -0.248661
+#&gt;  ds 5     m1   60     15.5  1.859e+01  -3.091124     1.670405
+#&gt;  ds 5     m1   60     19.8  1.859e+01   1.208876    -0.653262
+#&gt;  ds 5     m1   90     14.9  1.372e+01   1.176815    -0.764948
+#&gt;  ds 5     m1   90     14.2  1.372e+01   0.476815    -0.309937
+#&gt;  ds 5     m1  120     10.9  9.961e+00   0.938796    -0.723690
+#&gt;  ds 5     m1  120     10.4  9.961e+00   0.438796    -0.338255</div><div class='input'><span class='co'># }</span>
 
 </div></pre>
   </div>
