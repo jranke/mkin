@@ -70,7 +70,8 @@
 #'
 #' \dontrun{
 #' # Evaluate using mmkin and saem
-#' f_mmkin_dfop_sfo <- mmkin(list(dfop_sfo), ds_syn_dfop_sfo, quiet = TRUE, error_model = "tc", cores = 5)
+#' f_mmkin_dfop_sfo <- mmkin(list(dfop_sfo), ds_syn_dfop_sfo,
+#'   quiet = TRUE, error_model = "tc", cores = 5)
 #' f_saem_dfop_sfo <- saem(f_mmkin_dfop_sfo)
 #' summary(f_saem_dfop_sfo, data = TRUE)
 #' }
