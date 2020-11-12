@@ -74,5 +74,7 @@ lrtest.mkinfit <- function(object, object_2 = NULL, ...) {
 #' @export
 lrtest.mmkin <- function(object, ...) {
   if (nrow(object) != 2 | ncol(object) > 1) stop("Only works for a column containing two mkinfit objects")
+  object[[1, 1]]$mkinmod$name <- rownames(object)[1]
+  object[[2, 1]]$mkinmod$name <- rownames(object)[2]
   lrtest(object[[1, 1]], object[[2, 1]])
 }

@@ -98,6 +98,8 @@ mmkin <- function(models = c("SFO", "FOMC", "DFOP"), datasets,
     model_index <- w[1]
     dataset_index <- w[2]
     res <- try(mkinfit(models[[model_index]], datasets[[dataset_index]], ...))
+    if (!inherits(res, "try-error")) res$mkinmod$name <- names(models)[model_index]
+    return(res)
   }
 
   if (is.null(cluster)) {
@@ -156,8 +158,7 @@ print.mmkin <- function(x, ...) {
   all_summary_warnings <- character()
   sww <- 0 # Counter for Shapiro-Wilks warnings
 
-  x_t <- t(x) # To make lapply work by rows
-  display <- lapply(x_t,
+  display <- lapply(x,
     function(fit) {
       if (inherits(fit, "try-error")) return("E")
       sw <- fit$summary_warnings
