@@ -7,7 +7,10 @@
 #' context of pesticide  registrations, as the use of the data may be
 #' constrained by data protection regulations.
 #'
-#' Metabolite residues at early sampling times reported as 0.0 were set to NA.
+#' Data for the first dataset are from p. 685. Data for the other four
+#' datasets were used in the preprocessed versions given in the kinetics
+#' section (p. 761ff.), with the exception of residues smaller than 1 for DCP
+#' in the soil from Site I2, where the values given on p. 694 were used.
 #'
 #' The R code used to create this data object is installed with this package
 #' in the 'dataset_generation' directory. In the code, page numbers are given for
@@ -16,13 +19,12 @@
 #' @format An [mkindsg] object grouping five datasets
 #' @source Hellenic Ministry of Rural Development and Agriculture (2014)
 #'   Final addendum to the Renewal Assessment Report - public version - 2,4-D
-#'   Volume 3 Annex B.8 Fate and behaviour in the environment p. 638, 640,
-#'   644-646.
+#'   Volume 3 Annex B.8 Fate and behaviour in the environment
 #'   \url{http://registerofquestions.efsa.europa.eu/roqFrontend/outputLoader?output=ON-3812}
 #' @examples
 #' print(D24_2014)
 #' print(D24_2014$ds[[1]], data = TRUE)
-#' m1 = mkinmod(D24 = list(type = "SFO", to = "phenol"),
-#'   phenol = list(type = "SFO", to = "anisole"),
-#'   anisole = list(type = "SFO"))
+#' m_D24 = mkinmod(D24 = mkinsub("SFO", to = "DCP"),
+#'   DCP = mkinsub("SFO", to = "DCA"),
+#'   DCA = mkinsub("SFO"))
 "D24_2014"

@@ -23,7 +23,7 @@ pkgfiles = \
 	data/* \
 	DESCRIPTION \
 	inst/WORDLIST \
-	inst/extdata/* \
+	inst/dataset_generation/* \
 	inst/testdata/fit_old_FOCUS_D.rda \
 	man/* \
 	NAMESPACE \
