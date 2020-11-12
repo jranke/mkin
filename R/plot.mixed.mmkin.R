@@ -1,4 +1,4 @@
-if(getRversion() >= '2.15.1') utils::globalVariables("ds")
+utils::globalVariables("ds")
 
 #' Plot predictions from a fitted nonlinear mixed model obtained via an mmkin row object
 #'

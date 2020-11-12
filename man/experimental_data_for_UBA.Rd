@@ -30,12 +30,12 @@
  (Austria, 2015, p. 16).
 
  Datasets 6 to 10 are from the Renewal Assessment Report (RAR) for glyphosate
- (Germany, 2013a, pages 8, 28, 50, 51). For the initial sampling,
+ (Germany, 2013, pages 8, 28, 50, 51). For the initial sampling,
  the residues given for the metabolite were added to the parent
  value, following the recommendation of the FOCUS kinetics workgroup.
 
  Dataset 11 is from the Renewal Assessment Report (RAR) for 2,4-D
- (Germany, 2013b, p. 644). Values reported as zero were set to NA, with
+ (Hellas, 2013, p. 644). Values reported as zero were set to NA, with
  the exception of the day three sampling of metabolite A2, which was set
  to one half of the LOD reported to be 1\% AR.
 
@@ -66,10 +66,10 @@
   Version 1.1, 18 December 2014
   \url{http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics}
 
-  Germany (2013a). Renewal Assessment Report Glyphosate Volume 3 Annex B.8: Environmental Fate
+  Germany (2013). Renewal Assessment Report Glyphosate Volume 3 Annex B.8: Environmental Fate
   and Behaviour
 
-  Germany (2013b). Renewal Assessment Report 2,4-D Volume 3 Annex B.8: Fate and behaviour in the
+  Hellas (2013). Renewal Assessment Report 2,4-D Volume 3 Annex B.8: Fate and behaviour in the
   environment
 
   Ranke (2019) Documentation of results obtained for the error model expertise

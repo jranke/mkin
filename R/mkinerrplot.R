@@ -1,4 +1,4 @@
-if(getRversion() >= '2.15.1') utils::globalVariables(c("variable", "residual"))
+utils::globalVariables(c("variable", "residual"))
 
 #' Function to plot squared residuals and the error model for an mkin object
 #' 

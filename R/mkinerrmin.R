@@ -1,4 +1,4 @@
-if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "value_mean"))
+utils::globalVariables(c("name", "value_mean"))
 
 #' Calculate the minimum error to assume in order to pass the variance test
 #'

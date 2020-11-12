@@ -2,7 +2,18 @@
 % Please edit documentation in R/mkinds.R
 \name{mkinds}
 \alias{mkinds}
+\alias{print.mkinds}
 \title{A dataset class for mkin}
+\usage{
+\method{print}{mkinds}(x, data = FALSE, ...)
+}
+\arguments{
+\item{x}{An \link{mkinds} object.}
+
+\item{data}{Should the data be printed?}
+
+\item{\dots}{Not used.}
+}
 \description{
 At the moment this dataset class is hardly used in mkin. For example,
 mkinfit does not take mkinds datasets as argument, but works with dataframes
@@ -14,9 +25,6 @@ provided by this package come as mkinds objects nevertheless.
 mds <- mkinds$new("FOCUS A", FOCUS_2006_A)
 print(mds)
 
-}
-\seealso{
-The S3 printing method \code{\link{print.mkinds}}
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}

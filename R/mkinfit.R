@@ -1,4 +1,4 @@
-if(getRversion() >= '2.15.1') utils::globalVariables(c("name", "time", "value"))
+utils::globalVariables(c("name", "time", "value"))
 
 #' Fit a kinetic model to data with one or more state variables
 #'

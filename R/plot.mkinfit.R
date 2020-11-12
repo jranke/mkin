@@ -1,4 +1,4 @@
-if(getRversion() >= '2.15.1') utils::globalVariables(c("type", "variable", "observed"))
+utils::globalVariables(c("type", "variable", "observed"))
 
 #' Plot the observed data and the fitted model of an mkinfit object
 #'

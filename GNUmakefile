@@ -23,6 +23,7 @@ pkgfiles = \
 	data/* \
 	DESCRIPTION \
 	inst/WORDLIST \
+	inst/extdata/* \
 	inst/testdata/fit_old_FOCUS_D.rda \
 	man/* \
 	NAMESPACE \
@@ -42,7 +43,7 @@ $(TGZ): $(pkgfiles) vignettes
 	$(RM) Rplots.pdf
 	"$(RBIN)/R" CMD build . 2>&1 | tee build.log
 
-roxygen: 
+roxygen:
 	"$(RBIN)/Rscript" -e 'devtools::document()'
 
 $(TGZVNR): $(pkgfiles)

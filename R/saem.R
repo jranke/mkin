@@ -102,7 +102,7 @@ saem.mmkin <- function(object,
     grDevices::png(tmp)
   }
   fit_time <- system.time({
-    capture.output(f_saemix <- saemix::saemix(m_saemix, d_saemix, control), split = !quiet)
+    utils::capture.output(f_saemix <- saemix::saemix(m_saemix, d_saemix, control), split = !quiet)
     f_pred <- try(saemix::saemix.predict(f_saemix), silent = TRUE)
     if (!inherits(f_pred, "try-error")) {
       f_saemix <- f_pred

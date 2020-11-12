@@ -1,5 +1,13 @@
 # mkin 0.9.50.4 (unreleased)
 
+- 'f_norm_temp_focus' generic function to normalise time intervals using the FOCUS method, with methods for numeric vectors and 'mkindsg' objects
+
+- 'mkindsg' R6 class for groups of 'mkinds' datasets with metadata
+
+- 'D24_2014' dataset
+
+- 'focus_soil_moisture' FOCUS default soil moisture data
+
 - 'plot.mixed.mmkin' method used for 'nlme.mmkin' and 'saem.mmkin', both inheriting from 'mixed.mmkin' (currently virtual)
 
 - 'saem' generic function to fit saemix models, with a generator 'saem.mmkin', summary and plot methods
