@@ -332,7 +332,7 @@ saemix_model <- function(object, cores = 1, verbose = FALSE, ...) {
       uid <- unique(id)
 
       res_list <- parallel::mclapply(uid, function(i) {
-          transparms_optim <- as.numeric(psi[i, ])
+          transparms_optim <- as.numeric(psi[i, ]) # psi[i, ] is a dataframe when called in saemix.predict
           names(transparms_optim) <- names(degparms_optim)
 
           odeini_optim <- transparms_optim[odeini_optim_parm_names]
