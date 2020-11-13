@@ -1,3 +1,5 @@
+utils::globalVariables(c("predicted", "std"))
+
 #' Fit nonlinear mixed models with SAEM
 #'
 #' This function uses [saemix::saemix()] as a backend for fitting nonlinear mixed

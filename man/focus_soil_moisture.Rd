@@ -16,7 +16,8 @@ Version 2.2, May 2014 \url{https://esdac.jrc.ec.europa.eu/projects/ground-water}
 focus_soil_moisture
 }
 \description{
-FOCUS default values for soil moisture contents at field capacity, MWHC and 1/3 bar
+The value were transcribed from p. 36. The table assumes field capacity
+corresponds to pF2, MWHC to pF 1 and 1/3 bar to pF 2.5.
 }
 \examples{
 focus_soil_moisture

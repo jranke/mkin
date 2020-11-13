@@ -109,7 +109,7 @@ fomc_sfo <- mkinmod(parent = mkinsub("FOMC", "A1"),
 dfop_sfo <- mkinmod(parent = mkinsub("DFOP", "A1"),
   A1 = mkinsub("SFO"))
 # The following fit uses analytical solutions for SFO-SFO and DFOP-SFO,
-# and compiled ODEs for FOMC, both are fast
+# and compiled ODEs for FOMC that are much slower
 f_mmkin <- mmkin(list(
     "SFO-SFO" = sfo_sfo, "FOMC-SFO" = fomc_sfo, "DFOP-SFO" = dfop_sfo),
   ds, quiet = TRUE)
@@ -121,11 +121,12 @@ f_saem_dfop_sfo <- saem(f_mmkin["DFOP-SFO", ])
 # We can use print, plot and summary methods to check the results
 print(f_saem_dfop_sfo)
 plot(f_saem_dfop_sfo)
-summary(f_saem_dfop_sfo, data = FALSE)
+summary(f_saem_dfop_sfo, data = TRUE)
 
 # Using a single core, the following takes about 6 minutes as we do not have an
 # analytical solution. Using 10 cores it is slower instead of faster
-#f_saem_fomc <- saem(f_mmkin["FOMC-SFO", ], cores = 1)
+f_saem_fomc <- saem(f_mmkin["FOMC-SFO", ], cores = 1)
+plot(f_saem_fomc)
 }
 }
 \seealso{

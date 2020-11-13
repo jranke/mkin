@@ -19,7 +19,14 @@ f_time_norm_focus(object, ...)
   ...
 )
 
-\method{f_time_norm_focus}{mkindsg}(object, Q10 = 2.58, walker = 0.7, f_na = NA, ...)
+\method{f_time_norm_focus}{mkindsg}(
+  object,
+  study_moisture_ref_source = c("meta", "focus"),
+  Q10 = 2.58,
+  walker = 0.7,
+  f_na = NA,
+  ...
+)
 }
 \arguments{
 \item{object}{An object containing information used for the calculations}
@@ -39,21 +46,21 @@ f_time_norm_focus(object, ...)
 
 \item{f_na}{The factor to use for NA values. If set to NA, only factors
 for complete cases will be returned.}
+
+\item{study_moisture_ref_source}{Source for the reference value
+used to calculate the study moisture}
 }
 \description{
 Time step normalisation factors for aerobic soil degradation as described
 in Appendix 8 to the FOCUS kinetics guidance (FOCUS 2014, p. 369).
 }
 \examples{
-f_time_norm_focus(25, 20, 25) # 1.37, compare p. 184
+f_time_norm_focus(25, 20, 25) # 1.37, compare FOCUS 2014 p. 184
 
 D24_2014$meta
 # No moisture normalisation in the first dataset, so we use f_na = 1 to get
-# Temperature only normalisation as in the EU evaluation
-f_time_norm_focus(D24_2014, f_na = 1)
-# Moisture normalisation for the other four soils is one, as soil moisture
-# is higher than the approximate field capacity derived from the USDA soil
-# type
+# temperature only normalisation as in the EU evaluation
+f_time_norm_focus(D24_2014, study_moisture_ref_source = "focus", f_na = 1)
 }
 \references{
 FOCUS (2006) \dQuote{Guidance Document on Estimating Persistence
