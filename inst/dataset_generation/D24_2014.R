@@ -1,5 +1,8 @@
 # From the Addendum to the RAR 2014, see the help file for D24_2014
-# Soil characterisation from EFSA conclusion 2014
+# Soil characterisation in the EFSA conclusion 2014 is completely different
+# and does not correspond to the USDA soil types that can be derived
+# from the texture data on p. 687
+library(mkin)
 D24_2014 <- mkindsg$new(
   title = "Aerobic soil degradation data on 2,4-D from the EU assessment in 2014",
   ds = list(
@@ -60,12 +63,11 @@ D24_2014 <- mkindsg$new(
   ),
   meta = data.frame(
     study = c("Cohen 1991", rep("Liu and Adelfinskaya 2011", 4)),
-    usda_soil_type = c("Silt loam", # p. 683, EFSA conclusion p. 41/42
-      "Clay loam", "Clay loam", "Sandy loam", "Sandy loam"),
-    moisture_ref_type = c(NA, rep("% MWHC", 4)), # p. 687
+    usda_soil_type = c("Silt loam", # p. 683, 687
+      "Silt loam", "Loam", "Loam", "Loamy sand"),
+    study_moisture_ref_type = c(NA, rep("pF1", 4)), # p. 687
     rel_moisture = c(NA, 0.5, 0.5, 0.5, 0.5), # p. 687
-    moisture_ref = c(NA, 65.7, 59.9, 75.3, 48.5), # p. 687
     temperature = c(25, 20, 20, 20, 20)
   )
 )
-#save(D24_2014, file = "../../data/D24_2014.rda", version = 2)
+save(D24_2014, file = "../../data/D24_2014.rda", version = 2)

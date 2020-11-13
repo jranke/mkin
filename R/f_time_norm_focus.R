@@ -10,6 +10,8 @@ utils::globalVariables("D24_2014")
 #' @param moisture Numeric vector of moisture contents in \\% w/w
 #' @param field_moisture Numeric vector of moisture contents at field capacity
 #'   (pF2) in \\% w/w
+#' @param study_moisture_ref_source Source for the reference value
+#'   used to calculate the study moisture
 #' @param Q10 The Q10 value used for temperature normalisation
 #' @param walker The Walker exponent used for moisture normalisation
 #' @param f_na The factor to use for NA values. If set to NA, only factors
@@ -28,15 +30,12 @@ utils::globalVariables("D24_2014")
 #'   \url{http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics}
 #' @seealso [focus_soil_moisture]
 #' @examples
-#' f_time_norm_focus(25, 20, 25) # 1.37, compare p. 184
+#' f_time_norm_focus(25, 20, 25) # 1.37, compare FOCUS 2014 p. 184
 #'
 #' D24_2014$meta
 #' # No moisture normalisation in the first dataset, so we use f_na = 1 to get
-#' # Temperature only normalisation as in the EU evaluation
-#' f_time_norm_focus(D24_2014, f_na = 1)
-#' # Moisture normalisation for the other four soils is one, as soil moisture
-#' # is higher than the approximate field capacity derived from the USDA soil
-#' # type
+#' # temperature only normalisation as in the EU evaluation
+#' f_time_norm_focus(D24_2014, study_moisture_ref_source = "focus", f_na = 1)
 #' @export
 f_time_norm_focus <- function(object, ...) {
   UseMethod("f_time_norm_focus")
@@ -44,9 +43,9 @@ f_time_norm_focus <- function(object, ...) {
 
 #' @rdname f_time_norm_focus
 #' @export
-f_time_norm_focus.numeric <- function(object, 
-  moisture = NA, field_moisture = NA, 
-  temperature = object, 
+f_time_norm_focus.numeric <- function(object,
+  moisture = NA, field_moisture = NA,
+  temperature = object,
   Q10 = 2.58, walker = 0.7, f_na = NA, ...)
 {
   f_temp <- ifelse(is.na(temperature),
@@ -65,13 +64,40 @@ f_time_norm_focus.numeric <- function(object,
 
 #' @rdname f_time_norm_focus
 #' @export
-f_time_norm_focus.mkindsg <- function(object, Q10 = 2.58, walker = 0.7, f_na = NA, ...) {
+f_time_norm_focus.mkindsg <- function(object,
+  study_moisture_ref_source = c("meta", "focus"),
+  Q10 = 2.58, walker = 0.7, f_na = NA, ...) {
+
+  study_moisture_ref_source <- match.arg(study_moisture_ref_source)
   meta <- object$meta
-  field_moisture <- focus_soil_moisture[meta$usda_soil_type, "pF2"]
-  study_moisture <- meta$rel_moisture * meta$moisture_ref
+
+  if (is.null(meta$field_moisture)) {
+    field_moisture <- focus_soil_moisture[meta$usda_soil_type, "pF2"]
+  } else {
+    field_moisture <- ifelse(is.na(meta$field_moisture),
+      focus_soil_moisture[meta$usda_soil_type, "pF2"],
+      meta$field_moisture)
+  }
+
+  if (study_moisture_ref_source == "meta") {
+    study_moisture_ref <- meta$study_moisture_ref
+  } else {
+    study_moisture_ref <-
+      focus_soil_moisture[as.matrix(meta[c("usda_soil_type", "study_moisture_ref_type")])]
+  }
+
+  if ("study_moisture" %in% names(meta)) {
+    study_moisture <- ifelse(is.na(meta$study_moisture),
+      meta$rel_moisture * study_moisture_ref,
+      meta$study_moisture)
+  } else {
+    study_moisture <- meta$rel_moisture * study_moisture_ref
+  }
+
   object$f_time_norm <- f_time_norm_focus(meta$temperature,
     moisture = study_moisture, field_moisture = field_moisture,
     Q10 = Q10, walker = walker, f_na = f_na)
   cat("$time_norm was set to\n")
   print(object$f_time_norm)
+  return(object$f_time_norm)
 }
