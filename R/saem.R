@@ -63,7 +63,7 @@
 #' dfop_sfo <- mkinmod(parent = mkinsub("DFOP", "A1"),
 #'   A1 = mkinsub("SFO"))
 #' # The following fit uses analytical solutions for SFO-SFO and DFOP-SFO,
-#' # and compiled ODEs for FOMC, both are fast
+#' # and compiled ODEs for FOMC that are much slower
 #' f_mmkin <- mmkin(list(
 #'     "SFO-SFO" = sfo_sfo, "FOMC-SFO" = fomc_sfo, "DFOP-SFO" = dfop_sfo),
 #'   ds, quiet = TRUE)
@@ -75,11 +75,12 @@
 #' # We can use print, plot and summary methods to check the results
 #' print(f_saem_dfop_sfo)
 #' plot(f_saem_dfop_sfo)
-#' summary(f_saem_dfop_sfo, data = FALSE)
+#' summary(f_saem_dfop_sfo, data = TRUE)
 #'
 #' # Using a single core, the following takes about 6 minutes as we do not have an
 #' # analytical solution. Using 10 cores it is slower instead of faster
-#' #f_saem_fomc <- saem(f_mmkin["FOMC-SFO", ], cores = 1)
+#' f_saem_fomc <- saem(f_mmkin["FOMC-SFO", ], cores = 1)
+#' plot(f_saem_fomc)
 #' }
 #' @export
 saem <- function(object, control, ...) UseMethod("saem")
@@ -103,12 +104,6 @@ saem.mmkin <- function(object,
   }
   fit_time <- system.time({
     utils::capture.output(f_saemix <- saemix::saemix(m_saemix, d_saemix, control), split = !quiet)
-    f_pred <- try(saemix::saemix.predict(f_saemix), silent = TRUE)
-    if (!inherits(f_pred, "try-error")) {
-      f_saemix <- f_pred
-    } else {
-      warning("Creating predictions from the saemix model failed")
-    }
   })
   if (suppressPlot) {
     grDevices::dev.off()
@@ -121,6 +116,20 @@ saem.mmkin <- function(object,
     object[[1]]$transform_rates,
     object[[1]]$transform_fractions)
 
+  return_data <- nlme_data(object)
+
+  return_data$predicted <- f_saemix@model@model(
+    psi = saemix::psi(f_saemix),
+    id = as.numeric(return_data$ds),
+    xidep = return_data[c("time", "name")])
+
+  return_data <- transform(return_data,
+    residual = predicted - value,
+    std = sigma_twocomp(predicted,
+      f_saemix@results@respar[1], f_saemix@results@respar[2]))
+  return_data <- transform(return_data,
+    standardized = residual / std)
+
   result <- list(
     mkinmod = object[[1]]$mkinmod,
     mmkin = object,
@@ -132,7 +141,7 @@ saem.mmkin <- function(object,
     mean_dp_start = attr(m_saemix, "mean_dp_start"),
     bparms.optim = bparms_optim,
     bparms.fixed = object[[1]]$bparms.fixed,
-    data = nlme_data(object),
+    data = return_data,
     err_mod = object[[1]]$err_mod,
     date.fit = date(),
     saemixversion = as.character(utils::packageVersion("saemix")),
@@ -323,7 +332,7 @@ saemix_model <- function(object, cores = 1, verbose = FALSE, ...) {
       uid <- unique(id)
 
       res_list <- parallel::mclapply(uid, function(i) {
-          transparms_optim <- psi[i, ]
+          transparms_optim <- as.numeric(psi[i, ])
           names(transparms_optim) <- names(degparms_optim)
 
           odeini_optim <- transparms_optim[odeini_optim_parm_names]

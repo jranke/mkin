@@ -75,8 +75,8 @@ plot.mixed.mmkin <- function(x,
     rownames(degparms_optim) <- ds_names
     degparms_optim_names <- setdiff(names(fit_1$par), names(fit_1$errparms))
     colnames(degparms_optim) <- degparms_optim_names
-    residual_type = ifelse(standardized, "iwres", "ires")
-    residuals <- x$so@results@predictions[[residual_type]]
+    residual_type = ifelse(standardized, "residual", "standardized")
+    residuals <- x$data[[residual_type]]
     degparms_pop <- x$so@results@fixed.effects
     names(degparms_pop) <- degparms_optim_names
   }
@@ -95,9 +95,7 @@ plot.mixed.mmkin <- function(x,
   odeini_names <- grep("_0$", degparms_all_names, value = TRUE)
   odeparms_names <- setdiff(degparms_all_names, odeini_names)
 
-  residual_type = ifelse(standardized, "iwres", "ires")
-
-  observed <- cbind(x$data,
+  observed <- cbind(x$data[c("ds", "name", "time", "value")],
     residual = residuals)
 
   solution_type = fit_1$solution_type

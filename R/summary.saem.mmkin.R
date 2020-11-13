@@ -151,14 +151,11 @@ summary.saem.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes =
   err_mod = object$mmkin_orig[[1]]$err_mod
 
   object$diffs <- object$mkinmod$diffs
-  object$print_data <- data
+  object$print_data <- data # boolean: Should we print the data?
   so_pred <- object$so@results@predictions
 
-  object$data[["observed"]] <- object$data[["value"]]
-  object$data[["value"]] <- NULL
-  object$data[["predicted"]] <- so_pred$ipred
-  object$data[["residual"]] <- so_pred$ires
-  object$data[["standardized"]] <- so_pred$iwres
+  names(object$data)[4] <- "observed" # rename value to observed
+
   object$verbose <- verbose
 
   object$fixed <- object$mmkin_orig[[1]]$fixed
