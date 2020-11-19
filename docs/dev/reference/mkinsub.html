@@ -73,7 +73,7 @@ mkinmod." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.9.50.3</span>
+        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.9.50.4</span>
       </span>
     </div>
 
@@ -121,7 +121,7 @@ mkinmod." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/jranke/mkin/">
+  <a href="https://github.com/jranke/mkin/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -140,7 +140,7 @@ mkinmod." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Function to set up a kinetic submodel for one state variable</h1>
-    <small class="dont-index">Source: <a href='http://github.com/jranke/mkin/blob/master/R/mkinsub.R'><code>R/mkinsub.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/jranke/mkin/blob/master/R/mkinsub.R'><code>R/mkinsub.R</code></a></small>
     <div class="hidden name"><code>mkinsub.Rd</code></div>
     </div>
 
@@ -149,7 +149,7 @@ mkinmod." />
 <code><a href='mkinmod.html'>mkinmod</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>mkinsub</span>(<span class='no'>submodel</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>sink</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>full_name</span> <span class='kw'>=</span> <span class='fl'>NA</span>)</pre>
+    <pre class="usage"><span class='fu'>mkinsub</span><span class='op'>(</span><span class='va'>submodel</span>, to <span class='op'>=</span> <span class='cn'>NULL</span>, sink <span class='op'>=</span> <span class='cn'>TRUE</span>, full_name <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -181,22 +181,28 @@ results on other operating systems or system configurations.</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A list for use with <code><a href='mkinmod.html'>mkinmod</a></code>.</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Johannes Ranke</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='co'># One parent compound, one metabolite, both single first order.</span>
-<span class='no'>SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(
-  <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"m1"</span>),
-  <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
+<span class='va'>SFO_SFO</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span><span class='op'>(</span>
+  parent <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span>, to <span class='op'>=</span> <span class='st'>"m1"</span><span class='op'>)</span>,
+  m1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
 <span class='co'># The same model using mkinsub</span>
-<span class='no'>SFO_SFO.2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(
-  <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'>mkinsub</span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>),
-  <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'>mkinsub</span>(<span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
+<span class='va'>SFO_SFO.2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span><span class='op'>(</span>
+  parent <span class='op'>=</span> <span class='fu'>mkinsub</span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='st'>"m1"</span><span class='op'>)</span>,
+  m1 <span class='op'>=</span> <span class='fu'>mkinsub</span><span class='op'>(</span><span class='st'>"SFO"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
 <span class='co'># \dontrun{</span>
   <span class='co'># Now supplying full names</span>
-  <span class='no'>SFO_SFO.2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(
-    <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'>mkinsub</span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>, <span class='kw'>full_name</span> <span class='kw'>=</span> <span class='st'>"Test compound"</span>),
-    <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'>mkinsub</span>(<span class='st'>"SFO"</span>, <span class='kw'>full_name</span> <span class='kw'>=</span> <span class='st'>"Metabolite M1"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'> # }
+  <span class='va'>SFO_SFO.2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span><span class='op'>(</span>
+    parent <span class='op'>=</span> <span class='fu'>mkinsub</span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='st'>"m1"</span>, full_name <span class='op'>=</span> <span class='st'>"Test compound"</span><span class='op'>)</span>,
+    m1 <span class='op'>=</span> <span class='fu'>mkinsub</span><span class='op'>(</span><span class='st'>"SFO"</span>, full_name <span class='op'>=</span> <span class='st'>"Metabolite M1"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'> <span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -213,7 +219,7 @@ results on other operating systems or system configurations.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

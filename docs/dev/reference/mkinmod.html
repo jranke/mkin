@@ -42,7 +42,11 @@
 <meta property="og:title" content="Function to set up a kinetic model with one or more state variables — mkinmod" />
 <meta property="og:description" content="This function is usually called using a call to mkinsub() for each observed
 variable, specifying the corresponding submodel as well as outgoing pathways
-(see examples)." />
+(see examples).
+Print mkinmod objects in a way that the user finds his way to get to its
+components.
+This is a convenience function to set up the lists used as arguments for
+mkinmod." />
 
 
 <meta name="robots" content="noindex">
@@ -74,7 +78,7 @@ variable, specifying the corresponding submodel as well as outgoing pathways
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.9.50.3</span>
+        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.9.50.4</span>
       </span>
     </div>
 
@@ -122,7 +126,7 @@ variable, specifying the corresponding submodel as well as outgoing pathways
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/jranke/mkin/">
+  <a href="https://github.com/jranke/mkin/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -141,50 +145,60 @@ variable, specifying the corresponding submodel as well as outgoing pathways
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Function to set up a kinetic model with one or more state variables</h1>
-    <small class="dont-index">Source: <a href='http://github.com/jranke/mkin/blob/master/R/mkinmod.R'><code>R/mkinmod.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/jranke/mkin/blob/master/R/mkinmod.R'><code>R/mkinmod.R</code></a>, <a href='https://github.com/jranke/mkin/blob/master/R/mkinsub.R'><code>R/mkinsub.R</code></a></small>
     <div class="hidden name"><code>mkinmod.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function is usually called using a call to <code><a href='mkinsub.html'>mkinsub()</a></code> for each observed
+    <p>This function is usually called using a call to <code>mkinsub()</code> for each observed
 variable, specifying the corresponding submodel as well as outgoing pathways
 (see examples).</p>
+<p>Print mkinmod objects in a way that the user finds his way to get to its
+components.</p>
+<p>This is a convenience function to set up the lists used as arguments for
+<code>mkinmod</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>mkinmod</span>(
-  <span class='no'>...</span>,
-  <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>,
-  <span class='kw'>speclist</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>mkinmod</span><span class='op'>(</span>
+  <span class='va'>...</span>,
+  use_of_ff <span class='op'>=</span> <span class='st'>"max"</span>,
+  speclist <span class='op'>=</span> <span class='cn'>NULL</span>,
+  quiet <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  verbose <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span>
+
+<span class='co'># S3 method for mkinmod</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
+
+<span class='fu'>mkinsub</span><span class='op'>(</span><span class='va'>submodel</span>, to <span class='op'>=</span> <span class='cn'>NULL</span>, sink <span class='op'>=</span> <span class='cn'>TRUE</span>, full_name <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>...</th>
-      <td><p>For each observed variable, a list as obtained by <code><a href='mkinsub.html'>mkinsub()</a></code>
+      <td><p>For each observed variable, a list as obtained by <code>mkinsub()</code>
 has to be specified as an argument (see examples).  Currently, single
 first order kinetics "SFO", indeterminate order rate equation kinetics
 "IORE", or single first order with reversible binding "SFORB" are
 implemented for all variables, while "FOMC", "DFOP", "HS" and "logistic"
 can additionally be chosen for the first variable which is assumed to be
 the source compartment.
-Additionally, <code><a href='mkinsub.html'>mkinsub()</a></code> has an argument <code>to</code>, specifying names of
+Additionally, <code>mkinsub()</code> has an argument <code>to</code>, specifying names of
 variables to which a transfer is to be assumed in the model.
 If the argument <code>use_of_ff</code> is set to "min"
 (default) and the model for the compartment is "SFO" or "SFORB", an
-additional <code><a href='mkinsub.html'>mkinsub()</a></code> argument can be <code>sink = FALSE</code>, effectively
-fixing the flux to sink to zero.</p></td>
+additional <code>mkinsub()</code> argument can be <code>sink = FALSE</code>, effectively
+fixing the flux to sink to zero.
+In print.mkinmod, this argument is currently not used.</p></td>
     </tr>
     <tr>
       <th>use_of_ff</th>
       <td><p>Specification of the use of formation fractions in the
-model equations and, if applicable, the coefficient matrix. If "min", a
-minimum use of formation fractions is made in order to avoid fitting the
-product of formation fractions and rate constants. If "max", formation
-fractions are always used.</p></td>
+model equations and, if applicable, the coefficient matrix.  If "max",
+formation fractions are always used (default).  If "min", a minimum use of
+formation fractions is made, i.e. each pathway to a metabolite has its
+own rate constant.</p></td>
     </tr>
     <tr>
       <th>speclist</th>
@@ -200,6 +214,32 @@ argument. Default is NULL.</p></td>
       <th>verbose</th>
       <td><p>If <code>TRUE</code>, passed to <code><a href='https://rdrr.io/pkg/inline/man/cfunction.html'>inline::cfunction()</a></code> if
 applicable to give detailed information about the C function being built.</p></td>
+    </tr>
+    <tr>
+      <th>x</th>
+      <td><p>An <code>mkinmod</code> object.</p></td>
+    </tr>
+    <tr>
+      <th>submodel</th>
+      <td><p>Character vector of length one to specify the submodel type.
+See <code>mkinmod</code> for the list of allowed submodel names.</p></td>
+    </tr>
+    <tr>
+      <th>to</th>
+      <td><p>Vector of the names of the state variable to which a
+transformation shall be included in the model.</p></td>
+    </tr>
+    <tr>
+      <th>sink</th>
+      <td><p>Should a pathway to sink be included in the model in addition to
+the pathways to other state variables?</p></td>
+    </tr>
+    <tr>
+      <th>full_name</th>
+      <td><p>An optional name to be used e.g. for plotting fits
+performed with the model.  You can use non-ASCII characters here, but then
+your R code will not be portable, <em>i.e.</em> may produce unintended plot
+results on other operating systems or system configurations.</p></td>
     </tr>
     </table>
 
@@ -218,6 +258,8 @@ model.</p></dd>
 represented by one.</p></dd>
 <dt>cf</dt><dd><p>If generated, a compiled function calculating the derivatives as
 returned by cfunction.</p></dd>
+
+A list for use with mkinmod.
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
@@ -244,27 +286,36 @@ EC Document Reference Sanco/10058/2005 version 2.0, 434 pp,
 <a href='http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics'>http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics</a></p>
 <p>NAFTA Technical Working Group on Pesticides (not dated) Guidance for
 Evaluating and Calculating Degradation Kinetics in Environmental Media</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Johannes Ranke</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='co'># Specify the SFO model (this is not needed any more, as we can now mkinfit("SFO", ...)</span>
-<span class='no'>SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinmod</span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))
+<span class='va'>SFO</span> <span class='op'>&lt;-</span> <span class='fu'>mkinmod</span><span class='op'>(</span>parent <span class='op'>=</span> <span class='fu'>mkinsub</span><span class='op'>(</span><span class='st'>"SFO"</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># One parent compound, one metabolite, both single first order</span>
-<span class='no'>SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinmod</span>(
-  <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>),
-  <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
+<span class='va'>SFO_SFO</span> <span class='op'>&lt;-</span> <span class='fu'>mkinmod</span><span class='op'>(</span>
+  parent <span class='op'>=</span> <span class='fu'>mkinsub</span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='st'>"m1"</span><span class='op'>)</span>,
+  m1 <span class='op'>=</span> <span class='fu'>mkinsub</span><span class='op'>(</span><span class='st'>"SFO"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
 <span class='co'># \dontrun{</span>
+<span class='co'># Now supplying full names used for plotting</span>
+ <span class='va'>SFO_SFO.2</span> <span class='op'>&lt;-</span> <span class='fu'>mkinmod</span><span class='op'>(</span>
+   parent <span class='op'>=</span> <span class='fu'>mkinsub</span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='st'>"m1"</span>, full_name <span class='op'>=</span> <span class='st'>"Test compound"</span><span class='op'>)</span>,
+   m1 <span class='op'>=</span> <span class='fu'>mkinsub</span><span class='op'>(</span><span class='st'>"SFO"</span>, full_name <span class='op'>=</span> <span class='st'>"Metabolite M1"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
 <span class='co'># The above model used to be specified like this, before the advent of mkinsub()</span>
-<span class='no'>SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinmod</span>(
-  <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"m1"</span>),
-  <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
+<span class='va'>SFO_SFO</span> <span class='op'>&lt;-</span> <span class='fu'>mkinmod</span><span class='op'>(</span>
+  parent <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span>, to <span class='op'>=</span> <span class='st'>"m1"</span><span class='op'>)</span>,
+  m1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
 <span class='co'># Show details of creating the C function</span>
-<span class='no'>SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinmod</span>(
-  <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>),
-  <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>), <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; Compilation argument:
-#&gt;  /usr/lib/R/bin/R CMD SHLIB file306f74383fd2.c 2&gt; file306f74383fd2.c.err.txt 
-#&gt; Program source:
+<span class='va'>SFO_SFO</span> <span class='op'>&lt;-</span> <span class='fu'>mkinmod</span><span class='op'>(</span>
+  parent <span class='op'>=</span> <span class='fu'>mkinsub</span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='st'>"m1"</span><span class='op'>)</span>,
+  m1 <span class='op'>=</span> <span class='fu'>mkinsub</span><span class='op'>(</span><span class='st'>"SFO"</span><span class='op'>)</span>, verbose <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Program source:
 #&gt;   1: #include &lt;R.h&gt;
 #&gt;   2: 
 #&gt;   3: 
@@ -286,7 +337,8 @@ Evaluating and Calculating Degradation Kinetics in Environmental Media</p>
 #&gt;  19: }</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
 <span class='co'># The symbolic solution which is available in this case is not</span>
 <span class='co'># made for human reading but for speed of computation</span>
-<span class='no'>SFO_SFO</span>$<span class='no'>deg_func</span></div><div class='output co'>#&gt; function (observed, odeini, odeparms) 
+<span class='va'>SFO_SFO</span><span class='op'>$</span><span class='va'>deg_func</span>
+</div><div class='output co'>#&gt; function (observed, odeini, odeparms) 
 #&gt; {
 #&gt;     predicted &lt;- numeric(0)
 #&gt;     with(as.list(odeparms), {
@@ -301,19 +353,41 @@ Evaluating and Calculating Degradation Kinetics in Environmental Media</p>
 #&gt;     })
 #&gt;     return(predicted)
 #&gt; }
-#&gt; &lt;environment: 0x55555ad56ea0&gt;</div><div class='input'>
+#&gt; &lt;environment: 0x55555cb0b088&gt;</div><div class='input'>
 <span class='co'># If we have several parallel metabolites</span>
 <span class='co'># (compare tests/testthat/test_synthetic_data_for_UBA_2014.R)</span>
-<span class='no'>m_synth_DFOP_par</span> <span class='kw'>&lt;-</span> <span class='fu'>mkinmod</span>(
- <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"DFOP"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"M1"</span>, <span class='st'>"M2"</span>)),
- <span class='kw'>M1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>),
- <span class='kw'>M2</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>),
- <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='va'>m_synth_DFOP_par</span> <span class='op'>&lt;-</span> <span class='fu'>mkinmod</span><span class='op'>(</span>
+ parent <span class='op'>=</span> <span class='fu'>mkinsub</span><span class='op'>(</span><span class='st'>"DFOP"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"M1"</span>, <span class='st'>"M2"</span><span class='op'>)</span><span class='op'>)</span>,
+ M1 <span class='op'>=</span> <span class='fu'>mkinsub</span><span class='op'>(</span><span class='st'>"SFO"</span><span class='op'>)</span>,
+ M2 <span class='op'>=</span> <span class='fu'>mkinsub</span><span class='op'>(</span><span class='st'>"SFO"</span><span class='op'>)</span>,
+ quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
-<span class='no'>fit_DFOP_par_c</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>m_synth_DFOP_par</span>,
-  <span class='no'>synthetic_data_for_UBA_2014</span><span class='kw'>[[</span><span class='fl'>12</span>]]$<span class='no'>data</span>,
-  <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Shapiro-Wilk test for standardized residuals: p =  0.000174</span></div><div class='input'># }
+<span class='va'>fit_DFOP_par_c</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='va'>m_synth_DFOP_par</span>,
+  <span class='va'>synthetic_data_for_UBA_2014</span><span class='op'>[[</span><span class='fl'>12</span><span class='op'>]</span><span class='op'>]</span><span class='op'>$</span><span class='va'>data</span>,
+  quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='co'># }</span>
 
+
+  <span class='va'>m_synth_SFO_lin</span> <span class='op'>&lt;-</span> <span class='fu'>mkinmod</span><span class='op'>(</span>parent <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span>, to <span class='op'>=</span> <span class='st'>"M1"</span><span class='op'>)</span>,
+                             M1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span>, to <span class='op'>=</span> <span class='st'>"M2"</span><span class='op'>)</span>,
+                             M2 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span><span class='op'>)</span>, use_of_ff <span class='op'>=</span> <span class='st'>"max"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
+  <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>m_synth_SFO_lin</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;mkinmod&gt; model generated with
+#&gt; Use of formation fractions $use_of_ff: max 
+#&gt; Specification $spec:
+#&gt; $parent
+#&gt; $type: SFO; $to: M1; $sink: TRUE
+#&gt; $M1
+#&gt; $type: SFO; $to: M2; $sink: TRUE
+#&gt; $M2
+#&gt; $type: SFO; $sink: TRUE
+#&gt; Coefficient matrix $coefmat available
+#&gt; Compiled model $cf available
+#&gt; Differential equations:
+#&gt; d_parent/dt = - k_parent * parent
+#&gt; d_M1/dt = + f_parent_to_M1 * k_parent * parent - k_M1 * M1
+#&gt; d_M2/dt = + f_M1_to_M2 * k_M1 * M1 - k_M2 * M2</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -330,7 +404,7 @@ Evaluating and Calculating Degradation Kinetics in Environmental Media</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

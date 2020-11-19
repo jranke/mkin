@@ -76,7 +76,7 @@ the fit of at least one model to the same dataset is shown." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.9.50.3</span>
+        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.9.50.4</span>
       </span>
     </div>
 
@@ -124,7 +124,7 @@ the fit of at least one model to the same dataset is shown." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/jranke/mkin/">
+  <a href="https://github.com/jranke/mkin/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -144,31 +144,31 @@ the fit of at least one model to the same dataset is shown." />
     <div class="page-header">
     <h1>Plot model fits (observed and fitted) and the residuals for a row or column
 of an mmkin object</h1>
-    <small class="dont-index">Source: <a href='http://github.com/jranke/mkin/blob/master/R/plot.mmkin.R'><code>R/plot.mmkin.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/jranke/mkin/blob/master/R/plot.mmkin.R'><code>R/plot.mmkin.R</code></a></small>
     <div class="hidden name"><code>plot.mmkin.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>When x is a row selected from an mmkin object (<code><a href='Extract.mmkin.html'>[.mmkin</a></code>), the
+    <p>When x is a row selected from an mmkin object (<code><a href='[.mmkin.html'>[.mmkin</a></code>), the
 same model fitted for at least one dataset is shown. When it is a column,
 the fit of at least one model to the same dataset is shown.</p>
     </div>
 
     <pre class="usage"><span class='co'># S3 method for mmkin</span>
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(
-  <span class='no'>x</span>,
-  <span class='kw'>main</span> <span class='kw'>=</span> <span class='st'>"auto"</span>,
-  <span class='kw'>legends</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>resplot</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"time"</span>, <span class='st'>"errmod"</span>),
-  <span class='kw'>standardized</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>show_errmin</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>errmin_var</span> <span class='kw'>=</span> <span class='st'>"All data"</span>,
-  <span class='kw'>errmin_digits</span> <span class='kw'>=</span> <span class='fl'>3</span>,
-  <span class='kw'>cex</span> <span class='kw'>=</span> <span class='fl'>0.7</span>,
-  <span class='kw'>rel.height.middle</span> <span class='kw'>=</span> <span class='fl'>0.9</span>,
-  <span class='kw'>ymax</span> <span class='kw'>=</span> <span class='st'>"auto"</span>,
-  <span class='no'>...</span>
-)</pre>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  main <span class='op'>=</span> <span class='st'>"auto"</span>,
+  legends <span class='op'>=</span> <span class='fl'>1</span>,
+  resplot <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"time"</span>, <span class='st'>"errmod"</span><span class='op'>)</span>,
+  standardized <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  show_errmin <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  errmin_var <span class='op'>=</span> <span class='st'>"All data"</span>,
+  errmin_digits <span class='op'>=</span> <span class='fl'>3</span>,
+  cex <span class='op'>=</span> <span class='fl'>0.7</span>,
+  rel.height.middle <span class='op'>=</span> <span class='fl'>0.9</span>,
+  ymax <span class='op'>=</span> <span class='st'>"auto"</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -240,21 +240,30 @@ than two rows of plots are shown.</p></td>
 
     <p>If the current plot device is a <code><a href='https://rdrr.io/pkg/tikzDevice/man/tikz.html'>tikz</a></code> device, then
 latex is being used for the formatting of the chi2 error level.</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Johannes Ranke</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
   <span class='co'># \dontrun{</span>
   <span class='co'># Only use one core not to offend CRAN checks</span>
-  <span class='no'>fits</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"FOMC"</span>, <span class='st'>"HS"</span>),
-                <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='st'>"FOCUS B"</span> <span class='kw'>=</span> <span class='no'>FOCUS_2006_B</span>, <span class='st'>"FOCUS C"</span> <span class='kw'>=</span> <span class='no'>FOCUS_2006_C</span>), <span class='co'># named list for titles</span>
-                <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>error_model</span> <span class='kw'>=</span> <span class='st'>"tc"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Optimisation did not converge:</span>
-#&gt; <span class='warning'>iteration limit reached without convergence (10)</span></div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>fits</span>[, <span class='st'>"FOCUS C"</span>])</div><div class='img'><img src='plot.mmkin-1.png' alt='' width='700' height='433' /></div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>fits</span>[<span class='st'>"FOMC"</span>, ])</div><div class='img'><img src='plot.mmkin-2.png' alt='' width='700' height='433' /></div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>fits</span>[<span class='st'>"FOMC"</span>, ], <span class='kw'>show_errmin</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='img'><img src='plot.mmkin-3.png' alt='' width='700' height='433' /></div><div class='input'>
+  <span class='va'>fits</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"FOMC"</span>, <span class='st'>"HS"</span><span class='op'>)</span>,
+                <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"FOCUS B"</span> <span class='op'>=</span> <span class='va'>FOCUS_2006_B</span>, <span class='st'>"FOCUS C"</span> <span class='op'>=</span> <span class='va'>FOCUS_2006_C</span><span class='op'>)</span>, <span class='co'># named list for titles</span>
+                cores <span class='op'>=</span> <span class='fl'>1</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span>, error_model <span class='op'>=</span> <span class='st'>"tc"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Optimisation did not converge:</span>
+#&gt; <span class='warning'>iteration limit reached without convergence (10)</span></div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>fits</span><span class='op'>[</span>, <span class='st'>"FOCUS C"</span><span class='op'>]</span><span class='op'>)</span>
+</div><div class='img'><img src='plot.mmkin-1.png' alt='' width='700' height='433' /></div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>fits</span><span class='op'>[</span><span class='st'>"FOMC"</span>, <span class='op'>]</span><span class='op'>)</span>
+</div><div class='img'><img src='plot.mmkin-2.png' alt='' width='700' height='433' /></div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>fits</span><span class='op'>[</span><span class='st'>"FOMC"</span>, <span class='op'>]</span>, show_errmin <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+</div><div class='img'><img src='plot.mmkin-3.png' alt='' width='700' height='433' /></div><div class='input'>
   <span class='co'># We can also plot a single fit, if we like the way plot.mmkin works, but then the plot</span>
   <span class='co'># height should be smaller than the plot width (this is not possible for the html pages</span>
   <span class='co'># generated by pkgdown, as far as I know).</span>
-  <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>fits</span>[<span class='st'>"FOMC"</span>, <span class='st'>"FOCUS C"</span>]) <span class='co'># same as plot(fits[1, 2])</span></div><div class='img'><img src='plot.mmkin-4.png' alt='' width='700' height='433' /></div><div class='input'>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>fits</span><span class='op'>[</span><span class='st'>"FOMC"</span>, <span class='st'>"FOCUS C"</span><span class='op'>]</span><span class='op'>)</span> <span class='co'># same as plot(fits[1, 2])</span>
+</div><div class='img'><img src='plot.mmkin-4.png' alt='' width='700' height='433' /></div><div class='input'>
   <span class='co'># Show the error models</span>
-  <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>fits</span>[<span class='st'>"FOMC"</span>, ], <span class='kw'>resplot</span> <span class='kw'>=</span> <span class='st'>"errmod"</span>)</div><div class='img'><img src='plot.mmkin-5.png' alt='' width='700' height='433' /></div><div class='input'>  # }
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>fits</span><span class='op'>[</span><span class='st'>"FOMC"</span>, <span class='op'>]</span>, resplot <span class='op'>=</span> <span class='st'>"errmod"</span><span class='op'>)</span>
+</div><div class='img'><img src='plot.mmkin-5.png' alt='' width='700' height='433' /></div><div class='input'>  <span class='co'># }</span>
 
 </div></pre>
   </div>
@@ -272,7 +281,7 @@ latex is being used for the formatting of the chi2 error level.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

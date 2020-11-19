@@ -29,11 +29,12 @@
 #'   (default) and the model for the compartment is "SFO" or "SFORB", an
 #'   additional [mkinsub()] argument can be \code{sink = FALSE}, effectively
 #'   fixing the flux to sink to zero.
+#'   In print.mkinmod, this argument is currently not used.
 #' @param use_of_ff Specification of the use of formation fractions in the
-#'   model equations and, if applicable, the coefficient matrix. If "min", a
-#'   minimum use of formation fractions is made in order to avoid fitting the
-#'   product of formation fractions and rate constants. If "max", formation
-#'   fractions are always used.
+#'   model equations and, if applicable, the coefficient matrix.  If "max",
+#'   formation fractions are always used (default).  If "min", a minimum use of
+#'   formation fractions is made, i.e. each pathway to a metabolite has its
+#'   own rate constant. 
 #' @param speclist The specification of the observed variables and their
 #'   submodel types and pathways can be given as a single list using this
 #'   argument. Default is NULL.
@@ -91,6 +92,11 @@
 #'   m1 = mkinsub("SFO"))
 #'
 #' \dontrun{
+#' # Now supplying full names used for plotting
+#'  SFO_SFO.2 <- mkinmod(
+#'    parent = mkinsub("SFO", "m1", full_name = "Test compound"),
+#'    m1 = mkinsub("SFO", full_name = "Metabolite M1"))
+#'
 #' # The above model used to be specified like this, before the advent of mkinsub()
 #' SFO_SFO <- mkinmod(
 #'   parent = list(type = "SFO", to = "m1"),
@@ -111,7 +117,7 @@
 #'  parent = mkinsub("DFOP", c("M1", "M2")),
 #'  M1 = mkinsub("SFO"),
 #'  M2 = mkinsub("SFO"),
-#'  use_of_ff = "max", quiet = TRUE)
+#'  quiet = TRUE)
 #'
 #' fit_DFOP_par_c <- mkinfit(m_synth_DFOP_par,
 #'   synthetic_data_for_UBA_2014[[12]]$data,
@@ -451,8 +457,8 @@ mkinmod <- function(..., use_of_ff = "max", speclist = NULL, quiet = FALSE, verb
 #' Print mkinmod objects in a way that the user finds his way to get to its
 #' components.
 #'
+#' @rdname mkinmod
 #' @param x An \code{\link{mkinmod}} object.
-#' @param \dots Not used.
 #' @examples
 #'
 #'   m_synth_SFO_lin <- mkinmod(parent = list(type = "SFO", to = "M1"),

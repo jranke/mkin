@@ -60,6 +60,17 @@
 #' # Plotting with mmkin (single brackets, extracting an mmkin object) does not
 #' # allow to plot the observed variables separately
 #' plot(fits.0[1, 1])
+#'
+#' # On Windows, we can use multiple cores by making a cluster using the parallel
+#' # package, which gets loaded with mkin, and passing it to mmkin, e.g.
+#' cl <- makePSOCKcluster(12)
+#' f <- mmkin(c("SFO", "FOMC", "DFOP"),
+#'   list(A = FOCUS_2006_A, B = FOCUS_2006_B, C = FOCUS_2006_C, D = FOCUS_2006_D),
+#'   cluster = cl, quiet = TRUE)
+#' print(f)
+#' # We get false convergence for the FOMC fit to FOCUS_2006_A because this
+#' # dataset is really SFO, and the FOMC fit is overparameterised
+#' stopCluster(cl)
 #' }
 #'
 #' @export mmkin

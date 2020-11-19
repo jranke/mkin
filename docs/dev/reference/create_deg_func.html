@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.9.50.3</span>
+        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.9.50.4</span>
       </span>
     </div>
 
@@ -120,7 +120,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/jranke/mkin/">
+  <a href="https://github.com/jranke/mkin/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -139,7 +139,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Create degradation functions for known analytical solutions</h1>
-    <small class="dont-index">Source: <a href='http://github.com/jranke/mkin/blob/master/R/create_deg_func.R'><code>R/create_deg_func.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/jranke/mkin/blob/master/R/create_deg_func.R'><code>R/create_deg_func.R</code></a></small>
     <div class="hidden name"><code>create_deg_func.Rd</code></div>
     </div>
 
@@ -147,7 +147,7 @@
     <p>Create degradation functions for known analytical solutions</p>
     </div>
 
-    <pre class="usage"><span class='fu'>create_deg_func</span>(<span class='no'>spec</span>, <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"min"</span>, <span class='st'>"max"</span>))</pre>
+    <pre class="usage"><span class='fu'>create_deg_func</span><span class='op'>(</span><span class='va'>spec</span>, use_of_ff <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"min"</span>, <span class='st'>"max"</span><span class='op'>)</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -168,30 +168,36 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='no'>SFO_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(
-  <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"m1"</span>),
-  <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='no'>FOCUS_D</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>FOCUS_2006_D</span>, <span class='no'>value</span> <span class='kw'>!=</span> <span class='fl'>0</span>) <span class='co'># to avoid warnings</span>
-<span class='no'>fit_1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_D</span>, <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"analytical"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Shapiro-Wilk test for standardized residuals: p =  0.0165</span></div><div class='input'><span class='no'>fit_2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_D</span>, <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"deSolve"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Shapiro-Wilk test for standardized residuals: p =  0.0165</span></div><div class='input'><span class='co'># \dontrun{</span>
-<span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/library.html'>require</a></span>(<span class='no'>rbenchmark</span>))
-  <span class='fu'><a href='https://rdrr.io/pkg/rbenchmark/man/benchmark.html'>benchmark</a></span>(
-    <span class='kw'>analytical</span> <span class='kw'>=</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_D</span>, <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"analytical"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>),
-    <span class='kw'>deSolve</span> <span class='kw'>=</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_D</span>, <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"deSolve"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>),
-    <span class='kw'>replications</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='output co'>#&gt; <span class='message'>Loading required package: rbenchmark</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Shapiro-Wilk test for standardized residuals: p =  0.0165</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Shapiro-Wilk test for standardized residuals: p =  0.0165</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Shapiro-Wilk test for standardized residuals: p =  0.0165</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Shapiro-Wilk test for standardized residuals: p =  0.0165</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Shapiro-Wilk test for standardized residuals: p =  0.0165</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Shapiro-Wilk test for standardized residuals: p =  0.0165</span></div><div class='output co'>#&gt;         test replications elapsed relative user.self sys.self user.child
-#&gt; 1 analytical            2   0.423    1.000     0.423        0          0
-#&gt; 2    deSolve            2   0.716    1.693     0.715        0          0
+<span class='va'>SFO_SFO</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span><span class='op'>(</span>
+  parent <span class='op'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='st'>"m1"</span><span class='op'>)</span>,
+  m1 <span class='op'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span><span class='op'>(</span><span class='st'>"SFO"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='va'>FOCUS_D</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>FOCUS_2006_D</span>, <span class='va'>value</span> <span class='op'>!=</span> <span class='fl'>0</span><span class='op'>)</span> <span class='co'># to avoid warnings</span>
+<span class='va'>fit_1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='va'>SFO_SFO</span>, <span class='va'>FOCUS_D</span>, solution_type <span class='op'>=</span> <span class='st'>"analytical"</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='va'>fit_2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='va'>SFO_SFO</span>, <span class='va'>FOCUS_D</span>, solution_type <span class='op'>=</span> <span class='st'>"deSolve"</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='co'># \dontrun{</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>require</a></span><span class='op'>(</span><span class='va'><a href='http://rbenchmark.googlecode.com'>rbenchmark</a></span><span class='op'>)</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/pkg/rbenchmark/man/benchmark.html'>benchmark</a></span><span class='op'>(</span>
+    analytical <span class='op'>=</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='va'>SFO_SFO</span>, <span class='va'>FOCUS_D</span>, solution_type <span class='op'>=</span> <span class='st'>"analytical"</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,
+    deSolve <span class='op'>=</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='va'>SFO_SFO</span>, <span class='va'>FOCUS_D</span>, solution_type <span class='op'>=</span> <span class='st'>"deSolve"</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,
+    replications <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Loading required package: rbenchmark</span></div><div class='output co'>#&gt;         test replications elapsed relative user.self sys.self user.child
+#&gt; 1 analytical            2   0.397    1.000     0.397    0.001          0
+#&gt; 2    deSolve            2   0.684    1.723     0.683    0.000          0
 #&gt;   sys.child
 #&gt; 1         0
-#&gt; 2         0</div><div class='input'>  <span class='no'>DFOP_SFO</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(
-    <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"DFOP"</span>, <span class='st'>"m1"</span>),
-    <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>))</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>  <span class='fu'><a href='https://rdrr.io/pkg/rbenchmark/man/benchmark.html'>benchmark</a></span>(
-    <span class='kw'>analytical</span> <span class='kw'>=</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>DFOP_SFO</span>, <span class='no'>FOCUS_D</span>, <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"analytical"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>),
-    <span class='kw'>deSolve</span> <span class='kw'>=</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>DFOP_SFO</span>, <span class='no'>FOCUS_D</span>, <span class='kw'>solution_type</span> <span class='kw'>=</span> <span class='st'>"deSolve"</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>),
-    <span class='kw'>replications</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='output co'>#&gt;         test replications elapsed relative user.self sys.self user.child
-#&gt; 1 analytical            2   0.910    1.000     0.909        0          0
-#&gt; 2    deSolve            2   1.734    1.905     1.733        0          0
+#&gt; 2         0</div><div class='input'>  <span class='va'>DFOP_SFO</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span><span class='op'>(</span>
+    parent <span class='op'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span><span class='op'>(</span><span class='st'>"DFOP"</span>, <span class='st'>"m1"</span><span class='op'>)</span>,
+    m1 <span class='op'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span><span class='op'>(</span><span class='st'>"SFO"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>  <span class='fu'><a href='https://rdrr.io/pkg/rbenchmark/man/benchmark.html'>benchmark</a></span><span class='op'>(</span>
+    analytical <span class='op'>=</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='va'>DFOP_SFO</span>, <span class='va'>FOCUS_D</span>, solution_type <span class='op'>=</span> <span class='st'>"analytical"</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,
+    deSolve <span class='op'>=</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='va'>DFOP_SFO</span>, <span class='va'>FOCUS_D</span>, solution_type <span class='op'>=</span> <span class='st'>"deSolve"</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,
+    replications <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;         test replications elapsed relative user.self sys.self user.child
+#&gt; 1 analytical            2   0.834    1.000     0.833    0.001          0
+#&gt; 2    deSolve            2   1.545    1.853     1.541    0.001          0
 #&gt;   sys.child
 #&gt; 1         0
-#&gt; 2         0</div><div class='input'># }
+#&gt; 2         0</div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -208,7 +214,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
