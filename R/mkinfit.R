@@ -479,6 +479,10 @@ mkinfit <- function(mkinmod, observed,
       solution_type = "analytical"
     } else {
       if (!is.null(mkinmod$cf) & use_compiled[1] != FALSE) {
+        try_dynlib <- try(inline::getDynLib(mkinmod$cf)[["path"]])
+        if (inherits(try_dynlib, "try-error")) {
+          mkinmod$cf <- inline::readDynLib(mkinmod$cf_name, mkinmod$cf_dir)
+        }
         solution_type = "deSolve"
       } else {
         if (is.matrix(mkinmod$coefmat)) {

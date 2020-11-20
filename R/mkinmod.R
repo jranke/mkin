@@ -11,7 +11,6 @@
 #' of the system of differential equations is included in the resulting
 #' mkinmod object in some cases, speeding up the solution.
 #'
-#' If a C compiler is found by [pkgbuild::has_compiler()] and there
 #' is more than one observed variable in the specification, C code is generated
 #' for evaluating the differential equations, compiled using
 #' [inline::cfunction()] and added to the resulting mkinmod object.
@@ -34,16 +33,17 @@
 #'   model equations and, if applicable, the coefficient matrix.  If "max",
 #'   formation fractions are always used (default).  If "min", a minimum use of
 #'   formation fractions is made, i.e. each pathway to a metabolite has its
-#'   own rate constant. 
+#'   own rate constant.
+#' @param name A name for the model. Should be a valid R object name.
 #' @param speclist The specification of the observed variables and their
 #'   submodel types and pathways can be given as a single list using this
 #'   argument. Default is NULL.
 #' @param quiet Should messages be suppressed?
 #' @param verbose If \code{TRUE}, passed to [inline::cfunction()] if
 #'   applicable to give detailed information about the C function being built.
+#' @param cf_dir Directory where CFunc objects should be saved. Specifying
+#'   'cf_dir' without specifying a 'name' for the object is an error.
 #' @importFrom methods signature
-#' @importFrom pkgbuild has_compiler
-#' @importFrom inline cfunction
 #' @return A list of class \code{mkinmod} for use with [mkinfit()],
 #'   containing, among others,
 #'   \item{diffs}{
@@ -90,17 +90,17 @@
 #' SFO_SFO <- mkinmod(
 #'   parent = mkinsub("SFO", "m1"),
 #'   m1 = mkinsub("SFO"))
+#' print(SFO_SFO)
 #'
 #' \dontrun{
-#' # Now supplying full names used for plotting
+#'  fit_sfo_sfo <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE, solution_type = "deSolve")
+#'
+#'  # Now supplying full names used for plotting, and write to user defined location
 #'  SFO_SFO.2 <- mkinmod(
 #'    parent = mkinsub("SFO", "m1", full_name = "Test compound"),
-#'    m1 = mkinsub("SFO", full_name = "Metabolite M1"))
-#'
-#' # The above model used to be specified like this, before the advent of mkinsub()
-#' SFO_SFO <- mkinmod(
-#'   parent = list(type = "SFO", to = "m1"),
-#'   m1 = list(type = "SFO"))
+#'    m1 = mkinsub("SFO", full_name = "Metabolite M1"),
+#'    name = "SFOSFO", cf_dir = tempdir())
+#' fit_sfo_sfo <- mkinfit(SFO_SFO.2, FOCUS_2006_D, quiet = TRUE, solution_type = "deSolve")
 #'
 #' # Show details of creating the C function
 #' SFO_SFO <- mkinmod(
@@ -125,11 +125,17 @@
 #' }
 #'
 #' @export mkinmod
-mkinmod <- function(..., use_of_ff = "max", speclist = NULL, quiet = FALSE, verbose = FALSE)
+mkinmod <- function(..., use_of_ff = "max", name = NULL,
+  speclist = NULL, quiet = FALSE, verbose = FALSE, cf_dir = NULL)
 {
   if (is.null(speclist)) spec <- list(...)
   else spec <- speclist
   obs_vars <- names(spec)
+
+  if (!is.null(cf_dir)) {
+    if (!dir.exists(cf_dir)) stop(cf_dir, " does not exist")
+    if (is.null(name)) stop("You must give a name if you want to use 'cf_dir'")
+  }
 
   # Check if any of the names of the observed variables contains any other
   for (obs_var in obs_vars) {
@@ -372,7 +378,7 @@ mkinmod <- function(..., use_of_ff = "max", speclist = NULL, quiet = FALSE, verb
 
   # Try to create a function compiled from C code if there is more than one observed variable {{{
   # and a compiler is available
-  if (length(obs_vars) > 1 & has_compiler()) {
+  if (length(obs_vars) > 1 & pkgbuild::has_compiler()) {
 
     # Translate the R code for the derivatives to C code
     diffs.C <- paste(diffs, collapse = ";\n")
@@ -432,15 +438,27 @@ mkinmod <- function(..., use_of_ff = "max", speclist = NULL, quiet = FALSE, verb
       "}\n\n")
 
     # Try to build a shared library
-    cf <- try(cfunction(list(func = derivs_sig), derivs_code,
-                        otherdefs = initpar_code,
-                        verbose = verbose,
-                        convention = ".C", language = "C"),
-              silent = TRUE)
+    cf <- try(inline::cfunction(derivs_sig, derivs_code,
+      otherdefs = initpar_code,
+      verbose = verbose,
+      convention = ".C", language = "C"),
+      silent = TRUE)
 
     if (!inherits(cf, "try-error")) {
-      if (!quiet) message("Successfully compiled differential equation model from auto-generated C code.")
-      model$cf <- cf
+      if (is.null(cf_dir)) {
+        model$cf <- cf
+        if (!quiet) message("Temporary DLL for differentials generated and loaded")
+      } else {
+        cf_file <- inline::writeDynLib(cf, name, cf_dir)
+        model$cf <- inline::readDynLib(name, cf_dir)
+        model$cf_name <- name
+        model$cf_dir <- cf_dir
+        fileDLL <- inline::getDynLib(model$cf)[["path"]]
+        if (!quiet) {
+          message("CFunc object written to ", cf_file)
+          message("DLL written to ", fileDLL)
+        }
+      }
     }
   }
   # }}}
@@ -459,14 +477,6 @@ mkinmod <- function(..., use_of_ff = "max", speclist = NULL, quiet = FALSE, verb
 #'
 #' @rdname mkinmod
 #' @param x An \code{\link{mkinmod}} object.
-#' @examples
-#'
-#'   m_synth_SFO_lin <- mkinmod(parent = list(type = "SFO", to = "M1"),
-#'                              M1 = list(type = "SFO", to = "M2"),
-#'                              M2 = list(type = "SFO"), use_of_ff = "max")
-#'
-#'   print(m_synth_SFO_lin)
-#'
 #' @export
 print.mkinmod <- function(x, ...) {
   cat("<mkinmod> model generated with\n")
