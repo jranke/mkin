@@ -25,6 +25,7 @@
 #'     deSolve = mkinfit(DFOP_SFO, FOCUS_D, solution_type = "deSolve", quiet = TRUE),
 #'     replications = 2)
 #' }
+#' @export
 create_deg_func <- function(spec, use_of_ff = c("min", "max")) {
 
   use_of_ff <- match.arg(use_of_ff)
