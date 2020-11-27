@@ -38,7 +38,6 @@
 #' @param \dots Further arguments passed to the ode solver in case such a
 #'   solver is used.
 #' @import deSolve
-#' @importFrom inline getDynLib
 #' @return A matrix with the numeric solution in wide format
 #' @author Johannes Ranke
 #' @examples
@@ -117,7 +116,7 @@ mkinpredict.mkinmod <- function(x,
   solution_type = "deSolve",
   use_compiled = "auto",
   method.ode = "lsoda", atol = 1e-8, rtol = 1e-10,
-  map_output = TRUE, 
+  map_output = TRUE,
   na_stop = TRUE,
   ...)
 {
@@ -170,12 +169,13 @@ mkinpredict.mkinmod <- function(x,
 
   if (solution_type == "deSolve") {
     if (!is.null(x$cf) & use_compiled[1] != FALSE) {
-      out <- ode(
+
+      out <- deSolve::ode(
         y = odeini,
         times = outtimes,
-        func = "func",
+        func = "diffs",
         initfunc = "initpar",
-        dllname = getDynLib(x$cf)[["name"]],
+        dllname = inline::getDynLib(x$cf)[["name"]],
         parms = odeparms[x$parms], # Order matters when using compiled models
         method = method.ode,
         atol = atol,
@@ -195,7 +195,7 @@ mkinpredict.mkinmod <- function(x,
         }
         return(list(c(diffs)))
       }
-      out <- ode(
+      out <- deSolve::ode(
         y = odeini,
         times = outtimes,
         func = mkindiff,

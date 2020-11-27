@@ -9,9 +9,13 @@
 mkinmod(
   ...,
   use_of_ff = "max",
+  name = NULL,
   speclist = NULL,
   quiet = FALSE,
-  verbose = FALSE
+  verbose = FALSE,
+  dll_dir = NULL,
+  unload = FALSE,
+  overwrite = FALSE
 )
 
 \method{print}{mkinmod}(x, ...)
@@ -40,6 +44,8 @@ formation fractions are always used (default).  If "min", a minimum use of
 formation fractions is made, i.e. each pathway to a metabolite has its
 own rate constant.}
 
+\item{name}{A name for the model. Should be a valid R object name.}
+
 \item{speclist}{The specification of the observed variables and their
 submodel types and pathways can be given as a single list using this
 argument. Default is NULL.}
@@ -48,6 +54,17 @@ argument. Default is NULL.}
 
 \item{verbose}{If \code{TRUE}, passed to \code{\link[inline:cfunction]{inline::cfunction()}} if
 applicable to give detailed information about the C function being built.}
+
+\item{dll_dir}{Directory where an DLL object, if generated internally by
+\code{\link[inline:cfunction]{inline::cfunction()}}, should be saved.  The DLL will only be stored in a
+permanent location for use in future sessions, if 'dll_dir' and 'name'
+are specified.}
+
+\item{unload}{If a DLL from the target location in 'dll_dir' is already
+loaded, should that be unloaded first?}
+
+\item{overwrite}{If a file exists at the target DLL location in 'dll_dir',
+should this be overwritten?}
 
 \item{x}{An \code{\link{mkinmod}} object.}
 
@@ -132,17 +149,21 @@ SFO <- mkinmod(parent = mkinsub("SFO"))
 SFO_SFO <- mkinmod(
   parent = mkinsub("SFO", "m1"),
   m1 = mkinsub("SFO"))
+print(SFO_SFO)
 
 \dontrun{
-# Now supplying full names used for plotting
+ fit_sfo_sfo <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE, solution_type = "deSolve")
+
+ # Now supplying compound names used for plotting, and write to user defined location
  SFO_SFO.2 <- mkinmod(
    parent = mkinsub("SFO", "m1", full_name = "Test compound"),
-   m1 = mkinsub("SFO", full_name = "Metabolite M1"))
-
-# The above model used to be specified like this, before the advent of mkinsub()
-SFO_SFO <- mkinmod(
-  parent = list(type = "SFO", to = "m1"),
-  m1 = list(type = "SFO"))
+   m1 = mkinsub("SFO", full_name = "Metabolite M1"),
+   name = "SFO_SFO", dll_dir = "~/dll", unload = TRUE, overwrite = TRUE)
+# Now we can save the model and restore it in a new session
+saveRDS(SFO_SFO.2, file = "~/SFO_SFO.rds")
+# Terminate the R session here if you would like to check, and then do
+SFO_SFO.3 <- readRDS("~/SFO_SFO.rds")
+fit_sfo_sfo <- mkinfit(SFO_SFO.3, FOCUS_2006_D, quiet = TRUE, solution_type = "deSolve")
 
 # Show details of creating the C function
 SFO_SFO <- mkinmod(
@@ -165,13 +186,6 @@ fit_DFOP_par_c <- mkinfit(m_synth_DFOP_par,
   synthetic_data_for_UBA_2014[[12]]$data,
   quiet = TRUE)
 }
-
-
-  m_synth_SFO_lin <- mkinmod(parent = list(type = "SFO", to = "M1"),
-                             M1 = list(type = "SFO", to = "M2"),
-                             M2 = list(type = "SFO"), use_of_ff = "max")
-
-  print(m_synth_SFO_lin)
 
 }
 \references{
