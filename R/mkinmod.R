@@ -11,6 +11,7 @@
 #' of the system of differential equations is included in the resulting
 #' mkinmod object in some cases, speeding up the solution.
 #'
+#' If a C compiler is found by [pkgbuild::has_compiler()] and there
 #' is more than one observed variable in the specification, C code is generated
 #' for evaluating the differential equations, compiled using
 #' [inline::cfunction()] and added to the resulting mkinmod object.
@@ -34,15 +35,21 @@
 #'   formation fractions are always used (default).  If "min", a minimum use of
 #'   formation fractions is made, i.e. each pathway to a metabolite has its
 #'   own rate constant.
-#' @param name A name for the model. Should be a valid R object name.
 #' @param speclist The specification of the observed variables and their
 #'   submodel types and pathways can be given as a single list using this
 #'   argument. Default is NULL.
 #' @param quiet Should messages be suppressed?
 #' @param verbose If \code{TRUE}, passed to [inline::cfunction()] if
 #'   applicable to give detailed information about the C function being built.
-#' @param cf_dir Directory where CFunc objects should be saved. Specifying
-#'   'cf_dir' without specifying a 'name' for the object is an error.
+#' @param name A name for the model. Should be a valid R object name.
+#' @param dll_dir Directory where an DLL object, if generated internally by
+#'   [inline::cfunction()], should be saved.  The DLL will only be stored in a
+#'   permanent location for use in future sessions, if 'dll_dir' and 'name'
+#'   are specified.
+#' @param unload If a DLL from the target location in 'dll_dir' is already
+#'   loaded, should that be unloaded first?
+#' @param overwrite If a file exists at the target DLL location in 'dll_dir',
+#'   should this be overwritten?
 #' @importFrom methods signature
 #' @return A list of class \code{mkinmod} for use with [mkinfit()],
 #'   containing, among others,
@@ -95,12 +102,20 @@
 #' \dontrun{
 #'  fit_sfo_sfo <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE, solution_type = "deSolve")
 #'
-#'  # Now supplying full names used for plotting, and write to user defined location
+#'  # Now supplying compound names used for plotting, and write to user defined location
+#'  # We need to choose a path outside the session tempdir because this gets removed
+#'  DLL_dir <- "~/.local/share/mkin"
+#'  if (!dir.exists(DLL_dir)) dir.create(DLL_dir)
 #'  SFO_SFO.2 <- mkinmod(
 #'    parent = mkinsub("SFO", "m1", full_name = "Test compound"),
 #'    m1 = mkinsub("SFO", full_name = "Metabolite M1"),
-#'    name = "SFOSFO", cf_dir = tempdir())
-#' fit_sfo_sfo <- mkinfit(SFO_SFO.2, FOCUS_2006_D, quiet = TRUE, solution_type = "deSolve")
+#'    name = "SFO_SFO", dll_dir = DLL_dir, unload = TRUE, overwrite = TRUE)
+#' # Now we can save the model and restore it in a new session
+#' saveRDS(SFO_SFO.2, file = "~/SFO_SFO.rds")
+#' # Terminate the R session here if you would like to check, and then do
+#' library(mkin)
+#' SFO_SFO.3 <- readRDS("~/SFO_SFO.rds")
+#' fit_sfo_sfo <- mkinfit(SFO_SFO.3, FOCUS_2006_D, quiet = TRUE, solution_type = "deSolve")
 #'
 #' # Show details of creating the C function
 #' SFO_SFO <- mkinmod(
@@ -126,15 +141,17 @@
 #'
 #' @export mkinmod
 mkinmod <- function(..., use_of_ff = "max", name = NULL,
-  speclist = NULL, quiet = FALSE, verbose = FALSE, cf_dir = NULL)
+  speclist = NULL, quiet = FALSE, verbose = FALSE, dll_dir = NULL,
+  unload = FALSE, overwrite = FALSE)
 {
   if (is.null(speclist)) spec <- list(...)
   else spec <- speclist
   obs_vars <- names(spec)
 
-  if (!is.null(cf_dir)) {
-    if (!dir.exists(cf_dir)) stop(cf_dir, " does not exist")
-    if (is.null(name)) stop("You must give a name if you want to use 'cf_dir'")
+  save_msg <- "You need to specify both 'name' and 'dll_dir' to save a model DLL"
+  if (!is.null(dll_dir)) {
+    if (!dir.exists(dll_dir)) stop(dll_dir, " does not exist")
+    if (is.null(name)) stop(save_msg)
   }
 
   # Check if any of the names of the observed variables contains any other
@@ -310,7 +327,7 @@ mkinmod <- function(..., use_of_ff = "max", name = NULL,
     } #}}}
   } #}}}
 
-  model <- list(diffs = diffs, parms = parms, map = map, spec = spec, use_of_ff = use_of_ff)
+  model <- list(diffs = diffs, parms = parms, map = map, spec = spec, use_of_ff = use_of_ff, name = name)
 
   # Create coefficient matrix if possible #{{{
   if (mat) {
@@ -438,26 +455,19 @@ mkinmod <- function(..., use_of_ff = "max", name = NULL,
       "}\n\n")
 
     # Try to build a shared library
-    cf <- try(inline::cfunction(derivs_sig, derivs_code,
+    model$cf <- try(inline::cfunction(derivs_sig, derivs_code,
       otherdefs = initpar_code,
-      verbose = verbose,
+      verbose = verbose, name = "diffs",
       convention = ".C", language = "C"),
       silent = TRUE)
 
-    if (!inherits(cf, "try-error")) {
-      if (is.null(cf_dir)) {
-        model$cf <- cf
+    if (!inherits(model$cf, "try-error")) {
+      if (is.null(dll_dir)) {
         if (!quiet) message("Temporary DLL for differentials generated and loaded")
+        dll_info <- inline::getDynLib(model$cf)
       } else {
-        cf_file <- inline::writeDynLib(cf, name, cf_dir)
-        model$cf <- inline::readDynLib(name, cf_dir)
-        model$cf_name <- name
-        model$cf_dir <- cf_dir
-        fileDLL <- inline::getDynLib(model$cf)[["path"]]
-        if (!quiet) {
-          message("CFunc object written to ", cf_file)
-          message("DLL written to ", fileDLL)
-        }
+        dll_info <- inline::moveDLL(model$cf, name, dll_dir,
+          unload = unload, overwrite = overwrite, verbose = !quiet)
       }
     }
   }

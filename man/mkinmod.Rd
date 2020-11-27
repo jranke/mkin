@@ -13,7 +13,9 @@ mkinmod(
   speclist = NULL,
   quiet = FALSE,
   verbose = FALSE,
-  cf_dir = NULL
+  dll_dir = NULL,
+  unload = FALSE,
+  overwrite = FALSE
 )
 
 \method{print}{mkinmod}(x, ...)
@@ -53,8 +55,16 @@ argument. Default is NULL.}
 \item{verbose}{If \code{TRUE}, passed to \code{\link[inline:cfunction]{inline::cfunction()}} if
 applicable to give detailed information about the C function being built.}
 
-\item{cf_dir}{Directory where CFunc objects should be saved. Specifying
-'cf_dir' without specifying a 'name' for the object is an error.}
+\item{dll_dir}{Directory where an DLL object, if generated internally by
+\code{\link[inline:cfunction]{inline::cfunction()}}, should be saved.  The DLL will only be stored in a
+permanent location for use in future sessions, if 'dll_dir' and 'name'
+are specified.}
+
+\item{unload}{If a DLL from the target location in 'dll_dir' is already
+loaded, should that be unloaded first?}
+
+\item{overwrite}{If a file exists at the target DLL location in 'dll_dir',
+should this be overwritten?}
 
 \item{x}{An \code{\link{mkinmod}} object.}
 
@@ -120,6 +130,7 @@ For kinetic models with more than one observed variable, a symbolic solution
 of the system of differential equations is included in the resulting
 mkinmod object in some cases, speeding up the solution.
 
+If a C compiler is found by \code{\link[pkgbuild:has_compiler]{pkgbuild::has_compiler()}} and there
 is more than one observed variable in the specification, C code is generated
 for evaluating the differential equations, compiled using
 \code{\link[inline:cfunction]{inline::cfunction()}} and added to the resulting mkinmod object.
@@ -143,12 +154,16 @@ print(SFO_SFO)
 \dontrun{
  fit_sfo_sfo <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE, solution_type = "deSolve")
 
- # Now supplying full names used for plotting, and write to user defined location
+ # Now supplying compound names used for plotting, and write to user defined location
  SFO_SFO.2 <- mkinmod(
    parent = mkinsub("SFO", "m1", full_name = "Test compound"),
    m1 = mkinsub("SFO", full_name = "Metabolite M1"),
-   name = "SFOSFO", cf_dir = tempdir())
-fit_sfo_sfo <- mkinfit(SFO_SFO.2, FOCUS_2006_D, quiet = TRUE, solution_type = "deSolve")
+   name = "SFO_SFO", dll_dir = "~/dll", unload = TRUE, overwrite = TRUE)
+# Now we can save the model and restore it in a new session
+saveRDS(SFO_SFO.2, file = "~/SFO_SFO.rds")
+# Terminate the R session here if you would like to check, and then do
+SFO_SFO.3 <- readRDS("~/SFO_SFO.rds")
+fit_sfo_sfo <- mkinfit(SFO_SFO.3, FOCUS_2006_D, quiet = TRUE, solution_type = "deSolve")
 
 # Show details of creating the C function
 SFO_SFO <- mkinmod(

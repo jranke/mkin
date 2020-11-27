@@ -169,18 +169,13 @@ mkinpredict.mkinmod <- function(x,
 
   if (solution_type == "deSolve") {
     if (!is.null(x$cf) & use_compiled[1] != FALSE) {
-      DLL <- try(inline::getDynLib(x$cf))
-      if (inherits(DLL, "try-error")) {
-        x$cf <- inline::readDynLib(x$cf_name, x$cf_dir)
-      }
-      cf_env <- environment(x$cf)
 
       out <- deSolve::ode(
         y = odeini,
         times = outtimes,
-        func = cf_env$name,
+        func = "diffs",
         initfunc = "initpar",
-        dllname = cf_env$f,
+        dllname = inline::getDynLib(x$cf)[["name"]],
         parms = odeparms[x$parms], # Order matters when using compiled models
         method = method.ode,
         atol = atol,
