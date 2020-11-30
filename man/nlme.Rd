@@ -78,7 +78,6 @@ plot(augPred(m_nlme, level = 0:1), layout = c(3, 1))
 # The procedure is greatly simplified by the nlme.mmkin function
 f_nlme <- nlme(f)
 plot(f_nlme)
-
 }
 \seealso{
 \code{\link{nlme.mmkin}}

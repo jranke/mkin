@@ -155,13 +155,17 @@ print(SFO_SFO)
  fit_sfo_sfo <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE, solution_type = "deSolve")
 
  # Now supplying compound names used for plotting, and write to user defined location
+ # We need to choose a path outside the session tempdir because this gets removed
+ DLL_dir <- "~/.local/share/mkin"
+ if (!dir.exists(DLL_dir)) dir.create(DLL_dir)
  SFO_SFO.2 <- mkinmod(
    parent = mkinsub("SFO", "m1", full_name = "Test compound"),
    m1 = mkinsub("SFO", full_name = "Metabolite M1"),
-   name = "SFO_SFO", dll_dir = "~/dll", unload = TRUE, overwrite = TRUE)
+   name = "SFO_SFO", dll_dir = DLL_dir, unload = TRUE, overwrite = TRUE)
 # Now we can save the model and restore it in a new session
 saveRDS(SFO_SFO.2, file = "~/SFO_SFO.rds")
 # Terminate the R session here if you would like to check, and then do
+library(mkin)
 SFO_SFO.3 <- readRDS("~/SFO_SFO.rds")
 fit_sfo_sfo <- mkinfit(SFO_SFO.3, FOCUS_2006_D, quiet = TRUE, solution_type = "deSolve")
 

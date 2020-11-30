@@ -56,15 +56,15 @@ get_deg_func <- function() {
 #' f <- mmkin(c("SFO", "DFOP"), ds, quiet = TRUE, cores = 1)
 #' library(nlme)
 #' f_nlme_sfo <- nlme(f["SFO", ])
-#' f_nlme_dfop <- nlme(f["DFOP", ])
-#' AIC(f_nlme_sfo, f_nlme_dfop)
-#' print(f_nlme_dfop)
-#' plot(f_nlme_dfop)
-#' endpoints(f_nlme_dfop)
 #'
 #' \dontrun{
-#'   f_nlme_2 <- nlme(f["SFO", ], start = c(parent_0 = 100, log_k_parent = 0.1))
-#'   update(f_nlme_2, random = parent_0 ~ 1)
+#'
+#'   f_nlme_dfop <- nlme(f["DFOP", ])
+#'   anova(f_nlme_sfo, f_nlme_dfop)
+#'   print(f_nlme_dfop)
+#'   plot(f_nlme_dfop)
+#'   endpoints(f_nlme_dfop)
+#'
 #'   ds_2 <- lapply(experimental_data_for_UBA_2019[6:10],
 #'    function(x) x$data[c("name", "time", "value")])
 #'   m_sfo_sfo <- mkinmod(parent = mkinsub("SFO", "A1"),
@@ -82,14 +82,15 @@ get_deg_func <- function() {
 #'   f_nlme_sfo_sfo <- nlme(f_2["SFO-SFO", ])
 #'   plot(f_nlme_sfo_sfo)
 #'
-#'   # With formation fractions
-#'   f_nlme_sfo_sfo_ff <- nlme(f_2["SFO-SFO-ff", ])
-#'   plot(f_nlme_sfo_sfo_ff)
+#'   # With formation fractions this does not coverge with defaults
+#'   # f_nlme_sfo_sfo_ff <- nlme(f_2["SFO-SFO-ff", ])
+#'   #plot(f_nlme_sfo_sfo_ff)
 #'
-#'   # For the following fit we need to increase pnlsMaxIter and the tolerance
-#'   # to get convergence
-#'   f_nlme_dfop_sfo <- nlme(f_2["DFOP-SFO", ],
-#'     control = list(pnlsMaxIter = 120, tolerance = 5e-4), verbose = TRUE)
+#'   # With the log-Cholesky parameterization, this converges in 11
+#'   # iterations and around 100 seconds, but without tweaking control
+#'   # parameters (with pdDiag, increasing the tolerance and pnlsMaxIter was
+#'   # necessary)
+#'   f_nlme_dfop_sfo <- nlme(f_2["DFOP-SFO", ])
 #'
 #'   plot(f_nlme_dfop_sfo)
 #'
@@ -114,10 +115,18 @@ get_deg_func <- function() {
 #'     ds_2, quiet = TRUE, error_model = "obs")
 #'   f_nlme_sfo_sfo_obs <- nlme(f_2_obs["SFO-SFO", ])
 #'   print(f_nlme_sfo_sfo_obs)
-#'   # The same with DFOP-SFO does not converge, apparently the variances of
-#'   # parent and A1 are too similar in this case, so that the model is
-#'   # overparameterised
-#'   #f_nlme_dfop_sfo_obs <- nlme(f_2_obs["DFOP-SFO", ], control = list(maxIter = 100))
+#'   f_nlme_dfop_sfo_obs <- nlme(f_2_obs["DFOP-SFO", ])
+#'
+#'   f_2_tc <- mmkin(list("SFO-SFO" = m_sfo_sfo,
+#'    "DFOP-SFO" = m_dfop_sfo),
+#'     ds_2, quiet = TRUE, error_model = "tc")
+#'   # f_nlme_sfo_sfo_tc <- nlme(f_2_tc["SFO-SFO", ]) # stops with error message
+#'   f_nlme_dfop_sfo_tc <- nlme(f_2_tc["DFOP-SFO", ])
+#'   # We get warnings about false convergence in the LME step in several iterations
+#'   # but as the last such warning occurs in iteration 25 and we have 28 iterations
+#'   # we can ignore these
+#'   anova(f_nlme_dfop_sfo, f_nlme_dfop_sfo_obs, f_nlme_dfop_sfo_tc)
+#'
 #' }
 nlme.mmkin <- function(model, data = sys.frame(sys.parent()),
   fixed, random = fixed,
@@ -160,7 +169,7 @@ nlme.mmkin <- function(model, data = sys.frame(sys.parent()),
                                  eval(parse(text = paste(el, 1, sep = "~"))))
 
   if (missing(random)) {
-    thisCall[["random"]] <- pdDiag(thisCall[["fixed"]])
+    thisCall[["random"]] <- pdLogChol(thisCall[["fixed"]])
   }
 
   error_model <- model[[1]]$err_mod

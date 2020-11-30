@@ -54,7 +54,6 @@
 #' # The procedure is greatly simplified by the nlme.mmkin function
 #' f_nlme <- nlme(f)
 #' plot(f_nlme)
-#'
 #' @return A function that can be used with nlme
 #' @export
 nlme_function <- function(object) {

@@ -38,24 +38,27 @@ test_that("nlme_function works correctly", {
   m_nlme_raw <- nlme(value ~ SSasymp(time, 0, parent_0, log_k_parent_sink),
     data = grouped_data,
     fixed = parent_0 + log_k_parent_sink ~ 1,
-    random = pdDiag(parent_0 + log_k_parent_sink ~ 1),
-    start = mean_dp)
+    random = pdLogChol(parent_0 + log_k_parent_sink ~ 1),
+    start = mean_dp,
+    control = list("msWarnNoConv" = FALSE))
 
   m_nlme_mkin <- nlme(value ~ nlme_f(name, time, parent_0, log_k_parent_sink),
     data = grouped_data,
     fixed = parent_0 + log_k_parent_sink ~ 1,
-    random = pdDiag(parent_0 + log_k_parent_sink ~ 1),
-    start = mean_dp)
+    random = pdLogChol(parent_0 + log_k_parent_sink ~ 1),
+    start = mean_dp,
+    control = list("msWarnNoConv" = FALSE))
 
   expect_equal(m_nlme_raw$coefficients, m_nlme_mkin$coefficients)
 
-  m_nlme_mmkin <- nlme(f)
+  m_nlme_mmkin <- nlme(f, control = list("msWarnNoConv" = FALSE))
 
   m_nlme_raw_2 <- nlme(value ~ SSasymp(time, 0, parent_0, log_k_parent),
     data = grouped_data,
     fixed = parent_0 + log_k_parent ~ 1,
-    random = pdDiag(parent_0 + log_k_parent ~ 1),
-    start = mean_degparms(f, random = TRUE))
+    random = pdLogChol(parent_0 + log_k_parent ~ 1),
+    start = mean_degparms(f, random = TRUE),
+    control = list("msWarnNoConv" = FALSE))
 
   expect_equal(m_nlme_raw_2$coefficients, m_nlme_mmkin$coefficients)
 
@@ -84,8 +87,7 @@ test_that("nlme_function works correctly", {
   m_nlme_mkin_up_2 <- update(m_nlme_mkin, random = parent_0 ~ 1)
   expect_equal(m_nlme_raw_up_2$coefficients, m_nlme_mkin_up_2$coefficients)
 
-  expect_silent(tmp <- update(m_nlme_mkin))
-  expect_silent(tmp <- update(m_nlme_mmkin))
+  expect_warning(tmp <- update(m_nlme_mmkin), "Iteration 1, LME step")
 
   geomean_dt50_mmkin <- exp(mean(log((sapply(f, function(x) endpoints(x)$distimes["parent", "DT50"])))))
   expect_equal(round(endpoints(m_nlme_mmkin)$distimes["parent", "DT50"]), round(geomean_dt50_mmkin))

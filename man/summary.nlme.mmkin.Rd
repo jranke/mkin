@@ -80,6 +80,7 @@ pred_sfo <- function(k) {
 ds_sfo_mean <- lapply(k_in, pred_sfo)
 names(ds_sfo_mean) <- paste("ds", 1:5)
 
+set.seed(12345)
 ds_sfo_syn <- lapply(ds_sfo_mean, function(ds) {
   add_err(ds,
     sdfunc = function(value) sqrt(1^2 + value^2 * 0.07^2),
