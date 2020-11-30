@@ -74,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.9.50.3</span>
+        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.9.50.4</span>
       </span>
     </div>
 
@@ -122,7 +122,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/jranke/mkin/">
+  <a href="https://github.com/jranke/mkin/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -151,12 +151,12 @@
   The results from the fitting are also included.</p>
     </div>
 
-    <pre class="usage"><span class='no'>schaefer07_complex_case</span></pre>
+    <pre class="usage"><span class='va'>schaefer07_complex_case</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>The data set is a data frame with 8 observations on the following 6 variables.</p><dl'>
+    <p>The data set is a data frame with 8 observations on the following 6 variables.</p><dl>
     <dt><code>time</code></dt><dd><p>a numeric vector</p></dd>
     <dt><code>parent</code></dt><dd><p>a numeric vector</p></dd>
     <dt><code>A1</code></dt><dd><p>a numeric vector</p></dd>
@@ -173,28 +173,32 @@
   Symposium Pesticide Chemistry, Piacenza, 2007, p. 916-923.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>data</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkin_wide_to_long.html'>mkin_wide_to_long</a></span>(<span class='no'>schaefer07_complex_case</span>, <span class='kw'>time</span> <span class='kw'>=</span> <span class='st'>"time"</span>)
-<span class='no'>model</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(
-  <span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"A1"</span>, <span class='st'>"B1"</span>, <span class='st'>"C1"</span>), <span class='kw'>sink</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>),
-  <span class='kw'>A1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"A2"</span>),
-  <span class='kw'>B1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>),
-  <span class='kw'>C1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>),
-  <span class='kw'>A2</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>), <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>  <span class='co'># \dontrun{</span>
-    <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>model</span>, <span class='no'>data</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-    <span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='no'>fit</span>)</div><div class='img'><img src='schaefer07_complex_case-1.png' alt='' width='700' height='433' /></div><div class='input'>    <span class='fu'><a href='endpoints.html'>endpoints</a></span>(<span class='no'>fit</span>)</div><div class='output co'>#&gt; $ff
+    <pre class="examples"><div class='input'><span class='va'>data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkin_wide_to_long.html'>mkin_wide_to_long</a></span><span class='op'>(</span><span class='va'>schaefer07_complex_case</span>, time <span class='op'>=</span> <span class='st'>"time"</span><span class='op'>)</span>
+<span class='va'>model</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span><span class='op'>(</span>
+  parent <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span>, to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"A1"</span>, <span class='st'>"B1"</span>, <span class='st'>"C1"</span><span class='op'>)</span>, sink <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>,
+  A1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span>, to <span class='op'>=</span> <span class='st'>"A2"</span><span class='op'>)</span>,
+  B1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span><span class='op'>)</span>,
+  C1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span><span class='op'>)</span>,
+  A2 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span><span class='op'>)</span>, use_of_ff <span class='op'>=</span> <span class='st'>"max"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Temporary DLL for differentials generated and loaded</span></div><div class='input'>  <span class='co'># \dontrun{</span>
+    <span class='va'>fit</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='va'>model</span>, <span class='va'>data</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+    <span class='fu'><a href='https://rdrr.io/pkg/saemix/man/plot-SaemixObject-method.html'>plot</a></span><span class='op'>(</span><span class='va'>fit</span><span class='op'>)</span>
+</div><div class='img'><img src='schaefer07_complex_case-1.png' alt='' width='700' height='433' /></div><div class='input'>    <span class='fu'><a href='endpoints.html'>endpoints</a></span><span class='op'>(</span><span class='va'>fit</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $ff
 #&gt;   parent_A1   parent_B1   parent_C1 parent_sink       A1_A2     A1_sink 
-#&gt;   0.3809619   0.1954667   0.4235714   0.0000000   0.4479609   0.5520391 
+#&gt;   0.3809620   0.1954665   0.4235715   0.0000000   0.4479662   0.5520338 
 #&gt; 
 #&gt; $distimes
 #&gt;            DT50      DT90
 #&gt; parent 13.95078  46.34350
-#&gt; A1     49.75343 165.27733
-#&gt; B1     37.26907 123.80517
+#&gt; A1     49.75343 165.27731
+#&gt; B1     37.26912 123.80533
 #&gt; C1     11.23131  37.30959
-#&gt; A2     28.50638  94.69614
+#&gt; A2     28.50569  94.69386
 #&gt; </div><div class='input'>  <span class='co'># }</span>
  <span class='co'># Compare with the results obtained in the original publication</span>
- <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>schaefer07_complex_results</span>)</div><div class='output co'>#&gt;         compound          parameter  KinGUI ModelMaker deviation
+ <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>schaefer07_complex_results</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;         compound          parameter  KinGUI ModelMaker deviation
 #&gt; 1         parent   degradation rate  0.0496     0.0506       2.0
 #&gt; 2         parent               DT50 13.9900    13.6900       2.2
 #&gt; 3  metabolite A1 formation fraction  0.3803     0.3696       2.9
@@ -224,7 +228,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -193,8 +193,10 @@ mmkin model are used as fixed parameters</p></td>
     </tr>
     <tr>
       <th>random</th>
-      <td><p>If not specified, all fixed effects are complemented
-with uncorrelated random effects</p></td>
+      <td><p>If not specified, correlated random effects are set up
+for all optimised degradation model parameters using the log-Cholesky
+parameterization <a href='https://rdrr.io/pkg/nlme/man/pdLogChol.html'>nlme::pdLogChol</a> that is also the default of
+the generic <a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a> method.</p></td>
     </tr>
     <tr>
       <th>groups</th>
@@ -274,11 +276,14 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
 <span class='va'>f</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='st'>"DFOP"</span><span class='op'>)</span>, <span class='va'>ds</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span>, cores <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://svn.r-project.org/R-packages/trunk/nlme/'>nlme</a></span><span class='op'>)</span>
 <span class='va'>f_nlme_sfo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f</span><span class='op'>[</span><span class='st'>"SFO"</span>, <span class='op'>]</span><span class='op'>)</span>
-<span class='va'>f_nlme_dfop</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f</span><span class='op'>[</span><span class='st'>"DFOP"</span>, <span class='op'>]</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/stats/AIC.html'>AIC</a></span><span class='op'>(</span><span class='va'>f_nlme_sfo</span>, <span class='va'>f_nlme_dfop</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;             df      AIC
-#&gt; f_nlme_sfo   5 625.0539
-#&gt; f_nlme_dfop  9 495.1270</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 1, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='input'>
+<span class='co'># \dontrun{</span>
+
+  <span class='va'>f_nlme_dfop</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f</span><span class='op'>[</span><span class='st'>"DFOP"</span>, <span class='op'>]</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/stats/anova.html'>anova</a></span><span class='op'>(</span><span class='va'>f_nlme_sfo</span>, <span class='va'>f_nlme_dfop</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;             Model df      AIC      BIC    logLik   Test  L.Ratio p-value
+#&gt; f_nlme_sfo      1  6 622.0677 637.0666 -305.0338                        
+#&gt; f_nlme_dfop     2 15 487.0134 524.5105 -228.5067 1 vs 2 153.0543  &lt;.0001</div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Kinetic nonlinear mixed-effects model fit by maximum likelihood
 #&gt; 
 #&gt; Structural model:
@@ -289,48 +294,30 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
 #&gt; Data:
 #&gt; 90 observations of 1 variable(s) grouped in 5 datasets
 #&gt; 
-#&gt; Log-likelihood: -238.5635
+#&gt; Log-likelihood: -228.5067
 #&gt; 
 #&gt; Fixed effects:
 #&gt;  list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_qlogis ~ 1) 
 #&gt; parent_0   log_k1   log_k2 g_qlogis 
-#&gt;  94.1702  -1.8002  -4.1474   0.0324 
+#&gt; 94.18273 -1.82135 -4.16872  0.08949 
 #&gt; 
 #&gt; Random effects:
 #&gt;  Formula: list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_qlogis ~ 1)
 #&gt;  Level: ds
-#&gt;  Structure: Diagonal
-#&gt;         parent_0 log_k1 log_k2 g_qlogis Residual
-#&gt; StdDev:    2.488 0.8447   1.33   0.4652    2.321
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop</span><span class='op'>)</span>
-</div><div class='img'><img src='nlme.mmkin-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='endpoints.html'>endpoints</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop</span><span class='op'>)</span>
+#&gt;  Structure: General positive-definite, Log-Cholesky parametrization
+#&gt;          StdDev    Corr                
+#&gt; parent_0 2.4656397 prnt_0 log_k1 log_k2
+#&gt; log_k1   0.7950788  0.240              
+#&gt; log_k2   1.2605419  0.150  0.984       
+#&gt; g_qlogis 0.5013272 -0.075  0.843  0.834
+#&gt; Residual 2.3308100                     
+#&gt; </div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop</span><span class='op'>)</span>
+</div><div class='img'><img src='nlme.mmkin-1.png' alt='' width='700' height='433' /></div><div class='input'>  <span class='fu'><a href='endpoints.html'>endpoints</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $distimes
 #&gt;            DT50     DT90 DT50back  DT50_k1  DT50_k2
-#&gt; parent 10.79857 100.7937 30.34192 4.193937 43.85442
+#&gt; parent 10.57119 101.0652 30.42366 4.283776 44.80015
 #&gt; </div><div class='input'>
-<span class='co'># \dontrun{</span>
-  <span class='va'>f_nlme_2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f</span><span class='op'>[</span><span class='st'>"SFO"</span>, <span class='op'>]</span>, start <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>parent_0 <span class='op'>=</span> <span class='fl'>100</span>, log_k_parent <span class='op'>=</span> <span class='fl'>0.1</span><span class='op'>)</span><span class='op'>)</span>
-  <span class='fu'><a href='https://rdrr.io/r/stats/update.html'>update</a></span><span class='op'>(</span><span class='va'>f_nlme_2</span>, random <span class='op'>=</span> <span class='va'>parent_0</span> <span class='op'>~</span> <span class='fl'>1</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Kinetic nonlinear mixed-effects model fit by maximum likelihood
-#&gt; 
-#&gt; Structural model:
-#&gt; d_parent/dt = - k_parent * parent
-#&gt; 
-#&gt; Data:
-#&gt;  observations of 0 variable(s) grouped in 0 datasets
-#&gt; 
-#&gt; Log-likelihood: -404.3729
-#&gt; 
-#&gt; Fixed effects:
-#&gt;  list(parent_0 ~ 1, log_k_parent ~ 1) 
-#&gt;     parent_0 log_k_parent 
-#&gt;       75.933       -3.556 
-#&gt; 
-#&gt; Random effects:
-#&gt;  Formula: parent_0 ~ 1 | ds
-#&gt;         parent_0 Residual
-#&gt; StdDev: 0.002417    21.63
-#&gt; </div><div class='input'>  <span class='va'>ds_2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>experimental_data_for_UBA_2019</span><span class='op'>[</span><span class='fl'>6</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>]</span>,
+  <span class='va'>ds_2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>experimental_data_for_UBA_2019</span><span class='op'>[</span><span class='fl'>6</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>]</span>,
    <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='va'>x</span><span class='op'>$</span><span class='va'>data</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"name"</span>, <span class='st'>"time"</span>, <span class='st'>"value"</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>
   <span class='va'>m_sfo_sfo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span><span class='op'>(</span>parent <span class='op'>=</span> <span class='fu'><a href='mkinmod.html'>mkinsub</a></span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='st'>"A1"</span><span class='op'>)</span>,
     A1 <span class='op'>=</span> <span class='fu'><a href='mkinmod.html'>mkinsub</a></span><span class='op'>(</span><span class='st'>"SFO"</span><span class='op'>)</span>, use_of_ff <span class='op'>=</span> <span class='st'>"min"</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
@@ -345,66 +332,42 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
     <span class='va'>ds_2</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
   <span class='va'>f_nlme_sfo_sfo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f_2</span><span class='op'>[</span><span class='st'>"SFO-SFO"</span>, <span class='op'>]</span><span class='op'>)</span>
-  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_nlme_sfo_sfo</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 1, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 2, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_nlme_sfo_sfo</span><span class='op'>)</span>
 </div><div class='img'><img src='nlme.mmkin-2.png' alt='' width='700' height='433' /></div><div class='input'>
-  <span class='co'># With formation fractions</span>
-  <span class='va'>f_nlme_sfo_sfo_ff</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f_2</span><span class='op'>[</span><span class='st'>"SFO-SFO-ff"</span>, <span class='op'>]</span><span class='op'>)</span>
-  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_nlme_sfo_sfo_ff</span><span class='op'>)</span>
-</div><div class='img'><img src='nlme.mmkin-3.png' alt='' width='700' height='433' /></div><div class='input'>
-  <span class='co'># For the following fit we need to increase pnlsMaxIter and the tolerance</span>
-  <span class='co'># to get convergence</span>
-  <span class='va'>f_nlme_dfop_sfo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f_2</span><span class='op'>[</span><span class='st'>"DFOP-SFO"</span>, <span class='op'>]</span>,
-    control <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>pnlsMaxIter <span class='op'>=</span> <span class='fl'>120</span>, tolerance <span class='op'>=</span> <span class='fl'>5e-4</span><span class='op'>)</span>, verbose <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; 
-#&gt; **Iteration 1
-#&gt; LME step: Loglik: -404.9583, nlminb iterations: 1
-#&gt; reStruct  parameters:
-#&gt;        ds1        ds2        ds3        ds4        ds5        ds6 
-#&gt; -0.4114356  0.9798646  1.3524300  0.7293315  0.3354323  1.3647313 
-#&gt;  Beginning PNLS step: ..  completed fit_nlme() step.
-#&gt; PNLS step: RSS =  630.3633 
-#&gt;  fixed effects: 93.82269  -5.455993  -0.9601037  -1.862196  -4.199671  0.07824609  
-#&gt;  iterations: 120 
-#&gt; Convergence crit. (must all become &lt;= tolerance = 0.0005):
-#&gt;     fixed  reStruct 
-#&gt; 0.7897284 0.5822782 
-#&gt; 
-#&gt; **Iteration 2
-#&gt; LME step: Loglik: -407.7755, nlminb iterations: 11
-#&gt; reStruct  parameters:
-#&gt;         ds1         ds2         ds3         ds4         ds5         ds6 
-#&gt; -0.37122411  0.00305562  1.44336560  0.72467122  0.30160310  1.40762692 
-#&gt;  Beginning PNLS step: ..  completed fit_nlme() step.
-#&gt; PNLS step: RSS =  630.3637 
-#&gt;  fixed effects: 93.82269  -5.455992  -0.9601036  -1.862196  -4.199671  0.0782462  
-#&gt;  iterations: 120 
-#&gt; Convergence crit. (must all become &lt;= tolerance = 0.0005):
-#&gt;        fixed     reStruct 
-#&gt; 1.375673e-06 9.758294e-06 </div><div class='input'>
+  <span class='co'># With formation fractions this does not coverge with defaults</span>
+  <span class='co'># f_nlme_sfo_sfo_ff &lt;- nlme(f_2["SFO-SFO-ff", ])</span>
+  <span class='co'>#plot(f_nlme_sfo_sfo_ff)</span>
+
+  <span class='co'># With the log-Cholesky parameterization, this converges in 11</span>
+  <span class='co'># iterations and around 100 seconds, but without tweaking control</span>
+  <span class='co'># parameters (with pdDiag, increasing the tolerance and pnlsMaxIter was</span>
+  <span class='co'># necessary)</span>
+  <span class='va'>f_nlme_dfop_sfo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f_2</span><span class='op'>[</span><span class='st'>"DFOP-SFO"</span>, <span class='op'>]</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 1, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 2, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 3, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 4, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='input'>
   <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop_sfo</span><span class='op'>)</span>
-</div><div class='img'><img src='nlme.mmkin-4.png' alt='' width='700' height='433' /></div><div class='input'>
+</div><div class='img'><img src='nlme.mmkin-3.png' alt='' width='700' height='433' /></div><div class='input'>
   <span class='fu'><a href='https://rdrr.io/r/stats/anova.html'>anova</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop_sfo</span>, <span class='va'>f_nlme_sfo_sfo</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                 Model df       AIC       BIC    logLik   Test  L.Ratio p-value
-#&gt; f_nlme_dfop_sfo     1 13  843.8547  884.6201 -408.9274                        
-#&gt; f_nlme_sfo_sfo      2  9 1085.1821 1113.4043 -533.5910 1 vs 2 249.3274  &lt;.0001</div><div class='input'>
+#&gt; f_nlme_dfop_sfo     1 28  811.7199  899.5222 -377.8599                        
+#&gt; f_nlme_sfo_sfo      2 15 1075.1934 1122.2304 -522.5967 1 vs 2 289.4736  &lt;.0001</div><div class='input'>
   <span class='fu'><a href='endpoints.html'>endpoints</a></span><span class='op'>(</span><span class='va'>f_nlme_sfo_sfo</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $ff
 #&gt; parent_sink   parent_A1     A1_sink 
-#&gt;   0.5912432   0.4087568   1.0000000 
+#&gt;   0.6512742   0.3487258   1.0000000 
 #&gt; 
 #&gt; $distimes
-#&gt;            DT50     DT90
-#&gt; parent 19.13518  63.5657
-#&gt; A1     66.02155 219.3189
+#&gt;             DT50      DT90
+#&gt; parent  18.03144  59.89916
+#&gt; A1     102.72949 341.25997
 #&gt; </div><div class='input'>  <span class='fu'><a href='endpoints.html'>endpoints</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop_sfo</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $ff
 #&gt;   parent_A1 parent_sink 
-#&gt;   0.2768574   0.7231426 
+#&gt;   0.2762167   0.7237833 
 #&gt; 
 #&gt; $distimes
 #&gt;             DT50     DT90 DT50back  DT50_k1  DT50_k2
-#&gt; parent  11.07091 104.6320 31.49738 4.462384 46.20825
-#&gt; A1     162.30523 539.1663       NA       NA       NA
+#&gt; parent  11.15024 133.9652 40.32755 4.688015 62.16017
+#&gt; A1     235.83191 783.4167       NA       NA       NA
 #&gt; </div><div class='input'>
   <span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='fu'>findFunction</span><span class='op'>(</span><span class='st'>"varConstProp"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>&gt;</span> <span class='fl'>0</span><span class='op'>)</span> <span class='op'>{</span> <span class='co'># tc error model for nlme available</span>
     <span class='co'># Attempts to fit metabolite kinetics with the tc error model are possible,</span>
@@ -416,7 +379,7 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
     <span class='fu'><a href='https://rdrr.io/r/stats/AIC.html'>AIC</a></span><span class='op'>(</span><span class='va'>f_nlme_sfo</span>, <span class='va'>f_nlme_sfo_tc</span>, <span class='va'>f_nlme_dfop</span>, <span class='va'>f_nlme_dfop_tc</span><span class='op'>)</span>
     <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop_tc</span><span class='op'>)</span>
   <span class='op'>}</span>
-</div><div class='output co'>#&gt; Kinetic nonlinear mixed-effects model fit by maximum likelihood
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 1, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 14, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 1, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 2, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 4, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 5, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 6, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 7, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 8, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 9, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 10, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 11, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 12, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 14, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 15, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 16, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 17, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 18, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; Kinetic nonlinear mixed-effects model fit by maximum likelihood
 #&gt; 
 #&gt; Structural model:
 #&gt; d_parent/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *
@@ -426,31 +389,35 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
 #&gt; Data:
 #&gt; 90 observations of 1 variable(s) grouped in 5 datasets
 #&gt; 
-#&gt; Log-likelihood: -238.4298
+#&gt; Log-likelihood: -228.3575
 #&gt; 
 #&gt; Fixed effects:
 #&gt;  list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_qlogis ~ 1) 
 #&gt; parent_0   log_k1   log_k2 g_qlogis 
-#&gt; 94.04775 -1.82340 -4.16715  0.05685 
+#&gt;  93.6695  -1.9187  -4.4253   0.2215 
 #&gt; 
 #&gt; Random effects:
 #&gt;  Formula: list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_qlogis ~ 1)
 #&gt;  Level: ds
-#&gt;  Structure: Diagonal
-#&gt;         parent_0 log_k1 log_k2 g_qlogis Residual
-#&gt; StdDev:    2.474   0.85  1.337   0.4659        1
+#&gt;  Structure: General positive-definite, Log-Cholesky parametrization
+#&gt;          StdDev    Corr                
+#&gt; parent_0 2.8574651 prnt_0 log_k1 log_k2
+#&gt; log_k1   0.9689083  0.506              
+#&gt; log_k2   1.5798002  0.446  0.997       
+#&gt; g_qlogis 0.5761569 -0.457  0.247  0.263
+#&gt; Residual 1.0000000                     
 #&gt; 
 #&gt; Variance function:
 #&gt;  Structure: Constant plus proportion of variance covariate
 #&gt;  Formula: ~fitted(.) 
 #&gt;  Parameter estimates:
-#&gt;      const       prop 
-#&gt; 2.23224114 0.01262341 </div><div class='input'>
+#&gt;     const      prop 
+#&gt; 2.0376990 0.0221686 </div><div class='input'>
   <span class='va'>f_2_obs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"SFO-SFO"</span> <span class='op'>=</span> <span class='va'>m_sfo_sfo</span>,
    <span class='st'>"DFOP-SFO"</span> <span class='op'>=</span> <span class='va'>m_dfop_sfo</span><span class='op'>)</span>,
     <span class='va'>ds_2</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span>, error_model <span class='op'>=</span> <span class='st'>"obs"</span><span class='op'>)</span>
   <span class='va'>f_nlme_sfo_sfo_obs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f_2_obs</span><span class='op'>[</span><span class='st'>"SFO-SFO"</span>, <span class='op'>]</span><span class='op'>)</span>
-  <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>f_nlme_sfo_sfo_obs</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 1, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>f_nlme_sfo_sfo_obs</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Kinetic nonlinear mixed-effects model fit by maximum likelihood
 #&gt; 
 #&gt; Structural model:
@@ -460,29 +427,44 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
 #&gt; Data:
 #&gt; 170 observations of 2 variable(s) grouped in 5 datasets
 #&gt; 
-#&gt; Log-likelihood: -472.976
+#&gt; Log-likelihood: -462.2203
 #&gt; 
 #&gt; Fixed effects:
 #&gt;  list(parent_0 ~ 1, log_k_parent_sink ~ 1, log_k_parent_A1 ~ 1,      log_k_A1_sink ~ 1) 
 #&gt;          parent_0 log_k_parent_sink   log_k_parent_A1     log_k_A1_sink 
-#&gt;            87.976            -3.670            -4.164            -4.645 
+#&gt;            88.682            -3.664            -4.164            -4.665 
 #&gt; 
 #&gt; Random effects:
 #&gt;  Formula: list(parent_0 ~ 1, log_k_parent_sink ~ 1, log_k_parent_A1 ~ 1,      log_k_A1_sink ~ 1)
 #&gt;  Level: ds
-#&gt;  Structure: Diagonal
-#&gt;         parent_0 log_k_parent_sink log_k_parent_A1 log_k_A1_sink Residual
-#&gt; StdDev:    3.992             1.777           1.055        0.4821    6.483
+#&gt;  Structure: General positive-definite, Log-Cholesky parametrization
+#&gt;                   StdDev    Corr                
+#&gt; parent_0          4.9153305 prnt_0 lg_k__ l___A1
+#&gt; log_k_parent_sink 1.8158570 0.956               
+#&gt; log_k_parent_A1   1.0514548 0.821  0.907        
+#&gt; log_k_A1_sink     0.4924122 0.035  0.315  0.533 
+#&gt; Residual          6.3987599                     
 #&gt; 
 #&gt; Variance function:
 #&gt;  Structure: Different standard deviations per stratum
 #&gt;  Formula: ~1 | name 
 #&gt;  Parameter estimates:
 #&gt;    parent        A1 
-#&gt; 1.0000000 0.2050003 </div><div class='input'>  <span class='co'># The same with DFOP-SFO does not converge, apparently the variances of</span>
-  <span class='co'># parent and A1 are too similar in this case, so that the model is</span>
-  <span class='co'># overparameterised</span>
-  <span class='co'>#f_nlme_dfop_sfo_obs &lt;- nlme(f_2_obs["DFOP-SFO", ], control = list(maxIter = 100))</span>
+#&gt; 1.0000000 0.2040647 </div><div class='input'>  <span class='va'>f_nlme_dfop_sfo_obs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f_2_obs</span><span class='op'>[</span><span class='st'>"DFOP-SFO"</span>, <span class='op'>]</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 1, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 2, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 3, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 4, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='input'>
+  <span class='va'>f_2_tc</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"SFO-SFO"</span> <span class='op'>=</span> <span class='va'>m_sfo_sfo</span>,
+   <span class='st'>"DFOP-SFO"</span> <span class='op'>=</span> <span class='va'>m_dfop_sfo</span><span class='op'>)</span>,
+    <span class='va'>ds_2</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span>, error_model <span class='op'>=</span> <span class='st'>"tc"</span><span class='op'>)</span>
+  <span class='co'># f_nlme_sfo_sfo_tc &lt;- nlme(f_2_tc["SFO-SFO", ]) # stops with error message</span>
+  <span class='va'>f_nlme_dfop_sfo_tc</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f_2_tc</span><span class='op'>[</span><span class='st'>"DFOP-SFO"</span>, <span class='op'>]</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 1, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 2, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 3, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 4, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 6, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 7, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 8, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 9, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 11, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 12, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 15, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 25, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='input'>  <span class='co'># We get warnings about false convergence in the LME step in several iterations</span>
+  <span class='co'># but as the last such warning occurs in iteration 25 and we have 28 iterations</span>
+  <span class='co'># we can ignore these</span>
+  <span class='fu'><a href='https://rdrr.io/r/stats/anova.html'>anova</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop_sfo</span>, <span class='va'>f_nlme_dfop_sfo_obs</span>, <span class='va'>f_nlme_dfop_sfo_tc</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                     Model df      AIC      BIC    logLik   Test L.Ratio p-value
+#&gt; f_nlme_dfop_sfo         1 28 811.7199 899.5222 -377.8599                       
+#&gt; f_nlme_dfop_sfo_obs     2 29 784.1304 875.0685 -363.0652 1 vs 2 29.5895  &lt;.0001
+#&gt; f_nlme_dfop_sfo_tc      3 29 791.9981 882.9362 -366.9990                       </div><div class='input'>
 <span class='co'># }</span>
 </div></pre>
   </div>

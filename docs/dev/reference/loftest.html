@@ -75,7 +75,7 @@ lrtest.default from the lmtest package." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.9.50.3</span>
+        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.9.50.4</span>
       </span>
     </div>
 
@@ -123,7 +123,7 @@ lrtest.default from the lmtest package." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/jranke/mkin/">
+  <a href="https://github.com/jranke/mkin/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -142,7 +142,7 @@ lrtest.default from the lmtest package." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Lack-of-fit test for models fitted to data with replicates</h1>
-    <small class="dont-index">Source: <a href='http://github.com/jranke/mkin/blob/master/R/loftest.R'><code>R/loftest.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/jranke/mkin/blob/master/R/loftest.R'><code>R/loftest.R</code></a></small>
     <div class="hidden name"><code>loftest.Rd</code></div>
     </div>
 
@@ -153,10 +153,10 @@ compares the likelihoods using the likelihood ratio test
 <code><a href='https://rdrr.io/pkg/lmtest/man/lrtest.html'>lrtest.default</a></code> from the lmtest package.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>loftest</span>(<span class='no'>object</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>loftest</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for mkinfit</span>
-<span class='fu'>loftest</span>(<span class='no'>object</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>loftest</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -183,9 +183,11 @@ of replicate samples.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \dontrun{</span>
-<span class='no'>test_data</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span>(<span class='no'>synthetic_data_for_UBA_2014</span><span class='kw'>[[</span><span class='fl'>12</span>]]$<span class='no'>data</span>, <span class='no'>name</span> <span class='kw'>==</span> <span class='st'>"parent"</span>)
-<span class='no'>sfo_fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='st'>"SFO"</span>, <span class='no'>test_data</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'><a href='plot.mkinfit.html'>plot_res</a></span>(<span class='no'>sfo_fit</span>) <span class='co'># We see a clear pattern in the residuals</span></div><div class='img'><img src='loftest-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>loftest</span>(<span class='no'>sfo_fit</span>)  <span class='co'># We have a clear lack of fit</span></div><div class='output co'>#&gt; Likelihood ratio test
+<span class='va'>test_data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>synthetic_data_for_UBA_2014</span><span class='op'>[[</span><span class='fl'>12</span><span class='op'>]</span><span class='op'>]</span><span class='op'>$</span><span class='va'>data</span>, <span class='va'>name</span> <span class='op'>==</span> <span class='st'>"parent"</span><span class='op'>)</span>
+<span class='va'>sfo_fit</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='va'>test_data</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'><a href='plot.mkinfit.html'>plot_res</a></span><span class='op'>(</span><span class='va'>sfo_fit</span><span class='op'>)</span> <span class='co'># We see a clear pattern in the residuals</span>
+</div><div class='img'><img src='loftest-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>loftest</span><span class='op'>(</span><span class='va'>sfo_fit</span><span class='op'>)</span>  <span class='co'># We have a clear lack of fit</span>
+</div><div class='output co'>#&gt; Likelihood ratio test
 #&gt; 
 #&gt; Model 1: ANOVA with error model const
 #&gt; Model 2: SFO with error model const
@@ -195,9 +197,11 @@ of replicate samples.</p>
 #&gt; ---
 #&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</div><div class='input'><span class='co'>#</span>
 <span class='co'># We try a different model (the one that was used to generate the data)</span>
-<span class='no'>dfop_fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='st'>"DFOP"</span>, <span class='no'>test_data</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'><a href='plot.mkinfit.html'>plot_res</a></span>(<span class='no'>dfop_fit</span>) <span class='co'># We don't see systematic deviations, but heteroscedastic residuals</span></div><div class='img'><img src='loftest-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># therefore we should consider adapting the error model, although we have</span>
-<span class='fu'>loftest</span>(<span class='no'>dfop_fit</span>) <span class='co'># no lack of fit</span></div><div class='output co'>#&gt; Likelihood ratio test
+<span class='va'>dfop_fit</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='st'>"DFOP"</span>, <span class='va'>test_data</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'><a href='plot.mkinfit.html'>plot_res</a></span><span class='op'>(</span><span class='va'>dfop_fit</span><span class='op'>)</span> <span class='co'># We don't see systematic deviations, but heteroscedastic residuals</span>
+</div><div class='img'><img src='loftest-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># therefore we should consider adapting the error model, although we have</span>
+<span class='fu'>loftest</span><span class='op'>(</span><span class='va'>dfop_fit</span><span class='op'>)</span> <span class='co'># no lack of fit</span>
+</div><div class='output co'>#&gt; Likelihood ratio test
 #&gt; 
 #&gt; Model 1: ANOVA with error model const
 #&gt; Model 2: DFOP with error model const
@@ -205,10 +209,11 @@ of replicate samples.</p>
 #&gt; 1  10 -40.710                    
 #&gt; 2   5 -42.453 -5 3.485     0.6257</div><div class='input'><span class='co'>#</span>
 <span class='co'># This is the anova model used internally for the comparison</span>
-<span class='no'>test_data_anova</span> <span class='kw'>&lt;-</span> <span class='no'>test_data</span>
-<span class='no'>test_data_anova</span>$<span class='no'>time</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span>(<span class='no'>test_data_anova</span>$<span class='no'>time</span>)
-<span class='no'>anova_fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>value</span> ~ <span class='no'>time</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>test_data_anova</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>anova_fit</span>)</div><div class='output co'>#&gt; 
+<span class='va'>test_data_anova</span> <span class='op'>&lt;-</span> <span class='va'>test_data</span>
+<span class='va'>test_data_anova</span><span class='op'>$</span><span class='va'>time</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>test_data_anova</span><span class='op'>$</span><span class='va'>time</span><span class='op'>)</span>
+<span class='va'>anova_fit</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>value</span> <span class='op'>~</span> <span class='va'>time</span>, data <span class='op'>=</span> <span class='va'>test_data_anova</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>anova_fit</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; 
 #&gt; Call:
 #&gt; lm(formula = value ~ time, data = test_data_anova)
 #&gt; 
@@ -233,12 +238,16 @@ of replicate samples.</p>
 #&gt; Residual standard error: 3.285 on 9 degrees of freedom
 #&gt; Multiple R-squared:  0.9953,	Adjusted R-squared:  0.9912 
 #&gt; F-statistic: 240.5 on 8 and 9 DF,  p-value: 1.417e-09
-#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/logLik.html'>logLik</a></span>(<span class='no'>anova_fit</span>) <span class='co'># We get the same likelihood and degrees of freedom</span></div><div class='output co'>#&gt; 'log Lik.' -40.71015 (df=10)</div><div class='input'><span class='co'>#</span>
-<span class='no'>test_data_2</span> <span class='kw'>&lt;-</span> <span class='no'>synthetic_data_for_UBA_2014</span><span class='kw'>[[</span><span class='fl'>12</span>]]$<span class='no'>data</span>
-<span class='no'>m_synth_SFO_lin</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"M1"</span>),
-  <span class='kw'>M1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"M2"</span>),
-  <span class='kw'>M2</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>), <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='no'>sfo_lin_fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>m_synth_SFO_lin</span>, <span class='no'>test_data_2</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'><a href='plot.mkinfit.html'>plot_res</a></span>(<span class='no'>sfo_lin_fit</span>) <span class='co'># not a good model, we try parallel formation</span></div><div class='img'><img src='loftest-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>loftest</span>(<span class='no'>sfo_lin_fit</span>)</div><div class='output co'>#&gt; Likelihood ratio test
+#&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/logLik.html'>logLik</a></span><span class='op'>(</span><span class='va'>anova_fit</span><span class='op'>)</span> <span class='co'># We get the same likelihood and degrees of freedom</span>
+</div><div class='output co'>#&gt; 'log Lik.' -40.71015 (df=10)</div><div class='input'><span class='co'>#</span>
+<span class='va'>test_data_2</span> <span class='op'>&lt;-</span> <span class='va'>synthetic_data_for_UBA_2014</span><span class='op'>[[</span><span class='fl'>12</span><span class='op'>]</span><span class='op'>]</span><span class='op'>$</span><span class='va'>data</span>
+<span class='va'>m_synth_SFO_lin</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span><span class='op'>(</span>parent <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span>, to <span class='op'>=</span> <span class='st'>"M1"</span><span class='op'>)</span>,
+  M1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span>, to <span class='op'>=</span> <span class='st'>"M2"</span><span class='op'>)</span>,
+  M2 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span><span class='op'>)</span>, use_of_ff <span class='op'>=</span> <span class='st'>"max"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Temporary DLL for differentials generated and loaded</span></div><div class='input'><span class='va'>sfo_lin_fit</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='va'>m_synth_SFO_lin</span>, <span class='va'>test_data_2</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'><a href='plot.mkinfit.html'>plot_res</a></span><span class='op'>(</span><span class='va'>sfo_lin_fit</span><span class='op'>)</span> <span class='co'># not a good model, we try parallel formation</span>
+</div><div class='img'><img src='loftest-3.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>loftest</span><span class='op'>(</span><span class='va'>sfo_lin_fit</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Likelihood ratio test
 #&gt; 
 #&gt; Model 1: ANOVA with error model const
 #&gt; Model 2: m_synth_SFO_lin with error model const and fixed parameter(s) M1_0, M2_0
@@ -247,10 +256,13 @@ of replicate samples.</p>
 #&gt; 2   7 -171.927 -21 156.64  &lt; 2.2e-16 ***
 #&gt; ---
 #&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</div><div class='input'><span class='co'>#</span>
-<span class='no'>m_synth_SFO_par</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"M1"</span>, <span class='st'>"M2"</span>)),
-  <span class='kw'>M1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>),
-  <span class='kw'>M2</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>), <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='no'>sfo_par_fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>m_synth_SFO_par</span>, <span class='no'>test_data_2</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'><a href='plot.mkinfit.html'>plot_res</a></span>(<span class='no'>sfo_par_fit</span>) <span class='co'># much better for metabolites</span></div><div class='img'><img src='loftest-4.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>loftest</span>(<span class='no'>sfo_par_fit</span>)</div><div class='output co'>#&gt; Likelihood ratio test
+<span class='va'>m_synth_SFO_par</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span><span class='op'>(</span>parent <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span>, to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"M1"</span>, <span class='st'>"M2"</span><span class='op'>)</span><span class='op'>)</span>,
+  M1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span><span class='op'>)</span>,
+  M2 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span><span class='op'>)</span>, use_of_ff <span class='op'>=</span> <span class='st'>"max"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Temporary DLL for differentials generated and loaded</span></div><div class='input'><span class='va'>sfo_par_fit</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='va'>m_synth_SFO_par</span>, <span class='va'>test_data_2</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'><a href='plot.mkinfit.html'>plot_res</a></span><span class='op'>(</span><span class='va'>sfo_par_fit</span><span class='op'>)</span> <span class='co'># much better for metabolites</span>
+</div><div class='img'><img src='loftest-4.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>loftest</span><span class='op'>(</span><span class='va'>sfo_par_fit</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Likelihood ratio test
 #&gt; 
 #&gt; Model 1: ANOVA with error model const
 #&gt; Model 2: m_synth_SFO_par with error model const and fixed parameter(s) M1_0, M2_0
@@ -259,10 +271,13 @@ of replicate samples.</p>
 #&gt; 2   7 -156.331 -21 125.45  &lt; 2.2e-16 ***
 #&gt; ---
 #&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</div><div class='input'><span class='co'>#</span>
-<span class='no'>m_synth_DFOP_par</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"DFOP"</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"M1"</span>, <span class='st'>"M2"</span>)),
-  <span class='kw'>M1</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>),
-  <span class='kw'>M2</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"SFO"</span>), <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'><span class='no'>dfop_par_fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>m_synth_DFOP_par</span>, <span class='no'>test_data_2</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'><a href='plot.mkinfit.html'>plot_res</a></span>(<span class='no'>dfop_par_fit</span>) <span class='co'># No visual lack of fit</span></div><div class='img'><img src='loftest-5.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>loftest</span>(<span class='no'>dfop_par_fit</span>)  <span class='co'># no lack of fit found by the test</span></div><div class='output co'>#&gt; Likelihood ratio test
+<span class='va'>m_synth_DFOP_par</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span><span class='op'>(</span>parent <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"DFOP"</span>, to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"M1"</span>, <span class='st'>"M2"</span><span class='op'>)</span><span class='op'>)</span>,
+  M1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span><span class='op'>)</span>,
+  M2 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span><span class='op'>)</span>, use_of_ff <span class='op'>=</span> <span class='st'>"max"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Temporary DLL for differentials generated and loaded</span></div><div class='input'><span class='va'>dfop_par_fit</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='va'>m_synth_DFOP_par</span>, <span class='va'>test_data_2</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'><a href='plot.mkinfit.html'>plot_res</a></span><span class='op'>(</span><span class='va'>dfop_par_fit</span><span class='op'>)</span> <span class='co'># No visual lack of fit</span>
+</div><div class='img'><img src='loftest-5.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>loftest</span><span class='op'>(</span><span class='va'>dfop_par_fit</span><span class='op'>)</span>  <span class='co'># no lack of fit found by the test</span>
+</div><div class='output co'>#&gt; Likelihood ratio test
 #&gt; 
 #&gt; Model 1: ANOVA with error model const
 #&gt; Model 2: m_synth_DFOP_par with error model const and fixed parameter(s) M1_0, M2_0
@@ -270,11 +285,12 @@ of replicate samples.</p>
 #&gt; 1  28  -93.606                      
 #&gt; 2   9 -102.763 -19 18.313     0.5016</div><div class='input'><span class='co'>#</span>
 <span class='co'># The anova model used for comparison in the case of transformation products</span>
-<span class='no'>test_data_anova_2</span> <span class='kw'>&lt;-</span> <span class='no'>dfop_par_fit</span>$<span class='no'>data</span>
-<span class='no'>test_data_anova_2</span>$<span class='no'>variable</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span>(<span class='no'>test_data_anova_2</span>$<span class='no'>variable</span>)
-<span class='no'>test_data_anova_2</span>$<span class='no'>time</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span>(<span class='no'>test_data_anova_2</span>$<span class='no'>time</span>)
-<span class='no'>anova_fit_2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span>(<span class='no'>observed</span> ~ <span class='no'>time</span>:<span class='no'>variable</span> - <span class='fl'>1</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>test_data_anova_2</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='no'>anova_fit_2</span>)</div><div class='output co'>#&gt; 
+<span class='va'>test_data_anova_2</span> <span class='op'>&lt;-</span> <span class='va'>dfop_par_fit</span><span class='op'>$</span><span class='va'>data</span>
+<span class='va'>test_data_anova_2</span><span class='op'>$</span><span class='va'>variable</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>test_data_anova_2</span><span class='op'>$</span><span class='va'>variable</span><span class='op'>)</span>
+<span class='va'>test_data_anova_2</span><span class='op'>$</span><span class='va'>time</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>test_data_anova_2</span><span class='op'>$</span><span class='va'>time</span><span class='op'>)</span>
+<span class='va'>anova_fit_2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>observed</span> <span class='op'>~</span> <span class='va'>time</span><span class='op'>:</span><span class='va'>variable</span> <span class='op'>-</span> <span class='fl'>1</span>, data <span class='op'>=</span> <span class='va'>test_data_anova_2</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>anova_fit_2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; 
 #&gt; Call:
 #&gt; lm(formula = observed ~ time:variable - 1, data = test_data_anova_2)
 #&gt; 
@@ -317,7 +333,7 @@ of replicate samples.</p>
 #&gt; Residual standard error: 2.225 on 25 degrees of freedom
 #&gt; Multiple R-squared:  0.9979,	Adjusted R-squared:  0.9957 
 #&gt; F-statistic: 469.2 on 25 and 25 DF,  p-value: &lt; 2.2e-16
-#&gt; </div><div class='input'># }
+#&gt; </div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -334,7 +350,7 @@ of replicate samples.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

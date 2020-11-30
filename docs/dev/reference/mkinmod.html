@@ -162,9 +162,13 @@ components.</p>
     <pre class="usage"><span class='fu'>mkinmod</span><span class='op'>(</span>
   <span class='va'>...</span>,
   use_of_ff <span class='op'>=</span> <span class='st'>"max"</span>,
+  name <span class='op'>=</span> <span class='cn'>NULL</span>,
   speclist <span class='op'>=</span> <span class='cn'>NULL</span>,
   quiet <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  verbose <span class='op'>=</span> <span class='cn'>FALSE</span>
+  verbose <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  dll_dir <span class='op'>=</span> <span class='cn'>NULL</span>,
+  unload <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  overwrite <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span>
 
 <span class='co'># S3 method for mkinmod</span>
@@ -201,6 +205,10 @@ formation fractions is made, i.e. each pathway to a metabolite has its
 own rate constant.</p></td>
     </tr>
     <tr>
+      <th>name</th>
+      <td><p>A name for the model. Should be a valid R object name.</p></td>
+    </tr>
+    <tr>
       <th>speclist</th>
       <td><p>The specification of the observed variables and their
 submodel types and pathways can be given as a single list using this
@@ -214,6 +222,23 @@ argument. Default is NULL.</p></td>
       <th>verbose</th>
       <td><p>If <code>TRUE</code>, passed to <code><a href='https://rdrr.io/pkg/inline/man/cfunction.html'>inline::cfunction()</a></code> if
 applicable to give detailed information about the C function being built.</p></td>
+    </tr>
+    <tr>
+      <th>dll_dir</th>
+      <td><p>Directory where an DLL object, if generated internally by
+<code><a href='https://rdrr.io/pkg/inline/man/cfunction.html'>inline::cfunction()</a></code>, should be saved.  The DLL will only be stored in a
+permanent location for use in future sessions, if 'dll_dir' and 'name'
+are specified.</p></td>
+    </tr>
+    <tr>
+      <th>unload</th>
+      <td><p>If a DLL from the target location in 'dll_dir' is already
+loaded, should that be unloaded first?</p></td>
+    </tr>
+    <tr>
+      <th>overwrite</th>
+      <td><p>If a file exists at the target DLL location in 'dll_dir',
+should this be overwritten?</p></td>
     </tr>
     <tr>
       <th>x</th>
@@ -299,18 +324,37 @@ Evaluating and Calculating Degradation Kinetics in Environmental Media</p>
 <span class='va'>SFO_SFO</span> <span class='op'>&lt;-</span> <span class='fu'>mkinmod</span><span class='op'>(</span>
   parent <span class='op'>=</span> <span class='fu'>mkinsub</span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='st'>"m1"</span><span class='op'>)</span>,
   m1 <span class='op'>=</span> <span class='fu'>mkinsub</span><span class='op'>(</span><span class='st'>"SFO"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>Temporary DLL for differentials generated and loaded</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>SFO_SFO</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;mkinmod&gt; model generated with
+#&gt; Use of formation fractions $use_of_ff: max 
+#&gt; Specification $spec:
+#&gt; $parent
+#&gt; $type: SFO; $to: m1; $sink: TRUE
+#&gt; $m1
+#&gt; $type: SFO; $sink: TRUE
+#&gt; Coefficient matrix $coefmat available
+#&gt; Compiled model $cf available
+#&gt; Differential equations:
+#&gt; d_parent/dt = - k_parent * parent
+#&gt; d_m1/dt = + f_parent_to_m1 * k_parent * parent - k_m1 * m1</div><div class='input'>
 <span class='co'># \dontrun{</span>
-<span class='co'># Now supplying full names used for plotting</span>
+ <span class='va'>fit_sfo_sfo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='va'>SFO_SFO</span>, <span class='va'>FOCUS_2006_D</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span>, solution_type <span class='op'>=</span> <span class='st'>"deSolve"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'>
+ <span class='co'># Now supplying compound names used for plotting, and write to user defined location</span>
+ <span class='co'># We need to choose a path outside the session tempdir because this gets removed</span>
+ <span class='va'>DLL_dir</span> <span class='op'>&lt;-</span> <span class='st'>"~/.local/share/mkin"</span>
+ <span class='kw'>if</span> <span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/files2.html'>dir.exists</a></span><span class='op'>(</span><span class='va'>DLL_dir</span><span class='op'>)</span><span class='op'>)</span> <span class='fu'><a href='https://rdrr.io/r/base/files2.html'>dir.create</a></span><span class='op'>(</span><span class='va'>DLL_dir</span><span class='op'>)</span>
  <span class='va'>SFO_SFO.2</span> <span class='op'>&lt;-</span> <span class='fu'>mkinmod</span><span class='op'>(</span>
    parent <span class='op'>=</span> <span class='fu'>mkinsub</span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='st'>"m1"</span>, full_name <span class='op'>=</span> <span class='st'>"Test compound"</span><span class='op'>)</span>,
-   m1 <span class='op'>=</span> <span class='fu'>mkinsub</span><span class='op'>(</span><span class='st'>"SFO"</span>, full_name <span class='op'>=</span> <span class='st'>"Metabolite M1"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
-<span class='co'># The above model used to be specified like this, before the advent of mkinsub()</span>
-<span class='va'>SFO_SFO</span> <span class='op'>&lt;-</span> <span class='fu'>mkinmod</span><span class='op'>(</span>
-  parent <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span>, to <span class='op'>=</span> <span class='st'>"m1"</span><span class='op'>)</span>,
-  m1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
+   m1 <span class='op'>=</span> <span class='fu'>mkinsub</span><span class='op'>(</span><span class='st'>"SFO"</span>, full_name <span class='op'>=</span> <span class='st'>"Metabolite M1"</span><span class='op'>)</span>,
+   name <span class='op'>=</span> <span class='st'>"SFO_SFO"</span>, dll_dir <span class='op'>=</span> <span class='va'>DLL_dir</span>, unload <span class='op'>=</span> <span class='cn'>TRUE</span>, overwrite <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Copied DLL from /tmp/RtmpX9Xf3y/file6d622f3b7e08.so to /home/jranke/.local/share/mkin/SFO_SFO.so</span></div><div class='input'><span class='co'># Now we can save the model and restore it in a new session</span>
+<span class='fu'><a href='https://rdrr.io/r/base/readRDS.html'>saveRDS</a></span><span class='op'>(</span><span class='va'>SFO_SFO.2</span>, file <span class='op'>=</span> <span class='st'>"~/SFO_SFO.rds"</span><span class='op'>)</span>
+<span class='co'># Terminate the R session here if you would like to check, and then do</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://pkgdown.jrwb.de/mkin/'>mkin</a></span><span class='op'>)</span>
+<span class='va'>SFO_SFO.3</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/readRDS.html'>readRDS</a></span><span class='op'>(</span><span class='st'>"~/SFO_SFO.rds"</span><span class='op'>)</span>
+<span class='va'>fit_sfo_sfo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='va'>SFO_SFO.3</span>, <span class='va'>FOCUS_2006_D</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span>, solution_type <span class='op'>=</span> <span class='st'>"deSolve"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'>
 <span class='co'># Show details of creating the C function</span>
 <span class='va'>SFO_SFO</span> <span class='op'>&lt;-</span> <span class='fu'>mkinmod</span><span class='op'>(</span>
   parent <span class='op'>=</span> <span class='fu'>mkinsub</span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='st'>"m1"</span><span class='op'>)</span>,
@@ -330,11 +374,11 @@ Evaluating and Calculating Degradation Kinetics in Environmental Media</p>
 #&gt;  12: }
 #&gt;  13: 
 #&gt;  14: 
-#&gt;  15: void func ( int * n, double * t, double * y, double * f, double * rpar, int * ipar ) {
+#&gt;  15: void diffs ( int * n, double * t, double * y, double * f, double * rpar, int * ipar ) {
 #&gt;  16: 
 #&gt;  17: f[0] = - k_parent * y[0];
 #&gt;  18: f[1] = + f_parent_to_m1 * k_parent * y[0] - k_m1 * y[1];
-#&gt;  19: }</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
+#&gt;  19: }</div><div class='output co'>#&gt; <span class='message'>Temporary DLL for differentials generated and loaded</span></div><div class='input'>
 <span class='co'># The symbolic solution which is available in this case is not</span>
 <span class='co'># made for human reading but for speed of computation</span>
 <span class='va'>SFO_SFO</span><span class='op'>$</span><span class='va'>deg_func</span>
@@ -353,7 +397,7 @@ Evaluating and Calculating Degradation Kinetics in Environmental Media</p>
 #&gt;     })
 #&gt;     return(predicted)
 #&gt; }
-#&gt; &lt;environment: 0x55555c97f8d8&gt;</div><div class='input'>
+#&gt; &lt;environment: 0x55555c5b8d68&gt;</div><div class='input'>
 <span class='co'># If we have several parallel metabolites</span>
 <span class='co'># (compare tests/testthat/test_synthetic_data_for_UBA_2014.R)</span>
 <span class='va'>m_synth_DFOP_par</span> <span class='op'>&lt;-</span> <span class='fu'>mkinmod</span><span class='op'>(</span>
@@ -367,27 +411,6 @@ Evaluating and Calculating Degradation Kinetics in Environmental Media</p>
   quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='co'># }</span>
 
-
-  <span class='va'>m_synth_SFO_lin</span> <span class='op'>&lt;-</span> <span class='fu'>mkinmod</span><span class='op'>(</span>parent <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span>, to <span class='op'>=</span> <span class='st'>"M1"</span><span class='op'>)</span>,
-                             M1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span>, to <span class='op'>=</span> <span class='st'>"M2"</span><span class='op'>)</span>,
-                             M2 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span><span class='op'>)</span>, use_of_ff <span class='op'>=</span> <span class='st'>"max"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
-  <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>m_synth_SFO_lin</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;mkinmod&gt; model generated with
-#&gt; Use of formation fractions $use_of_ff: max 
-#&gt; Specification $spec:
-#&gt; $parent
-#&gt; $type: SFO; $to: M1; $sink: TRUE
-#&gt; $M1
-#&gt; $type: SFO; $to: M2; $sink: TRUE
-#&gt; $M2
-#&gt; $type: SFO; $sink: TRUE
-#&gt; Coefficient matrix $coefmat available
-#&gt; Compiled model $cf available
-#&gt; Differential equations:
-#&gt; d_parent/dt = - k_parent * parent
-#&gt; d_M1/dt = + f_parent_to_M1 * k_parent * parent - k_M1 * M1
-#&gt; d_M2/dt = + f_M1_to_M2 * k_M1 * M1 - k_M2 * M2</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

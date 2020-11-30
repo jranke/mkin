@@ -102,7 +102,7 @@
       <h1 data-toc-skip>Performance benefit by using compiled model definitions in mkin</h1>
                         <h4 class="author">Johannes Ranke</h4>
             
-            <h4 class="date">2020-11-19</h4>
+            <h4 class="date">2020-11-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jranke/mkin/blob/master/vignettes/web_only/compiled_models.rmd"><code>vignettes/web_only/compiled_models.rmd</code></a></small>
       <div class="hidden name"><code>compiled_models.rmd</code></div>
@@ -134,9 +134,9 @@
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://pkgdown.jrwb.de/mkin/">"mkin"</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="va">SFO_SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>
-  parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"m1"</span><span class="op">)</span>,
-  m1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
+  parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"m1"</span><span class="op">)</span>,
+  m1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>## Temporary DLL for differentials generated and loaded</code></pre>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">FOCUS_D</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/saemix/man/subset.html">subset</a></span><span class="op">(</span><span class="va">FOCUS_2006_D</span>, <span class="va">value</span> <span class="op">!=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
 <p>We can compare the performance of the Eigenvalue based solution against the compiled version and the R implementation of the differential equations using the benchmark package. In the output of below code, the warnings about zero being removed from the FOCUS D dataset are suppressed. Since mkin version 0.9.49.11, an analytical solution is also implemented, which is included in the tests below.</p>
@@ -160,10 +160,10 @@
   <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="st">"R package rbenchmark is not available"</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
 <pre><code>##                    test replications relative elapsed
-## 4            analytical            1    1.000   0.186
-## 3     deSolve, compiled            1    1.742   0.324
-## 2      Eigenvalue based            1    2.048   0.381
-## 1 deSolve, not compiled            1   42.532   7.911</code></pre>
+## 4            analytical            1    1.000   0.187
+## 3     deSolve, compiled            1    1.807   0.338
+## 2      Eigenvalue based            1    2.032   0.380
+## 1 deSolve, not compiled            1   43.048   8.050</code></pre>
 <p>We see that using the compiled model is by more than a factor of 10 faster than using deSolve without compiled code.</p>
 </div>
 <div id="model-without-analytical-solution" class="section level2">
@@ -173,8 +173,8 @@
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="http://rbenchmark.googlecode.com">rbenchmark</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
   <span class="va">FOMC_SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>
-    parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"FOMC"</span>, <span class="st">"m1"</span><span class="op">)</span>,
-    m1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span> <span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span>
+    parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"FOMC"</span>, <span class="st">"m1"</span><span class="op">)</span>,
+    m1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span> <span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span>
 
   <span class="va">b.2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rbenchmark/man/benchmark.html">benchmark</a></span><span class="op">(</span>
     <span class="st">"deSolve, not compiled"</span> <span class="op">=</span> <span class="fu"><a href="../../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">FOMC_SFO</span>, <span class="va">FOCUS_D</span>,
@@ -188,11 +188,11 @@
   <span class="va">factor_FOMC_SFO</span> <span class="op">&lt;-</span> <span class="cn">NA</span>
   <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="st">"R package benchmark is not available"</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
-<pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
+<pre><code>## Temporary DLL for differentials generated and loaded</code></pre>
 <pre><code>##                    test replications relative elapsed
-## 2     deSolve, compiled            1    1.000   0.465
-## 1 deSolve, not compiled            1   30.852  14.346</code></pre>
-<p>Here we get a performance benefit of a factor of 31 using the version of the differential equation model compiled from C code!</p>
+## 2     deSolve, compiled            1    1.000   0.483
+## 1 deSolve, not compiled            1   29.969  14.475</code></pre>
+<p>Here we get a performance benefit of a factor of 30 using the version of the differential equation model compiled from C code!</p>
 <p>This vignette was built with mkin 0.9.50.4 on</p>
 <pre><code>## R version 4.0.3 (2020-10-10)
 ## Platform: x86_64-pc-linux-gnu (64-bit)

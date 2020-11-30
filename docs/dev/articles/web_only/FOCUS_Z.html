@@ -102,7 +102,7 @@
       <h1 data-toc-skip>Example evaluation of FOCUS dataset Z</h1>
                         <h4 class="author">Johannes Ranke</h4>
             
-            <h4 class="date">2020-11-19</h4>
+            <h4 class="date">2020-11-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jranke/mkin/blob/master/vignettes/web_only/FOCUS_Z.rmd"><code>vignettes/web_only/FOCUS_Z.rmd</code></a></small>
       <div class="hidden name"><code>FOCUS_Z.rmd</code></div>
@@ -138,9 +138,9 @@
 <a href="#parent-and-one-metabolite" class="anchor"></a>Parent and one metabolite</h1>
 <p>The next step is to set up the models used for the kinetic analysis. As the simultaneous fit of parent and the first metabolite is usually straightforward, Step 1 (SFO for parent only) is skipped here. We start with the model 2a, with formation and decline of metabolite Z1 and the pathway from parent directly to sink included (default in mkin).</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Z.2a</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>Z0 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z1"</span><span class="op">)</span>,
-                Z1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
+<code class="sourceCode R"><span class="va">Z.2a</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>Z0 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z1"</span><span class="op">)</span>,
+                Z1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>## Temporary DLL for differentials generated and loaded</code></pre>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m.Z.2a</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">Z.2a</span>, <span class="va">FOCUS_2006_Z_mkin</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <pre><code>## Warning in mkinfit(Z.2a, FOCUS_2006_Z_mkin, quiet = TRUE): Observations with
@@ -159,10 +159,10 @@
 <p>As obvious from the parameter summary (the  component of the summary), the kinetic rate constant from parent compound Z to sink is very small and the t-test for this parameter suggests that it is not significantly different from zero. This suggests, in agreement with the analysis in the FOCUS kinetics report, to simplify the model by removing the pathway to sink.</p>
 <p>A similar result can be obtained when formation fractions are used in the model formulation:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Z.2a.ff</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>Z0 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z1"</span><span class="op">)</span>,
-                   Z1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,
+<code class="sourceCode R"><span class="va">Z.2a.ff</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>Z0 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z1"</span><span class="op">)</span>,
+                   Z1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,
                    use_of_ff <span class="op">=</span> <span class="st">"max"</span><span class="op">)</span></code></pre></div>
-<pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
+<pre><code>## Temporary DLL for differentials generated and loaded</code></pre>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m.Z.2a.ff</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">Z.2a.ff</span>, <span class="va">FOCUS_2006_Z_mkin</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <pre><code>## Warning in mkinfit(Z.2a.ff, FOCUS_2006_Z_mkin, quiet = TRUE): Observations with
@@ -182,9 +182,9 @@
 <p>A simplified model is obtained by removing the pathway to the sink. </p>
 <p>In the following, we use the parameterisation with formation fractions in order to be able to compare with the results in the FOCUS guidance, and as it makes it easier to use parameters obtained in a previous fit when adding a further metabolite.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Z.3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>Z0 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z1"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
-               Z1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>, use_of_ff <span class="op">=</span> <span class="st">"max"</span><span class="op">)</span></code></pre></div>
-<pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
+<code class="sourceCode R"><span class="va">Z.3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>Z0 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z1"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
+               Z1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>, use_of_ff <span class="op">=</span> <span class="st">"max"</span><span class="op">)</span></code></pre></div>
+<pre><code>## Temporary DLL for differentials generated and loaded</code></pre>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m.Z.3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">Z.3</span>, <span class="va">FOCUS_2006_Z_mkin</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <pre><code>## Warning in mkinfit(Z.3, FOCUS_2006_Z_mkin, quiet = TRUE): Observations with
@@ -206,10 +206,10 @@
 <a href="#metabolites-z2-and-z3" class="anchor"></a>Metabolites Z2 and Z3</h1>
 <p>As suggested in the FOCUS report, the pathway to sink was removed for metabolite Z1 as well in the next step. While this step appears questionable on the basis of the above results, it is followed here for the purpose of comparison. Also, in the FOCUS report, it is assumed that there is additional empirical evidence that Z1 quickly and exclusively hydrolyses to Z2.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Z.5</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>Z0 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z1"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
-               Z1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z2"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
-               Z2 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>, use_of_ff <span class="op">=</span> <span class="st">"max"</span><span class="op">)</span></code></pre></div>
-<pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
+<code class="sourceCode R"><span class="va">Z.5</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>Z0 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z1"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
+               Z1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z2"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
+               Z2 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>, use_of_ff <span class="op">=</span> <span class="st">"max"</span><span class="op">)</span></code></pre></div>
+<pre><code>## Temporary DLL for differentials generated and loaded</code></pre>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m.Z.5</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">Z.5</span>, <span class="va">FOCUS_2006_Z_mkin</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <pre><code>## Warning in mkinfit(Z.5, FOCUS_2006_Z_mkin, quiet = TRUE): Observations with
@@ -219,12 +219,12 @@
 <p><img src="FOCUS_Z_files/figure-html/FOCUS_2006_Z_fits_5-1.png" width="700"></p>
 <p>Finally, metabolite Z3 is added to the model. We use the optimised differential equation parameter values from the previous fit in order to accelerate the optimization.</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Z.FOCUS</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>Z0 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z1"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
-                   Z1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z2"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
-                   Z2 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z3"</span><span class="op">)</span>,
-                   Z3 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,
+<code class="sourceCode R"><span class="va">Z.FOCUS</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>Z0 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z1"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
+                   Z1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z2"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
+                   Z2 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z3"</span><span class="op">)</span>,
+                   Z3 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,
                    use_of_ff <span class="op">=</span> <span class="st">"max"</span><span class="op">)</span></code></pre></div>
-<pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
+<pre><code>## Temporary DLL for differentials generated and loaded</code></pre>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m.Z.FOCUS</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">Z.FOCUS</span>, <span class="va">FOCUS_2006_Z_mkin</span>,
                      parms.ini <span class="op">=</span> <span class="va">m.Z.5</span><span class="op">$</span><span class="va">bparms.ode</span>,
@@ -266,11 +266,11 @@
 <p>As the FOCUS report states, there is a certain tailing of the time course of metabolite Z3. Also, the time course of the parent compound is not fitted very well using the SFO model, as residues at a certain low level remain.</p>
 <p>Therefore, an additional model is offered here, using the single first-order reversible binding (SFORB) model for metabolite Z3. As expected, the <span class="math inline">\(\chi^2\)</span> error level is lower for metabolite Z3 using this model and the graphical fit for Z3 is improved. However, the covariance matrix is not returned.</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Z.mkin.1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>Z0 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z1"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
-                    Z1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z2"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
-                    Z2 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z3"</span><span class="op">)</span>,
-                    Z3 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFORB"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
+<code class="sourceCode R"><span class="va">Z.mkin.1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>Z0 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z1"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
+                    Z1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z2"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
+                    Z2 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z3"</span><span class="op">)</span>,
+                    Z3 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFORB"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>## Temporary DLL for differentials generated and loaded</code></pre>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m.Z.mkin.1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">Z.mkin.1</span>, <span class="va">FOCUS_2006_Z_mkin</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <pre><code>## Warning in mkinfit(Z.mkin.1, FOCUS_2006_Z_mkin, quiet = TRUE): Observations with
@@ -283,10 +283,10 @@
 <pre><code>## NULL</code></pre>
 <p>Therefore, a further stepwise model building is performed starting from the stage of parent and two metabolites, starting from the assumption that the model fit for the parent compound can be improved by using the SFORB model.</p>
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Z.mkin.3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>Z0 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFORB"</span>, <span class="st">"Z1"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
-                    Z1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z2"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
-                    Z2 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
+<code class="sourceCode R"><span class="va">Z.mkin.3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>Z0 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFORB"</span>, <span class="st">"Z1"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
+                    Z1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z2"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
+                    Z2 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>## Temporary DLL for differentials generated and loaded</code></pre>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m.Z.mkin.3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">Z.mkin.3</span>, <span class="va">FOCUS_2006_Z_mkin</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <pre><code>## Warning in mkinfit(Z.mkin.3, FOCUS_2006_Z_mkin, quiet = TRUE): Observations with
@@ -297,11 +297,11 @@
 <p>This results in a much better representation of the behaviour of the parent compound Z0.</p>
 <p>Finally, Z3 is added as well. These models appear overparameterised (no covariance matrix returned) if the sink for Z1 is left in the models.</p>
 <div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Z.mkin.4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>Z0 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFORB"</span>, <span class="st">"Z1"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
-                    Z1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z2"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
-                    Z2 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z3"</span><span class="op">)</span>,
-                    Z3 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
+<code class="sourceCode R"><span class="va">Z.mkin.4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>Z0 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFORB"</span>, <span class="st">"Z1"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
+                    Z1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z2"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
+                    Z2 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z3"</span><span class="op">)</span>,
+                    Z3 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>## Temporary DLL for differentials generated and loaded</code></pre>
 <div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m.Z.mkin.4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">Z.mkin.4</span>, <span class="va">FOCUS_2006_Z_mkin</span>,
                       parms.ini <span class="op">=</span> <span class="va">m.Z.mkin.3</span><span class="op">$</span><span class="va">bparms.ode</span>,
@@ -313,11 +313,11 @@
 <p><img src="FOCUS_Z_files/figure-html/FOCUS_2006_Z_fits_10-1.png" width="700"></p>
 <p>The error level of the fit, but especially of metabolite Z3, can be improved if the SFORB model is chosen for this metabolite, as this model is capable of representing the tailing of the metabolite decline phase.</p>
 <div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Z.mkin.5</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>Z0 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFORB"</span>, <span class="st">"Z1"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
-                    Z1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z2"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
-                    Z2 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z3"</span><span class="op">)</span>,
-                    Z3 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFORB"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
+<code class="sourceCode R"><span class="va">Z.mkin.5</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>Z0 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFORB"</span>, <span class="st">"Z1"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
+                    Z1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z2"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
+                    Z2 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"Z3"</span><span class="op">)</span>,
+                    Z3 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFORB"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>## Temporary DLL for differentials generated and loaded</code></pre>
 <div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m.Z.mkin.5</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">Z.mkin.5</span>, <span class="va">FOCUS_2006_Z_mkin</span>,
                       parms.ini <span class="op">=</span> <span class="va">m.Z.mkin.4</span><span class="op">$</span><span class="va">bparms.ode</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>,

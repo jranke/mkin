@@ -102,7 +102,7 @@
       <h1 data-toc-skip>Benchmark timings for mkin</h1>
                         <h4 class="author">Johannes Ranke</h4>
             
-            <h4 class="date">2020-11-19</h4>
+            <h4 class="date">2020-11-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jranke/mkin/blob/master/vignettes/web_only/benchmarks.rmd"><code>vignettes/web_only/benchmarks.rmd</code></a></small>
       <div class="hidden name"><code>benchmarks.rmd</code></div>
@@ -127,14 +127,14 @@
 <p>One metabolite:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">SFO_SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>
-  parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"m1"</span><span class="op">)</span>,
-  m1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span>
+  parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"m1"</span><span class="op">)</span>,
+  m1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">FOMC_SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>
-  parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"FOMC"</span>, <span class="st">"m1"</span><span class="op">)</span>,
-  m1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span>
+  parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"FOMC"</span>, <span class="st">"m1"</span><span class="op">)</span>,
+  m1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">DFOP_SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>
-  parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"FOMC"</span>, <span class="st">"m1"</span><span class="op">)</span>,
-  m1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span>
+  parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"FOMC"</span>, <span class="st">"m1"</span><span class="op">)</span>,
+  m1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">t3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">SFO_SFO</span>, <span class="va">FOMC_SFO</span>, <span class="va">DFOP_SFO</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">FOCUS_D</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span>
 <span class="va">t4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">SFO_SFO</span>, <span class="va">FOMC_SFO</span>, <span class="va">DFOP_SFO</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">FOCUS_D</span><span class="op">)</span>,
     error_model <span class="op">=</span> <span class="st">"tc"</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></code></pre></div>
@@ -148,14 +148,14 @@
     error_model <span class="op">=</span> <span class="st">"obs"</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></code></pre></div>
 <p>Two metabolites, synthetic data:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">m_synth_SFO_lin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"M1"</span><span class="op">)</span>,
-                           M1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"M2"</span><span class="op">)</span>,
-                           M2 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,
+<code class="sourceCode R"><span class="va">m_synth_SFO_lin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"M1"</span><span class="op">)</span>,
+                           M1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"M2"</span><span class="op">)</span>,
+                           M2 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,
                            use_of_ff <span class="op">=</span> <span class="st">"max"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
-<span class="va">m_synth_DFOP_par</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"DFOP"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"M1"</span>, <span class="st">"M2"</span><span class="op">)</span><span class="op">)</span>,
-                           M1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,
-                           M2 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,
+<span class="va">m_synth_DFOP_par</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"DFOP"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"M1"</span>, <span class="st">"M2"</span><span class="op">)</span><span class="op">)</span>,
+                           M1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,
+                           M2 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,
                            use_of_ff <span class="op">=</span> <span class="st">"max"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
 <span class="va">SFO_lin_a</span> <span class="op">&lt;-</span> <span class="va">synthetic_data_for_UBA_2014</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">data</span>
@@ -232,8 +232,8 @@
 </tr>
 <tr class="even">
 <td align="left">0.9.50.4</td>
-<td align="right">1.702</td>
-<td align="right">3.717</td>
+<td align="right">1.786</td>
+<td align="right">3.729</td>
 </tr>
 </tbody>
 </table>
@@ -294,9 +294,9 @@
 </tr>
 <tr class="even">
 <td align="left">0.9.50.4</td>
-<td align="right">1.355</td>
-<td align="right">7.015</td>
-<td align="right">2.729</td>
+<td align="right">1.397</td>
+<td align="right">7.251</td>
+<td align="right">2.810</td>
 </tr>
 </tbody>
 </table>
@@ -381,12 +381,12 @@
 </tr>
 <tr class="even">
 <td align="left">0.9.50.4</td>
-<td align="right">0.759</td>
-<td align="right">1.245</td>
-<td align="right">1.436</td>
-<td align="right">3.687</td>
-<td align="right">1.886</td>
-<td align="right">3.028</td>
+<td align="right">0.783</td>
+<td align="right">1.282</td>
+<td align="right">1.486</td>
+<td align="right">3.815</td>
+<td align="right">1.958</td>
+<td align="right">3.105</td>
 </tr>
 </tbody>
 </table>
