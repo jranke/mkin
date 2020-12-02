@@ -8,11 +8,12 @@
 \usage{
 \method{nlme}{mmkin}(
   model,
-  data = sys.frame(sys.parent()),
-  fixed,
-  random = fixed,
+  data = "auto",
+  fixed = lapply(as.list(names(mean_degparms(model))), function(el) eval(parse(text =
+    paste(el, 1, sep = "~")))),
+  random = pdDiag(fixed),
   groups,
-  start,
+  start = mean_degparms(model, random = TRUE),
   correlation = NULL,
   weights = NULL,
   subset,

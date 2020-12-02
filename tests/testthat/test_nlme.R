@@ -56,18 +56,18 @@ test_that("nlme_function works correctly", {
   m_nlme_raw_2 <- nlme(value ~ SSasymp(time, 0, parent_0, log_k_parent),
     data = grouped_data,
     fixed = parent_0 + log_k_parent ~ 1,
-    random = pdLogChol(parent_0 + log_k_parent ~ 1),
+    random = pdDiag(parent_0 + log_k_parent ~ 1),
     start = mean_degparms(f, random = TRUE),
     control = list("msWarnNoConv" = FALSE))
 
   expect_equal(m_nlme_raw_2$coefficients, m_nlme_mmkin$coefficients)
 
-  anova_nlme <- anova(m_nlme_raw, m_nlme_mmkin)
+  anova_nlme <- anova(m_nlme_raw, m_nlme_mkin, m_nlme_raw_2, m_nlme_mmkin)
 
-  # We get a slightly lower AIC with the improved starting values used within
-  # nlme.mmkin, specifying also random effects
-  expect_lt(anova_nlme["m_nlme_mmkin", "AIC"],
+  expect_equal(anova_nlme["m_nlme_mkin", "AIC"],
     anova_nlme["m_nlme_raw", "AIC"])
+  expect_equal(anova_nlme["m_nlme_mmkin", "AIC"],
+    anova_nlme["m_nlme_raw_2", "AIC"])
 
   m_nlme_raw_up_1 <- update(m_nlme_raw, random = log_k_parent_sink ~ 1)
   # The following three calls give an error although they should
@@ -87,7 +87,7 @@ test_that("nlme_function works correctly", {
   m_nlme_mkin_up_2 <- update(m_nlme_mkin, random = parent_0 ~ 1)
   expect_equal(m_nlme_raw_up_2$coefficients, m_nlme_mkin_up_2$coefficients)
 
-  expect_warning(tmp <- update(m_nlme_mmkin), "Iteration 1, LME step")
+  expect_silent(tmp <- update(m_nlme_mmkin))
 
   geomean_dt50_mmkin <- exp(mean(log((sapply(f, function(x) endpoints(x)$distimes["parent", "DT50"])))))
   expect_equal(round(endpoints(m_nlme_mmkin)$distimes["parent", "DT50"]), round(geomean_dt50_mmkin))

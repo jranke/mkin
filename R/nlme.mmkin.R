@@ -130,9 +130,13 @@ get_deg_func <- function() {
 #'   anova(f_nlme_dfop_sfo, f_nlme_dfop_sfo_obs, f_nlme_dfop_sfo_tc)
 #'
 #' }
-nlme.mmkin <- function(model, data = sys.frame(sys.parent()),
-  fixed, random = fixed,
-  groups, start, correlation = NULL, weights = NULL,
+nlme.mmkin <- function(model, data = "auto",
+  fixed = lapply(as.list(names(mean_degparms(model))),
+    function(el) eval(parse(text = paste(el, 1, sep = "~")))),
+  random = pdDiag(fixed),
+  groups,
+  start = mean_degparms(model, random = TRUE),
+  correlation = NULL, weights = NULL,
   subset, method = c("ML", "REML"),
   na.action = na.fail, naPattern,
   control = list(), verbose= FALSE)
@@ -143,8 +147,8 @@ nlme.mmkin <- function(model, data = sys.frame(sys.parent()),
 
   # Warn in case arguments were used that are overriden
   if (any(!is.na(match(names(thisCall),
-               c("fixed", "data"))))) {
-    warning("'nlme.mmkin' will redefine 'fixed' and 'data'")
+               c("data"))))) {
+    warning("'nlme.mmkin' will redefine 'data'")
   }
 
   deg_func <- nlme_function(model)
@@ -158,21 +162,13 @@ nlme.mmkin <- function(model, data = sys.frame(sys.parent()),
 
   thisCall[["model"]] <- this_model
 
-  mean_dp_start <- mean_degparms(model)
-  dp_names <- names(mean_dp_start)
-
   thisCall[["data"]] <- nlme_data(model)
 
-  if (missing(start)) {
-    thisCall[["start"]] <- mean_degparms(model, random = TRUE)
-  }
+  thisCall[["start"]] <- start
 
-  thisCall[["fixed"]] <- lapply(as.list(dp_names), function(el)
-                                 eval(parse(text = paste(el, 1, sep = "~"))))
+  thisCall[["fixed"]] <- fixed
 
-  if (missing(random)) {
-    thisCall[["random"]] <- pdLogChol(thisCall[["fixed"]])
-  }
+  thisCall[["random"]] <- random
 
   error_model <- model[[1]]$err_mod
 
@@ -198,7 +194,7 @@ nlme.mmkin <- function(model, data = sys.frame(sys.parent()),
   val$mkinmod <- model[[1]]$mkinmod
   val$data <- thisCall[["data"]]
   val$mmkin <- model
-  val$mean_dp_start <- mean_dp_start
+  val$mean_dp_start <- start$fixed
   val$transform_rates <- model[[1]]$transform_rates
   val$transform_fractions <- model[[1]]$transform_fractions
   val$solution_type <- model[[1]]$solution_type
