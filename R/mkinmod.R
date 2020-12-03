@@ -33,8 +33,8 @@
 #' @param use_of_ff Specification of the use of formation fractions in the
 #'   model equations and, if applicable, the coefficient matrix.  If "max",
 #'   formation fractions are always used (default).  If "min", a minimum use of
-#'   formation fractions is made, i.e. each pathway to a metabolite has its
-#'   own rate constant.
+#'   formation fractions is made, i.e. each first-order pathway to a metabolite
+#'   has its own rate constant.
 #' @param speclist The specification of the observed variables and their
 #'   submodel types and pathways can be given as a single list using this
 #'   argument. Default is NULL.
