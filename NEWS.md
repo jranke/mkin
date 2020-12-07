@@ -1,6 +1,6 @@
 # mkin 0.9.50.4 (unreleased)
 
-- 'mkinmod' models gain arguments 'name' and 'dll_dir' which, in conjunction with the upcoming version of the 'inline' package, makes it possible to still use the DLL used for fast ODE solutions with 'deSolve' after saving and restoring the 'mkinmod' object.
+- 'mkinmod' models gain arguments 'name' and 'dll_dir' which, in conjunction with a current version of the 'inline' package, make it possible to still use the DLL used for fast ODE solutions with 'deSolve' after saving and restoring the 'mkinmod' object.
 
 - 'f_norm_temp_focus' generic function to normalise time intervals using the FOCUS method, with methods for numeric vectors and 'mkindsg' objects
 
