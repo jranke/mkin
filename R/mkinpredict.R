@@ -222,11 +222,17 @@ mkinpredict.mkinmod <- function(x,
   if (map_output) {
     # Output transformation for models with unobserved compartments like SFORB
     # if not already mapped in analytical solution
+    if (!na_stop) {
+      available <- c(TRUE, rep(FALSE, length(outtimes) - 1))
+    } else {
+      available <- rep(TRUE, length(outtimes))
+    }
     for (var in names(x$map)) {
       if((length(x$map[[var]]) == 1)) {
-        out_obs[, var] <- out[, var]
+        out_obs[available, var] <- out[available, var]
       } else {
-        out_obs[, var] <- out[, x$map[[var]][1]] + out[, x$map[[var]][2]]
+        out_obs[available, var] <- out[available, x$map[[var]][1]] +
+          out[available, x$map[[var]][2]]
       }
     }
     return(out_obs)
