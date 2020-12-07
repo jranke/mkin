@@ -17,6 +17,13 @@ utils::globalVariables(c("predicted", "std"))
 #'   [mkinmod] model to different datasets
 #' @param verbose Should we print information about created objects of
 #'   type [saemix::SaemixModel] and [saemix::SaemixData]?
+#' @param transformations Per default, all parameter transformations are done
+#'   in mkin. If this argument is set to 'saemix', parameter transformations
+#'   are done in 'saemix' for the supported cases. Currently this is only
+#'   supported in cases where the initial concentration of the parent is not fixed,
+#'   SFO or DFOP is used for the parent and there is either no metabolite or one.
+#' @param solution_type Possibility to specify the solution type in case the
+#'   automatic choice is not desired
 #' @param quiet Should we suppress the messages saemix prints at the beginning
 #'   and the end of the optimisation process?
 #' @param cores The number of cores to be used for multicore processing using
@@ -90,12 +97,15 @@ saem <- function(object, control, ...) UseMethod("saem")
 #' @rdname saem
 #' @export
 saem.mmkin <- function(object,
+  transformations = c("mkin", "saemix"),
+  solution_type = "auto",
   control = list(displayProgress = FALSE, print = FALSE,
     save = FALSE, save.graphs = FALSE),
   cores = 1,
   verbose = FALSE, suppressPlot = TRUE, quiet = FALSE, ...)
 {
-  m_saemix <- saemix_model(object, cores = cores, verbose = verbose, ...)
+  m_saemix <- saemix_model(object, cores = cores, verbose = verbose,
+    solution_type = solution_type, transformations = transformations, ...)
   d_saemix <- saemix_data(object, verbose = verbose)
   if (suppressPlot) {
     # We suppress the log-likelihood curve that saemix currently
@@ -113,10 +123,15 @@ saem.mmkin <- function(object,
   }
   transparms_optim <- f_saemix@results@fixed.effects
   names(transparms_optim) <- f_saemix@results@name.fixed
-  bparms_optim <- backtransform_odeparms(transparms_optim,
-    object[[1]]$mkinmod,
-    object[[1]]$transform_rates,
-    object[[1]]$transform_fractions)
+
+  if (transformations == "mkin") {
+    bparms_optim <- backtransform_odeparms(transparms_optim,
+      object[[1]]$mkinmod,
+      object[[1]]$transform_rates,
+      object[[1]]$transform_fractions)
+  } else {
+    bparms_optim <- transparms_optim
+  }
 
   return_data <- nlme_data(object)
 
@@ -136,6 +151,7 @@ saem.mmkin <- function(object,
     mkinmod = object[[1]]$mkinmod,
     mmkin = object,
     solution_type = object[[1]]$solution_type,
+    transformations = transformations,
     transform_rates = object[[1]]$transform_rates,
     transform_fractions = object[[1]]$transform_fractions,
     so = f_saemix,
@@ -188,13 +204,20 @@ print.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3), ...) {
 #' @rdname saem
 #' @return An [saemix::SaemixModel] object.
 #' @export
-saemix_model <- function(object, cores = 1, verbose = FALSE, ...) {
+saemix_model <- function(object, solution_type = "auto", transformations = c("mkin", "saemix"),
+  cores = 1, verbose = FALSE, ...)
+{
   if (nrow(object) > 1) stop("Only row objects allowed")
 
   mkin_model <- object[[1]]$mkinmod
-  solution_type <- object[[1]]$solution_type
 
   degparms_optim <-  mean_degparms(object)
+  if (transformations == "saemix") {
+    degparms_optim <- backtransform_odeparms(degparms_optim,
+      object[[1]]$mkinmod,
+      object[[1]]$transform_rates,
+      object[[1]]$transform_fractions)
+  }
   degparms_fixed <- object[[1]]$bparms.fixed
 
   # Transformations are done in the degradation function
@@ -249,8 +272,15 @@ saemix_model <- function(object, cores = 1, verbose = FALSE, ...) {
         }
       } else {
         if (parent_type == "SFO") {
-          model_function <- function(psi, id, xidep) {
-            psi[id, 1] * exp( - exp(psi[id, 2]) * xidep[, "time"])
+          if (transformations == "mkin") {
+            model_function <- function(psi, id, xidep) {
+              psi[id, 1] * exp( - exp(psi[id, 2]) * xidep[, "time"])
+            }
+          } else {
+            model_function <- function(psi, id, xidep) {
+              psi[id, 1] * exp( - psi[id, 2] * xidep[, "time"])
+            }
+            transform.par = c(0, 1)
           }
         }
         if (parent_type == "FOMC") {
@@ -259,11 +289,21 @@ saemix_model <- function(object, cores = 1, verbose = FALSE, ...) {
           }
         }
         if (parent_type == "DFOP") {
-          model_function <- function(psi, id, xidep) {
-            g <- plogis(psi[id, 4])
-            t <- xidep[, "time"]
-            psi[id, 1] * (g * exp(- exp(psi[id, 2]) * t) +
-              (1 - g) * exp(- exp(psi[id, 3]) * t))
+          if (transformations == "mkin") {
+            model_function <- function(psi, id, xidep) {
+              g <- plogis(psi[id, 4])
+              t <- xidep[, "time"]
+              psi[id, 1] * (g * exp(- exp(psi[id, 2]) * t) +
+                (1 - g) * exp(- exp(psi[id, 3]) * t))
+            }
+          } else {
+            model_function <- function(psi, id, xidep) {
+              g <- psi[id, 4]
+              t <- xidep[, "time"]
+              psi[id, 1] * (g * exp(- psi[id, 2] * t) +
+                (1 - g) * exp(- psi[id, 3] * t))
+            }
+            transform.par = c(0, 1, 1, 3)
           }
         }
         if (parent_type == "HS") {
@@ -282,53 +322,95 @@ saemix_model <- function(object, cores = 1, verbose = FALSE, ...) {
     # Parent with one metabolite
     # Parameter names used in the model functions are as in
     # https://nbviewer.jupyter.org/urls/jrwb.de/nb/Symbolic%20ODE%20solutions%20for%20mkin.ipynb
-    if (length(mkin_model$spec) == 2) {
-      types <- unname(sapply(mkin_model$spec, function(x) x$type))
+    types <- unname(sapply(mkin_model$spec, function(x) x$type))
+    if (length(mkin_model$spec) == 2 &! "SFORB" %in% types ) {
       # Initial value for the metabolite (n20) must be fixed
       if (names(odeini_fixed) == names(mkin_model$spec)[2]) {
         n20 <- odeini_fixed
         parent_name <- names(mkin_model$spec)[1]
         if (identical(types, c("SFO", "SFO"))) {
-          model_function <- function(psi, id, xidep) {
-            t <- xidep[, "time"]
-            n10 <- psi[id, 1]
-            k1 <- exp(psi[id, 2])
-            k2 <- exp(psi[id, 3])
-            f12 <- plogis(psi[id, 4])
-            ifelse(xidep[, "name"] == parent_name,
-              n10 * exp(- k1 * t),
-              (((k2 - k1) * n20 - f12 * k1 * n10) * exp(- k2 * t)) / (k2 - k1) +
-                (f12 * k1 * n10 * exp(- k1 * t)) / (k2 - k1)
-            )
+          if (transformations == "mkin") {
+            model_function <- function(psi, id, xidep) {
+              t <- xidep[, "time"]
+              n10 <- psi[id, 1]
+              k1 <- exp(psi[id, 2])
+              k2 <- exp(psi[id, 3])
+              f12 <- plogis(psi[id, 4])
+              ifelse(xidep[, "name"] == parent_name,
+                n10 * exp(- k1 * t),
+                (((k2 - k1) * n20 - f12 * k1 * n10) * exp(- k2 * t)) / (k2 - k1) +
+                  (f12 * k1 * n10 * exp(- k1 * t)) / (k2 - k1)
+              )
+            }
+          } else {
+            model_function <- function(psi, id, xidep) {
+              t <- xidep[, "time"]
+              n10 <- psi[id, 1]
+              k1 <- psi[id, 2]
+              k2 <- psi[id, 3]
+              f12 <- psi[id, 4]
+              ifelse(xidep[, "name"] == parent_name,
+                n10 * exp(- k1 * t),
+                (((k2 - k1) * n20 - f12 * k1 * n10) * exp(- k2 * t)) / (k2 - k1) +
+                  (f12 * k1 * n10 * exp(- k1 * t)) / (k2 - k1)
+              )
+            }
+            transform.par = c(0, 1, 1, 3)
           }
         }
         if (identical(types, c("DFOP", "SFO"))) {
-          model_function <- function(psi, id, xidep) {
-            t <- xidep[, "time"]
-            n10 <- psi[id, 1]
-            k2 <- exp(psi[id, 2])
-            f12 <- plogis(psi[id, 3])
-            l1 <- exp(psi[id, 4])
-            l2 <- exp(psi[id, 5])
-            g <- plogis(psi[id, 6])
-            ifelse(xidep[, "name"] == parent_name,
-              n10 * (g * exp(- l1 * t) + (1 - g) * exp(- l2 * t)),
-              ((f12 * g - f12) * l2 * n10 * exp(- l2 * t)) / (l2 - k2) -
-                (f12 * g * l1 * n10 * exp(- l1 * t)) / (l1 - k2) +
-                ((((l1 - k2) * l2 - k2 * l1 + k2^2) * n20 +
-                    ((f12 * l1 + (f12 * g - f12) * k2) * l2 -
-                      f12 * g * k2 * l1) * n10) * exp( - k2 * t)) /
-                ((l1 - k2) * l2 - k2 * l1 + k2^2)
-            )
+          if (transformations == "mkin") {
+            model_function <- function(psi, id, xidep) {
+              t <- xidep[, "time"]
+              n10 <- psi[id, 1]
+              k2 <- exp(psi[id, 2])
+              f12 <- plogis(psi[id, 3])
+              l1 <- exp(psi[id, 4])
+              l2 <- exp(psi[id, 5])
+              g <- plogis(psi[id, 6])
+              ifelse(xidep[, "name"] == parent_name,
+                n10 * (g * exp(- l1 * t) + (1 - g) * exp(- l2 * t)),
+                ((f12 * g - f12) * l2 * n10 * exp(- l2 * t)) / (l2 - k2) -
+                  (f12 * g * l1 * n10 * exp(- l1 * t)) / (l1 - k2) +
+                  ((((l1 - k2) * l2 - k2 * l1 + k2^2) * n20 +
+                      ((f12 * l1 + (f12 * g - f12) * k2) * l2 -
+                        f12 * g * k2 * l1) * n10) * exp( - k2 * t)) /
+                  ((l1 - k2) * l2 - k2 * l1 + k2^2)
+              )
+            }
+          } else {
+            model_function <- function(psi, id, xidep) {
+              t <- xidep[, "time"]
+              n10 <- psi[id, 1]
+              k2 <- psi[id, 2]
+              f12 <- psi[id, 3]
+              l1 <- psi[id, 4]
+              l2 <- psi[id, 5]
+              g <- psi[id, 6]
+              ifelse(xidep[, "name"] == parent_name,
+                n10 * (g * exp(- l1 * t) + (1 - g) * exp(- l2 * t)),
+                ((f12 * g - f12) * l2 * n10 * exp(- l2 * t)) / (l2 - k2) -
+                  (f12 * g * l1 * n10 * exp(- l1 * t)) / (l1 - k2) +
+                  ((((l1 - k2) * l2 - k2 * l1 + k2^2) * n20 +
+                      ((f12 * l1 + (f12 * g - f12) * k2) * l2 -
+                        f12 * g * k2 * l1) * n10) * exp( - k2 * t)) /
+                  ((l1 - k2) * l2 - k2 * l1 + k2^2)
+              )
+            }
+            transform.par = c(0, 1, 3, 1, 1, 3)
           }
         }
       }
     }
   }
 
-  if (is.function(model_function)) {
+  if (is.function(model_function) & solution_type == "auto") {
     solution_type = "analytical saemix"
   } else {
+
+    if (solution_type == "auto")
+      solution_type <- object[[1]]$solution_type
+
     model_function <- function(psi, id, xidep) {
 
       uid <- unique(id)
