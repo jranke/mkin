@@ -36,11 +36,11 @@ test_that("Plotting mkinfit and mmkin objects is reproducible", {
   vdiffr::expect_doppelganger("mmkin plot for FOCUS C", mmkin_FOCUS_C)
   vdiffr::expect_doppelganger("mmkin plot for SFO (FOCUS C and D)", mmkin_SFO)
   vdiffr::expect_doppelganger("plot_errmod with FOCUS C tc", plot_errmod_fit_C_tc)
+  skip_on_travis() # Still not working on Travis, maybe because of deSolve producing
   vdiffr::expect_doppelganger("mixed model fit for mmkin object", plot_biphasic_mmkin)
   vdiffr::expect_doppelganger("mixed model fit for nlme object", plot_biphasic_nlme)
   vdiffr::expect_doppelganger("mixed model fit for saem object with saemix transformations", plot_biphasic_saem_s)
   vdiffr::expect_doppelganger("mixed model fit for saem object with mkin transformations", plot_biphasic_saem_m)
-  skip_on_travis() # Still not working on Travis, maybe because of deSolve producing
   # different results when not working with a compiled model or eigenvalues
   vdiffr::expect_doppelganger("plot_errmod with FOCUS D obs eigen", plot_errmod_fit_D_obs_eigen)
   vdiffr::expect_doppelganger("plot_res for FOCUS D", plot_res_sfo_sfo)
