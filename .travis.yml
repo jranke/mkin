@@ -17,8 +17,8 @@ r_github_packages:
 r_packages:
   - nlme
 script:
-  - |
-    R CMD build .
-    travis_wait 30 R CMD check mkin_*.tar.gz
+  - R CMD build .
+  - R CMD check --no-tests mkin_*.tar.gz
+  - Rscript -e 'devtools::test()'
 after_success:
-  - travis_wait 30 Rscript -e 'covr::codecov()'
+  - Rscript -e 'covr::codecov()'
