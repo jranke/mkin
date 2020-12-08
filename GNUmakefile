@@ -91,7 +91,7 @@ slowtests: install
 	sed -i -e "s/\r.*\r//" tests_slow.log
 
 vdiffr:
-	"$(RDEVBIN)/Rscript" -e 'vdiffr::manage_cases(filter = "plot|nafta")'
+	"$(RBIN)/Rscript" -e 'vdiffr::manage_cases(filter = "plot|nafta")'
 
 testcheck: test check
 
