@@ -885,8 +885,8 @@ mkinfit <- function(mkinmod, observed,
   fit$rss <- function(P) cost_function(P, OLS = TRUE, update_data = FALSE)
 
   # Log-likelihood with possibility to fix degparms or errparms
-  fit$ll <- function(P, fixed_degparms = FALSE, fixed_errparms = FALSE) {
-    - cost_function(P, trans = FALSE, fixed_degparms = fixed_degparms,
+  fit$ll <- function(P, fixed_degparms = FALSE, fixed_errparms = FALSE, trans = FALSE) {
+    - cost_function(P, trans = trans, fixed_degparms = fixed_degparms,
       fixed_errparms = fixed_errparms, OLS = FALSE, update_data = FALSE)
   }
 

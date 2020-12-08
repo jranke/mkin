@@ -8,10 +8,12 @@
 \alias{saemix_data}
 \title{Fit nonlinear mixed models with SAEM}
 \usage{
-saem(object, control, ...)
+saem(object, ...)
 
 \method{saem}{mmkin}(
   object,
+  transformations = c("mkin", "saemix"),
+  solution_type = "auto",
   control = list(displayProgress = FALSE, print = FALSE, save = FALSE, save.graphs =
     FALSE),
   cores = 1,
@@ -23,7 +25,14 @@ saem(object, control, ...)
 
 \method{print}{saem.mmkin}(x, digits = max(3, getOption("digits") - 3), ...)
 
-saemix_model(object, cores = 1, verbose = FALSE, ...)
+saemix_model(
+  object,
+  solution_type = "auto",
+  transformations = c("mkin", "saemix"),
+  cores = 1,
+  verbose = FALSE,
+  ...
+)
 
 saemix_data(object, verbose = FALSE, ...)
 }
@@ -31,9 +40,18 @@ saemix_data(object, verbose = FALSE, ...)
 \item{object}{An \link{mmkin} row object containing several fits of the same
 \link{mkinmod} model to different datasets}
 
-\item{control}{Passed to \link[saemix:saemix]{saemix::saemix}}
-
 \item{\dots}{Further parameters passed to \link[saemix:saemixModel]{saemix::saemixModel}.}
+
+\item{transformations}{Per default, all parameter transformations are done
+in mkin. If this argument is set to 'saemix', parameter transformations
+are done in 'saemix' for the supported cases. Currently this is only
+supported in cases where the initial concentration of the parent is not fixed,
+SFO or DFOP is used for the parent and there is either no metabolite or one.}
+
+\item{solution_type}{Possibility to specify the solution type in case the
+automatic choice is not desired}
+
+\item{control}{Passed to \link[saemix:saemix]{saemix::saemix}}
 
 \item{cores}{The number of cores to be used for multicore processing using
 \code{\link[parallel:mclapply]{parallel::mclapply()}}. Using more than 1 core is experimental and may

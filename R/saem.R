@@ -92,7 +92,7 @@ utils::globalVariables(c("predicted", "std"))
 #' plot(f_saem_fomc)
 #' }
 #' @export
-saem <- function(object, control, ...) UseMethod("saem")
+saem <- function(object, ...) UseMethod("saem")
 
 #' @rdname saem
 #' @export
@@ -104,9 +104,11 @@ saem.mmkin <- function(object,
   cores = 1,
   verbose = FALSE, suppressPlot = TRUE, quiet = FALSE, ...)
 {
+  transformations <- match.arg(transformations)
   m_saemix <- saemix_model(object, cores = cores, verbose = verbose,
     solution_type = solution_type, transformations = transformations, ...)
   d_saemix <- saemix_data(object, verbose = verbose)
+
   if (suppressPlot) {
     # We suppress the log-likelihood curve that saemix currently
     # produces at the end of the fit by plotting to a file

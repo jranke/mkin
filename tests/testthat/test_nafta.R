@@ -20,7 +20,6 @@ test_that("Test data from Appendix B are correctly evaluated", {
 
   expect_known_output(print(res), "NAFTA_SOP_Appendix_B.txt")
 
-  skip_on_travis()
   plot_nafta <- function() plot(res)
   if(requireNamespace("vdiffr", quietly = TRUE)) {
     skip_if(getRversion() < "4.1.0")
@@ -49,7 +48,6 @@ test_that("Test data from Appendix D are correctly evaluated", {
 
   expect_known_output(print(res), "NAFTA_SOP_Appendix_D.txt")
 
-  skip_on_travis()
   plot_nafta <- function() plot(res)
   if(requireNamespace("vdiffr", quietly = TRUE)) {
     skip_if(getRversion() < "4.1.0")

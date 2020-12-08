@@ -100,3 +100,67 @@ fit_obs_1 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, error_model = "obs", quiet = TR
 # We know threestep is OK, and threestep (and IRLS) is faster here
 fit_tc_1 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, error_model = "tc", quiet = TRUE,
   error_model_algorithm = "threestep")
+
+# Mixed models data
+set.seed(123456)
+sampling_times = c(0, 1, 3, 7, 14, 28, 60, 90, 120)
+n <- n_biphasic <- 15
+log_sd <- 0.3
+err_1 = list(const = 1, prop = 0.05)
+tc <- function(value) sigma_twocomp(value, err_1$const, err_1$prop)
+const <- function(value) 2
+
+SFO <- mkinmod(parent = mkinsub("SFO"))
+k_parent = rlnorm(n, log(0.03), log_sd)
+ds_sfo <- lapply(1:n, function(i) {
+  ds_mean <- mkinpredict(SFO, c(k_parent = k_parent[i]),
+    c(parent = 100), sampling_times)
+  add_err(ds_mean, tc, n = 1)[[1]]
+})
+
+DFOP <- mkinmod(parent = mkinsub("DFOP"))
+dfop_pop <- list(parent_0 = 100, k1 = 0.06, k2 = 0.015, g = 0.4)
+dfop_parms <- as.matrix(data.frame(
+  k1 = rlnorm(n, log(dfop_pop$k1), log_sd),
+  k2 = rlnorm(n, log(dfop_pop$k2), log_sd),
+  g = plogis(rnorm(n, qlogis(dfop_pop$g), log_sd))))
+ds_dfop <- lapply(1:n, function(i) {
+  ds_mean <- mkinpredict(DFOP, dfop_parms[i, ],
+    c(parent = dfop_pop$parent_0), sampling_times)
+  add_err(ds_mean, const, n = 1)[[1]]
+})
+
+set.seed(123456)
+DFOP_SFO <- mkinmod(
+  parent = mkinsub("DFOP", "m1"),
+  m1 = mkinsub("SFO"),
+  quiet = TRUE)
+dfop_sfo_pop <- list(parent_0 = 100,
+  k_m1 = 0.002, f_parent_to_m1 = 0.5,
+  k1 = 0.05, k2 = 0.01, g = 0.5)
+syn_biphasic_parms <- as.matrix(data.frame(
+  k1 = rlnorm(n_biphasic, log(dfop_sfo_pop$k1), log_sd),
+  k2 = rlnorm(n_biphasic, log(dfop_sfo_pop$k2), log_sd),
+  g = plogis(rnorm(n_biphasic, qlogis(dfop_sfo_pop$g), log_sd)),
+  f_parent_to_m1 = plogis(rnorm(n_biphasic,
+      qlogis(dfop_sfo_pop$f_parent_to_m1), log_sd)),
+  k_m1 = rlnorm(n_biphasic, log(dfop_sfo_pop$k_m1), log_sd)))
+ds_biphasic_mean <- lapply(1:n_biphasic,
+  function(i) {
+    mkinpredict(DFOP_SFO, syn_biphasic_parms[i, ],
+      c(parent = 100, m1 = 0), sampling_times)
+  }
+)
+ds_biphasic <- lapply(ds_biphasic_mean, function(ds) {
+  add_err(ds,
+    sdfunc = function(value) sqrt(err_1$const^2 + value^2 * err_1$prop^2),
+    n = 1, secondary = "m1")[[1]]
+})
+
+# Mixed model fits
+mmkin_sfo_1 <- mmkin("SFO", ds_sfo, quiet = TRUE, error_model = "tc")
+sfo_saemix_1 <- saem(mmkin_sfo_1, quiet = TRUE, transformations = "saemix")
+mmkin_biphasic <- mmkin(list("DFOP-SFO" = DFOP_SFO), ds_biphasic, quiet = TRUE)
+nlme_biphasic <- nlme(mmkin_biphasic)
+saem_biphasic_m <- saem(mmkin_biphasic, transformations = "mkin", quiet = TRUE)
+saem_biphasic_s <- saem(mmkin_biphasic, transformations = "saemix", quiet = TRUE)

@@ -89,9 +89,42 @@ summary.saem.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes =
   confint_trans <- as.matrix(conf.int[pnames, c("estimate", "lower", "upper")])
   colnames(confint_trans)[1] <- "est."
 
-  bp <- backtransform_odeparms(confint_trans[, "est."], object$mkinmod,
-    object$transform_rates, object$transform_fractions)
-  bpnames <- names(bp)
+  if (object$transformations == "mkin") {
+    bp <- backtransform_odeparms(confint_trans[, "est."], object$mkinmod,
+      object$transform_rates, object$transform_fractions)
+    bpnames <- names(bp)
+
+    # Transform boundaries of CI for one parameter at a time,
+    # with the exception of sets of formation fractions (single fractions are OK).
+    f_names_skip <- character(0)
+    for (box in mod_vars) { # Figure out sets of fractions to skip
+      f_names <- grep(paste("^f", box, sep = "_"), pnames, value = TRUE)
+      n_paths <- length(f_names)
+      if (n_paths > 1) f_names_skip <- c(f_names_skip, f_names)
+    }
+
+    confint_back <- matrix(NA, nrow = length(bp), ncol = 3,
+      dimnames = list(bpnames, colnames(confint_trans)))
+    confint_back[, "est."] <- bp
+
+    for (pname in pnames) {
+      if (!pname %in% f_names_skip) {
+        par.lower <- confint_trans[pname, "lower"]
+        par.upper <- confint_trans[pname, "upper"]
+        names(par.lower) <- names(par.upper) <- pname
+        bpl <- backtransform_odeparms(par.lower, object$mkinmod,
+                                              object$transform_rates,
+                                              object$transform_fractions)
+        bpu <- backtransform_odeparms(par.upper, object$mkinmod,
+                                              object$transform_rates,
+                                              object$transform_fractions)
+        confint_back[names(bpl), "lower"] <- bpl
+        confint_back[names(bpu), "upper"] <- bpu
+      }
+    }
+  } else {
+    confint_back <- confint_trans
+  }
 
   #  Correlation of fixed effects (inspired by summary.nlme)
   varFix <- vcov(object$so)[1:np, 1:np]
@@ -111,34 +144,6 @@ summary.saem.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes =
   confint_errmod <- as.matrix(conf.int[enames, c("estimate", "lower", "upper")])
   colnames(confint_errmod)[1] <- "est."
 
-  # Transform boundaries of CI for one parameter at a time,
-  # with the exception of sets of formation fractions (single fractions are OK).
-  f_names_skip <- character(0)
-  for (box in mod_vars) { # Figure out sets of fractions to skip
-    f_names <- grep(paste("^f", box, sep = "_"), pnames, value = TRUE)
-    n_paths <- length(f_names)
-    if (n_paths > 1) f_names_skip <- c(f_names_skip, f_names)
-  }
-
-  confint_back <- matrix(NA, nrow = length(bp), ncol = 3,
-    dimnames = list(bpnames, colnames(confint_trans)))
-  confint_back[, "est."] <- bp
-
-  for (pname in pnames) {
-    if (!pname %in% f_names_skip) {
-      par.lower <- confint_trans[pname, "lower"]
-      par.upper <- confint_trans[pname, "upper"]
-      names(par.lower) <- names(par.upper) <- pname
-      bpl <- backtransform_odeparms(par.lower, object$mkinmod,
-                                            object$transform_rates,
-                                            object$transform_fractions)
-      bpu <- backtransform_odeparms(par.upper, object$mkinmod,
-                                            object$transform_rates,
-                                            object$transform_fractions)
-      confint_back[names(bpl), "lower"] <- bpl
-      confint_back[names(bpu), "upper"] <- bpu
-    }
-  }
 
   object$confint_trans <- confint_trans
   object$confint_ranef <- confint_ranef
@@ -213,7 +218,7 @@ print.summary.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3)
   print(data.frame(AIC = x$AIC, BIC = x$BIC, logLik = x$logLik,
       row.names = " "), digits = digits)
 
-  cat("\nOptimised, transformed parameters with symmetric confidence intervals:\n")
+  cat("\nOptimised parameters:\n")
   print(x$confint_trans, digits = digits)
 
   if (nrow(x$confint_trans) > 1) {
@@ -228,8 +233,10 @@ print.summary.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3)
   cat("\nVariance model:\n")
   print(x$confint_errmod, digits = digits)
 
-  cat("\nBacktransformed parameters with asymmetric confidence intervals:\n")
-  print(x$confint_back, digits = digits)
+  if (x$transformations == "mkin") {
+    cat("\nBacktransformed parameters:\n")
+    print(x$confint_back, digits = digits)
+  }
 
   printSFORB <- !is.null(x$SFORB)
   if(printSFORB){

@@ -26,7 +26,7 @@
 )
 }
 \arguments{
-\item{x}{An object of class \link{saem.mmkin} or \link{nlme.mmkin}}
+\item{x}{An object of class \link{mixed.mmkin}, \link{saem.mmkin} or \link{nlme.mmkin}}
 
 \item{i}{A numeric index to select datasets for which to plot the individual predictions,
 in case plots get too large}

@@ -2,7 +2,7 @@ utils::globalVariables("ds")
 
 #' Plot predictions from a fitted nonlinear mixed model obtained via an mmkin row object
 #'
-#' @param x An object of class [saem.mmkin] or [nlme.mmkin]
+#' @param x An object of class [mixed.mmkin], [saem.mmkin] or [nlme.mmkin]
 #' @param i A numeric index to select datasets for which to plot the individual predictions,
 #'   in case plots get too large
 #' @inheritParams plot.mkinfit
@@ -63,31 +63,43 @@ plot.mixed.mmkin <- function(x,
   fit_1 <- x$mmkin[[1]]
   ds_names <- colnames(x$mmkin)
 
+  backtransform = TRUE
+
+  if (identical(class(x), "mixed.mmkin")) {
+    degparms_pop <- mean_degparms(x$mmkin)
+
+    degparms_tmp <- parms(x$mmkin, transformed = TRUE)
+    degparms_i <- as.data.frame(t(degparms_tmp[setdiff(rownames(degparms_tmp), names(fit_1$errparms)), ]))
+    residual_type = ifelse(standardized, "standardized", "residual")
+    residuals <- x$data[[residual_type]]
+  }
+
   if (inherits(x, "nlme.mmkin")) {
-    degparms_optim <- coefficients(x)
+    degparms_i <- coefficients(x)
     degparms_pop <- nlme::fixef(x)
     residuals <- residuals(x,
       type = ifelse(standardized, "pearson", "response"))
   }
 
   if (inherits(x, "saem.mmkin")) {
-    degparms_optim <- saemix::psi(x$so)
-    rownames(degparms_optim) <- ds_names
-    degparms_optim_names <- setdiff(names(fit_1$par), names(fit_1$errparms))
-    colnames(degparms_optim) <- degparms_optim_names
-    residual_type = ifelse(standardized, "residual", "standardized")
+    if (x$transformations == "saemix") backtransform = FALSE
+    degparms_i <- saemix::psi(x$so)
+    rownames(degparms_i) <- ds_names
+    degparms_i_names <- setdiff(x$so@results@name.fixed, names(fit_1$errparms))
+    colnames(degparms_i) <- degparms_i_names
+    residual_type = ifelse(standardized, "standardized", "residual")
     residuals <- x$data[[residual_type]]
     degparms_pop <- x$so@results@fixed.effects
-    names(degparms_pop) <- degparms_optim_names
+    names(degparms_pop) <- degparms_i_names
   }
 
   degparms_fixed <- fit_1$fixed$value
   names(degparms_fixed) <- rownames(fit_1$fixed)
-  degparms_all <- cbind(as.matrix(degparms_optim),
-    matrix(rep(degparms_fixed, nrow(degparms_optim)),
+  degparms_all <- cbind(as.matrix(degparms_i),
+    matrix(rep(degparms_fixed, nrow(degparms_i)),
       ncol = length(degparms_fixed),
-      nrow = nrow(degparms_optim), byrow = TRUE))
-  degparms_all_names <- c(names(degparms_optim), names(degparms_fixed))
+      nrow = nrow(degparms_i), byrow = TRUE))
+  degparms_all_names <- c(names(degparms_i), names(degparms_fixed))
   colnames(degparms_all) <- degparms_all_names
 
   degparms_all_pop <- c(degparms_pop, degparms_fixed)
@@ -106,10 +118,14 @@ plot.mixed.mmkin <- function(x,
   pred_ds <- purrr::map_dfr(i, function(ds_i)   {
     odeparms_trans <- degparms_all[ds_i, odeparms_names]
     names(odeparms_trans) <- odeparms_names # needed if only one odeparm
-    odeparms <- backtransform_odeparms(odeparms_trans,
-      x$mkinmod,
-      transform_rates = fit_1$transform_rates,
-      transform_fractions = fit_1$transform_fractions)
+    if (backtransform) {
+      odeparms <- backtransform_odeparms(odeparms_trans,
+        x$mkinmod,
+        transform_rates = fit_1$transform_rates,
+        transform_fractions = fit_1$transform_fractions)
+    } else {
+      odeparms <- odeparms_trans
+    }
 
     odeini <- degparms_all[ds_i, odeini_names]
     names(odeini) <- gsub("_0", "", odeini_names)
@@ -121,10 +137,15 @@ plot.mixed.mmkin <- function(x,
   })
 
   odeparms_pop_trans <- degparms_all_pop[odeparms_names]
-  odeparms_pop <- backtransform_odeparms(odeparms_pop_trans,
-    x$mkinmod,
-    transform_rates = fit_1$transform_rates,
-    transform_fractions = fit_1$transform_fractions)
+
+  if (backtransform) {
+    odeparms_pop <- backtransform_odeparms(odeparms_pop_trans,
+      x$mkinmod,
+      transform_rates = fit_1$transform_rates,
+      transform_fractions = fit_1$transform_fractions)
+  } else {
+    odeparms_pop <- odeparms_pop_trans
+  }
 
   odeini_pop <- degparms_all_pop[odeini_names]
   names(odeini_pop) <- gsub("_0", "", odeini_names)

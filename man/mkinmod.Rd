@@ -41,8 +41,8 @@ In print.mkinmod, this argument is currently not used.}
 \item{use_of_ff}{Specification of the use of formation fractions in the
 model equations and, if applicable, the coefficient matrix.  If "max",
 formation fractions are always used (default).  If "min", a minimum use of
-formation fractions is made, i.e. each pathway to a metabolite has its
-own rate constant.}
+formation fractions is made, i.e. each first-order pathway to a metabolite
+has its own rate constant.}
 
 \item{name}{A name for the model. Should be a valid R object name.}
 

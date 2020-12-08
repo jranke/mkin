@@ -1,6 +1,19 @@
 context("Confidence intervals and p-values")
 
+test_that("Some special cases of confidence interval calculation work", {
+
+  tmp <- expect_warning(mkinfit("FOMC", FOCUS_2006_A, quiet = TRUE), "not converge")
+
+  expect_equivalent(
+    confint(tmp, transform = FALSE),
+    matrix(rep(NA, 8), nrow = 4))
+})
+
 test_that("The confint method 'quadratic' is consistent with the summary", {
+  expect_equivalent(
+    confint(fit_nw_1, parm = "parent_0", method = "quadratic"),
+    summary(fit_nw_1)$bpar["parent_0", c("Lower", "Upper")])
+
   expect_equivalent(
     confint(fit_nw_1, method = "quadratic"),
     summary(fit_nw_1)$bpar[, c("Lower", "Upper")])
@@ -74,8 +87,8 @@ test_that("Likelihood profile based confidence intervals work", {
    }
    f_mle <- stats4::mle(f_nll, start = as.list(parms(f)), nobs = nrow(FOCUS_2006_C))
 
-   ci_mkin_1_p_0.95 <- confint(f, method = "profile", level = 0.95,
-     cores = n_cores, quiet = TRUE)
+   ci_mkin_1_p_0.95 <- expect_message(confint(f, method = "profile", level = 0.95,
+     cores = n_cores, quiet = FALSE), "Profiling the likelihood")
 
    # Magically, we get very similar boundaries as stats4::mle
    # (we need to capture the output to avoid printing this while testing as
