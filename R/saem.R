@@ -269,7 +269,7 @@ saemix_model <- function(object, solution_type = "auto", transformations = c("mk
             k1 = exp(psi[id, 1])
             odeini_fixed * ifelse(t <= tb,
               exp(- k1 * t),
-              exp(- k1 * t) * exp(- exp(psi[id, 2]) * (t - tb)))
+              exp(- k1 * tb) * exp(- exp(psi[id, 2]) * (t - tb)))
           }
         }
       } else {
@@ -315,7 +315,7 @@ saemix_model <- function(object, solution_type = "auto", transformations = c("mk
             k1 = exp(psi[id, 2])
             psi[id, 1] * ifelse(t <= tb,
               exp(- k1 * t),
-              exp(- k1 * t) * exp(- exp(psi[id, 3]) * (t - tb)))
+              exp(- k1 * tb) * exp(- exp(psi[id, 3]) * (t - tb)))
           }
         }
       }
