@@ -102,7 +102,7 @@ test_that("Parent only models can be fitted with saemix", {
 
 test_that("Simple models with metabolite can be fitted with saemix", {
 
-  expect_known_output(print(saem_biphasic_s), "print_saem_biphasic_s.txt")
+  expect_known_output(print(saem_biphasic_s, digits = 1), "print_saem_biphasic_s.txt")
 
   test_summary <- summary(saem_biphasic_s)
   test_summary$saemixversion <- "Dummy 0.0 for testing"
