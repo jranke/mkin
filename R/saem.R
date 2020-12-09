@@ -26,10 +26,6 @@ utils::globalVariables(c("predicted", "std"))
 #'   automatic choice is not desired
 #' @param quiet Should we suppress the messages saemix prints at the beginning
 #'   and the end of the optimisation process?
-#' @param cores The number of cores to be used for multicore processing using
-#'   [parallel::mclapply()]. Using more than 1 core is experimental and may
-#'   lead to excessive forking, apparently depending on the BLAS version
-#'   used.
 #' @param suppressPlot Should we suppress any plotting that is done
 #'   by the saemix function?
 #' @param control Passed to [saemix::saemix]
@@ -43,7 +39,7 @@ utils::globalVariables(c("predicted", "std"))
 #' ds <- lapply(experimental_data_for_UBA_2019[6:10],
 #'  function(x) subset(x$data[c("name", "time", "value")]))
 #' names(ds) <- paste("Dataset", 6:10)
-#' f_mmkin_parent_p0_fixed <- mmkin("FOMC", ds, cores = 1,
+#' f_mmkin_parent_p0_fixed <- mmkin("FOMC", ds,
 #'   state.ini = c(parent = 100), fixed_initials = "parent", quiet = TRUE)
 #' f_saem_p0_fixed <- saem(f_mmkin_parent_p0_fixed)
 #'
@@ -76,9 +72,10 @@ utils::globalVariables(c("predicted", "std"))
 #' f_mmkin <- mmkin(list(
 #'     "SFO-SFO" = sfo_sfo, "FOMC-SFO" = fomc_sfo, "DFOP-SFO" = dfop_sfo),
 #'   ds, quiet = TRUE)
-#' # These take about five seconds each on this system, as we use
-#' # analytical solutions written for saemix. When using the analytical
-#' # solutions written for mkin this took around four minutes
+#' # saem fits of SFO-SFO and DFOP-SFO to these data take about five seconds
+#' # each on this system, as we use analytical solutions written for saemix.
+#' # When using the analytical solutions written for mkin this took around
+#' # four minutes
 #' f_saem_sfo_sfo <- saem(f_mmkin["SFO-SFO", ])
 #' f_saem_dfop_sfo <- saem(f_mmkin["DFOP-SFO", ])
 #' # We can use print, plot and summary methods to check the results
@@ -86,10 +83,18 @@ utils::globalVariables(c("predicted", "std"))
 #' plot(f_saem_dfop_sfo)
 #' summary(f_saem_dfop_sfo, data = TRUE)
 #'
-#' # Using a single core, the following takes about 6 minutes as we do not have an
-#' # analytical solution. Using 10 cores it is slower instead of faster
-#' f_saem_fomc <- saem(f_mmkin["FOMC-SFO", ], cores = 1)
-#' plot(f_saem_fomc)
+#' # The following takes about 6 minutes
+#' #f_saem_dfop_sfo_deSolve <- saem(f_mmkin["DFOP-SFO", ], solution_type = "deSolve",
+#' #  control = list(nbiter.saemix = c(200, 80), nbdisplay = 10))
+#'
+#' #saemix::compare.saemix(list(
+#' #  f_saem_dfop_sfo$so,
+#' #  f_saem_dfop_sfo_deSolve$so))
+#'
+#' # If the model supports it, we can also use eigenvalue based solutions, which
+#' # take a similar amount of time
+#' #f_saem_sfo_sfo_eigen <- saem(f_mmkin["SFO-SFO", ], solution_type = "eigen",
+#' #  control = list(nbiter.saemix = c(200, 80), nbdisplay = 10))
 #' }
 #' @export
 saem <- function(object, ...) UseMethod("saem")
@@ -115,14 +120,13 @@ saem.mmkin <- function(object,
     # that we discard afterwards
     tmp <- tempfile()
     grDevices::png(tmp)
+    on.exit(grDevices::dev.off())
+    on.exit(unlink(tmp), add = TRUE)
   }
   fit_time <- system.time({
     utils::capture.output(f_saemix <- saemix::saemix(m_saemix, d_saemix, control), split = !quiet)
   })
-  if (suppressPlot) {
-    grDevices::dev.off()
-    unlink(tmp)
-  }
+
   transparms_optim <- f_saemix@results@fixed.effects
   names(transparms_optim) <- f_saemix@results@name.fixed
 
@@ -417,44 +421,45 @@ saemix_model <- function(object, solution_type = "auto", transformations = c("mk
 
       uid <- unique(id)
 
-      res_list <- parallel::mclapply(uid, function(i) {
-          transparms_optim <- as.numeric(psi[i, ]) # psi[i, ] is a dataframe when called in saemix.predict
-          names(transparms_optim) <- names(degparms_optim)
+      res_list <- lapply(uid, function(i) {
 
-          odeini_optim <- transparms_optim[odeini_optim_parm_names]
-          names(odeini_optim) <- gsub('_0$', '', odeini_optim_parm_names)
+        transparms_optim <- as.numeric(psi[i, ]) # psi[i, ] is a dataframe when called in saemix.predict
+        names(transparms_optim) <- names(degparms_optim)
 
-          odeini <- c(odeini_optim, odeini_fixed)[names(mkin_model$diffs)]
+        odeini_optim <- transparms_optim[odeini_optim_parm_names]
+        names(odeini_optim) <- gsub('_0$', '', odeini_optim_parm_names)
 
-          ode_transparms_optim_names <- setdiff(names(transparms_optim), odeini_optim_parm_names)
-          odeparms_optim <- backtransform_odeparms(transparms_optim[ode_transparms_optim_names], mkin_model,
-            transform_rates = object[[1]]$transform_rates,
-            transform_fractions = object[[1]]$transform_fractions)
-          odeparms <- c(odeparms_optim, odeparms_fixed)
+        odeini <- c(odeini_optim, odeini_fixed)[names(mkin_model$diffs)]
 
-          xidep_i <- subset(xidep, id == i)
+        ode_transparms_optim_names <- setdiff(names(transparms_optim), odeini_optim_parm_names)
+        odeparms_optim <- backtransform_odeparms(transparms_optim[ode_transparms_optim_names], mkin_model,
+          transform_rates = object[[1]]$transform_rates,
+          transform_fractions = object[[1]]$transform_fractions)
+        odeparms <- c(odeparms_optim, odeparms_fixed)
 
-          if (solution_type == "analytical") {
-            out_values <- mkin_model$deg_func(xidep_i, odeini, odeparms)
-          } else {
+        xidep_i <- subset(xidep, id == i)
 
-            i_time <- xidep_i$time
-            i_name <- xidep_i$name
+        if (solution_type == "analytical") {
+          out_values <- mkin_model$deg_func(xidep_i, odeini, odeparms)
+        } else {
 
-            out_wide <- mkinpredict(mkin_model,
-              odeparms = odeparms, odeini = odeini,
-              solution_type = solution_type,
-              outtimes = sort(unique(i_time)),
-              na_stop = FALSE
-            )
+          i_time <- xidep_i$time
+          i_name <- xidep_i$name
 
-            out_index <- cbind(as.character(i_time), as.character(i_name))
-            out_values <- out_wide[out_index]
-          }
-          return(out_values)
-        }, mc.cores = cores)
-        res <- unlist(res_list)
-        return(res)
+          out_wide <- mkinpredict(mkin_model,
+            odeparms = odeparms, odeini = odeini,
+            solution_type = solution_type,
+            outtimes = sort(unique(i_time)),
+            na_stop = FALSE
+          )
+
+          out_index <- cbind(as.character(i_time), as.character(i_name))
+          out_values <- out_wide[out_index]
+        }
+        return(out_values)
+      })
+      res <- unlist(res_list)
+      return(res)
     }
   }
 

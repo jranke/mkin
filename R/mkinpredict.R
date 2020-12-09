@@ -134,6 +134,8 @@ mkinpredict.mkinmod <- function(x,
     dimnames = list(as.character(outtimes), c("time", obs_vars)))
   out_obs[, "time"] <- outtimes
 
+  n_out_na <- 0 # to check if we get NA values with deSolve
+
   if (solution_type == "analytical") {
     # This is clumsy, as we wanted fast analytical predictions for mkinfit,
     # which bypasses mkinpredict in the case of analytical solutions
@@ -222,7 +224,7 @@ mkinpredict.mkinmod <- function(x,
   if (map_output) {
     # Output transformation for models with unobserved compartments like SFORB
     # if not already mapped in analytical solution
-    if (!na_stop) {
+    if (n_out_na > 0 & !na_stop) {
       available <- c(TRUE, rep(FALSE, length(outtimes) - 1))
     } else {
       available <- rep(TRUE, length(outtimes))

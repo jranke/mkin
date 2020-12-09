@@ -53,11 +53,6 @@ automatic choice is not desired}
 
 \item{control}{Passed to \link[saemix:saemix]{saemix::saemix}}
 
-\item{cores}{The number of cores to be used for multicore processing using
-\code{\link[parallel:mclapply]{parallel::mclapply()}}. Using more than 1 core is experimental and may
-lead to excessive forking, apparently depending on the BLAS version
-used.}
-
 \item{verbose}{Should we print information about created objects of
 type \link[saemix:SaemixModel-class]{saemix::SaemixModel} and \link[saemix:SaemixData-class]{saemix::SaemixData}?}
 
@@ -98,7 +93,7 @@ using \link{mmkin}.
 ds <- lapply(experimental_data_for_UBA_2019[6:10],
  function(x) subset(x$data[c("name", "time", "value")]))
 names(ds) <- paste("Dataset", 6:10)
-f_mmkin_parent_p0_fixed <- mmkin("FOMC", ds, cores = 1,
+f_mmkin_parent_p0_fixed <- mmkin("FOMC", ds,
   state.ini = c(parent = 100), fixed_initials = "parent", quiet = TRUE)
 f_saem_p0_fixed <- saem(f_mmkin_parent_p0_fixed)
 
@@ -131,9 +126,10 @@ dfop_sfo <- mkinmod(parent = mkinsub("DFOP", "A1"),
 f_mmkin <- mmkin(list(
     "SFO-SFO" = sfo_sfo, "FOMC-SFO" = fomc_sfo, "DFOP-SFO" = dfop_sfo),
   ds, quiet = TRUE)
-# These take about five seconds each on this system, as we use
-# analytical solutions written for saemix. When using the analytical
-# solutions written for mkin this took around four minutes
+# saem fits of SFO-SFO and DFOP-SFO to these data take about five seconds
+# each on this system, as we use analytical solutions written for saemix.
+# When using the analytical solutions written for mkin this took around
+# four minutes
 f_saem_sfo_sfo <- saem(f_mmkin["SFO-SFO", ])
 f_saem_dfop_sfo <- saem(f_mmkin["DFOP-SFO", ])
 # We can use print, plot and summary methods to check the results
@@ -141,10 +137,18 @@ print(f_saem_dfop_sfo)
 plot(f_saem_dfop_sfo)
 summary(f_saem_dfop_sfo, data = TRUE)
 
-# Using a single core, the following takes about 6 minutes as we do not have an
-# analytical solution. Using 10 cores it is slower instead of faster
-f_saem_fomc <- saem(f_mmkin["FOMC-SFO", ], cores = 1)
-plot(f_saem_fomc)
+# The following takes about 6 minutes
+#f_saem_dfop_sfo_deSolve <- saem(f_mmkin["DFOP-SFO", ], solution_type = "deSolve",
+#  control = list(nbiter.saemix = c(200, 80), nbdisplay = 10))
+
+#saemix::compare.saemix(list(
+#  f_saem_dfop_sfo$so,
+#  f_saem_dfop_sfo_deSolve$so))
+
+# If the model supports it, we can also use eigenvalue based solutions, which
+# take a similar amount of time
+#f_saem_sfo_sfo_eigen <- saem(f_mmkin["SFO-SFO", ], solution_type = "eigen",
+#  control = list(nbiter.saemix = c(200, 80), nbdisplay = 10))
 }
 }
 \seealso{
