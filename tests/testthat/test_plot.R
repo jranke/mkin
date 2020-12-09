@@ -9,7 +9,7 @@ test_that("Plotting mkinfit and mmkin objects is reproducible", {
   mkinparplot_FOCUS_C_SFO <- function() mkinparplot(fits[["SFO", "FOCUS_C"]])
   mkinerrplot_FOCUS_C_SFO <- function() mkinerrplot(fits[["SFO", "FOCUS_C"]])
   mmkin_FOCUS_C <- function() plot(fits[, "FOCUS_C"])
-  mmkin_SFO <- function() plot(fits["SFO",])
+  mmkin_SFO <- function() plot(fits["SFO", c("FOCUS_C", "FOCUS_D")])
   fit_D_obs_eigen <- suppressWarnings(mkinfit(SFO_SFO, FOCUS_2006_D, error_model = "obs", quiet = TRUE))
   fit_C_tc <- mkinfit("SFO", FOCUS_2006_C, error_model = "tc", quiet = TRUE)
   plot_errmod_fit_C_tc <- function() plot_err(fit_C_tc)
