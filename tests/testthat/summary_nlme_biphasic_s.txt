@@ -1,0 +1,81 @@
+nlme version used for fitting:      Dummy 0.0 for testing 
+mkin version used for pre-fitting:  Dummy 0.0 for testing 
+R version used for fitting:         Dummy R version for testing 
+Date of fit:     Dummy date for testing 
+Date of summary: Dummy date for testing 
+
+Equations:
+d_parent/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *
+           time)) / (g * exp(-k1 * time) + (1 - g) * exp(-k2 * time)))
+           * parent
+d_m1/dt = + f_parent_to_m1 * ((k1 * g * exp(-k1 * time) + k2 * (1 - g)
+           * exp(-k2 * time)) / (g * exp(-k1 * time) + (1 - g) *
+           exp(-k2 * time))) * parent - k_m1 * m1
+
+Data:
+509 observations of 2 variable(s) grouped in 15 datasets
+
+Model predictions using solution type analytical 
+
+Fitted in test time 0 s using 2 iterations
+
+Variance model: Constant variance 
+
+Mean of starting values for individual parameters:
+       parent_0        log_k_m1 f_parent_qlogis          log_k1          log_k2 
+        100.700          -6.299          -0.078          -3.094          -3.954 
+       g_qlogis 
+          0.027 
+
+Fixed degradation parameter values:
+     value  type
+m1_0     0 state
+
+Results:
+
+   AIC  BIC logLik
+  2711 2766  -1343
+
+Optimised, transformed parameters with symmetric confidence intervals:
+                 lower    est.   upper
+parent_0         99.50 100.365 101.229
+log_k_m1         -6.53  -6.231  -5.936
+f_parent_qlogis  -0.24  -0.078   0.084
+log_k1           -3.61  -3.224  -2.839
+log_k2           -4.52  -4.098  -3.677
+g_qlogis         -0.38  -0.105   0.172
+
+Correlation: 
+                prnt_0 lg_k_1 f_prn_ log_k1 log_k2
+log_k_m1        -0.185                            
+f_parent_qlogis -0.161  0.405                     
+log_k1           0.056 -0.014 -0.016              
+log_k2           0.025  0.011 -0.004  0.026       
+g_qlogis        -0.032 -0.046 -0.012 -0.109 -0.103
+
+Random effects:
+ Formula: list(parent_0 ~ 1, log_k_m1 ~ 1, f_parent_qlogis ~ 1, log_k1 ~ 1,      log_k2 ~ 1, g_qlogis ~ 1)
+ Level: ds
+ Structure: Diagonal
+        parent_0 log_k_m1 f_parent_qlogis log_k1 log_k2 g_qlogis Residual
+StdDev:      1.1  0.00017            0.28   0.74   0.82     0.28      2.7
+
+
+Backtransformed parameters with asymmetric confidence intervals:
+                 lower    est.   upper
+parent_0       1.0e+02 100.365 1.0e+02
+k_m1           1.5e-03   0.002 2.6e-03
+f_parent_to_m1 4.4e-01   0.480 5.2e-01
+k1             2.7e-02   0.040 5.9e-02
+k2             1.1e-02   0.017 2.5e-02
+g              4.1e-01   0.474 5.4e-01
+
+Resulting formation fractions:
+              ff
+parent_m1   0.48
+parent_sink 0.52
+
+Estimated disappearance times:
+       DT50 DT90 DT50back DT50_k1 DT50_k2
+parent   27  105       31      17      42
+m1      352 1171       NA      NA      NA

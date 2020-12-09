@@ -184,15 +184,15 @@ print.summary.nlme.mmkin <- function(x, digits = max(3, getOption("digits") - 3)
     tc = "Two-component variance function"), "\n")
 
   cat("\nMean of starting values for individual parameters:\n")
-  print(x$mean_dp_start)
+  print(x$mean_dp_start, digits = digits)
 
   cat("\nFixed degradation parameter values:\n")
   if(length(x$fixed$value) == 0) cat("None\n")
-  else print(x$fixed)
+  else print(x$fixed, digits = digits)
 
   cat("\nResults:\n\n")
   print(data.frame(AIC = x$AIC, BIC = x$BIC, logLik = x$logLik,
-      row.names = " "), ...)
+      row.names = " "), digits = digits, ...)
 
   cat("\nOptimised, transformed parameters with symmetric confidence intervals:\n")
   print(x$confint_trans, digits = digits, ...)
@@ -220,7 +220,7 @@ print.summary.nlme.mmkin <- function(x, digits = max(3, getOption("digits") - 3)
   printff <- !is.null(x$ff)
   if(printff){
     cat("\nResulting formation fractions:\n")
-    print(data.frame(ff = x$ff), ...)
+    print(data.frame(ff = x$ff), digits = digits, ...)
   }
 
   printdistimes <- !is.null(x$distimes)

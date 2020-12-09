@@ -230,7 +230,7 @@ print.nlme.mmkin <- function(x, digits = max(3, getOption("digits") - 3), ...) {
     length(unique(x$data$name)), "variable(s) grouped in",
     length(unique(x$data$ds)), "datasets\n")
   cat("\nLog-", if(x$method == "REML") "restricted-" else "",
-      "likelihood: ", format(x$logLik), "\n", sep = "")
+      "likelihood: ", format(x$logLik, digits = digits), "\n", sep = "")
   fixF <- x$call$fixed
   cat("\nFixed effects:\n",
       deparse(

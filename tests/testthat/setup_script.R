@@ -94,7 +94,7 @@ fit_obs_1 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, error_model = "obs", quiet = TR
 fit_tc_1 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, error_model = "tc", quiet = TRUE,
   error_model_algorithm = "threestep")
 
-# Mixed models data
+# Mixed models data and
 set.seed(123456)
 sampling_times = c(0, 1, 3, 7, 14, 28, 60, 90, 120)
 n <- n_biphasic <- 15
@@ -153,6 +153,12 @@ ds_biphasic <- lapply(ds_biphasic_mean, function(ds) {
 # Mixed model fits
 mmkin_sfo_1 <- mmkin("SFO", ds_sfo, quiet = TRUE, error_model = "tc")
 sfo_saemix_1 <- saem(mmkin_sfo_1, quiet = TRUE, transformations = "saemix")
+
+mmkin_dfop_1 <- mmkin("DFOP", ds_dfop, quiet = TRUE)
+dfop_saemix_1 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "mkin")
+dfop_saemix_2 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "saemix")
+dfop_nlme_1 <- nlme(mmkin_dfop_1)
+
 mmkin_biphasic <- mmkin(list("DFOP-SFO" = DFOP_SFO), ds_biphasic, quiet = TRUE)
 mmkin_biphasic_mixed <- mixed(mmkin_biphasic)
 nlme_biphasic <- nlme(mmkin_biphasic)
@@ -163,9 +169,9 @@ ds_uba <- lapply(experimental_data_for_UBA_2019[6:10],
   function(x) subset(x$data[c("name", "time", "value")]))
 names(ds_uba) <- paste("Dataset", 6:10)
 sfo_sfo_uba <- mkinmod(parent = mkinsub("SFO", "A1"),
-  A1 = mkinsub("SFO"))
+  A1 = mkinsub("SFO"), quiet = TRUE)
 dfop_sfo_uba <- mkinmod(parent = mkinsub("DFOP", "A1"),
-  A1 = mkinsub("SFO"))
+  A1 = mkinsub("SFO"), quiet = TRUE)
 f_uba_mmkin <- mmkin(list("SFO-SFO" = sfo_sfo_uba, "DFOP-SFO" = dfop_sfo_uba),
   ds_uba, quiet = TRUE)
 f_uba_dfop_sfo_mixed <- mixed(f_uba_mmkin[2, ])
