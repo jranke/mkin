@@ -46,7 +46,7 @@ test_that("Parent only models can be fitted using nonlinear mixed effects models
 
 test_that("Print methods work", {
   expect_known_output(print(mmkin_biphasic_mixed, digits = 2), "print_mmkin_biphasic_mixed.txt")
-  expect_known_output(print(nlme_biphasic, digits = 2), "print_nlme_biphasic.txt")
+  expect_known_output(print(nlme_biphasic, digits = 1), "print_nlme_biphasic.txt")
   expect_known_output(print(sfo_saemix_1, digits = 1), "print_sfo_saemix_1.txt")
 })
 
@@ -60,7 +60,7 @@ test_that("nlme results are reproducible", {
   test_summary$date.summary <- "Dummy date for testing"
   test_summary$time <- c(elapsed = "test time 0")
 
-  expect_known_output(print(test_summary, digits = 2), "summary_nlme_biphasic_s.txt")
+  expect_known_output(print(test_summary, digits = 1), "summary_nlme_biphasic_s.txt")
 
   dfop_sfo_pop <- as.numeric(dfop_sfo_pop)
   ci_dfop_sfo_n <- summary(nlme_biphasic)$confint_back
