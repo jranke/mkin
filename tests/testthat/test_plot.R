@@ -32,17 +32,21 @@ test_that("Plotting mkinfit and mmkin objects is reproducible", {
   plot_err_sfo_sfo <- function() plot_err(f_sfo_sfo_desolve)
   vdiffr::expect_doppelganger("plot_err for FOCUS D", plot_err_sfo_sfo)
 
+  plot_biphasic_mmkin <- function() plot(f_uba_dfop_sfo_mixed)
+  vdiffr::expect_doppelganger("mixed model fit for mmkin object", plot_biphasic_mmkin)
+
+  plot_biphasic_saem_s <- function() plot(f_uba_dfop_sfo_saem)
+  vdiffr::expect_doppelganger("mixed model fit for saem object with saemix transformations", plot_biphasic_saem_s)
+
   skip_on_travis()
 
+  #plot_biphasic_mmkin <- function() plot(mixed(mmkin_biphasic))
   # Biphasic fits with lots of data and fits have lots of potential for differences
-  plot_biphasic_mmkin <- function() plot(mixed(mmkin_biphasic))
   plot_biphasic_nlme <- function() plot(nlme_biphasic)
-  plot_biphasic_saem_s <- function() plot(saem_biphasic_s)
+  #plot_biphasic_saem_s <- function() plot(saem_biphasic_s)
   plot_biphasic_saem_m <- function() plot(saem_biphasic_m)
 
-  vdiffr::expect_doppelganger("mixed model fit for mmkin object", plot_biphasic_mmkin)
   vdiffr::expect_doppelganger("mixed model fit for nlme object", plot_biphasic_nlme)
-  vdiffr::expect_doppelganger("mixed model fit for saem object with saemix transformations", plot_biphasic_saem_s)
   vdiffr::expect_doppelganger("mixed model fit for saem object with mkin transformations", plot_biphasic_saem_m)
 
   # different results when working with eigenvalues
