@@ -2,7 +2,8 @@ context("Nonlinear mixed effects models")
 
 test_that("Parent only models can be fitted using nonlinear mixed effects models", {
   # Some fits were done in the setup script
-  mmkin_sfo_2 <- mmkin("SFO", ds_sfo, fixed_initials = c(parent = 100), quiet = TRUE)
+  mmkin_sfo_2 <- update(mmkin_sfo_1, fixed_initials = c(parent = 100))
+  expect_error(update(mmkin_sfo_1, models = c("SFOOO")), "Please supply models.*")
 
   sfo_saemix_2 <- saem(mmkin_sfo_1, quiet = TRUE, transformations = "mkin")
   sfo_saemix_3 <- expect_error(saem(mmkin_sfo_2, quiet = TRUE), "at least two parameters")
@@ -45,6 +46,7 @@ test_that("Parent only models can be fitted using nonlinear mixed effects models
 })
 
 test_that("Print methods work", {
+  expect_known_output(print(fits, digits = 2), "print_mmkin_parent.txt")
   expect_known_output(print(mmkin_biphasic_mixed, digits = 2), "print_mmkin_biphasic_mixed.txt")
   expect_known_output(print(nlme_biphasic, digits = 1), "print_nlme_biphasic.txt")
   expect_known_output(print(sfo_saemix_1, digits = 1), "print_sfo_saemix_1.txt")

@@ -35,7 +35,7 @@ f_1_mkin_notrans <- mkinfit("SFO", FOCUS_2006_A, quiet = TRUE,
 # mmkin object of parent fits for tests
 models <- c("SFO", "FOMC", "DFOP", "HS")
 fits <- mmkin(models,
-  list(FOCUS_C = FOCUS_2006_C, FOCUS_D = FOCUS_2006_D),
+  list(FOCUS_A = FOCUS_2006_A, FOCUS_C = FOCUS_2006_C, FOCUS_D = FOCUS_2006_D),
   quiet = TRUE, cores = n_cores)
 
 # One metabolite
