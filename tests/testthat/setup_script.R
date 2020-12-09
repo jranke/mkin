@@ -57,26 +57,19 @@ DFOP_SFO <- mkinmod(parent = mkinsub("DFOP", to = "m1"),
 # Avoid warning when fitting a dataset where zero value is removed
 FOCUS_D <- subset(FOCUS_2006_D, value != 0)
 
-# We do not want warnings about non-normality of residuals here
-suppressWarnings(
 f_sfo_sfo_desolve <- mkinfit(SFO_SFO, FOCUS_D,
   solution_type = "deSolve", quiet = TRUE)
-)
-suppressWarnings(
+
 f_sfo_sfo_eigen <- mkinfit(SFO_SFO, FOCUS_D,
   solution_type = "eigen", quiet = TRUE)
-)
-suppressWarnings(
+
 f_sfo_sfo.ff <- mkinfit(SFO_SFO.ff, FOCUS_D,
   quiet = TRUE)
-)
 
 SFO_lin_a <- synthetic_data_for_UBA_2014[[1]]$data
 DFOP_par_c <- synthetic_data_for_UBA_2014[[12]]$data
 
-# We also suppress the warning about non-normality of residuals here, the data
-# were generated with a different error model, so no wonder!
-f_2_mkin <- suppressWarnings(mkinfit("DFOP", DFOP_par_c, quiet = TRUE))
+f_2_mkin <- mkinfit("DFOP", DFOP_par_c, quiet = TRUE)
 f_2_nls <- nls(value ~ SSbiexp(time, A1, lrc1, A2, lrc2), data = subset(DFOP_par_c, name == "parent"))
 f_2_anova <- lm(value ~ as.factor(time), data = subset(DFOP_par_c, name == "parent"))
 
