@@ -100,9 +100,12 @@ test_that("Parent only models can be fitted with saemix", {
   expect_true(all(rel_diff_2 < 0.08))
 })
 
-test_that("Simple models with metabolite can be fitted with saemix", {
-
+test_that("Print methods work", {
   expect_known_output(print(sfo_saemix_1, digits = 1), "print_sfo_saemix_1.txt")
+  expect_known_output(print(mmkin_biphasic_mixed, digits = 2), "print_mmkin_biphasic_mixed.txt")
+})
+
+test_that("Saemix results are reproducible", {
 
   test_summary <- summary(saem_biphasic_s)
   test_summary$saemixversion <- "Dummy 0.0 for testing"

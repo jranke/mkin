@@ -154,6 +154,7 @@ ds_biphasic <- lapply(ds_biphasic_mean, function(ds) {
 mmkin_sfo_1 <- mmkin("SFO", ds_sfo, quiet = TRUE, error_model = "tc")
 sfo_saemix_1 <- saem(mmkin_sfo_1, quiet = TRUE, transformations = "saemix")
 mmkin_biphasic <- mmkin(list("DFOP-SFO" = DFOP_SFO), ds_biphasic, quiet = TRUE)
+mmkin_biphasic_mixed <- mixed(mmkin_biphasic)
 nlme_biphasic <- nlme(mmkin_biphasic)
 saem_biphasic_m <- saem(mmkin_biphasic, transformations = "mkin", quiet = TRUE)
 saem_biphasic_s <- saem(mmkin_biphasic, transformations = "saemix", quiet = TRUE)

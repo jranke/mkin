@@ -92,10 +92,10 @@ print.mixed.mmkin <- function(x, digits = max(3, getOption("digits") - 3), ...) 
     length(unique(x$data$name)), "variable(s) grouped in",
     length(unique(x$data$ds)), "datasets\n\n")
 
-  print(x$mmkin)
+  print(x$mmkin, digits = digits)
 
   cat("\nMean fitted parameters:\n")
-  print(mean_degparms(x$mmkin))
+  print(mean_degparms(x$mmkin), digits = digits)
 
   invisible(x)
 }
