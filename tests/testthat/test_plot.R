@@ -32,12 +32,6 @@ test_that("Plotting mkinfit and mmkin objects is reproducible", {
   plot_err_sfo_sfo <- function() plot_err(f_sfo_sfo_desolve)
   vdiffr::expect_doppelganger("plot_err for FOCUS D", plot_err_sfo_sfo)
 
-  plot_errmod_fit_tc_1 <- function() plot_err(fit_tc_1, sep_obs = FALSE)
-  vdiffr::expect_doppelganger("plot_errmod with SFO_lin_a_tc", plot_errmod_fit_tc_1)
-
-  plot_errmod_fit_obs_1 <- function() plot_err(fit_obs_1, sep_obs = FALSE)
-  vdiffr::expect_doppelganger("plot_errmod with SFO_lin_a_obs", plot_errmod_fit_obs_1)
-
   skip_on_travis()
 
   # Biphasic fits with lots of data and fits have lots of potential for differences
