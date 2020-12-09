@@ -207,11 +207,11 @@ print.summary.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3)
     tc = "Two-component variance function"), "\n")
 
   cat("\nMean of starting values for individual parameters:\n")
-  print(x$mean_dp_start)
+  print(x$mean_dp_start, digits = digits)
 
   cat("\nFixed degradation parameter values:\n")
   if(length(x$fixed$value) == 0) cat("None\n")
-  else print(x$fixed)
+  else print(x$fixed, digits = digits)
 
   cat("\nResults:\n\n")
   cat("Likelihood computed by importance sampling\n")

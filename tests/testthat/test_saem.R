@@ -102,15 +102,27 @@ test_that("Parent only models can be fitted with saemix", {
 
 test_that("Simple models with metabolite can be fitted with saemix", {
 
+  expect_known_output(print(saem_biphasic_s), "print_saem_biphasic_s.txt")
+
+  test_summary <- summary(saem_biphasic_s)
+  test_summary$saemixversion <- "Dummy 0.0 for testing"
+  test_summary$mkinversion <- "Dummy 0.0 for testing"
+  test_summary$Rversion <- "Dummy R version for testing"
+  test_summary$date.fit <- "Dummy date for testing"
+  test_summary$date.summary <- "Dummy date for testing"
+  test_summary$time <- c(elapsed = "test time 0")
+
+  expect_known_output(print(test_summary, digits = 2), "summary_saem_biphasic_s.txt")
+
   dfop_sfo_pop <- as.numeric(dfop_sfo_pop)
   ci_dfop_sfo_s_s <- summary(saem_biphasic_s)$confint_back
   expect_true(all(ci_dfop_sfo_s_s[, "lower"] < dfop_sfo_pop))
   expect_true(all(ci_dfop_sfo_s_s[, "upper"] > dfop_sfo_pop))
 
-  # The following does not work, the k1 and k2 are not fitted well
+  # The following does not work, as k1 and k2 are not fitted well
   ci_dfop_sfo_s_m <- summary(saem_biphasic_m)$confint_back
   # expect_true(all(ci_dfop_sfo_s_m[, "lower"] < dfop_sfo_pop))
-  #expect_true(all(ci_dfop_sfo_s_m[, "upper"] > dfop_sfo_pop))
+  # expect_true(all(ci_dfop_sfo_s_m[, "upper"] > dfop_sfo_pop))
 
   # Somehow this does not work at the moment. But it took forever (~ 10 min) anyways...
   #saem_biphasic_2 <- saem(mmkin_biphasic, solution_type = "deSolve", quiet = TRUE)
