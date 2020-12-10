@@ -134,6 +134,12 @@ test_that("saem results are reproducible for biphasic fits", {
   expect_true(all(ci_dfop_sfo_s_m[no_k2, "lower"] < dfop_sfo_pop[no_k2]))
   expect_true(all(ci_dfop_sfo_s_m[no_k1, "upper"] > dfop_sfo_pop[no_k1]))
 
+  # I tried to only do few iterations in routine tests as this is so slow
+  # but then deSolve fails at some point (presumably at the switch between
+  # the two types of iterations)
+  #saem_biphasic_2 <- saem(mmkin_biphasic, solution_type = "deSolve",
+  # control = list(nbiter.saemix = c(10, 5), nbiter.burn = 5), quiet = TRUE)
+
   skip("Fitting with saemix takes around 10 minutes when using deSolve")
   saem_biphasic_2 <- saem(mmkin_biphasic, solution_type = "deSolve", quiet = TRUE)
 

@@ -95,7 +95,7 @@ fit_obs_1 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, error_model = "obs", quiet = TR
 fit_tc_1 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, error_model = "tc", quiet = TRUE,
   error_model_algorithm = "threestep")
 
-# Mixed models data and
+# Mixed models data and fits
 sampling_times = c(0, 1, 3, 7, 14, 28, 60, 90, 120)
 n <- n_biphasic <- 15
 log_sd <- 0.3
@@ -203,5 +203,4 @@ f_uba_mmkin <- mmkin(list("SFO-SFO" = sfo_sfo_uba, "DFOP-SFO" = dfop_sfo_uba),
   ds_uba, quiet = TRUE)
 f_uba_dfop_sfo_mixed <- mixed(f_uba_mmkin[2, ])
 f_uba_sfo_sfo_saem <- saem(f_uba_mmkin["SFO-SFO", ], quiet = TRUE, transformations = "saemix")
-#f_uba_sfo_sfo_saem <- saem(f_uba_mmkin["SFO-SFO", ], solution_type = "deSolve", quiet = TRUE) # currently fails
 f_uba_dfop_sfo_saem <- saem(f_uba_mmkin["DFOP-SFO", ], quiet = TRUE, transformations = "saemix")
