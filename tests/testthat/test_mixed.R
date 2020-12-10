@@ -122,17 +122,24 @@ test_that("saem results are reproducible for biphasic fits", {
   expect_known_output(print(test_summary, digits = 2), "summary_saem_biphasic_s.txt")
 
   dfop_sfo_pop <- as.numeric(dfop_sfo_pop)
+  no_k1 <- c(1, 2, 3, 5, 6)
+  no_k2 <- c(1, 2, 3, 4, 6)
+
   ci_dfop_sfo_s_s <- summary(saem_biphasic_s)$confint_back
   expect_true(all(ci_dfop_sfo_s_s[, "lower"] < dfop_sfo_pop))
   expect_true(all(ci_dfop_sfo_s_s[, "upper"] > dfop_sfo_pop))
 
-  # The following does not work, as k1 and k2 are not fitted well
+  # k1 and k2 are not fitted well
   ci_dfop_sfo_s_m <- summary(saem_biphasic_m)$confint_back
-  # expect_true(all(ci_dfop_sfo_s_m[, "lower"] < dfop_sfo_pop))
-  # expect_true(all(ci_dfop_sfo_s_m[, "upper"] > dfop_sfo_pop))
+  expect_true(all(ci_dfop_sfo_s_m[no_k2, "lower"] < dfop_sfo_pop[no_k2]))
+  expect_true(all(ci_dfop_sfo_s_m[no_k1, "upper"] > dfop_sfo_pop[no_k1]))
 
-  # Somehow this does not work at the moment. But it took forever (~ 10 min) anyways...
-  #saem_biphasic_2 <- saem(mmkin_biphasic, solution_type = "deSolve", quiet = TRUE)
+  skip("Fitting with saemix takes around 10 minutes when using deSolve")
+  saem_biphasic_2 <- saem(mmkin_biphasic, solution_type = "deSolve", quiet = TRUE)
 
+  # As with the analytical solution, k1 and k2 are not fitted well
+  ci_dfop_sfo_s_d <- summary(saem_biphasic_2)$confint_back
+  expect_true(all(ci_dfop_sfo_s_d[no_k2, "lower"] < dfop_sfo_pop[no_k2]))
+  expect_true(all(ci_dfop_sfo_s_d[no_k1, "upper"] > dfop_sfo_pop[no_k1]))
 })
 
