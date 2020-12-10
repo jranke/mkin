@@ -89,6 +89,9 @@ summary.saem.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes =
   confint_trans <- as.matrix(conf.int[pnames, c("estimate", "lower", "upper")])
   colnames(confint_trans)[1] <- "est."
 
+  # In case objects were produced by earlier versions of saem
+  if (is.null(object$transformations)) object$transformations <- "mkin"
+
   if (object$transformations == "mkin") {
     bp <- backtransform_odeparms(confint_trans[, "est."], object$mkinmod,
       object$transform_rates, object$transform_fractions)
