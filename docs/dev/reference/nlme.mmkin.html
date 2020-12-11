@@ -154,11 +154,12 @@ have been obtained by fitting the same model to a list of datasets.</p>
     <pre class="usage"><span class='co'># S3 method for mmkin</span>
 <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span>
   <span class='va'>model</span>,
-  data <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>sys.frame</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>sys.parent</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>,
-  <span class='va'>fixed</span>,
-  random <span class='op'>=</span> <span class='va'>fixed</span>,
+  data <span class='op'>=</span> <span class='st'>"auto"</span>,
+  fixed <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>as.list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='fu'><a href='nlme_function.html'>mean_degparms</a></span><span class='op'>(</span><span class='va'>model</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>el</span><span class='op'>)</span> <span class='fu'><a href='https://rdrr.io/r/base/eval.html'>eval</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/parse.html'>parse</a></span><span class='op'>(</span>text <span class='op'>=</span>
+    <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='va'>el</span>, <span class='fl'>1</span>, sep <span class='op'>=</span> <span class='st'>"~"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>,
+  random <span class='op'>=</span> <span class='fu'>pdDiag</span><span class='op'>(</span><span class='va'>fixed</span><span class='op'>)</span>,
   <span class='va'>groups</span>,
-  <span class='va'>start</span>,
+  start <span class='op'>=</span> <span class='fu'><a href='nlme_function.html'>mean_degparms</a></span><span class='op'>(</span><span class='va'>model</span>, random <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,
   correlation <span class='op'>=</span> <span class='cn'>NULL</span>,
   weights <span class='op'>=</span> <span class='cn'>NULL</span>,
   <span class='va'>subset</span>,
@@ -276,14 +277,14 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
 <span class='va'>f</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='st'>"DFOP"</span><span class='op'>)</span>, <span class='va'>ds</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span>, cores <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://svn.r-project.org/R-packages/trunk/nlme/'>nlme</a></span><span class='op'>)</span>
 <span class='va'>f_nlme_sfo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f</span><span class='op'>[</span><span class='st'>"SFO"</span>, <span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 1, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='input'>
+
 <span class='co'># \dontrun{</span>
 
   <span class='va'>f_nlme_dfop</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f</span><span class='op'>[</span><span class='st'>"DFOP"</span>, <span class='op'>]</span><span class='op'>)</span>
   <span class='fu'><a href='https://rdrr.io/r/stats/anova.html'>anova</a></span><span class='op'>(</span><span class='va'>f_nlme_sfo</span>, <span class='va'>f_nlme_dfop</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;             Model df      AIC      BIC    logLik   Test  L.Ratio p-value
-#&gt; f_nlme_sfo      1  6 622.0677 637.0666 -305.0338                        
-#&gt; f_nlme_dfop     2 15 487.0134 524.5105 -228.5067 1 vs 2 153.0543  &lt;.0001</div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop</span><span class='op'>)</span>
+#&gt; f_nlme_sfo      1  5 625.0539 637.5529 -307.5269                        
+#&gt; f_nlme_dfop     2  9 495.1270 517.6253 -238.5635 1 vs 2 137.9268  &lt;.0001</div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Kinetic nonlinear mixed-effects model fit by maximum likelihood
 #&gt; 
 #&gt; Structural model:
@@ -294,28 +295,24 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
 #&gt; Data:
 #&gt; 90 observations of 1 variable(s) grouped in 5 datasets
 #&gt; 
-#&gt; Log-likelihood: -228.5067
+#&gt; Log-likelihood: -238.6
 #&gt; 
 #&gt; Fixed effects:
 #&gt;  list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_qlogis ~ 1) 
 #&gt; parent_0   log_k1   log_k2 g_qlogis 
-#&gt; 94.18273 -1.82135 -4.16872  0.08949 
+#&gt;  94.1702  -1.8002  -4.1474   0.0324 
 #&gt; 
 #&gt; Random effects:
 #&gt;  Formula: list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_qlogis ~ 1)
 #&gt;  Level: ds
-#&gt;  Structure: General positive-definite, Log-Cholesky parametrization
-#&gt;          StdDev    Corr                
-#&gt; parent_0 2.4656397 prnt_0 log_k1 log_k2
-#&gt; log_k1   0.7950788  0.240              
-#&gt; log_k2   1.2605419  0.150  0.984       
-#&gt; g_qlogis 0.5013272 -0.075  0.843  0.834
-#&gt; Residual 2.3308100                     
+#&gt;  Structure: Diagonal
+#&gt;         parent_0 log_k1 log_k2 g_qlogis Residual
+#&gt; StdDev:    2.488 0.8447   1.33   0.4652    2.321
 #&gt; </div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop</span><span class='op'>)</span>
 </div><div class='img'><img src='nlme.mmkin-1.png' alt='' width='700' height='433' /></div><div class='input'>  <span class='fu'><a href='endpoints.html'>endpoints</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $distimes
 #&gt;            DT50     DT90 DT50back  DT50_k1  DT50_k2
-#&gt; parent 10.57119 101.0652 30.42366 4.283776 44.80015
+#&gt; parent 10.79857 100.7937 30.34192 4.193937 43.85442
 #&gt; </div><div class='input'>
   <span class='va'>ds_2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>experimental_data_for_UBA_2019</span><span class='op'>[</span><span class='fl'>6</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>]</span>,
    <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='va'>x</span><span class='op'>$</span><span class='va'>data</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"name"</span>, <span class='st'>"time"</span>, <span class='st'>"value"</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>
@@ -332,7 +329,7 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
     <span class='va'>ds_2</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 
   <span class='va'>f_nlme_sfo_sfo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f_2</span><span class='op'>[</span><span class='st'>"SFO-SFO"</span>, <span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 1, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 2, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_nlme_sfo_sfo</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_nlme_sfo_sfo</span><span class='op'>)</span>
 </div><div class='img'><img src='nlme.mmkin-2.png' alt='' width='700' height='433' /></div><div class='input'>
   <span class='co'># With formation fractions this does not coverge with defaults</span>
   <span class='co'># f_nlme_sfo_sfo_ff &lt;- nlme(f_2["SFO-SFO-ff", ])</span>
@@ -343,32 +340,22 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
   <span class='co'># parameters (with pdDiag, increasing the tolerance and pnlsMaxIter was</span>
   <span class='co'># necessary)</span>
   <span class='va'>f_nlme_dfop_sfo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f_2</span><span class='op'>[</span><span class='st'>"DFOP-SFO"</span>, <span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 1, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 2, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 3, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 4, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='error'>Error in nlme.formula(model = value ~ (mkin::get_deg_func())(name, time,     parent_0, log_k_A1, f_parent_qlogis, log_k1, log_k2, g_qlogis),     data = structure(list(ds = structure(c(1L, 1L, 1L, 1L, 1L,     1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L,     1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L,     1L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L,     2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L,     2L, 2L, 2L, 2L, 2L, 2L, 2L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L,     3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L,     3L, 3L, 3L, 3L, 3L, 3L, 3L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L,     4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L,     4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L,     5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L,     5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L    ), .Label = c("1", "2", "3", "4", "5"), class = c("ordered",     "factor")), name = c("parent", "parent", "parent", "parent",     "parent", "parent", "parent", "parent", "parent", "parent",     "parent", "parent", "parent", "parent", "parent", "parent",     "parent", "parent", "parent", "parent", "A1", "A1", "A1",     "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1",     "A1", "A1", "A1", "A1", "A1", "parent", "parent", "parent",     "parent", "parent", "parent", "parent", "parent", "parent",     "parent", "parent", "parent", "parent", "parent", "parent",     "parent", "parent", "parent", "A1", "A1", "A1", "A1", "A1",     "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1",     "A1", "parent", "parent", "parent", "parent", "parent", "parent",     "parent", "parent", "parent", "parent", "parent", "parent",     "parent", "parent", "parent", "parent", "A1", "A1", "A1",     "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1",     "A1", "parent", "parent", "parent", "parent", "parent", "parent",     "parent", "parent", "parent", "parent", "parent", "parent",     "parent", "parent", "parent", "parent", "parent", "parent",     "parent", "parent", "A1", "A1", "A1", "A1", "A1", "A1", "A1",     "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1",     "A1", "parent", "parent", "parent", "parent", "parent", "parent",     "parent", "parent", "parent", "parent", "parent", "parent",     "parent", "parent", "parent", "parent", "A1", "A1", "A1",     "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1",     "A1"), time = c(0, 0, 3, 3, 6, 6, 10, 10, 20, 20, 34, 34,     55, 55, 90, 90, 112, 112, 132, 132, 3, 3, 6, 6, 10, 10, 20,     20, 34, 34, 55, 55, 90, 90, 112, 112, 132, 132, 0, 0, 3,     3, 7, 7, 14, 14, 30, 30, 60, 60, 90, 90, 120, 120, 180, 180,     3, 3, 7, 7, 14, 14, 30, 30, 60, 60, 90, 90, 120, 120, 180,     180, 0, 0, 1, 1, 3, 3, 8, 8, 14, 14, 27, 27, 48, 48, 70,     70, 1, 1, 3, 3, 8, 8, 14, 14, 27, 27, 48, 48, 70, 70, 0,     0, 1, 1, 3, 3, 8, 8, 14, 14, 27, 27, 48, 48, 70, 70, 91,     91, 120, 120, 1, 1, 3, 3, 8, 8, 14, 14, 27, 27, 48, 48, 70,     70, 91, 91, 120, 120, 0, 0, 8, 8, 14, 14, 21, 21, 41, 41,     63, 63, 91, 91, 120, 120, 8, 8, 14, 14, 21, 21, 41, 41, 63,     63, 91, 91, 120, 120), value = c(97.2, 96.4, 71.1, 69.2,     58.1, 56.6, 44.4, 43.4, 33.3, 29.2, 17.6, 18, 10.5, 9.3,     4.5, 4.7, 3, 3.4, 2.3, 2.7, 4.3, 4.6, 7, 7.2, 8.2, 8, 11,     13.7, 11.5, 12.7, 14.9, 14.5, 12.1, 12.3, 9.9, 10.2, 8.8,     7.8, 93.6, 92.3, 87, 82.2, 74, 73.9, 64.2, 69.5, 54, 54.6,     41.1, 38.4, 32.5, 35.5, 28.1, 29, 26.5, 27.6, 3.9, 3.1, 6.9,     6.6, 10.4, 8.3, 14.4, 13.7, 22.1, 22.3, 27.5, 25.4, 28, 26.6,     25.8, 25.3, 91.9, 90.8, 64.9, 66.2, 43.5, 44.1, 18.3, 18.1,     10.2, 10.8, 4.9, 3.3, 1.6, 1.5, 1.1, 0.9, 9.6, 7.7, 15, 15.1,     21.2, 21.1, 19.7, 18.9, 17.5, 15.9, 9.5, 9.8, 6.2, 6.1, 99.8,     98.3, 77.1, 77.2, 59, 58.1, 27.4, 29.2, 19.1, 29.6, 10.1,     18.2, 4.5, 9.1, 2.3, 2.9, 2, 1.8, 2, 2.2, 4.2, 3.9, 7.4,     7.9, 14.5, 13.7, 14.2, 12.2, 13.7, 13.2, 13.6, 15.4, 10.4,     11.6, 10, 9.5, 9.1, 9, 96.1, 94.3, 73.9, 73.9, 69.4, 73.1,     65.6, 65.3, 55.9, 54.4, 47, 49.3, 44.7, 46.7, 42.1, 41.3,     3.3, 3.4, 3.9, 2.9, 6.4, 7.2, 9.1, 8.5, 11.7, 12, 13.3, 13.2,     14.3, 12.1)), row.names = c(NA, -170L), class = c("nfnGroupedData",     "nfGroupedData", "groupedData", "data.frame"), formula = value ~         time | ds, FUN = function (x)     max(x, na.rm = TRUE), order.groups = FALSE), start = list(        fixed = c(parent_0 = 93.8101519326534, log_k_A1 = -9.76474551635931,         f_parent_qlogis = -0.971114801595408, log_k1 = -1.87993711571859,         log_k2 = -4.27081421366622, g_qlogis = 0.135644115277507        ), random = list(ds = structure(c(2.56569977430371, -3.49441920289139,         -3.32614443321494, 4.35347873814922, -0.0986148763466161,         4.65850590018027, 1.8618544764481, 6.12693257601545,         4.91792724701579, -17.5652201996596, -0.466203822618637,         0.746660653597927, 0.282193987271096, -0.42053488943072,         -0.142115928819667, 0.369240076779088, -1.38985563501659,         1.02592753494098, 0.73090914081534, -0.736221117518819,         0.768170629350299, -1.89347658079869, 1.72168783460352,         0.844607177798114, -1.44098906095325, -0.377731855445672,         0.168180098477565, 0.469683412912104, 0.500717664434525,         -0.760849320378522), .Dim = 5:6, .Dimnames = list(c("1",         "2", "3", "4", "5"), c("parent_0", "log_k_A1", "f_parent_qlogis",         "log_k1", "log_k2", "g_qlogis"))))), fixed = list(parent_0 ~         1, log_k_A1 ~ 1, f_parent_qlogis ~ 1, log_k1 ~ 1, log_k2 ~         1, g_qlogis ~ 1), random = structure(numeric(0), class = c("pdDiag",     "pdMat"), formula = structure(list(parent_0 ~ 1, log_k_A1 ~         1, f_parent_qlogis ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_qlogis ~         1), class = "listForm"), Dimnames = list(NULL, NULL))): maximum number of iterations (maxIter = 50) reached without convergence</span></div><div class='output co'>#&gt; <span class='message'>Timing stopped at: 49.95 16.5 44.08</span></div><div class='input'>
   <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop_sfo</span><span class='op'>)</span>
-</div><div class='img'><img src='nlme.mmkin-3.png' alt='' width='700' height='433' /></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='error'>Error in plot(f_nlme_dfop_sfo): object 'f_nlme_dfop_sfo' not found</span></div><div class='input'>
   <span class='fu'><a href='https://rdrr.io/r/stats/anova.html'>anova</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop_sfo</span>, <span class='va'>f_nlme_sfo_sfo</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                 Model df       AIC       BIC    logLik   Test  L.Ratio p-value
-#&gt; f_nlme_dfop_sfo     1 28  811.7199  899.5222 -377.8599                        
-#&gt; f_nlme_sfo_sfo      2 15 1075.1934 1122.2304 -522.5967 1 vs 2 289.4736  &lt;.0001</div><div class='input'>
+</div><div class='output co'>#&gt; <span class='error'>Error in anova(f_nlme_dfop_sfo, f_nlme_sfo_sfo): object 'f_nlme_dfop_sfo' not found</span></div><div class='input'>
   <span class='fu'><a href='endpoints.html'>endpoints</a></span><span class='op'>(</span><span class='va'>f_nlme_sfo_sfo</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $ff
 #&gt; parent_sink   parent_A1     A1_sink 
-#&gt;   0.6512742   0.3487258   1.0000000 
+#&gt;   0.5912432   0.4087568   1.0000000 
 #&gt; 
 #&gt; $distimes
-#&gt;             DT50      DT90
-#&gt; parent  18.03144  59.89916
-#&gt; A1     102.72949 341.25997
+#&gt;            DT50     DT90
+#&gt; parent 19.13518  63.5657
+#&gt; A1     66.02155 219.3189
 #&gt; </div><div class='input'>  <span class='fu'><a href='endpoints.html'>endpoints</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop_sfo</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $ff
-#&gt;   parent_A1 parent_sink 
-#&gt;   0.2762167   0.7237833 
-#&gt; 
-#&gt; $distimes
-#&gt;             DT50     DT90 DT50back  DT50_k1  DT50_k2
-#&gt; parent  11.15024 133.9652 40.32755 4.688015 62.16017
-#&gt; A1     235.83191 783.4167       NA       NA       NA
-#&gt; </div><div class='input'>
+</div><div class='output co'>#&gt; <span class='error'>Error in endpoints(f_nlme_dfop_sfo): object 'f_nlme_dfop_sfo' not found</span></div><div class='input'>
   <span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='fu'>findFunction</span><span class='op'>(</span><span class='st'>"varConstProp"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>&gt;</span> <span class='fl'>0</span><span class='op'>)</span> <span class='op'>{</span> <span class='co'># tc error model for nlme available</span>
     <span class='co'># Attempts to fit metabolite kinetics with the tc error model are possible,</span>
     <span class='co'># but need tweeking of control values and sometimes do not converge</span>
@@ -379,7 +366,7 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
     <span class='fu'><a href='https://rdrr.io/r/stats/AIC.html'>AIC</a></span><span class='op'>(</span><span class='va'>f_nlme_sfo</span>, <span class='va'>f_nlme_sfo_tc</span>, <span class='va'>f_nlme_dfop</span>, <span class='va'>f_nlme_dfop_tc</span><span class='op'>)</span>
     <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop_tc</span><span class='op'>)</span>
   <span class='op'>}</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 1, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 14, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 1, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 2, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 4, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 5, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 6, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 7, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 8, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 9, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 10, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 11, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 12, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 14, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 15, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 16, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 17, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 18, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; Kinetic nonlinear mixed-effects model fit by maximum likelihood
+</div><div class='output co'>#&gt; Kinetic nonlinear mixed-effects model fit by maximum likelihood
 #&gt; 
 #&gt; Structural model:
 #&gt; d_parent/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *
@@ -389,35 +376,31 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
 #&gt; Data:
 #&gt; 90 observations of 1 variable(s) grouped in 5 datasets
 #&gt; 
-#&gt; Log-likelihood: -228.3575
+#&gt; Log-likelihood: -238.4
 #&gt; 
 #&gt; Fixed effects:
 #&gt;  list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_qlogis ~ 1) 
 #&gt; parent_0   log_k1   log_k2 g_qlogis 
-#&gt;  93.6695  -1.9187  -4.4253   0.2215 
+#&gt; 94.04775 -1.82340 -4.16715  0.05685 
 #&gt; 
 #&gt; Random effects:
 #&gt;  Formula: list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_qlogis ~ 1)
 #&gt;  Level: ds
-#&gt;  Structure: General positive-definite, Log-Cholesky parametrization
-#&gt;          StdDev    Corr                
-#&gt; parent_0 2.8574651 prnt_0 log_k1 log_k2
-#&gt; log_k1   0.9689083  0.506              
-#&gt; log_k2   1.5798002  0.446  0.997       
-#&gt; g_qlogis 0.5761569 -0.457  0.247  0.263
-#&gt; Residual 1.0000000                     
+#&gt;  Structure: Diagonal
+#&gt;         parent_0 log_k1 log_k2 g_qlogis Residual
+#&gt; StdDev:    2.474   0.85  1.337   0.4659        1
 #&gt; 
 #&gt; Variance function:
 #&gt;  Structure: Constant plus proportion of variance covariate
 #&gt;  Formula: ~fitted(.) 
 #&gt;  Parameter estimates:
-#&gt;     const      prop 
-#&gt; 2.0376990 0.0221686 </div><div class='input'>
+#&gt;      const       prop 
+#&gt; 2.23224114 0.01262341 </div><div class='input'>
   <span class='va'>f_2_obs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"SFO-SFO"</span> <span class='op'>=</span> <span class='va'>m_sfo_sfo</span>,
    <span class='st'>"DFOP-SFO"</span> <span class='op'>=</span> <span class='va'>m_dfop_sfo</span><span class='op'>)</span>,
     <span class='va'>ds_2</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span>, error_model <span class='op'>=</span> <span class='st'>"obs"</span><span class='op'>)</span>
   <span class='va'>f_nlme_sfo_sfo_obs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f_2_obs</span><span class='op'>[</span><span class='st'>"SFO-SFO"</span>, <span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 1, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>f_nlme_sfo_sfo_obs</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>f_nlme_sfo_sfo_obs</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Kinetic nonlinear mixed-effects model fit by maximum likelihood
 #&gt; 
 #&gt; Structural model:
@@ -427,44 +410,37 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
 #&gt; Data:
 #&gt; 170 observations of 2 variable(s) grouped in 5 datasets
 #&gt; 
-#&gt; Log-likelihood: -462.2203
+#&gt; Log-likelihood: -473
 #&gt; 
 #&gt; Fixed effects:
 #&gt;  list(parent_0 ~ 1, log_k_parent_sink ~ 1, log_k_parent_A1 ~ 1,      log_k_A1_sink ~ 1) 
 #&gt;          parent_0 log_k_parent_sink   log_k_parent_A1     log_k_A1_sink 
-#&gt;            88.682            -3.664            -4.164            -4.665 
+#&gt;            87.976            -3.670            -4.164            -4.645 
 #&gt; 
 #&gt; Random effects:
 #&gt;  Formula: list(parent_0 ~ 1, log_k_parent_sink ~ 1, log_k_parent_A1 ~ 1,      log_k_A1_sink ~ 1)
 #&gt;  Level: ds
-#&gt;  Structure: General positive-definite, Log-Cholesky parametrization
-#&gt;                   StdDev    Corr                
-#&gt; parent_0          4.9153305 prnt_0 lg_k__ l___A1
-#&gt; log_k_parent_sink 1.8158570 0.956               
-#&gt; log_k_parent_A1   1.0514548 0.821  0.907        
-#&gt; log_k_A1_sink     0.4924122 0.035  0.315  0.533 
-#&gt; Residual          6.3987599                     
+#&gt;  Structure: Diagonal
+#&gt;         parent_0 log_k_parent_sink log_k_parent_A1 log_k_A1_sink Residual
+#&gt; StdDev:    3.992             1.777           1.055        0.4821    6.483
 #&gt; 
 #&gt; Variance function:
 #&gt;  Structure: Different standard deviations per stratum
 #&gt;  Formula: ~1 | name 
 #&gt;  Parameter estimates:
 #&gt;    parent        A1 
-#&gt; 1.0000000 0.2040647 </div><div class='input'>  <span class='va'>f_nlme_dfop_sfo_obs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f_2_obs</span><span class='op'>[</span><span class='st'>"DFOP-SFO"</span>, <span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 1, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 2, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 3, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 4, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='input'>
+#&gt; 1.0000000 0.2050003 </div><div class='input'>  <span class='va'>f_nlme_dfop_sfo_obs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f_2_obs</span><span class='op'>[</span><span class='st'>"DFOP-SFO"</span>, <span class='op'>]</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in nlme.formula(model = value ~ (mkin::get_deg_func())(name, time,     parent_0, log_k_A1, f_parent_qlogis, log_k1, log_k2, g_qlogis),     data = structure(list(ds = structure(c(1L, 1L, 1L, 1L, 1L,     1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L,     1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L,     1L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L,     2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L,     2L, 2L, 2L, 2L, 2L, 2L, 2L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L,     3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L, 3L,     3L, 3L, 3L, 3L, 3L, 3L, 3L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L,     4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L,     4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 4L,     5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L,     5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L, 5L    ), .Label = c("1", "2", "3", "4", "5"), class = c("ordered",     "factor")), name = c("parent", "parent", "parent", "parent",     "parent", "parent", "parent", "parent", "parent", "parent",     "parent", "parent", "parent", "parent", "parent", "parent",     "parent", "parent", "parent", "parent", "A1", "A1", "A1",     "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1",     "A1", "A1", "A1", "A1", "A1", "parent", "parent", "parent",     "parent", "parent", "parent", "parent", "parent", "parent",     "parent", "parent", "parent", "parent", "parent", "parent",     "parent", "parent", "parent", "A1", "A1", "A1", "A1", "A1",     "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1",     "A1", "parent", "parent", "parent", "parent", "parent", "parent",     "parent", "parent", "parent", "parent", "parent", "parent",     "parent", "parent", "parent", "parent", "A1", "A1", "A1",     "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1",     "A1", "parent", "parent", "parent", "parent", "parent", "parent",     "parent", "parent", "parent", "parent", "parent", "parent",     "parent", "parent", "parent", "parent", "parent", "parent",     "parent", "parent", "A1", "A1", "A1", "A1", "A1", "A1", "A1",     "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1",     "A1", "parent", "parent", "parent", "parent", "parent", "parent",     "parent", "parent", "parent", "parent", "parent", "parent",     "parent", "parent", "parent", "parent", "A1", "A1", "A1",     "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1", "A1",     "A1"), time = c(0, 0, 3, 3, 6, 6, 10, 10, 20, 20, 34, 34,     55, 55, 90, 90, 112, 112, 132, 132, 3, 3, 6, 6, 10, 10, 20,     20, 34, 34, 55, 55, 90, 90, 112, 112, 132, 132, 0, 0, 3,     3, 7, 7, 14, 14, 30, 30, 60, 60, 90, 90, 120, 120, 180, 180,     3, 3, 7, 7, 14, 14, 30, 30, 60, 60, 90, 90, 120, 120, 180,     180, 0, 0, 1, 1, 3, 3, 8, 8, 14, 14, 27, 27, 48, 48, 70,     70, 1, 1, 3, 3, 8, 8, 14, 14, 27, 27, 48, 48, 70, 70, 0,     0, 1, 1, 3, 3, 8, 8, 14, 14, 27, 27, 48, 48, 70, 70, 91,     91, 120, 120, 1, 1, 3, 3, 8, 8, 14, 14, 27, 27, 48, 48, 70,     70, 91, 91, 120, 120, 0, 0, 8, 8, 14, 14, 21, 21, 41, 41,     63, 63, 91, 91, 120, 120, 8, 8, 14, 14, 21, 21, 41, 41, 63,     63, 91, 91, 120, 120), value = c(97.2, 96.4, 71.1, 69.2,     58.1, 56.6, 44.4, 43.4, 33.3, 29.2, 17.6, 18, 10.5, 9.3,     4.5, 4.7, 3, 3.4, 2.3, 2.7, 4.3, 4.6, 7, 7.2, 8.2, 8, 11,     13.7, 11.5, 12.7, 14.9, 14.5, 12.1, 12.3, 9.9, 10.2, 8.8,     7.8, 93.6, 92.3, 87, 82.2, 74, 73.9, 64.2, 69.5, 54, 54.6,     41.1, 38.4, 32.5, 35.5, 28.1, 29, 26.5, 27.6, 3.9, 3.1, 6.9,     6.6, 10.4, 8.3, 14.4, 13.7, 22.1, 22.3, 27.5, 25.4, 28, 26.6,     25.8, 25.3, 91.9, 90.8, 64.9, 66.2, 43.5, 44.1, 18.3, 18.1,     10.2, 10.8, 4.9, 3.3, 1.6, 1.5, 1.1, 0.9, 9.6, 7.7, 15, 15.1,     21.2, 21.1, 19.7, 18.9, 17.5, 15.9, 9.5, 9.8, 6.2, 6.1, 99.8,     98.3, 77.1, 77.2, 59, 58.1, 27.4, 29.2, 19.1, 29.6, 10.1,     18.2, 4.5, 9.1, 2.3, 2.9, 2, 1.8, 2, 2.2, 4.2, 3.9, 7.4,     7.9, 14.5, 13.7, 14.2, 12.2, 13.7, 13.2, 13.6, 15.4, 10.4,     11.6, 10, 9.5, 9.1, 9, 96.1, 94.3, 73.9, 73.9, 69.4, 73.1,     65.6, 65.3, 55.9, 54.4, 47, 49.3, 44.7, 46.7, 42.1, 41.3,     3.3, 3.4, 3.9, 2.9, 6.4, 7.2, 9.1, 8.5, 11.7, 12, 13.3, 13.2,     14.3, 12.1)), row.names = c(NA, -170L), class = c("nfnGroupedData",     "nfGroupedData", "groupedData", "data.frame"), formula = value ~         time | ds, FUN = function (x)     max(x, na.rm = TRUE), order.groups = FALSE), start = list(        fixed = c(parent_0 = 93.4272167134207, log_k_A1 = -9.71590717106959,         f_parent_qlogis = -0.953712099744438, log_k1 = -1.95256957646888,         log_k2 = -4.42919226610318, g_qlogis = 0.193023137298073        ), random = list(ds = structure(c(2.85557330683041, -3.87630303729395,         -2.78062140212751, 4.82042042600536, -1.01906929341432,         4.613992019697, 2.05871276943309, 6.0766404049189, 4.86471337131288,         -17.6140585653619, -0.480721175257541, 0.773079218835614,         0.260464433006093, -0.440615012802434, -0.112207463781733,         0.445812953745225, -1.49588630006094, 1.13602040717272,         0.801850880762046, -0.887797941619048, 0.936480292463262,         -2.43093808171905, 1.91256225793793, 0.984827519864443,         -1.40293198854659, -0.455176326336681, 0.376355651864385,         0.343919720700401, 0.46329187713133, -0.728390923359434        ), .Dim = 5:6, .Dimnames = list(c("1", "2", "3", "4",         "5"), c("parent_0", "log_k_A1", "f_parent_qlogis", "log_k1",         "log_k2", "g_qlogis"))))), fixed = list(parent_0 ~ 1,         log_k_A1 ~ 1, f_parent_qlogis ~ 1, log_k1 ~ 1, log_k2 ~             1, g_qlogis ~ 1), random = structure(numeric(0), class = c("pdDiag",     "pdMat"), formula = structure(list(parent_0 ~ 1, log_k_A1 ~         1, f_parent_qlogis ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_qlogis ~         1), class = "listForm"), Dimnames = list(NULL, NULL)),     weights = structure(numeric(0), formula = ~1 | name, class = c("varIdent",     "varFunc"))): maximum number of iterations (maxIter = 50) reached without convergence</span></div><div class='output co'>#&gt; <span class='message'>Timing stopped at: 59.38 16.5 53.5</span></div><div class='input'>
   <span class='va'>f_2_tc</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"SFO-SFO"</span> <span class='op'>=</span> <span class='va'>m_sfo_sfo</span>,
    <span class='st'>"DFOP-SFO"</span> <span class='op'>=</span> <span class='va'>m_dfop_sfo</span><span class='op'>)</span>,
     <span class='va'>ds_2</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span>, error_model <span class='op'>=</span> <span class='st'>"tc"</span><span class='op'>)</span>
   <span class='co'># f_nlme_sfo_sfo_tc &lt;- nlme(f_2_tc["SFO-SFO", ]) # stops with error message</span>
   <span class='va'>f_nlme_dfop_sfo_tc</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f_2_tc</span><span class='op'>[</span><span class='st'>"DFOP-SFO"</span>, <span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 1, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 2, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 3, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 4, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 6, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 7, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 8, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 9, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 11, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 12, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 15, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 25, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='input'>  <span class='co'># We get warnings about false convergence in the LME step in several iterations</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: longer object length is not a multiple of shorter object length</span></div><div class='output co'>#&gt; <span class='warning'>Warning: longer object length is not a multiple of shorter object length</span></div><div class='output co'>#&gt; <span class='warning'>Warning: longer object length is not a multiple of shorter object length</span></div><div class='output co'>#&gt; <span class='warning'>Warning: longer object length is not a multiple of shorter object length</span></div><div class='output co'>#&gt; <span class='warning'>Warning: longer object length is not a multiple of shorter object length</span></div><div class='output co'>#&gt; <span class='warning'>Warning: longer object length is not a multiple of shorter object length</span></div><div class='output co'>#&gt; <span class='warning'>Warning: longer object length is not a multiple of shorter object length</span></div><div class='output co'>#&gt; <span class='warning'>Warning: longer object length is not a multiple of shorter object length</span></div><div class='output co'>#&gt; <span class='warning'>Warning: longer object length is not a multiple of shorter object length</span></div><div class='output co'>#&gt; <span class='warning'>Warning: longer object length is not a multiple of shorter object length</span></div><div class='output co'>#&gt; <span class='warning'>Warning: longer object length is not a multiple of shorter object length</span></div><div class='output co'>#&gt; <span class='warning'>Warning: longer object length is not a multiple of shorter object length</span></div><div class='output co'>#&gt; <span class='warning'>Warning: longer object length is not a multiple of shorter object length</span></div><div class='output co'>#&gt; <span class='warning'>Warning: longer object length is not a multiple of shorter object length</span></div><div class='output co'>#&gt; <span class='error'>Error in X[, fmap[[nm]]] &lt;- gradnm: number of items to replace is not a multiple of replacement length</span></div><div class='output co'>#&gt; <span class='message'>Timing stopped at: 6.363 2.688 5.469</span></div><div class='input'>  <span class='co'># We get warnings about false convergence in the LME step in several iterations</span>
   <span class='co'># but as the last such warning occurs in iteration 25 and we have 28 iterations</span>
   <span class='co'># we can ignore these</span>
   <span class='fu'><a href='https://rdrr.io/r/stats/anova.html'>anova</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop_sfo</span>, <span class='va'>f_nlme_dfop_sfo_obs</span>, <span class='va'>f_nlme_dfop_sfo_tc</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                     Model df      AIC      BIC    logLik   Test L.Ratio p-value
-#&gt; f_nlme_dfop_sfo         1 28 811.7199 899.5222 -377.8599                       
-#&gt; f_nlme_dfop_sfo_obs     2 29 784.1304 875.0685 -363.0652 1 vs 2 29.5895  &lt;.0001
-#&gt; f_nlme_dfop_sfo_tc      3 29 791.9981 882.9362 -366.9990                       </div><div class='input'>
+</div><div class='output co'>#&gt; <span class='error'>Error in anova(f_nlme_dfop_sfo, f_nlme_dfop_sfo_obs, f_nlme_dfop_sfo_tc): object 'f_nlme_dfop_sfo' not found</span></div><div class='input'>
 <span class='co'># }</span>
 </div></pre>
   </div>
