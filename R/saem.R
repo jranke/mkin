@@ -106,11 +106,10 @@ saem.mmkin <- function(object,
   solution_type = "auto",
   control = list(displayProgress = FALSE, print = FALSE,
     save = FALSE, save.graphs = FALSE),
-  cores = 1,
   verbose = FALSE, suppressPlot = TRUE, quiet = FALSE, ...)
 {
   transformations <- match.arg(transformations)
-  m_saemix <- saemix_model(object, cores = cores, verbose = verbose,
+  m_saemix <- saemix_model(object, verbose = verbose,
     solution_type = solution_type, transformations = transformations, ...)
   d_saemix <- saemix_data(object, verbose = verbose)
 
@@ -211,7 +210,7 @@ print.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3), ...) {
 #' @return An [saemix::SaemixModel] object.
 #' @export
 saemix_model <- function(object, solution_type = "auto", transformations = c("mkin", "saemix"),
-  cores = 1, verbose = FALSE, ...)
+  verbose = FALSE, ...)
 {
   if (nrow(object) > 1) stop("Only row objects allowed")
 
