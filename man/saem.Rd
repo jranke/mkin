@@ -16,7 +16,6 @@ saem(object, ...)
   solution_type = "auto",
   control = list(displayProgress = FALSE, print = FALSE, save = FALSE, save.graphs =
     FALSE),
-  cores = 1,
   verbose = FALSE,
   suppressPlot = TRUE,
   quiet = FALSE,
@@ -29,7 +28,6 @@ saemix_model(
   object,
   solution_type = "auto",
   transformations = c("mkin", "saemix"),
-  cores = 1,
   verbose = FALSE,
   ...
 )

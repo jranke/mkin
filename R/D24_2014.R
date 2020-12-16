@@ -27,4 +27,5 @@
 #' m_D24 = mkinmod(D24 = mkinsub("SFO", to = "DCP"),
 #'   DCP = mkinsub("SFO", to = "DCA"),
 #'   DCA = mkinsub("SFO"))
+#' print(D24_2014)
 "D24_2014"
