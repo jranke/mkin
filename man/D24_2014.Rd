@@ -40,6 +40,6 @@ print(D24_2014$ds[[1]], data = TRUE)
 m_D24 = mkinmod(D24 = mkinsub("SFO", to = "DCP"),
   DCP = mkinsub("SFO", to = "DCA"),
   DCA = mkinsub("SFO"))
-print(D24_2014)
+print(m_D24)
 }
 \keyword{datasets}
