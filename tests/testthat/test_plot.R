@@ -1,6 +1,6 @@
 context("Plotting")
 
-test_that("Plotting mkinfit and mmkin objects is reproducible", {
+test_that("Plotting mkinfit, mmkin and mixed model objects is reproducible", {
   skip_on_cran()
   plot_default_FOCUS_C_SFO <- function() plot(fits[["SFO", "FOCUS_C"]])
   plot_res_FOCUS_C_SFO <- function() plot(fits[["SFO", "FOCUS_C"]], show_residuals = TRUE)

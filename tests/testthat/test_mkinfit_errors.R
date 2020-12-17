@@ -35,19 +35,3 @@ test_that("mkinfit warns if a specified initial parameter value is not in the mo
   expect_warning(mkinfit("SFO", FOCUS_2006_A, parms.ini = c(k_xy = 0.1), quiet = TRUE),
                  "not used in the model")
 })
-
-test_that("We get reproducible output if quiet = FALSE", {
-  # We cannot expect parameter and sum of squares traces to be the same across platforms
-  skip_on_cran()
-  skip_on_travis()
-  expect_known_output(mkinfit("DFOP", FOCUS_2006_C, reweight.method = "tc", trace_parms = TRUE),
-    file = "DFOP_FOCUS_C_messages.txt")
-})
-
-test_that("We get warnings in case of overparameterisation", {
-  skip_on_cran() # On winbuilder the following fit does not give a warning
-  skip_on_travis() # Neither on travis
-  expect_warning(f <- mkinfit("FOMC", FOCUS_2006_A, quiet = TRUE), "not converge")
-  # We do get Hessians and the related output after the switch to using numDeriv::hessian()
-  #s2 <- expect_warning(summary(mkinfit("DFOP", FOCUS_2006_A, quiet = TRUE)), "singular system")
-})
