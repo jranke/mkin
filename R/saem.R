@@ -22,6 +22,8 @@ utils::globalVariables(c("predicted", "std"))
 #'   are done in 'saemix' for the supported cases. Currently this is only
 #'   supported in cases where the initial concentration of the parent is not fixed,
 #'   SFO or DFOP is used for the parent and there is either no metabolite or one.
+#' @param degparms_start Parameter values given as a named numeric vector will
+#'   be used to override the starting values obtained from the 'mmkin' object.
 #' @param solution_type Possibility to specify the solution type in case the
 #'   automatic choice is not desired
 #' @param quiet Should we suppress the messages saemix prints at the beginning
@@ -103,6 +105,7 @@ saem <- function(object, ...) UseMethod("saem")
 #' @export
 saem.mmkin <- function(object,
   transformations = c("mkin", "saemix"),
+  degparms_start = numeric(),
   solution_type = "auto",
   control = list(displayProgress = FALSE, print = FALSE,
     save = FALSE, save.graphs = FALSE),
@@ -110,7 +113,8 @@ saem.mmkin <- function(object,
 {
   transformations <- match.arg(transformations)
   m_saemix <- saemix_model(object, verbose = verbose,
-    solution_type = solution_type, transformations = transformations, ...)
+    degparms_start = degparms_start, solution_type = solution_type,
+    transformations = transformations, ...)
   d_saemix <- saemix_data(object, verbose = verbose)
 
   if (suppressPlot) {
@@ -210,7 +214,7 @@ print.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3), ...) {
 #' @return An [saemix::SaemixModel] object.
 #' @export
 saemix_model <- function(object, solution_type = "auto", transformations = c("mkin", "saemix"),
-  verbose = FALSE, ...)
+  degparms_start = numeric(), verbose = FALSE, ...)
 {
   if (nrow(object) > 1) stop("Only row objects allowed")
 
@@ -477,8 +481,10 @@ saemix_model <- function(object, solution_type = "auto", transformations = c("mk
       b = mean(sapply(object, function(x) x$errparms[2]))),
     obs = c(a = mean(sapply(object, function(x) x$errparms)), b = 1))
 
-  psi0_matrix <- matrix(degparms_optim, nrow = 1)
-  colnames(psi0_matrix) <- names(degparms_optim)
+  degparms_psi0 <- degparms_optim
+  degparms_psi0[names(degparms_start)] <- degparms_start
+  psi0_matrix <- matrix(degparms_psi0, nrow = 1)
+  colnames(psi0_matrix) <- names(degparms_psi0)
 
   res <- saemix::saemixModel(model_function,
     psi0 = psi0_matrix,
