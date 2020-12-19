@@ -122,7 +122,7 @@ in Appendix 8 to the FOCUS kinetics guidance (FOCUS 2014, p. 369)." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/jranke/mkin/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -166,7 +166,7 @@ in Appendix 8 to the FOCUS kinetics guidance (FOCUS 2014, p. 369).</p>
 <span class='co'># S3 method for mkindsg</span>
 <span class='fu'>f_time_norm_focus</span><span class='op'>(</span>
   <span class='va'>object</span>,
-  study_moisture_ref_source <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"meta"</span>, <span class='st'>"focus"</span><span class='op'>)</span>,
+  study_moisture_ref_source <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"auto"</span>, <span class='st'>"meta"</span>, <span class='st'>"focus"</span><span class='op'>)</span>,
   Q10 <span class='op'>=</span> <span class='fl'>2.58</span>,
   walker <span class='op'>=</span> <span class='fl'>0.7</span>,
   f_na <span class='op'>=</span> <span class='cn'>NA</span>,
@@ -213,7 +213,9 @@ for complete cases will be returned.</p></td>
     <tr>
       <th>study_moisture_ref_source</th>
       <td><p>Source for the reference value
-used to calculate the study moisture</p></td>
+used to calculate the study moisture. If 'auto', preference is given
+to a reference moisture given in the meta information, otherwise
+the focus soil moisture for the soil class is used</p></td>
     </tr>
     </table>
 
@@ -237,22 +239,22 @@ Version 1.1, 18 December 2014
     <pre class="examples"><div class='input'><span class='fu'>f_time_norm_focus</span><span class='op'>(</span><span class='fl'>25</span>, <span class='fl'>20</span>, <span class='fl'>25</span><span class='op'>)</span> <span class='co'># 1.37, compare FOCUS 2014 p. 184</span>
 </div><div class='output co'>#&gt; [1] 1.373956</div><div class='input'>
 <span class='va'>D24_2014</span><span class='op'>$</span><span class='va'>meta</span>
-</div><div class='output co'>#&gt;                       study usda_soil_type study_moisture_ref_type rel_moisture
-#&gt; 1                Cohen 1991      Silt loam                    &lt;NA&gt;           NA
-#&gt; 2 Liu and Adelfinskaya 2011      Silt loam                     pF1          0.5
-#&gt; 3 Liu and Adelfinskaya 2011           Loam                     pF1          0.5
-#&gt; 4 Liu and Adelfinskaya 2011           Loam                     pF1          0.5
-#&gt; 5 Liu and Adelfinskaya 2011     Loamy sand                     pF1          0.5
-#&gt;   temperature
-#&gt; 1          25
-#&gt; 2          20
-#&gt; 3          20
-#&gt; 4          20
-#&gt; 5          20</div><div class='input'><span class='co'># No moisture normalisation in the first dataset, so we use f_na = 1 to get</span>
+</div><div class='output co'>#&gt;                                 study usda_soil_type study_moisture_ref_type
+#&gt; Mississippi                Cohen 1991      Silt loam                    &lt;NA&gt;
+#&gt; Fayette     Liu and Adelfinskaya 2011      Silt loam                     pF1
+#&gt; RefSol 03-G Liu and Adelfinskaya 2011           Loam                     pF1
+#&gt; Site E1     Liu and Adelfinskaya 2011           Loam                     pF1
+#&gt; Site I2     Liu and Adelfinskaya 2011     Loamy sand                     pF1
+#&gt;             rel_moisture temperature
+#&gt; Mississippi           NA          25
+#&gt; Fayette              0.5          20
+#&gt; RefSol 03-G          0.5          20
+#&gt; Site E1              0.5          20
+#&gt; Site I2              0.5          20</div><div class='input'><span class='co'># No moisture normalisation in the first dataset, so we use f_na = 1 to get</span>
 <span class='co'># temperature only normalisation as in the EU evaluation</span>
 <span class='fu'>f_time_norm_focus</span><span class='op'>(</span><span class='va'>D24_2014</span>, study_moisture_ref_source <span class='op'>=</span> <span class='st'>"focus"</span>, f_na <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $time_norm was set to
-#&gt; [1] 1.6062378 0.7118732 0.7156063 0.7156063 0.8977124</div><div class='output co'>#&gt; [1] 1.6062378 0.7118732 0.7156063 0.7156063 0.8977124</div></pre>
+#&gt; [1] 1.6062378 0.7118732 0.7156063 0.7156063 0.8977124</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
