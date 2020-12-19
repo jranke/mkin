@@ -11,7 +11,9 @@ utils::globalVariables("D24_2014")
 #' @param field_moisture Numeric vector of moisture contents at field capacity
 #'   (pF2) in \\% w/w
 #' @param study_moisture_ref_source Source for the reference value
-#'   used to calculate the study moisture
+#'   used to calculate the study moisture. If 'auto', preference is given
+#'   to a reference moisture given in the meta information, otherwise
+#'   the focus soil moisture for the soil class is used
 #' @param Q10 The Q10 value used for temperature normalisation
 #' @param walker The Walker exponent used for moisture normalisation
 #' @param f_na The factor to use for NA values. If set to NA, only factors
@@ -65,7 +67,7 @@ f_time_norm_focus.numeric <- function(object,
 #' @rdname f_time_norm_focus
 #' @export
 f_time_norm_focus.mkindsg <- function(object,
-  study_moisture_ref_source = c("meta", "focus"),
+  study_moisture_ref_source = c("auto", "meta", "focus"),
   Q10 = 2.58, walker = 0.7, f_na = NA, ...) {
 
   study_moisture_ref_source <- match.arg(study_moisture_ref_source)
@@ -79,11 +81,19 @@ f_time_norm_focus.mkindsg <- function(object,
       meta$field_moisture)
   }
 
-  if (study_moisture_ref_source == "meta") {
-    study_moisture_ref <- meta$study_moisture_ref
+  study_moisture_ref_focus <-
+    focus_soil_moisture[as.matrix(meta[c("usda_soil_type", "study_moisture_ref_type")])]
+
+  if (study_moisture_ref_source == "auto") {
+    study_moisture_ref <- ifelse (is.na(meta$study_ref_moisture),
+      study_moisture_ref_focus,
+      meta$study_ref_moisture)
   } else {
-    study_moisture_ref <-
-      focus_soil_moisture[as.matrix(meta[c("usda_soil_type", "study_moisture_ref_type")])]
+    if (study_moisture_ref_source == "meta") {
+      study_moisture_ref <- meta$study_moisture_ref
+    } else {
+      study_moisture_ref <- study_moisture_ref_focus
+    }
   }
 
   if ("study_moisture" %in% names(meta)) {
@@ -99,5 +109,5 @@ f_time_norm_focus.mkindsg <- function(object,
     Q10 = Q10, walker = walker, f_na = f_na)
   cat("$time_norm was set to\n")
   print(object$f_time_norm)
-  return(object$f_time_norm)
+  invisible(object$f_time_norm)
 }

@@ -140,6 +140,7 @@ mkindsg <- R6Class("mkindsg",
       self$f_time_norm <- f_time_norm
 
       if (!missing(meta)) {
+        rownames(meta) <- lapply(ds, function(x) x$title)
         self$meta <- meta
       }
     }
@@ -157,7 +158,7 @@ mkindsg <- R6Class("mkindsg",
 print.mkindsg <- function(x, data = FALSE, verbose = data, ...) {
   cat("<mkindsg> holding", length(x$ds), "mkinds objects\n")
   cat("Title $title: ",  x$title, "\n")
-  cat("Occurrene of observed compounds $observed_n:\n")
+  cat("Occurrence of observed compounds $observed_n:\n")
   print(x$observed_n)
   if (any(x$f_time_norm != 1)) {
     cat("Time normalisation factors $f_time_norm:\n")

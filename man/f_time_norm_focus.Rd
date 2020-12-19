@@ -21,7 +21,7 @@ f_time_norm_focus(object, ...)
 
 \method{f_time_norm_focus}{mkindsg}(
   object,
-  study_moisture_ref_source = c("meta", "focus"),
+  study_moisture_ref_source = c("auto", "meta", "focus"),
   Q10 = 2.58,
   walker = 0.7,
   f_na = NA,
@@ -48,7 +48,9 @@ f_time_norm_focus(object, ...)
 for complete cases will be returned.}
 
 \item{study_moisture_ref_source}{Source for the reference value
-used to calculate the study moisture}
+used to calculate the study moisture. If 'auto', preference is given
+to a reference moisture given in the meta information, otherwise
+the focus soil moisture for the soil class is used}
 }
 \description{
 Time step normalisation factors for aerobic soil degradation as described

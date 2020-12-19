@@ -1,4 +1,4 @@
-context("Nonlinear mixed effects models")
+context("Nonlinear mixed-effects models")
 
 test_that("Parent only models can be fitted using nonlinear mixed effects models", {
   expect_error(saem(fits), "Only row objects")

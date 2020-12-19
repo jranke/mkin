@@ -70,4 +70,6 @@ D24_2014 <- mkindsg$new(
     temperature = c(25, 20, 20, 20, 20)
   )
 )
-save(D24_2014, file = "../../data/D24_2014.rda", version = 2)
+f_time_norm_focus(D24_2014, study_moisture_ref_source = "focus", f_na = 1)
+
+save(D24_2014, file = "data/D24_2014.rda", version = 2)
