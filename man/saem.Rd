@@ -13,6 +13,7 @@ saem(object, ...)
 \method{saem}{mmkin}(
   object,
   transformations = c("mkin", "saemix"),
+  degparms_start = numeric(),
   solution_type = "auto",
   control = list(displayProgress = FALSE, print = FALSE, save = FALSE, save.graphs =
     FALSE),
@@ -28,6 +29,7 @@ saemix_model(
   object,
   solution_type = "auto",
   transformations = c("mkin", "saemix"),
+  degparms_start = numeric(),
   verbose = FALSE,
   ...
 )
@@ -45,6 +47,9 @@ in mkin. If this argument is set to 'saemix', parameter transformations
 are done in 'saemix' for the supported cases. Currently this is only
 supported in cases where the initial concentration of the parent is not fixed,
 SFO or DFOP is used for the parent and there is either no metabolite or one.}
+
+\item{degparms_start}{Parameter values given as a named numeric vector will
+be used to override the starting values obtained from the 'mmkin' object.}
 
 \item{solution_type}{Possibility to specify the solution type in case the
 automatic choice is not desired}

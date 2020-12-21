@@ -12,6 +12,7 @@
   xlab = "Time",
   xlim = range(x$data$time),
   resplot = c("predicted", "time"),
+  pred_over = NULL,
   ymax = "auto",
   maxabs = "auto",
   ncol.legend = ifelse(length(i) <= 3, length(i) + 1, ifelse(length(i) <= 8, 3, 4)),
@@ -44,6 +45,9 @@ variables in the model.}
 
 \item{resplot}{Should the residuals plotted against time or against
 predicted values?}
+
+\item{pred_over}{Named list of alternative predictions as obtained
+from \link{mkinpredict} with a compatible \link{mkinmod}.}
 
 \item{ymax}{Vector of maximum y axis values}
 
@@ -90,8 +94,15 @@ plot(f[, 3:4], standardized = TRUE)
 f_nlme <- nlme(f, control = list(pnlsMaxIter = 120, tolerance = 1e-3))
 plot(f_nlme)
 
-f_saem <- saem(f)
+f_saem <- saem(f, transformations = "saemix")
 plot(f_saem)
+
+# We can overlay the two variants if we generate predictions
+pred_nlme <- mkinpredict(dfop_sfo,
+  f_nlme$bparms.optim[-1],
+  c(parent = f_nlme$bparms.optim[[1]], A1 = 0),
+  seq(0, 180, by = 0.2))
+plot(f_saem, pred_over = list(nlme = pred_nlme))
 }
 }
 \author{

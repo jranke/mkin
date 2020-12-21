@@ -123,7 +123,7 @@ Expectation Maximisation algorithm (SAEM)." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/jranke/mkin/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -157,6 +157,7 @@ Expectation Maximisation algorithm (SAEM).</p>
 <span class='fu'>saem</span><span class='op'>(</span>
   <span class='va'>object</span>,
   transformations <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"mkin"</span>, <span class='st'>"saemix"</span><span class='op'>)</span>,
+  degparms_start <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>numeric</a></span><span class='op'>(</span><span class='op'>)</span>,
   solution_type <span class='op'>=</span> <span class='st'>"auto"</span>,
   control <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>displayProgress <span class='op'>=</span> <span class='cn'>FALSE</span>, print <span class='op'>=</span> <span class='cn'>FALSE</span>, save <span class='op'>=</span> <span class='cn'>FALSE</span>, save.graphs <span class='op'>=</span>
     <span class='cn'>FALSE</span><span class='op'>)</span>,
@@ -173,6 +174,7 @@ Expectation Maximisation algorithm (SAEM).</p>
   <span class='va'>object</span>,
   solution_type <span class='op'>=</span> <span class='st'>"auto"</span>,
   transformations <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"mkin"</span>, <span class='st'>"saemix"</span><span class='op'>)</span>,
+  degparms_start <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>numeric</a></span><span class='op'>(</span><span class='op'>)</span>,
   verbose <span class='op'>=</span> <span class='cn'>FALSE</span>,
   <span class='va'>...</span>
 <span class='op'>)</span>
@@ -198,6 +200,11 @@ in mkin. If this argument is set to 'saemix', parameter transformations
 are done in 'saemix' for the supported cases. Currently this is only
 supported in cases where the initial concentration of the parent is not fixed,
 SFO or DFOP is used for the parent and there is either no metabolite or one.</p></td>
+    </tr>
+    <tr>
+      <th>degparms_start</th>
+      <td><p>Parameter values given as a named numeric vector will
+be used to override the starting values obtained from the 'mmkin' object.</p></td>
     </tr>
     <tr>
       <th>solution_type</th>
@@ -260,36 +267,33 @@ using <a href='mmkin.html'>mmkin</a>.</p>
   state.ini <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>parent <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span>, fixed_initials <span class='op'>=</span> <span class='st'>"parent"</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='va'>f_saem_p0_fixed</span> <span class='op'>&lt;-</span> <span class='fu'>saem</span><span class='op'>(</span><span class='va'>f_mmkin_parent_p0_fixed</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Running main SAEM algorithm
-#&gt; [1] "Wed Dec 16 18:27:30 2020"
+#&gt; [1] "Mon Dec 21 05:58:33 2020"
 #&gt; ....
 #&gt;     Minimisation finished
-#&gt; [1] "Wed Dec 16 18:27:31 2020"</div><div class='input'>
+#&gt; [1] "Mon Dec 21 05:58:34 2020"</div><div class='input'>
 <span class='va'>f_mmkin_parent</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='st'>"FOMC"</span>, <span class='st'>"DFOP"</span><span class='op'>)</span>, <span class='va'>ds</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='va'>f_saem_sfo</span> <span class='op'>&lt;-</span> <span class='fu'>saem</span><span class='op'>(</span><span class='va'>f_mmkin_parent</span><span class='op'>[</span><span class='st'>"SFO"</span>, <span class='op'>]</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Running main SAEM algorithm
-#&gt; [1] "Wed Dec 16 18:27:33 2020"
+#&gt; [1] "Mon Dec 21 05:58:36 2020"
 #&gt; ....
 #&gt;     Minimisation finished
-#&gt; [1] "Wed Dec 16 18:27:35 2020"</div><div class='input'><span class='va'>f_saem_fomc</span> <span class='op'>&lt;-</span> <span class='fu'>saem</span><span class='op'>(</span><span class='va'>f_mmkin_parent</span><span class='op'>[</span><span class='st'>"FOMC"</span>, <span class='op'>]</span><span class='op'>)</span>
+#&gt; [1] "Mon Dec 21 05:58:37 2020"</div><div class='input'><span class='va'>f_saem_fomc</span> <span class='op'>&lt;-</span> <span class='fu'>saem</span><span class='op'>(</span><span class='va'>f_mmkin_parent</span><span class='op'>[</span><span class='st'>"FOMC"</span>, <span class='op'>]</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Running main SAEM algorithm
-#&gt; [1] "Wed Dec 16 18:27:35 2020"
+#&gt; [1] "Mon Dec 21 05:58:38 2020"
 #&gt; ....
 #&gt;     Minimisation finished
-#&gt; [1] "Wed Dec 16 18:27:37 2020"</div><div class='input'><span class='va'>f_saem_dfop</span> <span class='op'>&lt;-</span> <span class='fu'>saem</span><span class='op'>(</span><span class='va'>f_mmkin_parent</span><span class='op'>[</span><span class='st'>"DFOP"</span>, <span class='op'>]</span><span class='op'>)</span>
+#&gt; [1] "Mon Dec 21 05:58:40 2020"</div><div class='input'><span class='va'>f_saem_dfop</span> <span class='op'>&lt;-</span> <span class='fu'>saem</span><span class='op'>(</span><span class='va'>f_mmkin_parent</span><span class='op'>[</span><span class='st'>"DFOP"</span>, <span class='op'>]</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Running main SAEM algorithm
-#&gt; [1] "Wed Dec 16 18:27:37 2020"
+#&gt; [1] "Mon Dec 21 05:58:40 2020"
 #&gt; ....
 #&gt;     Minimisation finished
-#&gt; [1] "Wed Dec 16 18:27:40 2020"</div><div class='input'>
+#&gt; [1] "Mon Dec 21 05:58:43 2020"</div><div class='input'>
 <span class='co'># The returned saem.mmkin object contains an SaemixObject, therefore we can use</span>
 <span class='co'># functions from saemix</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>saemix</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Package saemix, version 3.1.9000</span>
 #&gt; <span class='message'>  please direct bugs, questions and feedback to emmanuelle.comets@inserm.fr</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/saemix/man/compare.saemix.html'>compare.saemix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>f_saem_sfo</span><span class='op'>$</span><span class='va'>so</span>, <span class='va'>f_saem_fomc</span><span class='op'>$</span><span class='va'>so</span>, <span class='va'>f_saem_dfop</span><span class='op'>$</span><span class='va'>so</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Likelihoods computed by importance sampling </div><div class='output co'>#&gt;        AIC      BIC
-#&gt; 1 624.2484 622.2956
-#&gt; 2 467.7096 464.9757
-#&gt; 3 495.4373 491.9222</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/saemix/man/plot-SaemixObject-method.html'>plot</a></span><span class='op'>(</span><span class='va'>f_saem_fomc</span><span class='op'>$</span><span class='va'>so</span>, plot.type <span class='op'>=</span> <span class='st'>"convergence"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in compare.saemix(list(f_saem_sfo$so, f_saem_fomc$so, f_saem_dfop$so)): 'compare.saemix' requires at least two models.</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/saemix/man/plot-SaemixObject-method.html'>plot</a></span><span class='op'>(</span><span class='va'>f_saem_fomc</span><span class='op'>$</span><span class='va'>so</span>, plot.type <span class='op'>=</span> <span class='st'>"convergence"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Plotting convergence plots</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/saemix/man/plot-SaemixObject-method.html'>plot</a></span><span class='op'>(</span><span class='va'>f_saem_fomc</span><span class='op'>$</span><span class='va'>so</span>, plot.type <span class='op'>=</span> <span class='st'>"individual.fit"</span><span class='op'>)</span>
 </div><div class='img'><img src='saem-1.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Plotting individual fits</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/saemix/man/plot-SaemixObject-method.html'>plot</a></span><span class='op'>(</span><span class='va'>f_saem_fomc</span><span class='op'>$</span><span class='va'>so</span>, plot.type <span class='op'>=</span> <span class='st'>"npde"</span><span class='op'>)</span>
 </div><div class='img'><img src='saem-2.png' alt='' width='700' height='433' /></div><div class='output co'>#&gt; Simulating data using nsim = 1000 simulated datasets
@@ -326,13 +330,11 @@ using <a href='mmkin.html'>mmkin</a>.</p>
 <span class='va'>f_mmkin_parent_tc</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/update.html'>update</a></span><span class='op'>(</span><span class='va'>f_mmkin_parent</span>, error_model <span class='op'>=</span> <span class='st'>"tc"</span><span class='op'>)</span>
 <span class='va'>f_saem_fomc_tc</span> <span class='op'>&lt;-</span> <span class='fu'>saem</span><span class='op'>(</span><span class='va'>f_mmkin_parent_tc</span><span class='op'>[</span><span class='st'>"FOMC"</span>, <span class='op'>]</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Running main SAEM algorithm
-#&gt; [1] "Wed Dec 16 18:27:43 2020"
+#&gt; [1] "Mon Dec 21 05:58:46 2020"
 #&gt; ....
 #&gt;     Minimisation finished
-#&gt; [1] "Wed Dec 16 18:27:48 2020"</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/saemix/man/compare.saemix.html'>compare.saemix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>f_saem_fomc</span><span class='op'>$</span><span class='va'>so</span>, <span class='va'>f_saem_fomc_tc</span><span class='op'>$</span><span class='va'>so</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Likelihoods computed by importance sampling </div><div class='output co'>#&gt;        AIC      BIC
-#&gt; 1 467.7096 464.9757
-#&gt; 2 469.5208 466.3963</div><div class='input'>
+#&gt; [1] "Mon Dec 21 05:58:51 2020"</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/saemix/man/compare.saemix.html'>compare.saemix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>f_saem_fomc</span><span class='op'>$</span><span class='va'>so</span>, <span class='va'>f_saem_fomc_tc</span><span class='op'>$</span><span class='va'>so</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in compare.saemix(list(f_saem_fomc$so, f_saem_fomc_tc$so)): 'compare.saemix' requires at least two models.</span></div><div class='input'>
 <span class='va'>sfo_sfo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span><span class='op'>(</span>parent <span class='op'>=</span> <span class='fu'><a href='mkinmod.html'>mkinsub</a></span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='st'>"A1"</span><span class='op'>)</span>,
   A1 <span class='op'>=</span> <span class='fu'><a href='mkinmod.html'>mkinsub</a></span><span class='op'>(</span><span class='st'>"SFO"</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Temporary DLL for differentials generated and loaded</span></div><div class='input'><span class='va'>fomc_sfo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span><span class='op'>(</span>parent <span class='op'>=</span> <span class='fu'><a href='mkinmod.html'>mkinsub</a></span><span class='op'>(</span><span class='st'>"FOMC"</span>, <span class='st'>"A1"</span><span class='op'>)</span>,
@@ -350,15 +352,15 @@ using <a href='mmkin.html'>mmkin</a>.</p>
 <span class='co'># four minutes</span>
 <span class='va'>f_saem_sfo_sfo</span> <span class='op'>&lt;-</span> <span class='fu'>saem</span><span class='op'>(</span><span class='va'>f_mmkin</span><span class='op'>[</span><span class='st'>"SFO-SFO"</span>, <span class='op'>]</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Running main SAEM algorithm
-#&gt; [1] "Wed Dec 16 18:27:50 2020"
+#&gt; [1] "Mon Dec 21 05:58:53 2020"
 #&gt; ....
 #&gt;     Minimisation finished
-#&gt; [1] "Wed Dec 16 18:27:55 2020"</div><div class='input'><span class='va'>f_saem_dfop_sfo</span> <span class='op'>&lt;-</span> <span class='fu'>saem</span><span class='op'>(</span><span class='va'>f_mmkin</span><span class='op'>[</span><span class='st'>"DFOP-SFO"</span>, <span class='op'>]</span><span class='op'>)</span>
+#&gt; [1] "Mon Dec 21 05:58:58 2020"</div><div class='input'><span class='va'>f_saem_dfop_sfo</span> <span class='op'>&lt;-</span> <span class='fu'>saem</span><span class='op'>(</span><span class='va'>f_mmkin</span><span class='op'>[</span><span class='st'>"DFOP-SFO"</span>, <span class='op'>]</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Running main SAEM algorithm
-#&gt; [1] "Wed Dec 16 18:27:56 2020"
+#&gt; [1] "Mon Dec 21 05:58:59 2020"
 #&gt; ....
 #&gt;     Minimisation finished
-#&gt; [1] "Wed Dec 16 18:28:05 2020"</div><div class='input'><span class='co'># We can use print, plot and summary methods to check the results</span>
+#&gt; [1] "Mon Dec 21 05:59:08 2020"</div><div class='input'><span class='co'># We can use print, plot and summary methods to check the results</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>f_saem_dfop_sfo</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Kinetic nonlinear mixed-effects model fit by SAEM
 #&gt; Structural model:
@@ -373,8 +375,6 @@ using <a href='mmkin.html'>mmkin</a>.</p>
 #&gt; 170 observations of 2 variable(s) grouped in 5 datasets
 #&gt; 
 #&gt; Likelihood computed by importance sampling
-#&gt;                           
-#&gt; LL by is "-407.78 (df=13)"
 #&gt;     AIC   BIC logLik
 #&gt;   841.6 836.5 -407.8
 #&gt; 
@@ -400,12 +400,11 @@ using <a href='mmkin.html'>mmkin</a>.</p>
 #&gt; SD.log_k2            1.90634  0.70934  3.1033
 #&gt; SD.g_qlogis          0.44771 -0.86417  1.7596</div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/saemix/man/plot-SaemixObject-method.html'>plot</a></span><span class='op'>(</span><span class='va'>f_saem_dfop_sfo</span><span class='op'>)</span>
 </div><div class='img'><img src='saem-5.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/saemix/man/summary-methods.html'>summary</a></span><span class='op'>(</span><span class='va'>f_saem_dfop_sfo</span>, data <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                           
-#&gt; LL by is "-407.78 (df=13)"</div><div class='output co'>#&gt; saemix version used for fitting:      3.1.9000 
+</div><div class='output co'>#&gt; saemix version used for fitting:      3.1.9000 
 #&gt; mkin version used for pre-fitting:  0.9.50.4 
 #&gt; R version used for fitting:         4.0.3 
-#&gt; Date of fit:     Wed Dec 16 18:28:06 2020 
-#&gt; Date of summary: Wed Dec 16 18:28:06 2020 
+#&gt; Date of fit:     Mon Dec 21 05:59:09 2020 
+#&gt; Date of summary: Mon Dec 21 05:59:09 2020 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *
@@ -420,7 +419,7 @@ using <a href='mmkin.html'>mmkin</a>.</p>
 #&gt; 
 #&gt; Model predictions using solution type analytical 
 #&gt; 
-#&gt; Fitted in 9.889 s using 300, 100 iterations
+#&gt; Fitted in 9.836 s using 300, 100 iterations
 #&gt; 
 #&gt; Variance model: Constant variance 
 #&gt; 

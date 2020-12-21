@@ -8,6 +8,8 @@ utils::globalVariables("ds")
 #' @inheritParams plot.mkinfit
 #' @param standardized Should the residuals be standardized? Only takes effect if
 #'   `resplot = "time"`.
+#' @param pred_over Named list of alternative predictions as obtained
+#'   from [mkinpredict] with a compatible [mkinmod].
 #' @param rel.height.legend The relative height of the legend shown on top
 #' @param rel.height.bottom The relative height of the bottom plot row
 #' @param ymax Vector of maximum y axis values
@@ -37,8 +39,15 @@ utils::globalVariables("ds")
 #' f_nlme <- nlme(f, control = list(pnlsMaxIter = 120, tolerance = 1e-3))
 #' plot(f_nlme)
 #'
-#' f_saem <- saem(f)
+#' f_saem <- saem(f, transformations = "saemix")
 #' plot(f_saem)
+#'
+#' # We can overlay the two variants if we generate predictions
+#' pred_nlme <- mkinpredict(dfop_sfo,
+#'   f_nlme$bparms.optim[-1],
+#'   c(parent = f_nlme$bparms.optim[[1]], A1 = 0),
+#'   seq(0, 180, by = 0.2))
+#' plot(f_saem, pred_over = list(nlme = pred_nlme))
 #' }
 #' @export
 plot.mixed.mmkin <- function(x,
@@ -48,6 +57,7 @@ plot.mixed.mmkin <- function(x,
   xlab = "Time",
   xlim = range(x$data$time),
   resplot = c("predicted", "time"),
+  pred_over = NULL,
   ymax = "auto", maxabs = "auto",
   ncol.legend = ifelse(length(i) <= 3, length(i) + 1, ifelse(length(i) <= 8, 3, 4)),
   nrow.legend = ceiling((length(i) + 1) / ncol.legend),
@@ -174,12 +184,19 @@ plot.mixed.mmkin <- function(x,
 
   par(mar = c(0.1, 2.1, 0.6, 2.1))
 
+  # Empty plot with legend
+  if (!is.null(pred_over)) lty_over <- seq(2, length.out = length(pred_over))
+  else lty_over <- NULL
+  n_pop <- 1 + length(lty_over)
+  lty_pop <- c(1, lty_over)
+
   plot(0, type = "n", axes = FALSE, ann = FALSE)
   legend("center", bty = "n", ncol = ncol.legend,
-    legend = c("Population", ds_names[i]),
-    lty = c(1, lty_ds), lwd = c(2, rep(1, length(i))),
-    col = c(1, col_ds),
-    pch = c(NA, pch_ds))
+    legend = c("Population", names(pred_over), ds_names[i]),
+    lty = c(lty_pop, lty_ds),
+    lwd = c(rep(2, n_pop), rep(1, length(i))),
+    col = c(rep(1, n_pop), col_ds),
+    pch = c(rep(NA, n_pop), pch_ds))
 
   resplot <- match.arg(resplot)
 
@@ -206,9 +223,17 @@ plot.mixed.mmkin <- function(x,
     }
 
     plot(pred_pop$time, pred_pop[[obs_var]],
-      type = "l", lwd = 2,
+      type = "l", lwd = 2, lty = lty_pop,
       xlim = xlim, ylim = ylim_row,
       xlab = xlab, ylab = obs_var, frame = frame)
+
+    if (!is.null(pred_over)) {
+      for (i_over in seq_along(pred_over)) {
+        pred_frame <- as.data.frame(pred_over[[i_over]])
+        lines(pred_frame$time, pred_frame[[obs_var]],
+          lwd = 2, lty = lty_over[i_over])
+      }
+    }
 
     for (ds_i in seq_along(i)) {
       points(subset(observed_row, ds == ds_names[ds_i], c("time", "value")),
