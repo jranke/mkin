@@ -1,28 +1,36 @@
 # mkin 0.9.50.4 (unreleased)
 
-- 'mixed.mmkin' New container for mmkin objects for plotting with the 'plot.mixed.mmkin' method
+## General new features
 
 - 'mkinmod' models gain arguments 'name' and 'dll_dir' which, in conjunction with a current version of the 'inline' package, make it possible to still use the DLL used for fast ODE solutions with 'deSolve' after saving and restoring the 'mkinmod' object.
 
-- 'f_norm_temp_focus' generic function to normalise time intervals using the FOCUS method, with methods for numeric vectors and 'mkindsg' objects
-
 - 'mkindsg' R6 class for groups of 'mkinds' datasets with metadata
 
-- 'D24_2014' dataset
+- 'f_norm_temp_focus' generic function to normalise time intervals using the FOCUS method, with methods for numeric vectors and 'mkindsg' objects
+
+- 'D24_2014' and 'dimethenamid_2018' datasets
 
 - 'focus_soil_moisture' FOCUS default soil moisture data
 
-- 'plot.mixed.mmkin' method used for 'nlme.mmkin' and 'saem.mmkin', both inheriting from 'mixed.mmkin' (currently virtual)
-
-- 'saem' generic function to fit saemix models, with a generator 'saem.mmkin', summary and plot methods
+- 'update' method for 'mmkin' objects
 
 - 'transform_odeparms', 'backtransform_odeparms': Use logit transformation for solitary fractions like the g parameter of the DFOP model, or formation fractions for a pathway to only one target variable
 
-- 'update' method for 'mmkin' objects
+## Mixed-effects models
+
+- 'mixed.mmkin' New container for mmkin objects for plotting with the 'plot.mixed.mmkin' method
+
+- 'plot.mixed.mmkin' method used for 'nlme.mmkin' and 'saem.mmkin', both inheriting from 'mixed.mmkin' (currently virtual)
 
 - 'plot', 'summary' and 'print' methods for 'nlme.mmkin' objects
 
-- 'saemix_model', 'saemix_data': Helper functions to fit nonlinear mixed-effects models for mmkin row objects using the saemix package
+-  Add the current development version of the saemix package as a second, optional backend for mixed-effects models
+
+- DESCRIPTION: Additional_repositories entry pointing to my drat repository on github for a suitable saemix version
+
+- 'saemix_model', 'saemix_data': Helper functions to fit nonlinear mixed-effects models for mmkin row objects.
+
+- 'saem' generic function to fit saemix models using 'saemix_model' and 'saemix_data', with a generator 'saem.mmkin', summary and plot methods
 
 # mkin 0.9.50.3 (2020-10-08)
 

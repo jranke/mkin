@@ -1,6 +1,8 @@
 context("Nonlinear mixed-effects models")
 
-test_that("Parent only models can be fitted using nonlinear mixed effects models", {
+test_that("Parent fits using saemix are correctly implemented", {
+  skip_if(!saemix_available)
+
   expect_error(saem(fits), "Only row objects")
   # Some fits were done in the setup script
   mmkin_sfo_2 <- update(mmkin_sfo_1, fixed_initials = c(parent = 100))
@@ -26,7 +28,7 @@ test_that("Parent only models can be fitted using nonlinear mixed effects models
   expect_equal(round(s_sfo_s1$confint_back["k_parent", "est."], 3),
     round(s_sfo_n$confint_back["k_parent", "est."], 3))
 
-  mmkin_fomc_1 <- mmkin("FOMC", ds_fomc, quiet = TRUE, error_model = "tc")
+  mmkin_fomc_1 <- mmkin("FOMC", ds_fomc, quiet = TRUE, error_model = "tc", cores = n_cores)
   fomc_saem_1 <- saem(mmkin_fomc_1, quiet = TRUE)
   ci_fomc_s1 <- summary(fomc_saem_1)$confint_back
 
@@ -66,7 +68,7 @@ test_that("Parent only models can be fitted using nonlinear mixed effects models
   rel_diff_2 <- (s_dfop_s2$confint_back[, "est."] - dfop_pop) / dfop_pop
   expect_true(all(rel_diff_2 < 0.12))
 
-  mmkin_hs_1 <- mmkin("HS", ds_hs, quiet = TRUE, error_model = "const")
+  mmkin_hs_1 <- mmkin("HS", ds_hs, quiet = TRUE, error_model = "const", cores = n_cores)
   hs_saem_1 <- saem(mmkin_hs_1, quiet = TRUE)
   ci_hs_s1 <- summary(hs_saem_1)$confint_back
 
@@ -88,10 +90,12 @@ test_that("Print methods work", {
   expect_known_output(print(fits, digits = 2), "print_mmkin_parent.txt")
   expect_known_output(print(mmkin_biphasic_mixed, digits = 2), "print_mmkin_biphasic_mixed.txt")
   expect_known_output(print(nlme_biphasic, digits = 1), "print_nlme_biphasic.txt")
+
+  skip_if(!saemix_available)
   expect_known_output(print(sfo_saem_1, digits = 1), "print_sfo_saem_1.txt")
 })
 
-test_that("nlme results are reproducible", {
+test_that("nlme results are reproducible to some degree", {
 
   test_summary <- summary(nlme_biphasic)
   test_summary$nlmeversion <- "Dummy 0.0 for testing"
@@ -111,6 +115,7 @@ test_that("nlme results are reproducible", {
 
 test_that("saem results are reproducible for biphasic fits", {
 
+  skip_if(!saemix_available)
   test_summary <- summary(saem_biphasic_s)
   test_summary$saemixversion <- "Dummy 0.0 for testing"
   test_summary$mkinversion <- "Dummy 0.0 for testing"
