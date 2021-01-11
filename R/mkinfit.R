@@ -169,7 +169,7 @@ utils::globalVariables(c("name", "time", "value"))
 #'
 #'   Ranke J and Meinecke S (2019) Error Models for the Kinetic Evaluation of Chemical
 #'   Degradation Data. *Environments* 6(12) 124
-#'   [doi:10.3390/environments6120124](https://doi.org/10.3390/environments6120124).
+#'   \doi{10.3390/environments6120124}.
 #' @examples
 #'
 #' # Use shorthand notation for parent only degradation

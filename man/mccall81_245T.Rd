@@ -25,7 +25,7 @@
 }
 \source{
   McCall P, Vrona SA, Kelley SS (1981) Fate of uniformly carbon-14 ring labelled 2,4,5-Trichlorophenoxyacetic acid and 2,4-dichlorophenoxyacetic acid. J Agric Chem 29, 100-107
-  \url{http://dx.doi.org/10.1021/jf00103a026}
+  \doi{10.1021/jf00103a026}
 }
 \examples{
   SFO_SFO_SFO <- mkinmod(T245 = list(type = "SFO", to = "phenol"),

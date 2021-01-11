@@ -27,7 +27,7 @@ included.}
 \item{digits}{Number of digits to use for printing}
 }
 \value{
-The summary function returns a list based on the \link[saemix:SaemixObject]{saemix::SaemixObject}
+The summary function returns a list based on the \link[saemix:SaemixObject-class]{saemix::SaemixObject}
 obtained in the fit, with at least the following additional components
 \item{saemixversion, mkinversion, Rversion}{The saemix, mkin and R versions used}
 \item{date.fit, date.summary}{The dates where the fit and the summary were

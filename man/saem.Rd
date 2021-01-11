@@ -57,7 +57,7 @@ automatic choice is not desired}
 \item{control}{Passed to \link[saemix:saemix]{saemix::saemix}}
 
 \item{verbose}{Should we print information about created objects of
-type \link[saemix:SaemixModel]{saemix::SaemixModel} and \link[saemix:SaemixData]{saemix::SaemixData}?}
+type \link[saemix:SaemixModel-class]{saemix::SaemixModel} and \link[saemix:SaemixData-class]{saemix::SaemixData}?}
 
 \item{suppressPlot}{Should we suppress any plotting that is done
 by the saemix function?}
@@ -71,12 +71,12 @@ and the end of the optimisation process?}
 }
 \value{
 An S3 object of class 'saem.mmkin', containing the fitted
-\link[saemix:SaemixObject]{saemix::SaemixObject} as a list component named 'so'. The
+\link[saemix:SaemixObject-class]{saemix::SaemixObject} as a list component named 'so'. The
 object also inherits from 'mixed.mmkin'.
 
-An \link[saemix:SaemixModel]{saemix::SaemixModel} object.
+An \link[saemix:SaemixModel-class]{saemix::SaemixModel} object.
 
-An \link[saemix:SaemixData]{saemix::SaemixData} object.
+An \link[saemix:SaemixData-class]{saemix::SaemixData} object.
 }
 \description{
 This function uses \code{\link[saemix:saemix]{saemix::saemix()}} as a backend for fitting nonlinear mixed

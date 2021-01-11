@@ -286,7 +286,7 @@ for measurement error in analytical chemistry. \emph{Technometrics} 37(2), 176-1
 
 Ranke J and Meinecke S (2019) Error Models for the Kinetic Evaluation of Chemical
 Degradation Data. \emph{Environments} 6(12) 124
-\href{https://doi.org/10.3390/environments6120124}{doi:10.3390/environments6120124}.
+\doi{10.3390/environments6120124}.
 }
 \seealso{
 \link{summary.mkinfit}, \link{plot.mkinfit}, \link{parms} and \link{lrtest}.
