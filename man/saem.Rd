@@ -18,7 +18,6 @@ saem(object, ...)
   control = list(displayProgress = FALSE, print = FALSE, save = FALSE, save.graphs =
     FALSE),
   verbose = FALSE,
-  suppressPlot = TRUE,
   quiet = FALSE,
   ...
 )
@@ -58,9 +57,6 @@ automatic choice is not desired}
 
 \item{verbose}{Should we print information about created objects of
 type \link[saemix:SaemixModel-class]{saemix::SaemixModel} and \link[saemix:SaemixData-class]{saemix::SaemixData}?}
-
-\item{suppressPlot}{Should we suppress any plotting that is done
-by the saemix function?}
 
 \item{quiet}{Should we suppress the messages saemix prints at the beginning
 and the end of the optimisation process?}

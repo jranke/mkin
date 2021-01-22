@@ -28,8 +28,6 @@ utils::globalVariables(c("predicted", "std"))
 #'   automatic choice is not desired
 #' @param quiet Should we suppress the messages saemix prints at the beginning
 #'   and the end of the optimisation process?
-#' @param suppressPlot Should we suppress any plotting that is done
-#'   by the saemix function?
 #' @param control Passed to [saemix::saemix]
 #' @param \dots Further parameters passed to [saemix::saemixModel].
 #' @return An S3 object of class 'saem.mmkin', containing the fitted
@@ -109,7 +107,7 @@ saem.mmkin <- function(object,
   solution_type = "auto",
   control = list(displayProgress = FALSE, print = FALSE,
     save = FALSE, save.graphs = FALSE),
-  verbose = FALSE, suppressPlot = TRUE, quiet = FALSE, ...)
+  verbose = FALSE, quiet = FALSE, ...)
 {
   transformations <- match.arg(transformations)
   m_saemix <- saemix_model(object, verbose = verbose,
@@ -117,15 +115,6 @@ saem.mmkin <- function(object,
     transformations = transformations, ...)
   d_saemix <- saemix_data(object, verbose = verbose)
 
-  if (suppressPlot) {
-    # We suppress the log-likelihood curve that saemix currently
-    # produces at the end of the fit by plotting to a file
-    # that we discard afterwards
-    tmp <- tempfile()
-    grDevices::png(tmp)
-    on.exit(grDevices::dev.off())
-    on.exit(unlink(tmp), add = TRUE)
-  }
   fit_time <- system.time({
     utils::capture.output(f_saemix <- saemix::saemix(m_saemix, d_saemix, control), split = !quiet)
   })
