@@ -16,9 +16,9 @@
 
 - 'transform_odeparms', 'backtransform_odeparms': Use logit transformation for solitary fractions like the g parameter of the DFOP model, or formation fractions for a pathway to only one target variable
 
-- 'plot.mmkin': Add a ylab argument, making it possible to customize the y axis label of the panels on the left without affecting the residual plots
+- 'plot.mmkin': Add a ylab argument, making it possible to customize the y axis label of the panels on the left without affecting the residual plots. Reduce legend size and vertical distance between panels
 
-- 'plot.mkinfit': Change default ylab from "Observed" to "Residue"
+- 'plot.mkinfit': Change default ylab from "Observed" to "Residue". Pass xlab to residual plot if show_residuals is TRUE.
 
 ## Mixed-effects models
 

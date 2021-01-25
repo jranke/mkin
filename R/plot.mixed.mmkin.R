@@ -61,7 +61,7 @@ plot.mixed.mmkin <- function(x,
   ymax = "auto", maxabs = "auto",
   ncol.legend = ifelse(length(i) <= 3, length(i) + 1, ifelse(length(i) <= 8, 3, 4)),
   nrow.legend = ceiling((length(i) + 1) / ncol.legend),
-  rel.height.legend = 0.03 + 0.08 * nrow.legend,
+  rel.height.legend = 0.02 + 0.07 * nrow.legend,
   rel.height.bottom = 1.1,
   pch_ds = 1:length(i),
   col_ds = pch_ds + 1,
@@ -182,7 +182,7 @@ plot.mixed.mmkin <- function(x,
     n_plot_rows + 1, 2, byrow = TRUE)
   layout(layout_matrix, heights = rel.heights)
 
-  par(mar = c(0.1, 2.1, 0.6, 2.1))
+  par(mar = c(0.1, 2.1, 0.1, 2.1))
 
   # Empty plot with legend
   if (!is.null(pred_over)) lty_over <- seq(2, length.out = length(pred_over))
@@ -217,15 +217,15 @@ plot.mixed.mmkin <- function(x,
     # Margins for bottom row of plots when we have more than one row
     # This is the only row that needs to show the x axis legend
     if (plot_row == n_plot_rows) {
-      par(mar = c(5.1, 4.1, 2.1, 2.1))
+      par(mar = c(5.1, 4.1, 1.1, 2.1))
     } else {
-      par(mar = c(3.0, 4.1, 2.1, 2.1))
+      par(mar = c(3.0, 4.1, 1.1, 2.1))
     }
 
     plot(pred_pop$time, pred_pop[[obs_var]],
       type = "l", lwd = 2, lty = lty_pop,
       xlim = xlim, ylim = ylim_row,
-      xlab = xlab, ylab = obs_var, frame = frame)
+      xlab = xlab, ylab = paste("Residues", obs_var), frame = frame)
 
     if (!is.null(pred_over)) {
       for (i_over in seq_along(pred_over)) {
