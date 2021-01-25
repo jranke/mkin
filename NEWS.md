@@ -16,6 +16,10 @@
 
 - 'transform_odeparms', 'backtransform_odeparms': Use logit transformation for solitary fractions like the g parameter of the DFOP model, or formation fractions for a pathway to only one target variable
 
+- 'plot.mmkin': Add a ylab argument, making it possible to customize the y axis label of the panels on the left without affecting the residual plots
+
+- 'plot.mkinfit': Change default ylab from "Observed" to "Residue"
+
 ## Mixed-effects models
 
 - 'mixed.mmkin' New container for mmkin objects for plotting with the 'plot.mixed.mmkin' method
@@ -31,6 +35,7 @@
 - 'saemix_model', 'saemix_data': Helper functions to fit nonlinear mixed-effects models for mmkin row objects.
 
 - 'saem' generic function to fit saemix models using 'saemix_model' and 'saemix_data', with a generator 'saem.mmkin', summary and plot methods
+
 
 # mkin 0.9.50.3 (2020-10-08)
 

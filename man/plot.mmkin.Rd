@@ -10,6 +10,7 @@ of an mmkin object}
   main = "auto",
   legends = 1,
   resplot = c("time", "errmod"),
+  ylab = "Residue",
   standardized = FALSE,
   show_errmin = TRUE,
   errmin_var = "All data",
@@ -31,6 +32,8 @@ column.}
 \item{resplot}{Should the residuals plotted against time, using
 \code{\link{mkinresplot}}, or as squared residuals against predicted
 values, with the error model, using \code{\link{mkinerrplot}}.}
+
+\item{ylab}{Label for the y axis.}
 
 \item{standardized}{Should the residuals be standardized? This option
 is passed to \code{\link{mkinresplot}}, it only takes effect if

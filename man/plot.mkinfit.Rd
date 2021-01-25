@@ -12,7 +12,7 @@
   fit = x,
   obs_vars = names(fit$mkinmod$map),
   xlab = "Time",
-  ylab = "Observed",
+  ylab = "Residue",
   xlim = range(fit$data$time),
   ylim = "default",
   col_obs = 1:length(obs_vars),

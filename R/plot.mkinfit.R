@@ -91,7 +91,7 @@ utils::globalVariables(c("type", "variable", "observed"))
 #' @export
 plot.mkinfit <- function(x, fit = x,
   obs_vars = names(fit$mkinmod$map),
-  xlab = "Time", ylab = "Observed",
+  xlab = "Time", ylab = "Residue",
   xlim = range(fit$data$time),
   ylim = "default",
   col_obs = 1:length(obs_vars),
