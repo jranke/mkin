@@ -73,7 +73,7 @@ dependence of the measured value \(y\):" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -122,7 +122,7 @@ dependence of the measured value \(y\):" />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/jranke/mkin/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -189,6 +189,33 @@ Additive, Multiplicative, and Mixed Analytical Errors. Clinical Chemistry
 <p>Rocke, David M. and Lorenzato, Stefan (1995) A two-component model for
 measurement error in analytical chemistry. Technometrics 37(2), 176-184.</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='va'>times</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>7</span>, <span class='fl'>14</span>, <span class='fl'>28</span>, <span class='fl'>60</span>, <span class='fl'>90</span>, <span class='fl'>120</span><span class='op'>)</span>
+<span class='va'>d_pred</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>time <span class='op'>=</span> <span class='va'>times</span>, parent <span class='op'>=</span> <span class='fl'>100</span> <span class='op'>*</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>exp</a></span><span class='op'>(</span><span class='op'>-</span> <span class='fl'>0.03</span> <span class='op'>*</span> <span class='va'>times</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>123456</span><span class='op'>)</span>
+<span class='va'>d_syn</span> <span class='op'>&lt;-</span> <span class='fu'><a href='add_err.html'>add_err</a></span><span class='op'>(</span><span class='va'>d_pred</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>y</span><span class='op'>)</span> <span class='fu'>sigma_twocomp</span><span class='op'>(</span><span class='va'>y</span>, <span class='fl'>1</span>, <span class='fl'>0.07</span><span class='op'>)</span>,
+  reps <span class='op'>=</span> <span class='fl'>2</span>, n <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>
+<span class='va'>f_nls</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/nls.html'>nls</a></span><span class='op'>(</span><span class='va'>value</span> <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/stats/SSasymp.html'>SSasymp</a></span><span class='op'>(</span><span class='va'>time</span>, <span class='fl'>0</span>, <span class='va'>parent_0</span>, <span class='va'>lrc</span><span class='op'>)</span>, data <span class='op'>=</span> <span class='va'>d_syn</span>,
+ start <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>parent_0 <span class='op'>=</span> <span class='fl'>100</span>, lrc <span class='op'>=</span> <span class='op'>-</span><span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://svn.r-project.org/R-packages/trunk/nlme/'>nlme</a></span><span class='op'>)</span>
+<span class='va'>f_gnls</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/gnls.html'>gnls</a></span><span class='op'>(</span><span class='va'>value</span> <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/stats/SSasymp.html'>SSasymp</a></span><span class='op'>(</span><span class='va'>time</span>, <span class='fl'>0</span>, <span class='va'>parent_0</span>, <span class='va'>lrc</span><span class='op'>)</span>,
+  data <span class='op'>=</span> <span class='va'>d_syn</span>, na.action <span class='op'>=</span> <span class='va'>na.omit</span>,
+  start <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>parent_0 <span class='op'>=</span> <span class='fl'>100</span>, lrc <span class='op'>=</span> <span class='op'>-</span><span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='fu'>findFunction</span><span class='op'>(</span><span class='st'>"varConstProp"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>&gt;</span> <span class='fl'>0</span><span class='op'>)</span> <span class='op'>{</span>
+  <span class='va'>f_gnls_tc</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/update.html'>update</a></span><span class='op'>(</span><span class='va'>f_gnls</span>, weights <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/varConstProp.html'>varConstProp</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='va'>f_gnls_tc_sf</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/update.html'>update</a></span><span class='op'>(</span><span class='va'>f_gnls_tc</span>, control <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>sigma <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>}</span>
+<span class='va'>f_mkin</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='va'>d_syn</span>, error_model <span class='op'>=</span> <span class='st'>"const"</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='va'>f_mkin_tc</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='va'>d_syn</span>, error_model <span class='op'>=</span> <span class='st'>"tc"</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'><a href='plot.mkinfit.html'>plot_res</a></span><span class='op'>(</span><span class='va'>f_mkin_tc</span>, standardized <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='img'><img src='sigma_twocomp-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/stats/AIC.html'>AIC</a></span><span class='op'>(</span><span class='va'>f_nls</span>, <span class='va'>f_gnls</span>, <span class='va'>f_gnls_tc</span>, <span class='va'>f_gnls_tc_sf</span>, <span class='va'>f_mkin</span>, <span class='va'>f_mkin_tc</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;              df      AIC
+#&gt; f_nls         3 114.4817
+#&gt; f_gnls        3 114.4817
+#&gt; f_gnls_tc     5 103.6447
+#&gt; f_gnls_tc_sf  4 101.6447
+#&gt; f_mkin        3 114.4817
+#&gt; f_mkin_tc     4 101.6446</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/jranke/mkin/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -100,7 +100,7 @@
       <h1 data-toc-skip>Benchmark timings for mkin</h1>
                         <h4 class="author">Johannes Ranke</h4>
             
-            <h4 class="date">2020-10-15</h4>
+            <h4 class="date">2021-02-03</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jranke/mkin/blob/master/vignettes/web_only/benchmarks.rmd"><code>vignettes/web_only/benchmarks.rmd</code></a></small>
       <div class="hidden name"><code>benchmarks.rmd</code></div>
@@ -114,48 +114,46 @@
 <h2 class="hasAnchor">
 <a href="#test-cases" class="anchor"></a>Test cases</h2>
 <p>Parent only:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="va">FOCUS_C</span> <span class="op">&lt;-</span> <span class="va">FOCUS_2006_C</span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">FOCUS_C</span> <span class="op">&lt;-</span> <span class="va">FOCUS_2006_C</span>
 <span class="va">FOCUS_D</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">FOCUS_2006_D</span>, <span class="va">value</span> <span class="op">!=</span> <span class="fl">0</span><span class="op">)</span>
 <span class="va">parent_datasets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">FOCUS_C</span>, <span class="va">FOCUS_D</span><span class="op">)</span>
 
 <span class="va">t1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"FOMC"</span>, <span class="st">"DFOP"</span>, <span class="st">"HS"</span><span class="op">)</span>, <span class="va">parent_datasets</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span>
 <span class="va">t2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"FOMC"</span>, <span class="st">"DFOP"</span>, <span class="st">"HS"</span><span class="op">)</span>, <span class="va">parent_datasets</span>,
-    error_model <span class="op">=</span> <span class="st">"tc"</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></pre></div>
+    error_model <span class="op">=</span> <span class="st">"tc"</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></code></pre></div>
 <p>One metabolite:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="va">SFO_SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>
-  parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"m1"</span><span class="op">)</span>,
-  m1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">SFO_SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>
+  parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"m1"</span><span class="op">)</span>,
+  m1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">FOMC_SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>
-  parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"FOMC"</span>, <span class="st">"m1"</span><span class="op">)</span>,
-  m1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span>
+  parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"FOMC"</span>, <span class="st">"m1"</span><span class="op">)</span>,
+  m1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">DFOP_SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>
-  parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"FOMC"</span>, <span class="st">"m1"</span><span class="op">)</span>,
-  m1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span>
-<span class="va">t3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">SFO_SFO</span>, <span class="va">FOMC_SFO</span>, <span class="va">DFOP_SFO</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">FOCUS_D</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></pre></div>
-<pre><code>## Warning in mkinfit(models[[model_index]], datasets[[dataset_index]], ...):
-## Shapiro-Wilk test for standardized residuals: p = 0.0165</code></pre>
-<pre><code>## Warning in mkinfit(models[[model_index]], datasets[[dataset_index]], ...):
-## Shapiro-Wilk test for standardized residuals: p = 0.0499
-
-## Warning in mkinfit(models[[model_index]], datasets[[dataset_index]], ...):
-## Shapiro-Wilk test for standardized residuals: p = 0.0499</code></pre>
-<div class="sourceCode" id="cb5"><pre class="downlit">
+  parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"FOMC"</span>, <span class="st">"m1"</span><span class="op">)</span>,
+  m1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">t3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">SFO_SFO</span>, <span class="va">FOMC_SFO</span>, <span class="va">DFOP_SFO</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">FOCUS_D</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span>
 <span class="va">t4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">SFO_SFO</span>, <span class="va">FOMC_SFO</span>, <span class="va">DFOP_SFO</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">FOCUS_D</span><span class="op">)</span>,
-    error_model <span class="op">=</span> <span class="st">"tc"</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span>
-<span class="va">t5</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">SFO_SFO</span>, <span class="va">FOMC_SFO</span>, <span class="va">DFOP_SFO</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">FOCUS_D</span><span class="op">)</span>,
-    error_model <span class="op">=</span> <span class="st">"obs"</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></pre></div>
+    error_model <span class="op">=</span> <span class="st">"tc"</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></code></pre></div>
+<pre><code>## Warning in mkinfit(models[[model_index]], datasets[[dataset_index]], ...): Optimisation did not converge:
+## iteration limit reached without convergence (10)
+
+## Warning in mkinfit(models[[model_index]], datasets[[dataset_index]], ...): Optimisation did not converge:
+## iteration limit reached without convergence (10)</code></pre>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">t5</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">SFO_SFO</span>, <span class="va">FOMC_SFO</span>, <span class="va">DFOP_SFO</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">FOCUS_D</span><span class="op">)</span>,
+    error_model <span class="op">=</span> <span class="st">"obs"</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></code></pre></div>
 <p>Two metabolites, synthetic data:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="va">m_synth_SFO_lin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"M1"</span><span class="op">)</span>,
-                           M1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"M2"</span><span class="op">)</span>,
-                           M2 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">m_synth_SFO_lin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"M1"</span><span class="op">)</span>,
+                           M1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"M2"</span><span class="op">)</span>,
+                           M2 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,
                            use_of_ff <span class="op">=</span> <span class="st">"max"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
-<span class="va">m_synth_DFOP_par</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"DFOP"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"M1"</span>, <span class="st">"M2"</span><span class="op">)</span><span class="op">)</span>,
-                           M1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,
-                           M2 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,
+<span class="va">m_synth_DFOP_par</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"DFOP"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"M1"</span>, <span class="st">"M2"</span><span class="op">)</span><span class="op">)</span>,
+                           M1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,
+                           M2 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,
                            use_of_ff <span class="op">=</span> <span class="st">"max"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
 <span class="va">SFO_lin_a</span> <span class="op">&lt;-</span> <span class="va">synthetic_data_for_UBA_2014</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">data</span>
@@ -163,10 +161,8 @@
 <span class="va">DFOP_par_c</span> <span class="op">&lt;-</span> <span class="va">synthetic_data_for_UBA_2014</span><span class="op">[[</span><span class="fl">12</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">data</span>
 
 <span class="va">t6</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">m_synth_SFO_lin</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">SFO_lin_a</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span>
-<span class="va">t7</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">m_synth_DFOP_par</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">DFOP_par_c</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></pre></div>
-<pre><code>## Warning in mkinfit(models[[model_index]], datasets[[dataset_index]], ...):
-## Shapiro-Wilk test for standardized residuals: p = 0.000174</code></pre>
-<div class="sourceCode" id="cb8"><pre class="downlit">
+<span class="va">t7</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">m_synth_DFOP_par</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">DFOP_par_c</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span>
+
 <span class="va">t8</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">m_synth_SFO_lin</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">SFO_lin_a</span><span class="op">)</span>,
     error_model <span class="op">=</span> <span class="st">"tc"</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span>
 <span class="va">t9</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">m_synth_DFOP_par</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">DFOP_par_c</span><span class="op">)</span>,
@@ -175,11 +171,11 @@
 <span class="va">t10</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">m_synth_SFO_lin</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">SFO_lin_a</span><span class="op">)</span>,
     error_model <span class="op">=</span> <span class="st">"obs"</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span>
 <span class="va">t11</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">m_synth_DFOP_par</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">DFOP_par_c</span><span class="op">)</span>,
-    error_model <span class="op">=</span> <span class="st">"obs"</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></pre></div>
-<div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="va">mkin_benchmarks</span><span class="op">[</span><span class="va">system_string</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"t"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">11</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span>
+    error_model <span class="op">=</span> <span class="st">"obs"</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mkin_benchmarks</span><span class="op">[</span><span class="va">system_string</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"t"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">11</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span>
   <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">t1</span>, <span class="va">t2</span>, <span class="va">t3</span>, <span class="va">t4</span>, <span class="va">t5</span>, <span class="va">t6</span>, <span class="va">t7</span>, <span class="va">t8</span>, <span class="va">t9</span>, <span class="va">t10</span>, <span class="va">t11</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/save.html">save</a></span><span class="op">(</span><span class="va">mkin_benchmarks</span>, file <span class="op">=</span> <span class="st">"~/git/mkin/vignettes/web_only/mkin_benchmarks.rda"</span><span class="op">)</span></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/save.html">save</a></span><span class="op">(</span><span class="va">mkin_benchmarks</span>, file <span class="op">=</span> <span class="st">"~/git/mkin/vignettes/web_only/mkin_benchmarks.rda"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="results" class="section level2">
 <h2 class="hasAnchor">
@@ -231,6 +227,16 @@
 <td align="left">0.9.50.3</td>
 <td align="right">1.752</td>
 <td align="right">4.156</td>
+</tr>
+<tr class="even">
+<td align="left">0.9.50.4</td>
+<td align="right">1.786</td>
+<td align="right">3.729</td>
+</tr>
+<tr class="odd">
+<td align="left">1.0.0</td>
+<td align="right">1.770</td>
+<td align="right">3.703</td>
 </tr>
 </tbody>
 </table>
@@ -288,6 +294,18 @@
 <td align="right">1.430</td>
 <td align="right">6.615</td>
 <td align="right">2.878</td>
+</tr>
+<tr class="even">
+<td align="left">0.9.50.4</td>
+<td align="right">1.397</td>
+<td align="right">7.251</td>
+<td align="right">2.810</td>
+</tr>
+<tr class="odd">
+<td align="left">1.0.0</td>
+<td align="right">1.373</td>
+<td align="right">7.127</td>
+<td align="right">2.762</td>
 </tr>
 </tbody>
 </table>
@@ -369,6 +387,24 @@
 <td align="right">2.984</td>
 <td align="right">2.113</td>
 <td align="right">3.073</td>
+</tr>
+<tr class="even">
+<td align="left">0.9.50.4</td>
+<td align="right">0.783</td>
+<td align="right">1.282</td>
+<td align="right">1.486</td>
+<td align="right">3.815</td>
+<td align="right">1.958</td>
+<td align="right">3.105</td>
+</tr>
+<tr class="odd">
+<td align="left">1.0.0</td>
+<td align="right">0.775</td>
+<td align="right">1.269</td>
+<td align="right">1.467</td>
+<td align="right">3.767</td>
+<td align="right">1.919</td>
+<td align="right">2.942</td>
 </tr>
 </tbody>
 </table>

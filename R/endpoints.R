@@ -10,8 +10,8 @@
 #' Additional DT50 values are calculated from the FOMC DT90 and k1 and k2 from
 #' HS and DFOP, as well as from Eigenvalues b1 and b2 of any SFORB models
 #'
-#' @param fit An object of class [mkinfit], [nlme.mmkin] or
-#'  [saem.mmkin]. Or another object that has list components
+#' @param fit An object of class [mkinfit] or [nlme.mmkin] 
+#'  or another object that has list components
 #'  mkinmod containing an [mkinmod] degradation model, and two numeric vectors,
 #'  bparms.optim and bparms.fixed, that contain parameter values
 #'  for that model.
@@ -20,8 +20,8 @@
 #'   and, if applicable, a vector of formation fractions named ff
 #'   and, if the SFORB model was in use, a vector of eigenvalues
 #'   of these SFORB models, equivalent to DFOP rate constants
-#' @note The function is used internally by [summary.mkinfit],
-#'   [summary.nlme.mmkin] and [summary.saem.mmkin].
+#' @note The function is used internally by [summary.mkinfit]
+#'   and [summary.nlme.mmkin]
 #' @author Johannes Ranke
 #' @examples
 #'

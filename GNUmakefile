@@ -93,7 +93,7 @@ slowtests: install
 vdiffr:
 	"$(RBIN)/Rscript" -e 'vdiffr::manage_cases(filter = "plot|nafta")'
 
-testcheck: test check
+testcheck: roxygen test check
 
 README.html: README.md
 	"$(RBIN)/Rscript" -e "rmarkdown::render('README.md', output_format = 'html_document', output_options = list(mathjax = NULL))"

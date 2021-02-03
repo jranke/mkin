@@ -2,7 +2,7 @@ utils::globalVariables("ds")
 
 #' Plot predictions from a fitted nonlinear mixed model obtained via an mmkin row object
 #'
-#' @param x An object of class [mixed.mmkin], [saem.mmkin] or [nlme.mmkin]
+#' @param x An object of class [mixed.mmkin], [nlme.mmkin]
 #' @param i A numeric index to select datasets for which to plot the individual predictions,
 #'   in case plots get too large
 #' @inheritParams plot.mkinfit
@@ -39,15 +39,6 @@ utils::globalVariables("ds")
 #' f_nlme <- nlme(f, control = list(pnlsMaxIter = 120, tolerance = 1e-3))
 #' plot(f_nlme)
 #'
-#' f_saem <- saem(f, transformations = "saemix")
-#' plot(f_saem)
-#'
-#' # We can overlay the two variants if we generate predictions
-#' pred_nlme <- mkinpredict(dfop_sfo,
-#'   f_nlme$bparms.optim[-1],
-#'   c(parent = f_nlme$bparms.optim[[1]], A1 = 0),
-#'   seq(0, 180, by = 0.2))
-#' plot(f_saem, pred_over = list(nlme = pred_nlme))
 #' }
 #' @export
 plot.mixed.mmkin <- function(x,
@@ -89,18 +80,6 @@ plot.mixed.mmkin <- function(x,
     degparms_pop <- nlme::fixef(x)
     residuals <- residuals(x,
       type = ifelse(standardized, "pearson", "response"))
-  }
-
-  if (inherits(x, "saem.mmkin")) {
-    if (x$transformations == "saemix") backtransform = FALSE
-    degparms_i <- saemix::psi(x$so)
-    rownames(degparms_i) <- ds_names
-    degparms_i_names <- setdiff(x$so@results@name.fixed, names(fit_1$errparms))
-    colnames(degparms_i) <- degparms_i_names
-    residual_type = ifelse(standardized, "standardized", "residual")
-    residuals <- x$data[[residual_type]]
-    degparms_pop <- x$so@results@fixed.effects
-    names(degparms_pop) <- degparms_i_names
   }
 
   degparms_fixed <- fit_1$fixed$value

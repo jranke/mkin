@@ -8,8 +8,8 @@ with mkinfit}
 endpoints(fit)
 }
 \arguments{
-\item{fit}{An object of class \link{mkinfit}, \link{nlme.mmkin} or
-\link{saem.mmkin}. Or another object that has list components
+\item{fit}{An object of class \link{mkinfit} or \link{nlme.mmkin}
+or another object that has list components
 mkinmod containing an \link{mkinmod} degradation model, and two numeric vectors,
 bparms.optim and bparms.fixed, that contain parameter values
 for that model.}
@@ -32,8 +32,8 @@ Additional DT50 values are calculated from the FOMC DT90 and k1 and k2 from
 HS and DFOP, as well as from Eigenvalues b1 and b2 of any SFORB models
 }
 \note{
-The function is used internally by \link{summary.mkinfit},
-\link{summary.nlme.mmkin} and \link{summary.saem.mmkin}.
+The function is used internally by \link{summary.mkinfit}
+and \link{summary.nlme.mmkin}
 }
 \examples{
 

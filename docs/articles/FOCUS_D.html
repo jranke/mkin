@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -80,7 +80,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/jranke/mkin/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -100,7 +100,7 @@
       <h1 data-toc-skip>Example evaluation of FOCUS Example Dataset D</h1>
                         <h4 class="author">Johannes Ranke</h4>
             
-            <h4 class="date">2020-10-15</h4>
+            <h4 class="date">2021-02-03</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jranke/mkin/blob/master/vignettes/FOCUS_D.rmd"><code>vignettes/FOCUS_D.rmd</code></a></small>
       <div class="hidden name"><code>FOCUS_D.rmd</code></div>
@@ -110,9 +110,9 @@
     
     
 <p>This is just a very simple vignette showing how to fit a degradation model for a parent compound with one transformation product using <code>mkin</code>. After loading the library we look at the data. We have observed concentrations in the column named <code>value</code> at the times specified in column <code>time</code> for the two observed variables named <code>parent</code> and <code>m1</code>.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://pkgdown.jrwb.de/mkin/">mkin</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">FOCUS_2006_D</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://pkgdown.jrwb.de/mkin/">mkin</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">FOCUS_2006_D</span><span class="op">)</span></code></pre></div>
 <pre><code>##      name time  value
 ## 1  parent    0  99.46
 ## 2  parent    0 102.04
@@ -160,37 +160,35 @@
 ## 44     m1  120  33.31</code></pre>
 <p>Next we specify the degradation model: The parent compound degrades with simple first-order kinetics (SFO) to one metabolite named m1, which also degrades with SFO kinetics.</p>
 <p>The call to mkinmod returns a degradation model. The differential equations represented in R code can be found in the character vector <code>$diffs</code> of the <code>mkinmod</code> object. If a C compiler (gcc) is installed and functional, the differential equation model will be compiled from auto-generated C code.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="va">SFO_SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"m1"</span><span class="op">)</span>, m1 <span class="op">=</span> <span class="fu"><a href="../reference/mkinsub.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span></pre></div>
-<pre><code>## Successfully compiled differential equation model from auto-generated C code.</code></pre>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">SFO_SFO</span><span class="op">$</span><span class="va">diffs</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">SFO_SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"m1"</span><span class="op">)</span>, m1 <span class="op">=</span> <span class="fu"><a href="../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>## Temporary DLL for differentials generated and loaded</code></pre>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">SFO_SFO</span><span class="op">$</span><span class="va">diffs</span><span class="op">)</span></code></pre></div>
 <pre><code>##                                                    parent 
 ##                          "d_parent = - k_parent * parent" 
 ##                                                        m1 
 ## "d_m1 = + f_parent_to_m1 * k_parent * parent - k_m1 * m1"</code></pre>
 <p>We do the fitting without progress report (<code>quiet = TRUE</code>).</p>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">SFO_SFO</span>, <span class="va">FOCUS_2006_D</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">SFO_SFO</span>, <span class="va">FOCUS_2006_D</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <pre><code>## Warning in mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE): Observations with value
 ## of zero were removed from the data</code></pre>
-<pre><code>## Warning in mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE): Shapiro-Wilk test for
-## standardized residuals: p = 0.0165</code></pre>
 <p>A plot of the fit including a residual plot for both observed variables is obtained using the <code>plot_sep</code> method for <code>mkinfit</code> objects, which shows separate graphs for all compounds and their residuals.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit">
-<span class="fu"><a href="../reference/plot.mkinfit.html">plot_sep</a></span><span class="op">(</span><span class="va">fit</span>, lpos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"topright"</span>, <span class="st">"bottomright"</span><span class="op">)</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/plot.mkinfit.html">plot_sep</a></span><span class="op">(</span><span class="va">fit</span>, lpos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"topright"</span>, <span class="st">"bottomright"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="FOCUS_D_files/figure-html/plot-1.png" width="768"></p>
 <p>Confidence intervals for the parameter estimates are obtained using the <code>mkinparplot</code> function.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit">
-<span class="fu"><a href="../reference/mkinparplot.html">mkinparplot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/mkinparplot.html">mkinparplot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></code></pre></div>
 <p><img src="FOCUS_D_files/figure-html/plot_2-1.png" width="768"></p>
 <p>A comprehensive report of the results is obtained using the <code>summary</code> method for <code>mkinfit</code> objects.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></pre></div>
-<pre><code>## mkin version used for fitting:    0.9.50.3 
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></code></pre></div>
+<pre><code>## mkin version used for fitting:    1.0.0 
 ## R version used for fitting:       4.0.3 
-## Date of fit:     Thu Oct 15 12:42:00 2020 
-## Date of summary: Thu Oct 15 12:42:00 2020 
+## Date of fit:     Wed Feb  3 17:32:13 2021 
+## Date of summary: Wed Feb  3 17:32:14 2021 
 ## 
 ## Equations:
 ## d_parent/dt = - k_parent * parent
@@ -198,7 +196,7 @@
 ## 
 ## Model predictions using solution type analytical 
 ## 
-## Fitted using 421 model solutions performed in 0.172 s
+## Fitted using 401 model solutions performed in 0.161 s
 ## 
 ## Error model: Constant variance 
 ## 
@@ -212,11 +210,11 @@
 ## f_parent_to_m1   0.5000 deparm
 ## 
 ## Starting values for the transformed parameters actually optimised:
-##                     value lower upper
-## parent_0       100.750000  -Inf   Inf
-## log_k_parent    -2.302585  -Inf   Inf
-## log_k_m1        -2.301586  -Inf   Inf
-## f_parent_ilr_1   0.000000  -Inf   Inf
+##                      value lower upper
+## parent_0        100.750000  -Inf   Inf
+## log_k_parent     -2.302585  -Inf   Inf
+## log_k_m1         -2.301586  -Inf   Inf
+## f_parent_qlogis   0.000000  -Inf   Inf
 ## 
 ## Fixed parameter values:
 ##      value  type
@@ -225,7 +223,6 @@
 ## 
 ## Warning(s): 
 ## Observations with value of zero were removed from the data
-## Shapiro-Wilk test for standardized residuals: p =  0.0165
 ## 
 ## Results:
 ## 
@@ -233,20 +230,20 @@
 ##   204.4486 212.6365 -97.22429
 ## 
 ## Optimised, transformed parameters with symmetric confidence intervals:
-##                Estimate Std. Error    Lower    Upper
-## parent_0       99.60000    1.57000 96.40000 102.8000
-## log_k_parent   -2.31600    0.04087 -2.39900  -2.2330
-## log_k_m1       -5.24800    0.13320 -5.51800  -4.9770
-## f_parent_ilr_1  0.04096    0.06312 -0.08746   0.1694
-## sigma           3.12600    0.35850  2.39600   3.8550
+##                 Estimate Std. Error   Lower    Upper
+## parent_0        99.60000    1.57000 96.4000 102.8000
+## log_k_parent    -2.31600    0.04087 -2.3990  -2.2330
+## log_k_m1        -5.24700    0.13320 -5.5180  -4.9770
+## f_parent_qlogis  0.05792    0.08926 -0.1237   0.2395
+## sigma            3.12600    0.35850  2.3960   3.8550
 ## 
 ## Parameter correlation:
-##                  parent_0 log_k_parent   log_k_m1 f_parent_ilr_1      sigma
-## parent_0        1.000e+00    5.174e-01 -1.688e-01     -5.471e-01 -3.214e-07
-## log_k_parent    5.174e-01    1.000e+00 -3.263e-01     -5.426e-01  3.168e-07
-## log_k_m1       -1.688e-01   -3.263e-01  1.000e+00      7.478e-01 -1.410e-07
-## f_parent_ilr_1 -5.471e-01   -5.426e-01  7.478e-01      1.000e+00  5.093e-10
-## sigma          -3.214e-07    3.168e-07 -1.410e-07      5.093e-10  1.000e+00
+##                   parent_0 log_k_parent   log_k_m1 f_parent_qlogis      sigma
+## parent_0         1.000e+00    5.174e-01 -1.688e-01      -5.471e-01 -1.171e-06
+## log_k_parent     5.174e-01    1.000e+00 -3.263e-01      -5.426e-01 -8.481e-07
+## log_k_m1        -1.688e-01   -3.263e-01  1.000e+00       7.478e-01  8.209e-07
+## f_parent_qlogis -5.471e-01   -5.426e-01  7.478e-01       1.000e+00  1.305e-06
+## sigma           -1.171e-06   -8.481e-07  8.209e-07       1.305e-06  1.000e+00
 ## 
 ## Backtransformed parameters:
 ## Confidence intervals for internally transformed parameters are asymmetric.
@@ -283,10 +280,10 @@
 ##     1   parent    92.50  90.23787  2.262e+00
 ##     3   parent    63.23  74.07319 -1.084e+01
 ##     3   parent    68.99  74.07319 -5.083e+00
-##     7   parent    52.32  49.91206  2.408e+00
-##     7   parent    55.13  49.91206  5.218e+00
-##    14   parent    27.27  25.01257  2.257e+00
-##    14   parent    26.64  25.01257  1.627e+00
+##     7   parent    52.32  49.91207  2.408e+00
+##     7   parent    55.13  49.91207  5.218e+00
+##    14   parent    27.27  25.01258  2.257e+00
+##    14   parent    26.64  25.01258  1.627e+00
 ##    21   parent    11.50  12.53462 -1.035e+00
 ##    21   parent    11.64  12.53462 -8.946e-01
 ##    35   parent     2.85   3.14787 -2.979e-01
@@ -294,25 +291,25 @@
 ##    50   parent     0.69   0.71624 -2.624e-02
 ##    50   parent     0.63   0.71624 -8.624e-02
 ##    75   parent     0.05   0.06074 -1.074e-02
-##    75   parent     0.06   0.06074 -7.381e-04
+##    75   parent     0.06   0.06074 -7.382e-04
 ##     1       m1     4.84   4.80296  3.704e-02
 ##     1       m1     5.64   4.80296  8.370e-01
 ##     3       m1    12.91  13.02400 -1.140e-01
 ##     3       m1    12.96  13.02400 -6.400e-02
 ##     7       m1    22.97  25.04476 -2.075e+00
 ##     7       m1    24.47  25.04476 -5.748e-01
-##    14       m1    41.69  36.69002  5.000e+00
-##    14       m1    33.21  36.69002 -3.480e+00
+##    14       m1    41.69  36.69003  5.000e+00
+##    14       m1    33.21  36.69003 -3.480e+00
 ##    21       m1    44.37  41.65310  2.717e+00
 ##    21       m1    46.44  41.65310  4.787e+00
-##    35       m1    41.22  43.31312 -2.093e+00
-##    35       m1    37.95  43.31312 -5.363e+00
-##    50       m1    41.19  41.21831 -2.831e-02
-##    50       m1    40.01  41.21831 -1.208e+00
-##    75       m1    40.09  36.44703  3.643e+00
-##    75       m1    33.85  36.44703 -2.597e+00
-##   100       m1    31.04  31.98163 -9.416e-01
-##   100       m1    33.13  31.98163  1.148e+00
+##    35       m1    41.22  43.31313 -2.093e+00
+##    35       m1    37.95  43.31313 -5.363e+00
+##    50       m1    41.19  41.21832 -2.832e-02
+##    50       m1    40.01  41.21832 -1.208e+00
+##    75       m1    40.09  36.44704  3.643e+00
+##    75       m1    33.85  36.44704 -2.597e+00
+##   100       m1    31.04  31.98162 -9.416e-01
+##   100       m1    33.13  31.98162  1.148e+00
 ##   120       m1    25.15  28.78984 -3.640e+00
 ##   120       m1    33.31  28.78984  4.520e+00</code></pre>
   </div>

@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Subsetting method for mmkin objects — [.mmkin" />
-<meta property="og:description" content="Subsetting method for mmkin objects." />
+<meta property="og:description" content="Subsetting method for mmkin objects" />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -109,6 +109,9 @@
     <li>
       <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
+    <li>
+      <a href="../articles/web_only/benchmarks.html">Some benchmark timings</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -117,8 +120,8 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/jranke/mkin/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+  <a href="https://github.com/jranke/mkin/">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -136,12 +139,12 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Subsetting method for mmkin objects</h1>
-    <small class="dont-index">Source: <a href='http://github.com/jranke/mkin/blob/master/R/mmkin.R'><code>R/mmkin.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/jranke/mkin/blob/master/R/mmkin.R'><code>R/mmkin.R</code></a></small>
     <div class="hidden name"><code>Extract.mmkin.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Subsetting method for mmkin objects.</p>
+    <p>Subsetting method for mmkin objects</p>
     </div>
 
     <pre class="usage"># S3 method for mmkin
@@ -176,30 +179,46 @@ either a list of mkinfit objects or a single mkinfit object.</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>An object of class <code><a href='mmkin.html'>mmkin</a></code>.</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Johannes Ranke</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
   <span class='co'># Only use one core, to pass R CMD check --as-cran</span>
-  <span class='no'>fits</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"FOMC"</span>), <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>B</span> <span class='kw'>=</span> <span class='no'>FOCUS_2006_B</span>, <span class='kw'>C</span> <span class='kw'>=</span> <span class='no'>FOCUS_2006_C</span>),
-                <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-  <span class='no'>fits</span>[<span class='st'>"FOMC"</span>, ]</div><div class='output co'>#&gt;       dataset
-#&gt; model  B       C      
-#&gt;   FOMC List,39 List,39
-#&gt; attr(,"class")
-#&gt; [1] "mmkin"</div><div class='input'>  <span class='no'>fits</span>[, <span class='st'>"B"</span>]</div><div class='output co'>#&gt;       dataset
-#&gt; model  B      
-#&gt;   SFO  List,39
-#&gt;   FOMC List,39
-#&gt; attr(,"class")
-#&gt; [1] "mmkin"</div><div class='input'>  <span class='no'>fits</span>[<span class='st'>"SFO"</span>, <span class='st'>"B"</span>]</div><div class='output co'>#&gt;      dataset
-#&gt; model B      
-#&gt;   SFO List,39
-#&gt; attr(,"class")
-#&gt; [1] "mmkin"</div><div class='input'>
-  <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(
+  <span class='va'>fits</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='st'>"FOMC"</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>B <span class='op'>=</span> <span class='va'>FOCUS_2006_B</span>, C <span class='op'>=</span> <span class='va'>FOCUS_2006_C</span><span class='op'>)</span>,
+                cores <span class='op'>=</span> <span class='fl'>1</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+  <span class='va'>fits</span><span class='op'>[</span><span class='st'>"FOMC"</span>, <span class='op'>]</span>
+</div><div class='output co'>#&gt; &lt;mmkin&gt; object
+#&gt; Status of individual fits:
+#&gt; 
+#&gt;       dataset
+#&gt; model  B  C 
+#&gt;   FOMC OK OK
+#&gt; 
+#&gt; OK: No warnings</div><div class='input'>  <span class='va'>fits</span><span class='op'>[</span>, <span class='st'>"B"</span><span class='op'>]</span>
+</div><div class='output co'>#&gt; &lt;mmkin&gt; object
+#&gt; Status of individual fits:
+#&gt; 
+#&gt;       dataset
+#&gt; model  B 
+#&gt;   SFO  OK
+#&gt;   FOMC OK
+#&gt; 
+#&gt; OK: No warnings</div><div class='input'>  <span class='va'>fits</span><span class='op'>[</span><span class='st'>"SFO"</span>, <span class='st'>"B"</span><span class='op'>]</span>
+</div><div class='output co'>#&gt; &lt;mmkin&gt; object
+#&gt; Status of individual fits:
+#&gt; 
+#&gt;      dataset
+#&gt; model B 
+#&gt;   SFO OK
+#&gt; 
+#&gt; OK: No warnings</div><div class='input'>
+  <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span>
     <span class='co'># This extracts an mkinfit object with lots of components</span>
-    <span class='no'>fits</span><span class='kw'>[[</span><span class='st'>"FOMC"</span>, <span class='st'>"B"</span>]]
-  )</div><div class='output co'>#&gt; $par
+    <span class='va'>fits</span><span class='op'>[[</span><span class='st'>"FOMC"</span>, <span class='st'>"B"</span><span class='op'>]</span><span class='op'>]</span>
+  <span class='op'>)</span>
+</div><div class='output co'>#&gt; $par
 #&gt;  parent_0 log_alpha  log_beta     sigma 
 #&gt; 99.666193  2.549849  5.050586  1.890202 
 #&gt; 
@@ -214,12 +233,11 @@ either a list of mkinfit objects or a single mkinfit object.</p></td>
 #&gt; 
 #&gt; $evaluations
 #&gt; function gradient 
-#&gt;       25       72 
+#&gt;       25       78 
 #&gt; 
 #&gt; $message
 #&gt; [1] "both X-convergence and relative convergence (5)"
-#&gt; </div><div class='input'>
-</div></pre>
+#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -235,7 +253,7 @@ either a list of mkinfit objects or a single mkinfit object.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

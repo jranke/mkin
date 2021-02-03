@@ -1,6 +1,6 @@
-# mkin 0.9.50.4 (unreleased)
+# mkin 1.0.0
 
-## General new features
+## General
 
 - 'mkinmod' models gain arguments 'name' and 'dll_dir' which, in conjunction with a current version of the 'inline' package, make it possible to still use the DLL used for fast ODE solutions with 'deSolve' after saving and restoring the 'mkinmod' object.
 
@@ -24,18 +24,9 @@
 
 - 'mixed.mmkin' New container for mmkin objects for plotting with the 'plot.mixed.mmkin' method
 
-- 'plot.mixed.mmkin' method used for 'nlme.mmkin' and 'saem.mmkin', both inheriting from 'mixed.mmkin' (currently virtual)
+- 'plot.mixed.mmkin' method used for 'nlme.mmkin' inheriting from 'mixed.mmkin' (currently virtual)
 
 - 'plot', 'summary' and 'print' methods for 'nlme.mmkin' objects
-
--  Add the current development version of the saemix package as a second, optional backend for mixed-effects models
-
-- DESCRIPTION: Additional_repositories entry pointing to my drat repository on github for a suitable saemix version
-
-- 'saemix_model', 'saemix_data': Helper functions to fit nonlinear mixed-effects models for mmkin row objects.
-
-- 'saem' generic function to fit saemix models using 'saemix_model' and 'saemix_data', with a generator 'saem.mmkin', summary and plot methods
-
 
 # mkin 0.9.50.3 (2020-10-08)
 

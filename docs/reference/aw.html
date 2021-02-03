@@ -74,7 +74,7 @@ by Burnham and Anderson (2004)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -111,6 +111,9 @@ by Burnham and Anderson (2004)." />
     <li>
       <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
+    <li>
+      <a href="../articles/web_only/benchmarks.html">Some benchmark timings</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -119,8 +122,8 @@ by Burnham and Anderson (2004)." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/jranke/mkin/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+  <a href="https://github.com/jranke/mkin/">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -138,7 +141,7 @@ by Burnham and Anderson (2004)." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Calculate Akaike weights for model averaging</h1>
-    <small class="dont-index">Source: <a href='http://github.com/jranke/mkin/blob/master/R/aw.R'><code>R/aw.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/jranke/mkin/blob/master/R/aw.R'><code>R/aw.R</code></a></small>
     <div class="hidden name"><code>aw.Rd</code></div>
     </div>
 
@@ -148,13 +151,13 @@ expected Kullback-Leibler information as specified
 by Burnham and Anderson (2004).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>aw</span>(<span class='no'>object</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>aw</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for mkinfit</span>
-<span class='fu'>aw</span>(<span class='no'>object</span>, <span class='no'>...</span>)
+<span class='fu'>aw</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for mmkin</span>
-<span class='fu'>aw</span>(<span class='no'>object</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>aw</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -182,11 +185,16 @@ Inference: Understanding AIC and BIC in Model Selection.
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \dontrun{</span>
-<span class='no'>f_sfo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='st'>"SFO"</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='no'>f_dfop</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='st'>"DFOP"</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='no'>aw_sfo_dfop</span> <span class='kw'>&lt;-</span> <span class='fu'>aw</span>(<span class='no'>f_sfo</span>, <span class='no'>f_dfop</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='no'>aw_sfo_dfop</span>)</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='no'>aw_sfo_dfop</span> <span class='co'># SFO gets more weight as it has less parameters and a similar fit</span></div><div class='output co'>#&gt; [1] 0.5970258 0.4029742</div><div class='input'><span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"FOMC"</span>, <span class='st'>"DFOP"</span>), <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='st'>"FOCUS D"</span> <span class='kw'>=</span> <span class='no'>FOCUS_2006_D</span>), <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>aw</span>(<span class='no'>f</span>)</div><div class='output co'>#&gt; [1] 0.4808722 0.1945539 0.3245740</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='fu'>aw</span>(<span class='no'>f</span>))</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='fu'>aw</span>(<span class='no'>f</span>[<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"SFO"</span>, <span class='st'>"DFOP"</span>)])</div><div class='output co'>#&gt; [1] 0.5970258 0.4029742</div><div class='input'># }
+<span class='va'>f_sfo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='va'>FOCUS_2006_D</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='va'>f_dfop</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='st'>"DFOP"</span>, <span class='va'>FOCUS_2006_D</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='va'>aw_sfo_dfop</span> <span class='op'>&lt;-</span> <span class='fu'>aw</span><span class='op'>(</span><span class='va'>f_sfo</span>, <span class='va'>f_dfop</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>aw_sfo_dfop</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='va'>aw_sfo_dfop</span> <span class='co'># SFO gets more weight as it has less parameters and a similar fit</span>
+</div><div class='output co'>#&gt; [1] 0.5970258 0.4029742</div><div class='input'><span class='va'>f</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='st'>"FOMC"</span>, <span class='st'>"DFOP"</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"FOCUS D"</span> <span class='op'>=</span> <span class='va'>FOCUS_2006_D</span><span class='op'>)</span>, cores <span class='op'>=</span> <span class='fl'>1</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'>aw</span><span class='op'>(</span><span class='va'>f</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.4808722 0.1945539 0.3245740</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='fu'>aw</span><span class='op'>(</span><span class='va'>f</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='fu'>aw</span><span class='op'>(</span><span class='va'>f</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='st'>"DFOP"</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.5970258 0.4029742</div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -203,7 +211,7 @@ Inference: Understanding AIC and BIC in Model Selection.
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

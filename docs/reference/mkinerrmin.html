@@ -73,7 +73,7 @@ the chi-squared test as defined in the FOCUS kinetics report from 2006." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.50.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -110,6 +110,9 @@ the chi-squared test as defined in the FOCUS kinetics report from 2006." />
     <li>
       <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
+    <li>
+      <a href="../articles/web_only/benchmarks.html">Some benchmark timings</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -118,8 +121,8 @@ the chi-squared test as defined in the FOCUS kinetics report from 2006." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="http://github.com/jranke/mkin/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+  <a href="https://github.com/jranke/mkin/">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -137,7 +140,7 @@ the chi-squared test as defined in the FOCUS kinetics report from 2006." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Calculate the minimum error to assume in order to pass the variance test</h1>
-    <small class="dont-index">Source: <a href='http://github.com/jranke/mkin/blob/master/R/mkinerrmin.R'><code>R/mkinerrmin.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/jranke/mkin/blob/master/R/mkinerrmin.R'><code>R/mkinerrmin.R</code></a></small>
     <div class="hidden name"><code>mkinerrmin.Rd</code></div>
     </div>
 
@@ -146,7 +149,7 @@ the chi-squared test as defined in the FOCUS kinetics report from 2006." />
 the chi-squared test as defined in the FOCUS kinetics report from 2006.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>mkinerrmin</span>(<span class='no'>fit</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.05</span>)</pre>
+    <pre class="usage"><span class='fu'>mkinerrmin</span><span class='op'>(</span><span class='va'>fit</span>, alpha <span class='op'>=</span> <span class='fl'>0.05</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -186,18 +189,22 @@ Document Reference Sanco/10058/2005 version 2.0, 434 pp,
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='no'>SFO_SFO</span> <span class='kw'>=</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span>(<span class='kw'>parent</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>, <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"m1"</span>),
-                  <span class='kw'>m1</span> <span class='kw'>=</span> <span class='fu'><a href='mkinsub.html'>mkinsub</a></span>(<span class='st'>"SFO"</span>),
-                  <span class='kw'>use_of_ff</span> <span class='kw'>=</span> <span class='st'>"max"</span>)</div><div class='output co'>#&gt; <span class='message'>Successfully compiled differential equation model from auto-generated C code.</span></div><div class='input'>
-<span class='no'>fit_FOCUS_D</span> <span class='kw'>=</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_D</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span>(<span class='fu'>mkinerrmin</span>(<span class='no'>fit_FOCUS_D</span>), <span class='fl'>4</span>)</div><div class='output co'>#&gt;          err.min n.optim df
+<span class='va'>SFO_SFO</span> <span class='op'>=</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span><span class='op'>(</span>parent <span class='op'>=</span> <span class='fu'><a href='mkinmod.html'>mkinsub</a></span><span class='op'>(</span><span class='st'>"SFO"</span>, to <span class='op'>=</span> <span class='st'>"m1"</span><span class='op'>)</span>,
+                  m1 <span class='op'>=</span> <span class='fu'><a href='mkinmod.html'>mkinsub</a></span><span class='op'>(</span><span class='st'>"SFO"</span><span class='op'>)</span>,
+                  use_of_ff <span class='op'>=</span> <span class='st'>"max"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Temporary DLL for differentials generated and loaded</span></div><div class='input'>
+<span class='va'>fit_FOCUS_D</span> <span class='op'>=</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='va'>SFO_SFO</span>, <span class='va'>FOCUS_2006_D</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span><span class='op'>(</span><span class='fu'>mkinerrmin</span><span class='op'>(</span><span class='va'>fit_FOCUS_D</span><span class='op'>)</span>, <span class='fl'>4</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;          err.min n.optim df
 #&gt; All data  0.0640       4 15
 #&gt; parent    0.0646       2  7
 #&gt; m1        0.0469       2  8</div><div class='input'><span class='co'># \dontrun{</span>
-  <span class='no'>fit_FOCUS_E</span> <span class='kw'>=</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span>(<span class='no'>SFO_SFO</span>, <span class='no'>FOCUS_2006_E</span>, <span class='kw'>quiet</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-  <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span>(<span class='fu'>mkinerrmin</span>(<span class='no'>fit_FOCUS_E</span>), <span class='fl'>4</span>)</div><div class='output co'>#&gt;          err.min n.optim df
+  <span class='va'>fit_FOCUS_E</span> <span class='op'>=</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='va'>SFO_SFO</span>, <span class='va'>FOCUS_2006_E</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+  <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span><span class='op'>(</span><span class='fu'>mkinerrmin</span><span class='op'>(</span><span class='va'>fit_FOCUS_E</span><span class='op'>)</span>, <span class='fl'>4</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;          err.min n.optim df
 #&gt; All data  0.1544       4 13
 #&gt; parent    0.1659       2  7
-#&gt; m1        0.1095       2  6</div><div class='input'># }
+#&gt; m1        0.1095       2  6</div><div class='input'><span class='co'># }</span>
 
 </div></pre>
   </div>
@@ -215,7 +222,7 @@ Document Reference Sanco/10058/2005 version 2.0, 434 pp,
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

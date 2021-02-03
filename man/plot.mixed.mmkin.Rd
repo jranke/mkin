@@ -17,7 +17,7 @@
   maxabs = "auto",
   ncol.legend = ifelse(length(i) <= 3, length(i) + 1, ifelse(length(i) <= 8, 3, 4)),
   nrow.legend = ceiling((length(i) + 1)/ncol.legend),
-  rel.height.legend = 0.03 + 0.08 * nrow.legend,
+  rel.height.legend = 0.02 + 0.07 * nrow.legend,
   rel.height.bottom = 1.1,
   pch_ds = 1:length(i),
   col_ds = pch_ds + 1,
@@ -27,7 +27,7 @@
 )
 }
 \arguments{
-\item{x}{An object of class \link{mixed.mmkin}, \link{saem.mmkin} or \link{nlme.mmkin}}
+\item{x}{An object of class \link{mixed.mmkin}, \link{nlme.mmkin}}
 
 \item{i}{A numeric index to select datasets for which to plot the individual predictions,
 in case plots get too large}
@@ -94,15 +94,6 @@ plot(f[, 3:4], standardized = TRUE)
 f_nlme <- nlme(f, control = list(pnlsMaxIter = 120, tolerance = 1e-3))
 plot(f_nlme)
 
-f_saem <- saem(f, transformations = "saemix")
-plot(f_saem)
-
-# We can overlay the two variants if we generate predictions
-pred_nlme <- mkinpredict(dfop_sfo,
-  f_nlme$bparms.optim[-1],
-  c(parent = f_nlme$bparms.optim[[1]], A1 = 0),
-  seq(0, 180, by = 0.2))
-plot(f_saem, pred_over = list(nlme = pred_nlme))
 }
 }
 \author{
