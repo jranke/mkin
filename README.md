@@ -100,6 +100,8 @@ version is found in the ['dev' subdirectory](https://pkgdown.jrwb.de/mkin/dev/).
 * Nonlinear mixed-effects models can be created from fits of the same degradation
   model to different datasets for the same compound by using the
   [nlme.mmkin](https://pkgdown.jrwb.de/mkin/reference/nlme.mmkin.html) method.
+  Note that the convergence of the nlme fits depends on the quality of the data.
+  Convergence is better for simple models and data for many groups (e.g. soils).
 
 ## GUI
 

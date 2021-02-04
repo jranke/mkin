@@ -75,5 +75,5 @@ lines of the mkinfit object, and \code{\link{plot_res}} for a function
 combining the plot of the fit and the residual plot.
 }
 \author{
-Johannes Ranke
+Johannes Ranke and Katrin Lindenberger
 }

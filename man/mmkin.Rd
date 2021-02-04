@@ -2,6 +2,7 @@
 % Please edit documentation in R/mmkin.R
 \name{mmkin}
 \alias{mmkin}
+\alias{print.mmkin}
 \title{Fit one or more kinetic models with one or more state variables to one or
 more datasets}
 \usage{
@@ -12,6 +13,8 @@ mmkin(
   cluster = NULL,
   ...
 )
+
+\method{print}{mmkin}(x, ...)
 }
 \arguments{
 \item{models}{Either a character vector of shorthand names like
@@ -30,7 +33,9 @@ detected by \code{\link[parallel:detectCores]{parallel::detectCores()}} are used
 \item{cluster}{A cluster as returned by \code{\link{makeCluster}} to be used
 for parallel execution.}
 
-\item{\dots}{Further arguments that will be passed to \code{\link{mkinfit}}.}
+\item{\dots}{Not used.}
+
+\item{x}{An \link{mmkin} object.}
 }
 \value{
 A two-dimensional \code{\link{array}} of \code{\link{mkinfit}}

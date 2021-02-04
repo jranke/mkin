@@ -542,6 +542,8 @@ mkinfit <- function(mkinmod, observed,
   {
     assign("calls", calls + 1, inherits = TRUE) # Increase the model solution counter
 
+    #browser()
+
     # Trace parameter values if requested and if we are actually optimising
     if(trace_parms & update_data) cat(format(P, width = 10, digits = 6), "\n")
 

@@ -42,17 +42,21 @@
 #'
 #' SFO_SFO <- mkinmod(
 #'   parent = list(type = "SFO", to = "m1", sink = TRUE),
-#'   m1 = list(type = "SFO"))
+#'   m1 = list(type = "SFO"), use_of_ff = "min")
+#'
 #' # Fit the model to the FOCUS example dataset D using defaults
-#' fit <- mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE)
+#' FOCUS_D <- subset(FOCUS_2006_D, value != 0) # remove zero values to avoid warning
+#' fit <- mkinfit(SFO_SFO, FOCUS_D, quiet = TRUE)
 #' fit.s <- summary(fit)
 #' # Transformed and backtransformed parameters
 #' print(fit.s$par, 3)
 #' print(fit.s$bpar, 3)
 #'
 #' \dontrun{
-#' # Compare to the version without transforming rate parameters
-#' fit.2 <- mkinfit(SFO_SFO, FOCUS_2006_D, transform_rates = FALSE, quiet = TRUE)
+#' # Compare to the version without transforming rate parameters (does not work
+#' # with analytical solution, we get NA values for m1 in predictions)
+#' fit.2 <- mkinfit(SFO_SFO, FOCUS_D, transform_rates = FALSE,
+#'   solution_type = "deSolve", quiet = TRUE)
 #' fit.2.s <- summary(fit.2)
 #' print(fit.2.s$par, 3)
 #' print(fit.2.s$bpar, 3)
@@ -66,13 +70,13 @@
 #' backtransform_odeparms(transformed, SFO_SFO)
 #'
 #' \dontrun{
-#' # The case of formation fractions
+#' # The case of formation fractions (this is now the default)
 #' SFO_SFO.ff <- mkinmod(
 #'   parent = list(type = "SFO", to = "m1", sink = TRUE),
 #'   m1 = list(type = "SFO"),
 #'   use_of_ff = "max")
 #'
-#' fit.ff <- mkinfit(SFO_SFO.ff, FOCUS_2006_D, quiet = TRUE)
+#' fit.ff <- mkinfit(SFO_SFO.ff, FOCUS_D, quiet = TRUE)
 #' fit.ff.s <- summary(fit.ff)
 #' print(fit.ff.s$par, 3)
 #' print(fit.ff.s$bpar, 3)
@@ -87,7 +91,7 @@
 #'   use_of_ff = "max")
 #'
 #'
-#' fit.ff.2 <- mkinfit(SFO_SFO.ff.2, FOCUS_2006_D, quiet = TRUE)
+#' fit.ff.2 <- mkinfit(SFO_SFO.ff.2, FOCUS_D, quiet = TRUE)
 #' fit.ff.2.s <- summary(fit.ff.2)
 #' print(fit.ff.2.s$par, 3)
 #' print(fit.ff.2.s$bpar, 3)

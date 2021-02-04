@@ -79,6 +79,12 @@ This functions sets up a nonlinear mixed effects model for an mmkin row
 object. An mmkin row object is essentially a list of mkinfit objects that
 have been obtained by fitting the same model to a list of datasets.
 }
+\details{
+Note that the convergence of the nlme algorithms depends on the quality
+of the data. In degradation kinetics, we often only have few datasets
+(e.g. data for few soils) and complicated degradation models, which may
+make it impossible to obtain convergence with nlme.
+}
 \note{
 As the object inherits from \link[nlme:nlme]{nlme::nlme}, there is a wealth of
 methods that will automatically work on 'nlme.mmkin' objects, such as
@@ -120,11 +126,10 @@ f_nlme_sfo <- nlme(f["SFO", ])
   # f_nlme_sfo_sfo_ff <- nlme(f_2["SFO-SFO-ff", ])
   #plot(f_nlme_sfo_sfo_ff)
 
-  # With the log-Cholesky parameterization, this converges in 11
-  # iterations and around 100 seconds, but without tweaking control
-  # parameters (with pdDiag, increasing the tolerance and pnlsMaxIter was
-  # necessary)
-  f_nlme_dfop_sfo <- nlme(f_2["DFOP-SFO", ])
+  # For the following, we need to increase pnlsMaxIter and the tolerance
+  # to get convergence
+  f_nlme_dfop_sfo <- nlme(f_2["DFOP-SFO", ],
+    control = list(pnlsMaxIter = 120, tolerance = 5e-4))
 
   plot(f_nlme_dfop_sfo)
 
@@ -144,22 +149,18 @@ f_nlme_sfo <- nlme(f["SFO", ])
     print(f_nlme_dfop_tc)
   }
 
-  f_2_obs <- mmkin(list("SFO-SFO" = m_sfo_sfo,
-   "DFOP-SFO" = m_dfop_sfo),
-    ds_2, quiet = TRUE, error_model = "obs")
+  f_2_obs <- update(f_2, error_model = "obs")
   f_nlme_sfo_sfo_obs <- nlme(f_2_obs["SFO-SFO", ])
   print(f_nlme_sfo_sfo_obs)
-  f_nlme_dfop_sfo_obs <- nlme(f_2_obs["DFOP-SFO", ])
+  f_nlme_dfop_sfo_obs <- nlme(f_2_obs["DFOP-SFO", ],
+    control = list(pnlsMaxIter = 120, tolerance = 5e-4))
 
-  f_2_tc <- mmkin(list("SFO-SFO" = m_sfo_sfo,
-   "DFOP-SFO" = m_dfop_sfo),
-    ds_2, quiet = TRUE, error_model = "tc")
-  # f_nlme_sfo_sfo_tc <- nlme(f_2_tc["SFO-SFO", ]) # stops with error message
-  f_nlme_dfop_sfo_tc <- nlme(f_2_tc["DFOP-SFO", ])
-  # We get warnings about false convergence in the LME step in several iterations
-  # but as the last such warning occurs in iteration 25 and we have 28 iterations
-  # we can ignore these
-  anova(f_nlme_dfop_sfo, f_nlme_dfop_sfo_obs, f_nlme_dfop_sfo_tc)
+  f_2_tc <- update(f_2, error_model = "tc")
+  # f_nlme_sfo_sfo_tc <- nlme(f_2_tc["SFO-SFO", ]) # No convergence with 50 iterations
+  # f_nlme_dfop_sfo_tc <- nlme(f_2_tc["DFOP-SFO", ],
+  #  control = list(pnlsMaxIter = 120, tolerance = 5e-4)) # Error in X[, fmap[[nm]]] <- gradnm
+
+  anova(f_nlme_dfop_sfo, f_nlme_dfop_sfo_obs)
 
 }
 }

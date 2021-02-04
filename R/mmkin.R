@@ -162,6 +162,7 @@ mmkin <- function(models = c("SFO", "FOMC", "DFOP"), datasets,
 #'
 #' @param x An [mmkin] object.
 #' @param \dots Not used.
+#' @rdname mmkin
 #' @export
 print.mmkin <- function(x, ...) {
   cat("<mmkin> object\n")

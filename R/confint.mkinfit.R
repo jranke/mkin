@@ -57,20 +57,20 @@
 #' if (identical(Sys.getenv("NOT_CRAN"), "true")) {
 #'   n_cores <- parallel::detectCores() - 1
 #' } else {
-#'  n_cores <- 1
+#'   n_cores <- 1
 #' }
 #' if (Sys.getenv("TRAVIS") != "") n_cores = 1
 #' if (Sys.info()["sysname"] == "Windows") n_cores = 1
 #'
-#' SFO_SFO <- mkinmod(parent = mkinsub("SFO", "m1"), m1 = mkinsub("SFO"), quiet = TRUE)
+#' SFO_SFO <- mkinmod(parent = mkinsub("SFO", "m1"), m1 = mkinsub("SFO"),
+#'   use_of_ff = "min", quiet = TRUE)
 #' SFO_SFO.ff <- mkinmod(parent = mkinsub("SFO", "m1"), m1 = mkinsub("SFO"),
 #'   use_of_ff = "max", quiet = TRUE)
 #' f_d_1 <- mkinfit(SFO_SFO, subset(FOCUS_2006_D, value != 0), quiet = TRUE)
 #' system.time(ci_profile <- confint(f_d_1, method = "profile", cores = 1, quiet = TRUE))
 #' # Using more cores does not save much time here, as parent_0 takes up most of the time
 #' # If we additionally exclude parent_0 (the confidence of which is often of
-#' # minor interest), we get a nice performance improvement from about 50
-#' # seconds to about 12 seconds if we use at least four cores
+#' # minor interest), we get a nice performance improvement if we use at least 4 cores
 #' system.time(ci_profile_no_parent_0 <- confint(f_d_1, method = "profile",
 #'   c("k_parent_sink", "k_parent_m1", "k_m1_sink", "sigma"), cores = n_cores))
 #' ci_profile

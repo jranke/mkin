@@ -28,7 +28,7 @@ utils::globalVariables(c("variable", "residual"))
 #' @param \dots further arguments passed to \code{\link{plot}}.
 #' @return Nothing is returned by this function, as it is called for its side
 #'   effect, namely to produce a plot.
-#' @author Johannes Ranke
+#' @author Johannes Ranke and Katrin Lindenberger
 #' @seealso \code{\link{mkinplot}}, for a way to plot the data and the fitted
 #'   lines of the mkinfit object, and \code{\link{plot_res}} for a function
 #'   combining the plot of the fit and the residual plot.

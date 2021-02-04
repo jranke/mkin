@@ -1,3 +1,11 @@
+# mkin 1.0.1
+
+- 'confint.mmkin', 'nlme.mmkin', 'transform_odeparms': Fix example code in dontrun sections that failed with current defaults
+
+- 'logLik.mkinfit': Improve example code to avoid warnings and show convenient syntax
+
+- 'mkinresplot': Re-add Katrin Lindenberger as coauthor who was accidentally removed long ago
+
 # mkin 1.0.0
 
 ## General

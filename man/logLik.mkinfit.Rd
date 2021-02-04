@@ -35,10 +35,10 @@ and the fitted error model parameters.
     parent = mkinsub("SFO", to = "m1"),
     m1 = mkinsub("SFO")
   )
-  d_t <- FOCUS_2006_D
+  d_t <- subset(FOCUS_2006_D, value != 0)
   f_nw <- mkinfit(sfo_sfo, d_t, quiet = TRUE) # no weighting (weights are unity)
-  f_obs <- mkinfit(sfo_sfo, d_t, error_model = "obs", quiet = TRUE)
-  f_tc <- mkinfit(sfo_sfo, d_t, error_model = "tc", quiet = TRUE)
+  f_obs <- update(f_nw, error_model = "obs")
+  f_tc <- update(f_nw, error_model = "tc")
   AIC(f_nw, f_obs, f_tc)
   }
 
