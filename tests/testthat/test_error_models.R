@@ -33,22 +33,22 @@ test_that("The different error model fitting methods work for parent fits", {
   f_9_threestep <- mkinfit("SFO", test_9,
     error_model = "tc", error_model_algorithm = "threestep", quiet = TRUE)
   expect_equivalent(round(AIC(f_9_threestep), 2), 139.43)
-  expect_equivalent(parms(f_9_threestep)[1:3], f_9_parms_const)
+  expect_equivalent(parms(f_9_threestep)[1:3], f_9_parms_const, tolerance = 1e-5)
 
   f_9_fourstep <- mkinfit("SFO", test_9,
     error_model = "tc", error_model_algorithm = "fourstep", quiet = TRUE)
   expect_equivalent(round(AIC(f_9_fourstep), 2), 139.43)
-  expect_equivalent(parms(f_9_fourstep)[1:3], f_9_parms_const)
+  expect_equivalent(parms(f_9_fourstep)[1:3], f_9_parms_const, tolerance = 1e-5)
 
   f_9_IRLS <- mkinfit("SFO", test_9,
     error_model = "tc", error_model_algorithm = "IRLS", quiet = TRUE)
   expect_equivalent(round(AIC(f_9_IRLS), 2), 139.43)
-  expect_equivalent(parms(f_9_IRLS)[1:3], f_9_parms_const)
+  expect_equivalent(parms(f_9_IRLS)[1:3], f_9_parms_const, tolerance = 1e-5)
 
   f_9_d_3 <- mkinfit("SFO", test_9,
     error_model = "tc", error_model_algorithm = "d_3", quiet = TRUE)
   expect_equivalent(round(AIC(f_9_d_3), 2), 134.94)
-  expect_equivalent(parms(f_9_d_3), f_9_parms_tc_direct)
+  expect_equivalent(parms(f_9_d_3), f_9_parms_tc_direct, tolerance = 1e-5)
 })
 
 test_that("The default error model algorithm finds the best known AIC values for parent fits", {
