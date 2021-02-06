@@ -1,3 +1,13 @@
+# mkin 1.0.1.9000
+
+- Switch to a versioning scheme where the fourth version component indicates development versions
+
+- Reintroduce the interface to the current development version of saemix, in particular:
+
+- 'saemix_model' and 'saemix_data': Helper functions to set up nonlinear mixed-effects models for mmkin row objects
+
+- 'saem': generic function to fit saemix models using 'saemix_model' and 'saemix_data', with a generator 'saem.mmkin', summary and plot methods
+
 # mkin 1.0.1
 
 - 'confint.mmkin', 'nlme.mmkin', 'transform_odeparms': Fix example code in dontrun sections that failed with current defaults
