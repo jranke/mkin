@@ -1,14 +1,5 @@
 context("Confidence intervals and p-values")
 
-test_that("Some special cases of confidence interval calculation work", {
-
-  tmp <- expect_warning(mkinfit("FOMC", FOCUS_2006_A, quiet = TRUE), "not converge")
-
-  expect_equivalent(
-    confint(tmp, transform = FALSE),
-    matrix(rep(NA, 8), nrow = 4))
-})
-
 test_that("The confint method 'quadratic' is consistent with the summary", {
   expect_equivalent(
     confint(fit_nw_1, parm = "parent_0", method = "quadratic"),

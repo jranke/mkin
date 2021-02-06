@@ -6,6 +6,8 @@
 
 - 'mkinresplot': Re-add Katrin Lindenberger as coauthor who was accidentally removed long ago
 
+- Remove tests relying on non-convergence of the FOMC fit to the FOCUS A dataset as this is platform dependent (revealed by the new additional tests on CRAN, thanks!)
+
 # mkin 1.0.0
 
 ## General
