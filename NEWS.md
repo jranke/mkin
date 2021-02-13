@@ -1,6 +1,10 @@
 # mkin 1.0.2.9000
 
+## General
+
 - Switch to a versioning scheme where the fourth version component indicates development versions
+
+## Mixed-effects models
 
 - Reintroduce the interface to the current development version of saemix, in particular:
 
