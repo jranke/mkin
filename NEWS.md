@@ -1,4 +1,4 @@
-# mkin 1.0.1.9000
+# mkin 1.0.2.9000
 
 - Switch to a versioning scheme where the fourth version component indicates development versions
 
@@ -7,6 +7,10 @@
 - 'saemix_model' and 'saemix_data': Helper functions to set up nonlinear mixed-effects models for mmkin row objects
 
 - 'saem': generic function to fit saemix models using 'saemix_model' and 'saemix_data', with a generator 'saem.mmkin', summary and plot methods
+
+# mkin 1.0.2
+
+- 'mkinfit': Keep model names stored in 'mkinmod' objects, avoiding their loss in 'gmkin'
 
 # mkin 1.0.1
 
