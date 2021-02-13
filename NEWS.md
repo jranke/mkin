@@ -1,3 +1,7 @@
+# mkin 1.0.2
+
+- 'mkinfit': Keep model names stored in 'mkinmod' objects, avoiding their loss in 'gmkin'
+
 # mkin 1.0.1
 
 - 'confint.mmkin', 'nlme.mmkin', 'transform_odeparms': Fix example code in dontrun sections that failed with current defaults

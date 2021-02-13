@@ -261,8 +261,15 @@ mkinfit <- function(mkinmod, observed,
   summary_warnings <- character()
 
   # Derive the name used for the model
-  if (is.character(mkinmod)) mkinmod_name <- mkinmod
-  else mkinmod_name <- deparse(substitute(mkinmod))
+  if (is.character(mkinmod)) {
+    mkinmod_name <- mkinmod
+  } else {
+    if (is.null(mkinmod$name)) {
+      mkinmod_name <- deparse(substitute(mkinmod))
+    } else {
+      mkinmod_name <- mkinmod$name
+    }
+  }
 
   # Check mkinmod and generate a model for the variable whith the highest value
   # if a suitable string is given
