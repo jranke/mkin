@@ -1,7 +1,7 @@
 ---
 title: Introduction to mkin
 author: Johannes Ranke
-date: "`r Sys.Date()`"
+date: Last change 15 February 2021 (rebuilt `r Sys.Date()`)
 output:
   html_document:
     toc: true
@@ -66,17 +66,14 @@ plot_sep(f_SFO_SFO_SFO, lpos = c("topright", "bottomright", "bottomright"))
 
 # Background
 
-Many approaches are possible regarding the evaluation of chemical degradation
-data.
-
-The `mkin` package [@pkg:mkin] implements the approach recommended in the
-kinetics report provided by the FOrum for Co-ordination of pesticide fate
-models and their USe [@FOCUS2006; -@FOCUSkinetics2014]
-for simple decline data series, data series with transformation products,
-commonly termed metabolites, and for data series for more than one compartment.
-It is also possible to include back reactions, so equilibrium reactions and
-equilibrium partitioning can be specified, although this oftentimes leads to an
-overparameterisation of the model.
+The `mkin` package [@pkg:mkin] implements the approach to degradation kinetics
+recommended in the kinetics report provided by the FOrum for Co-ordination of
+pesticide fate models and their USe [@FOCUS2006; -@FOCUSkinetics2014].
+It covers data series describing the decline of one compound, data series with
+transformation products (commonly termed metabolites) and data series for
+more than one compartment. It is possible to include back reactions. Therefore,
+equilibrium reactions and equilibrium partitioning can be specified, although
+this often leads to an overparameterisation of the model.
 
 When the first `mkin` code was published in 2010, the most commonly used tools for
 fitting more complex kinetic degradation models to experimental data were
@@ -86,29 +83,27 @@ as proposed by the FOCUS Kinetics Workgroup, and ModelMaker, a general purpose
 compartment based tool providing infrastructure for fitting dynamic simulation
 models based on differential equations to data.
 
-The code was first uploaded to the BerliOS platform. When this was taken down,
-the version control history was imported into the R-Forge site (see *e.g.*
-[the initial commit on 11 May 2010](https://cgit.jrwb.de/mkin/commit/?id=30cbb4092f6d2d3beff5800603374a0d009ad770)),
-where the code is still occasionally updated.
+The 'mkin' code was first uploaded to the BerliOS development platform. When
+this was taken down, the version control history was imported into the R-Forge
+site (see *e.g.* [the initial commit on 11 May
+2010](https://cgit.jrwb.de/mkin/commit/?id=30cbb4092f6d2d3beff5800603374a0d009ad770)),
+where the code is still being updated.
 
 At that time, the R package `FME` (Flexible Modelling Environment)
 [@soetaert2010] was already available, and provided a good basis for
 developing a package specifically tailored to the task. The remaining challenge
 was to make it as easy as possible for the users (including the author of this
 vignette) to specify the system of differential equations and to include the
-output requested by the FOCUS guidance, such as the relative standard deviation
-that has to be assumed for the residuals, such that the $\chi^2$
-goodness-of-fit test as defined by the FOCUS kinetics workgroup would pass
-using an significance level $\alpha$ of 0.05. This relative error, expressed
-as a percentage, is often termed $\chi^2$ error level or similar.
+output requested by the FOCUS guidance, such as the $\chi^2$ error
+level as defined in this guidance.
 
 Also, `mkin` introduced using analytical solutions for parent only kinetics for
 improved optimization speed. Later, Eigenvalue based solutions were
 introduced to `mkin` for the case of linear differential equations (*i.e.*
 where the FOMC or DFOP models were not used for the parent compound), greatly
-improving the optimization speed for these cases. This, however, has become
+improving the optimization speed for these cases. This, has become
 somehow obsolete, as the use of compiled code described below gives even
-smaller execution times.
+faster execution times.
 
 The possibility to specify back-reactions and a biphasic model (SFORB) for
 metabolites were present in `mkin` from the very beginning.
@@ -116,16 +111,17 @@ metabolites were present in `mkin` from the very beginning.
 ## Derived software tools
 
 Soon after the publication of `mkin`, two derived tools were published, namely
-KinGUII (available from Bayer Crop Science) and CAKE (commissioned to Tessella
+KinGUII (developed at Bayer Crop Science) and CAKE (commissioned to Tessella
 by Syngenta), which added a graphical user interface (GUI), and added fitting by
 iteratively reweighted least squares (IRLS) and characterisation of likely
 parameter distributions by Markov Chain Monte Carlo (MCMC) sampling.
 
 CAKE focuses on a smooth use experience, sacrificing some flexibility in the model
 definition, originally allowing only two primary metabolites in parallel.
-The current version 3.3 of CAKE release in March 2016 uses a basic scheme for
-up to six metabolites in a flexible arrangement, but does not support
-back-reactions (non-instantaneous equilibria) or biphasic kinetics for metabolites.
+The current version 3.4 of CAKE released in May 2020 uses a scheme for up to
+six metabolites in a flexible arrangement and supports biphasic modelling of
+metabolites, but does not support back-reactions (non-instantaneous
+equilibria).
 
 KinGUI offers an even more flexible widget for specifying complex kinetic
 models.  Back-reactions (non-instantaneous equilibria) were supported early on,
@@ -142,34 +138,33 @@ for further information.
 A comparison of scope, usability and numerical results obtained with these
 tools has been recently been published by @ranke2018.
 
-## Recent developments
+# Unique features
 
-Currently (July 2019), the main features available in `mkin` which are not
-present in KinGUII or CAKE, are the speed increase by using compiled code when
-a compiler is present, parallel model fitting on multicore machines using the
-`mmkin` function, and the estimation of parameter confidence intervals based on
-transformed parameters.
+Currently, the main unique features available in `mkin` are
 
-In addition, the possibility to use two alternative error models to constant
-variance have been integrated. The variance by variable error model introduced
-by @gao11 has been available via an iteratively reweighted least squares (IRLS)
-procedure since mkin
+- the [speed increase](https://pkgdown.jrwb.de/mkin/articles/web_only/compiled_models.html) by using compiled code when a compiler is present,
+- parallel model fitting on multicore machines using the [`mmkin` function](https://pkgdown.jrwb.de/mkin/reference/mmkin.html),
+- the estimation of parameter confidence intervals based on transformed
+  parameters (see below) and
+- the possibility to use the [two-component error model](https://pkgdown.jrwb.de/mkin/reference/sigma_twocomp.html)
+
+The iteratively reweighted least squares fitting of different variances for
+each variable as introduced by @gao11 has been available in mkin since
 [version 0.9-22](https://pkgdown.jrwb.de/mkin/news/index.html#mkin-0-9-22-2013-10-26).
 With [release 0.9.49.5](https://pkgdown.jrwb.de/mkin/news/index.html#mkin-0-9-49-5-2019-07-04),
-the IRLS algorithm has been replaced by direct or step-wise maximisation of
+the IRLS algorithm has been complemented by direct or step-wise maximisation of
 the likelihood function, which makes it possible not only to fit the
 variance by variable error model but also a
 [two-component error model](https://pkgdown.jrwb.de/mkin/reference/sigma_twocomp.html)
-inspired by error models developed in analytical chemistry.
+inspired by error models developed in analytical chemistry [@ranke2019].
 
 # Internal parameter transformations
 
-For rate constants, the log
-transformation is used, as proposed by Bates and Watts [-@bates1988, p. 77,
-149]. Approximate intervals are constructed for the transformed rate
-constants [compare @bates1988, p. 135], *i.e.* for their logarithms.
-Confidence intervals for the rate constants are then obtained using the
-appropriate backtransformation using the exponential function.
+For rate constants, the log transformation is used, as proposed by Bates and
+Watts [-@bates1988, p. 77, 149]. Approximate intervals are constructed for the
+transformed rate constants [compare @bates1988, p. 135], *i.e.* for their
+logarithms. Confidence intervals for the rate constants are then obtained using
+the appropriate backtransformation using the exponential function.
 
 In the first version of `mkin` allowing for specifying models using
 formation fractions, a home-made reparameterisation was used in order to ensure
@@ -185,7 +180,9 @@ proposed together with René Lehmann [@ranke2012], based on isometric
 logratio transformation (ILR). The aim was to improve the validity of the
 linear approximation of the objective function during the parameter
 estimation procedure as well as in the subsequent calculation of parameter
-confidence intervals.
+confidence intervals. In the current version of mkin, a logit transformation
+is used for parameters that are bound between 0 and 1, such as the g parameter
+of the DFOP model.
 
 ## Confidence intervals based on transformed parameters
 
@@ -201,9 +198,8 @@ fractions that quantify the paths to each of the compounds formed from a
 specific parent compound, and no such 1:1 relation exists.
 
 Therefore, parameter confidence intervals for formation fractions obtained with
-this method only appear valid for the case of a single transformation product, where
-only one formation fraction is to be estimated, directly corresponding to one
-component of the ilr transformed parameter.
+this method only appear valid for the case of a single transformation product,
+where currently the logit transformation is used for the formation fraction.
 
 The confidence intervals obtained by backtransformation for the cases where a
 1:1 relation between transformed and original parameter exist are considered by

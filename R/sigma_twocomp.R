@@ -23,6 +23,11 @@
 #'
 #'   Rocke, David M. and Lorenzato, Stefan (1995) A two-component model for
 #'   measurement error in analytical chemistry. Technometrics 37(2), 176-184.
+#'
+#'   Ranke J and Meinecke S (2019) Error Models for the Kinetic Evaluation of Chemical
+#'   Degradation Data. *Environments* 6(12) 124
+#'   \doi{10.3390/environments6120124}.
+#'
 #' @examples
 #' times <- c(0, 1, 3, 7, 14, 28, 60, 90, 120)
 #' d_pred <- data.frame(time = times, parent = 100 * exp(- 0.03 * times))

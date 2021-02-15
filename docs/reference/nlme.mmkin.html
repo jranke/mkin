@@ -74,7 +74,7 @@ have been obtained by fitting the same model to a list of datasets." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
       </span>
     </div>
 
@@ -157,7 +157,7 @@ have been obtained by fitting the same model to a list of datasets.</p>
   data <span class='op'>=</span> <span class='st'>"auto"</span>,
   fixed <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>as.list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='fu'><a href='nlme_function.html'>mean_degparms</a></span><span class='op'>(</span><span class='va'>model</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>el</span><span class='op'>)</span> <span class='fu'><a href='https://rdrr.io/r/base/eval.html'>eval</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/parse.html'>parse</a></span><span class='op'>(</span>text <span class='op'>=</span>
     <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='va'>el</span>, <span class='fl'>1</span>, sep <span class='op'>=</span> <span class='st'>"~"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>,
-  random <span class='op'>=</span> <span class='fu'>pdDiag</span><span class='op'>(</span><span class='va'>fixed</span><span class='op'>)</span>,
+  random <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/pdDiag.html'>pdDiag</a></span><span class='op'>(</span><span class='va'>fixed</span><span class='op'>)</span>,
   <span class='va'>groups</span>,
   start <span class='op'>=</span> <span class='fu'><a href='nlme_function.html'>mean_degparms</a></span><span class='op'>(</span><span class='va'>model</span>, random <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,
   correlation <span class='op'>=</span> <span class='cn'>NULL</span>,
@@ -290,7 +290,7 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
   <span class='fu'><a href='https://rdrr.io/r/stats/anova.html'>anova</a></span><span class='op'>(</span><span class='va'>f_nlme_sfo</span>, <span class='va'>f_nlme_dfop</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;             Model df      AIC      BIC    logLik   Test  L.Ratio p-value
 #&gt; f_nlme_sfo      1  5 625.0539 637.5529 -307.5269                        
-#&gt; f_nlme_dfop     2  9 495.1270 517.6253 -238.5635 1 vs 2 137.9268  &lt;.0001</div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop</span><span class='op'>)</span>
+#&gt; f_nlme_dfop     2  9 495.1270 517.6253 -238.5635 1 vs 2 137.9269  &lt;.0001</div><div class='input'>  <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Kinetic nonlinear mixed-effects model fit by maximum likelihood
 #&gt; 
 #&gt; Structural model:
@@ -318,7 +318,7 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
 </div><div class='img'><img src='nlme.mmkin-1.png' alt='' width='700' height='433' /></div><div class='input'>  <span class='fu'><a href='endpoints.html'>endpoints</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $distimes
 #&gt;            DT50     DT90 DT50back  DT50_k1  DT50_k2
-#&gt; parent 10.79857 100.7937 30.34192 4.193937 43.85442
+#&gt; parent 10.79857 100.7937 30.34193 4.193938 43.85443
 #&gt; </div><div class='input'>
   <span class='va'>ds_2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>experimental_data_for_UBA_2019</span><span class='op'>[</span><span class='fl'>6</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>]</span>,
    <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='va'>x</span><span class='op'>$</span><span class='va'>data</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"name"</span>, <span class='st'>"time"</span>, <span class='st'>"value"</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span>
@@ -350,8 +350,8 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
 </div><div class='img'><img src='nlme.mmkin-3.png' alt='' width='700' height='433' /></div><div class='input'>
   <span class='fu'><a href='https://rdrr.io/r/stats/anova.html'>anova</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop_sfo</span>, <span class='va'>f_nlme_sfo_sfo</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                 Model df       AIC       BIC    logLik   Test  L.Ratio p-value
-#&gt; f_nlme_dfop_sfo     1 13  843.8547  884.6201 -408.9274                        
-#&gt; f_nlme_sfo_sfo      2  9 1085.1821 1113.4043 -533.5910 1 vs 2 249.3274  &lt;.0001</div><div class='input'>
+#&gt; f_nlme_dfop_sfo     1 13  843.8548  884.6201 -408.9274                        
+#&gt; f_nlme_sfo_sfo      2  9 1085.1821 1113.4043 -533.5910 1 vs 2 249.3273  &lt;.0001</div><div class='input'>
   <span class='fu'><a href='endpoints.html'>endpoints</a></span><span class='op'>(</span><span class='va'>f_nlme_sfo_sfo</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $ff
 #&gt; parent_sink   parent_A1     A1_sink 
@@ -364,12 +364,12 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
 #&gt; </div><div class='input'>  <span class='fu'><a href='endpoints.html'>endpoints</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop_sfo</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $ff
 #&gt;   parent_A1 parent_sink 
-#&gt;   0.2768574   0.7231426 
+#&gt;   0.2768575   0.7231425 
 #&gt; 
 #&gt; $distimes
 #&gt;             DT50     DT90 DT50back  DT50_k1  DT50_k2
-#&gt; parent  11.07091 104.6320 31.49738 4.462384 46.20825
-#&gt; A1     162.30523 539.1663       NA       NA       NA
+#&gt; parent  11.07091 104.6320 31.49737 4.462384 46.20825
+#&gt; A1     162.30492 539.1653       NA       NA       NA
 #&gt; </div><div class='input'>
   <span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='fu'>findFunction</span><span class='op'>(</span><span class='st'>"varConstProp"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>&gt;</span> <span class='fl'>0</span><span class='op'>)</span> <span class='op'>{</span> <span class='co'># tc error model for nlme available</span>
     <span class='co'># Attempts to fit metabolite kinetics with the tc error model are possible,</span>
@@ -396,7 +396,7 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
 #&gt; Fixed effects:
 #&gt;  list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_qlogis ~ 1) 
 #&gt; parent_0   log_k1   log_k2 g_qlogis 
-#&gt; 94.04775 -1.82340 -4.16715  0.05685 
+#&gt; 94.04774 -1.82340 -4.16716  0.05686 
 #&gt; 
 #&gt; Random effects:
 #&gt;  Formula: list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_qlogis ~ 1)
@@ -410,7 +410,7 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
 #&gt;  Formula: ~fitted(.) 
 #&gt;  Parameter estimates:
 #&gt;      const       prop 
-#&gt; 2.23224114 0.01262341 </div><div class='input'>
+#&gt; 2.23223147 0.01262395 </div><div class='input'>
   <span class='va'>f_2_obs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/update.html'>update</a></span><span class='op'>(</span><span class='va'>f_2</span>, error_model <span class='op'>=</span> <span class='st'>"obs"</span><span class='op'>)</span>
   <span class='va'>f_nlme_sfo_sfo_obs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f_2_obs</span><span class='op'>[</span><span class='st'>"SFO-SFO"</span>, <span class='op'>]</span><span class='op'>)</span>
   <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>f_nlme_sfo_sfo_obs</span><span class='op'>)</span>
@@ -442,7 +442,7 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
 #&gt;  Formula: ~1 | name 
 #&gt;  Parameter estimates:
 #&gt;    parent        A1 
-#&gt; 1.0000000 0.2050003 </div><div class='input'>  <span class='va'>f_nlme_dfop_sfo_obs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f_2_obs</span><span class='op'>[</span><span class='st'>"DFOP-SFO"</span>, <span class='op'>]</span>,
+#&gt; 1.0000000 0.2049995 </div><div class='input'>  <span class='va'>f_nlme_dfop_sfo_obs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f_2_obs</span><span class='op'>[</span><span class='st'>"DFOP-SFO"</span>, <span class='op'>]</span>,
     control <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>pnlsMaxIter <span class='op'>=</span> <span class='fl'>120</span>, tolerance <span class='op'>=</span> <span class='fl'>5e-4</span><span class='op'>)</span><span class='op'>)</span>
 
   <span class='va'>f_2_tc</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/update.html'>update</a></span><span class='op'>(</span><span class='va'>f_2</span>, error_model <span class='op'>=</span> <span class='st'>"tc"</span><span class='op'>)</span>
@@ -452,8 +452,8 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
 
   <span class='fu'><a href='https://rdrr.io/r/stats/anova.html'>anova</a></span><span class='op'>(</span><span class='va'>f_nlme_dfop_sfo</span>, <span class='va'>f_nlme_dfop_sfo_obs</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                     Model df      AIC      BIC    logLik   Test  L.Ratio
-#&gt; f_nlme_dfop_sfo         1 13 843.8547 884.6201 -408.9274                
-#&gt; f_nlme_dfop_sfo_obs     2 14 817.5338 861.4350 -394.7669 1 vs 2 28.32089
+#&gt; f_nlme_dfop_sfo         1 13 843.8548 884.6201 -408.9274                
+#&gt; f_nlme_dfop_sfo_obs     2 14 817.5338 861.4350 -394.7669 1 vs 2 28.32093
 #&gt;                     p-value
 #&gt; f_nlme_dfop_sfo            
 #&gt; f_nlme_dfop_sfo_obs  &lt;.0001</div><div class='input'>
