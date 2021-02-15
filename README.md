@@ -45,40 +45,19 @@ version is found in the ['dev' subdirectory](https://pkgdown.jrwb.de/mkin/dev/).
 
 ## Features
 
+### General
+
 * Highly flexible model specification using
   [`mkinmod`](https://pkgdown.jrwb.de/mkin/reference/mkinmod.html),
   including equilibrium reactions and using the single first-order
   reversible binding (SFORB) model, which will automatically create
   two latent state variables for the observed variable.
-* As of version 0.9-39, fitting of several models to several datasets, optionally in
-  parallel, is supported, see for example
-  [`plot.mmkin`](https://pkgdown.jrwb.de/mkin/reference/plot.mmkin.html).
 * Model solution (forward modelling) in the function
   [`mkinpredict`](https://pkgdown.jrwb.de/mkin/reference/mkinpredict.html)
   is performed either using the analytical solution for the case of
   parent only degradation, an eigenvalue based solution if only simple
   first-order (SFO) or SFORB kinetics are used in the model, or
   using a numeric solver from the `deSolve` package (default is `lsoda`).
-* If a C compiler is installed, the kinetic models are compiled from automatically
-  generated C code, see
-  [vignette `compiled_models`](https://pkgdown.jrwb.de/mkin/articles/web_only/compiled_models.html).
-  The autogeneration of C code was
-  inspired by the [`ccSolve`](https://github.com/karlines/ccSolve) package. Thanks
-  to Karline Soetaert for her work on that.
-* By default, kinetic rate constants and kinetic formation fractions are
-  transformed internally using
-  [`transform_odeparms`](https://pkgdown.jrwb.de/mkin/reference/transform_odeparms.html)
-  so their estimators can more reasonably be expected to follow
-  a normal distribution. This has the side effect that no constraints
-  are needed in the optimisation. Thanks to René Lehmann for the nice
-  cooperation on this, especially the isometric log-ratio transformation
-  that is now used for the formation fractions.
-* A side effect of this is that when parameter estimates are backtransformed
-  to match the model definition, confidence intervals calculated from
-  standard errors are also backtransformed to the correct scale, and will
-  not include meaningless values like negative rate constants or
-  formation fractions adding up to more than 1, which can not occur in
-  a single experiment with a single defined radiolabel position.
 * The usual one-sided t-test for significant difference from zero is nevertheless
   shown based on estimators for the untransformed parameters.
 * Summary and plotting functions. The `summary` of an `mkinfit` object is in
@@ -86,22 +65,58 @@ version is found in the ['dev' subdirectory](https://pkgdown.jrwb.de/mkin/dev/).
   approximately reproduce the fit with other tools.
 * The chi-squared error level as defined in the FOCUS kinetics guidance
   (see below) is calculated for each observed variable.
-* When a metabolite decline phase is not described well by SFO kinetics,
-  SFORB kinetics can be used for the metabolite.
-* Three different error models can be selected using the argument `error_model`
-  to the [`mkinfit`](https://pkgdown.jrwb.de/mkin/reference/mkinfit.html)
-  function.
 * The 'variance by variable' error model which is often fitted using
   Iteratively Reweighted Least Squares (IRLS) should now be specified as
   `error_model = "obs"`.
-* A two-component error model similar to the one proposed by
+
+### Unique in mkin
+
+* Three different error models can be selected using the argument `error_model`
+  to the [`mkinfit`](https://pkgdown.jrwb.de/mkin/reference/mkinfit.html)
+  function. A two-component error model similar to the one proposed by
   [Rocke and Lorenzato](https://pkgdown.jrwb.de/mkin/reference/sigma_twocomp.html)
   can be selected using the argument `error_model = "tc"`.
+* Model comparisons using the Akaike Information Criterion (AIC) are supported which
+  can also be used for non-constant variance. In such cases the FOCUS
+  chi-squared error level is not meaningful.
+* By default, kinetic rate constants and kinetic formation fractions are
+  transformed internally using
+  [`transform_odeparms`](https://pkgdown.jrwb.de/mkin/reference/transform_odeparms.html)
+  so their estimators can more reasonably be expected to follow
+  a normal distribution.
+* When parameter estimates are backtransformed to match the model definition,
+  confidence intervals calculated from standard errors are also backtransformed
+  to the correct scale, and will not include meaningless values like negative
+  rate constants or formation fractions adding up to more than 1, which cannot
+  occur in a single experiment with a single defined radiolabel position.
+* When a metabolite decline phase is not described well by SFO kinetics,
+  SFORB kinetics can be used for the metabolite. Mathematically, the SFORB model
+  is equivalent to the DFOP model used by other tools for biphasic metabolite curves.
+  However, the SFORB model has the advantage that there is a mechanistic
+  interpretation of the model parameters.
 * Nonlinear mixed-effects models can be created from fits of the same degradation
   model to different datasets for the same compound by using the
   [nlme.mmkin](https://pkgdown.jrwb.de/mkin/reference/nlme.mmkin.html) method.
   Note that the convergence of the nlme fits depends on the quality of the data.
   Convergence is better for simple models and data for many groups (e.g. soils).
+
+### Performance
+
+* Parallel fitting of several models to several datasets is supported, see for
+  example
+  [`plot.mmkin`](https://pkgdown.jrwb.de/mkin/reference/plot.mmkin.html).
+* If a C compiler is installed, the kinetic models are compiled from automatically
+  generated C code, see
+  [vignette `compiled_models`](https://pkgdown.jrwb.de/mkin/articles/web_only/compiled_models.html).
+  The autogeneration of C code was
+  inspired by the [`ccSolve`](https://github.com/karlines/ccSolve) package. Thanks
+  to Karline Soetaert for her work on that.
+* Even if no compiler is installed, many degradation models still give
+  [very good performance](https://pkgdown.jrwb.de/mkin/articles/web_only/benchmarks.html),
+  as current versions of mkin also have [analytical solutions for some models
+  with one metabolite](https://jrwb.de/performance-improvements-mkin/), and if
+  SFO or SFORB are used for the parent compound, Eigenvalue based solutions of
+  the degradation model are available.
 
 ## GUI
 
@@ -111,8 +126,8 @@ for installation instructions and a manual.
 
 ## News
 
-There is a ChangeLog, for the latest [CRAN release](https://cran.r-project.org/package=mkin/news/news.html)
-and one for the [github master branch](https://github.com/jranke/mkin/blob/master/NEWS.md).
+There is a list of changes for the latest [CRAN release](https://cran.r-project.org/package=mkin/news/news.html)
+and one for each github branch, e.g. [the main branch](https://github.com/jranke/mkin/blob/master/NEWS.md).
 
 ## Credits and historical remarks
 
@@ -166,6 +181,28 @@ Finally, there is
 [KineticEval](https://github.com/zhenglei-gao/KineticEval), which contains
 a further development of the scripts used for KinGUII, so the different tools
 will hopefully be able to learn from each other in the future as well.
+
+Thanks to René Lehmann, formerly working at the Umweltbundesamt, for the nice
+cooperation cooperation on parameter transformations, especially the isometric
+log-ratio transformation that is now used for formation fractions in case
+there are more than two transformation targets.
+
+Many inspirations for improvements of mkin resulted from doing kinetic evaluations
+of degradation data for my clients while working at Harlan Laboratories and
+at Eurofins Regulatory AG, and now as an independent consultant.
+
+Funding was received from the Umweltbundesamt in the course of the projects
+
+- Grant Number 112407 (Testing and validation of modelling software as an alternative
+to ModelMaker 4.0, 2014-2015)
+- Project Number 56703 (Optimization of gmkin for routine use in the Umweltbundesamt, 2015)
+- Project Number 112407 (Testing the feasibility of using an error model
+  according to Rocke and Lorenzato for more realistic parameter estimates in
+  the kinetic evaluation of degradation data, 2018-2019)
+- Project Number 120667 (Development of objective criteria for the evaluation
+  of the visual fit in the kinetic evaluation of degradation data, 2019-2020)
+- Project 146839 (Checking the feasibility of using mixed-effects models for
+  the derivation of kinetic modelling parameters from degradation studies, 2020-2021)
 
 ## References
 
