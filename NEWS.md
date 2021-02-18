@@ -12,15 +12,15 @@
 
 - 'saem': generic function to fit saemix models using 'saemix_model' and 'saemix_data', with a generator 'saem.mmkin', summary and plot methods
 
-# mkin 1.0.3
+# mkin 1.0.3 (2021-02-15)
 
 - Review and update README, the 'Introduction to mkin' vignette and some of the help pages
 
-# mkin 1.0.2
+# mkin 1.0.2 (Unreleased)
 
 - 'mkinfit': Keep model names stored in 'mkinmod' objects, avoiding their loss in 'gmkin'
 
-# mkin 1.0.1
+# mkin 1.0.1 (2021-02-10)
 
 - 'confint.mmkin', 'nlme.mmkin', 'transform_odeparms': Fix example code in dontrun sections that failed with current defaults
 
@@ -32,7 +32,7 @@
 
 - Increase test tolerance for some parameter comparisons that also proved to be platform dependent
 
-# mkin 1.0.0
+# mkin 1.0.0 (2021-02-03)
 
 ## General
 
