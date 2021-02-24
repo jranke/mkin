@@ -1,4 +1,4 @@
-# mkin 1.0.3.9000
+# mkin 1.0.4.9000
 
 ## General
 
@@ -11,6 +11,12 @@
 - 'saemix_model' and 'saemix_data': Helper functions to set up nonlinear mixed-effects models for mmkin row objects
 
 - 'saem': generic function to fit saemix models using 'saemix_model' and 'saemix_data', with a generator 'saem.mmkin', summary and plot methods
+
+# mkin 1.0.4 (Unreleased)
+
+- 'plot.mixed.mmkin': Reset graphical parameters on exit
+
+- All plotting functions setting graphical parameters: Use on.exit() for resetting graphical parameters
 
 # mkin 1.0.3 (2021-02-15)
 
