@@ -161,6 +161,7 @@ plot.mkinfit <- function(x, fit = x,
   if (do_layout) {
     # Layout should be restored afterwards
     oldpar <- par(no.readonly = TRUE)
+    on.exit(par(oldpar, no.readonly = TRUE))
 
     # If the observed variables are shown separately, or if requested, do row layout
     if (sep_obs | row_layout) {
@@ -287,7 +288,6 @@ plot.mkinfit <- function(x, fit = x,
         legend = FALSE, frame = frame)
     }
   }
-  if (do_layout) par(oldpar, no.readonly = TRUE)
 }
 
 #' @rdname plot.mkinfit

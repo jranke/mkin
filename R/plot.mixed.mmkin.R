@@ -167,6 +167,7 @@ plot.mixed.mmkin <- function(x,
 
   # Start of graphical section
   oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar, no.readonly = TRUE))
 
   n_plot_rows = length(obs_vars)
   n_plots = n_plot_rows * 2
