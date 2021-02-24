@@ -1,4 +1,4 @@
-# mkin 1.0.4 (2021-02-24)
+# mkin 1.0.4 (Unreleased)
 
 - 'plot.mixed.mmkin': Reset graphical parameters on exit
 
