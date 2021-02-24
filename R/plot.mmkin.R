@@ -65,6 +65,7 @@ plot.mmkin <- function(x, main = "auto", legends = 1,
 {
 
   oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar, no.readonly = TRUE))
 
   n.m <- nrow(x)
   n.d <- ncol(x)
@@ -153,6 +154,4 @@ plot.mmkin <- function(x, main = "auto", legends = 1,
     }
     mtext(paste(fit_name, "residuals"), cex = cex, line = 0.4)
   }
-
-  par(oldpar, no.readonly = TRUE)
 }

@@ -32,7 +32,8 @@ mkinparplot <- function(object) {
               fractions.optim = length(fractions.optim))
   n.plot <- n.plot[n.plot > 0]
 
-  oldpars <- par(no.readonly = TRUE)
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar, no.readonly = TRUE))
   layout(matrix(1:length(n.plot), ncol = 1), heights = n.plot + 1)
 
   s <- summary(object)
@@ -71,5 +72,4 @@ mkinparplot <- function(object) {
 	   as.numeric(values.upper.nonInf), parname_index,
 	   code = 3, angle = 90, length = 0.05))
   }
-  par(oldpars)
 }
