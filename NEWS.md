@@ -1,3 +1,9 @@
+# mkin 1.0.4 (2021-02-24)
+
+- 'plot.mixed.mmkin': Reset graphical parameters on exit
+
+- All plotting functions setting graphical parameters: Use on.exit() for resetting graphical parameters
+
 # mkin 1.0.3 (2021-02-15)
 
 - Review and update README, the 'Introduction to mkin' vignette and some of the help pages
