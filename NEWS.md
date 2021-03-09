@@ -12,6 +12,8 @@
 
 - 'saem': generic function to fit saemix models using 'saemix_model' and 'saemix_data', with a generator 'saem.mmkin', summary and plot methods
 
+- 'mean_degparms': New argument 'test_log_parms' that makes the function only consider log-transformed parameters where the untransformed parameters pass the t-test for a certain confidence level. This can be used to check more plausible parameters for 'saem'
+
 # mkin 1.0.4 (Unreleased)
 
 - 'plot.mixed.mmkin': Reset graphical parameters on exit

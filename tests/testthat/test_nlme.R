@@ -1,4 +1,4 @@
-context("Nonlinear mixed-effects models")
+context("Nonlinear mixed-effects models with nlme")
 
 library(nlme)
 

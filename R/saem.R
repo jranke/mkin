@@ -24,8 +24,16 @@ utils::globalVariables(c("predicted", "std"))
 #'   SFO or DFOP is used for the parent and there is either no metabolite or one.
 #' @param degparms_start Parameter values given as a named numeric vector will
 #'   be used to override the starting values obtained from the 'mmkin' object.
+#' @param test_log_parms If TRUE, an attempt is made to use more robust starting
+#'   values for population parameters fitted as log parameters in mkin (like
+#'   rate constants) by only considering rate constants that pass the t-test
+#'   when calculating mean degradation parameters using [mean_degparms].
+#' @param conf.level Possibility to adjust the required confidence level
+#'   for parameter that are tested if requested by 'test_log_parms'.
 #' @param solution_type Possibility to specify the solution type in case the
 #'   automatic choice is not desired
+#' @param fail_with_errors Should a failure to compute standard errors
+#'   from the inverse of the Fisher Information Matrix be a failure?
 #' @param quiet Should we suppress the messages saemix prints at the beginning
 #'   and the end of the optimisation process?
 #' @param control Passed to [saemix::saemix]
@@ -51,7 +59,7 @@ utils::globalVariables(c("predicted", "std"))
 #' # The returned saem.mmkin object contains an SaemixObject, therefore we can use
 #' # functions from saemix
 #' library(saemix)
-#' compare.saemix(list(f_saem_sfo$so, f_saem_fomc$so, f_saem_dfop$so))
+#' compare.saemix(f_saem_sfo$so, f_saem_fomc$so, f_saem_dfop$so)
 #' plot(f_saem_fomc$so, plot.type = "convergence")
 #' plot(f_saem_fomc$so, plot.type = "individual.fit")
 #' plot(f_saem_fomc$so, plot.type = "npde")
@@ -59,7 +67,7 @@ utils::globalVariables(c("predicted", "std"))
 #'
 #' f_mmkin_parent_tc <- update(f_mmkin_parent, error_model = "tc")
 #' f_saem_fomc_tc <- saem(f_mmkin_parent_tc["FOMC", ])
-#' compare.saemix(list(f_saem_fomc$so, f_saem_fomc_tc$so))
+#' compare.saemix(f_saem_fomc$so, f_saem_fomc_tc$so)
 #'
 #' sfo_sfo <- mkinmod(parent = mkinsub("SFO", "A1"),
 #'   A1 = mkinsub("SFO"))
@@ -104,19 +112,32 @@ saem <- function(object, ...) UseMethod("saem")
 saem.mmkin <- function(object,
   transformations = c("mkin", "saemix"),
   degparms_start = numeric(),
+  test_log_parms = FALSE,
+  conf.level = 0.6,
   solution_type = "auto",
   control = list(displayProgress = FALSE, print = FALSE,
     save = FALSE, save.graphs = FALSE),
+  fail_with_errors = TRUE,
   verbose = FALSE, quiet = FALSE, ...)
 {
   transformations <- match.arg(transformations)
   m_saemix <- saemix_model(object, verbose = verbose,
-    degparms_start = degparms_start, solution_type = solution_type,
+    degparms_start = degparms_start,
+    test_log_parms = test_log_parms, conf.level = conf.level,
+    solution_type = solution_type,
     transformations = transformations, ...)
   d_saemix <- saemix_data(object, verbose = verbose)
 
   fit_time <- system.time({
     utils::capture.output(f_saemix <- saemix::saemix(m_saemix, d_saemix, control), split = !quiet)
+    FIM_failed <- NULL
+    if (any(is.na(f_saemix@results@se.fixed))) FIM_failed <- c(FIM_failed, "fixed effects")
+    if (any(is.na(c(f_saemix@results@se.omega, f_saemix@results@se.respar)))) {
+      FIM_failed <- c(FIM_failed, "random effects and residual error parameters")
+    }
+    if (!is.null(FIM_failed) & fail_with_errors) {
+      stop("Could not invert FIM for ", paste(FIM_failed, collapse = " and "))
+    }
   })
 
   transparms_optim <- f_saemix@results@fixed.effects
@@ -203,13 +224,13 @@ print.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3), ...) {
 #' @return An [saemix::SaemixModel] object.
 #' @export
 saemix_model <- function(object, solution_type = "auto", transformations = c("mkin", "saemix"),
-  degparms_start = numeric(), verbose = FALSE, ...)
+  degparms_start = numeric(), test_log_parms = FALSE, verbose = FALSE, ...)
 {
   if (nrow(object) > 1) stop("Only row objects allowed")
 
   mkin_model <- object[[1]]$mkinmod
 
-  degparms_optim <-  mean_degparms(object)
+  degparms_optim <-  mean_degparms(object, test_log_parms = test_log_parms)
   if (transformations == "saemix") {
     degparms_optim <- backtransform_odeparms(degparms_optim,
       object[[1]]$mkinmod,

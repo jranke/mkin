@@ -106,6 +106,7 @@ const <- function(value) 2
 set.seed(123456)
 SFO <- mkinmod(parent = mkinsub("SFO"))
 k_parent = rlnorm(n, log(0.03), log_sd)
+set.seed(123456)
 ds_sfo <- lapply(1:n, function(i) {
   ds_mean <- mkinpredict(SFO, c(k_parent = k_parent[i]),
     c(parent = 100), sampling_times)
@@ -118,6 +119,7 @@ fomc_pop <- list(parent_0 = 100, alpha = 2, beta = 8)
 fomc_parms <- as.matrix(data.frame(
     alpha = rlnorm(n, log(fomc_pop$alpha), 0.4),
     beta = rlnorm(n, log(fomc_pop$beta), 0.2)))
+set.seed(123456)
 ds_fomc <- lapply(1:3, function(i) {
   ds_mean <- mkinpredict(FOMC, fomc_parms[i, ],
     c(parent = 100), sampling_times)
@@ -131,6 +133,7 @@ dfop_parms <- as.matrix(data.frame(
   k1 = rlnorm(n, log(dfop_pop$k1), log_sd),
   k2 = rlnorm(n, log(dfop_pop$k2), log_sd),
   g = plogis(rnorm(n, qlogis(dfop_pop$g), log_sd))))
+set.seed(123456)
 ds_dfop <- lapply(1:n, function(i) {
   ds_mean <- mkinpredict(DFOP, dfop_parms[i, ],
     c(parent = dfop_pop$parent_0), sampling_times)
@@ -144,6 +147,7 @@ hs_parms <- as.matrix(data.frame(
   k1 = rlnorm(n, log(hs_pop$k1), log_sd),
   k2 = rlnorm(n, log(hs_pop$k2), log_sd),
   tb = rlnorm(n, log(hs_pop$tb), 0.1)))
+set.seed(123456)
 ds_hs <- lapply(1:10, function(i) {
   ds_mean <- mkinpredict(HS, hs_parms[i, ],
     c(parent = hs_pop$parent_0), sampling_times)
@@ -171,6 +175,7 @@ ds_biphasic_mean <- lapply(1:n_biphasic,
       c(parent = 100, m1 = 0), sampling_times)
   }
 )
+set.seed(123456)
 ds_biphasic <- lapply(ds_biphasic_mean, function(ds) {
   add_err(ds,
     sdfunc = function(value) sqrt(err_1$const^2 + value^2 * err_1$prop^2),
@@ -193,8 +198,18 @@ nlme_biphasic <- nlme(mmkin_biphasic)
 if (saemix_available) {
   sfo_saem_1 <- saem(mmkin_sfo_1, quiet = TRUE, transformations = "saemix")
 
-  dfop_saemix_1 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "mkin")
-  dfop_saemix_2 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "saemix")
+  # With default control parameters, we do not get good results with mkin
+  # transformations here
+  dfop_saemix_1 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "mkin",
+   control = list(
+     displayProgress = FALSE, print = FALSE, save = FALSE, save.graphs = FALSE,
+     rw.init = 1, nbiter.saemix = c(600, 100))
+  )
+  dfop_saemix_2 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "saemix",
+   control = list(
+     displayProgress = FALSE, print = FALSE, save = FALSE, save.graphs = FALSE,
+     rw.init = 0.5, nbiter.saemix = c(600, 100))
+  )
 
   saem_biphasic_m <- saem(mmkin_biphasic, transformations = "mkin", quiet = TRUE)
   saem_biphasic_s <- saem(mmkin_biphasic, transformations = "saemix", quiet = TRUE)

@@ -8,7 +8,7 @@
 \usage{
 nlme_function(object)
 
-mean_degparms(object, random = FALSE)
+mean_degparms(object, random = FALSE, test_log_parms = FALSE, conf.level = 0.6)
 
 nlme_data(object)
 }
@@ -16,6 +16,13 @@ nlme_data(object)
 \item{object}{An mmkin row object containing several fits of the same model to different datasets}
 
 \item{random}{Should a list with fixed and random effects be returned?}
+
+\item{test_log_parms}{If TRUE, log parameters are only considered in
+the mean calculations if their untransformed counterparts (most likely
+rate constants) pass the t-test for significant difference from zero.}
+
+\item{conf.level}{Possibility to adjust the required confidence level
+for parameter that are tested if requested by 'test_log_parms'.}
 }
 \value{
 A function that can be used with nlme
@@ -60,7 +67,7 @@ grouped_data <- nlme_data(f)
 nlme_f <- nlme_function(f)
 # These assignments are necessary for these objects to be
 # visible to nlme and augPred when evaluation is done by
-# pkgdown to generated the html docs.
+# pkgdown to generate the html docs.
 assign("nlme_f", nlme_f, globalenv())
 assign("grouped_data", grouped_data, globalenv())
 

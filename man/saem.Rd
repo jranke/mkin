@@ -14,9 +14,12 @@ saem(object, ...)
   object,
   transformations = c("mkin", "saemix"),
   degparms_start = numeric(),
+  test_log_parms = FALSE,
+  conf.level = 0.6,
   solution_type = "auto",
   control = list(displayProgress = FALSE, print = FALSE, save = FALSE, save.graphs =
     FALSE),
+  fail_with_errors = TRUE,
   verbose = FALSE,
   quiet = FALSE,
   ...
@@ -29,6 +32,7 @@ saemix_model(
   solution_type = "auto",
   transformations = c("mkin", "saemix"),
   degparms_start = numeric(),
+  test_log_parms = FALSE,
   verbose = FALSE,
   ...
 )
@@ -50,10 +54,21 @@ SFO or DFOP is used for the parent and there is either no metabolite or one.}
 \item{degparms_start}{Parameter values given as a named numeric vector will
 be used to override the starting values obtained from the 'mmkin' object.}
 
+\item{test_log_parms}{If TRUE, an attempt is made to use more robust starting
+values for population parameters fitted as log parameters in mkin (like
+rate constants) by only considering rate constants that pass the t-test
+when calculating mean degradation parameters using \link{mean_degparms}.}
+
+\item{conf.level}{Possibility to adjust the required confidence level
+for parameter that are tested if requested by 'test_log_parms'.}
+
 \item{solution_type}{Possibility to specify the solution type in case the
 automatic choice is not desired}
 
 \item{control}{Passed to \link[saemix:saemix]{saemix::saemix}}
+
+\item{fail_with_errors}{Should a failure to compute standard errors
+from the inverse of the Fisher Information Matrix be a failure?}
 
 \item{verbose}{Should we print information about created objects of
 type \link[saemix:SaemixModel-class]{saemix::SaemixModel} and \link[saemix:SaemixData-class]{saemix::SaemixData}?}
@@ -104,7 +119,7 @@ f_saem_dfop <- saem(f_mmkin_parent["DFOP", ])
 # The returned saem.mmkin object contains an SaemixObject, therefore we can use
 # functions from saemix
 library(saemix)
-compare.saemix(list(f_saem_sfo$so, f_saem_fomc$so, f_saem_dfop$so))
+compare.saemix(f_saem_sfo$so, f_saem_fomc$so, f_saem_dfop$so)
 plot(f_saem_fomc$so, plot.type = "convergence")
 plot(f_saem_fomc$so, plot.type = "individual.fit")
 plot(f_saem_fomc$so, plot.type = "npde")
@@ -112,7 +127,7 @@ plot(f_saem_fomc$so, plot.type = "vpc")
 
 f_mmkin_parent_tc <- update(f_mmkin_parent, error_model = "tc")
 f_saem_fomc_tc <- saem(f_mmkin_parent_tc["FOMC", ])
-compare.saemix(list(f_saem_fomc$so, f_saem_fomc_tc$so))
+compare.saemix(f_saem_fomc$so, f_saem_fomc_tc$so)
 
 sfo_sfo <- mkinmod(parent = mkinsub("SFO", "A1"),
   A1 = mkinsub("SFO"))
