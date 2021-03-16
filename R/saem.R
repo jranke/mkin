@@ -36,7 +36,9 @@ utils::globalVariables(c("predicted", "std"))
 #'   from the inverse of the Fisher Information Matrix be a failure?
 #' @param quiet Should we suppress the messages saemix prints at the beginning
 #'   and the end of the optimisation process?
-#' @param control Passed to [saemix::saemix]
+#' @param nbiter.saemix Convenience option to increase the number of
+#'   iterations
+#' @param control Passed to [saemix::saemix].
 #' @param \dots Further parameters passed to [saemix::saemixModel].
 #' @return An S3 object of class 'saem.mmkin', containing the fitted
 #'   [saemix::SaemixObject] as a list component named 'so'. The
@@ -115,7 +117,9 @@ saem.mmkin <- function(object,
   test_log_parms = FALSE,
   conf.level = 0.6,
   solution_type = "auto",
+  nbiter.saemix = c(300, 100),
   control = list(displayProgress = FALSE, print = FALSE,
+    nbiter.saemix = nbiter.saemix,
     save = FALSE, save.graphs = FALSE),
   fail_with_errors = TRUE,
   verbose = FALSE, quiet = FALSE, ...)
