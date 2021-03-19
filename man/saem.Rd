@@ -17,8 +17,9 @@ saem(object, ...)
   test_log_parms = FALSE,
   conf.level = 0.6,
   solution_type = "auto",
-  control = list(displayProgress = FALSE, print = FALSE, save = FALSE, save.graphs =
-    FALSE),
+  nbiter.saemix = c(300, 100),
+  control = list(displayProgress = FALSE, print = FALSE, nbiter.saemix = nbiter.saemix,
+    save = FALSE, save.graphs = FALSE),
   fail_with_errors = TRUE,
   verbose = FALSE,
   quiet = FALSE,
@@ -65,7 +66,10 @@ for parameter that are tested if requested by 'test_log_parms'.}
 \item{solution_type}{Possibility to specify the solution type in case the
 automatic choice is not desired}
 
-\item{control}{Passed to \link[saemix:saemix]{saemix::saemix}}
+\item{nbiter.saemix}{Convenience option to increase the number of
+iterations}
+
+\item{control}{Passed to \link[saemix:saemix]{saemix::saemix}.}
 
 \item{fail_with_errors}{Should a failure to compute standard errors
 from the inverse of the Fisher Information Matrix be a failure?}

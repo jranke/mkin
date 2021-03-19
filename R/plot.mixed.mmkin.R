@@ -10,6 +10,10 @@ utils::globalVariables("ds")
 #'   `resplot = "time"`.
 #' @param pred_over Named list of alternative predictions as obtained
 #'   from [mkinpredict] with a compatible [mkinmod].
+#' @param test_log_parms Passed to [mean_degparms] in the case of an
+#'   [mixed.mmkin] object
+#' @param conf.level Passed to [mean_degparms] in the case of an
+#'   [mixed.mmkin] object
 #' @param rel.height.legend The relative height of the legend shown on top
 #' @param rel.height.bottom The relative height of the bottom plot row
 #' @param ymax Vector of maximum y axis values
@@ -58,6 +62,8 @@ plot.mixed.mmkin <- function(x,
   xlim = range(x$data$time),
   resplot = c("predicted", "time"),
   pred_over = NULL,
+  test_log_parms = FALSE,
+  conf.level = 0.6,
   ymax = "auto", maxabs = "auto",
   ncol.legend = ifelse(length(i) <= 3, length(i) + 1, ifelse(length(i) <= 8, 3, 4)),
   nrow.legend = ceiling((length(i) + 1) / ncol.legend),
@@ -76,7 +82,7 @@ plot.mixed.mmkin <- function(x,
   backtransform = TRUE
 
   if (identical(class(x), "mixed.mmkin")) {
-    degparms_pop <- mean_degparms(x$mmkin)
+    degparms_pop <- mean_degparms(x$mmkin, test_log_parms = test_log_parms, conf.level = conf.level)
 
     degparms_tmp <- parms(x$mmkin, transformed = TRUE)
     degparms_i <- as.data.frame(t(degparms_tmp[setdiff(rownames(degparms_tmp), names(fit_1$errparms)), ]))
