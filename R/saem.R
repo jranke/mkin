@@ -164,7 +164,7 @@ saem.mmkin <- function(object,
     xidep = return_data[c("time", "name")])
 
   return_data <- transform(return_data,
-    residual = predicted - value,
+    residual = value - predicted,
     std = sigma_twocomp(predicted,
       f_saemix@results@respar[1], f_saemix@results@respar[2]))
   return_data <- transform(return_data,
