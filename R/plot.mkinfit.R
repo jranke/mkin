@@ -278,7 +278,7 @@ plot.mkinfit <- function(x, fit = x,
     if (show_residuals) {
       mkinresplot(fit, obs_vars = row_obs_vars, standardized = standardized,
         pch_obs = pch_obs[row_obs_vars], col_obs = col_obs[row_obs_vars],
-        legend = FALSE, frame = frame, xlab = xlab)
+        legend = FALSE, frame = frame, xlab = xlab, xlim = xlim)
     }
 
     # Show error model plot if requested

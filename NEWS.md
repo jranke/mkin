@@ -1,8 +1,8 @@
 # mkin 1.0.4 (Unreleased)
 
-- 'plot.mixed.mmkin': Reset graphical parameters on exit
-
 - All plotting functions setting graphical parameters: Use on.exit() for resetting graphical parameters
+
+- 'plot.mkinfit': Use xlab and xlim for the residual plot if show_residuals is TRUE
 
 # mkin 1.0.3 (2021-02-15)
 
