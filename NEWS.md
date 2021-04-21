@@ -16,11 +16,13 @@
 
 - 'plot.mixed.mmkin': Gains arguments 'test_log_parms' and 'conf.level'
 
-# mkin 1.0.4 (Unreleased)
-
-- 'plot.mixed.mmkin': Reset graphical parameters on exit
+# mkin 1.0.4 (2021-04-20)
 
 - All plotting functions setting graphical parameters: Use on.exit() for resetting graphical parameters
+
+- 'plot.mkinfit': Use xlab and xlim for the residual plot if show_residuals is TRUE
+
+- 'mmkin': Use cores = 1 per default on Windows to make it easier for first time users
 
 # mkin 1.0.3 (2021-02-15)
 

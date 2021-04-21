@@ -79,7 +79,7 @@ method of Venzon and Moolgavkar (1988)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
       </span>
     </div>
 
@@ -285,13 +285,13 @@ Profile-Likelihood Based Confidence Intervals, Applied Statistics, 37,
 <span class='va'>f_d_1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='va'>SFO_SFO</span>, <span class='fu'><a href='https://rdrr.io/r/base/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>FOCUS_2006_D</span>, <span class='va'>value</span> <span class='op'>!=</span> <span class='fl'>0</span><span class='op'>)</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span><span class='op'>(</span><span class='va'>ci_profile</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span><span class='op'>(</span><span class='va'>f_d_1</span>, method <span class='op'>=</span> <span class='st'>"profile"</span>, cores <span class='op'>=</span> <span class='fl'>1</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   4.255   1.029   3.937 </div><div class='input'><span class='co'># Using more cores does not save much time here, as parent_0 takes up most of the time</span>
+#&gt;   3.871   0.000   3.871 </div><div class='input'><span class='co'># Using more cores does not save much time here, as parent_0 takes up most of the time</span>
 <span class='co'># If we additionally exclude parent_0 (the confidence of which is often of</span>
 <span class='co'># minor interest), we get a nice performance improvement if we use at least 4 cores</span>
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span><span class='op'>(</span><span class='va'>ci_profile_no_parent_0</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/confint.html'>confint</a></span><span class='op'>(</span><span class='va'>f_d_1</span>, method <span class='op'>=</span> <span class='st'>"profile"</span>,
   <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"k_parent_sink"</span>, <span class='st'>"k_parent_m1"</span>, <span class='st'>"k_m1_sink"</span>, <span class='st'>"sigma"</span><span class='op'>)</span>, cores <span class='op'>=</span> <span class='va'>n_cores</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Profiling the likelihood</span></div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   1.469   0.092   0.911 </div><div class='input'><span class='va'>ci_profile</span>
+#&gt;   1.484   0.116   0.923 </div><div class='input'><span class='va'>ci_profile</span>
 </div><div class='output co'>#&gt;                       2.5%        97.5%
 #&gt; parent_0      96.456003640 1.027703e+02
 #&gt; k_parent_sink  0.040762501 5.549764e-02

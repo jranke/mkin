@@ -13,7 +13,8 @@
 #'   is only used when the \code{cluster} argument is \code{NULL}. On Windows
 #'   machines, cores > 1 is not supported, you need to use the \code{cluster}
 #'   argument to use multiple logical processors. Per default, all cores
-#'   detected by [parallel::detectCores()] are used.
+#'   detected by [parallel::detectCores()] are used, except on Windows where
+#'   the default is 1.
 #' @param cluster A cluster as returned by \code{\link{makeCluster}} to be used
 #'   for parallel execution.
 #' @param \dots Further arguments that will be passed to \code{\link{mkinfit}}.
@@ -75,7 +76,7 @@
 #'
 #' @export mmkin
 mmkin <- function(models = c("SFO", "FOMC", "DFOP"), datasets,
-  cores = parallel::detectCores(), cluster = NULL, ...)
+  cores = if (Sys.info()["sysname"] == "Windows") 1 else parallel::detectCores(), cluster = NULL, ...)
 {
   call <- match.call()
   parent_models_available = c("SFO", "FOMC", "DFOP", "HS", "SFORB", "IORE", "logistic")
