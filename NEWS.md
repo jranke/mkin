@@ -4,6 +4,8 @@
 
 - 'plot.mkinfit': Use xlab and xlim for the residual plot if show_residuals is TRUE
 
+- 'mmkin': Use cores = 1 per default on Windows to make it easier for first time users
+
 # mkin 1.0.3 (2021-02-15)
 
 - Review and update README, the 'Introduction to mkin' vignette and some of the help pages
