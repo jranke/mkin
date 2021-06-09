@@ -13,7 +13,7 @@
     paste(el, 1, sep = "~")))),
   random = pdDiag(fixed),
   groups,
-  start = mean_degparms(model, random = TRUE),
+  start = mean_degparms(model, random = TRUE, test_log_parms = TRUE),
   correlation = NULL,
   weights = NULL,
   subset,

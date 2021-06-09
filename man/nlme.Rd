@@ -2,35 +2,18 @@
 % Please edit documentation in R/nlme.R
 \name{nlme_function}
 \alias{nlme_function}
-\alias{mean_degparms}
 \alias{nlme_data}
 \title{Helper functions to create nlme models from mmkin row objects}
 \usage{
 nlme_function(object)
 
-mean_degparms(object, random = FALSE, test_log_parms = FALSE, conf.level = 0.6)
-
 nlme_data(object)
 }
 \arguments{
 \item{object}{An mmkin row object containing several fits of the same model to different datasets}
-
-\item{random}{Should a list with fixed and random effects be returned?}
-
-\item{test_log_parms}{If TRUE, log parameters are only considered in
-the mean calculations if their untransformed counterparts (most likely
-rate constants) pass the t-test for significant difference from zero.}
-
-\item{conf.level}{Possibility to adjust the required confidence level
-for parameter that are tested if requested by 'test_log_parms'.}
 }
 \value{
 A function that can be used with nlme
-
-If random is FALSE (default), a named vector containing mean values
-of the fitted degradation model parameters. If random is TRUE, a list with
-fixed and random effects, in the format required by the start argument of
-nlme for the case of a single grouping variable ds.
 
 A \code{\link{groupedData}} object
 }

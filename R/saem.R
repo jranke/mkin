@@ -13,6 +13,7 @@ utils::globalVariables(c("predicted", "std"))
 #' psi0 of [saemix::saemixModel()] are the mean values of the parameters found
 #' using [mmkin].
 #'
+#' @importFrom utils packageVersion
 #' @param object An [mmkin] row object containing several fits of the same
 #'   [mkinmod] model to different datasets
 #' @param verbose Should we print information about created objects of
@@ -230,6 +231,11 @@ print.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3), ...) {
 saemix_model <- function(object, solution_type = "auto", transformations = c("mkin", "saemix"),
   degparms_start = numeric(), test_log_parms = FALSE, verbose = FALSE, ...)
 {
+  if (packageVersion("saemix") < "3.1.9000") {
+    stop("To use the interface to saemix, you need to install a development version\n",
+      "preferably https://github.com/jranke/saemixextension@warp_combined")
+  }
+
   if (nrow(object) > 1) stop("Only row objects allowed")
 
   mkin_model <- object[[1]]$mkinmod

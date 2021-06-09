@@ -40,11 +40,16 @@ utils::globalVariables("ds")
 #'
 #' # For this fit we need to increase pnlsMaxiter, and we increase the
 #' # tolerance in order to speed up the fit for this example evaluation
+#' # It still takes 20 seconds to run
 #' f_nlme <- nlme(f, control = list(pnlsMaxIter = 120, tolerance = 1e-3))
 #' plot(f_nlme)
 #'
 #' f_saem <- saem(f, transformations = "saemix")
 #' plot(f_saem)
+#'
+#' f_obs <- mmkin(list("DFOP-SFO" = dfop_sfo), ds, quiet = TRUE, error_model = "obs")
+#' f_nlmix <- nlmix(f_obs)
+#' plot(f_nlmix)
 #'
 #' # We can overlay the two variants if we generate predictions
 #' pred_nlme <- mkinpredict(dfop_sfo,
@@ -107,6 +112,18 @@ plot.mixed.mmkin <- function(x,
     residuals <- x$data[[residual_type]]
     degparms_pop <- x$so@results@fixed.effects
     names(degparms_pop) <- degparms_i_names
+  }
+
+  if (inherits(x, "nlmixr.mmkin")) {
+    eta_i <- random.effects(x$nm)[-1]
+    names(eta_i) <- gsub("^eta.", "", names(eta_i))
+    degparms_i <- eta_i
+    degparms_pop <- x$nm$theta
+    for (parm_name in names(degparms_i)) {
+      degparms_i[parm_name] <- eta_i[parm_name] + degparms_pop[parm_name]
+    }
+    residual_type = ifelse(standardized, "standardized", "residual")
+    residuals <- x$data[[residual_type]]
   }
 
   degparms_fixed <- fit_1$fixed$value

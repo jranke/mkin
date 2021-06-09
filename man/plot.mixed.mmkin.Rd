@@ -99,11 +99,16 @@ plot(f[, 3:4], standardized = TRUE)
 
 # For this fit we need to increase pnlsMaxiter, and we increase the
 # tolerance in order to speed up the fit for this example evaluation
+# It still takes 20 seconds to run
 f_nlme <- nlme(f, control = list(pnlsMaxIter = 120, tolerance = 1e-3))
 plot(f_nlme)
 
 f_saem <- saem(f, transformations = "saemix")
 plot(f_saem)
+
+f_obs <- mmkin(list("DFOP-SFO" = dfop_sfo), ds, quiet = TRUE, error_model = "obs")
+f_nlmix <- nlmix(f_obs)
+plot(f_nlmix)
 
 # We can overlay the two variants if we generate predictions
 pred_nlme <- mkinpredict(dfop_sfo,
