@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.0.4.9000</span>
+        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.0.5</span>
       </span>
     </div>
 
@@ -157,6 +157,8 @@
   xlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/range.html'>range</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>$</span><span class='va'>data</span><span class='op'>$</span><span class='va'>time</span><span class='op'>)</span>,
   resplot <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"predicted"</span>, <span class='st'>"time"</span><span class='op'>)</span>,
   pred_over <span class='op'>=</span> <span class='cn'>NULL</span>,
+  test_log_parms <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  conf.level <span class='op'>=</span> <span class='fl'>0.6</span>,
   ymax <span class='op'>=</span> <span class='st'>"auto"</span>,
   maxabs <span class='op'>=</span> <span class='st'>"auto"</span>,
   ncol.legend <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>i</span><span class='op'>)</span> <span class='op'>&lt;=</span> <span class='fl'>3</span>, <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>i</span><span class='op'>)</span> <span class='op'>+</span> <span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>i</span><span class='op'>)</span> <span class='op'>&lt;=</span> <span class='fl'>8</span>, <span class='fl'>3</span>, <span class='fl'>4</span><span class='op'>)</span><span class='op'>)</span>,
@@ -210,6 +212,16 @@ predicted values?</p></td>
       <th>pred_over</th>
       <td><p>Named list of alternative predictions as obtained
 from <a href='mkinpredict.html'>mkinpredict</a> with a compatible <a href='mkinmod.html'>mkinmod</a>.</p></td>
+    </tr>
+    <tr>
+      <th>test_log_parms</th>
+      <td><p>Passed to <a href='mean_degparms.html'>mean_degparms</a> in the case of an
+<a href='mixed.html'>mixed.mmkin</a> object</p></td>
+    </tr>
+    <tr>
+      <th>conf.level</th>
+      <td><p>Passed to <a href='mean_degparms.html'>mean_degparms</a> in the case of an
+<a href='mixed.html'>mixed.mmkin</a> object</p></td>
     </tr>
     <tr>
       <th>ymax</th>
@@ -278,16 +290,21 @@ corresponding model prediction lines for the different datasets.</p></td>
 </div><div class='img'><img src='plot.mixed.mmkin-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># For this fit we need to increase pnlsMaxiter, and we increase the</span>
 <span class='co'># tolerance in order to speed up the fit for this example evaluation</span>
+<span class='co'># It still takes 20 seconds to run</span>
 <span class='va'>f_nlme</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f</span>, control <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>pnlsMaxIter <span class='op'>=</span> <span class='fl'>120</span>, tolerance <span class='op'>=</span> <span class='fl'>1e-3</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_nlme</span><span class='op'>)</span>
 </div><div class='img'><img src='plot.mixed.mmkin-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='va'>f_saem</span> <span class='op'>&lt;-</span> <span class='fu'><a href='saem.html'>saem</a></span><span class='op'>(</span><span class='va'>f</span>, transformations <span class='op'>=</span> <span class='st'>"saemix"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Running main SAEM algorithm
-#&gt; [1] "Tue Mar  9 17:34:35 2021"
+#&gt; [1] "Fri Jun 11 10:56:37 2021"
 #&gt; ....
 #&gt;     Minimisation finished
-#&gt; [1] "Tue Mar  9 17:34:42 2021"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_saem</span><span class='op'>)</span>
+#&gt; [1] "Fri Jun 11 10:56:44 2021"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_saem</span><span class='op'>)</span>
 </div><div class='img'><img src='plot.mixed.mmkin-3.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='va'>f_obs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"DFOP-SFO"</span> <span class='op'>=</span> <span class='va'>dfop_sfo</span><span class='op'>)</span>, <span class='va'>ds</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span>, error_model <span class='op'>=</span> <span class='st'>"obs"</span><span class='op'>)</span>
+<span class='va'>f_nlmix</span> <span class='op'>&lt;-</span> <span class='fu'>nlmix</span><span class='op'>(</span><span class='va'>f_obs</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in nlmix(f_obs): could not find function "nlmix"</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_nlmix</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in plot(f_nlmix): object 'f_nlmix' not found</span></div><div class='input'>
 <span class='co'># We can overlay the two variants if we generate predictions</span>
 <span class='va'>pred_nlme</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinpredict.html'>mkinpredict</a></span><span class='op'>(</span><span class='va'>dfop_sfo</span>,
   <span class='va'>f_nlme</span><span class='op'>$</span><span class='va'>bparms.optim</span><span class='op'>[</span><span class='op'>-</span><span class='fl'>1</span><span class='op'>]</span>,

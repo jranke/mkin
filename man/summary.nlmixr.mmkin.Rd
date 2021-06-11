@@ -2,12 +2,15 @@
 % Please edit documentation in R/summary.nlmixr.mmkin.R
 \name{summary.nlmixr.mmkin}
 \alias{summary.nlmixr.mmkin}
+\alias{print.summary.nlmixr.mmkin}
 \title{Summary method for class "nlmixr.mmkin"}
 \usage{
 \method{summary}{nlmixr.mmkin}(object, data = FALSE, verbose = FALSE, distimes = TRUE, ...)
+
+\method{print}{summary.nlmixr.mmkin}(x, digits = max(3, getOption("digits") - 3), verbose = x$verbose, ...)
 }
 \arguments{
-\item{object}{an object of class \link{nlmix.mmkin}}
+\item{object}{an object of class \link{nlmixr.mmkin}}
 
 \item{data}{logical, indicating whether the full data should be included in
 the summary.}
@@ -19,7 +22,7 @@ included.}
 
 \item{\dots}{optional arguments passed to methods like \code{print}.}
 
-\item{x}{an object of class \link{summary.nlmix.mmkin}}
+\item{x}{an object of class \link{summary.nlmixr.mmkin}}
 
 \item{digits}{Number of digits to use for printing}
 }
@@ -32,9 +35,7 @@ produced}
 \item{diffs}{The differential equations used in the degradation model}
 \item{use_of_ff}{Was maximum or minimum use made of formation fractions}
 \item{data}{The data}
-\item{confint_trans}{Transformed parameters as used in the optimisation, with confidence intervals}
 \item{confint_back}{Backtransformed parameters, with confidence intervals if available}
-\item{confint_errmod}{Error model parameters with confidence intervals}
 \item{ff}{The estimated formation fractions derived from the fitted
 model.}
 \item{distimes}{The DT50 and DT90 values for each observed variable.}
@@ -85,12 +86,14 @@ ds_syn_dfop_sfo <- lapply(ds_mean_dfop_sfo, function(ds) {
 \dontrun{
 # Evaluate using mmkin and nlmixr
 f_mmkin_dfop_sfo <- mmkin(list(dfop_sfo), ds_syn_dfop_sfo,
-  quiet = TRUE, error_model = "obs", cores = 5)
+  quiet = TRUE, error_model = "tc", cores = 5)
 f_saemix_dfop_sfo <- mkin::saem(f_mmkin_dfop_sfo)
 f_nlme_dfop_sfo <- mkin::nlme(f_mmkin_dfop_sfo)
 f_nlmixr_dfop_sfo_saem <- nlmixr(f_mmkin_dfop_sfo, est = "saem")
-#f_nlmixr_dfop_sfo_focei <- nlmixr(f_mmkin_dfop_sfo, est = "focei")
-summary(f_nlmixr_dfop_sfo, data = TRUE)
+# The following takes a very long time but gives
+f_nlmixr_dfop_sfo_focei <- nlmixr(f_mmkin_dfop_sfo, est = "focei")
+AIC(f_nlmixr_dfop_sfo_saem$nm, f_nlmixr_dfop_sfo_focei$nm)
+summary(f_nlmixr_dfop_sfo_sfo, data = TRUE)
 }
 
 }

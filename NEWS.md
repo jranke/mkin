@@ -1,4 +1,4 @@
-# mkin 1.0.5
+# mkin 1.0.5 (unreleased)
 
 ## Mixed-effects models
 

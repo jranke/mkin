@@ -4,6 +4,7 @@
 #'   of the fitted degradation model parameters. If random is TRUE, a list with
 #'   fixed and random effects, in the format required by the start argument of
 #'   nlme for the case of a single grouping variable ds.
+#' @param object An mmkin row object containing several fits of the same model to different datasets
 #' @param random Should a list with fixed and random effects be returned?
 #' @param test_log_parms If TRUE, log parameters are only considered in
 #'   the mean calculations if their untransformed counterparts (most likely
@@ -51,7 +52,7 @@ mean_degparms <- function(object, random = FALSE, test_log_parms = FALSE, conf.l
 
     # For nlmixr we can specify starting values for standard deviations eta, and
     # we ignore uncertain parameters if test_log_parms is FALSE
-    eta <- apply(degparm_mat_trans_OK, 1, sd, na.rm = TRUE)
+    eta <- apply(degparm_mat_trans_OK, 1, stats::sd, na.rm = TRUE)
 
     return(list(fixed = fixed, random = list(ds = random), eta = eta))
   } else {

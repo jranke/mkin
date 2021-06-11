@@ -1,4 +1,7 @@
-utils::globalVariables(c("predicted", "std"))
+utils::globalVariables(c("predicted", "std", "ID", "TIME", "CMT", "DV", "IPRED", "IRES", "IWRES"))
+
+#' @export
+nlmixr::nlmixr
 
 #' Fit nonlinear mixed models using nlmixr
 #'
@@ -10,8 +13,10 @@ utils::globalVariables(c("predicted", "std"))
 #' obtained by fitting the same model to a list of datasets using [mkinfit].
 #'
 #' @importFrom nlmixr nlmixr tableControl
+#' @importFrom dplyr %>%
 #' @param object An [mmkin] row object containing several fits of the same
 #'   [mkinmod] model to different datasets
+#' @param data Not used, the data are extracted from the mmkin row object
 #' @param est Estimation method passed to [nlmixr::nlmixr]
 #' @param degparms_start Parameter values given as a named numeric vector will
 #'   be used to override the starting values obtained from the 'mmkin' object.
@@ -21,22 +26,28 @@ utils::globalVariables(c("predicted", "std"))
 #'   when calculating mean degradation parameters using [mean_degparms].
 #' @param conf.level Possibility to adjust the required confidence level
 #'   for parameter that are tested if requested by 'test_log_parms'.
-#' @param solution_type Possibility to specify the solution type in case the
-#'   automatic choice is not desired
-#' @param control Passed to [nlmixr::nlmixr].
+#' @param data Not used, as the data are extracted from the mmkin row object
+#' @param table Passed to [nlmixr::nlmixr]
+#' @param error_model Possibility to override the error model which is being
+#'   set based on the error model used in the mmkin row object.
+#' @param control Passed to [nlmixr::nlmixr]
 #' @param \dots Passed to [nlmixr_model]
+#' @param save Passed to [nlmixr::nlmixr]
+#' @param envir Passed to [nlmixr::nlmixr]
 #' @return An S3 object of class 'nlmixr.mmkin', containing the fitted
 #'   [nlmixr::nlmixr] object as a list component named 'nm'. The
 #'   object also inherits from 'mixed.mmkin'.
 #' @seealso [summary.nlmixr.mmkin] [plot.mixed.mmkin]
 #' @examples
+#' \dontrun{
 #' ds <- lapply(experimental_data_for_UBA_2019[6:10],
 #'  function(x) subset(x$data[c("name", "time", "value")]))
 #' names(ds) <- paste("Dataset", 6:10)
+#' 
 #' f_mmkin_parent <- mmkin(c("SFO", "FOMC", "DFOP", "HS"), ds, quiet = TRUE, cores = 1)
 #' f_mmkin_parent_tc <- mmkin(c("SFO", "FOMC", "DFOP"), ds, error_model = "tc",
 #'   cores = 1, quiet = TRUE)
-#'
+#' 
 #' f_nlmixr_sfo_saem <- nlmixr(f_mmkin_parent["SFO", ], est = "saem")
 #' f_nlmixr_sfo_focei <- nlmixr(f_mmkin_parent["SFO", ], est = "focei")
 #'
@@ -66,7 +77,6 @@ utils::globalVariables(c("predicted", "std"))
 #' # solution, the two-component error model does not improve it
 #' plot(f_nlmixr_fomc_saem)
 #'
-#' \dontrun{
 #' sfo_sfo <- mkinmod(parent = mkinsub("SFO", "A1"),
 #'   A1 = mkinsub("SFO"))
 #' fomc_sfo <- mkinmod(parent = mkinsub("FOMC", "A1"),
@@ -167,7 +177,8 @@ nlmixr.mmkin <- function(object, data = NULL,
   return_data <- nlmixr_df %>%
     dplyr::transmute(ds = ID, name = CMT, time = TIME, value = DV,
       predicted = IPRED, residual = IRES,
-      std = IRES/IWRES, standardized = IWRES)
+      std = IRES/IWRES, standardized = IWRES) %>%
+    dplyr::arrange(ds, name, time)
 
   bparms_optim <- backtransform_odeparms(f_nlmixr$theta,
     object[[1]]$mkinmod,
@@ -227,6 +238,9 @@ print.nlmixr.mmkin <- function(x, digits = max(3, getOption("digits") - 3), ...)
 }
 
 #' @rdname nlmixr.mmkin
+#' @param add_attributes Should the starting values used for degradation model
+#'   parameters and their distribution and for the error model parameters
+#'   be returned as attributes?
 #' @return An function defining a model suitable for fitting with [nlmixr::nlmixr].
 #' @export
 nlmixr_model <- function(object,
@@ -435,6 +449,7 @@ nlmixr_model <- function(object,
 
   if (add_attributes) {
     attr(f, "mean_dp_start") <- degparms_optim
+    attr(f, "eta_start") <- degparms_mmkin$eta
     attr(f, "mean_ep_start") <- errparms_ini
   }
 

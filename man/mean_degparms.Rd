@@ -7,6 +7,8 @@
 mean_degparms(object, random = FALSE, test_log_parms = FALSE, conf.level = 0.6)
 }
 \arguments{
+\item{object}{An mmkin row object containing several fits of the same model to different datasets}
+
 \item{random}{Should a list with fixed and random effects be returned?}
 
 \item{test_log_parms}{If TRUE, log parameters are only considered in

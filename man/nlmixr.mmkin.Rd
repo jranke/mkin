@@ -29,7 +29,8 @@ nlmixr_model(
   degparms_start = "auto",
   test_log_parms = FALSE,
   conf.level = 0.6,
-  error_model = object[[1]]$err_mod
+  error_model = object[[1]]$err_mod,
+  add_attributes = FALSE
 )
 
 nlmixr_data(object, ...)
@@ -38,9 +39,16 @@ nlmixr_data(object, ...)
 \item{object}{An \link{mmkin} row object containing several fits of the same
 \link{mkinmod} model to different datasets}
 
+\item{data}{Not used, as the data are extracted from the mmkin row object}
+
 \item{est}{Estimation method passed to \link[nlmixr:nlmixr]{nlmixr::nlmixr}}
 
-\item{control}{Passed to \link[nlmixr:nlmixr]{nlmixr::nlmixr}.}
+\item{control}{Passed to \link[nlmixr:nlmixr]{nlmixr::nlmixr}}
+
+\item{table}{Passed to \link[nlmixr:nlmixr]{nlmixr::nlmixr}}
+
+\item{error_model}{Possibility to override the error model which is being
+set based on the error model used in the mmkin row object.}
 
 \item{test_log_parms}{If TRUE, an attempt is made to use more robust starting
 values for population parameters fitted as log parameters in mkin (like
@@ -52,6 +60,10 @@ for parameter that are tested if requested by 'test_log_parms'.}
 
 \item{\dots}{Passed to \link{nlmixr_model}}
 
+\item{save}{Passed to \link[nlmixr:nlmixr]{nlmixr::nlmixr}}
+
+\item{envir}{Passed to \link[nlmixr:nlmixr]{nlmixr::nlmixr}}
+
 \item{x}{An nlmixr.mmkin object to print}
 
 \item{digits}{Number of digits to use for printing}
@@ -59,8 +71,9 @@ for parameter that are tested if requested by 'test_log_parms'.}
 \item{degparms_start}{Parameter values given as a named numeric vector will
 be used to override the starting values obtained from the 'mmkin' object.}
 
-\item{solution_type}{Possibility to specify the solution type in case the
-automatic choice is not desired}
+\item{add_attributes}{Should the starting values used for degradation model
+parameters and their distribution and for the error model parameters
+be returned as attributes?}
 }
 \value{
 An S3 object of class 'nlmixr.mmkin', containing the fitted
@@ -81,9 +94,11 @@ An mmkin row object is essentially a list of mkinfit objects that have been
 obtained by fitting the same model to a list of datasets using \link{mkinfit}.
 }
 \examples{
+\dontrun{
 ds <- lapply(experimental_data_for_UBA_2019[6:10],
  function(x) subset(x$data[c("name", "time", "value")]))
 names(ds) <- paste("Dataset", 6:10)
+
 f_mmkin_parent <- mmkin(c("SFO", "FOMC", "DFOP", "HS"), ds, quiet = TRUE, cores = 1)
 f_mmkin_parent_tc <- mmkin(c("SFO", "FOMC", "DFOP"), ds, error_model = "tc",
   cores = 1, quiet = TRUE)
@@ -117,7 +132,6 @@ AIC(nlme(f_mmkin_parent["HS", ]))
 # solution, the two-component error model does not improve it
 plot(f_nlmixr_fomc_saem)
 
-\dontrun{
 sfo_sfo <- mkinmod(parent = mkinsub("SFO", "A1"),
   A1 = mkinsub("SFO"))
 fomc_sfo <- mkinmod(parent = mkinsub("FOMC", "A1"),

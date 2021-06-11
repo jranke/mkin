@@ -6,8 +6,9 @@
 #' endpoints such as formation fractions and DT50 values. Optionally
 #' (default is FALSE), the data are listed in full.
 #'
-#' @param object an object of class [nlmix.mmkin]
-#' @param x an object of class [summary.nlmix.mmkin]
+#' @importFrom stats confint sd
+#' @param object an object of class [nlmixr.mmkin]
+#' @param x an object of class [summary.nlmixr.mmkin]
 #' @param data logical, indicating whether the full data should be included in
 #'   the summary.
 #' @param verbose Should the summary be verbose?
@@ -23,9 +24,7 @@
 #'   \item{diffs}{The differential equations used in the degradation model}
 #'   \item{use_of_ff}{Was maximum or minimum use made of formation fractions}
 #'   \item{data}{The data}
-#'   \item{confint_trans}{Transformed parameters as used in the optimisation, with confidence intervals}
 #'   \item{confint_back}{Backtransformed parameters, with confidence intervals if available}
-#'   \item{confint_errmod}{Error model parameters with confidence intervals}
 #'   \item{ff}{The estimated formation fractions derived from the fitted
 #'      model.}
 #'   \item{distimes}{The DT50 and DT90 values for each observed variable.}
@@ -78,7 +77,7 @@
 #' # The following takes a very long time but gives
 #' f_nlmixr_dfop_sfo_focei <- nlmixr(f_mmkin_dfop_sfo, est = "focei")
 #' AIC(f_nlmixr_dfop_sfo_saem$nm, f_nlmixr_dfop_sfo_focei$nm)
-#' summary(f_nlmixr_dfop_sfo, data = TRUE)
+#' summary(f_nlmixr_dfop_sfo_sfo, data = TRUE)
 #' }
 #'
 #' @export
@@ -134,6 +133,7 @@ summary.nlmixr.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes
     dim(varFix),
     list(pnames, pnames))
 
+  object$confint_trans <- confint_trans
   object$confint_back <- confint_back
 
   object$date.summary = date()
@@ -141,31 +141,29 @@ summary.nlmixr.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes
 
   object$diffs <- object$mkinmod$diffs
   object$print_data <- data # boolean: Should we print the data?
-  predict(object$nm)
-  so_pred <- object$so@results@predictions
 
   names(object$data)[4] <- "observed" # rename value to observed
 
   object$verbose <- verbose
 
   object$fixed <- object$mmkin_orig[[1]]$fixed
-  object$AIC = AIC(object$so)
-  object$BIC = BIC(object$so)
-  object$logLik = logLik(object$so, method = "is")
+  object$AIC = AIC(object$nm)
+  object$BIC = BIC(object$nm)
+  object$logLik = logLik(object$nm)
 
   ep <- endpoints(object)
   if (length(ep$ff) != 0)
     object$ff <- ep$ff
   if (distimes) object$distimes <- ep$distimes
   if (length(ep$SFORB) != 0) object$SFORB <- ep$SFORB
-  class(object) <- c("summary.saem.mmkin")
+  class(object) <- c("summary.nlmixr.mmkin")
   return(object)
 }
 
-#' @rdname summary.saem.mmkin
+#' @rdname summary.nlmixr.mmkin
 #' @export
-print.summary.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3), verbose = x$verbose, ...) {
-  cat("saemix version used for fitting:     ", x$saemixversion, "\n")
+print.summary.nlmixr.mmkin <- function(x, digits = max(3, getOption("digits") - 3), verbose = x$verbose, ...) {
+  cat("nlmixr version used for fitting:   ", x$nlmixrversion, "\n")
   cat("mkin version used for pre-fitting: ", x$mkinversion, "\n")
   cat("R version used for fitting:        ", x$Rversion, "\n")
 
@@ -181,25 +179,29 @@ print.summary.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3)
     length(unique(x$data$name)), "variable(s) grouped in",
     length(unique(x$data$ds)), "datasets\n")
 
-  cat("\nModel predictions using solution type", x$solution_type, "\n")
+  cat("\nDegradation model predictions using RxODE\n")
 
-  cat("\nFitted in", x$time[["elapsed"]],  "s using", paste(x$so@options$nbiter.saemix, collapse = ", "), "iterations\n")
+  cat("\nFitted in", x$time[["elapsed"]],  "s\n")
 
   cat("\nVariance model: ")
   cat(switch(x$err_mod,
     const = "Constant variance",
     obs = "Variance unique to each observed variable",
-    tc = "Two-component variance function"), "\n")
+    tc = "Two-component variance function",
+    obs_tc = "Two-component variance unique to each observed variable"), "\n")
 
   cat("\nMean of starting values for individual parameters:\n")
   print(x$mean_dp_start, digits = digits)
+
+  cat("\nMean of starting values for error model parameters:\n")
+  print(x$mean_ep_start, digits = digits)
 
   cat("\nFixed degradation parameter values:\n")
   if(length(x$fixed$value) == 0) cat("None\n")
   else print(x$fixed, digits = digits)
 
   cat("\nResults:\n\n")
-  cat("Likelihood computed by importance sampling\n")
+  cat("Likelihood calculated by", nlmixr::getOfvType(x$nm), " \n")
   print(data.frame(AIC = x$AIC, BIC = x$BIC, logLik = x$logLik,
       row.names = " "), digits = digits)
 
@@ -212,16 +214,14 @@ print.summary.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3)
     print(corr, title = "\nCorrelation:", ...)
   }
 
-  cat("\nRandom effects:\n")
-  print(x$confint_ranef, digits = digits)
+  cat("\nRandom effects (omega):\n")
+  print(x$nm$omega, digits = digits)
 
   cat("\nVariance model:\n")
-  print(x$confint_errmod, digits = digits)
+  print(x$nm$sigma, digits = digits)
 
-  if (x$transformations == "mkin") {
-    cat("\nBacktransformed parameters:\n")
-    print(x$confint_back, digits = digits)
-  }
+  cat("\nBacktransformed parameters:\n")
+  print(x$confint_back, digits = digits)
 
   printSFORB <- !is.null(x$SFORB)
   if(printSFORB){
