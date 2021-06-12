@@ -18,4 +18,29 @@
 #'   \url{http://registerofquestions.efsa.europa.eu/roqFrontend/outputLoader?output=ON-5211}
 #' @examples
 #' print(dimethenamid_2018)
+#' dmta_ds <- lapply(1:8, function(i) {
+#'   ds_i <- dimethenamid_2018$ds[[i]]$data
+#'   ds_i[ds_i$name == "DMTAP", "name"] <-  "DMTA"
+#'   ds_i$time <- ds_i$time * dimethenamid_2018$f_time_norm[i]
+#'   ds_i
+#' })
+#' names(dmta_ds) <- sapply(dimethenamid_2018$ds, function(ds) ds$title)
+#' dmta_ds[["Borstel"]] <- rbind(dmta_ds[["Borstel 1"]], dmta_ds[["Borstel 2"]])
+#' dmta_ds[["Borstel 1"]] <- NULL
+#' dmta_ds[["Borstel 2"]] <- NULL
+#' dmta_ds[["Elliot"]] <- rbind(dmta_ds[["Elliot 1"]], dmta_ds[["Elliot 2"]])
+#' dmta_ds[["Elliot 1"]] <- NULL
+#' dmta_ds[["Elliot 2"]] <- NULL
+#' dfop_sfo3_plus <- mkinmod(
+#'   DMTA = mkinsub("DFOP", c("M23", "M27", "M31")),
+#'   M23 = mkinsub("SFO"),
+#'   M27 = mkinsub("SFO"),
+#'   M31 = mkinsub("SFO", "M27", sink = FALSE),
+#'   quiet = TRUE
+#' )
+#' f_dmta_mkin_tc <- mmkin(
+#'   list("DFOP-SFO3+" = dfop_sfo3_plus),
+#'   dmta_ds, quiet = TRUE, error_model = "tc")
+#' nlmixr_model(f_dmta_mkin_tc) # incomplete
+#' # nlmixr(f_dmta_mkin_tc, est = "saem") # not supported (yet)
 "dimethenamid_2018"

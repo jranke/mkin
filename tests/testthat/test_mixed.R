@@ -113,7 +113,7 @@ test_that("nlme results are reproducible to some degree", {
 
   expect_known_output(print(test_summary, digits = 1), "summary_nlme_biphasic_s.txt")
 
-  # k1 just fails the first test (lower bound of the ci), so we need to excluded it 
+  # k1 just fails the first test (lower bound of the ci), so we need to exclude it
   dfop_no_k1 <- c("parent_0", "k_m1", "f_parent_to_m1", "k2", "g")
   dfop_sfo_pop_no_k1 <- as.numeric(dfop_sfo_pop[dfop_no_k1])
   dfop_sfo_pop <- as.numeric(dfop_sfo_pop)

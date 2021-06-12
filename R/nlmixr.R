@@ -43,11 +43,11 @@ nlmixr::nlmixr
 #' ds <- lapply(experimental_data_for_UBA_2019[6:10],
 #'  function(x) subset(x$data[c("name", "time", "value")]))
 #' names(ds) <- paste("Dataset", 6:10)
-#' 
+#'
 #' f_mmkin_parent <- mmkin(c("SFO", "FOMC", "DFOP", "HS"), ds, quiet = TRUE, cores = 1)
 #' f_mmkin_parent_tc <- mmkin(c("SFO", "FOMC", "DFOP"), ds, error_model = "tc",
 #'   cores = 1, quiet = TRUE)
-#' 
+#'
 #' f_nlmixr_sfo_saem <- nlmixr(f_mmkin_parent["SFO", ], est = "saem")
 #' f_nlmixr_sfo_focei <- nlmixr(f_mmkin_parent["SFO", ], est = "focei")
 #'
@@ -278,19 +278,17 @@ nlmixr_model <- function(object,
     conf.level = conf.level, random = TRUE)
 
   degparms_optim <- degparms_mmkin$fixed
-
-  degparms_optim <- degparms_mmkin$fixed
+  degparms_optim_back <- backtransform_odeparms(degparms_optim,
+      object[[1]]$mkinmod,
+      object[[1]]$transform_rates,
+      object[[1]]$transform_fractions)
+  degparms_optim_back_names <- names(degparms_optim_back)
+  names(degparms_optim_back_names) <- names(degparms_optim)
 
   if (degparms_start[1] == "auto") {
     degparms_start <- degparms_optim
   }
   degparms_fixed <- object[[1]]$bparms.fixed
-
-  degparms_optim_back_names <- names(backtransform_odeparms(degparms_optim,
-      object[[1]]$mkinmod,
-      object[[1]]$transform_rates,
-      object[[1]]$transform_fractions))
-  names(degparms_optim_back_names) <- names(degparms_optim)
 
   odeini_optim_parm_names <- grep('_0$', names(degparms_optim), value = TRUE)
   odeini_fixed_parm_names <- grep('_0$', names(degparms_fixed), value = TRUE)
@@ -307,7 +305,7 @@ nlmixr_model <- function(object,
   ini_block <- "ini({"
 
   # Initial values for all degradation parameters
-  for (parm_name in names(degparms_optim)) {
+  for (parm_name in names(degparms_start)) {
     # As initials for state variables are not transformed,
     # we need to modify the name here as we want to
     # use the original name in the model block
