@@ -41,6 +41,13 @@
 #' f_dmta_mkin_tc <- mmkin(
 #'   list("DFOP-SFO3+" = dfop_sfo3_plus),
 #'   dmta_ds, quiet = TRUE, error_model = "tc")
-#' nlmixr_model(f_dmta_mkin_tc) # incomplete
-#' # nlmixr(f_dmta_mkin_tc, est = "saem") # not supported (yet)
+#' nlmixr_model(f_dmta_mkin_tc)
+#' f_dmta_nlmixr_saem <- nlmixr(f_dmta_mkin_tc, est = "saem",
+#'   control = saemControl(print = 500))
+#' summary(f_dmta_nlmixr_saem)
+#' plot(f_dmta_nlmixr_saem)
+#' f_dmta_nlmixr_focei <- nlmixr(f_dmta_mkin_tc, est = "focei",
+#'   control = foceiControl(print = 500))
+#' summary(f_dmta_nlmixr_focei)
+#' plot(f_dmta_nlmixr_focei)
 "dimethenamid_2018"

@@ -20,6 +20,9 @@ nlmixr::nlmixr
 #' @param est Estimation method passed to [nlmixr::nlmixr]
 #' @param degparms_start Parameter values given as a named numeric vector will
 #'   be used to override the starting values obtained from the 'mmkin' object.
+#' @param eta_start Standard deviations on the transformed scale given as a
+#'   named numeric vector will be used to override the starting values obtained
+#'   from the 'mmkin' object.
 #' @param test_log_parms If TRUE, an attempt is made to use more robust starting
 #'   values for population parameters fitted as log parameters in mkin (like
 #'   rate constants) by only considering rate constants that pass the t-test
@@ -148,6 +151,8 @@ nlmixr.mmkin <- function(object, data = NULL,
   error_model = object[[1]]$err_mod,
   test_log_parms = TRUE,
   conf.level = 0.6,
+  degparms_start = "auto",
+  eta_start = "auto",
   ...,
   save = NULL,
   envir = parent.frame()
@@ -155,7 +160,9 @@ nlmixr.mmkin <- function(object, data = NULL,
 {
   m_nlmixr <- nlmixr_model(object, est = est,
     error_model = error_model, add_attributes = TRUE,
-    test_log_parms = test_log_parms, conf.level = conf.level)
+    test_log_parms = test_log_parms, conf.level = conf.level,
+    degparms_start = degparms_start, eta_start = eta_start
+  )
   d_nlmixr <- nlmixr_data(object)
 
   mean_dp_start <- attr(m_nlmixr, "mean_dp_start")
@@ -164,7 +171,7 @@ nlmixr.mmkin <- function(object, data = NULL,
   attributes(m_nlmixr) <- NULL
 
   fit_time <- system.time({
-    f_nlmixr <- nlmixr(m_nlmixr, d_nlmixr, est = est)
+    f_nlmixr <- nlmixr(m_nlmixr, d_nlmixr, est = est, control = control)
   })
 
   if (is.null(f_nlmixr$CMT)) {
@@ -246,7 +253,8 @@ print.nlmixr.mmkin <- function(x, digits = max(3, getOption("digits") - 3), ...)
 nlmixr_model <- function(object,
   est = c("saem", "focei"),
   degparms_start = "auto",
-  test_log_parms = FALSE, conf.level = 0.6,
+  eta_start = "auto",
+  test_log_parms = TRUE, conf.level = 0.6,
   error_model = object[[1]]$err_mod, add_attributes = FALSE)
 {
   if (nrow(object) > 1) stop("Only row objects allowed")
@@ -278,16 +286,44 @@ nlmixr_model <- function(object,
     conf.level = conf.level, random = TRUE)
 
   degparms_optim <- degparms_mmkin$fixed
+
+  degparms_optim_ilr_names <- grep("^f_.*_ilr", names(degparms_optim), value = TRUE)
+  obs_vars_ilr <- unique(gsub("f_(.*)_ilr.*$", "\\1", degparms_optim_ilr_names))
+  degparms_optim_noilr <- degparms_optim[setdiff(names(degparms_optim),
+    degparms_optim_ilr_names)]
+
   degparms_optim_back <- backtransform_odeparms(degparms_optim,
       object[[1]]$mkinmod,
       object[[1]]$transform_rates,
       object[[1]]$transform_fractions)
-  degparms_optim_back_names <- names(degparms_optim_back)
-  names(degparms_optim_back_names) <- names(degparms_optim)
 
   if (degparms_start[1] == "auto") {
-    degparms_start <- degparms_optim
+    degparms_start <- degparms_optim_noilr
+    for (obs_var_ilr in obs_vars_ilr) {
+      ff_names <- grep(paste0("^f_", obs_var_ilr, "_"),
+        names(degparms_optim_back), value = TRUE)
+      f_tffm0 <- tffm0(degparms_optim_back[ff_names])
+      f_tffm0_qlogis <- qlogis(f_tffm0)
+      names(f_tffm0_qlogis) <- paste0("f_", obs_var_ilr,
+        "_tffm0_", 1:length(f_tffm0), "_qlogis")
+      degparms_start <- c(degparms_start, f_tffm0_qlogis)
+    }
   }
+
+  if (eta_start[1] == "auto") {
+    eta_start <- degparms_mmkin$eta[setdiff(names(degparms_optim),
+      degparms_optim_ilr_names)]
+    for (obs_var_ilr in obs_vars_ilr) {
+      ff_n <- length(grep(paste0("^f_", obs_var_ilr, "_"),
+        names(degparms_optim_back), value = TRUE))
+      eta_start_ff <- rep(0.3, ff_n)
+      names(eta_start_ff) <- paste0("f_", obs_var_ilr,
+        "_tffm0_", 1:ff_n, "_qlogis")
+      eta_start <- c(eta_start, eta_start_ff)
+    }
+  }
+
+
   degparms_fixed <- object[[1]]$bparms.fixed
 
   odeini_optim_parm_names <- grep('_0$', names(degparms_optim), value = TRUE)
@@ -315,7 +351,7 @@ nlmixr_model <- function(object,
       as.character(degparms_start[parm_name]),
       "\n",
       "eta.", parm_name, " ~ ",
-      as.character(degparms_mmkin$eta[parm_name]),
+      as.character(eta_start[parm_name]),
       "\n"
     )
   }
@@ -394,7 +430,7 @@ nlmixr_model <- function(object,
   }
 
   # Population initial values for log rate constants
-  for (parm_name in grep("^log_", names(degparms_optim), value = TRUE)) {
+  for (parm_name in grep("^log_", names(degparms_start), value = TRUE)) {
     model_block <- paste0(
       model_block,
       gsub("^log_", "", parm_name), " = ",
@@ -402,11 +438,34 @@ nlmixr_model <- function(object,
   }
 
   # Population initial values for logit transformed parameters
-  for (parm_name in grep("_qlogis$", names(degparms_optim), value = TRUE)) {
+  for (parm_name in grep("_qlogis$", names(degparms_start), value = TRUE)) {
     model_block <- paste0(
       model_block,
-      degparms_optim_back_names[parm_name], " = ",
+      gsub("_qlogis$", "", parm_name), " = ",
       "expit(", parm_name, " + eta.", parm_name, ")\n")
+  }
+
+  # Calculate formation fractions from tffm0 transformed values
+  for (obs_var_ilr in obs_vars_ilr) {
+    ff_names <- grep(paste0("^f_", obs_var_ilr, "_"),
+      names(degparms_optim_back), value = TRUE)
+    pattern <- paste0("^f_", obs_var_ilr, "_to_(.*)$")
+    target_vars <- gsub(pattern, "\\1",
+      grep(paste0("^f_", obs_var_ilr, "_to_"), names(degparms_optim_back), value = TRUE))
+    for (i in 1:length(target_vars)) {
+      ff_name <- ff_names[i]
+      ff_line <- paste0(ff_name, " = f_", obs_var_ilr, "_tffm0_", i)
+      if (i > 1) {
+        for (j in (i - 1):1) {
+          ff_line <- paste0(ff_line, " * (1 - f_", obs_var_ilr, "_tffm0_", j , ")")
+        }
+      }
+      model_block <- paste0(
+        model_block,
+        ff_line,
+        "\n"
+      )
+    }
   }
 
   # Differential equations
