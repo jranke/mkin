@@ -85,11 +85,11 @@ summary.nlmixr.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes
 
   mod_vars <- names(object$mkinmod$diffs)
 
-  pnames <- names(object$mean_dp_start)
-  np <- length(pnames)
-
   conf.int <- confint(object$nm)
-  confint_trans <- as.matrix(conf.int[pnames, c(1, 3, 4)])
+  dpnames <- setdiff(rownames(conf.int), names(object$mean_ep_start))
+  ndp <- length(dpnames)
+
+  confint_trans <- as.matrix(conf.int[dpnames, c(1, 3, 4)])
   colnames(confint_trans) <- c("est.", "lower", "upper")
 
   bp <- backtransform_odeparms(confint_trans[, "est."], object$mkinmod,
@@ -100,7 +100,7 @@ summary.nlmixr.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes
   # with the exception of sets of formation fractions (single fractions are OK).
   f_names_skip <- character(0)
   for (box in mod_vars) { # Figure out sets of fractions to skip
-    f_names <- grep(paste("^f", box, sep = "_"), pnames, value = TRUE)
+    f_names <- grep(paste("^f", box, sep = "_"), dpnames, value = TRUE)
     n_paths <- length(f_names)
     if (n_paths > 1) f_names_skip <- c(f_names_skip, f_names)
   }
@@ -109,7 +109,7 @@ summary.nlmixr.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes
     dimnames = list(bpnames, colnames(confint_trans)))
   confint_back[, "est."] <- bp
 
-  for (pname in pnames) {
+  for (pname in dpnames) {
     if (!pname %in% f_names_skip) {
       par.lower <- confint_trans[pname, "lower"]
       par.upper <- confint_trans[pname, "upper"]
@@ -131,7 +131,7 @@ summary.nlmixr.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes
   object$corFixed <- array(
     t(varFix/stdFix)/stdFix,
     dim(varFix),
-    list(pnames, pnames))
+    list(dpnames, dpnames))
 
   object$confint_trans <- confint_trans
   object$confint_back <- confint_back

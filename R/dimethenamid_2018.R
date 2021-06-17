@@ -31,6 +31,7 @@
 #' dmta_ds[["Elliot"]] <- rbind(dmta_ds[["Elliot 1"]], dmta_ds[["Elliot 2"]])
 #' dmta_ds[["Elliot 1"]] <- NULL
 #' dmta_ds[["Elliot 2"]] <- NULL
+#' \dontrun{
 #' dfop_sfo3_plus <- mkinmod(
 #'   DMTA = mkinsub("DFOP", c("M23", "M27", "M31")),
 #'   M23 = mkinsub("SFO"),
@@ -42,12 +43,15 @@
 #'   list("DFOP-SFO3+" = dfop_sfo3_plus),
 #'   dmta_ds, quiet = TRUE, error_model = "tc")
 #' nlmixr_model(f_dmta_mkin_tc)
-#' f_dmta_nlmixr_saem <- nlmixr(f_dmta_mkin_tc, est = "saem",
-#'   control = saemControl(print = 500))
-#' summary(f_dmta_nlmixr_saem)
-#' plot(f_dmta_nlmixr_saem)
 #' f_dmta_nlmixr_focei <- nlmixr(f_dmta_mkin_tc, est = "focei",
-#'   control = foceiControl(print = 500))
+#'   control = nlmixr::foceiControl(print = 500))
 #' summary(f_dmta_nlmixr_focei)
 #' plot(f_dmta_nlmixr_focei)
+#' # saem has a problem with this model/data combination, maybe because of the
+#' # overparameterised error model, to be investigated
+#' #f_dmta_nlmixr_saem <- nlmixr(f_dmta_mkin_tc, est = "saem",
+#' #  control = saemControl(print = 500))
+#' #summary(f_dmta_nlmixr_saem)
+#' #plot(f_dmta_nlmixr_saem)
+#' }
 "dimethenamid_2018"

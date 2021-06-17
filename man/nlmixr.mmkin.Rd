@@ -16,6 +16,8 @@
   error_model = object[[1]]$err_mod,
   test_log_parms = TRUE,
   conf.level = 0.6,
+  degparms_start = "auto",
+  eta_start = "auto",
   ...,
   save = NULL,
   envir = parent.frame()
@@ -27,7 +29,8 @@ nlmixr_model(
   object,
   est = c("saem", "focei"),
   degparms_start = "auto",
-  test_log_parms = FALSE,
+  eta_start = "auto",
+  test_log_parms = TRUE,
   conf.level = 0.6,
   error_model = object[[1]]$err_mod,
   add_attributes = FALSE
@@ -58,6 +61,13 @@ when calculating mean degradation parameters using \link{mean_degparms}.}
 \item{conf.level}{Possibility to adjust the required confidence level
 for parameter that are tested if requested by 'test_log_parms'.}
 
+\item{degparms_start}{Parameter values given as a named numeric vector will
+be used to override the starting values obtained from the 'mmkin' object.}
+
+\item{eta_start}{Standard deviations on the transformed scale given as a
+named numeric vector will be used to override the starting values obtained
+from the 'mmkin' object.}
+
 \item{\dots}{Passed to \link{nlmixr_model}}
 
 \item{save}{Passed to \link[nlmixr:nlmixr]{nlmixr::nlmixr}}
@@ -67,9 +77,6 @@ for parameter that are tested if requested by 'test_log_parms'.}
 \item{x}{An nlmixr.mmkin object to print}
 
 \item{digits}{Number of digits to use for printing}
-
-\item{degparms_start}{Parameter values given as a named numeric vector will
-be used to override the starting values obtained from the 'mmkin' object.}
 
 \item{add_attributes}{Should the starting values used for degradation model
 parameters and their distribution and for the error model parameters

@@ -13,7 +13,8 @@
 #'
 #' @param ff Vector of untransformed formation fractions. The sum
 #'   must be smaller or equal to one
-#' @param ff_trans
+#' @param ff_trans Vector of transformed formation fractions that can be
+#'   restricted to the interval from 0 to 1
 #' @return A vector of the transformed formation fractions
 #' @export
 #' @examples
@@ -33,7 +34,8 @@ tffm0 <- function(ff) {
   return(res)
 }
 #' @rdname tffm0
-#' @return
+#' @export
+#' @return A vector of backtransformed formation fractions for natural use in degradation models
 invtffm0 <- function(ff_trans) {
   n <- length(ff_trans)
   res <- numeric(n)
