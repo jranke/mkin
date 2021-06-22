@@ -77,7 +77,7 @@ constrained by data protection regulations." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.0.3.9000</span>
+        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.0.5</span>
       </span>
     </div>
 
@@ -203,7 +203,291 @@ specific pieces of information in the comments.</p>
 #&gt; Elliot 2          0.75              33.37          23
 #&gt; Flaach            0.40                 NA          20
 #&gt; BBA 2.2           0.40                 NA          20
-#&gt; BBA 2.3           0.40                 NA          20</div></pre>
+#&gt; BBA 2.3           0.40                 NA          20</div><div class='input'><span class='va'>dmta_ds</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>8</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>i</span><span class='op'>)</span> <span class='op'>{</span>
+  <span class='va'>ds_i</span> <span class='op'>&lt;-</span> <span class='va'>dimethenamid_2018</span><span class='op'>$</span><span class='va'>ds</span><span class='op'>[[</span><span class='va'>i</span><span class='op'>]</span><span class='op'>]</span><span class='op'>$</span><span class='va'>data</span>
+  <span class='va'>ds_i</span><span class='op'>[</span><span class='va'>ds_i</span><span class='op'>$</span><span class='va'>name</span> <span class='op'>==</span> <span class='st'>"DMTAP"</span>, <span class='st'>"name"</span><span class='op'>]</span> <span class='op'>&lt;-</span>  <span class='st'>"DMTA"</span>
+  <span class='va'>ds_i</span><span class='op'>$</span><span class='va'>time</span> <span class='op'>&lt;-</span> <span class='va'>ds_i</span><span class='op'>$</span><span class='va'>time</span> <span class='op'>*</span> <span class='va'>dimethenamid_2018</span><span class='op'>$</span><span class='va'>f_time_norm</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span>
+  <span class='va'>ds_i</span>
+<span class='op'>}</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>dmta_ds</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>sapply</a></span><span class='op'>(</span><span class='va'>dimethenamid_2018</span><span class='op'>$</span><span class='va'>ds</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>ds</span><span class='op'>)</span> <span class='va'>ds</span><span class='op'>$</span><span class='va'>title</span><span class='op'>)</span>
+<span class='va'>dmta_ds</span><span class='op'>[[</span><span class='st'>"Borstel"</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>dmta_ds</span><span class='op'>[[</span><span class='st'>"Borstel 1"</span><span class='op'>]</span><span class='op'>]</span>, <span class='va'>dmta_ds</span><span class='op'>[[</span><span class='st'>"Borstel 2"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
+<span class='va'>dmta_ds</span><span class='op'>[[</span><span class='st'>"Borstel 1"</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='cn'>NULL</span>
+<span class='va'>dmta_ds</span><span class='op'>[[</span><span class='st'>"Borstel 2"</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='cn'>NULL</span>
+<span class='va'>dmta_ds</span><span class='op'>[[</span><span class='st'>"Elliot"</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>dmta_ds</span><span class='op'>[[</span><span class='st'>"Elliot 1"</span><span class='op'>]</span><span class='op'>]</span>, <span class='va'>dmta_ds</span><span class='op'>[[</span><span class='st'>"Elliot 2"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
+<span class='va'>dmta_ds</span><span class='op'>[[</span><span class='st'>"Elliot 1"</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='cn'>NULL</span>
+<span class='va'>dmta_ds</span><span class='op'>[[</span><span class='st'>"Elliot 2"</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='cn'>NULL</span>
+<span class='co'># \dontrun{</span>
+<span class='va'>dfop_sfo3_plus</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span><span class='op'>(</span>
+  DMTA <span class='op'>=</span> <span class='fu'><a href='mkinmod.html'>mkinsub</a></span><span class='op'>(</span><span class='st'>"DFOP"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"M23"</span>, <span class='st'>"M27"</span>, <span class='st'>"M31"</span><span class='op'>)</span><span class='op'>)</span>,
+  M23 <span class='op'>=</span> <span class='fu'><a href='mkinmod.html'>mkinsub</a></span><span class='op'>(</span><span class='st'>"SFO"</span><span class='op'>)</span>,
+  M27 <span class='op'>=</span> <span class='fu'><a href='mkinmod.html'>mkinsub</a></span><span class='op'>(</span><span class='st'>"SFO"</span><span class='op'>)</span>,
+  M31 <span class='op'>=</span> <span class='fu'><a href='mkinmod.html'>mkinsub</a></span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='st'>"M27"</span>, sink <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>,
+  quiet <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span>
+<span class='va'>f_dmta_mkin_tc</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span><span class='op'>(</span>
+  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"DFOP-SFO3+"</span> <span class='op'>=</span> <span class='va'>dfop_sfo3_plus</span><span class='op'>)</span>,
+  <span class='va'>dmta_ds</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span>, error_model <span class='op'>=</span> <span class='st'>"tc"</span><span class='op'>)</span>
+<span class='fu'><a href='nlmixr.mmkin.html'>nlmixr_model</a></span><span class='op'>(</span><span class='va'>f_dmta_mkin_tc</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>With est = 'saem', a different error model is required for each observed variableChanging the error model to 'obs_tc' (Two-component error for each observed variable)</span></div><div class='output co'>#&gt; function () 
+#&gt; {
+#&gt;     ini({
+#&gt;         DMTA_0 = 98.7697627680706
+#&gt;         eta.DMTA_0 ~ 2.35171765917765
+#&gt;         log_k_M23 = -3.92162409637283
+#&gt;         eta.log_k_M23 ~ 0.549278519419884
+#&gt;         log_k_M27 = -4.33774620773911
+#&gt;         eta.log_k_M27 ~ 0.864474956685295
+#&gt;         log_k_M31 = -4.24767627688461
+#&gt;         eta.log_k_M31 ~ 0.750297149164171
+#&gt;         log_k1 = -2.2341008812259
+#&gt;         eta.log_k1 ~ 0.902976221565793
+#&gt;         log_k2 = -3.7762779983269
+#&gt;         eta.log_k2 ~ 1.57684519529298
+#&gt;         g_qlogis = 0.450175725479389
+#&gt;         eta.g_qlogis ~ 3.0851335687675
+#&gt;         f_DMTA_tffm0_1_qlogis = -2.09240906629456
+#&gt;         eta.f_DMTA_tffm0_1_qlogis ~ 0.3
+#&gt;         f_DMTA_tffm0_2_qlogis = -2.18057573598794
+#&gt;         eta.f_DMTA_tffm0_2_qlogis ~ 0.3
+#&gt;         f_DMTA_tffm0_3_qlogis = -2.14267187609763
+#&gt;         eta.f_DMTA_tffm0_3_qlogis ~ 0.3
+#&gt;         sigma_low_DMTA = 0.697933852349996
+#&gt;         rsd_high_DMTA = 0.0257724286053519
+#&gt;         sigma_low_M23 = 0.697933852349996
+#&gt;         rsd_high_M23 = 0.0257724286053519
+#&gt;         sigma_low_M27 = 0.697933852349996
+#&gt;         rsd_high_M27 = 0.0257724286053519
+#&gt;         sigma_low_M31 = 0.697933852349996
+#&gt;         rsd_high_M31 = 0.0257724286053519
+#&gt;     })
+#&gt;     model({
+#&gt;         DMTA_0_model = DMTA_0 + eta.DMTA_0
+#&gt;         DMTA(0) = DMTA_0_model
+#&gt;         k_M23 = exp(log_k_M23 + eta.log_k_M23)
+#&gt;         k_M27 = exp(log_k_M27 + eta.log_k_M27)
+#&gt;         k_M31 = exp(log_k_M31 + eta.log_k_M31)
+#&gt;         k1 = exp(log_k1 + eta.log_k1)
+#&gt;         k2 = exp(log_k2 + eta.log_k2)
+#&gt;         g = expit(g_qlogis + eta.g_qlogis)
+#&gt;         f_DMTA_tffm0_1 = expit(f_DMTA_tffm0_1_qlogis + eta.f_DMTA_tffm0_1_qlogis)
+#&gt;         f_DMTA_tffm0_2 = expit(f_DMTA_tffm0_2_qlogis + eta.f_DMTA_tffm0_2_qlogis)
+#&gt;         f_DMTA_tffm0_3 = expit(f_DMTA_tffm0_3_qlogis + eta.f_DMTA_tffm0_3_qlogis)
+#&gt;         f_DMTA_to_M23 = f_DMTA_tffm0_1
+#&gt;         f_DMTA_to_M27 = f_DMTA_tffm0_2 * (1 - f_DMTA_tffm0_1)
+#&gt;         f_DMTA_to_M31 = f_DMTA_tffm0_3 * (1 - f_DMTA_tffm0_2) * 
+#&gt;             (1 - f_DMTA_tffm0_1)
+#&gt;         d/dt(DMTA) = -((k1 * g * exp(-k1 * time) + k2 * (1 - 
+#&gt;             g) * exp(-k2 * time))/(g * exp(-k1 * time) + (1 - 
+#&gt;             g) * exp(-k2 * time))) * DMTA
+#&gt;         d/dt(M23) = +f_DMTA_to_M23 * ((k1 * g * exp(-k1 * time) + 
+#&gt;             k2 * (1 - g) * exp(-k2 * time))/(g * exp(-k1 * time) + 
+#&gt;             (1 - g) * exp(-k2 * time))) * DMTA - k_M23 * M23
+#&gt;         d/dt(M27) = +f_DMTA_to_M27 * ((k1 * g * exp(-k1 * time) + 
+#&gt;             k2 * (1 - g) * exp(-k2 * time))/(g * exp(-k1 * time) + 
+#&gt;             (1 - g) * exp(-k2 * time))) * DMTA - k_M27 * M27 + 
+#&gt;             k_M31 * M31
+#&gt;         d/dt(M31) = +f_DMTA_to_M31 * ((k1 * g * exp(-k1 * time) + 
+#&gt;             k2 * (1 - g) * exp(-k2 * time))/(g * exp(-k1 * time) + 
+#&gt;             (1 - g) * exp(-k2 * time))) * DMTA - k_M31 * M31
+#&gt;         DMTA ~ add(sigma_low_DMTA) + prop(rsd_high_DMTA)
+#&gt;         M23 ~ add(sigma_low_M23) + prop(rsd_high_M23)
+#&gt;         M27 ~ add(sigma_low_M27) + prop(rsd_high_M27)
+#&gt;         M31 ~ add(sigma_low_M31) + prop(rsd_high_M31)
+#&gt;     })
+#&gt; }
+#&gt; &lt;environment: 0x555559c2bd78&gt;</div><div class='input'><span class='va'>f_dmta_nlmixr_focei</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlmixr/man/nlmixr.html'>nlmixr</a></span><span class='op'>(</span><span class='va'>f_dmta_mkin_tc</span>, est <span class='op'>=</span> <span class='st'>"focei"</span>,
+  control <span class='op'>=</span> <span class='fu'>nlmixr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/nlmixr/man/foceiControl.html'>foceiControl</a></span><span class='op'>(</span>print <span class='op'>=</span> <span class='fl'>500</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span> parameter labels from comments are typically ignored in non-interactive mode</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span> Need to run with the source intact to parse comments</span></div><div class='output co'>#&gt; <span class='message'>→ creating full model...</span></div><div class='output co'>#&gt; <span class='message'>→ pruning branches (<span style='color: #262626; background-color: #DADADA;'>`if`</span>/<span style='color: #262626; background-color: #DADADA;'>`else`</span>)...</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> done</span></div><div class='output co'>#&gt; <span class='message'>→ loading into <span style='color: #0000BB;'>symengine</span> environment...</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> done</span></div><div class='output co'>#&gt; <span class='message'>→ creating full model...</span></div><div class='output co'>#&gt; <span class='message'>→ pruning branches (<span style='color: #262626; background-color: #DADADA;'>`if`</span>/<span style='color: #262626; background-color: #DADADA;'>`else`</span>)...</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> done</span></div><div class='output co'>#&gt; <span class='message'>→ loading into <span style='color: #0000BB;'>symengine</span> environment...</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> done</span></div><div class='output co'>#&gt; <span class='message'>→ calculate jacobian</span></div><div class='output co'>#&gt; [====|====|====|====|====|====|====|====|====|====] 0:00:02 
+#&gt; </div><div class='output co'>#&gt; <span class='message'>→ calculate sensitivities</span></div><div class='output co'>#&gt; [====|====|====|====|====|====|====|====|====|====] 0:00:04 
+#&gt; </div><div class='output co'>#&gt; <span class='message'>→ calculate ∂(f)/∂(η)</span></div><div class='output co'>#&gt; [====|====|====|====|====|====|====|====|====|====] 0:00:01 
+#&gt; </div><div class='output co'>#&gt; <span class='message'>→ calculate ∂(R²)/∂(η)</span></div><div class='output co'>#&gt; [====|====|====|====|====|====|====|====|====|====] 0:00:08 
+#&gt; </div><div class='output co'>#&gt; <span class='message'>→ finding duplicate expressions in inner model...</span></div><div class='output co'>#&gt; [====|====|====|====|====|====|====|====|====|====] 0:00:07 
+#&gt; </div><div class='output co'>#&gt; <span class='message'>→ optimizing duplicate expressions in inner model...</span></div><div class='output co'>#&gt; [====|====|====|====|====|====|====|====|====|====] 0:00:07 
+#&gt; </div><div class='output co'>#&gt; <span class='message'>→ finding duplicate expressions in EBE model...</span></div><div class='output co'>#&gt; [====|====|====|====|====|====|====|====|====|====] 0:00:00 
+#&gt; </div><div class='output co'>#&gt; <span class='message'>→ optimizing duplicate expressions in EBE model...</span></div><div class='output co'>#&gt; [====|====|====|====|====|====|====|====|====|====] 0:00:00 
+#&gt; </div><div class='output co'>#&gt; <span class='message'>→ compiling inner model...</span></div><div class='output co'>#&gt; <span class='message'> </span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> done</span></div><div class='output co'>#&gt; <span class='message'>→ finding duplicate expressions in FD model...</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>→ optimizing duplicate expressions in FD model...</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>→ compiling EBE model...</span></div><div class='output co'>#&gt; <span class='message'> </span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> done</span></div><div class='output co'>#&gt; <span class='message'>→ compiling events FD model...</span></div><div class='output co'>#&gt; <span class='message'> </span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> done</span></div><div class='output co'>#&gt; <span class='message'>Needed Covariates:</span></div><div class='output co'>#&gt; [1] "CMT"</div><div class='output co'>#&gt; <span class='message'>RxODE 1.1.0 using 8 threads (see ?getRxThreads)</span>
+#&gt; <span class='message'>  no cache: create with `rxCreateCache()`</span></div><div class='output co'>#&gt; <span style='font-weight: bold;'>Key:</span> U: Unscaled Parameters; X: Back-transformed parameters; G: Gill difference gradient approximation
+#&gt; F: Forward difference gradient approximation
+#&gt; C: Central difference gradient approximation
+#&gt; M: Mixed forward and central difference gradient approximation
+#&gt; Unscaled parameters for Omegas=chol(solve(omega));
+#&gt; Diagonals are transformed, as specified by foceiControl(diagXform=)
+#&gt; |-----+---------------+-----------+-----------+-----------+-----------|
+#&gt; |    #| Objective Fun |    DMTA_0 | log_k_M23 | log_k_M27 | log_k_M31 |
+#&gt; |.....................|    log_k1 |    log_k2 |  g_qlogis |f_DMTA_tffm0_1_qlogis |
+#&gt; |.....................|f_DMTA_tffm0_2_qlogis |f_DMTA_tffm0_3_qlogis | sigma_low |  rsd_high |
+#&gt; |.....................|        o1 |        o2 |        o3 |        o4 |
+#&gt; |.....................|        o5 |        o6 |        o7 |        o8 |
+#&gt; <span style='text-decoration: underline;'>|.....................|        o9 |       o10 |...........|...........|</span>
+#&gt; calculating covariance matrix
+#&gt; done</div><div class='output co'>#&gt; <span class='message'>Calculating residuals/tables</span></div><div class='output co'>#&gt; <span class='message'>done</span></div><div class='output co'>#&gt; <span class='warning'>Warning: initial ETAs were nudged; (can control by foceiControl(etaNudge=., etaNudge2=))</span></div><div class='output co'>#&gt; <span class='warning'>Warning: last objective function was not at minimum, possible problems in optimization</span></div><div class='output co'>#&gt; <span class='warning'>Warning: S matrix non-positive definite</span></div><div class='output co'>#&gt; <span class='warning'>Warning: using R matrix to calculate covariance</span></div><div class='output co'>#&gt; <span class='warning'>Warning: gradient problems with initial estimate and covariance; see $scaleInfo</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>f_dmta_nlmixr_focei</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; nlmixr version used for fitting:    2.0.4 
+#&gt; mkin version used for pre-fitting:  1.0.5 
+#&gt; R version used for fitting:         4.1.0 
+#&gt; Date of fit:     Thu Jun 17 14:04:58 2021 
+#&gt; Date of summary: Thu Jun 17 14:04:58 2021 
+#&gt; 
+#&gt; Equations:
+#&gt; d_DMTA/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *
+#&gt;            time)) / (g * exp(-k1 * time) + (1 - g) * exp(-k2 * time)))
+#&gt;            * DMTA
+#&gt; d_M23/dt = + f_DMTA_to_M23 * ((k1 * g * exp(-k1 * time) + k2 * (1 - g)
+#&gt;            * exp(-k2 * time)) / (g * exp(-k1 * time) + (1 - g) *
+#&gt;            exp(-k2 * time))) * DMTA - k_M23 * M23
+#&gt; d_M27/dt = + f_DMTA_to_M27 * ((k1 * g * exp(-k1 * time) + k2 * (1 - g)
+#&gt;            * exp(-k2 * time)) / (g * exp(-k1 * time) + (1 - g) *
+#&gt;            exp(-k2 * time))) * DMTA - k_M27 * M27 + k_M31 * M31
+#&gt; d_M31/dt = + f_DMTA_to_M31 * ((k1 * g * exp(-k1 * time) + k2 * (1 - g)
+#&gt;            * exp(-k2 * time)) / (g * exp(-k1 * time) + (1 - g) *
+#&gt;            exp(-k2 * time))) * DMTA - k_M31 * M31
+#&gt; 
+#&gt; Data:
+#&gt; 568 observations of 4 variable(s) grouped in 6 datasets
+#&gt; 
+#&gt; Degradation model predictions using RxODE
+#&gt; 
+#&gt; Fitted in 242.937 s
+#&gt; 
+#&gt; Variance model: Two-component variance function 
+#&gt; 
+#&gt; Mean of starting values for individual parameters:
+#&gt;       DMTA_0    log_k_M23    log_k_M27    log_k_M31 f_DMTA_ilr_1 f_DMTA_ilr_2 
+#&gt;      98.7698      -3.9216      -4.3377      -4.2477       0.1380       0.1393 
+#&gt; f_DMTA_ilr_3       log_k1       log_k2     g_qlogis 
+#&gt;      -1.7571      -2.2341      -3.7763       0.4502 
+#&gt; 
+#&gt; Mean of starting values for error model parameters:
+#&gt; sigma_low  rsd_high 
+#&gt;   0.69793   0.02577 
+#&gt; 
+#&gt; Fixed degradation parameter values:
+#&gt; None
+#&gt; 
+#&gt; Results:
+#&gt; 
+#&gt; Likelihood calculated by focei  
+#&gt;    AIC  BIC logLik
+#&gt;   1936 2031 -945.9
+#&gt; 
+#&gt; Optimised parameters:
+#&gt;                          est.   lower   upper
+#&gt; DMTA_0                98.7698 98.7356 98.8039
+#&gt; log_k_M23             -3.9216 -3.9235 -3.9197
+#&gt; log_k_M27             -4.3377 -4.3398 -4.3357
+#&gt; log_k_M31             -4.2477 -4.2497 -4.2457
+#&gt; log_k1                -2.2341 -2.2353 -2.2329
+#&gt; log_k2                -3.7763 -3.7781 -3.7744
+#&gt; g_qlogis               0.4502  0.4496  0.4507
+#&gt; f_DMTA_tffm0_1_qlogis -2.0924 -2.0936 -2.0912
+#&gt; f_DMTA_tffm0_2_qlogis -2.1806 -2.1818 -2.1794
+#&gt; f_DMTA_tffm0_3_qlogis -2.1427 -2.1439 -2.1415
+#&gt; 
+#&gt; Correlation: 
+#&gt;                       DMTA_0 l__M23 l__M27 l__M31 log_k1 log_k2 g_qlgs
+#&gt; log_k_M23             0                                               
+#&gt; log_k_M27             0      0                                        
+#&gt; log_k_M31             0      0      0                                 
+#&gt; log_k1                0      0      0      0                          
+#&gt; log_k2                0      0      0      0      0                   
+#&gt; g_qlogis              0      0      0      0      0      0            
+#&gt; f_DMTA_tffm0_1_qlogis 0      0      0      0      0      0      0     
+#&gt; f_DMTA_tffm0_2_qlogis 0      0      0      0      0      0      0     
+#&gt; f_DMTA_tffm0_3_qlogis 0      0      0      0      0      0      0     
+#&gt;                       f_DMTA_0_1 f_DMTA_0_2
+#&gt; log_k_M23                                  
+#&gt; log_k_M27                                  
+#&gt; log_k_M31                                  
+#&gt; log_k1                                     
+#&gt; log_k2                                     
+#&gt; g_qlogis                                   
+#&gt; f_DMTA_tffm0_1_qlogis                      
+#&gt; f_DMTA_tffm0_2_qlogis 0                    
+#&gt; f_DMTA_tffm0_3_qlogis 0          0         
+#&gt; 
+#&gt; Random effects (omega):
+#&gt;                           eta.DMTA_0 eta.log_k_M23 eta.log_k_M27 eta.log_k_M31
+#&gt; eta.DMTA_0                     2.352        0.0000        0.0000        0.0000
+#&gt; eta.log_k_M23                  0.000        0.5493        0.0000        0.0000
+#&gt; eta.log_k_M27                  0.000        0.0000        0.8645        0.0000
+#&gt; eta.log_k_M31                  0.000        0.0000        0.0000        0.7503
+#&gt; eta.log_k1                     0.000        0.0000        0.0000        0.0000
+#&gt; eta.log_k2                     0.000        0.0000        0.0000        0.0000
+#&gt; eta.g_qlogis                   0.000        0.0000        0.0000        0.0000
+#&gt; eta.f_DMTA_tffm0_1_qlogis      0.000        0.0000        0.0000        0.0000
+#&gt; eta.f_DMTA_tffm0_2_qlogis      0.000        0.0000        0.0000        0.0000
+#&gt; eta.f_DMTA_tffm0_3_qlogis      0.000        0.0000        0.0000        0.0000
+#&gt;                           eta.log_k1 eta.log_k2 eta.g_qlogis
+#&gt; eta.DMTA_0                     0.000      0.000        0.000
+#&gt; eta.log_k_M23                  0.000      0.000        0.000
+#&gt; eta.log_k_M27                  0.000      0.000        0.000
+#&gt; eta.log_k_M31                  0.000      0.000        0.000
+#&gt; eta.log_k1                     0.903      0.000        0.000
+#&gt; eta.log_k2                     0.000      1.577        0.000
+#&gt; eta.g_qlogis                   0.000      0.000        3.085
+#&gt; eta.f_DMTA_tffm0_1_qlogis      0.000      0.000        0.000
+#&gt; eta.f_DMTA_tffm0_2_qlogis      0.000      0.000        0.000
+#&gt; eta.f_DMTA_tffm0_3_qlogis      0.000      0.000        0.000
+#&gt;                           eta.f_DMTA_tffm0_1_qlogis eta.f_DMTA_tffm0_2_qlogis
+#&gt; eta.DMTA_0                                      0.0                       0.0
+#&gt; eta.log_k_M23                                   0.0                       0.0
+#&gt; eta.log_k_M27                                   0.0                       0.0
+#&gt; eta.log_k_M31                                   0.0                       0.0
+#&gt; eta.log_k1                                      0.0                       0.0
+#&gt; eta.log_k2                                      0.0                       0.0
+#&gt; eta.g_qlogis                                    0.0                       0.0
+#&gt; eta.f_DMTA_tffm0_1_qlogis                       0.3                       0.0
+#&gt; eta.f_DMTA_tffm0_2_qlogis                       0.0                       0.3
+#&gt; eta.f_DMTA_tffm0_3_qlogis                       0.0                       0.0
+#&gt;                           eta.f_DMTA_tffm0_3_qlogis
+#&gt; eta.DMTA_0                                      0.0
+#&gt; eta.log_k_M23                                   0.0
+#&gt; eta.log_k_M27                                   0.0
+#&gt; eta.log_k_M31                                   0.0
+#&gt; eta.log_k1                                      0.0
+#&gt; eta.log_k2                                      0.0
+#&gt; eta.g_qlogis                                    0.0
+#&gt; eta.f_DMTA_tffm0_1_qlogis                       0.0
+#&gt; eta.f_DMTA_tffm0_2_qlogis                       0.0
+#&gt; eta.f_DMTA_tffm0_3_qlogis                       0.3
+#&gt; 
+#&gt; Variance model:
+#&gt; sigma_low  rsd_high 
+#&gt;   0.69793   0.02577 
+#&gt; 
+#&gt; Backtransformed parameters:
+#&gt;                   est.    lower    upper
+#&gt; DMTA_0        98.76976 98.73563 98.80390
+#&gt; k_M23          0.01981  0.01977  0.01985
+#&gt; k_M27          0.01307  0.01304  0.01309
+#&gt; k_M31          0.01430  0.01427  0.01433
+#&gt; f_DMTA_to_M23  0.10984       NA       NA
+#&gt; f_DMTA_to_M27  0.09036       NA       NA
+#&gt; f_DMTA_to_M31  0.08399       NA       NA
+#&gt; k1             0.10709  0.10696  0.10722
+#&gt; k2             0.02291  0.02287  0.02295
+#&gt; g              0.61068  0.61055  0.61081
+#&gt; 
+#&gt; Resulting formation fractions:
+#&gt;                ff
+#&gt; DMTA_M23  0.10984
+#&gt; DMTA_M27  0.09036
+#&gt; DMTA_M31  0.08399
+#&gt; DMTA_sink 0.71581
+#&gt; 
+#&gt; Estimated disappearance times:
+#&gt;       DT50   DT90 DT50back DT50_k1 DT50_k2
+#&gt; DMTA 10.66  59.78       18   6.473   30.26
+#&gt; M23  34.99 116.24       NA      NA      NA
+#&gt; M27  53.05 176.23       NA      NA      NA
+#&gt; M31  48.48 161.05       NA      NA      NA</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_dmta_nlmixr_focei</span><span class='op'>)</span>
+</div><div class='img'><img src='dimethenamid_2018-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># saem has a problem with this model/data combination, maybe because of the</span>
+<span class='co'># overparameterised error model, to be investigated</span>
+<span class='co'>#f_dmta_nlmixr_saem &lt;- nlmixr(f_dmta_mkin_tc, est = "saem",</span>
+<span class='co'>#  control = saemControl(print = 500))</span>
+<span class='co'>#summary(f_dmta_nlmixr_saem)</span>
+<span class='co'>#plot(f_dmta_nlmixr_saem)</span>
+<span class='co'># }</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
