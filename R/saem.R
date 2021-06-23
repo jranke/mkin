@@ -115,7 +115,7 @@ saem <- function(object, ...) UseMethod("saem")
 saem.mmkin <- function(object,
   transformations = c("mkin", "saemix"),
   degparms_start = numeric(),
-  test_log_parms = FALSE,
+  test_log_parms = TRUE,
   conf.level = 0.6,
   solution_type = "auto",
   nbiter.saemix = c(300, 100),
