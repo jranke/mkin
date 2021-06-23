@@ -34,10 +34,9 @@ get_deg_func <- function() {
 #' @param data Ignored, data are taken from the mmkin model
 #' @param fixed Ignored, all degradation parameters fitted in the
 #'   mmkin model are used as fixed parameters
-#' @param random If not specified, correlated random effects are set up
-#'   for all optimised degradation model parameters using the log-Cholesky
-#'   parameterization [nlme::pdLogChol] that is also the default of
-#'   the generic [nlme] method.
+#' @param random If not specified, no correlations between random effects are
+#'   set up for the optimised degradation model parameters. This is
+#'   achieved by using the [nlme::pdDiag] method.
 #' @param groups See the documentation of nlme
 #' @param start If not specified, mean values of the fitted degradation
 #'   parameters taken from the mmkin object are used
