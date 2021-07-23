@@ -36,10 +36,9 @@
 \item{fixed}{Ignored, all degradation parameters fitted in the
 mmkin model are used as fixed parameters}
 
-\item{random}{If not specified, correlated random effects are set up
-for all optimised degradation model parameters using the log-Cholesky
-parameterization \link[nlme:pdLogChol]{nlme::pdLogChol} that is also the default of
-the generic \link{nlme} method.}
+\item{random}{If not specified, no correlations between random effects are
+set up for the optimised degradation model parameters. This is
+achieved by using the \link[nlme:pdDiag]{nlme::pdDiag} method.}
 
 \item{groups}{See the documentation of nlme}
 

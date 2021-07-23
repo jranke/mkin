@@ -90,9 +90,6 @@ slowtests: install
 	NOT_CRAN=true "$(RBIN)/Rscript" -e 'library(mkin); testthat::test_dir("tests/testthat/slow")' 2>&1 | tee tests_slow.log
 	sed -i -e "s/\r.*\r//" tests_slow.log
 
-vdiffr:
-	"$(RBIN)/Rscript" -e 'vdiffr::manage_cases(filter = "plot|nafta")'
-
 testcheck: roxygen test check
 
 README.html: README.md

@@ -3,17 +3,17 @@ Loading required package: parallel
 ℹ Testing mkin
 ✔ |  OK F W S | Context
 ✔ |   5       | AIC calculation
-✔ |   5       | Analytical solutions for coupled models [3.5 s]
+✔ |   5       | Analytical solutions for coupled models [3.4 s]
 ✔ |   5       | Calculation of Akaike weights
 ✔ |   2       | Export dataset for reading into CAKE
-✔ |  12       | Confidence intervals and p-values [1.0 s]
-✔ |  14       | Error model fitting [4.7 s]
+✔ |  12       | Confidence intervals and p-values [1.1 s]
+✔ |  14       | Error model fitting [4.8 s]
 ✔ |   5       | Time step normalisation
 ✔ |   4       | Calculation of FOCUS chi2 error levels [0.6 s]
 ✔ |  14       | Results for FOCUS D established in expertise for UBA (Ranke 2014) [0.8 s]
 ✔ |   4       | Test fitting the decline of metabolites from their maximum [0.3 s]
 ✔ |   1       | Fitting the logistic model [0.2 s]
-✔ |  35     1 | Nonlinear mixed-effects models [26.9 s]
+✔ |  35     1 | Nonlinear mixed-effects models [27.8 s]
 ────────────────────────────────────────────────────────────────────────────────
 Skip (test_mixed.R:161:3): saem results are reproducible for biphasic fits
 Reason: Fitting with saemix takes around 10 minutes when using deSolve
@@ -23,34 +23,36 @@ Reason: Fitting with saemix takes around 10 minutes when using deSolve
 ✔ |   1       | mkinfit features [0.3 s]
 ✔ |   8       | mkinmod model generation and printing [0.2 s]
 ✔ |   3       | Model predictions with mkinpredict [0.3 s]
-✔ |  14     2 | Evaluations according to 2015 NAFTA guidance [1.3 s]
+✔ |  16       | Evaluations according to 2015 NAFTA guidance [1.5 s]
+✔ |   9       | Nonlinear mixed-effects models with nlme [8.2 s]
+✖ |  15 1 2   | Plotting [1.3 s]
 ────────────────────────────────────────────────────────────────────────────────
-Skip (test_nafta.R:25:5): Test data from Appendix B are correctly evaluated
-Reason: getRversion() >= "4.1.0" is TRUE
+Warning (test_plot.R:38:5): Plotting mkinfit, mmkin and mixed model objects is reproducible
+Adding new file snapshot: '_snaps/plot/mixed-model-fit-for-saem-object-with-saemix-transformations.svg'
 
-Skip (test_nafta.R:53:5): Test data from Appendix D are correctly evaluated
-Reason: getRversion() >= "4.1.0" is TRUE
-────────────────────────────────────────────────────────────────────────────────
-✔ |   9       | Nonlinear mixed-effects models with nlme [8.1 s]
-✔ |   0     1 | Plotting [0.8 s]
-────────────────────────────────────────────────────────────────────────────────
-Skip (test_plot.R:18:3): Plotting mkinfit, mmkin and mixed model objects is reproducible
-Reason: getRversion() >= "4.1.0" is TRUE
+Failure (test_plot.R:44:3): Plotting mkinfit, mmkin and mixed model objects is reproducible
+Snapshot of `testcase` to 'plot/mixed-model-fit-for-nlme-object.svg' has changed
+Run `testthat::snapshot_review('plot')` to review changes
+Backtrace:
+ 1. vdiffr::expect_doppelganger(...) test_plot.R:44:2
+ 3. testthat::expect_snapshot_file(...)
+
+Warning (test_plot.R:53:5): Plotting mkinfit, mmkin and mixed model objects is reproducible
+Adding new file snapshot: '_snaps/plot/mixed-model-fit-for-saem-object-with-mkin-transformations.svg'
 ────────────────────────────────────────────────────────────────────────────────
 ✔ |   4       | Residuals extracted from mkinfit models
 ✔ |   2       | Complex test case from Schaefer et al. (2007) Piacenza paper [1.5 s]
-✔ |   7       | Fitting the SFORB model [3.8 s]
+✔ |   7       | Fitting the SFORB model [3.9 s]
 ✔ |   1       | Summaries of old mkinfit objects
 ✔ |   4       | Summary [0.1 s]
 ✔ |   4       | Results for synthetic data established in expertise for UBA (Ranke 2014) [2.3 s]
-✔ |   9       | Hypothesis tests [8.5 s]
+✔ |   9       | Hypothesis tests [8.6 s]
 ✔ |   4       | Calculation of maximum time weighted average concentrations (TWAs) [2.2 s]
 
 ══ Results ═════════════════════════════════════════════════════════════════════
-Duration: 68.2 s
+Duration: 70.3 s
 
 ── Skipped tests  ──────────────────────────────────────────────────────────────
 • Fitting with saemix takes around 10 minutes when using deSolve (1)
-• getRversion() >= "4.1.0" is TRUE (3)
 
-[ FAIL 0 | WARN 0 | SKIP 4 | PASS 188 ]
+[ FAIL 1 | WARN 2 | SKIP 1 | PASS 205 ]

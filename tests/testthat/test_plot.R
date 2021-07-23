@@ -14,8 +14,6 @@ test_that("Plotting mkinfit, mmkin and mixed model objects is reproducible", {
   fit_C_tc <- mkinfit("SFO", FOCUS_2006_C, error_model = "tc", quiet = TRUE)
   plot_errmod_fit_C_tc <- function() plot_err(fit_C_tc)
 
-
-  skip_if(getRversion() >= "4.1.0")
   vdiffr::expect_doppelganger("mkinfit plot for FOCUS C with defaults", plot_default_FOCUS_C_SFO)
   vdiffr::expect_doppelganger("mkinfit plot for FOCUS C with residuals like in gmkin", plot_res_FOCUS_C_SFO)
   vdiffr::expect_doppelganger("plot_res for FOCUS C", plot_res_FOCUS_C_SFO_2)
