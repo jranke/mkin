@@ -1,7 +1,7 @@
 ---
 title: Example evaluations of the dimethenamid data from 2018
 author: Johannes Ranke
-date: Last change 23 June 2021, built on `r format(Sys.Date(), format = "%d %b %Y")`
+date: Last change 27 July 2021, built on `r format(Sys.Date(), format = "%d %b %Y")`
 output:
   html_document:
     toc: true
@@ -163,8 +163,10 @@ tendency of the algorithm to try parameter combinations unsuitable for
 fitting these data.
 
 ```{r f_parent_nlme, warning = FALSE}
+library(nlme)
 f_parent_nlme_sfo_const <- nlme(f_parent_mkin_const["SFO", ])
-#f_parent_nlme_dfop_const <- nlme(f_parent_mkin_const["DFOP", ]) # error
+#f_parent_nlme_dfop_const <- nlme(f_parent_mkin_const["DFOP", ])
+# maxIter = 50 reached
 f_parent_nlme_sfo_tc <- nlme(f_parent_mkin_tc["SFO", ])
 f_parent_nlme_dfop_tc <- nlme(f_parent_mkin_tc["DFOP", ])
 ```
@@ -180,10 +182,10 @@ used for these attempts can be made visible below.
 f_parent_nlme_sfo_const_logchol <- nlme(f_parent_mkin_const["SFO", ],
   random = pdLogChol(list(DMTA_0 ~ 1, log_k_DMTA ~ 1)))
 anova(f_parent_nlme_sfo_const, f_parent_nlme_sfo_const_logchol) # not better
-f_parent_nlme_dfop_tc_logchol <- update(f_parent_nlme_dfop_tc,
-  random = pdLogChol(list(DMTA_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_qlogis ~ 1)))
+#f_parent_nlme_dfop_tc_logchol <- update(f_parent_nlme_dfop_tc,
+#  random = pdLogChol(list(DMTA_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_qlogis ~ 1)))
 # using log Cholesky parameterisation for random effects (nlme default) does
-# not converge and gives lots of warnings about the LME step not converging
+# not converge here and gives lots of warnings about the LME step not converging
 ```
 
 The model comparison function of the nlme package can directly be applied
@@ -221,7 +223,7 @@ The convergence plot for the SFO model using constant variance is shown below.
 
 ```{r f_parent_saemix_sfo_const, results = 'hide'}
 library(saemix)
-f_parent_saemix_sfo_const <- saem(f_parent_mkin_const["SFO", ], quiet = TRUE,
+f_parent_saemix_sfo_const <- mkin::saem(f_parent_mkin_const["SFO", ], quiet = TRUE,
   transformations = "saemix")
 plot(f_parent_saemix_sfo_const$so, plot.type = "convergence")
 ```
@@ -230,18 +232,19 @@ Obviously the default number of iterations is sufficient to reach convergence.
 This can also be said for the SFO fit using the two-component error model.
 
 ```{r f_parent_saemix_sfo_tc, results = 'hide'}
-f_parent_saemix_sfo_tc <- saem(f_parent_mkin_tc["SFO", ], quiet = TRUE,
+f_parent_saemix_sfo_tc <- mkin::saem(f_parent_mkin_tc["SFO", ], quiet = TRUE,
   transformations = "saemix")
 plot(f_parent_saemix_sfo_tc$so, plot.type = "convergence")
 ```
 
 When fitting the DFOP model with constant variance, parameter convergence
-is not as unambiguous. Therefore, the number of iterations in the first
+is not as unambiguous (see the failure of nlme with the default number of
+iterations above). Therefore, the number of iterations in the first
 phase of the algorithm was increased, leading to visually satisfying
 convergence.
 
 ```{r f_parent_saemix_dfop_const, results = 'hide'}
-f_parent_saemix_dfop_const <- saem(f_parent_mkin_const["DFOP", ], quiet = TRUE,
+f_parent_saemix_dfop_const <- mkin::saem(f_parent_mkin_const["DFOP", ], quiet = TRUE,
   control = saemixControl(nbiter.saemix = c(800, 200), print = FALSE,
     save = FALSE, save.graphs = FALSE, displayProgress = FALSE),
   transformations = "saemix")
@@ -250,11 +253,11 @@ plot(f_parent_saemix_dfop_const$so, plot.type = "convergence")
 
 The same applies to the case where the DFOP model is fitted with the
 two-component error model. Convergence of the variance of k2 is enhanced
-by using the two-component error, it remains pretty stable already after 200
+by using the two-component error, it remains more or less stable already after 200
 iterations of the first phase.
 
 ```{r f_parent_saemix_dfop_tc_moreiter, results = 'hide'}
-f_parent_saemix_dfop_tc_moreiter <- saem(f_parent_mkin_tc["DFOP", ], quiet = TRUE,
+f_parent_saemix_dfop_tc_moreiter <- mkin::saem(f_parent_mkin_tc["DFOP", ], quiet = TRUE,
   control = saemixControl(nbiter.saemix = c(800, 200), print = FALSE,
     save = FALSE, save.graphs = FALSE, displayProgress = FALSE),
   transformations = "saemix")
@@ -306,6 +309,7 @@ First, the focei algorithm is used for the four model combinations and the
 goodness of fit of the results is compared.
 
 ```{r f_parent_nlmixr_focei, results = "hide", message = FALSE, warning = FALSE}
+library(nlmixr)
 f_parent_nlmixr_focei_sfo_const <- nlmixr(f_parent_mkin_const["SFO", ], est = "focei")
 f_parent_nlmixr_focei_sfo_tc <- nlmixr(f_parent_mkin_tc["SFO", ], est = "focei")
 f_parent_nlmixr_focei_dfop_const <- nlmixr(f_parent_mkin_const["DFOP", ], est = "focei")
@@ -317,7 +321,14 @@ AIC(f_parent_nlmixr_focei_sfo_const$nm, f_parent_nlmixr_focei_sfo_tc$nm,
   f_parent_nlmixr_focei_dfop_const$nm, f_parent_nlmixr_focei_dfop_tc$nm)
 ```
 
-The AIC values are very close to the ones obtained with nlme.
+The AIC values are very close to the ones obtained with nlme which are repeated below
+for convenience.
+
+```{r AIC_parent_nlme_rep}
+AIC(
+  f_parent_nlme_sfo_const, f_parent_nlme_sfo_tc, f_parent_nlme_dfop_tc
+)
+```
 
 Secondly, we use the SAEM estimation routine and check the convergence plots for
 SFO with constant variance
@@ -333,7 +344,7 @@ for SFO with two-component error
 ```{r f_parent_nlmixr_saem_sfo_tc, results = "hide", warning = FALSE, message = FALSE}
 f_parent_nlmixr_saem_sfo_tc <- nlmixr(f_parent_mkin_tc["SFO", ], est = "saem",
   control = nlmixr::saemControl(logLik = TRUE))
-nlmixr::traceplot(f_parent_nlmixr_saem_sfo_tc$nm)
+traceplot(f_parent_nlmixr_saem_sfo_tc$nm)
 ```
 
 For DFOP with constant variance, the convergence plots show considerable instability
@@ -343,7 +354,7 @@ the number of parallel chains for the first phase of algorithm.
 ```{r f_parent_nlmixr_saem_dfop_const, results = "hide", warning = FALSE, message = FALSE}
 f_parent_nlmixr_saem_dfop_const <- nlmixr(f_parent_mkin_const["DFOP", ], est = "saem",
   control = nlmixr::saemControl(logLik = TRUE, nBurn = 1000), nmc = 15)
-nlmixr::traceplot(f_parent_nlmixr_saem_dfop_const$nm)
+traceplot(f_parent_nlmixr_saem_dfop_const$nm)
 ```
 
 For DFOP with two-component error, the same increase in iterations and parallel
@@ -354,7 +365,7 @@ erratic convergence, so this may not be necessary to this degree.
 ```{r f_parent_nlmixr_saem_dfop_tc, results = "hide", warning = FALSE, message = FALSE}
 f_parent_nlmixr_saem_dfop_tc <- nlmixr(f_parent_mkin_tc["DFOP", ], est = "saem",
   control = nlmixr::saemControl(logLik = TRUE, nBurn = 1000, nmc = 15))
-nlmixr::traceplot(f_parent_nlmixr_saem_dfop_tc$nm)
+traceplot(f_parent_nlmixr_saem_dfop_tc$nm)
 ```
 
 The AIC values are internally calculated using Gaussian quadrature. For an
@@ -366,8 +377,20 @@ AIC(f_parent_nlmixr_saem_sfo_const$nm, f_parent_nlmixr_saem_sfo_tc$nm,
   f_parent_nlmixr_saem_dfop_const$nm, f_parent_nlmixr_saem_dfop_tc$nm)
 ```
 
+The following table gives the AIC values obtained with the three packages.
 
-
+```{r AIC_all}
+AIC_all <- data.frame(
+  nlme = c(AIC(f_parent_nlme_sfo_const), AIC(f_parent_nlme_sfo_tc), NA, AIC(f_parent_nlme_dfop_tc)),
+  nlmixr_focei = sapply(list(f_parent_nlmixr_focei_sfo_const$nm, f_parent_nlmixr_focei_sfo_tc$nm,
+  f_parent_nlmixr_focei_dfop_const$nm, f_parent_nlmixr_focei_dfop_tc$nm), AIC),
+  saemix = sapply(list(f_parent_saemix_sfo_const$so, f_parent_saemix_sfo_tc$so,
+    f_parent_saemix_dfop_const$so, f_parent_saemix_dfop_tc_moreiter$so), AIC),
+  nlmixr_saem = sapply(list(f_parent_nlmixr_saem_sfo_const$nm, f_parent_nlmixr_saem_sfo_tc$nm,
+  f_parent_nlmixr_saem_dfop_const$nm, f_parent_nlmixr_saem_dfop_tc$nm), AIC)
+)
+kable(AIC_all)
+```
 
 # References
 
