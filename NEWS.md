@@ -1,4 +1,4 @@
-# mkin 1.0.4 (Unreleased)
+# mkin 1.0.4 (2021-04-20)
 
 - All plotting functions setting graphical parameters: Use on.exit() for resetting graphical parameters
 
