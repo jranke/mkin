@@ -10,6 +10,8 @@
 
 - 'plot.mixed.mmkin': Gains arguments 'test_log_parms' and 'conf.level'
 
+- 'vignettes/web_only/dimethenamid_2018.rmd': Example evaluations of the dimethenamid data.
+
 # mkin 1.0.4 (2021-04-20)
 
 - All plotting functions setting graphical parameters: Use on.exit() for resetting graphical parameters
