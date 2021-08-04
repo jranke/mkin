@@ -1,7 +1,7 @@
 ---
 title: Example evaluations of the dimethenamid data from 2018
 author: Johannes Ranke
-date: Last change 27 July 2021, built on `r format(Sys.Date(), format = "%d %b %Y")`
+date: Last change 4 August 2021, built on `r format(Sys.Date(), format = "%d %b %Y")`
 output:
   html_document:
     toc: true
@@ -381,6 +381,8 @@ The following table gives the AIC values obtained with the three packages.
 
 ```{r AIC_all}
 AIC_all <- data.frame(
+  "Degradation model" = c("SFO", "SFO", "DFOP", "DFOP"),
+  "Error model" = c("const", "tc", "const", "tc"),
   nlme = c(AIC(f_parent_nlme_sfo_const), AIC(f_parent_nlme_sfo_tc), NA, AIC(f_parent_nlme_dfop_tc)),
   nlmixr_focei = sapply(list(f_parent_nlmixr_focei_sfo_const$nm, f_parent_nlmixr_focei_sfo_tc$nm,
   f_parent_nlmixr_focei_dfop_const$nm, f_parent_nlmixr_focei_dfop_tc$nm), AIC),
