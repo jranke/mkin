@@ -11,11 +11,11 @@
 #' in the 'dataset_generation' directory. In the code, page numbers are given for
 #' specific pieces of information in the comments.
 #'
-#' @format An [mkindsg] object grouping eight datasets with some meta information
+#' @format An [mkindsg] object grouping seven datasets with some meta information
 #' @source Rapporteur Member State Germany, Co-Rapporteur Member State Bulgaria (2018)
 #'   Renewal Assessment Report Dimethenamid-P Volume 3 - B.8 Environmental fate and behaviour
 #'   Rev. 2 - November 2017
-#'   \url{http://registerofquestions.efsa.europa.eu/roqFrontend/outputLoader?output=ON-5211}
+#'   \url{https://open.efsa.europa.eu/study-inventory/EFSA-Q-2014-00716}
 #' @examples
 #' print(dimethenamid_2018)
 "dimethenamid_2018"
