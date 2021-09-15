@@ -5,13 +5,13 @@
 \alias{dimethenamid_2018}
 \title{Aerobic soil degradation data on dimethenamid and dimethenamid-P from the EU assessment in 2018}
 \format{
-An \link{mkindsg} object grouping eight datasets with some meta information
+An \link{mkindsg} object grouping seven datasets with some meta information
 }
 \source{
 Rapporteur Member State Germany, Co-Rapporteur Member State Bulgaria (2018)
 Renewal Assessment Report Dimethenamid-P Volume 3 - B.8 Environmental fate and behaviour
 Rev. 2 - November 2017
-\url{http://registerofquestions.efsa.europa.eu/roqFrontend/outputLoader?output=ON-5211}
+\url{https://open.efsa.europa.eu/study-inventory/EFSA-Q-2014-00716}
 }
 \usage{
 dimethenamid_2018

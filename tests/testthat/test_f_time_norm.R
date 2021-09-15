@@ -13,7 +13,7 @@ test_that("Time step normalisation for a dataset works", {
   # Reference values from Dimethenamid RAR 2018 Vol3 B.8
   expect_equal(round(dimethenamid_2018$f_time_norm, 3), 
     c(1,
-      rep(0.971, 2),                   # p. 56
+      0.971,                           # p. 56
       rep(round(1.329 * 0.924, 3), 2), # p. 51
       0.623, 0.768, 0.673)             # p. 45
   )
