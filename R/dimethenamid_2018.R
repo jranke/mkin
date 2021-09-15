@@ -15,7 +15,7 @@
 #' @source Rapporteur Member State Germany, Co-Rapporteur Member State Bulgaria (2018)
 #'   Renewal Assessment Report Dimethenamid-P Volume 3 - B.8 Environmental fate and behaviour
 #'   Rev. 2 - November 2017
-#'   \url{https://open.efsa.europa.eu/study-inventory/EFSA-Q-2014-00716}
+#'   \href{https://open.efsa.europa.eu}{https://open.efsa.europa.eu/study-inventory/EFSA-Q-2014-00716}
 #' @examples
 #' print(dimethenamid_2018)
 "dimethenamid_2018"
