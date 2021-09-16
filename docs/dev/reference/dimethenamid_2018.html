@@ -77,7 +77,7 @@ constrained by data protection regulations." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.0.5</span>
+        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.1.0</span>
       </span>
     </div>
 
@@ -162,7 +162,7 @@ constrained by data protection regulations.</p>
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>An <a href='mkindsg.html'>mkindsg</a> object grouping eight datasets with some meta information</p>
+    <p>An <a href='mkindsg.html'>mkindsg</a> object grouping seven datasets with some meta information</p>
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
     <p>Rapporteur Member State Germany, Co-Rapporteur Member State Bulgaria (2018)
@@ -177,42 +177,36 @@ specific pieces of information in the comments.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>dimethenamid_2018</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;mkindsg&gt; holding 8 mkinds objects
+</div><div class='output co'>#&gt; &lt;mkindsg&gt; holding 7 mkinds objects
 #&gt; Title $title:  Aerobic soil degradation data on dimethenamid-P from the EU assessment in 2018 
 #&gt; Occurrence of observed compounds $observed_n:
 #&gt; DMTAP   M23   M27   M31  DMTA 
-#&gt;     4     7     7     7     4 
+#&gt;     3     7     7     7     4 
 #&gt; Time normalisation factors $f_time_norm:
-#&gt; [1] 1.0000000 0.9706477 0.9706477 1.2284784 1.2284784 0.6233856 0.7678922
-#&gt; [8] 0.6733938
+#&gt; [1] 1.0000000 0.9706477 1.2284784 1.2284784 0.6233856 0.7678922 0.6733938
 #&gt; Meta information $meta:
-#&gt;                       study  usda_soil_type study_moisture_ref_type
-#&gt; Calke         Unsworth 2014      Sandy loam                     pF2
-#&gt; Borstel 1 Staudenmaier 2013            Sand                     pF1
-#&gt; Borstel 2 Staudenmaier 2009            Sand                     pF1
-#&gt; Elliot 1         Wendt 1997       Clay loam                   pF2.5
-#&gt; Elliot 2         Wendt 1997       Clay loam                   pF2.5
-#&gt; Flaach           König 1996 Sandy clay loam                     pF1
-#&gt; BBA 2.2          König 1995      Loamy sand                     pF1
-#&gt; BBA 2.3          König 1995      Sandy loam                     pF1
-#&gt;           rel_moisture study_ref_moisture temperature
-#&gt; Calke             1.00                 NA          20
-#&gt; Borstel 1         0.50              23.00          20
-#&gt; Borstel 2         0.50              23.00          20
-#&gt; Elliot 1          0.75              33.37          23
-#&gt; Elliot 2          0.75              33.37          23
-#&gt; Flaach            0.40                 NA          20
-#&gt; BBA 2.2           0.40                 NA          20
-#&gt; BBA 2.3           0.40                 NA          20</div><div class='input'><span class='va'>dmta_ds</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>8</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>i</span><span class='op'>)</span> <span class='op'>{</span>
+#&gt;                      study  usda_soil_type study_moisture_ref_type rel_moisture
+#&gt; Calke        Unsworth 2014      Sandy loam                     pF2         1.00
+#&gt; Borstel  Staudenmaier 2009            Sand                     pF1         0.50
+#&gt; Elliot 1        Wendt 1997       Clay loam                   pF2.5         0.75
+#&gt; Elliot 2        Wendt 1997       Clay loam                   pF2.5         0.75
+#&gt; Flaach          König 1996 Sandy clay loam                     pF1         0.40
+#&gt; BBA 2.2         König 1995      Loamy sand                     pF1         0.40
+#&gt; BBA 2.3         König 1995      Sandy loam                     pF1         0.40
+#&gt;          study_ref_moisture temperature
+#&gt; Calke                    NA          20
+#&gt; Borstel               23.00          20
+#&gt; Elliot 1              33.37          23
+#&gt; Elliot 2              33.37          23
+#&gt; Flaach                   NA          20
+#&gt; BBA 2.2                  NA          20
+#&gt; BBA 2.3                  NA          20</div><div class='input'><span class='va'>dmta_ds</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>7</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>i</span><span class='op'>)</span> <span class='op'>{</span>
   <span class='va'>ds_i</span> <span class='op'>&lt;-</span> <span class='va'>dimethenamid_2018</span><span class='op'>$</span><span class='va'>ds</span><span class='op'>[[</span><span class='va'>i</span><span class='op'>]</span><span class='op'>]</span><span class='op'>$</span><span class='va'>data</span>
   <span class='va'>ds_i</span><span class='op'>[</span><span class='va'>ds_i</span><span class='op'>$</span><span class='va'>name</span> <span class='op'>==</span> <span class='st'>"DMTAP"</span>, <span class='st'>"name"</span><span class='op'>]</span> <span class='op'>&lt;-</span>  <span class='st'>"DMTA"</span>
   <span class='va'>ds_i</span><span class='op'>$</span><span class='va'>time</span> <span class='op'>&lt;-</span> <span class='va'>ds_i</span><span class='op'>$</span><span class='va'>time</span> <span class='op'>*</span> <span class='va'>dimethenamid_2018</span><span class='op'>$</span><span class='va'>f_time_norm</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span>
   <span class='va'>ds_i</span>
 <span class='op'>}</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>dmta_ds</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>sapply</a></span><span class='op'>(</span><span class='va'>dimethenamid_2018</span><span class='op'>$</span><span class='va'>ds</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>ds</span><span class='op'>)</span> <span class='va'>ds</span><span class='op'>$</span><span class='va'>title</span><span class='op'>)</span>
-<span class='va'>dmta_ds</span><span class='op'>[[</span><span class='st'>"Borstel"</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>dmta_ds</span><span class='op'>[[</span><span class='st'>"Borstel 1"</span><span class='op'>]</span><span class='op'>]</span>, <span class='va'>dmta_ds</span><span class='op'>[[</span><span class='st'>"Borstel 2"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
-<span class='va'>dmta_ds</span><span class='op'>[[</span><span class='st'>"Borstel 1"</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='cn'>NULL</span>
-<span class='va'>dmta_ds</span><span class='op'>[[</span><span class='st'>"Borstel 2"</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='cn'>NULL</span>
 <span class='va'>dmta_ds</span><span class='op'>[[</span><span class='st'>"Elliot"</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>dmta_ds</span><span class='op'>[[</span><span class='st'>"Elliot 1"</span><span class='op'>]</span><span class='op'>]</span>, <span class='va'>dmta_ds</span><span class='op'>[[</span><span class='st'>"Elliot 2"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
 <span class='va'>dmta_ds</span><span class='op'>[[</span><span class='st'>"Elliot 1"</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='cn'>NULL</span>
 <span class='va'>dmta_ds</span><span class='op'>[[</span><span class='st'>"Elliot 2"</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='cn'>NULL</span>
@@ -231,33 +225,33 @@ specific pieces of information in the comments.</p>
 </div><div class='output co'>#&gt; <span class='message'>With est = 'saem', a different error model is required for each observed variableChanging the error model to 'obs_tc' (Two-component error for each observed variable)</span></div><div class='output co'>#&gt; function () 
 #&gt; {
 #&gt;     ini({
-#&gt;         DMTA_0 = 98.7697627680706
-#&gt;         eta.DMTA_0 ~ 2.35171765917765
+#&gt;         DMTA_0 = 98.7132391714013
+#&gt;         eta.DMTA_0 ~ 2.32692496033921
 #&gt;         log_k_M23 = -3.92162409637283
 #&gt;         eta.log_k_M23 ~ 0.549278519419884
-#&gt;         log_k_M27 = -4.33774620773911
-#&gt;         eta.log_k_M27 ~ 0.864474956685295
-#&gt;         log_k_M31 = -4.24767627688461
-#&gt;         eta.log_k_M31 ~ 0.750297149164171
-#&gt;         log_k1 = -2.2341008812259
-#&gt;         eta.log_k1 ~ 0.902976221565793
-#&gt;         log_k2 = -3.7762779983269
-#&gt;         eta.log_k2 ~ 1.57684519529298
-#&gt;         g_qlogis = 0.450175725479389
-#&gt;         eta.g_qlogis ~ 3.0851335687675
-#&gt;         f_DMTA_tffm0_1_qlogis = -2.09240906629456
+#&gt;         log_k_M27 = -4.33057580082049
+#&gt;         eta.log_k_M27 ~ 0.855184233768426
+#&gt;         log_k_M31 = -4.24415516780733
+#&gt;         eta.log_k_M31 ~ 0.745746058085877
+#&gt;         log_k1 = -2.23515804885306
+#&gt;         eta.log_k1 ~ 0.901033446532357
+#&gt;         log_k2 = -3.77581484944379
+#&gt;         eta.log_k2 ~ 1.57682329638124
+#&gt;         g_qlogis = 0.436302910942805
+#&gt;         eta.g_qlogis ~ 3.10190528862808
+#&gt;         f_DMTA_tffm0_1_qlogis = -2.0914852208395
 #&gt;         eta.f_DMTA_tffm0_1_qlogis ~ 0.3
-#&gt;         f_DMTA_tffm0_2_qlogis = -2.18057573598794
+#&gt;         f_DMTA_tffm0_2_qlogis = -2.17879574608926
 #&gt;         eta.f_DMTA_tffm0_2_qlogis ~ 0.3
-#&gt;         f_DMTA_tffm0_3_qlogis = -2.14267187609763
+#&gt;         f_DMTA_tffm0_3_qlogis = -2.14036526460782
 #&gt;         eta.f_DMTA_tffm0_3_qlogis ~ 0.3
-#&gt;         sigma_low_DMTA = 0.697933852349996
+#&gt;         sigma_low_DMTA = 0.700117227383809
 #&gt;         rsd_high_DMTA = 0.0257724286053519
-#&gt;         sigma_low_M23 = 0.697933852349996
+#&gt;         sigma_low_M23 = 0.700117227383809
 #&gt;         rsd_high_M23 = 0.0257724286053519
-#&gt;         sigma_low_M27 = 0.697933852349996
+#&gt;         sigma_low_M27 = 0.700117227383809
 #&gt;         rsd_high_M27 = 0.0257724286053519
-#&gt;         sigma_low_M31 = 0.697933852349996
+#&gt;         sigma_low_M31 = 0.700117227383809
 #&gt;         rsd_high_M31 = 0.0257724286053519
 #&gt;     })
 #&gt;     model({
@@ -295,7 +289,7 @@ specific pieces of information in the comments.</p>
 #&gt;         M31 ~ add(sigma_low_M31) + prop(rsd_high_M31)
 #&gt;     })
 #&gt; }
-#&gt; &lt;environment: 0x555559ac3820&gt;</div><div class='input'><span class='co'># The focei fit takes about four minutes on my system</span>
+#&gt; &lt;environment: 0x555559e97ac0&gt;</div><div class='input'><span class='co'># The focei fit takes about four minutes on my system</span>
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span><span class='op'>(</span>
   <span class='va'>f_dmta_nlmixr_focei</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlmixr/man/nlmixr.html'>nlmixr</a></span><span class='op'>(</span><span class='va'>f_dmta_mkin_tc</span>, est <span class='op'>=</span> <span class='st'>"focei"</span>,
     control <span class='op'>=</span> <span class='fu'>nlmixr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/nlmixr/man/foceiControl.html'>foceiControl</a></span><span class='op'>(</span>print <span class='op'>=</span> <span class='fl'>500</span><span class='op'>)</span><span class='op'>)</span>
@@ -308,7 +302,7 @@ specific pieces of information in the comments.</p>
 #&gt; </div><div class='output co'>#&gt; <span class='message'>→ optimizing duplicate expressions in inner model...</span></div><div class='output co'>#&gt; [====|====|====|====|====|====|====|====|====|====] 0:00:07 
 #&gt; </div><div class='output co'>#&gt; <span class='message'>→ finding duplicate expressions in EBE model...</span></div><div class='output co'>#&gt; [====|====|====|====|====|====|====|====|====|====] 0:00:00 
 #&gt; </div><div class='output co'>#&gt; <span class='message'>→ optimizing duplicate expressions in EBE model...</span></div><div class='output co'>#&gt; [====|====|====|====|====|====|====|====|====|====] 0:00:00 
-#&gt; </div><div class='output co'>#&gt; <span class='message'>→ compiling inner model...</span></div><div class='output co'>#&gt; <span class='message'> </span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> done</span></div><div class='output co'>#&gt; <span class='message'>→ finding duplicate expressions in FD model...</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>→ optimizing duplicate expressions in FD model...</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>→ compiling EBE model...</span></div><div class='output co'>#&gt; <span class='message'> </span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> done</span></div><div class='output co'>#&gt; <span class='message'>→ compiling events FD model...</span></div><div class='output co'>#&gt; <span class='message'> </span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> done</span></div><div class='output co'>#&gt; <span class='message'>Needed Covariates:</span></div><div class='output co'>#&gt; [1] "CMT"</div><div class='output co'>#&gt; <span class='message'>RxODE 1.1.0 using 8 threads (see ?getRxThreads)</span>
+#&gt; </div><div class='output co'>#&gt; <span class='message'>→ compiling inner model...</span></div><div class='output co'>#&gt; <span class='message'> </span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> done</span></div><div class='output co'>#&gt; <span class='message'>→ finding duplicate expressions in FD model...</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>→ optimizing duplicate expressions in FD model...</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>→ compiling EBE model...</span></div><div class='output co'>#&gt; <span class='message'> </span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> done</span></div><div class='output co'>#&gt; <span class='message'>→ compiling events FD model...</span></div><div class='output co'>#&gt; <span class='message'> </span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> done</span></div><div class='output co'>#&gt; <span class='message'>Needed Covariates:</span></div><div class='output co'>#&gt; [1] "CMT"</div><div class='output co'>#&gt; <span class='message'>RxODE 1.1.1 using 8 threads (see ?getRxThreads)</span>
 #&gt; <span class='message'>  no cache: create with `rxCreateCache()`</span></div><div class='output co'>#&gt; <span style='font-weight: bold;'>Key:</span> U: Unscaled Parameters; X: Back-transformed parameters; G: Gill difference gradient approximation
 #&gt; F: Forward difference gradient approximation
 #&gt; C: Central difference gradient approximation
@@ -324,12 +318,12 @@ specific pieces of information in the comments.</p>
 #&gt; <span style='text-decoration: underline;'>|.....................|        o9 |       o10 |...........|...........|</span>
 #&gt; calculating covariance matrix
 #&gt; done</div><div class='output co'>#&gt; <span class='message'>Calculating residuals/tables</span></div><div class='output co'>#&gt; <span class='message'>done</span></div><div class='output co'>#&gt; <span class='warning'>Warning: initial ETAs were nudged; (can control by foceiControl(etaNudge=., etaNudge2=))</span></div><div class='output co'>#&gt; <span class='warning'>Warning: last objective function was not at minimum, possible problems in optimization</span></div><div class='output co'>#&gt; <span class='warning'>Warning: S matrix non-positive definite</span></div><div class='output co'>#&gt; <span class='warning'>Warning: using R matrix to calculate covariance</span></div><div class='output co'>#&gt; <span class='warning'>Warning: gradient problems with initial estimate and covariance; see $scaleInfo</span></div><div class='output co'>#&gt;    user  system elapsed 
-#&gt; 232.621  14.126 246.850 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>f_dmta_nlmixr_focei</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; nlmixr version used for fitting:    2.0.4 
-#&gt; mkin version used for pre-fitting:  1.0.5 
-#&gt; R version used for fitting:         4.1.0 
-#&gt; Date of fit:     Wed Aug  4 15:53:54 2021 
-#&gt; Date of summary: Wed Aug  4 15:53:54 2021 
+#&gt; 230.015   8.962 238.957 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>f_dmta_nlmixr_focei</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; nlmixr version used for fitting:    2.0.5 
+#&gt; mkin version used for pre-fitting:  1.1.0 
+#&gt; R version used for fitting:         4.1.1 
+#&gt; Date of fit:     Thu Sep 16 14:06:55 2021 
+#&gt; Date of summary: Thu Sep 16 14:06:55 2021 
 #&gt; 
 #&gt; Equations:
 #&gt; d_DMTA/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *
@@ -346,23 +340,23 @@ specific pieces of information in the comments.</p>
 #&gt;            exp(-k2 * time))) * DMTA - k_M31 * M31
 #&gt; 
 #&gt; Data:
-#&gt; 568 observations of 4 variable(s) grouped in 6 datasets
+#&gt; 563 observations of 4 variable(s) grouped in 6 datasets
 #&gt; 
 #&gt; Degradation model predictions using RxODE
 #&gt; 
-#&gt; Fitted in 246.669 s
+#&gt; Fitted in 238.792 s
 #&gt; 
 #&gt; Variance model: Two-component variance function 
 #&gt; 
 #&gt; Mean of starting values for individual parameters:
 #&gt;       DMTA_0    log_k_M23    log_k_M27    log_k_M31 f_DMTA_ilr_1 f_DMTA_ilr_2 
-#&gt;      98.7698      -3.9216      -4.3377      -4.2477       0.1380       0.1393 
+#&gt;      98.7132      -3.9216      -4.3306      -4.2442       0.1376       0.1388 
 #&gt; f_DMTA_ilr_3       log_k1       log_k2     g_qlogis 
-#&gt;      -1.7571      -2.2341      -3.7763       0.4502 
+#&gt;      -1.7554      -2.2352      -3.7758       0.4363 
 #&gt; 
 #&gt; Mean of starting values for error model parameters:
 #&gt; sigma_low  rsd_high 
-#&gt;   0.69793   0.02577 
+#&gt;   0.70012   0.02577 
 #&gt; 
 #&gt; Fixed degradation parameter values:
 #&gt; None
@@ -371,20 +365,20 @@ specific pieces of information in the comments.</p>
 #&gt; 
 #&gt; Likelihood calculated by focei  
 #&gt;    AIC  BIC logLik
-#&gt;   1936 2031 -945.9
+#&gt;   1918 2014 -937.2
 #&gt; 
 #&gt; Optimised parameters:
 #&gt;                          est.   lower   upper
-#&gt; DMTA_0                98.7698 98.7356 98.8039
-#&gt; log_k_M23             -3.9216 -3.9235 -3.9197
-#&gt; log_k_M27             -4.3377 -4.3398 -4.3357
-#&gt; log_k_M31             -4.2477 -4.2497 -4.2457
-#&gt; log_k1                -2.2341 -2.2353 -2.2329
-#&gt; log_k2                -3.7763 -3.7781 -3.7744
-#&gt; g_qlogis               0.4502  0.4496  0.4507
-#&gt; f_DMTA_tffm0_1_qlogis -2.0924 -2.0936 -2.0912
-#&gt; f_DMTA_tffm0_2_qlogis -2.1806 -2.1818 -2.1794
-#&gt; f_DMTA_tffm0_3_qlogis -2.1427 -2.1439 -2.1415
+#&gt; DMTA_0                98.7132 98.6801 98.7464
+#&gt; log_k_M23             -3.9216 -3.9235 -3.9198
+#&gt; log_k_M27             -4.3306 -4.3326 -4.3286
+#&gt; log_k_M31             -4.2442 -4.2461 -4.2422
+#&gt; log_k1                -2.2352 -2.2364 -2.2340
+#&gt; log_k2                -3.7758 -3.7776 -3.7740
+#&gt; g_qlogis               0.4363  0.4358  0.4368
+#&gt; f_DMTA_tffm0_1_qlogis -2.0915 -2.0926 -2.0903
+#&gt; f_DMTA_tffm0_2_qlogis -2.1788 -2.1800 -2.1776
+#&gt; f_DMTA_tffm0_3_qlogis -2.1404 -2.1415 -2.1392
 #&gt; 
 #&gt; Correlation: 
 #&gt;                       DMTA_0 l__M23 l__M27 l__M31 log_k1 log_k2 g_qlgs
@@ -410,10 +404,10 @@ specific pieces of information in the comments.</p>
 #&gt; 
 #&gt; Random effects (omega):
 #&gt;                           eta.DMTA_0 eta.log_k_M23 eta.log_k_M27 eta.log_k_M31
-#&gt; eta.DMTA_0                     2.352        0.0000        0.0000        0.0000
+#&gt; eta.DMTA_0                     2.327        0.0000        0.0000        0.0000
 #&gt; eta.log_k_M23                  0.000        0.5493        0.0000        0.0000
-#&gt; eta.log_k_M27                  0.000        0.0000        0.8645        0.0000
-#&gt; eta.log_k_M31                  0.000        0.0000        0.0000        0.7503
+#&gt; eta.log_k_M27                  0.000        0.0000        0.8552        0.0000
+#&gt; eta.log_k_M31                  0.000        0.0000        0.0000        0.7457
 #&gt; eta.log_k1                     0.000        0.0000        0.0000        0.0000
 #&gt; eta.log_k2                     0.000        0.0000        0.0000        0.0000
 #&gt; eta.g_qlogis                   0.000        0.0000        0.0000        0.0000
@@ -425,9 +419,9 @@ specific pieces of information in the comments.</p>
 #&gt; eta.log_k_M23                  0.000      0.000        0.000
 #&gt; eta.log_k_M27                  0.000      0.000        0.000
 #&gt; eta.log_k_M31                  0.000      0.000        0.000
-#&gt; eta.log_k1                     0.903      0.000        0.000
+#&gt; eta.log_k1                     0.901      0.000        0.000
 #&gt; eta.log_k2                     0.000      1.577        0.000
-#&gt; eta.g_qlogis                   0.000      0.000        3.085
+#&gt; eta.g_qlogis                   0.000      0.000        3.102
 #&gt; eta.f_DMTA_tffm0_1_qlogis      0.000      0.000        0.000
 #&gt; eta.f_DMTA_tffm0_2_qlogis      0.000      0.000        0.000
 #&gt; eta.f_DMTA_tffm0_3_qlogis      0.000      0.000        0.000
@@ -456,44 +450,44 @@ specific pieces of information in the comments.</p>
 #&gt; 
 #&gt; Variance model:
 #&gt; sigma_low  rsd_high 
-#&gt;   0.69793   0.02577 
+#&gt;   0.70012   0.02577 
 #&gt; 
 #&gt; Backtransformed parameters:
 #&gt;                   est.    lower    upper
-#&gt; DMTA_0        98.76976 98.73563 98.80390
+#&gt; DMTA_0        98.71324 98.68012 98.74636
 #&gt; k_M23          0.01981  0.01977  0.01985
-#&gt; k_M27          0.01307  0.01304  0.01309
-#&gt; k_M31          0.01430  0.01427  0.01433
-#&gt; f_DMTA_to_M23  0.10984       NA       NA
-#&gt; f_DMTA_to_M27  0.09036       NA       NA
-#&gt; f_DMTA_to_M31  0.08399       NA       NA
-#&gt; k1             0.10709  0.10696  0.10722
-#&gt; k2             0.02291  0.02287  0.02295
-#&gt; g              0.61068  0.61055  0.61081
+#&gt; k_M27          0.01316  0.01313  0.01319
+#&gt; k_M31          0.01435  0.01432  0.01438
+#&gt; f_DMTA_to_M23  0.10993       NA       NA
+#&gt; f_DMTA_to_M27  0.09049       NA       NA
+#&gt; f_DMTA_to_M31  0.08414       NA       NA
+#&gt; k1             0.10698  0.10685  0.10710
+#&gt; k2             0.02292  0.02288  0.02296
+#&gt; g              0.60738  0.60725  0.60751
 #&gt; 
 #&gt; Resulting formation fractions:
 #&gt;                ff
-#&gt; DMTA_M23  0.10984
-#&gt; DMTA_M27  0.09036
-#&gt; DMTA_M31  0.08399
-#&gt; DMTA_sink 0.71581
+#&gt; DMTA_M23  0.10993
+#&gt; DMTA_M27  0.09049
+#&gt; DMTA_M31  0.08414
+#&gt; DMTA_sink 0.71543
 #&gt; 
 #&gt; Estimated disappearance times:
-#&gt;       DT50   DT90 DT50back DT50_k1 DT50_k2
-#&gt; DMTA 10.66  59.78       18   6.473   30.26
-#&gt; M23  34.99 116.24       NA      NA      NA
-#&gt; M27  53.05 176.23       NA      NA      NA
-#&gt; M31  48.48 161.05       NA      NA      NA</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_dmta_nlmixr_focei</span><span class='op'>)</span>
+#&gt;       DT50  DT90 DT50back DT50_k1 DT50_k2
+#&gt; DMTA 10.72  60.1    18.09    6.48   30.24
+#&gt; M23  34.99 116.2       NA      NA      NA
+#&gt; M27  52.67 175.0       NA      NA      NA
+#&gt; M31  48.31 160.5       NA      NA      NA</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_dmta_nlmixr_focei</span><span class='op'>)</span>
 </div><div class='img'><img src='dimethenamid_2018-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># Using saemix takes about 18 minutes</span>
 <span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span><span class='op'>(</span>
   <span class='va'>f_dmta_saemix</span> <span class='op'>&lt;-</span> <span class='fu'><a href='saem.html'>saem</a></span><span class='op'>(</span><span class='va'>f_dmta_mkin_tc</span>, test_log_parms <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='op'>)</span>
 </div><div class='output co'>#&gt; Running main SAEM algorithm
-#&gt; [1] "Wed Aug  4 15:53:55 2021"
+#&gt; [1] "Thu Sep 16 14:06:56 2021"
 #&gt; ....
 #&gt;     Minimisation finished
-#&gt; [1] "Wed Aug  4 16:12:40 2021"</div><div class='output co'>#&gt;     user   system  elapsed 
-#&gt; 1192.021    0.064 1192.182 </div><div class='input'>
+#&gt; [1] "Thu Sep 16 14:25:28 2021"</div><div class='output co'>#&gt;     user   system  elapsed 
+#&gt; 1176.278    0.021 1176.388 </div><div class='input'>
 <span class='co'># nlmixr with est = "saem" is pretty fast with default iteration numbers, most</span>
 <span class='co'># of the time (about 2.5 minutes) is spent for calculating the log likelihood at the end</span>
 <span class='co'># The likelihood calculated for the nlmixr fit is much lower than that found by saemix</span>
@@ -504,15 +498,15 @@ specific pieces of information in the comments.</p>
   <span class='va'>f_dmta_nlmixr_saem</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlmixr/man/nlmixr.html'>nlmixr</a></span><span class='op'>(</span><span class='va'>f_dmta_mkin_tc</span>, est <span class='op'>=</span> <span class='st'>"saem"</span>,
     control <span class='op'>=</span> <span class='fu'>nlmixr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/nlmixr/man/saemControl.html'>saemControl</a></span><span class='op'>(</span>print <span class='op'>=</span> <span class='fl'>500</span>, logLik <span class='op'>=</span> <span class='cn'>TRUE</span>, nmc <span class='op'>=</span> <span class='fl'>9</span><span class='op'>)</span><span class='op'>)</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>With est = 'saem', a different error model is required for each observed variableChanging the error model to 'obs_tc' (Two-component error for each observed variable)</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span> parameter labels from comments are typically ignored in non-interactive mode</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span> Need to run with the source intact to parse comments</span></div><div class='output co'>#&gt; <span class='message'> </span></div><div class='output co'>#&gt; <span class='message'>→ generate SAEM model</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> done</span></div><div class='output co'>#&gt; 1:    98.3427   -3.5148   -3.3187   -3.7728   -2.1163   -2.8457    0.9482   -2.8064   -2.7412   -2.8745    2.7912    0.6805    0.8213    0.8055    0.8578    1.4980    2.9309    0.2850    0.2854    0.2850    4.0990    0.3821    3.5349    0.6537    5.4143    0.0002    4.5093    0.1905
-#&gt; 500:    97.8277   -4.3506   -4.0318   -4.1520   -3.0553   -3.5843    1.1326   -2.0873   -2.0421   -2.0751    0.2960    1.2515    0.2531    0.3807    0.7928    0.8863    6.5211    0.1433    0.1082    0.3353    0.8960    0.0470    0.7501    0.0475    0.9527    0.0281    0.7321    0.0594</div><div class='output co'>#&gt; <span class='message'>Calculating covariance matrix</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>Calculating -2LL by Gaussian quadrature (nnodes=3,nsd=1.6)</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>→ creating full model...</span></div><div class='output co'>#&gt; <span class='message'>→ pruning branches (<span style='color: #262626; background-color: #DADADA;'>`if`</span>/<span style='color: #262626; background-color: #DADADA;'>`else`</span>)...</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> done</span></div><div class='output co'>#&gt; <span class='message'>→ loading into <span style='color: #0000BB;'>symengine</span> environment...</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> done</span></div><div class='output co'>#&gt; <span class='message'>→ compiling EBE model...</span></div><div class='output co'>#&gt; <span class='message'> </span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> done</span></div><div class='output co'>#&gt; <span class='message'>Needed Covariates:</span></div><div class='output co'>#&gt; [1] "CMT"</div><div class='output co'>#&gt; <span class='message'>Calculating residuals/tables</span></div><div class='output co'>#&gt; <span class='message'>done</span></div><div class='output co'>#&gt;    user  system elapsed 
-#&gt; 813.299   3.736 151.935 </div><div class='input'><span class='fu'>traceplot</span><span class='op'>(</span><span class='va'>f_dmta_nlmixr_saem</span><span class='op'>$</span><span class='va'>nm</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>With est = 'saem', a different error model is required for each observed variableChanging the error model to 'obs_tc' (Two-component error for each observed variable)</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span> parameter labels from comments are typically ignored in non-interactive mode</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span> Need to run with the source intact to parse comments</span></div><div class='output co'>#&gt; <span class='message'> </span></div><div class='output co'>#&gt; <span class='message'>→ generate SAEM model</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> done</span></div><div class='output co'>#&gt; 1:    98.3400   -3.5096   -3.3392   -3.7596   -2.2055   -2.7755    1.0281   -2.7872   -2.7223   -2.8341    2.6422    0.7027    0.8124    0.7085    0.8560    1.4980    3.2777    0.3063    0.2850    0.2850    4.1120    0.3716    4.4582    0.3994    4.4820    0.4025    3.7803    0.5780
+#&gt; 500:    97.8212   -4.4030   -4.0872   -4.1289   -2.8278   -4.3505    2.6614   -2.1252   -2.1308   -2.0749    2.9463    1.2933    0.2802    0.3467    0.4814    0.7877    3.0743    0.1508    0.1523    0.3155    0.9557    0.0333    0.4787    0.1073    0.6826    0.0707    0.7849    0.0356</div><div class='output co'>#&gt; <span class='message'>Calculating covariance matrix</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>Calculating -2LL by Gaussian quadrature (nnodes=3,nsd=1.6)</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>→ creating full model...</span></div><div class='output co'>#&gt; <span class='message'>→ pruning branches (<span style='color: #262626; background-color: #DADADA;'>`if`</span>/<span style='color: #262626; background-color: #DADADA;'>`else`</span>)...</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> done</span></div><div class='output co'>#&gt; <span class='message'>→ loading into <span style='color: #0000BB;'>symengine</span> environment...</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> done</span></div><div class='output co'>#&gt; <span class='message'>→ compiling EBE model...</span></div><div class='output co'>#&gt; <span class='message'> </span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> done</span></div><div class='output co'>#&gt; <span class='message'>Needed Covariates:</span></div><div class='output co'>#&gt; [1] "CMT"</div><div class='output co'>#&gt; <span class='message'>Calculating residuals/tables</span></div><div class='output co'>#&gt; <span class='message'>done</span></div><div class='output co'>#&gt;    user  system elapsed 
+#&gt; 800.784   3.715 149.687 </div><div class='input'><span class='fu'>traceplot</span><span class='op'>(</span><span class='va'>f_dmta_nlmixr_saem</span><span class='op'>$</span><span class='va'>nm</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='error'>Error in traceplot(f_dmta_nlmixr_saem$nm): could not find function "traceplot"</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>f_dmta_nlmixr_saem</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; nlmixr version used for fitting:    2.0.4 
-#&gt; mkin version used for pre-fitting:  1.0.5 
-#&gt; R version used for fitting:         4.1.0 
-#&gt; Date of fit:     Wed Aug  4 16:16:18 2021 
-#&gt; Date of summary: Wed Aug  4 16:16:18 2021 
+</div><div class='output co'>#&gt; nlmixr version used for fitting:    2.0.5 
+#&gt; mkin version used for pre-fitting:  1.1.0 
+#&gt; R version used for fitting:         4.1.1 
+#&gt; Date of fit:     Thu Sep 16 14:29:02 2021 
+#&gt; Date of summary: Thu Sep 16 14:29:02 2021 
 #&gt; 
 #&gt; Equations:
 #&gt; d_DMTA/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *
@@ -529,25 +523,25 @@ specific pieces of information in the comments.</p>
 #&gt;            exp(-k2 * time))) * DMTA - k_M31 * M31
 #&gt; 
 #&gt; Data:
-#&gt; 568 observations of 4 variable(s) grouped in 6 datasets
+#&gt; 563 observations of 4 variable(s) grouped in 6 datasets
 #&gt; 
 #&gt; Degradation model predictions using RxODE
 #&gt; 
-#&gt; Fitted in 151.67 s
+#&gt; Fitted in 149.421 s
 #&gt; 
 #&gt; Variance model: Two-component variance function 
 #&gt; 
 #&gt; Mean of starting values for individual parameters:
 #&gt;       DMTA_0    log_k_M23    log_k_M27    log_k_M31 f_DMTA_ilr_1 f_DMTA_ilr_2 
-#&gt;      98.7698      -3.9216      -4.3377      -4.2477       0.1380       0.1393 
+#&gt;      98.7132      -3.9216      -4.3306      -4.2442       0.1376       0.1388 
 #&gt; f_DMTA_ilr_3       log_k1       log_k2     g_qlogis 
-#&gt;      -1.7571      -2.2341      -3.7763       0.4502 
+#&gt;      -1.7554      -2.2352      -3.7758       0.4363 
 #&gt; 
 #&gt; Mean of starting values for error model parameters:
 #&gt; sigma_low_DMTA  rsd_high_DMTA  sigma_low_M23   rsd_high_M23  sigma_low_M27 
-#&gt;        0.69793        0.02577        0.69793        0.02577        0.69793 
+#&gt;        0.70012        0.02577        0.70012        0.02577        0.70012 
 #&gt;   rsd_high_M27  sigma_low_M31   rsd_high_M31 
-#&gt;        0.02577        0.69793        0.02577 
+#&gt;        0.02577        0.70012        0.02577 
 #&gt; 
 #&gt; Fixed degradation parameter values:
 #&gt; None
@@ -556,32 +550,32 @@ specific pieces of information in the comments.</p>
 #&gt; 
 #&gt; Likelihood calculated by focei  
 #&gt;    AIC  BIC logLik
-#&gt;   2036 2157 -989.8
+#&gt;   1953 2074 -948.3
 #&gt; 
 #&gt; Optimised parameters:
 #&gt;                         est.  lower  upper
-#&gt; DMTA_0                97.828 96.121 99.535
-#&gt; log_k_M23             -4.351 -5.300 -3.401
-#&gt; log_k_M27             -4.032 -4.470 -3.594
-#&gt; log_k_M31             -4.152 -4.689 -3.615
-#&gt; log_k1                -3.055 -3.785 -2.325
-#&gt; log_k2                -3.584 -4.517 -2.651
-#&gt; g_qlogis               1.133 -2.165  4.430
-#&gt; f_DMTA_tffm0_1_qlogis -2.087 -2.407 -1.768
-#&gt; f_DMTA_tffm0_2_qlogis -2.042 -2.336 -1.748
-#&gt; f_DMTA_tffm0_3_qlogis -2.075 -2.557 -1.593
+#&gt; DMTA_0                97.821 95.862 99.780
+#&gt; log_k_M23             -4.403 -5.376 -3.430
+#&gt; log_k_M27             -4.087 -4.545 -3.629
+#&gt; log_k_M31             -4.129 -4.639 -3.618
+#&gt; log_k1                -2.828 -3.389 -2.266
+#&gt; log_k2                -4.351 -5.472 -3.229
+#&gt; g_qlogis               2.661  0.824  4.499
+#&gt; f_DMTA_tffm0_1_qlogis -2.125 -2.449 -1.801
+#&gt; f_DMTA_tffm0_2_qlogis -2.131 -2.468 -1.794
+#&gt; f_DMTA_tffm0_3_qlogis -2.075 -2.540 -1.610
 #&gt; 
 #&gt; Correlation: 
 #&gt;                       DMTA_0 l__M23 l__M27 l__M31 log_k1 log_k2 g_qlgs
-#&gt; log_k_M23             -0.031                                          
-#&gt; log_k_M27             -0.050  0.004                                   
-#&gt; log_k_M31             -0.032  0.003  0.078                            
-#&gt; log_k1                 0.014 -0.002 -0.002 -0.001                     
-#&gt; log_k2                 0.059  0.006 -0.001  0.002 -0.037              
-#&gt; g_qlogis              -0.077  0.005  0.009  0.004  0.035 -0.201       
-#&gt; f_DMTA_tffm0_1_qlogis -0.104  0.066  0.009  0.006  0.000 -0.011  0.014
-#&gt; f_DMTA_tffm0_2_qlogis -0.120  0.013  0.081 -0.033 -0.002 -0.013  0.017
-#&gt; f_DMTA_tffm0_3_qlogis -0.086  0.010  0.060  0.078 -0.002 -0.005  0.010
+#&gt; log_k_M23             -0.019                                          
+#&gt; log_k_M27             -0.028  0.004                                   
+#&gt; log_k_M31             -0.019  0.003  0.075                            
+#&gt; log_k1                 0.038 -0.004 -0.006 -0.003                     
+#&gt; log_k2                 0.046  0.011  0.008  0.009  0.068              
+#&gt; g_qlogis              -0.067  0.004  0.006  0.001 -0.076 -0.409       
+#&gt; f_DMTA_tffm0_1_qlogis -0.062  0.055  0.006  0.004 -0.008 -0.004  0.012
+#&gt; f_DMTA_tffm0_2_qlogis -0.062  0.010  0.058 -0.034 -0.008 -0.007  0.014
+#&gt; f_DMTA_tffm0_3_qlogis -0.052  0.009  0.056  0.071 -0.006 -0.001  0.008
 #&gt;                       f_DMTA_0_1 f_DMTA_0_2
 #&gt; log_k_M23                                  
 #&gt; log_k_M27                                  
@@ -590,15 +584,15 @@ specific pieces of information in the comments.</p>
 #&gt; log_k2                                     
 #&gt; g_qlogis                                   
 #&gt; f_DMTA_tffm0_1_qlogis                      
-#&gt; f_DMTA_tffm0_2_qlogis  0.026               
-#&gt; f_DMTA_tffm0_3_qlogis  0.019      0.002    
+#&gt; f_DMTA_tffm0_2_qlogis  0.017               
+#&gt; f_DMTA_tffm0_3_qlogis  0.014     -0.005    
 #&gt; 
 #&gt; Random effects (omega):
 #&gt;                           eta.DMTA_0 eta.log_k_M23 eta.log_k_M27 eta.log_k_M31
-#&gt; eta.DMTA_0                     0.296         0.000        0.0000        0.0000
-#&gt; eta.log_k_M23                  0.000         1.252        0.0000        0.0000
-#&gt; eta.log_k_M27                  0.000         0.000        0.2531        0.0000
-#&gt; eta.log_k_M31                  0.000         0.000        0.0000        0.3807
+#&gt; eta.DMTA_0                     2.946         0.000        0.0000        0.0000
+#&gt; eta.log_k_M23                  0.000         1.293        0.0000        0.0000
+#&gt; eta.log_k_M27                  0.000         0.000        0.2802        0.0000
+#&gt; eta.log_k_M31                  0.000         0.000        0.0000        0.3467
 #&gt; eta.log_k1                     0.000         0.000        0.0000        0.0000
 #&gt; eta.log_k2                     0.000         0.000        0.0000        0.0000
 #&gt; eta.g_qlogis                   0.000         0.000        0.0000        0.0000
@@ -610,9 +604,9 @@ specific pieces of information in the comments.</p>
 #&gt; eta.log_k_M23                 0.0000     0.0000        0.000
 #&gt; eta.log_k_M27                 0.0000     0.0000        0.000
 #&gt; eta.log_k_M31                 0.0000     0.0000        0.000
-#&gt; eta.log_k1                    0.7928     0.0000        0.000
-#&gt; eta.log_k2                    0.0000     0.8863        0.000
-#&gt; eta.g_qlogis                  0.0000     0.0000        6.521
+#&gt; eta.log_k1                    0.4814     0.0000        0.000
+#&gt; eta.log_k2                    0.0000     0.7877        0.000
+#&gt; eta.g_qlogis                  0.0000     0.0000        3.074
 #&gt; eta.f_DMTA_tffm0_1_qlogis     0.0000     0.0000        0.000
 #&gt; eta.f_DMTA_tffm0_2_qlogis     0.0000     0.0000        0.000
 #&gt; eta.f_DMTA_tffm0_3_qlogis     0.0000     0.0000        0.000
@@ -624,8 +618,8 @@ specific pieces of information in the comments.</p>
 #&gt; eta.log_k1                                   0.0000                    0.0000
 #&gt; eta.log_k2                                   0.0000                    0.0000
 #&gt; eta.g_qlogis                                 0.0000                    0.0000
-#&gt; eta.f_DMTA_tffm0_1_qlogis                    0.1433                    0.0000
-#&gt; eta.f_DMTA_tffm0_2_qlogis                    0.0000                    0.1082
+#&gt; eta.f_DMTA_tffm0_1_qlogis                    0.1508                    0.0000
+#&gt; eta.f_DMTA_tffm0_2_qlogis                    0.0000                    0.1523
 #&gt; eta.f_DMTA_tffm0_3_qlogis                    0.0000                    0.0000
 #&gt;                           eta.f_DMTA_tffm0_3_qlogis
 #&gt; eta.DMTA_0                                   0.0000
@@ -637,40 +631,40 @@ specific pieces of information in the comments.</p>
 #&gt; eta.g_qlogis                                 0.0000
 #&gt; eta.f_DMTA_tffm0_1_qlogis                    0.0000
 #&gt; eta.f_DMTA_tffm0_2_qlogis                    0.0000
-#&gt; eta.f_DMTA_tffm0_3_qlogis                    0.3353
+#&gt; eta.f_DMTA_tffm0_3_qlogis                    0.3155
 #&gt; 
 #&gt; Variance model:
 #&gt; sigma_low_DMTA  rsd_high_DMTA  sigma_low_M23   rsd_high_M23  sigma_low_M27 
-#&gt;        0.89603        0.04704        0.75015        0.04753        0.95265 
+#&gt;        0.95572        0.03325        0.47871        0.10733        0.68264 
 #&gt;   rsd_high_M27  sigma_low_M31   rsd_high_M31 
-#&gt;        0.02810        0.73212        0.05942 
+#&gt;        0.07072        0.78486        0.03557 
 #&gt; 
 #&gt; Backtransformed parameters:
 #&gt;                   est.     lower    upper
-#&gt; DMTA_0        97.82774 96.120503 99.53498
-#&gt; k_M23          0.01290  0.004991  0.03334
-#&gt; k_M27          0.01774  0.011451  0.02749
-#&gt; k_M31          0.01573  0.009195  0.02692
-#&gt; f_DMTA_to_M23  0.11033        NA       NA
-#&gt; f_DMTA_to_M27  0.10218        NA       NA
-#&gt; f_DMTA_to_M31  0.08784        NA       NA
-#&gt; k1             0.04711  0.022707  0.09773
-#&gt; k2             0.02775  0.010918  0.07056
-#&gt; g              0.75632  0.102960  0.98823
+#&gt; DMTA_0        97.82122 95.862233 99.78020
+#&gt; k_M23          0.01224  0.004625  0.03239
+#&gt; k_M27          0.01679  0.010615  0.02654
+#&gt; k_M31          0.01610  0.009664  0.02683
+#&gt; f_DMTA_to_M23  0.10668        NA       NA
+#&gt; f_DMTA_to_M27  0.09481        NA       NA
+#&gt; f_DMTA_to_M31  0.08908        NA       NA
+#&gt; k1             0.05914  0.033731  0.10370
+#&gt; k2             0.01290  0.004204  0.03958
+#&gt; g              0.93471  0.695081  0.98900
 #&gt; 
 #&gt; Resulting formation fractions:
 #&gt;                ff
-#&gt; DMTA_M23  0.11033
-#&gt; DMTA_M27  0.10218
-#&gt; DMTA_M31  0.08784
-#&gt; DMTA_sink 0.69965
+#&gt; DMTA_M23  0.10668
+#&gt; DMTA_M27  0.09481
+#&gt; DMTA_M31  0.08908
+#&gt; DMTA_sink 0.70943
 #&gt; 
 #&gt; Estimated disappearance times:
 #&gt;       DT50   DT90 DT50back DT50_k1 DT50_k2
-#&gt; DMTA 16.59  57.44    17.29   14.71   24.97
-#&gt; M23  53.74 178.51       NA      NA      NA
-#&gt; M27  39.07 129.78       NA      NA      NA
-#&gt; M31  44.06 146.36       NA      NA      NA</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_dmta_nlmixr_saem</span><span class='op'>)</span>
+#&gt; DMTA 12.57  45.43    13.67   11.72   53.73
+#&gt; M23  56.63 188.11       NA      NA      NA
+#&gt; M27  41.29 137.18       NA      NA      NA
+#&gt; M31  43.05 143.01       NA      NA      NA</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_dmta_nlmixr_saem</span><span class='op'>)</span>
 </div><div class='img'><img src='dimethenamid_2018-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
