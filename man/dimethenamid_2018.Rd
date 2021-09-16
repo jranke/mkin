@@ -5,7 +5,7 @@
 \alias{dimethenamid_2018}
 \title{Aerobic soil degradation data on dimethenamid and dimethenamid-P from the EU assessment in 2018}
 \format{
-An \link{mkindsg} object grouping eight datasets with some meta information
+An \link{mkindsg} object grouping seven datasets with some meta information
 }
 \source{
 Rapporteur Member State Germany, Co-Rapporteur Member State Bulgaria (2018)
@@ -31,16 +31,13 @@ specific pieces of information in the comments.
 }
 \examples{
 print(dimethenamid_2018)
-dmta_ds <- lapply(1:8, function(i) {
+dmta_ds <- lapply(1:7, function(i) {
   ds_i <- dimethenamid_2018$ds[[i]]$data
   ds_i[ds_i$name == "DMTAP", "name"] <-  "DMTA"
   ds_i$time <- ds_i$time * dimethenamid_2018$f_time_norm[i]
   ds_i
 })
 names(dmta_ds) <- sapply(dimethenamid_2018$ds, function(ds) ds$title)
-dmta_ds[["Borstel"]] <- rbind(dmta_ds[["Borstel 1"]], dmta_ds[["Borstel 2"]])
-dmta_ds[["Borstel 1"]] <- NULL
-dmta_ds[["Borstel 2"]] <- NULL
 dmta_ds[["Elliot"]] <- rbind(dmta_ds[["Elliot 1"]], dmta_ds[["Elliot 2"]])
 dmta_ds[["Elliot 1"]] <- NULL
 dmta_ds[["Elliot 2"]] <- NULL

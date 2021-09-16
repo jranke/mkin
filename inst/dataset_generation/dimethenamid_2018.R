@@ -15,15 +15,7 @@ dimethenamid_2018 <- mkindsg$new(
         )
       )
     ),
-    mkinds$new("Borstel 1", # p. 22
-      mkin_wide_to_long(
-        data.frame(
-          t = c(0, 28, 58, 89, 119),
-          DMTAP = c(100.5, 51.4, 26.8, 15.7, 7.9)
-        )
-      )
-    ),
-    mkinds$new("Borstel 2", # p. 19/20
+    mkinds$new("Borstel", # p. 19/20
       mkin_wide_to_long(
         data.frame(
           t = rep(c(0, 2, 7, 14, 28, 58, 89, 119), each = 2),
@@ -134,20 +126,20 @@ dimethenamid_2018 <- mkindsg$new(
   # but the FOCUS generic guidance suggests them to be equivalent to the USDA
   # classes with the same name
   meta = data.frame(
-    study = c("Unsworth 2014", "Staudenmaier 2013", "Staudenmaier 2009",
+    study = c("Unsworth 2014", "Staudenmaier 2009",
       rep("Wendt 1997", 2), "König 1996", rep("König 1995", 2)),
-    usda_soil_type = c("Sandy loam", rep("Sand", 2),
+    usda_soil_type = c("Sandy loam", "Sand",
       rep("Clay loam", 2), "Sandy clay loam", "Loamy sand",
       "Sandy loam"),
-    study_moisture_ref_type = c("pF2", rep("pF1", 2),
+    study_moisture_ref_type = c("pF2", "pF1",
       rep("pF2.5", 2), rep("pF1", 3)),
-    rel_moisture = c(1, rep(0.5, 2),
+    rel_moisture = c(1, 0.5,
       rep(0.75, 2), rep(0.4, 3)),
-    study_ref_moisture = c(NA, rep(23, 2), rep(33.37, 2), rep(NA, 3)),
-    temperature = c(20, rep(20, 2),
+    study_ref_moisture = c(NA, 23, rep(33.37, 2), rep(NA, 3)),
+    temperature = c(20, 20,
       rep(23, 2), rep(20, 3))
   )
 )
-f_time_norm_focus(dimethenamid_2018)
+f_time_norm_focus(dimethenamid_2018) # This modifies the R6 object in place
 
 save(dimethenamid_2018, file = "data/dimethenamid_2018.rda", version = 2)

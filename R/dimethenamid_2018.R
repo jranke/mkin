@@ -11,23 +11,20 @@
 #' in the 'dataset_generation' directory. In the code, page numbers are given for
 #' specific pieces of information in the comments.
 #'
-#' @format An [mkindsg] object grouping eight datasets with some meta information
+#' @format An [mkindsg] object grouping seven datasets with some meta information
 #' @source Rapporteur Member State Germany, Co-Rapporteur Member State Bulgaria (2018)
 #'   Renewal Assessment Report Dimethenamid-P Volume 3 - B.8 Environmental fate and behaviour
 #'   Rev. 2 - November 2017
 #'   \url{https://open.efsa.europa.eu/study-inventory/EFSA-Q-2014-00716}
 #' @examples
 #' print(dimethenamid_2018)
-#' dmta_ds <- lapply(1:8, function(i) {
+#' dmta_ds <- lapply(1:7, function(i) {
 #'   ds_i <- dimethenamid_2018$ds[[i]]$data
 #'   ds_i[ds_i$name == "DMTAP", "name"] <-  "DMTA"
 #'   ds_i$time <- ds_i$time * dimethenamid_2018$f_time_norm[i]
 #'   ds_i
 #' })
 #' names(dmta_ds) <- sapply(dimethenamid_2018$ds, function(ds) ds$title)
-#' dmta_ds[["Borstel"]] <- rbind(dmta_ds[["Borstel 1"]], dmta_ds[["Borstel 2"]])
-#' dmta_ds[["Borstel 1"]] <- NULL
-#' dmta_ds[["Borstel 2"]] <- NULL
 #' dmta_ds[["Elliot"]] <- rbind(dmta_ds[["Elliot 1"]], dmta_ds[["Elliot 2"]])
 #' dmta_ds[["Elliot 1"]] <- NULL
 #' dmta_ds[["Elliot 2"]] <- NULL

@@ -1,4 +1,4 @@
-# mkin 1.0.5 (unreleased)
+# mkin 1.1.0 (unreleased)
 
 ## Mixed-effects models
 
@@ -11,6 +11,10 @@
 - 'plot.mixed.mmkin': Gains arguments 'test_log_parms' and 'conf.level'
 
 - 'vignettes/web_only/dimethenamid_2018.rmd': Example evaluations of the dimethenamid data.
+
+# mkin 1.0.5 (2021-09-15)
+
+- 'dimethenamid_2018': Correct the data for the Borstel soil. The five observations from Staudenmaier (2013) that were previously stored as "Borstel 2" are actually just a subset of the 16 observations in "Borstel 1" which is now simply "Borstel"
 
 # mkin 1.0.4 (2021-04-20)
 
