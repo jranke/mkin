@@ -16,10 +16,12 @@ r_packages:
   - devtools
   - covr
   - vdiffr
+before_script: echo $GITHUB_PAT
 env: GITHUB_PAT=
 r_github_packages:
   - jranke/saemixextension@warp_combined
 script:
+  - echo $GITHUB_PAT
   - R CMD build .
   - R CMD check --no-tests mkin_*.tar.gz
   - Rscript -e 'devtools::test()'
