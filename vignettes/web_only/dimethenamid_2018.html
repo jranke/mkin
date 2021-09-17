@@ -1591,7 +1591,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Example evaluations of the dimethenamid data from 2018</h1>
 <h4 class="author">Johannes Ranke</h4>
-<h4 class="date">Last change 16 September 2021, built on 16 Sep 2021</h4>
+<h4 class="date">Last change 17 September 2021, built on 17 Sep 2021</h4>
 
 </div>
 
@@ -1599,7 +1599,7 @@ div.tocify {
 <p><a href="http://www.jrwb.de">Wissenschaftlicher Berater, Kronacher Str. 12, 79639 Grenzach-Wyhlen, Germany</a></p>
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
-<p>During the preparation of the journal article on nonlinear mixed-effects models in degradation kinetics <span class="citation">(Ranke et al. 2021)</span> and the analysis of the dimethenamid degradation data analysed therein, a need for a more detailed analysis using not only nlme and saemix, but also nlmixr for fitting the mixed-effects models was identified.</p>
+<p>During the preparation of the journal article on nonlinear mixed-effects models in degradation kinetics <span class="citation">(Ranke et al. 2021)</span> and the analysis of the dimethenamid degradation data analysed therein, a need for a more detailed analysis using not only nlme and saemix, but also nlmixr for fitting the mixed-effects models was identified, as many model variants do not converge when fitted with nlme, and not all relevant error models can be fitted with saemix.</p>
 <p>This vignette is an attempt to satisfy this need.</p>
 </div>
 <div id="data" class="section level1">
@@ -1607,7 +1607,7 @@ div.tocify {
 <p>Residue data forming the basis for the endpoints derived in the conclusion on the peer review of the pesticide risk assessment of dimethenamid-P published by the European Food Safety Authority (EFSA) in 2018 <span class="citation">(EFSA 2018)</span> were transcribed from the risk assessment report <span class="citation">(Rapporteur Member State Germany, Co-Rapporteur Member State Bulgaria 2018)</span> which can be downloaded from the Open EFSA repository <a href="https://open.efsa.europa.eu">https://open.efsa.europa.eu/study-inventory/EFSA-Q-2014-00716</a>.</p>
 <p>The data are <a href="https://pkgdown.jrwb.de/mkin/reference/dimethenamid_2018.html">available in the mkin package</a>. The following code (hidden by default, please use the button to the right to show it) treats the data available for the racemic mixture dimethenamid (DMTA) and its enantiomer dimethenamid-P (DMTAP) in the same way, as no difference between their degradation behaviour was identified in the EU risk assessment. The observation times of each dataset are multiplied with the corresponding normalisation factor also available in the dataset, in order to make it possible to describe all datasets with a single set of parameters.</p>
 <p>Also, datasets observed in the same soil are merged, resulting in dimethenamid (DMTA) data from six soils.</p>
-<pre class="r"><code>library(mkin)
+<pre class="r"><code>library(mkin, quietly = TRUE)
 dmta_ds &lt;- lapply(1:7, function(i) {
   ds_i &lt;- dimethenamid_2018$ds[[i]]$data
   ds_i[ds_i$name == &quot;DMTAP&quot;, &quot;name&quot;] &lt;-  &quot;DMTA&quot;
@@ -1720,12 +1720,14 @@ plot(f_parent_saemix_dfop_tc$so, plot.type = &quot;convergence&quot;)</code></pr
 <p>In order to check the influence of the likelihood calculation algorithms implemented in saemix, the likelihood from Gaussian quadrature is added to the best fit, and the AIC values obtained from the three methods are compared.</p>
 <pre class="r"><code>f_parent_saemix_dfop_tc$so &lt;-
   llgq.saemix(f_parent_saemix_dfop_tc$so)
-AIC(f_parent_saemix_dfop_tc$so)</code></pre>
-<pre><code>[1] 666.1</code></pre>
-<pre class="r"><code>AIC(f_parent_saemix_dfop_tc$so, method = &quot;gq&quot;)</code></pre>
-<pre><code>[1] 666.03</code></pre>
-<pre class="r"><code>AIC(f_parent_saemix_dfop_tc$so, method = &quot;lin&quot;)</code></pre>
-<pre><code>[1] 665.48</code></pre>
+AIC_parent_saemix_methods &lt;- c(
+  is = AIC(f_parent_saemix_dfop_tc$so, method = &quot;is&quot;),
+  gq = AIC(f_parent_saemix_dfop_tc$so, method = &quot;gq&quot;),
+  lin = AIC(f_parent_saemix_dfop_tc$so, method = &quot;lin&quot;)
+)
+print(AIC_parent_saemix_methods)</code></pre>
+<pre><code>    is     gq    lin 
+666.10 666.03 665.48 </code></pre>
 <p>The AIC values based on importance sampling and Gaussian quadrature are very similar. Using linearisation is known to be less accurate, but still gives a similar value.</p>
 </div>
 <div id="nlmixr" class="section level3">
@@ -1783,6 +1785,9 @@ f_parent_nlmixr_saem_sfo_const$nm   5 798.68
 f_parent_nlmixr_saem_sfo_tc$nm      6 808.88
 f_parent_nlmixr_saem_dfop_const$nm  9 815.95
 f_parent_nlmixr_saem_dfop_tc$nm    10 669.57</code></pre>
+</div>
+<div id="comparison" class="section level3">
+<h3>Comparison</h3>
 <p>The following table gives the AIC values obtained with the three packages.</p>
 <pre class="r"><code>AIC_all &lt;- data.frame(
   check.names = FALSE,

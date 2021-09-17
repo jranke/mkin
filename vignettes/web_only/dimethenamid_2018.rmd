@@ -1,7 +1,7 @@
 ---
 title: Example evaluations of the dimethenamid data from 2018
 author: Johannes Ranke
-date: Last change 16 September 2021, built on `r format(Sys.Date(), format = "%d %b %Y")`
+date: Last change 17 September 2021, built on `r format(Sys.Date(), format = "%d %b %Y")`
 output:
   html_document:
     toc: true
@@ -32,7 +32,8 @@ During the preparation of the journal article on nonlinear mixed-effects models
 in degradation kinetics [@ranke2021] and the analysis of the dimethenamid
 degradation data analysed therein, a need for a more detailed analysis using
 not only nlme and saemix, but also nlmixr for fitting the mixed-effects models
-was identified.
+was identified, as many model variants do not converge when fitted with nlme,
+and not all relevant error models can be fitted with saemix.
 
 This vignette is an attempt to satisfy this need.
 
@@ -59,7 +60,7 @@ Also, datasets observed in the same soil are merged, resulting in dimethenamid
 (DMTA) data from six soils.
 
 ```{r dimethenamid_data}
-library(mkin)
+library(mkin, quietly = TRUE)
 dmta_ds <- lapply(1:7, function(i) {
   ds_i <- dimethenamid_2018$ds[[i]]$data
   ds_i[ds_i$name == "DMTAP", "name"] <-  "DMTA"
@@ -294,9 +295,12 @@ are compared.
 ```{r AIC_parent_saemix_methods, cache = FALSE}
 f_parent_saemix_dfop_tc$so <-
   llgq.saemix(f_parent_saemix_dfop_tc$so)
-AIC(f_parent_saemix_dfop_tc$so)
-AIC(f_parent_saemix_dfop_tc$so, method = "gq")
-AIC(f_parent_saemix_dfop_tc$so, method = "lin")
+AIC_parent_saemix_methods <- c(
+  is = AIC(f_parent_saemix_dfop_tc$so, method = "is"),
+  gq = AIC(f_parent_saemix_dfop_tc$so, method = "gq"),
+  lin = AIC(f_parent_saemix_dfop_tc$so, method = "lin")
+)
+print(AIC_parent_saemix_methods)
 ```
 The AIC values based on importance sampling and Gaussian quadrature are very
 similar. Using linearisation is known to be less accurate, but still gives a
@@ -398,6 +402,8 @@ AIC(f_parent_nlmixr_saem_sfo_const$nm, f_parent_nlmixr_saem_sfo_tc$nm,
   f_parent_nlmixr_saem_dfop_const$nm, f_parent_nlmixr_saem_dfop_tc$nm)
 ```
 
+### Comparison
+
 The following table gives the AIC values obtained with the three packages.
 
 ```{r AIC_all, cache = FALSE}
@@ -415,6 +421,8 @@ AIC_all <- data.frame(
 )
 kable(AIC_all)
 ```
+
+
 
 # References
 
