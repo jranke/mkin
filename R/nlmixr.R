@@ -31,8 +31,8 @@ nlmixr::nlmixr
 #'   for parameter that are tested if requested by 'test_log_parms'.
 #' @param data Not used, as the data are extracted from the mmkin row object
 #' @param table Passed to [nlmixr::nlmixr]
-#' @param error_model Possibility to override the error model which is being
-#'   set based on the error model used in the mmkin row object.
+#' @param error_model Optional argument to override the error model which is
+#'   being set based on the error model used in the mmkin row object.
 #' @param control Passed to [nlmixr::nlmixr]
 #' @param \dots Passed to [nlmixr_model]
 #' @param save Passed to [nlmixr::nlmixr]

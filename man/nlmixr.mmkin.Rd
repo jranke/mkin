@@ -50,8 +50,8 @@ nlmixr_data(object, ...)
 
 \item{table}{Passed to \link[nlmixr:nlmixr]{nlmixr::nlmixr}}
 
-\item{error_model}{Possibility to override the error model which is being
-set based on the error model used in the mmkin row object.}
+\item{error_model}{Optional argument to override the error model which is
+being set based on the error model used in the mmkin row object.}
 
 \item{test_log_parms}{If TRUE, an attempt is made to use more robust starting
 values for population parameters fitted as log parameters in mkin (like
