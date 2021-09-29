@@ -94,7 +94,8 @@ An dataframe suitable for use with \link[nlmixr:nlmixr]{nlmixr::nlmixr}
 \description{
 This function uses \code{\link[nlmixr:nlmixr]{nlmixr::nlmixr()}} as a backend for fitting nonlinear mixed
 effects models created from \link{mmkin} row objects using the Stochastic Approximation
-Expectation Maximisation algorithm (SAEM).
+Expectation Maximisation algorithm (SAEM) or First Order Conditional
+Estimation with Interaction (FOCEI).
 }
 \details{
 An mmkin row object is essentially a list of mkinfit objects that have been
@@ -110,20 +111,31 @@ f_mmkin_parent <- mmkin(c("SFO", "FOMC", "DFOP", "HS"), ds, quiet = TRUE, cores 
 f_mmkin_parent_tc <- mmkin(c("SFO", "FOMC", "DFOP"), ds, error_model = "tc",
   cores = 1, quiet = TRUE)
 
-f_nlmixr_sfo_saem <- nlmixr(f_mmkin_parent["SFO", ], est = "saem")
-f_nlmixr_sfo_focei <- nlmixr(f_mmkin_parent["SFO", ], est = "focei")
+library(nlmixr)
+f_nlmixr_sfo_saem <- nlmixr(f_mmkin_parent["SFO", ], est = "saem",
+  control = saemControl(print = 0))
+f_nlmixr_sfo_focei <- nlmixr(f_mmkin_parent["SFO", ], est = "focei",
+  control = foceiControl(print = 0))
 
-f_nlmixr_fomc_saem <- nlmixr(f_mmkin_parent["FOMC", ], est = "saem")
-f_nlmixr_fomc_focei <- nlmixr(f_mmkin_parent["FOMC", ], est = "focei")
+f_nlmixr_fomc_saem <- nlmixr(f_mmkin_parent["FOMC", ], est = "saem",
+  control = saemControl(print = 0))
+f_nlmixr_fomc_focei <- nlmixr(f_mmkin_parent["FOMC", ], est = "focei",
+  control = foceiControl(print = 0))
 
-f_nlmixr_dfop_saem <- nlmixr(f_mmkin_parent["DFOP", ], est = "saem")
-f_nlmixr_dfop_focei <- nlmixr(f_mmkin_parent["DFOP", ], est = "focei")
+f_nlmixr_dfop_saem <- nlmixr(f_mmkin_parent["DFOP", ], est = "saem",
+  control = saemControl(print = 0))
+f_nlmixr_dfop_focei <- nlmixr(f_mmkin_parent["DFOP", ], est = "focei",
+  control = foceiControl(print = 0))
 
-f_nlmixr_hs_saem <- nlmixr(f_mmkin_parent["HS", ], est = "saem")
-f_nlmixr_hs_focei <- nlmixr(f_mmkin_parent["HS", ], est = "focei")
+f_nlmixr_hs_saem <- nlmixr(f_mmkin_parent["HS", ], est = "saem",
+  control = saemControl(print = 0))
+f_nlmixr_hs_focei <- nlmixr(f_mmkin_parent["HS", ], est = "focei",
+  control = foceiControl(print = 0))
 
-f_nlmixr_fomc_saem_tc <- nlmixr(f_mmkin_parent_tc["FOMC", ], est = "saem")
-f_nlmixr_fomc_focei_tc <- nlmixr(f_mmkin_parent_tc["FOMC", ], est = "focei")
+f_nlmixr_fomc_saem_tc <- nlmixr(f_mmkin_parent_tc["FOMC", ], est = "saem",
+  control = saemControl(print = 0))
+f_nlmixr_fomc_focei_tc <- nlmixr(f_mmkin_parent_tc["FOMC", ], est = "focei",
+  control = foceiControl(print = 0))
 
 AIC(
   f_nlmixr_sfo_saem$nm, f_nlmixr_sfo_focei$nm,
@@ -135,9 +147,8 @@ AIC(
 AIC(nlme(f_mmkin_parent["FOMC", ]))
 AIC(nlme(f_mmkin_parent["HS", ]))
 
-# nlme is comparable to nlmixr with focei, saem finds a better
-# solution, the two-component error model does not improve it
-plot(f_nlmixr_fomc_saem)
+# The FOCEI fit of FOMC with constant variance or the tc error model is best
+plot(f_nlmixr_fomc_saem_tc)
 
 sfo_sfo <- mkinmod(parent = mkinsub("SFO", "A1"),
   A1 = mkinsub("SFO"))
