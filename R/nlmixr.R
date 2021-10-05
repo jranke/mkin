@@ -92,11 +92,11 @@ nlmixr::nlmixr
 #' plot(f_nlmixr_fomc_saem_tc)
 #'
 #' sfo_sfo <- mkinmod(parent = mkinsub("SFO", "A1"),
-#'   A1 = mkinsub("SFO"))
+#'   A1 = mkinsub("SFO"), quiet = TRUE)
 #' fomc_sfo <- mkinmod(parent = mkinsub("FOMC", "A1"),
-#'   A1 = mkinsub("SFO"))
+#'   A1 = mkinsub("SFO"), quiet = TRUE)
 #' dfop_sfo <- mkinmod(parent = mkinsub("DFOP", "A1"),
-#'   A1 = mkinsub("SFO"))
+#'   A1 = mkinsub("SFO"), quiet = TRUE)
 #'
 #' f_mmkin_const <- mmkin(list(
 #'     "SFO-SFO" = sfo_sfo, "FOMC-SFO" = fomc_sfo, "DFOP-SFO" = dfop_sfo),
@@ -107,6 +107,8 @@ nlmixr::nlmixr
 #' f_mmkin_tc <- mmkin(list(
 #'     "SFO-SFO" = sfo_sfo, "FOMC-SFO" = fomc_sfo, "DFOP-SFO" = dfop_sfo),
 #'   ds, quiet = TRUE, error_model = "tc")
+#'
+#' nlmixr_model(f_mmkin_const["SFO-SFO", ])
 #'
 #' # A single constant variance is currently only possible with est = 'focei' in nlmixr
 #' f_nlmixr_sfo_sfo_focei_const <- nlmixr(f_mmkin_const["SFO-SFO", ], est = "focei")
@@ -450,9 +452,14 @@ nlmixr_model <- function(object,
 
   # Population initial values for logit transformed parameters
   for (parm_name in grep("_qlogis$", names(degparms_start), value = TRUE)) {
+    parm_name_new <- names(
+      backtransform_odeparms(degparms_start[parm_name],
+        object[[1]]$mkinmod,
+        object[[1]]$transform_rates,
+        object[[1]]$transform_fractions))
     model_block <- paste0(
       model_block,
-      gsub("_qlogis$", "", parm_name), " = ",
+      parm_name_new, " = ",
       "expit(", parm_name, " + eta.", parm_name, ")\n")
   }
 
