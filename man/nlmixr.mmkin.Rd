@@ -151,11 +151,11 @@ AIC(nlme(f_mmkin_parent["HS", ]))
 plot(f_nlmixr_fomc_saem_tc)
 
 sfo_sfo <- mkinmod(parent = mkinsub("SFO", "A1"),
-  A1 = mkinsub("SFO"))
+  A1 = mkinsub("SFO"), quiet = TRUE)
 fomc_sfo <- mkinmod(parent = mkinsub("FOMC", "A1"),
-  A1 = mkinsub("SFO"))
+  A1 = mkinsub("SFO"), quiet = TRUE)
 dfop_sfo <- mkinmod(parent = mkinsub("DFOP", "A1"),
-  A1 = mkinsub("SFO"))
+  A1 = mkinsub("SFO"), quiet = TRUE)
 
 f_mmkin_const <- mmkin(list(
     "SFO-SFO" = sfo_sfo, "FOMC-SFO" = fomc_sfo, "DFOP-SFO" = dfop_sfo),
@@ -166,6 +166,8 @@ f_mmkin_obs <- mmkin(list(
 f_mmkin_tc <- mmkin(list(
     "SFO-SFO" = sfo_sfo, "FOMC-SFO" = fomc_sfo, "DFOP-SFO" = dfop_sfo),
   ds, quiet = TRUE, error_model = "tc")
+
+nlmixr_model(f_mmkin_const["SFO-SFO", ])
 
 # A single constant variance is currently only possible with est = 'focei' in nlmixr
 f_nlmixr_sfo_sfo_focei_const <- nlmixr(f_mmkin_const["SFO-SFO", ], est = "focei")
