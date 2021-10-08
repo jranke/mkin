@@ -361,10 +361,10 @@ nlmixr_model <- function(object,
     ini_block <- paste0(
       ini_block,
       parm_name, " = ",
-      as.character(degparms_start[parm_name]),
+      as.character(signif(degparms_start[parm_name], 2)),
       "\n",
       "eta.", parm_name, " ~ ",
-      as.character(eta_start[parm_name]),
+      as.character(signif(eta_start[parm_name], 2)),
       "\n"
     )
   }
@@ -422,7 +422,7 @@ nlmixr_model <- function(object,
     ini_block <- paste0(
       ini_block,
       parm_name, " = ",
-      as.character(errparms_ini[parm_name]),
+      as.character(signif(errparms_ini[parm_name], 2)),
       "\n"
     )
   }
