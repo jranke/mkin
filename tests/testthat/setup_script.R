@@ -185,7 +185,7 @@ ds_biphasic <- lapply(ds_biphasic_mean, function(ds) {
 # Mixed model fits
 saemix_available <- FALSE
 if (requireNamespace("saemix", quietly = TRUE)) {
-  if(packageVersion("saemix") >= "3.1.9000") saemix_available <- TRUE
+  if(packageVersion("saemix") >= "3.0") saemix_available <- TRUE
 }
 mmkin_sfo_1 <- mmkin("SFO", ds_sfo, quiet = TRUE, error_model = "tc", cores = n_cores)
 mmkin_dfop_1 <- mmkin("DFOP", ds_dfop, quiet = TRUE, cores = n_cores)

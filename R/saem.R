@@ -231,9 +231,8 @@ print.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3), ...) {
 saemix_model <- function(object, solution_type = "auto", transformations = c("mkin", "saemix"),
   degparms_start = numeric(), test_log_parms = FALSE, verbose = FALSE, ...)
 {
-  if (packageVersion("saemix") < "3.1.9000") {
-    stop("To use the interface to saemix, you need to install a development version\n",
-      "preferably https://github.com/jranke/saemixextension@warp_combined")
+  if (packageVersion("saemix") < "3.0") {
+    stop("To use the interface to saemix, you need to install a version >= 3.0\n")
   }
 
   if (nrow(object) > 1) stop("Only row objects allowed")
