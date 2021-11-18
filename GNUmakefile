@@ -114,7 +114,7 @@ pd_release: roxygen
 	git add -A
 
 r-forge:
-	git archive master > $(HOME)/git/mkin/mkin.tar;\
+	git archive main > $(HOME)/git/mkin/mkin.tar;\
 	cd $(RFDIR) && rm -r `ls` && tar -xf $(HOME)/git/mkin/mkin.tar;\
 	rm -r $(SDDIR)/*;\
 	cp -a docs/* $(SDDIR);\

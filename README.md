@@ -1,8 +1,8 @@
 # mkin
 
 [![](https://www.r-pkg.org/badges/version/mkin)](https://cran.r-project.org/package=mkin)
-[![Build Status](https://travis-ci.com/jranke/mkin.svg?branch=master)](https://app.travis-ci.com/github/jranke/mkin)
-[![codecov](https://codecov.io/github/jranke/mkin/branch/master/graphs/badge.svg)](https://codecov.io/github/jranke/mkin)
+[![Build Status](https://travis-ci.com/jranke/mkin.svg?branch=main)](https://app.travis-ci.com/github/jranke/mkin)
+[![codecov](https://codecov.io/github/jranke/mkin/branch/main/graphs/badge.svg)](https://codecov.io/github/jranke/mkin)
 
 The R package **mkin** provides calculation routines for the analysis of
 chemical degradation data, including <b>m</b>ulticompartment <b>kin</b>etics as
@@ -127,7 +127,7 @@ for installation instructions and a manual.
 ## News
 
 There is a list of changes for the latest [CRAN release](https://cran.r-project.org/package=mkin/news/news.html)
-and one for each github branch, e.g. [the main branch](https://github.com/jranke/mkin/blob/master/NEWS.md).
+and one for each github branch, e.g. [the main branch](https://github.com/jranke/mkin/blob/main/NEWS.md).
 
 ## Credits and historical remarks
 
