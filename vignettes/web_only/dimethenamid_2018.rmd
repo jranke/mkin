@@ -1,7 +1,7 @@
 ---
 title: Example evaluations of the dimethenamid data from 2018
 author: Johannes Ranke
-date: Last change 27 September 2021, built on `r format(Sys.Date(), format = "%d %b %Y")`
+date: Last change 11 January 2022, built on `r format(Sys.Date(), format = "%d %b %Y")`
 output:
   html_document:
     toc: true
@@ -230,11 +230,11 @@ fit. As we will compare the SAEM implementation of saemix to the results
 obtained using the nlmixr package later, we define control settings that
 work well for all the parent data fits shown in this vignette.
 
-```{r saemix_control}
+```{r saemix_control, results='hide'}
 library(saemix)
 saemix_control <- saemixControl(nbiter.saemix = c(800, 300), nb.chains = 15,
     print = FALSE, save = FALSE, save.graphs = FALSE, displayProgress = FALSE)
-saemix_control_10k <- saemixControl(nbiter.saemix = c(10000, 1000), nb.chains = 15,
+saemix_control_moreiter <- saemixControl(nbiter.saemix = c(1600, 300), nb.chains = 15,
     print = FALSE, save = FALSE, save.graphs = FALSE, displayProgress = FALSE)
 ```
 
@@ -274,14 +274,15 @@ f_parent_saemix_dfop_tc <- mkin::saem(f_parent_mkin_tc["DFOP", ], quiet = TRUE,
 plot(f_parent_saemix_dfop_tc$so, plot.type = "convergence")
 ```
 
-We also check if using many more iterations (10 000 for the first and 1000 for
-the second phase) improve the result in a significant way. The AIC values
-obtained are compared further below.
-
-```{r f_parent_saemix_dfop_tc_10k, results = 'hide', dependson = "saemix_control"}
-f_parent_saemix_dfop_tc_10k <- mkin::saem(f_parent_mkin_tc["DFOP", ], quiet = TRUE,
-  control = saemix_control_10k, transformations = "saemix")
-plot(f_parent_saemix_dfop_tc_10k$so, plot.type = "convergence")
+```{r f_parent_saemix_dfop_tc_moreiter, results = 'hide', dependson = "saemix_control"}
+# The last time I tried (2022-01-11) this gives an error in solve.default(omega.eta)
+# system is computationally singular: reciprocal condition number = 5e-17
+#f_parent_saemix_dfop_tc_10k <- mkin::saem(f_parent_mkin_tc["DFOP", ], quiet = TRUE,
+#  control = saemix_control_10k, transformations = "saemix")
+# Now we do not get a significant improvement by using twice the number of iterations
+f_parent_saemix_dfop_tc_moreiter <- mkin::saem(f_parent_mkin_tc["DFOP", ], quiet = TRUE,
+  control = saemix_control_moreiter, transformations = "saemix")
+#plot(f_parent_saemix_dfop_tc_moreiter$so, plot.type = "convergence")
 ```
 
 An alternative way to fit DFOP in combination with the two-component error model
@@ -293,15 +294,16 @@ f_parent_saemix_dfop_tc_mkin <- mkin::saem(f_parent_mkin_tc["DFOP", ], quiet = T
   control = saemix_control, transformations = "mkin")
 plot(f_parent_saemix_dfop_tc_mkin$so, plot.type = "convergence")
 ```
-
 As the convergence plots do not clearly indicate that the algorithm has converged, we
-again use a much larger number of iterations, which leads to satisfactory
+again use four times the number of iterations, which leads to almost satisfactory
 convergence (see below).
 
-```{r f_parent_saemix_dfop_tc_mkin_10k, results = 'hide', dependson = "saemix_control"}
-f_parent_saemix_dfop_tc_mkin_10k <- mkin::saem(f_parent_mkin_tc["DFOP", ], quiet = TRUE,
-  control = saemix_control_10k, transformations = "mkin")
-plot(f_parent_saemix_dfop_tc_mkin_10k$so, plot.type = "convergence")
+```{r f_parent_saemix_dfop_tc_mkin_moreiter, results = 'hide', dependson = "saemix_control"}
+saemix_control_muchmoreiter <- saemixControl(nbiter.saemix = c(3200, 300), nb.chains = 15,
+    print = FALSE, save = FALSE, save.graphs = FALSE, displayProgress = FALSE)
+f_parent_saemix_dfop_tc_mkin_muchmoreiter <- mkin::saem(f_parent_mkin_tc["DFOP", ], quiet = TRUE,
+  control = saemix_control_muchmoreiter, transformations = "mkin")
+plot(f_parent_saemix_dfop_tc_mkin_muchmoreiter$so, plot.type = "convergence")
 ```
 
 The four combinations (SFO/const, SFO/tc, DFOP/const and DFOP/tc), including
@@ -314,9 +316,9 @@ AIC_parent_saemix <- saemix::compare.saemix(
   f_parent_saemix_sfo_tc$so,
   f_parent_saemix_dfop_const$so,
   f_parent_saemix_dfop_tc$so,
-  f_parent_saemix_dfop_tc_10k$so,
+  f_parent_saemix_dfop_tc_moreiter$so,
   f_parent_saemix_dfop_tc_mkin$so,
-  f_parent_saemix_dfop_tc_mkin_10k$so)
+  f_parent_saemix_dfop_tc_mkin_muchmoreiter$so)
 rownames(AIC_parent_saemix) <- c(
   "SFO const", "SFO tc", "DFOP const", "DFOP tc", "DFOP tc more iterations",
   "DFOP tc mkintrans", "DFOP tc mkintrans more iterations")
@@ -325,10 +327,10 @@ print(AIC_parent_saemix)
 
 As in the case of nlme fits, the DFOP model fitted with two-component error
 (number 4) gives the lowest AIC. Using a much larger number of iterations
-does not improve the fit a lot. When the mkin transformations are used
-instead of the saemix transformations, this large number of iterations leads
-to a goodness of fit that is comparable to the result obtained with saemix
-transformations.
+does not significantly change the AIC. When the mkin transformations are used
+instead of the saemix transformations, we need four times the number of
+iterations to obtain a goodness of fit that almost as good as the result
+obtained with saemix transformations.
 
 In order to check the influence of the likelihood calculation algorithms
 implemented in saemix, the likelihood from Gaussian quadrature is added
@@ -393,6 +395,7 @@ aic_nlme_nlmixr_focei <- data.frame(
   "AIC (nlmixr with FOCEI)" = aic_nlmixr_focei,
   check.names = FALSE
 )
+print(aic_nlme_nlmixr_focei)
 ```
 
 Secondly, we use the SAEM estimation routine and check the convergence plots. The
@@ -407,7 +410,7 @@ nlmixr_saem_control_10k <- saemControl(logLik = TRUE,
   nBurn = 10000, nEm = 1000, nmc = 15)
 ```
 
-The we fit SFO with constant variance
+Then we fit SFO with constant variance
 
 ```{r f_parent_nlmixr_saem_sfo_const, results = "hide", warning = FALSE, message = FALSE, dependson = "nlmixr_saem_control"}
 f_parent_nlmixr_saem_sfo_const <- nlmixr(f_parent_mkin_const["SFO", ], est = "saem",
@@ -425,7 +428,7 @@ traceplot(f_parent_nlmixr_saem_sfo_tc$nm)
 
 For DFOP with constant variance, the convergence plots show considerable
 instability of the fit, which indicates overparameterisation which was already
-observed earlier for this model combination.
+observed above for this model combination.
 
 ```{r f_parent_nlmixr_saem_dfop_const, results = "hide", warning = FALSE, message = FALSE, dependson = "nlmixr_saem_control"}
 f_parent_nlmixr_saem_dfop_const <- nlmixr(f_parent_mkin_const["DFOP", ], est = "saem",
@@ -505,8 +508,7 @@ kable(AIC_all)
 ```{r parms_all, cache = FALSE}
 intervals(f_parent_saemix_dfop_tc)
 intervals(f_parent_saemix_dfop_tc)
-intervals(f_parent_saemix_dfop_tc_10k)
-intervals(f_parent_saemix_dfop_tc_mkin_10k)
+intervals(f_parent_saemix_dfop_tc_mkin_muchmoreiter)
 intervals(f_parent_nlmixr_saem_dfop_tc)
 intervals(f_parent_nlmixr_saem_dfop_tc_10k)
 ```
