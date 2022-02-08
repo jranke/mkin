@@ -24,7 +24,7 @@ get_deg_func <- function() {
 #' This functions sets up a nonlinear mixed effects model for an mmkin row
 #' object. An mmkin row object is essentially a list of mkinfit objects that
 #' have been obtained by fitting the same model to a list of datasets.
-#' 
+#'
 #' Note that the convergence of the nlme algorithms depends on the quality
 #' of the data. In degradation kinetics, we often only have few datasets
 #' (e.g. data for few soils) and complicated degradation models, which may
@@ -34,10 +34,9 @@ get_deg_func <- function() {
 #' @param data Ignored, data are taken from the mmkin model
 #' @param fixed Ignored, all degradation parameters fitted in the
 #'   mmkin model are used as fixed parameters
-#' @param random If not specified, correlated random effects are set up
-#'   for all optimised degradation model parameters using the log-Cholesky
-#'   parameterization [nlme::pdLogChol] that is also the default of
-#'   the generic [nlme] method.
+#' @param random If not specified, no correlations between random effects are
+#'   set up for the optimised degradation model parameters. This is
+#'   achieved by using the [nlme::pdDiag] method.
 #' @param groups See the documentation of nlme
 #' @param start If not specified, mean values of the fitted degradation
 #'   parameters taken from the mmkin object are used
@@ -135,7 +134,7 @@ nlme.mmkin <- function(model, data = "auto",
     function(el) eval(parse(text = paste(el, 1, sep = "~")))),
   random = pdDiag(fixed),
   groups,
-  start = mean_degparms(model, random = TRUE),
+  start = mean_degparms(model, random = TRUE, test_log_parms = TRUE),
   correlation = NULL, weights = NULL,
   subset, method = c("ML", "REML"),
   na.action = na.fail, naPattern,

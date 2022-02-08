@@ -23,6 +23,10 @@ mixed(object, ...)
 
 \item{digits}{Number of digits to use for printing.}
 }
+\value{
+An object of class 'mixed.mmkin' which has the observed data in a
+single dataframe which is convenient for plotting
+}
 \description{
 Create a mixed effects model from an mmkin row object
 }

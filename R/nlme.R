@@ -36,7 +36,7 @@
 #' nlme_f <- nlme_function(f)
 #' # These assignments are necessary for these objects to be
 #' # visible to nlme and augPred when evaluation is done by
-#' # pkgdown to generated the html docs.
+#' # pkgdown to generate the html docs.
 #' assign("nlme_f", nlme_f, globalenv())
 #' assign("grouped_data", grouped_data, globalenv())
 #'
@@ -122,30 +122,6 @@ nlme_function <- function(object) {
   })
   model_function <- as.function(c(model_function_alist, model_function_body))
   return(model_function)
-}
-
-#' @rdname nlme
-#' @return If random is FALSE (default), a named vector containing mean values
-#'   of the fitted degradation model parameters. If random is TRUE, a list with
-#'   fixed and random effects, in the format required by the start argument of
-#'   nlme for the case of a single grouping variable ds.
-#' @param random Should a list with fixed and random effects be returned?
-#' @export
-mean_degparms <- function(object, random = FALSE) {
-  if (nrow(object) > 1) stop("Only row objects allowed")
-  parm_mat_trans <- sapply(object, parms, transformed = TRUE)
-  mean_degparm_names <- setdiff(rownames(parm_mat_trans), names(object[[1]]$errparms))
-  degparm_mat_trans <- parm_mat_trans[mean_degparm_names, , drop = FALSE]
-  fixed <- apply(degparm_mat_trans, 1, mean)
-  if (random) {
-    random <- t(apply(degparm_mat_trans[mean_degparm_names, , drop = FALSE], 2, function(column) column - fixed))
-    # If we only have one parameter, apply returns a vector so we get a single row
-    if (nrow(degparm_mat_trans) == 1) random <- t(random)
-    rownames(random) <- levels(nlme_data(object)$ds)
-    return(list(fixed = fixed, random = list(ds = random)))
-  } else {
-    return(fixed)
-  }
 }
 
 #' @rdname nlme

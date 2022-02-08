@@ -77,7 +77,7 @@ the ilr transformation is used." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.9.50.4</span>
+        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.0.3.9000</span>
       </span>
     </div>
 
@@ -126,7 +126,7 @@ the ilr transformation is used." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/jranke/mkin/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -231,50 +231,64 @@ This is no problem for the internal use in <a href='mkinfit.html'>mkinfit</a>.</
     <pre class="examples"><div class='input'>
 <span class='va'>SFO_SFO</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span><span class='op'>(</span>
   parent <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span>, to <span class='op'>=</span> <span class='st'>"m1"</span>, sink <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,
-  m1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Temporary DLL for differentials generated and loaded</span></div><div class='input'><span class='co'># Fit the model to the FOCUS example dataset D using defaults</span>
-<span class='va'>fit</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='va'>SFO_SFO</span>, <span class='va'>FOCUS_2006_D</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='va'>fit.s</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/saemix/man/summary-methods.html'>summary</a></span><span class='op'>(</span><span class='va'>fit</span><span class='op'>)</span>
+  m1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span><span class='op'>)</span>, use_of_ff <span class='op'>=</span> <span class='st'>"min"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Temporary DLL for differentials generated and loaded</span></div><div class='input'>
+<span class='co'># Fit the model to the FOCUS example dataset D using defaults</span>
+<span class='va'>FOCUS_D</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/saemix/man/subset.html'>subset</a></span><span class='op'>(</span><span class='va'>FOCUS_2006_D</span>, <span class='va'>value</span> <span class='op'>!=</span> <span class='fl'>0</span><span class='op'>)</span> <span class='co'># remove zero values to avoid warning</span>
+<span class='va'>fit</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='va'>SFO_SFO</span>, <span class='va'>FOCUS_D</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='va'>fit.s</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/saemix/man/summary-methods.html'>summary</a></span><span class='op'>(</span><span class='va'>fit</span><span class='op'>)</span>
 <span class='co'># Transformed and backtransformed parameters</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>fit.s</span><span class='op'>$</span><span class='va'>par</span>, <span class='fl'>3</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                 Estimate Std. Error  Lower  Upper
-#&gt; parent_0         99.5985     1.5702 96.404 102.79
-#&gt; log_k_parent     -2.3157     0.0409 -2.399  -2.23
-#&gt; log_k_m1         -5.2475     0.1332 -5.518  -4.98
-#&gt; f_parent_qlogis   0.0579     0.0893 -0.124   0.24
-#&gt; sigma             3.1255     0.3585  2.396   3.85</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>fit.s</span><span class='op'>$</span><span class='va'>bpar</span>, <span class='fl'>3</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;                Estimate se_notrans t value   Pr(&gt;t)    Lower    Upper
-#&gt; parent_0       99.59848    1.57022   63.43 2.30e-36 96.40383 102.7931
-#&gt; k_parent        0.09870    0.00403   24.47 4.96e-23  0.09082   0.1073
-#&gt; k_m1            0.00526    0.00070    7.51 6.16e-09  0.00401   0.0069
-#&gt; f_parent_to_m1  0.51448    0.02230   23.07 3.10e-22  0.46912   0.5596
-#&gt; sigma           3.12550    0.35852    8.72 2.24e-10  2.39609   3.8549</div><div class='input'>
+</div><div class='output co'>#&gt;                   Estimate Std. Error Lower  Upper
+#&gt; parent_0             99.60     1.5702 96.40 102.79
+#&gt; log_k_parent_sink    -3.04     0.0763 -3.19  -2.88
+#&gt; log_k_parent_m1      -2.98     0.0403 -3.06  -2.90
+#&gt; log_k_m1_sink        -5.25     0.1332 -5.52  -4.98
+#&gt; sigma                 3.13     0.3585  2.40   3.85</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>fit.s</span><span class='op'>$</span><span class='va'>bpar</span>, <span class='fl'>3</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;               Estimate se_notrans t value   Pr(&gt;t)    Lower    Upper
+#&gt; parent_0      99.59848    1.57022   63.43 2.30e-36 96.40384 102.7931
+#&gt; k_parent_sink  0.04792    0.00365   13.11 6.13e-15  0.04103   0.0560
+#&gt; k_parent_m1    0.05078    0.00205   24.80 3.27e-23  0.04678   0.0551
+#&gt; k_m1_sink      0.00526    0.00070    7.51 6.16e-09  0.00401   0.0069
+#&gt; sigma          3.12550    0.35852    8.72 2.24e-10  2.39609   3.8549</div><div class='input'>
 <span class='co'># \dontrun{</span>
-<span class='co'># Compare to the version without transforming rate parameters</span>
-<span class='va'>fit.2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='va'>SFO_SFO</span>, <span class='va'>FOCUS_2006_D</span>, transform_rates <span class='op'>=</span> <span class='cn'>FALSE</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='output co'>#&gt; <span class='error'>Error in if (cost &lt; cost.current) {    assign("cost.current", cost, inherits = TRUE)    if (!quiet)         cat(ifelse(OLS, "Sum of squared residuals", "Negative log-likelihood"),             " at call ", calls, ": ", signif(cost.current, 6),             "\n", sep = "")}: missing value where TRUE/FALSE needed</span></div><div class='output co'>#&gt; <span class='message'>Timing stopped at: 0.006 0 0.005</span></div><div class='input'><span class='va'>fit.2.s</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/saemix/man/summary-methods.html'>summary</a></span><span class='op'>(</span><span class='va'>fit.2</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in h(simpleError(msg, call)): error in evaluating the argument 'object' in selecting a method for function 'summary': object 'fit.2' not found</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>fit.2.s</span><span class='op'>$</span><span class='va'>par</span>, <span class='fl'>3</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'print': object 'fit.2.s' not found</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>fit.2.s</span><span class='op'>$</span><span class='va'>bpar</span>, <span class='fl'>3</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'print': object 'fit.2.s' not found</span></div><div class='input'><span class='co'># }</span>
+<span class='co'># Compare to the version without transforming rate parameters (does not work</span>
+<span class='co'># with analytical solution, we get NA values for m1 in predictions)</span>
+<span class='va'>fit.2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='va'>SFO_SFO</span>, <span class='va'>FOCUS_D</span>, transform_rates <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  solution_type <span class='op'>=</span> <span class='st'>"deSolve"</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='va'>fit.2.s</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/saemix/man/summary-methods.html'>summary</a></span><span class='op'>(</span><span class='va'>fit.2</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>fit.2.s</span><span class='op'>$</span><span class='va'>par</span>, <span class='fl'>3</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;               Estimate Std. Error    Lower    Upper
+#&gt; parent_0      99.59848    1.57022 96.40384 1.03e+02
+#&gt; k_parent_sink  0.04792    0.00365  0.04049 5.54e-02
+#&gt; k_parent_m1    0.05078    0.00205  0.04661 5.49e-02
+#&gt; k_m1_sink      0.00526    0.00070  0.00384 6.69e-03
+#&gt; sigma          3.12550    0.35852  2.39609 3.85e+00</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>fit.2.s</span><span class='op'>$</span><span class='va'>bpar</span>, <span class='fl'>3</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;               Estimate se_notrans t value   Pr(&gt;t)    Lower    Upper
+#&gt; parent_0      99.59848    1.57022   63.43 2.30e-36 96.40384 1.03e+02
+#&gt; k_parent_sink  0.04792    0.00365   13.11 6.13e-15  0.04049 5.54e-02
+#&gt; k_parent_m1    0.05078    0.00205   24.80 3.27e-23  0.04661 5.49e-02
+#&gt; k_m1_sink      0.00526    0.00070    7.51 6.16e-09  0.00384 6.69e-03
+#&gt; sigma          3.12550    0.35852    8.72 2.24e-10  2.39609 3.85e+00</div><div class='input'><span class='co'># }</span>
 
 <span class='va'>initials</span> <span class='op'>&lt;-</span> <span class='va'>fit</span><span class='op'>$</span><span class='va'>start</span><span class='op'>$</span><span class='va'>value</span>
 <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>initials</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span><span class='op'>(</span><span class='va'>fit</span><span class='op'>$</span><span class='va'>start</span><span class='op'>)</span>
 <span class='va'>transformed</span> <span class='op'>&lt;-</span> <span class='va'>fit</span><span class='op'>$</span><span class='va'>start_transformed</span><span class='op'>$</span><span class='va'>value</span>
 <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>transformed</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span><span class='op'>(</span><span class='va'>fit</span><span class='op'>$</span><span class='va'>start_transformed</span><span class='op'>)</span>
 <span class='fu'>transform_odeparms</span><span class='op'>(</span><span class='va'>initials</span>, <span class='va'>SFO_SFO</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;        parent_0    log_k_parent        log_k_m1 f_parent_qlogis 
-#&gt;      100.750000       -2.302585       -2.301586        0.000000 </div><div class='input'><span class='fu'>backtransform_odeparms</span><span class='op'>(</span><span class='va'>transformed</span>, <span class='va'>SFO_SFO</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;       parent_0       k_parent           k_m1 f_parent_to_m1 
-#&gt;       100.7500         0.1000         0.1001         0.5000 </div><div class='input'>
+</div><div class='output co'>#&gt;          parent_0 log_k_parent_sink   log_k_parent_m1     log_k_m1_sink 
+#&gt;        100.750000         -2.302585         -2.301586         -2.300587 </div><div class='input'><span class='fu'>backtransform_odeparms</span><span class='op'>(</span><span class='va'>transformed</span>, <span class='va'>SFO_SFO</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;      parent_0 k_parent_sink   k_parent_m1     k_m1_sink 
+#&gt;      100.7500        0.1000        0.1001        0.1002 </div><div class='input'>
 <span class='co'># \dontrun{</span>
-<span class='co'># The case of formation fractions</span>
+<span class='co'># The case of formation fractions (this is now the default)</span>
 <span class='va'>SFO_SFO.ff</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span><span class='op'>(</span>
   parent <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span>, to <span class='op'>=</span> <span class='st'>"m1"</span>, sink <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,
   m1 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>type <span class='op'>=</span> <span class='st'>"SFO"</span><span class='op'>)</span>,
   use_of_ff <span class='op'>=</span> <span class='st'>"max"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Temporary DLL for differentials generated and loaded</span></div><div class='input'>
-<span class='va'>fit.ff</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='va'>SFO_SFO.ff</span>, <span class='va'>FOCUS_2006_D</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='va'>fit.ff.s</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/saemix/man/summary-methods.html'>summary</a></span><span class='op'>(</span><span class='va'>fit.ff</span><span class='op'>)</span>
+<span class='va'>fit.ff</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='va'>SFO_SFO.ff</span>, <span class='va'>FOCUS_D</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='va'>fit.ff.s</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/saemix/man/summary-methods.html'>summary</a></span><span class='op'>(</span><span class='va'>fit.ff</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>fit.ff.s</span><span class='op'>$</span><span class='va'>par</span>, <span class='fl'>3</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;                 Estimate Std. Error  Lower  Upper
 #&gt; parent_0         99.5985     1.5702 96.404 102.79
@@ -299,8 +313,8 @@ This is no problem for the internal use in <a href='mkinfit.html'>mkinfit</a>.</
   use_of_ff <span class='op'>=</span> <span class='st'>"max"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Temporary DLL for differentials generated and loaded</span></div><div class='input'>
 
-<span class='va'>fit.ff.2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='va'>SFO_SFO.ff.2</span>, <span class='va'>FOCUS_2006_D</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Observations with value of zero were removed from the data</span></div><div class='input'><span class='va'>fit.ff.2.s</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/saemix/man/summary-methods.html'>summary</a></span><span class='op'>(</span><span class='va'>fit.ff.2</span><span class='op'>)</span>
+<span class='va'>fit.ff.2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinfit.html'>mkinfit</a></span><span class='op'>(</span><span class='va'>SFO_SFO.ff.2</span>, <span class='va'>FOCUS_D</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='va'>fit.ff.2.s</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/saemix/man/summary-methods.html'>summary</a></span><span class='op'>(</span><span class='va'>fit.ff.2</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>fit.ff.2.s</span><span class='op'>$</span><span class='va'>par</span>, <span class='fl'>3</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;              Estimate Std. Error Lower Upper
 #&gt; parent_0        84.79      3.012 78.67 90.91

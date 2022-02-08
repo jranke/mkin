@@ -118,9 +118,6 @@ variable, specifying the corresponding submodel as well as outgoing pathways
 
 Print mkinmod objects in a way that the user finds his way to get to its
 components.
-
-This is a convenience function to set up the lists used as arguments for
-\code{\link{mkinmod}}.
 }
 \details{
 For the definition of model types and their parameters, the equations given

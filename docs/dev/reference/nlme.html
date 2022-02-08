@@ -75,7 +75,7 @@ datasets. They are used internally by the nlme.mmkin() method." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.9.50.4</span>
+        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.1.0</span>
       </span>
     </div>
 
@@ -124,7 +124,7 @@ datasets. They are used internally by the nlme.mmkin() method." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/jranke/mkin/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -155,8 +155,6 @@ datasets. They are used internally by the <code><a href='nlme.mmkin.html'>nlme.m
 
     <pre class="usage"><span class='fu'>nlme_function</span><span class='op'>(</span><span class='va'>object</span><span class='op'>)</span>
 
-<span class='fu'>mean_degparms</span><span class='op'>(</span><span class='va'>object</span>, random <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-
 <span class='fu'>nlme_data</span><span class='op'>(</span><span class='va'>object</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -166,19 +164,11 @@ datasets. They are used internally by the <code><a href='nlme.mmkin.html'>nlme.m
       <th>object</th>
       <td><p>An mmkin row object containing several fits of the same model to different datasets</p></td>
     </tr>
-    <tr>
-      <th>random</th>
-      <td><p>Should a list with fixed and random effects be returned?</p></td>
-    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A function that can be used with nlme</p>
-<p>If random is FALSE (default), a named vector containing mean values
-of the fitted degradation model parameters. If random is TRUE, a list with
-fixed and random effects, in the format required by the start argument of
-nlme for the case of a single grouping variable ds.</p>
 <p>A <code><a href='https://rdrr.io/pkg/nlme/man/groupedData.html'>groupedData</a></code> object</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -206,12 +196,12 @@ nlme for the case of a single grouping variable ds.</p>
 <span class='va'>ds</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>d1 <span class='op'>=</span> <span class='va'>d1</span>, d2 <span class='op'>=</span> <span class='va'>d2</span>, d3 <span class='op'>=</span> <span class='va'>d3</span><span class='op'>)</span>
 
 <span class='va'>f</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='va'>ds</span>, cores <span class='op'>=</span> <span class='fl'>1</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-<span class='va'>mean_dp</span> <span class='op'>&lt;-</span> <span class='fu'>mean_degparms</span><span class='op'>(</span><span class='va'>f</span><span class='op'>)</span>
+<span class='va'>mean_dp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mean_degparms.html'>mean_degparms</a></span><span class='op'>(</span><span class='va'>f</span><span class='op'>)</span>
 <span class='va'>grouped_data</span> <span class='op'>&lt;-</span> <span class='fu'>nlme_data</span><span class='op'>(</span><span class='va'>f</span><span class='op'>)</span>
 <span class='va'>nlme_f</span> <span class='op'>&lt;-</span> <span class='fu'>nlme_function</span><span class='op'>(</span><span class='va'>f</span><span class='op'>)</span>
 <span class='co'># These assignments are necessary for these objects to be</span>
 <span class='co'># visible to nlme and augPred when evaluation is done by</span>
-<span class='co'># pkgdown to generated the html docs.</span>
+<span class='co'># pkgdown to generate the html docs.</span>
 <span class='fu'><a href='https://rdrr.io/r/base/assign.html'>assign</a></span><span class='op'>(</span><span class='st'>"nlme_f"</span>, <span class='va'>nlme_f</span>, <span class='fu'><a href='https://rdrr.io/r/base/environment.html'>globalenv</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/assign.html'>assign</a></span><span class='op'>(</span><span class='st'>"grouped_data"</span>, <span class='va'>grouped_data</span>, <span class='fu'><a href='https://rdrr.io/r/base/environment.html'>globalenv</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
 
@@ -224,37 +214,37 @@ nlme for the case of a single grouping variable ds.</p>
 <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m_nlme</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Nonlinear mixed-effects model fit by maximum likelihood
 #&gt;   Model: value ~ nlme_f(name, time, parent_0, log_k_parent_sink) 
-#&gt;  Data: grouped_data 
+#&gt;   Data: grouped_data 
 #&gt;        AIC      BIC    logLik
-#&gt;   252.7798 262.1358 -121.3899
+#&gt;   300.6824 310.2426 -145.3412
 #&gt; 
 #&gt; Random effects:
 #&gt;  Formula: list(parent_0 ~ 1, log_k_parent_sink ~ 1)
 #&gt;  Level: ds
 #&gt;  Structure: Diagonal
-#&gt;             parent_0 log_k_parent_sink Residual
-#&gt; StdDev: 0.0006768135         0.6800777 2.489397
+#&gt;         parent_0 log_k_parent_sink Residual
+#&gt; StdDev: 1.697361         0.6801209 3.666073
 #&gt; 
-#&gt; Fixed effects: parent_0 + log_k_parent_sink ~ 1 
-#&gt;                       Value Std.Error DF   t-value p-value
-#&gt; parent_0          101.74884 0.6456014 44 157.60321       0
-#&gt; log_k_parent_sink  -3.05575 0.4015811 44  -7.60929       0
+#&gt; Fixed effects:  parent_0 + log_k_parent_sink ~ 1 
+#&gt;                       Value Std.Error DF  t-value p-value
+#&gt; parent_0          100.99378 1.3890416 46 72.70753       0
+#&gt; log_k_parent_sink  -3.07521 0.4018589 46 -7.65246       0
 #&gt;  Correlation: 
 #&gt;                   prnt_0
-#&gt; log_k_parent_sink 0.026 
+#&gt; log_k_parent_sink 0.027 
 #&gt; 
 #&gt; Standardized Within-Group Residuals:
 #&gt;        Min         Q1        Med         Q3        Max 
-#&gt; -2.1317488 -0.6878121  0.0828385  0.8592270  2.9529864 
+#&gt; -1.9942823 -0.5622565  0.1791579  0.7165038  2.0704781 
 #&gt; 
-#&gt; Number of Observations: 48
+#&gt; Number of Observations: 50
 #&gt; Number of Groups: 3 </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/nlme/man/augPred.html'>augPred</a></span><span class='op'>(</span><span class='va'>m_nlme</span>, level <span class='op'>=</span> <span class='fl'>0</span><span class='op'>:</span><span class='fl'>1</span><span class='op'>)</span>, layout <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>3</span>, <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='img'><img src='nlme-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># augPred does not work on fits with more than one state</span>
 <span class='co'># variable</span>
 <span class='co'>#</span>
 <span class='co'># The procedure is greatly simplified by the nlme.mmkin function</span>
 <span class='va'>f_nlme</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 1, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_nlme</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_nlme</span><span class='op'>)</span>
 </div><div class='img'><img src='nlme-2.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

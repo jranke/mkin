@@ -2,28 +2,18 @@
 % Please edit documentation in R/nlme.R
 \name{nlme_function}
 \alias{nlme_function}
-\alias{mean_degparms}
 \alias{nlme_data}
 \title{Helper functions to create nlme models from mmkin row objects}
 \usage{
 nlme_function(object)
 
-mean_degparms(object, random = FALSE)
-
 nlme_data(object)
 }
 \arguments{
 \item{object}{An mmkin row object containing several fits of the same model to different datasets}
-
-\item{random}{Should a list with fixed and random effects be returned?}
 }
 \value{
 A function that can be used with nlme
-
-If random is FALSE (default), a named vector containing mean values
-of the fitted degradation model parameters. If random is TRUE, a list with
-fixed and random effects, in the format required by the start argument of
-nlme for the case of a single grouping variable ds.
 
 A \code{\link{groupedData}} object
 }
@@ -60,7 +50,7 @@ grouped_data <- nlme_data(f)
 nlme_f <- nlme_function(f)
 # These assignments are necessary for these objects to be
 # visible to nlme and augPred when evaluation is done by
-# pkgdown to generated the html docs.
+# pkgdown to generate the html docs.
 assign("nlme_f", nlme_f, globalenv())
 assign("grouped_data", grouped_data, globalenv())
 

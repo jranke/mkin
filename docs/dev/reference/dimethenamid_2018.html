@@ -77,7 +77,7 @@ constrained by data protection regulations." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.9.50.4</span>
+        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.1.0</span>
       </span>
     </div>
 
@@ -162,13 +162,13 @@ constrained by data protection regulations.</p>
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>An <a href='mkindsg.html'>mkindsg</a> object grouping eight datasets with some meta information</p>
+    <p>An <a href='mkindsg.html'>mkindsg</a> object grouping seven datasets with some meta information</p>
     <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
 
     <p>Rapporteur Member State Germany, Co-Rapporteur Member State Bulgaria (2018)
 Renewal Assessment Report Dimethenamid-P Volume 3 - B.8 Environmental fate and behaviour
 Rev. 2 - November 2017
-<a href='http://registerofquestions.efsa.europa.eu/roqFrontend/outputLoader?output=ON-5211'>http://registerofquestions.efsa.europa.eu/roqFrontend/outputLoader?output=ON-5211</a></p>
+<a href='https://open.efsa.europa.eu/study-inventory/EFSA-Q-2014-00716'>https://open.efsa.europa.eu/study-inventory/EFSA-Q-2014-00716</a></p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The R code used to create this data object is installed with this package
@@ -177,33 +177,249 @@ specific pieces of information in the comments.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>dimethenamid_2018</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;mkindsg&gt; holding 8 mkinds objects
+</div><div class='output co'>#&gt; &lt;mkindsg&gt; holding 7 mkinds objects
 #&gt; Title $title:  Aerobic soil degradation data on dimethenamid-P from the EU assessment in 2018 
 #&gt; Occurrence of observed compounds $observed_n:
 #&gt; DMTAP   M23   M27   M31  DMTA 
-#&gt;     4     7     7     7     4 
+#&gt;     3     7     7     7     4 
 #&gt; Time normalisation factors $f_time_norm:
-#&gt; [1] 1.0000000 0.9706477 0.9706477 1.2284784 1.2284784 0.6233856 0.7678922
-#&gt; [8] 0.6733938
+#&gt; [1] 1.0000000 0.9706477 1.2284784 1.2284784 0.6233856 0.7678922 0.6733938
 #&gt; Meta information $meta:
-#&gt;                       study  usda_soil_type study_moisture_ref_type
-#&gt; Calke         Unsworth 2014      Sandy loam                     pF2
-#&gt; Borstel 1 Staudenmaier 2013            Sand                     pF1
-#&gt; Borstel 2 Staudenmaier 2009            Sand                     pF1
-#&gt; Elliot 1         Wendt 1997       Clay loam                   pF2.5
-#&gt; Elliot 2         Wendt 1997       Clay loam                   pF2.5
-#&gt; Flaach           König 1996 Sandy clay loam                     pF1
-#&gt; BBA 2.2          König 1995      Loamy sand                     pF1
-#&gt; BBA 2.3          König 1995      Sandy loam                     pF1
-#&gt;           rel_moisture study_ref_moisture temperature
-#&gt; Calke             1.00                 NA          20
-#&gt; Borstel 1         0.50              23.00          20
-#&gt; Borstel 2         0.50              23.00          20
-#&gt; Elliot 1          0.75              33.37          23
-#&gt; Elliot 2          0.75              33.37          23
-#&gt; Flaach            0.40                 NA          20
-#&gt; BBA 2.2           0.40                 NA          20
-#&gt; BBA 2.3           0.40                 NA          20</div></pre>
+#&gt;                      study  usda_soil_type study_moisture_ref_type rel_moisture
+#&gt; Calke        Unsworth 2014      Sandy loam                     pF2         1.00
+#&gt; Borstel  Staudenmaier 2009            Sand                     pF1         0.50
+#&gt; Elliot 1        Wendt 1997       Clay loam                   pF2.5         0.75
+#&gt; Elliot 2        Wendt 1997       Clay loam                   pF2.5         0.75
+#&gt; Flaach          König 1996 Sandy clay loam                     pF1         0.40
+#&gt; BBA 2.2         König 1995      Loamy sand                     pF1         0.40
+#&gt; BBA 2.3         König 1995      Sandy loam                     pF1         0.40
+#&gt;          study_ref_moisture temperature
+#&gt; Calke                    NA          20
+#&gt; Borstel               23.00          20
+#&gt; Elliot 1              33.37          23
+#&gt; Elliot 2              33.37          23
+#&gt; Flaach                   NA          20
+#&gt; BBA 2.2                  NA          20
+#&gt; BBA 2.3                  NA          20</div><div class='input'><span class='va'>dmta_ds</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>7</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>i</span><span class='op'>)</span> <span class='op'>{</span>
+  <span class='va'>ds_i</span> <span class='op'>&lt;-</span> <span class='va'>dimethenamid_2018</span><span class='op'>$</span><span class='va'>ds</span><span class='op'>[[</span><span class='va'>i</span><span class='op'>]</span><span class='op'>]</span><span class='op'>$</span><span class='va'>data</span>
+  <span class='va'>ds_i</span><span class='op'>[</span><span class='va'>ds_i</span><span class='op'>$</span><span class='va'>name</span> <span class='op'>==</span> <span class='st'>"DMTAP"</span>, <span class='st'>"name"</span><span class='op'>]</span> <span class='op'>&lt;-</span>  <span class='st'>"DMTA"</span>
+  <span class='va'>ds_i</span><span class='op'>$</span><span class='va'>time</span> <span class='op'>&lt;-</span> <span class='va'>ds_i</span><span class='op'>$</span><span class='va'>time</span> <span class='op'>*</span> <span class='va'>dimethenamid_2018</span><span class='op'>$</span><span class='va'>f_time_norm</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span>
+  <span class='va'>ds_i</span>
+<span class='op'>}</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>dmta_ds</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>sapply</a></span><span class='op'>(</span><span class='va'>dimethenamid_2018</span><span class='op'>$</span><span class='va'>ds</span>, <span class='kw'>function</span><span class='op'>(</span><span class='va'>ds</span><span class='op'>)</span> <span class='va'>ds</span><span class='op'>$</span><span class='va'>title</span><span class='op'>)</span>
+<span class='va'>dmta_ds</span><span class='op'>[[</span><span class='st'>"Elliot"</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>dmta_ds</span><span class='op'>[[</span><span class='st'>"Elliot 1"</span><span class='op'>]</span><span class='op'>]</span>, <span class='va'>dmta_ds</span><span class='op'>[[</span><span class='st'>"Elliot 2"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
+<span class='va'>dmta_ds</span><span class='op'>[[</span><span class='st'>"Elliot 1"</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='cn'>NULL</span>
+<span class='va'>dmta_ds</span><span class='op'>[[</span><span class='st'>"Elliot 2"</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='cn'>NULL</span>
+<span class='co'># \dontrun{</span>
+<span class='va'>dfop_sfo3_plus</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mkinmod.html'>mkinmod</a></span><span class='op'>(</span>
+  DMTA <span class='op'>=</span> <span class='fu'><a href='mkinmod.html'>mkinsub</a></span><span class='op'>(</span><span class='st'>"DFOP"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"M23"</span>, <span class='st'>"M27"</span>, <span class='st'>"M31"</span><span class='op'>)</span><span class='op'>)</span>,
+  M23 <span class='op'>=</span> <span class='fu'><a href='mkinmod.html'>mkinsub</a></span><span class='op'>(</span><span class='st'>"SFO"</span><span class='op'>)</span>,
+  M27 <span class='op'>=</span> <span class='fu'><a href='mkinmod.html'>mkinsub</a></span><span class='op'>(</span><span class='st'>"SFO"</span><span class='op'>)</span>,
+  M31 <span class='op'>=</span> <span class='fu'><a href='mkinmod.html'>mkinsub</a></span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='st'>"M27"</span>, sink <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>,
+  quiet <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span>
+<span class='va'>f_dmta_mkin_tc</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span><span class='op'>(</span>
+  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"DFOP-SFO3+"</span> <span class='op'>=</span> <span class='va'>dfop_sfo3_plus</span><span class='op'>)</span>,
+  <span class='va'>dmta_ds</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span>, error_model <span class='op'>=</span> <span class='st'>"tc"</span><span class='op'>)</span>
+<span class='fu'><a href='nlmixr.mmkin.html'>nlmixr_model</a></span><span class='op'>(</span><span class='va'>f_dmta_mkin_tc</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>With est = 'saem', a different error model is required for each observed variableChanging the error model to 'obs_tc' (Two-component error for each observed variable)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: number of items to replace is not a multiple of replacement length</span></div><div class='output co'>#&gt; function () 
+#&gt; {
+#&gt;     ini({
+#&gt;         DMTA_0 = 98.7132391714013
+#&gt;         eta.DMTA_0 ~ 2.32692496033921
+#&gt;         log_k_M23 = -3.92162409637283
+#&gt;         eta.log_k_M23 ~ 0.549278519419884
+#&gt;         log_k_M27 = -4.33057580082049
+#&gt;         eta.log_k_M27 ~ 0.855184233768426
+#&gt;         log_k_M31 = -4.24415516780733
+#&gt;         eta.log_k_M31 ~ 0.745746058085877
+#&gt;         log_k1 = -2.23515804885306
+#&gt;         eta.log_k1 ~ 0.901033446532357
+#&gt;         log_k2 = -3.77581484944379
+#&gt;         eta.log_k2 ~ 1.57682329638124
+#&gt;         g_qlogis = 0.436302910942805
+#&gt;         eta.g_qlogis ~ 3.10190528862808
+#&gt;         f_DMTA_tffm0_1_qlogis = -2.0914852208395
+#&gt;         eta.f_DMTA_tffm0_1_qlogis ~ 0.3
+#&gt;         f_DMTA_tffm0_2_qlogis = -2.17879574608926
+#&gt;         eta.f_DMTA_tffm0_2_qlogis ~ 0.3
+#&gt;         f_DMTA_tffm0_3_qlogis = -2.14036526460782
+#&gt;         eta.f_DMTA_tffm0_3_qlogis ~ 0.3
+#&gt;         sigma_low_DMTA = 0.700117227383809
+#&gt;         rsd_high_DMTA = 0.0257724286053519
+#&gt;         sigma_low_M23 = 0.700117227383809
+#&gt;         rsd_high_M23 = 0.0257724286053519
+#&gt;         sigma_low_M27 = 0.700117227383809
+#&gt;         rsd_high_M27 = 0.0257724286053519
+#&gt;         sigma_low_M31 = 0.700117227383809
+#&gt;         rsd_high_M31 = 0.0257724286053519
+#&gt;     })
+#&gt;     model({
+#&gt;         DMTA_0_model = DMTA_0 + eta.DMTA_0
+#&gt;         DMTA(0) = DMTA_0_model
+#&gt;         k_M23 = exp(log_k_M23 + eta.log_k_M23)
+#&gt;         k_M27 = exp(log_k_M27 + eta.log_k_M27)
+#&gt;         k_M31 = exp(log_k_M31 + eta.log_k_M31)
+#&gt;         k1 = exp(log_k1 + eta.log_k1)
+#&gt;         k2 = exp(log_k2 + eta.log_k2)
+#&gt;         g = expit(g_qlogis + eta.g_qlogis)
+#&gt;         f_DMTA_to_M23 = expit(f_DMTA_tffm0_1_qlogis + eta.f_DMTA_tffm0_1_qlogis)
+#&gt;         f_DMTA_to_M23 = expit(f_DMTA_tffm0_2_qlogis + eta.f_DMTA_tffm0_2_qlogis)
+#&gt;         f_DMTA_to_M23 = expit(f_DMTA_tffm0_3_qlogis + eta.f_DMTA_tffm0_3_qlogis)
+#&gt;         f_DMTA_to_M23 = f_DMTA_tffm0_1
+#&gt;         f_DMTA_to_M27 = f_DMTA_tffm0_2 * (1 - f_DMTA_tffm0_1)
+#&gt;         f_DMTA_to_M31 = f_DMTA_tffm0_3 * (1 - f_DMTA_tffm0_2) * 
+#&gt;             (1 - f_DMTA_tffm0_1)
+#&gt;         d/dt(DMTA) = -((k1 * g * exp(-k1 * time) + k2 * (1 - 
+#&gt;             g) * exp(-k2 * time))/(g * exp(-k1 * time) + (1 - 
+#&gt;             g) * exp(-k2 * time))) * DMTA
+#&gt;         d/dt(M23) = +f_DMTA_to_M23 * ((k1 * g * exp(-k1 * time) + 
+#&gt;             k2 * (1 - g) * exp(-k2 * time))/(g * exp(-k1 * time) + 
+#&gt;             (1 - g) * exp(-k2 * time))) * DMTA - k_M23 * M23
+#&gt;         d/dt(M27) = +f_DMTA_to_M27 * ((k1 * g * exp(-k1 * time) + 
+#&gt;             k2 * (1 - g) * exp(-k2 * time))/(g * exp(-k1 * time) + 
+#&gt;             (1 - g) * exp(-k2 * time))) * DMTA - k_M27 * M27 + 
+#&gt;             k_M31 * M31
+#&gt;         d/dt(M31) = +f_DMTA_to_M31 * ((k1 * g * exp(-k1 * time) + 
+#&gt;             k2 * (1 - g) * exp(-k2 * time))/(g * exp(-k1 * time) + 
+#&gt;             (1 - g) * exp(-k2 * time))) * DMTA - k_M31 * M31
+#&gt;         DMTA ~ add(sigma_low_DMTA) + prop(rsd_high_DMTA)
+#&gt;         M23 ~ add(sigma_low_M23) + prop(rsd_high_M23)
+#&gt;         M27 ~ add(sigma_low_M27) + prop(rsd_high_M27)
+#&gt;         M31 ~ add(sigma_low_M31) + prop(rsd_high_M31)
+#&gt;     })
+#&gt; }
+#&gt; &lt;environment: 0x555559d89920&gt;</div><div class='input'><span class='co'># The focei fit takes about four minutes on my system</span>
+<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span><span class='op'>(</span>
+  <span class='va'>f_dmta_nlmixr_focei</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlmixr/man/nlmixr.html'>nlmixr</a></span><span class='op'>(</span><span class='va'>f_dmta_mkin_tc</span>, est <span class='op'>=</span> <span class='st'>"focei"</span>,
+    control <span class='op'>=</span> <span class='fu'>nlmixr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/nlmixr/man/foceiControl.html'>foceiControl</a></span><span class='op'>(</span>print <span class='op'>=</span> <span class='fl'>500</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: number of items to replace is not a multiple of replacement length</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span> parameter labels from comments are typically ignored in non-interactive mode</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span> Need to run with the source intact to parse comments</span></div><div class='output co'>#&gt; <span class='message'>→ creating full model...</span></div><div class='output co'>#&gt; <span class='message'>→ pruning branches (<span style='color: #262626; background-color: #DADADA;'>`if`</span>/<span style='color: #262626; background-color: #DADADA;'>`else`</span>)...</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> done</span></div><div class='output co'>#&gt; <span class='message'>→ loading into <span style='color: #0000BB;'>symengine</span> environment...</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> done</span></div><div class='output co'>#&gt; <span class='message'>→ creating full model...</span></div><div class='output co'>#&gt; <span class='message'>→ pruning branches (<span style='color: #262626; background-color: #DADADA;'>`if`</span>/<span style='color: #262626; background-color: #DADADA;'>`else`</span>)...</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> done</span></div><div class='output co'>#&gt; <span class='message'>→ loading into <span style='color: #0000BB;'>symengine</span> environment...</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> done</span></div><div class='output co'>#&gt; <span class='message'>→ calculate jacobian</span></div><div class='output co'>#&gt; [====|====|====|====|====|====|====|====|====|====] 0:00:02 
+#&gt; </div><div class='output co'>#&gt; <span class='message'>→ calculate sensitivities</span></div><div class='output co'>#&gt; [====|====|====|====|====|====|====|====|====|====] 0:00:04 
+#&gt; </div><div class='output co'>#&gt; <span class='message'>→ calculate ∂(f)/∂(η)</span></div><div class='output co'>#&gt; [====|====|====|====|====|====|====|====|====|====] 0:00:01 
+#&gt; </div><div class='output co'>#&gt; <span class='message'>→ calculate ∂(R²)/∂(η)</span></div><div class='output co'>#&gt; [====|====|====|====|====|====|====|====|====|====] 0:00:09 
+#&gt; </div><div class='output co'>#&gt; <span class='message'>→ finding duplicate expressions in inner model...</span></div><div class='output co'>#&gt; [====|====|====|====|====|====|====|====|====|====] 0:00:07 
+#&gt; </div><div class='output co'>#&gt; <span class='message'>→ optimizing duplicate expressions in inner model...</span></div><div class='output co'>#&gt; [====|====|====|====|====|====|====|====|====|====] 0:00:06 
+#&gt; </div><div class='output co'>#&gt; <span class='message'>→ finding duplicate expressions in EBE model...</span></div><div class='output co'>#&gt; [====|====|====|====|====|====|====|====|====|====] 0:00:00 
+#&gt; </div><div class='output co'>#&gt; <span class='message'>→ optimizing duplicate expressions in EBE model...</span></div><div class='output co'>#&gt; [====|====|====|====|====|====|====|====|====|====] 0:00:00 
+#&gt; </div><div class='output co'>#&gt; <span class='message'>→ compiling inner model...</span></div><div class='output co'>#&gt; <span class='message'> </span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> done</span></div><div class='output co'>#&gt; <span class='message'>→ finding duplicate expressions in FD model...</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>→ optimizing duplicate expressions in FD model...</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>→ compiling EBE model...</span></div><div class='output co'>#&gt; <span class='message'> </span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> done</span></div><div class='output co'>#&gt; <span class='message'>→ compiling events FD model...</span></div><div class='output co'>#&gt; <span class='message'> </span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> done</span></div><div class='output co'>#&gt; <span class='message'>Model:</span></div><div class='output co'>#&gt; <span class='message'>cmt(DMTA);</span>
+#&gt; <span class='message'>cmt(M23);</span>
+#&gt; <span class='message'>cmt(M27);</span>
+#&gt; <span class='message'>cmt(M31);</span>
+#&gt; <span class='message'>rx_expr_14~ETA[1]+THETA[1];</span>
+#&gt; <span class='message'>DMTA(0)=rx_expr_14;</span>
+#&gt; <span class='message'>rx_expr_15~ETA[5]+THETA[5];</span>
+#&gt; <span class='message'>rx_expr_16~ETA[7]+THETA[7];</span>
+#&gt; <span class='message'>rx_expr_17~ETA[6]+THETA[6];</span>
+#&gt; <span class='message'>rx_expr_24~exp(rx_expr_15);</span>
+#&gt; <span class='message'>rx_expr_25~exp(rx_expr_17);</span>
+#&gt; <span class='message'>rx_expr_29~t*rx_expr_24;</span>
+#&gt; <span class='message'>rx_expr_30~t*rx_expr_25;</span>
+#&gt; <span class='message'>rx_expr_31~exp(-(rx_expr_16));</span>
+#&gt; <span class='message'>rx_expr_35~1+rx_expr_31;</span>
+#&gt; <span class='message'>rx_expr_40~1/(rx_expr_35);</span>
+#&gt; <span class='message'>rx_expr_42~(rx_expr_40);</span>
+#&gt; <span class='message'>rx_expr_43~1-rx_expr_42;</span>
+#&gt; <span class='message'>d/dt(DMTA)=-DMTA*(exp(rx_expr_15-rx_expr_29)/(rx_expr_35)+exp(rx_expr_17-rx_expr_30)*(rx_expr_43))/(exp(-t*rx_expr_24)/(rx_expr_35)+exp(-t*rx_expr_25)*(rx_expr_43));</span>
+#&gt; <span class='message'>rx_expr_18~ETA[2]+THETA[2];</span>
+#&gt; <span class='message'>rx_expr_26~exp(rx_expr_18);</span>
+#&gt; <span class='message'>d/dt(M23)=-rx_expr_26*M23+DMTA*(exp(rx_expr_15-rx_expr_29)/(rx_expr_35)+exp(rx_expr_17-rx_expr_30)*(rx_expr_43))*f_DMTA_tffm0_1/(exp(-t*rx_expr_24)/(rx_expr_35)+exp(-t*rx_expr_25)*(rx_expr_43));</span>
+#&gt; <span class='message'>rx_expr_19~ETA[3]+THETA[3];</span>
+#&gt; <span class='message'>rx_expr_20~ETA[4]+THETA[4];</span>
+#&gt; <span class='message'>rx_expr_21~1-f_DMTA_tffm0_1;</span>
+#&gt; <span class='message'>rx_expr_27~exp(rx_expr_19);</span>
+#&gt; <span class='message'>rx_expr_28~exp(rx_expr_20);</span>
+#&gt; <span class='message'>d/dt(M27)=-rx_expr_27*M27+rx_expr_28*M31+DMTA*(rx_expr_21)*(exp(rx_expr_15-rx_expr_29)/(rx_expr_35)+exp(rx_expr_17-rx_expr_30)*(rx_expr_43))*f_DMTA_tffm0_2/(exp(-t*rx_expr_24)/(rx_expr_35)+exp(-t*rx_expr_25)*(rx_expr_43));</span>
+#&gt; <span class='message'>rx_expr_22~1-f_DMTA_tffm0_2;</span>
+#&gt; <span class='message'>d/dt(M31)=-rx_expr_28*M31+DMTA*(rx_expr_22)*(rx_expr_21)*(exp(rx_expr_15-rx_expr_29)/(rx_expr_35)+exp(rx_expr_17-rx_expr_30)*(rx_expr_43))*f_DMTA_tffm0_3/(exp(-t*rx_expr_24)/(rx_expr_35)+exp(-t*rx_expr_25)*(rx_expr_43));</span>
+#&gt; <span class='message'>rx_expr_0~CMT==4;</span>
+#&gt; <span class='message'>rx_expr_1~CMT==2;</span>
+#&gt; <span class='message'>rx_expr_2~CMT==1;</span>
+#&gt; <span class='message'>rx_expr_3~CMT==3;</span>
+#&gt; <span class='message'>rx_expr_4~1-(rx_expr_0);</span>
+#&gt; <span class='message'>rx_expr_5~1-(rx_expr_1);</span>
+#&gt; <span class='message'>rx_expr_6~1-(rx_expr_3);</span>
+#&gt; <span class='message'>rx_yj_~(rx_expr_4)*((2*(rx_expr_5)*(rx_expr_2)+2*(rx_expr_1))*(rx_expr_6)+2*(rx_expr_3))+2*(rx_expr_0);</span>
+#&gt; <span class='message'>rx_expr_7~(rx_expr_1);</span>
+#&gt; <span class='message'>rx_expr_8~(rx_expr_3);</span>
+#&gt; <span class='message'>rx_expr_9~(rx_expr_0);</span>
+#&gt; <span class='message'>rx_expr_13~(rx_expr_5);</span>
+#&gt; <span class='message'>rx_expr_32~rx_expr_13*(rx_expr_2);</span>
+#&gt; <span class='message'>rx_lambda_~(rx_expr_4)*((rx_expr_32+rx_expr_7)*(rx_expr_6)+rx_expr_8)+rx_expr_9;</span>
+#&gt; <span class='message'>rx_hi_~(rx_expr_4)*((rx_expr_32+rx_expr_7)*(rx_expr_6)+rx_expr_8)+rx_expr_9;</span>
+#&gt; <span class='message'>rx_low_~0;</span>
+#&gt; <span class='message'>rx_expr_10~M31*(rx_expr_0);</span>
+#&gt; <span class='message'>rx_expr_11~M27*(rx_expr_3);</span>
+#&gt; <span class='message'>rx_expr_12~M23*(rx_expr_1);</span>
+#&gt; <span class='message'>rx_expr_23~DMTA*(rx_expr_5);</span>
+#&gt; <span class='message'>rx_expr_36~rx_expr_23*(rx_expr_2);</span>
+#&gt; <span class='message'>rx_pred_=(rx_expr_4)*((rx_expr_10+(rx_expr_4)*(rx_expr_11+(rx_expr_12+rx_expr_36)*(rx_expr_6)))*(rx_expr_3)+((rx_expr_1)*(rx_expr_10+(rx_expr_4)*(rx_expr_11+(rx_expr_12+rx_expr_36)*(rx_expr_6)))+(rx_expr_5)*(rx_expr_10+(rx_expr_4)*(rx_expr_11+(rx_expr_12+rx_expr_36)*(rx_expr_6)))*(rx_expr_2))*(rx_expr_6))+(rx_expr_0)*(rx_expr_10+(rx_expr_4)*(rx_expr_11+(rx_expr_12+rx_expr_36)*(rx_expr_6)));</span>
+#&gt; <span class='message'>rx_expr_33~Rx_pow_di(THETA[12],2);</span>
+#&gt; <span class='message'>rx_expr_34~Rx_pow_di(THETA[11],2);</span>
+#&gt; <span class='message'>rx_r_=(rx_expr_4)*((rx_expr_33*Rx_pow_di(((rx_expr_10+(rx_expr_4)*(rx_expr_11+(rx_expr_12+rx_expr_36)*(rx_expr_6)))*(rx_expr_3)+((rx_expr_1)*(rx_expr_10+(rx_expr_4)*(rx_expr_11+(rx_expr_12+rx_expr_36)*(rx_expr_6)))+(rx_expr_5)*(rx_expr_10+(rx_expr_4)*(rx_expr_11+(rx_expr_12+rx_expr_36)*(rx_expr_6)))*(rx_expr_2))*(rx_expr_6)),2)+rx_expr_34)*(rx_expr_3)+((rx_expr_1)*(rx_expr_33*Rx_pow_di(((rx_expr_1)*(rx_expr_10+(rx_expr_4)*(rx_expr_11+(rx_expr_12+rx_expr_36)*(rx_expr_6)))+(rx_expr_5)*(rx_expr_10+(rx_expr_4)*(rx_expr_11+(rx_expr_12+rx_expr_36)*(rx_expr_6)))*(rx_expr_2)),2)+rx_expr_34)+(rx_expr_33*Rx_pow_di(((rx_expr_10+(rx_expr_4)*(rx_expr_11+(rx_expr_12+rx_expr_36)*(rx_expr_6)))*(rx_expr_2)),2)+rx_expr_34)*(rx_expr_5)*(rx_expr_2))*(rx_expr_6))+(rx_expr_0)*(rx_expr_33*Rx_pow_di(((rx_expr_4)*((rx_expr_10+(rx_expr_4)*(rx_expr_11+(rx_expr_12+rx_expr_36)*(rx_expr_6)))*(rx_expr_3)+((rx_expr_1)*(rx_expr_10+(rx_expr_4)*(rx_expr_11+(rx_expr_12+rx_expr_36)*(rx_expr_6)))+(rx_expr_5)*(rx_expr_10+(rx_expr_4)*(rx_expr_11+(rx_expr_12+rx_expr_36)*(rx_expr_6)))*(rx_expr_2))*(rx_expr_6))+(rx_expr_0)*(rx_expr_10+(rx_expr_4)*(rx_expr_11+(rx_expr_12+rx_expr_36)*(rx_expr_6)))),2)+rx_expr_34);</span>
+#&gt; <span class='message'>DMTA_0=THETA[1];</span>
+#&gt; <span class='message'>log_k_M23=THETA[2];</span>
+#&gt; <span class='message'>log_k_M27=THETA[3];</span>
+#&gt; <span class='message'>log_k_M31=THETA[4];</span>
+#&gt; <span class='message'>log_k1=THETA[5];</span>
+#&gt; <span class='message'>log_k2=THETA[6];</span>
+#&gt; <span class='message'>g_qlogis=THETA[7];</span>
+#&gt; <span class='message'>f_DMTA_tffm0_1_qlogis=THETA[8];</span>
+#&gt; <span class='message'>f_DMTA_tffm0_2_qlogis=THETA[9];</span>
+#&gt; <span class='message'>f_DMTA_tffm0_3_qlogis=THETA[10];</span>
+#&gt; <span class='message'>sigma_low=THETA[11];</span>
+#&gt; <span class='message'>rsd_high=THETA[12];</span>
+#&gt; <span class='message'>eta.DMTA_0=ETA[1];</span>
+#&gt; <span class='message'>eta.log_k_M23=ETA[2];</span>
+#&gt; <span class='message'>eta.log_k_M27=ETA[3];</span>
+#&gt; <span class='message'>eta.log_k_M31=ETA[4];</span>
+#&gt; <span class='message'>eta.log_k1=ETA[5];</span>
+#&gt; <span class='message'>eta.log_k2=ETA[6];</span>
+#&gt; <span class='message'>eta.g_qlogis=ETA[7];</span>
+#&gt; <span class='message'>eta.f_DMTA_tffm0_1_qlogis=ETA[8];</span>
+#&gt; <span class='message'>eta.f_DMTA_tffm0_2_qlogis=ETA[9];</span>
+#&gt; <span class='message'>eta.f_DMTA_tffm0_3_qlogis=ETA[10];</span>
+#&gt; <span class='message'>DMTA_0_model=rx_expr_14;</span>
+#&gt; <span class='message'>k_M23=rx_expr_26;</span>
+#&gt; <span class='message'>k_M27=rx_expr_27;</span>
+#&gt; <span class='message'>k_M31=rx_expr_28;</span>
+#&gt; <span class='message'>k1=rx_expr_24;</span>
+#&gt; <span class='message'>k2=rx_expr_25;</span>
+#&gt; <span class='message'>g=1/(rx_expr_35);</span>
+#&gt; <span class='message'>f_DMTA_to_M23=1/(1+exp(-(ETA[8]+THETA[8])));</span>
+#&gt; <span class='message'>f_DMTA_to_M23=1/(1+exp(-(ETA[9]+THETA[9])));</span>
+#&gt; <span class='message'>f_DMTA_to_M23=1/(1+exp(-(ETA[10]+THETA[10])));</span>
+#&gt; <span class='message'>f_DMTA_to_M23=f_DMTA_tffm0_1;</span>
+#&gt; <span class='message'>f_DMTA_to_M27=(rx_expr_21)*f_DMTA_tffm0_2;</span>
+#&gt; <span class='message'>f_DMTA_to_M31=(rx_expr_22)*(rx_expr_21)*f_DMTA_tffm0_3;</span>
+#&gt; <span class='message'>tad=tad();</span>
+#&gt; <span class='message'>dosenum=dosenum();</span></div><div class='output co'>#&gt; <span class='message'>Needed Covariates:</span></div><div class='output co'>#&gt; <span class='message'>[1] "f_DMTA_tffm0_1" "f_DMTA_tffm0_2" "f_DMTA_tffm0_3" "CMT"           </span></div><div class='output co'>#&gt; <span class='error'>Error in (function (data, inits, PKpars, model = NULL, pred = NULL, err = NULL,     lower = -Inf, upper = Inf, fixed = NULL, skipCov = NULL,     control = foceiControl(), thetaNames = NULL, etaNames = NULL,     etaMat = NULL, ..., env = NULL, keep = NULL, drop = NULL) {    set.seed(control$seed)    .pt &lt;- proc.time()    RxODE::.setWarnIdSort(FALSE)    on.exit(RxODE::.setWarnIdSort(TRUE))    loadNamespace("n1qn1")    if (!RxODE::rxIs(control, "foceiControl")) {        control &lt;- do.call(foceiControl, control)    }    if (is.null(env)) {        .ret &lt;- new.env(parent = emptyenv())    }    else {        .ret &lt;- env    }    .ret$origData &lt;- data    .ret$etaNames &lt;- etaNames    .ret$thetaFixed &lt;- fixed    .ret$control &lt;- control    .ret$control$focei.mu.ref &lt;- integer(0)    if (is(model, "RxODE") || is(model, "character")) {        .ret$ODEmodel &lt;- TRUE        if (class(pred) != "function") {            stop("pred must be a function specifying the prediction variables in this model.")        }    }    else {        .ret$ODEmodel &lt;- TRUE        model &lt;- RxODE::rxGetLin(PKpars)        pred &lt;- eval(parse(text = "function(){return(Central);}"))    }    .square &lt;- function(x) x * x    .ret$diagXformInv &lt;- c(sqrt = ".square", log = "exp", identity = "identity")[control$diagXform]    if (is.null(err)) {        err &lt;- eval(parse(text = paste0("function(){err", paste(inits$ERROR[[1]],             collapse = ""), "}")))    }    .covNames &lt;- .parNames &lt;- c()    .ret$adjLik &lt;- control$adjLik    .mixed &lt;- !is.null(inits$OMGA) &amp;&amp; length(inits$OMGA) &gt; 0    if (!exists("noLik", envir = .ret)) {        .atol &lt;- rep(control$atol, length(RxODE::rxModelVars(model)$state))        .rtol &lt;- rep(control$rtol, length(RxODE::rxModelVars(model)$state))        .ssAtol &lt;- rep(control$ssAtol, length(RxODE::rxModelVars(model)$state))        .ssRtol &lt;- rep(control$ssRtol, length(RxODE::rxModelVars(model)$state))        .ret$model &lt;- RxODE::rxSymPySetupPred(model, pred, PKpars,             err, grad = (control$derivMethod == 2L), pred.minus.dv = TRUE,             sum.prod = control$sumProd, theta.derivs = FALSE,             optExpression = control$optExpression, interaction = (control$interaction ==                 1L), only.numeric = !.mixed, run.internal = TRUE,             addProp = control$addProp)        if (!is.null(.ret$model$inner)) {            .atol &lt;- c(.atol, rep(control$atolSens, length(RxODE::rxModelVars(.ret$model$inner)$state) -                 length(.atol)))            .rtol &lt;- c(.rtol, rep(control$rtolSens, length(RxODE::rxModelVars(.ret$model$inner)$state) -                 length(.rtol)))            .ret$control$rxControl$atol &lt;- .atol            .ret$control$rxControl$rtol &lt;- .rtol            .ssAtol &lt;- c(.ssAtol, rep(control$ssAtolSens, length(RxODE::rxModelVars(.ret$model$inner)$state) -                 length(.ssAtol)))            .ssRtol &lt;- c(.ssRtol, rep(control$ssRtolSens, length(RxODE::rxModelVars(.ret$model$inner)$state) -                 length(.ssRtol)))            .ret$control$rxControl$ssAtol &lt;- .ssAtol            .ret$control$rxControl$ssRtol &lt;- .ssRtol        }        .covNames &lt;- .parNames &lt;- RxODE::rxParams(.ret$model$pred.only)        .covNames &lt;- .covNames[regexpr(rex::rex(start, or("THETA",             "ETA"), "[", numbers, "]", end), .covNames) == -1]        colnames(data) &lt;- sapply(names(data), function(x) {            if (any(x == .covNames)) {                return(x)            }            else {                return(toupper(x))            }        })        .lhs &lt;- c(names(RxODE::rxInits(.ret$model$pred.only)),             RxODE::rxLhs(.ret$model$pred.only))        if (length(.lhs) &gt; 0) {            .covNames &lt;- .covNames[regexpr(rex::rex(start, or(.lhs),                 end), .covNames) == -1]        }        if (length(.covNames) &gt; 0) {            if (!all(.covNames %in% names(data))) {                message("Model:")                RxODE::rxCat(.ret$model$pred.only)                message("Needed Covariates:")                nlmixrPrint(.covNames)                stop("Not all the covariates are in the dataset.")            }            message("Needed Covariates:")            print(.covNames)        }        .extraPars &lt;- .ret$model$extra.pars    }    else {        if (.ret$noLik) {            .atol &lt;- rep(control$atol, length(RxODE::rxModelVars(model)$state))            .rtol &lt;- rep(control$rtol, length(RxODE::rxModelVars(model)$state))            .ret$model &lt;- RxODE::rxSymPySetupPred(model, pred,                 PKpars, err, grad = FALSE, pred.minus.dv = TRUE,                 sum.prod = control$sumProd, theta.derivs = FALSE,                 optExpression = control$optExpression, run.internal = TRUE,                 only.numeric = TRUE, addProp = control$addProp)            if (!is.null(.ret$model$inner)) {                .atol &lt;- c(.atol, rep(control$atolSens, length(RxODE::rxModelVars(.ret$model$inner)$state) -                   length(.atol)))                .rtol &lt;- c(.rtol, rep(control$rtolSens, length(RxODE::rxModelVars(.ret$model$inner)$state) -                   length(.rtol)))                .ret$control$rxControl$atol &lt;- .atol                .ret$control$rxControl$rtol &lt;- .rtol            }            .covNames &lt;- .parNames &lt;- RxODE::rxParams(.ret$model$pred.only)            .covNames &lt;- .covNames[regexpr(rex::rex(start, or("THETA",                 "ETA"), "[", numbers, "]", end), .covNames) ==                 -1]            colnames(data) &lt;- sapply(names(data), function(x) {                if (any(x == .covNames)) {                  return(x)                }                else {                  return(toupper(x))                }            })            .lhs &lt;- c(names(RxODE::rxInits(.ret$model$pred.only)),                 RxODE::rxLhs(.ret$model$pred.only))            if (length(.lhs) &gt; 0) {                .covNames &lt;- .covNames[regexpr(rex::rex(start,                   or(.lhs), end), .covNames) == -1]            }            if (length(.covNames) &gt; 0) {                if (!all(.covNames %in% names(data))) {                  message("Model:")                  RxODE::rxCat(.ret$model$pred.only)                  message("Needed Covariates:")                  nlmixrPrint(.covNames)                  stop("Not all the covariates are in the dataset.")                }                message("Needed Covariates:")                print(.covNames)            }            .extraPars &lt;- .ret$model$extra.pars        }        else {            .extraPars &lt;- NULL        }    }    .ret$skipCov &lt;- skipCov    if (is.null(skipCov)) {        if (is.null(fixed)) {            .tmp &lt;- rep(FALSE, length(inits$THTA))        }        else {            if (length(fixed) &lt; length(inits$THTA)) {                .tmp &lt;- c(fixed, rep(FALSE, length(inits$THTA) -                   length(fixed)))            }            else {                .tmp &lt;- fixed[1:length(inits$THTA)]            }        }        if (exists("uif", envir = .ret)) {            .uifErr &lt;- .ret$uif$ini$err[!is.na(.ret$uif$ini$ntheta)]            .uifErr &lt;- sapply(.uifErr, function(x) {                if (is.na(x)) {                  return(FALSE)                }                return(!any(x == c("pow2", "tbs", "tbsYj")))            })            .tmp &lt;- (.tmp | .uifErr)        }        .ret$skipCov &lt;- c(.tmp, rep(TRUE, length(.extraPars)))        .ret$control$focei.mu.ref &lt;- .ret$uif$focei.mu.ref    }    if (is.null(.extraPars)) {        .nms &lt;- c(sprintf("THETA[%s]", seq_along(inits$THTA)))    }    else {        .nms &lt;- c(sprintf("THETA[%s]", seq_along(inits$THTA)),             sprintf("ERR[%s]", seq_along(.extraPars)))    }    if (!is.null(thetaNames) &amp;&amp; (length(inits$THTA) + length(.extraPars)) ==         length(thetaNames)) {        .nms &lt;- thetaNames    }    .ret$thetaNames &lt;- .nms    .thetaReset$thetaNames &lt;- .nms    if (length(lower) == 1) {        lower &lt;- rep(lower, length(inits$THTA))    }    else if (length(lower) != length(inits$THTA)) {        print(inits$THTA)        print(lower)        stop("Lower must be a single constant for all the THETA lower bounds, or match the dimension of THETA.")    }    if (length(upper) == 1) {        upper &lt;- rep(upper, length(inits$THTA))    }    else if (length(lower) != length(inits$THTA)) {        stop("Upper must be a single constant for all the THETA lower bounds, or match the dimension of THETA.")    }    if (!is.null(.extraPars)) {        .ret$model$extra.pars &lt;- eval(call(control$diagXform,             .ret$model$extra.pars))        if (length(.ret$model$extra.pars) &gt; 0) {            inits$THTA &lt;- c(inits$THTA, .ret$model$extra.pars)            .lowerErr &lt;- rep(control$atol[1] * 10, length(.ret$model$extra.pars))            .upperErr &lt;- rep(Inf, length(.ret$model$extra.pars))            lower &lt;- c(lower, .lowerErr)            upper &lt;- c(upper, .upperErr)        }    }    if (is.null(data$ID))         stop("\"ID\" not found in data")    if (is.null(data$DV))         stop("\"DV\" not found in data")    if (is.null(data$EVID))         data$EVID &lt;- 0    if (is.null(data$AMT))         data$AMT &lt;- 0    for (.v in c("TIME", "AMT", "DV", .covNames)) {        data[[.v]] &lt;- as.double(data[[.v]])    }    .ret$dataSav &lt;- data    .ds &lt;- data[data$EVID != 0 &amp; data$EVID != 2, c("ID", "TIME",         "AMT", "EVID", .covNames)]    .w &lt;- which(tolower(names(data)) == "limit")    .limitName &lt;- NULL    if (length(.w) == 1L) {        .limitName &lt;- names(data)[.w]    }    .censName &lt;- NULL    .w &lt;- which(tolower(names(data)) == "cens")    if (length(.w) == 1L) {        .censName &lt;- names(data[.w])    }    data &lt;- data[data$EVID == 0 | data$EVID == 2, c("ID", "TIME",         "DV", "EVID", .covNames, .limitName, .censName)]    .w &lt;- which(!(names(.ret$dataSav) %in% c(.covNames, keep)))    names(.ret$dataSav)[.w] &lt;- tolower(names(.ret$dataSav[.w]))    if (.mixed) {        .lh &lt;- .parseOM(inits$OMGA)        .nlh &lt;- sapply(.lh, length)        .osplt &lt;- rep(1:length(.lh), .nlh)        .lini &lt;- list(inits$THTA, unlist(.lh))        .nlini &lt;- sapply(.lini, length)        .nsplt &lt;- rep(1:length(.lini), .nlini)        .om0 &lt;- .genOM(.lh)        if (length(etaNames) == dim(.om0)[1]) {            .ret$etaNames &lt;- .ret$etaNames        }        else {            .ret$etaNames &lt;- sprintf("ETA[%d]", seq(1, dim(.om0)[1]))        }        .ret$rxInv &lt;- RxODE::rxSymInvCholCreate(mat = .om0, diag.xform = control$diagXform)        .ret$xType &lt;- .ret$rxInv$xType        .om0a &lt;- .om0        .om0a &lt;- .om0a/control$diagOmegaBoundLower        .om0b &lt;- .om0        .om0b &lt;- .om0b * control$diagOmegaBoundUpper        .om0a &lt;- RxODE::rxSymInvCholCreate(mat = .om0a, diag.xform = control$diagXform)        .om0b &lt;- RxODE::rxSymInvCholCreate(mat = .om0b, diag.xform = control$diagXform)        .omdf &lt;- data.frame(a = .om0a$theta, m = .ret$rxInv$theta,             b = .om0b$theta, diag = .om0a$theta.diag)        .omdf$lower &lt;- with(.omdf, ifelse(a &gt; b, b, a))        .omdf$lower &lt;- with(.omdf, ifelse(lower == m, -Inf, lower))        .omdf$lower &lt;- with(.omdf, ifelse(!diag, -Inf, lower))        .omdf$upper &lt;- with(.omdf, ifelse(a &lt; b, b, a))        .omdf$upper &lt;- with(.omdf, ifelse(upper == m, Inf, upper))        .omdf$upper &lt;- with(.omdf, ifelse(!diag, Inf, upper))        .ret$control$nomega &lt;- length(.omdf$lower)        .ret$control$neta &lt;- sum(.omdf$diag)        .ret$control$ntheta &lt;- length(lower)        .ret$control$nfixed &lt;- sum(fixed)        lower &lt;- c(lower, .omdf$lower)        upper &lt;- c(upper, .omdf$upper)    }    else {        .ret$control$nomega &lt;- 0        .ret$control$neta &lt;- 0        .ret$xType &lt;- -1        .ret$control$ntheta &lt;- length(lower)        .ret$control$nfixed &lt;- sum(fixed)    }    .ret$lower &lt;- lower    .ret$upper &lt;- upper    .ret$thetaIni &lt;- inits$THTA    .scaleC &lt;- double(length(lower))    if (is.null(control$scaleC)) {        .scaleC &lt;- rep(NA_real_, length(lower))    }    else {        .scaleC &lt;- as.double(control$scaleC)        if (length(lower) &gt; length(.scaleC)) {            .scaleC &lt;- c(.scaleC, rep(NA_real_, length(lower) -                 length(.scaleC)))        }        else if (length(lower) &lt; length(.scaleC)) {            .scaleC &lt;- .scaleC[seq(1, length(lower))]            warning("scaleC control option has more options than estimated population parameters, please check.")        }    }    .ret$scaleC &lt;- .scaleC    if (exists("uif", envir = .ret)) {        .ini &lt;- as.data.frame(.ret$uif$ini)[!is.na(.ret$uif$ini$err),             c("est", "err", "ntheta")]        for (.i in seq_along(.ini$err)) {            if (is.na(.ret$scaleC[.ini$ntheta[.i]])) {                if (any(.ini$err[.i] == c("boxCox", "yeoJohnson",                   "pow2", "tbs", "tbsYj"))) {                  .ret$scaleC[.ini$ntheta[.i]] &lt;- 1                }                else if (any(.ini$err[.i] == c("prop", "add",                   "norm", "dnorm", "logn", "dlogn", "lnorm",                   "dlnorm"))) {                  .ret$scaleC[.ini$ntheta[.i]] &lt;- 0.5 * abs(.ini$est[.i])                }            }        }        for (.i in .ini$model$extraProps$powTheta) {            if (is.na(.ret$scaleC[.i]))                 .ret$scaleC[.i] &lt;- 1        }        .ini &lt;- as.data.frame(.ret$uif$ini)        for (.i in .ini$model$extraProps$factorial) {            if (is.na(.ret$scaleC[.i]))                 .ret$scaleC[.i] &lt;- abs(1/digamma(.ini$est[.i] +                   1))        }        for (.i in .ini$model$extraProps$gamma) {            if (is.na(.ret$scaleC[.i]))                 .ret$scaleC[.i] &lt;- abs(1/digamma(.ini$est[.i]))        }        for (.i in .ini$model$extraProps$log) {            if (is.na(.ret$scaleC[.i]))                 .ret$scaleC[.i] &lt;- log(abs(.ini$est[.i])) * abs(.ini$est[.i])        }        for (.i in .ret$logitThetas) {            .b &lt;- .ret$logitThetasLow[.i]            .c &lt;- .ret$logitThetasHi[.i]            .a &lt;- .ini$est[.i]            if (is.na(.ret$scaleC[.i])) {                .ret$scaleC[.i] &lt;- 1 * (-.b + .c) * exp(-.a)/((1 +                   exp(-.a))^2 * (.b + 1 * (-.b + .c)/(1 + exp(-.a))))            }        }    }    names(.ret$thetaIni) &lt;- sprintf("THETA[%d]", seq_along(.ret$thetaIni))    if (is.null(etaMat) &amp; !is.null(control$etaMat)) {        .ret$etaMat &lt;- control$etaMat    }    else {        .ret$etaMat &lt;- etaMat    }    .ret$setupTime &lt;- (proc.time() - .pt)["elapsed"]    if (exists("uif", envir = .ret)) {        .tmp &lt;- .ret$uif$logThetasList        .ret$logThetas &lt;- .tmp[[1]]        .ret$logThetasF &lt;- .tmp[[2]]        .tmp &lt;- .ret$uif$logitThetasList        .ret$logitThetas &lt;- .tmp[[1]]        .ret$logitThetasF &lt;- .tmp[[2]]        .tmp &lt;- .ret$uif$logitThetasListLow        .ret$logitThetasLow &lt;- .tmp[[1]]        .ret$logitThetasLowF &lt;- .tmp[[2]]        .tmp &lt;- .ret$uif$logitThetasListHi        .ret$logitThetasHi &lt;- .tmp[[1]]        .ret$logitThetasHiF &lt;- .tmp[[2]]        .tmp &lt;- .ret$uif$probitThetasList        .ret$probitThetas &lt;- .tmp[[1]]        .ret$probitThetasF &lt;- .tmp[[2]]        .tmp &lt;- .ret$uif$probitThetasListLow        .ret$probitThetasLow &lt;- .tmp[[1]]        .ret$probitThetasLowF &lt;- .tmp[[2]]        .tmp &lt;- .ret$uif$probitThetasListHi        .ret$probitThetasHi &lt;- .tmp[[1]]        .ret$probitThetasHiF &lt;- .tmp[[2]]    }    else {        .ret$logThetasF &lt;- integer(0)        .ret$logitThetasF &lt;- integer(0)        .ret$logitThetasHiF &lt;- numeric(0)        .ret$logitThetasLowF &lt;- numeric(0)        .ret$logitThetas &lt;- integer(0)        .ret$logitThetasHi &lt;- numeric(0)        .ret$logitThetasLow &lt;- numeric(0)        .ret$probitThetasF &lt;- integer(0)        .ret$probitThetasHiF &lt;- numeric(0)        .ret$probitThetasLowF &lt;- numeric(0)        .ret$probitThetas &lt;- integer(0)        .ret$probitThetasHi &lt;- numeric(0)        .ret$probitThetasLow &lt;- numeric(0)    }    if (exists("noLik", envir = .ret)) {        if (!.ret$noLik) {            .ret$.params &lt;- c(sprintf("THETA[%d]", seq_along(.ret$thetaIni)),                 sprintf("ETA[%d]", seq(1, dim(.om0)[1])))            .ret$.thetan &lt;- length(.ret$thetaIni)            .ret$nobs &lt;- sum(data$EVID == 0)        }    }    .ret$control$printTop &lt;- TRUE    .ret$control$nF &lt;- 0    .est0 &lt;- .ret$thetaIni    if (!is.null(.ret$model$pred.nolhs)) {        .ret$control$predNeq &lt;- length(.ret$model$pred.nolhs$state)    }    else {        .ret$control$predNeq &lt;- 0L    }    .fitFun &lt;- function(.ret) {        this.env &lt;- environment()        assign("err", "theta reset", this.env)        while (this.env$err == "theta reset") {            assign("err", "", this.env)            .ret0 &lt;- tryCatch({                foceiFitCpp_(.ret)            }, error = function(e) {                if (regexpr("theta reset", e$message) != -1) {                  assign("zeroOuter", FALSE, this.env)                  assign("zeroGrad", FALSE, this.env)                  if (regexpr("theta reset0", e$message) != -1) {                    assign("zeroGrad", TRUE, this.env)                  }                  else if (regexpr("theta resetZ", e$message) !=                     -1) {                    assign("zeroOuter", TRUE, this.env)                  }                  assign("err", "theta reset", this.env)                }                else {                  assign("err", e$message, this.env)                }            })            if (this.env$err == "theta reset") {                .nm &lt;- names(.ret$thetaIni)                .ret$thetaIni &lt;- setNames(.thetaReset$thetaIni +                   0, .nm)                .ret$rxInv$theta &lt;- .thetaReset$omegaTheta                .ret$control$printTop &lt;- FALSE                .ret$etaMat &lt;- .thetaReset$etaMat                .ret$control$etaMat &lt;- .thetaReset$etaMat                .ret$control$maxInnerIterations &lt;- .thetaReset$maxInnerIterations                .ret$control$nF &lt;- .thetaReset$nF                .ret$control$gillRetC &lt;- .thetaReset$gillRetC                .ret$control$gillRet &lt;- .thetaReset$gillRet                .ret$control$gillRet &lt;- .thetaReset$gillRet                .ret$control$gillDf &lt;- .thetaReset$gillDf                .ret$control$gillDf2 &lt;- .thetaReset$gillDf2                .ret$control$gillErr &lt;- .thetaReset$gillErr                .ret$control$rEps &lt;- .thetaReset$rEps                .ret$control$aEps &lt;- .thetaReset$aEps                .ret$control$rEpsC &lt;- .thetaReset$rEpsC                .ret$control$aEpsC &lt;- .thetaReset$aEpsC                .ret$control$c1 &lt;- .thetaReset$c1                .ret$control$c2 &lt;- .thetaReset$c2                if (this.env$zeroOuter) {                  message("Posthoc reset")                  .ret$control$maxOuterIterations &lt;- 0L                }                else if (this.env$zeroGrad) {                  message("Theta reset (zero gradient values); Switch to bobyqa")                  RxODE::rxReq("minqa")                  .ret$control$outerOptFun &lt;- .bobyqa                  .ret$control$outerOpt &lt;- -1L                }                else {                  message("Theta reset (ETA drift)")                }            }        }        if (this.env$err != "") {            stop(this.env$err)        }        else {            return(.ret0)        }    }    .ret0 &lt;- try(.fitFun(.ret))    .n &lt;- 1    while (inherits(.ret0, "try-error") &amp;&amp; control$maxOuterIterations !=         0 &amp;&amp; .n &lt;= control$nRetries) {        message(sprintf("Restart %s", .n))        .ret$control$nF &lt;- 0        .estNew &lt;- .est0 + 0.2 * .n * abs(.est0) * stats::runif(length(.est0)) -             0.1 * .n        .estNew &lt;- sapply(seq_along(.est0), function(.i) {            if (.ret$thetaFixed[.i]) {                return(.est0[.i])            }            else if (.estNew[.i] &lt; lower[.i]) {                return(lower + (.Machine$double.eps)^(1/7))            }            else if (.estNew[.i] &gt; upper[.i]) {                return(upper - (.Machine$double.eps)^(1/7))            }            else {                return(.estNew[.i])            }        })        .ret$thetaIni &lt;- .estNew        .ret0 &lt;- try(.fitFun(.ret))        .n &lt;- .n + 1    }    if (inherits(.ret0, "try-error"))         stop("Could not fit data.")    .ret &lt;- .ret0    if (exists("parHistData", .ret)) {        .tmp &lt;- .ret$parHistData        .tmp &lt;- .tmp[.tmp$type == "Unscaled", names(.tmp) !=             "type"]        .iter &lt;- .tmp$iter        .tmp &lt;- .tmp[, names(.tmp) != "iter"]        .ret$parHistStacked &lt;- data.frame(stack(.tmp), iter = .iter)        names(.ret$parHistStacked) &lt;- c("val", "par", "iter")        .ret$parHist &lt;- data.frame(iter = .iter, .tmp)    }    if (.mixed) {        .etas &lt;- .ret$ranef        .thetas &lt;- .ret$fixef        .pars &lt;- .Call(`_nlmixr_nlmixrParameters`, .thetas, .etas)        .ret$shrink &lt;- .Call(`_nlmixr_calcShrinkOnly`, .ret$omega,             .pars$eta.lst, length(.etas$ID))        .updateParFixed(.ret)    }    else {        .updateParFixed(.ret)    }    if (!exists("table", .ret)) {        .ret$table &lt;- tableControl()    }    if (control$calcTables) {        .ret &lt;- addTable(.ret, updateObject = "no", keep = keep,             drop = drop, table = .ret$table)    }    .ret})(data = dat, inits = .FoceiInits, PKpars = .pars, model = .mod,     pred = function() {        return(nlmixr_pred)    }, err = uif$error, lower = uif$focei.lower, upper = uif$focei.upper,     fixed = uif$focei.fixed, thetaNames = uif$focei.names, etaNames = uif$eta.names,     control = control, env = env, keep = .keep, drop = .drop): Not all the covariates are in the dataset.</span></div><div class='output co'>#&gt; <span class='message'>Timing stopped at: 121.4 8.294 129.7</span></div><div class='output co'>#&gt; <span class='message'>Timing stopped at: 121.5 8.294 129.9</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>f_dmta_nlmixr_focei</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in summary(f_dmta_nlmixr_focei): object 'f_dmta_nlmixr_focei' not found</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_dmta_nlmixr_focei</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in plot(f_dmta_nlmixr_focei): object 'f_dmta_nlmixr_focei' not found</span></div><div class='input'><span class='co'># Using saemix takes about 18 minutes</span>
+<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span><span class='op'>(</span>
+  <span class='va'>f_dmta_saemix</span> <span class='op'>&lt;-</span> <span class='fu'><a href='saem.html'>saem</a></span><span class='op'>(</span><span class='va'>f_dmta_mkin_tc</span>, test_log_parms <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; Running main SAEM algorithm
+#&gt; [1] "Tue Oct  5 16:58:50 2021"
+#&gt; ....
+#&gt;     Minimisation finished
+#&gt; [1] "Tue Oct  5 17:17:24 2021"</div><div class='output co'>#&gt;     user   system  elapsed 
+#&gt; 1181.365    0.031 1181.470 </div><div class='input'>
+<span class='co'># nlmixr with est = "saem" is pretty fast with default iteration numbers, most</span>
+<span class='co'># of the time (about 2.5 minutes) is spent for calculating the log likelihood at the end</span>
+<span class='co'># The likelihood calculated for the nlmixr fit is much lower than that found by saemix</span>
+<span class='co'># Also, the trace plot and the plot of the individual predictions is not</span>
+<span class='co'># convincing for the parent. It seems we are fitting an overparameterised</span>
+<span class='co'># model, so the result we get strongly depends on starting parameters and control settings.</span>
+<span class='fu'><a href='https://rdrr.io/r/base/system.time.html'>system.time</a></span><span class='op'>(</span>
+  <span class='va'>f_dmta_nlmixr_saem</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlmixr/man/nlmixr.html'>nlmixr</a></span><span class='op'>(</span><span class='va'>f_dmta_mkin_tc</span>, est <span class='op'>=</span> <span class='st'>"saem"</span>,
+    control <span class='op'>=</span> <span class='fu'>nlmixr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/nlmixr/man/saemControl.html'>saemControl</a></span><span class='op'>(</span>print <span class='op'>=</span> <span class='fl'>500</span>, logLik <span class='op'>=</span> <span class='cn'>TRUE</span>, nmc <span class='op'>=</span> <span class='fl'>9</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>With est = 'saem', a different error model is required for each observed variableChanging the error model to 'obs_tc' (Two-component error for each observed variable)</span></div><div class='output co'>#&gt; <span class='warning'>Warning: number of items to replace is not a multiple of replacement length</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span> parameter labels from comments are typically ignored in non-interactive mode</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span> Need to run with the source intact to parse comments</span></div><div class='output co'>#&gt; <span class='error'>Error in eval(substitute(expr), data, enclos = parent.frame()): Cannot run SAEM since some of the parameters are not mu-referenced (eta.f_DMTA_tffm0_1_qlogis, eta.f_DMTA_tffm0_2_qlogis, eta.f_DMTA_tffm0_3_qlogis)</span></div><div class='output co'>#&gt; <span class='message'>Timing stopped at: 0.849 0.016 0.864</span></div><div class='output co'>#&gt; <span class='message'>Timing stopped at: 1.041 0.016 1.058</span></div><div class='input'><span class='fu'>traceplot</span><span class='op'>(</span><span class='va'>f_dmta_nlmixr_saem</span><span class='op'>$</span><span class='va'>nm</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in traceplot(f_dmta_nlmixr_saem$nm): could not find function "traceplot"</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>f_dmta_nlmixr_saem</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in summary(f_dmta_nlmixr_saem): object 'f_dmta_nlmixr_saem' not found</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>f_dmta_nlmixr_saem</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in plot(f_dmta_nlmixr_saem): object 'f_dmta_nlmixr_saem' not found</span></div><div class='input'><span class='co'># }</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -2,7 +2,7 @@ utils::globalVariables("ds")
 
 #' Plot predictions from a fitted nonlinear mixed model obtained via an mmkin row object
 #'
-#' @param x An object of class [mixed.mmkin], [nlme.mmkin]
+#' @param x An object of class [mixed.mmkin], [saem.mmkin] or [nlme.mmkin]
 #' @param i A numeric index to select datasets for which to plot the individual predictions,
 #'   in case plots get too large
 #' @inheritParams plot.mkinfit
@@ -10,6 +10,10 @@ utils::globalVariables("ds")
 #'   `resplot = "time"`.
 #' @param pred_over Named list of alternative predictions as obtained
 #'   from [mkinpredict] with a compatible [mkinmod].
+#' @param test_log_parms Passed to [mean_degparms] in the case of an
+#'   [mixed.mmkin] object
+#' @param conf.level Passed to [mean_degparms] in the case of an
+#'   [mixed.mmkin] object
 #' @param rel.height.legend The relative height of the legend shown on top
 #' @param rel.height.bottom The relative height of the bottom plot row
 #' @param ymax Vector of maximum y axis values
@@ -36,9 +40,23 @@ utils::globalVariables("ds")
 #'
 #' # For this fit we need to increase pnlsMaxiter, and we increase the
 #' # tolerance in order to speed up the fit for this example evaluation
+#' # It still takes 20 seconds to run
 #' f_nlme <- nlme(f, control = list(pnlsMaxIter = 120, tolerance = 1e-3))
 #' plot(f_nlme)
 #'
+#' f_saem <- saem(f, transformations = "saemix")
+#' plot(f_saem)
+#'
+#' f_obs <- mmkin(list("DFOP-SFO" = dfop_sfo), ds, quiet = TRUE, error_model = "obs")
+#' f_nlmix <- nlmix(f_obs)
+#' plot(f_nlmix)
+#'
+#' # We can overlay the two variants if we generate predictions
+#' pred_nlme <- mkinpredict(dfop_sfo,
+#'   f_nlme$bparms.optim[-1],
+#'   c(parent = f_nlme$bparms.optim[[1]], A1 = 0),
+#'   seq(0, 180, by = 0.2))
+#' plot(f_saem, pred_over = list(nlme = pred_nlme))
 #' }
 #' @export
 plot.mixed.mmkin <- function(x,
@@ -49,6 +67,8 @@ plot.mixed.mmkin <- function(x,
   xlim = range(x$data$time),
   resplot = c("predicted", "time"),
   pred_over = NULL,
+  test_log_parms = FALSE,
+  conf.level = 0.6,
   ymax = "auto", maxabs = "auto",
   ncol.legend = ifelse(length(i) <= 3, length(i) + 1, ifelse(length(i) <= 8, 3, 4)),
   nrow.legend = ceiling((length(i) + 1) / ncol.legend),
@@ -67,7 +87,7 @@ plot.mixed.mmkin <- function(x,
   backtransform = TRUE
 
   if (identical(class(x), "mixed.mmkin")) {
-    degparms_pop <- mean_degparms(x$mmkin)
+    degparms_pop <- mean_degparms(x$mmkin, test_log_parms = test_log_parms, conf.level = conf.level)
 
     degparms_tmp <- parms(x$mmkin, transformed = TRUE)
     degparms_i <- as.data.frame(t(degparms_tmp[setdiff(rownames(degparms_tmp), names(fit_1$errparms)), ]))
@@ -80,6 +100,30 @@ plot.mixed.mmkin <- function(x,
     degparms_pop <- nlme::fixef(x)
     residuals <- residuals(x,
       type = ifelse(standardized, "pearson", "response"))
+  }
+
+  if (inherits(x, "saem.mmkin")) {
+    if (x$transformations == "saemix") backtransform = FALSE
+    degparms_i <- saemix::psi(x$so)
+    rownames(degparms_i) <- ds_names
+    degparms_i_names <- setdiff(x$so@results@name.fixed, names(fit_1$errparms))
+    colnames(degparms_i) <- degparms_i_names
+    residual_type = ifelse(standardized, "standardized", "residual")
+    residuals <- x$data[[residual_type]]
+    degparms_pop <- x$so@results@fixed.effects
+    names(degparms_pop) <- degparms_i_names
+  }
+
+  if (inherits(x, "nlmixr.mmkin")) {
+    eta_i <- random.effects(x$nm)[-1]
+    names(eta_i) <- gsub("^eta.", "", names(eta_i))
+    degparms_i <- eta_i
+    degparms_pop <- x$nm$theta
+    for (parm_name in names(degparms_i)) {
+      degparms_i[parm_name] <- eta_i[parm_name] + degparms_pop[parm_name]
+    }
+    residual_type = ifelse(standardized, "standardized", "residual")
+    residuals <- x$data[[residual_type]]
   }
 
   degparms_fixed <- fit_1$fixed$value

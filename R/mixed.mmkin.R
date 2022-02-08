@@ -3,6 +3,8 @@
 #' @param object An [mmkin] row object
 #' @param method The method to be used
 #' @param \dots Currently not used
+#' @return An object of class 'mixed.mmkin' which has the observed data in a
+#'   single dataframe which is convenient for plotting
 #' @examples
 #' sampling_times = c(0, 1, 3, 7, 14, 28, 60, 90, 120)
 #' n_biphasic <- 8
@@ -54,7 +56,6 @@ mixed.mmkin <- function(object, method = c("none"), ...) {
   if (nrow(object) > 1) stop("Only row objects allowed")
 
   method <- match.arg(method)
-  if (method == "default") method = c("naive", "nlme")
 
   ds_names <- colnames(object)
   res <- list(mmkin = object, mkinmod = object[[1]]$mkinmod)

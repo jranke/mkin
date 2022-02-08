@@ -76,7 +76,7 @@ endpoints such as formation fractions and DT50 values. Optionally
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.9.50.4</span>
+        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.0.3.9000</span>
       </span>
     </div>
 
@@ -125,7 +125,7 @@ endpoints such as formation fractions and DT50 values. Optionally
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/jranke/mkin/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -263,12 +263,12 @@ José Pinheiro and Douglas Bates for the components inherited from nlme</p>
 <span class='va'>f_mmkin</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mmkin.html'>mmkin</a></span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='va'>ds_sfo_syn</span>, quiet <span class='op'>=</span> <span class='cn'>TRUE</span>, error_model <span class='op'>=</span> <span class='st'>"tc"</span>, cores <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='warning'>Warning: Optimisation did not converge:</span>
 #&gt; <span class='warning'>iteration limit reached without convergence (10)</span></div><div class='input'><span class='va'>f_nlme</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/nlme/man/nlme.html'>nlme</a></span><span class='op'>(</span><span class='va'>f_mmkin</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 1, LME step: nlminb() did not converge (code = 1). Do increase 'msMaxIter'!</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/saemix/man/summary-methods.html'>summary</a></span><span class='op'>(</span><span class='va'>f_nlme</span>, data <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; nlme version used for fitting:      3.1.150.1 
-#&gt; mkin version used for pre-fitting:  0.9.50.4 
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Iteration 4, LME step: nlminb() did not converge (code = 1). PORT message: false convergence (8)</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/pkg/saemix/man/summary-methods.html'>summary</a></span><span class='op'>(</span><span class='va'>f_nlme</span>, data <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; nlme version used for fitting:      3.1.152 
+#&gt; mkin version used for pre-fitting:  1.0.3.9000 
 #&gt; R version used for fitting:         4.0.3 
-#&gt; Date of fit:     Mon Nov 30 16:01:23 2020 
-#&gt; Date of summary: Mon Nov 30 16:01:23 2020 
+#&gt; Date of fit:     Mon Feb 15 17:13:12 2021 
+#&gt; Date of summary: Mon Feb 15 17:13:12 2021 
 #&gt; 
 #&gt; Equations:
 #&gt; d_parent/dt = - k_parent * parent
@@ -278,148 +278,146 @@ José Pinheiro and Douglas Bates for the components inherited from nlme</p>
 #&gt; 
 #&gt; Model predictions using solution type analytical 
 #&gt; 
-#&gt; Fitted in 0.996 s using 6 iterations
+#&gt; Fitted in 0.544 s using 4 iterations
 #&gt; 
 #&gt; Variance model: Two-component variance function 
 #&gt; 
 #&gt; Mean of starting values for individual parameters:
 #&gt;     parent_0 log_k_parent 
-#&gt;   101.568773    -4.454103 
+#&gt;      101.569       -4.454 
 #&gt; 
 #&gt; Fixed degradation parameter values:
 #&gt; None
 #&gt; 
 #&gt; Results:
 #&gt; 
-#&gt;        AIC      BIC    logLik
-#&gt;   586.4159 603.9145 -286.2079
+#&gt;     AIC   BIC logLik
+#&gt;   584.5 599.5 -286.2
 #&gt; 
 #&gt; Optimised, transformed parameters with symmetric confidence intervals:
 #&gt;               lower    est.   upper
-#&gt; parent_0     99.360 101.593 103.825
-#&gt; log_k_parent -4.979  -4.451  -3.924
+#&gt; parent_0     99.371 101.592 103.814
+#&gt; log_k_parent -4.973  -4.449  -3.926
 #&gt; 
 #&gt; Correlation: 
 #&gt;              prnt_0
-#&gt; log_k_parent 0.155 
+#&gt; log_k_parent 0.051 
 #&gt; 
 #&gt; Random effects:
 #&gt;  Formula: list(parent_0 ~ 1, log_k_parent ~ 1)
 #&gt;  Level: ds
-#&gt;  Structure: General positive-definite, Log-Cholesky parametrization
-#&gt;              StdDev    Corr  
-#&gt; parent_0     0.2624248 prnt_0
-#&gt; log_k_parent 0.5907146 0.999 
-#&gt; Residual     1.0000000       
+#&gt;  Structure: Diagonal
+#&gt;          parent_0 log_k_parent Residual
+#&gt; StdDev: 6.924e-05       0.5863        1
 #&gt; 
 #&gt; Variance function:
 #&gt;  Structure: Constant plus proportion of variance covariate
 #&gt;  Formula: ~fitted(.) 
 #&gt;  Parameter estimates:
-#&gt;       const        prop 
-#&gt; 6.56706e-24 7.89583e-02 
+#&gt;        const         prop 
+#&gt; 0.0001208853 0.0789968036 
 #&gt; 
 #&gt; Backtransformed parameters with asymmetric confidence intervals:
 #&gt;              lower      est.     upper
-#&gt; parent_0 99.360213 101.59280 103.82539
-#&gt; k_parent  0.006883   0.01166   0.01976
+#&gt; parent_0 99.370882 101.59243 103.81398
+#&gt; k_parent  0.006923   0.01168   0.01972
 #&gt; 
 #&gt; Estimated disappearance times:
 #&gt;         DT50  DT90
-#&gt; parent 59.44 197.4
+#&gt; parent 59.32 197.1
 #&gt; 
 #&gt; Data:
 #&gt;    ds   name time observed predicted  residual    std standardized
-#&gt;  ds 1 parent    0    104.1   101.417   2.68283 8.0077     0.335030
-#&gt;  ds 1 parent    0    105.0   101.417   3.58283 8.0077     0.447422
-#&gt;  ds 1 parent    1     98.5   100.624  -2.12400 7.9451    -0.267334
-#&gt;  ds 1 parent    1     96.1   100.624  -4.52400 7.9451    -0.569407
-#&gt;  ds 1 parent    3    101.9    99.056   2.84379 7.8213     0.363595
-#&gt;  ds 1 parent    3     85.2    99.056 -13.85621 7.8213    -1.771597
-#&gt;  ds 1 parent    7     99.1    95.994   3.10646 7.5795     0.409850
-#&gt;  ds 1 parent    7     93.0    95.994  -2.99354 7.5795    -0.394953
-#&gt;  ds 1 parent   14     88.1    90.860  -2.75997 7.1741    -0.384710
-#&gt;  ds 1 parent   14     84.1    90.860  -6.75997 7.1741    -0.942268
-#&gt;  ds 1 parent   28     80.2    81.402  -1.20174 6.4273    -0.186973
-#&gt;  ds 1 parent   28     91.3    81.402   9.89826 6.4273     1.540024
-#&gt;  ds 1 parent   60     65.1    63.316   1.78361 4.9994     0.356767
-#&gt;  ds 1 parent   60     65.8    63.316   2.48361 4.9994     0.496785
-#&gt;  ds 1 parent   90     47.8    50.029  -2.22862 3.9502    -0.564182
-#&gt;  ds 1 parent   90     53.5    50.029   3.47138 3.9502     0.878792
-#&gt;  ds 1 parent  120     37.6    39.529  -1.92946 3.1212    -0.618182
-#&gt;  ds 1 parent  120     39.3    39.529  -0.22946 3.1212    -0.073516
-#&gt;  ds 2 parent    0    107.9   101.711   6.18875 8.0309     0.770613
-#&gt;  ds 2 parent    0    102.1   101.711   0.38875 8.0309     0.048406
-#&gt;  ds 2 parent    1    103.8   100.174   3.62597 7.9096     0.458428
-#&gt;  ds 2 parent    1    108.6   100.174   8.42597 7.9096     1.065287
-#&gt;  ds 2 parent    3     91.0    97.169  -6.16895 7.6723    -0.804055
-#&gt;  ds 2 parent    3     84.9    97.169 -12.26895 7.6723    -1.599124
-#&gt;  ds 2 parent    7     79.3    91.427 -12.12652 7.2189    -1.679833
-#&gt;  ds 2 parent    7    100.9    91.427   9.47348 7.2189     1.312320
-#&gt;  ds 2 parent   14     77.3    82.182  -4.88174 6.4889    -0.752318
-#&gt;  ds 2 parent   14     83.5    82.182   1.31826 6.4889     0.203155
-#&gt;  ds 2 parent   28     66.8    66.402   0.39792 5.2430     0.075895
-#&gt;  ds 2 parent   28     63.3    66.402  -3.10208 5.2430    -0.591662
-#&gt;  ds 2 parent   60     40.8    40.789   0.01138 3.2206     0.003532
-#&gt;  ds 2 parent   60     44.8    40.789   4.01138 3.2206     1.245537
-#&gt;  ds 2 parent   90     27.8    25.830   1.97002 2.0395     0.965937
-#&gt;  ds 2 parent   90     27.0    25.830   1.17002 2.0395     0.573682
-#&gt;  ds 2 parent  120     15.2    16.357  -1.15721 1.2915    -0.895991
-#&gt;  ds 2 parent  120     15.5    16.357  -0.85721 1.2915    -0.663710
-#&gt;  ds 3 parent    0     97.7   101.907  -4.20726 8.0464    -0.522873
-#&gt;  ds 3 parent    0     88.2   101.907 -13.70726 8.0464    -1.703521
-#&gt;  ds 3 parent    1    109.9    99.522  10.37805 7.8581     1.320685
-#&gt;  ds 3 parent    1     97.8    99.522  -1.72195 7.8581    -0.219130
-#&gt;  ds 3 parent    3    100.5    94.918   5.58248 7.4945     0.744875
-#&gt;  ds 3 parent    3     77.4    94.918 -17.51752 7.4945    -2.337375
-#&gt;  ds 3 parent    7     78.3    86.338  -8.03788 6.8171    -1.179077
-#&gt;  ds 3 parent    7     90.3    86.338   3.96212 6.8171     0.581204
-#&gt;  ds 3 parent   14     76.0    73.147   2.85281 5.7756     0.493944
-#&gt;  ds 3 parent   14     79.1    73.147   5.95281 5.7756     1.030687
-#&gt;  ds 3 parent   28     46.0    52.504  -6.50373 4.1456    -1.568826
-#&gt;  ds 3 parent   28     53.4    52.504   0.89627 4.1456     0.216197
-#&gt;  ds 3 parent   60     25.1    24.605   0.49461 1.9428     0.254586
-#&gt;  ds 3 parent   60     21.4    24.605  -3.20539 1.9428    -1.649882
-#&gt;  ds 3 parent   90     11.0    12.090  -1.09046 0.9546    -1.142271
-#&gt;  ds 3 parent   90     14.2    12.090   2.10954 0.9546     2.209770
-#&gt;  ds 3 parent  120      5.8     5.941  -0.14094 0.4691    -0.300464
-#&gt;  ds 3 parent  120      6.1     5.941   0.15906 0.4691     0.339077
-#&gt;  ds 4 parent    0     95.3   101.177  -5.87672 7.9887    -0.735625
-#&gt;  ds 4 parent    0    102.0   101.177   0.82328 7.9887     0.103056
-#&gt;  ds 4 parent    1    104.4   100.716   3.68438 7.9523     0.463307
-#&gt;  ds 4 parent    1    105.4   100.716   4.68438 7.9523     0.589057
-#&gt;  ds 4 parent    3    113.7    99.800  13.90026 7.8800     1.763989
-#&gt;  ds 4 parent    3     82.3    99.800 -17.49974 7.8800    -2.220774
-#&gt;  ds 4 parent    7     98.1    97.993   0.10713 7.7374     0.013846
-#&gt;  ds 4 parent    7     87.8    97.993 -10.19287 7.7374    -1.317359
-#&gt;  ds 4 parent   14     97.9    94.909   2.99079 7.4939     0.399098
-#&gt;  ds 4 parent   14    104.8    94.909   9.89079 7.4939     1.319851
-#&gt;  ds 4 parent   28     85.0    89.030  -4.02995 7.0297    -0.573279
-#&gt;  ds 4 parent   28     77.2    89.030 -11.82995 7.0297    -1.682864
-#&gt;  ds 4 parent   60     82.2    76.923   5.27690 6.0737     0.868808
-#&gt;  ds 4 parent   60     86.1    76.923   9.17690 6.0737     1.510919
-#&gt;  ds 4 parent   90     70.5    67.073   3.42743 5.2959     0.647182
-#&gt;  ds 4 parent   90     61.7    67.073  -5.37257 5.2959    -1.014470
-#&gt;  ds 4 parent  120     60.0    58.483   1.51654 4.6178     0.328416
-#&gt;  ds 4 parent  120     56.4    58.483  -2.08346 4.6178    -0.451184
-#&gt;  ds 5 parent    0     92.6   101.752  -9.15161 8.0341    -1.139091
-#&gt;  ds 5 parent    0    116.5   101.752  14.74839 8.0341     1.835716
-#&gt;  ds 5 parent    1    108.0   100.069   7.93112 7.9013     1.003778
-#&gt;  ds 5 parent    1    104.9   100.069   4.83112 7.9013     0.611436
-#&gt;  ds 5 parent    3    100.5    96.786   3.71355 7.6421     0.485934
-#&gt;  ds 5 parent    3     89.5    96.786  -7.28645 7.6421    -0.953462
-#&gt;  ds 5 parent    7     91.7    90.541   1.15895 7.1490     0.162114
-#&gt;  ds 5 parent    7     95.1    90.541   4.55895 7.1490     0.637707
-#&gt;  ds 5 parent   14     82.2    80.566   1.63437 6.3613     0.256923
-#&gt;  ds 5 parent   14     84.5    80.566   3.93437 6.3613     0.618483
-#&gt;  ds 5 parent   28     60.5    63.791  -3.29084 5.0368    -0.653357
-#&gt;  ds 5 parent   28     72.8    63.791   9.00916 5.0368     1.788662
-#&gt;  ds 5 parent   60     38.3    37.412   0.88840 2.9540     0.300748
-#&gt;  ds 5 parent   60     40.7    37.412   3.28840 2.9540     1.113217
-#&gt;  ds 5 parent   90     22.5    22.685  -0.18500 1.7912    -0.103287
-#&gt;  ds 5 parent   90     20.8    22.685  -1.88500 1.7912    -1.052387
-#&gt;  ds 5 parent  120     13.4    13.755  -0.35534 1.0861    -0.327173
-#&gt;  ds 5 parent  120     13.8    13.755   0.04466 1.0861     0.041118</div><div class='input'>
+#&gt;  ds 1 parent    0    104.1   101.592   2.50757 8.0255     0.312451
+#&gt;  ds 1 parent    0    105.0   101.592   3.40757 8.0255     0.424594
+#&gt;  ds 1 parent    1     98.5   100.796  -2.29571 7.9625    -0.288313
+#&gt;  ds 1 parent    1     96.1   100.796  -4.69571 7.9625    -0.589725
+#&gt;  ds 1 parent    3    101.9    99.221   2.67904 7.8381     0.341796
+#&gt;  ds 1 parent    3     85.2    99.221 -14.02096 7.8381    -1.788812
+#&gt;  ds 1 parent    7     99.1    96.145   2.95512 7.5951     0.389081
+#&gt;  ds 1 parent    7     93.0    96.145  -3.14488 7.5951    -0.414065
+#&gt;  ds 1 parent   14     88.1    90.989  -2.88944 7.1879    -0.401987
+#&gt;  ds 1 parent   14     84.1    90.989  -6.88944 7.1879    -0.958480
+#&gt;  ds 1 parent   28     80.2    81.493  -1.29305 6.4377    -0.200857
+#&gt;  ds 1 parent   28     91.3    81.493   9.80695 6.4377     1.523364
+#&gt;  ds 1 parent   60     65.1    63.344   1.75642 5.0039     0.351008
+#&gt;  ds 1 parent   60     65.8    63.344   2.45642 5.0039     0.490898
+#&gt;  ds 1 parent   90     47.8    50.018  -2.21764 3.9512    -0.561252
+#&gt;  ds 1 parent   90     53.5    50.018   3.48236 3.9512     0.881335
+#&gt;  ds 1 parent  120     37.6    39.495  -1.89515 3.1200    -0.607423
+#&gt;  ds 1 parent  120     39.3    39.495  -0.19515 3.1200    -0.062549
+#&gt;  ds 2 parent    0    107.9   101.592   6.30757 8.0255     0.785943
+#&gt;  ds 2 parent    0    102.1   101.592   0.50757 8.0255     0.063245
+#&gt;  ds 2 parent    1    103.8   100.058   3.74159 7.9043     0.473361
+#&gt;  ds 2 parent    1    108.6   100.058   8.54159 7.9043     1.080626
+#&gt;  ds 2 parent    3     91.0    97.060  -6.05952 7.6674    -0.790297
+#&gt;  ds 2 parent    3     84.9    97.060 -12.15952 7.6674    -1.585874
+#&gt;  ds 2 parent    7     79.3    91.329 -12.02867 7.2147    -1.667251
+#&gt;  ds 2 parent    7    100.9    91.329   9.57133 7.2147     1.326647
+#&gt;  ds 2 parent   14     77.3    82.102  -4.80185 6.4858    -0.740366
+#&gt;  ds 2 parent   14     83.5    82.102   1.39815 6.4858     0.215571
+#&gt;  ds 2 parent   28     66.8    66.351   0.44945 5.2415     0.085748
+#&gt;  ds 2 parent   28     63.3    66.351  -3.05055 5.2415    -0.582002
+#&gt;  ds 2 parent   60     40.8    40.775   0.02474 3.2211     0.007679
+#&gt;  ds 2 parent   60     44.8    40.775   4.02474 3.2211     1.249485
+#&gt;  ds 2 parent   90     27.8    25.832   1.96762 2.0407     0.964198
+#&gt;  ds 2 parent   90     27.0    25.832   1.16762 2.0407     0.572171
+#&gt;  ds 2 parent  120     15.2    16.366  -1.16561 1.2928    -0.901595
+#&gt;  ds 2 parent  120     15.5    16.366  -0.86561 1.2928    -0.669547
+#&gt;  ds 3 parent    0     97.7   101.592  -3.89243 8.0255    -0.485009
+#&gt;  ds 3 parent    0     88.2   101.592 -13.39243 8.0255    -1.668739
+#&gt;  ds 3 parent    1    109.9    99.218  10.68196 7.8379     1.362858
+#&gt;  ds 3 parent    1     97.8    99.218  -1.41804 7.8379    -0.180921
+#&gt;  ds 3 parent    3    100.5    94.634   5.86555 7.4758     0.784603
+#&gt;  ds 3 parent    3     77.4    94.634 -17.23445 7.4758    -2.305360
+#&gt;  ds 3 parent    7     78.3    86.093  -7.79273 6.8011    -1.145813
+#&gt;  ds 3 parent    7     90.3    86.093   4.20727 6.8011     0.618620
+#&gt;  ds 3 parent   14     76.0    72.958   3.04222 5.7634     0.527848
+#&gt;  ds 3 parent   14     79.1    72.958   6.14222 5.7634     1.065722
+#&gt;  ds 3 parent   28     46.0    52.394  -6.39404 4.1390    -1.544842
+#&gt;  ds 3 parent   28     53.4    52.394   1.00596 4.1390     0.243046
+#&gt;  ds 3 parent   60     25.1    24.582   0.51786 1.9419     0.266676
+#&gt;  ds 3 parent   60     21.4    24.582  -3.18214 1.9419    -1.638664
+#&gt;  ds 3 parent   90     11.0    12.092  -1.09202 0.9552    -1.143199
+#&gt;  ds 3 parent   90     14.2    12.092   2.10798 0.9552     2.206776
+#&gt;  ds 3 parent  120      5.8     5.948  -0.14810 0.4699    -0.315178
+#&gt;  ds 3 parent  120      6.1     5.948   0.15190 0.4699     0.323282
+#&gt;  ds 4 parent    0     95.3   101.592  -6.29243 8.0255    -0.784057
+#&gt;  ds 4 parent    0    102.0   101.592   0.40757 8.0255     0.050784
+#&gt;  ds 4 parent    1    104.4   101.125   3.27549 7.9885     0.410025
+#&gt;  ds 4 parent    1    105.4   101.125   4.27549 7.9885     0.535205
+#&gt;  ds 4 parent    3    113.7   100.195  13.50487 7.9151     1.706218
+#&gt;  ds 4 parent    3     82.3   100.195 -17.89513 7.9151    -2.260886
+#&gt;  ds 4 parent    7     98.1    98.362  -0.26190 7.7703    -0.033706
+#&gt;  ds 4 parent    7     87.8    98.362 -10.56190 7.7703    -1.359270
+#&gt;  ds 4 parent   14     97.9    95.234   2.66590 7.5232     0.354357
+#&gt;  ds 4 parent   14    104.8    95.234   9.56590 7.5232     1.271521
+#&gt;  ds 4 parent   28     85.0    89.274  -4.27372 7.0523    -0.606001
+#&gt;  ds 4 parent   28     77.2    89.274 -12.07372 7.0523    -1.712017
+#&gt;  ds 4 parent   60     82.2    77.013   5.18661 6.0838     0.852526
+#&gt;  ds 4 parent   60     86.1    77.013   9.08661 6.0838     1.493571
+#&gt;  ds 4 parent   90     70.5    67.053   3.44692 5.2970     0.650733
+#&gt;  ds 4 parent   90     61.7    67.053  -5.35308 5.2970    -1.010591
+#&gt;  ds 4 parent  120     60.0    58.381   1.61905 4.6119     0.351058
+#&gt;  ds 4 parent  120     56.4    58.381  -1.98095 4.6119    -0.429530
+#&gt;  ds 5 parent    0     92.6   101.592  -8.99243 8.0255    -1.120485
+#&gt;  ds 5 parent    0    116.5   101.592  14.90757 8.0255     1.857531
+#&gt;  ds 5 parent    1    108.0    99.914   8.08560 7.8929     1.024413
+#&gt;  ds 5 parent    1    104.9    99.914   4.98560 7.8929     0.631655
+#&gt;  ds 5 parent    3    100.5    96.641   3.85898 7.6343     0.505477
+#&gt;  ds 5 parent    3     89.5    96.641  -7.14102 7.6343    -0.935382
+#&gt;  ds 5 parent    7     91.7    90.412   1.28752 7.1423     0.180267
+#&gt;  ds 5 parent    7     95.1    90.412   4.68752 7.1423     0.656304
+#&gt;  ds 5 parent   14     82.2    80.463   1.73715 6.3563     0.273295
+#&gt;  ds 5 parent   14     84.5    80.463   4.03715 6.3563     0.635141
+#&gt;  ds 5 parent   28     60.5    63.728  -3.22788 5.0343    -0.641178
+#&gt;  ds 5 parent   28     72.8    63.728   9.07212 5.0343     1.802062
+#&gt;  ds 5 parent   60     38.3    37.399   0.90061 2.9544     0.304835
+#&gt;  ds 5 parent   60     40.7    37.399   3.30061 2.9544     1.117174
+#&gt;  ds 5 parent   90     22.5    22.692  -0.19165 1.7926    -0.106913
+#&gt;  ds 5 parent   90     20.8    22.692  -1.89165 1.7926    -1.055273
+#&gt;  ds 5 parent  120     13.4    13.768  -0.36790 1.0876    -0.338259
+#&gt;  ds 5 parent  120     13.8    13.768   0.03210 1.0876     0.029517</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

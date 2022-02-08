@@ -13,6 +13,8 @@
   xlim = range(x$data$time),
   resplot = c("predicted", "time"),
   pred_over = NULL,
+  test_log_parms = FALSE,
+  conf.level = 0.6,
   ymax = "auto",
   maxabs = "auto",
   ncol.legend = ifelse(length(i) <= 3, length(i) + 1, ifelse(length(i) <= 8, 3, 4)),
@@ -27,7 +29,7 @@
 )
 }
 \arguments{
-\item{x}{An object of class \link{mixed.mmkin}, \link{nlme.mmkin}}
+\item{x}{An object of class \link{mixed.mmkin}, \link{saem.mmkin} or \link{nlme.mmkin}}
 
 \item{i}{A numeric index to select datasets for which to plot the individual predictions,
 in case plots get too large}
@@ -48,6 +50,12 @@ predicted values?}
 
 \item{pred_over}{Named list of alternative predictions as obtained
 from \link{mkinpredict} with a compatible \link{mkinmod}.}
+
+\item{test_log_parms}{Passed to \link{mean_degparms} in the case of an
+\link{mixed.mmkin} object}
+
+\item{conf.level}{Passed to \link{mean_degparms} in the case of an
+\link{mixed.mmkin} object}
 
 \item{ymax}{Vector of maximum y axis values}
 
@@ -91,9 +99,23 @@ plot(f[, 3:4], standardized = TRUE)
 
 # For this fit we need to increase pnlsMaxiter, and we increase the
 # tolerance in order to speed up the fit for this example evaluation
+# It still takes 20 seconds to run
 f_nlme <- nlme(f, control = list(pnlsMaxIter = 120, tolerance = 1e-3))
 plot(f_nlme)
 
+f_saem <- saem(f, transformations = "saemix")
+plot(f_saem)
+
+f_obs <- mmkin(list("DFOP-SFO" = dfop_sfo), ds, quiet = TRUE, error_model = "obs")
+f_nlmix <- nlmix(f_obs)
+plot(f_nlmix)
+
+# We can overlay the two variants if we generate predictions
+pred_nlme <- mkinpredict(dfop_sfo,
+  f_nlme$bparms.optim[-1],
+  c(parent = f_nlme$bparms.optim[[1]], A1 = 0),
+  seq(0, 180, by = 0.2))
+plot(f_saem, pred_over = list(nlme = pred_nlme))
 }
 }
 \author{

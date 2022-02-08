@@ -1,8 +1,3 @@
-#' Function to set up a kinetic submodel for one state variable
-#' 
-#' This is a convenience function to set up the lists used as arguments for
-#' \code{\link{mkinmod}}.
-#' 
 #' @rdname mkinmod
 #' @param submodel Character vector of length one to specify the submodel type.
 #'   See \code{\link{mkinmod}} for the list of allowed submodel names.

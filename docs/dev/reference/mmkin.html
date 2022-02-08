@@ -75,7 +75,7 @@ datasets specified in its first two arguments." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.9.50.4</span>
+        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.0.5</span>
       </span>
     </div>
 
@@ -124,7 +124,7 @@ datasets specified in its first two arguments." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/jranke/mkin/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -155,10 +155,13 @@ datasets specified in its first two arguments.</p>
     <pre class="usage"><span class='fu'>mmkin</span><span class='op'>(</span>
   models <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"SFO"</span>, <span class='st'>"FOMC"</span>, <span class='st'>"DFOP"</span><span class='op'>)</span>,
   <span class='va'>datasets</span>,
-  cores <span class='op'>=</span> <span class='fu'>parallel</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/r/parallel/detectCores.html'>detectCores</a></span><span class='op'>(</span><span class='op'>)</span>,
+  cores <span class='op'>=</span> <span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Sys.info.html'>Sys.info</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>[</span><span class='st'>"sysname"</span><span class='op'>]</span> <span class='op'>==</span> <span class='st'>"Windows"</span><span class='op'>)</span> <span class='fl'>1</span> <span class='kw'>else</span> <span class='fu'>parallel</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/r/parallel/detectCores.html'>detectCores</a></span><span class='op'>(</span><span class='op'>)</span>,
   cluster <span class='op'>=</span> <span class='cn'>NULL</span>,
   <span class='va'>...</span>
-<span class='op'>)</span></pre>
+<span class='op'>)</span>
+
+<span class='co'># S3 method for mmkin</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -180,7 +183,8 @@ data for <code><a href='mkinfit.html'>mkinfit</a></code>.</p></td>
 is only used when the <code>cluster</code> argument is <code>NULL</code>. On Windows
 machines, cores &gt; 1 is not supported, you need to use the <code>cluster</code>
 argument to use multiple logical processors. Per default, all cores
-detected by <code><a href='https://rdrr.io/r/parallel/detectCores.html'>parallel::detectCores()</a></code> are used.</p></td>
+detected by <code><a href='https://rdrr.io/r/parallel/detectCores.html'>parallel::detectCores()</a></code> are used, except on Windows where
+the default is 1.</p></td>
     </tr>
     <tr>
       <th>cluster</th>
@@ -189,7 +193,11 @@ for parallel execution.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Further arguments that will be passed to <code><a href='mkinfit.html'>mkinfit</a></code>.</p></td>
+      <td><p>Not used.</p></td>
+    </tr>
+    <tr>
+      <th>x</th>
+      <td><p>An mmkin object.</p></td>
     </tr>
     </table>
 
@@ -227,19 +235,19 @@ plotting.</p></div>
 
 <span class='va'>time_default</span>
 </div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   4.968   0.427   1.342 </div><div class='input'><span class='va'>time_1</span>
+#&gt;   4.771   0.576   1.803 </div><div class='input'><span class='va'>time_1</span>
 </div><div class='output co'>#&gt;    user  system elapsed 
-#&gt;   5.365   0.000   5.368 </div><div class='input'>
+#&gt;   5.779   0.000   5.781 </div><div class='input'>
 <span class='fu'><a href='endpoints.html'>endpoints</a></span><span class='op'>(</span><span class='va'>fits.0</span><span class='op'>[[</span><span class='st'>"SFO_lin"</span>, <span class='fl'>2</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $ff
 #&gt;   parent_M1 parent_sink       M1_M2     M1_sink 
-#&gt;   0.7340478   0.2659522   0.7505687   0.2494313 
+#&gt;   0.7340481   0.2659519   0.7505683   0.2494317 
 #&gt; 
 #&gt; $distimes
 #&gt;             DT50       DT90
 #&gt; parent  0.877769   2.915885
-#&gt; M1      2.325746   7.725960
-#&gt; M2     33.720083 112.015691
+#&gt; M1      2.325744   7.725956
+#&gt; M2     33.720100 112.015749
 #&gt; </div><div class='input'>
 <span class='co'># plot.mkinfit handles rows or columns of mmkin result objects</span>
 <span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>fits.0</span><span class='op'>[</span><span class='fl'>1</span>, <span class='op'>]</span><span class='op'>)</span>
@@ -266,12 +274,10 @@ plotting.</p></div>
 #&gt;       dataset
 #&gt; model  A  B  C  D 
 #&gt;   SFO  OK OK OK OK
-#&gt;   FOMC C  OK OK OK
+#&gt;   FOMC OK OK OK OK
 #&gt;   DFOP OK OK OK OK
 #&gt; 
-#&gt; OK: No warnings
-#&gt; C: Optimisation did not converge:
-#&gt; false convergence (8)</div><div class='input'><span class='co'># We get false convergence for the FOMC fit to FOCUS_2006_A because this</span>
+#&gt; OK: No warnings</div><div class='input'><span class='co'># We get false convergence for the FOMC fit to FOCUS_2006_A because this</span>
 <span class='co'># dataset is really SFO, and the FOMC fit is overparameterised</span>
 <span class='fu'>stopCluster</span><span class='op'>(</span><span class='va'>cl</span><span class='op'>)</span>
 <span class='co'># }</span>
