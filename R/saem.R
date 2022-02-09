@@ -158,9 +158,14 @@ saem.mmkin <- function(object,
   }
 
   return_data <- nlme_data(object)
+  saemix_data_ds <- f_saemix@data@data$ds
+  mkin_ds_order <- as.character(unique(return_data$ds))
+  saemix_ds_order <- unique(saemix_data_ds)
 
+  psi <- saemix::psi(f_saemix)
+  rownames(psi) <- saemix_ds_order
   return_data$predicted <- f_saemix@model@model(
-    psi = saemix::psi(f_saemix),
+    psi = psi[mkin_ds_order, ],
     id = as.numeric(return_data$ds),
     xidep = return_data[c("time", "name")])
 
@@ -184,6 +189,8 @@ saem.mmkin <- function(object,
     bparms.optim = bparms_optim,
     bparms.fixed = object[[1]]$bparms.fixed,
     data = return_data,
+    mkin_ds_order = mkin_ds_order,
+    saemix_ds_order = saemix_ds_order,
     err_mod = object[[1]]$err_mod,
     date.fit = date(),
     saemixversion = as.character(utils::packageVersion("saemix")),

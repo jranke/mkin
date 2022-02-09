@@ -13,6 +13,8 @@
 
 \item{backtransform}{Should we backtransform the parameters where a one to
 one correlation between transformed and backtransformed parameters exists?}
+
+\item{\dots}{For compatibility with the generic method}
 }
 \value{
 An object with 'intervals.saem.mmkin' and 'intervals.lme' in the

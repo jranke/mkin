@@ -198,18 +198,8 @@ nlme_biphasic <- nlme(mmkin_biphasic)
 if (saemix_available) {
   sfo_saem_1 <- saem(mmkin_sfo_1, quiet = TRUE, transformations = "saemix")
 
-  # With default control parameters, we do not get good results with mkin
-  # transformations here
-  dfop_saemix_1 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "mkin",
-   control = list(
-     displayProgress = FALSE, print = FALSE, save = FALSE, save.graphs = FALSE,
-     rw.init = 1, nbiter.saemix = c(600, 100))
-  )
-  dfop_saemix_2 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "saemix",
-   control = list(
-     displayProgress = FALSE, print = FALSE, save = FALSE, save.graphs = FALSE,
-     rw.init = 0.5, nbiter.saemix = c(600, 100))
-  )
+  dfop_saemix_1 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "mkin")
+  dfop_saemix_2 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "saemix")
 
   saem_biphasic_m <- saem(mmkin_biphasic, transformations = "mkin", quiet = TRUE)
   saem_biphasic_s <- saem(mmkin_biphasic, transformations = "saemix", quiet = TRUE)

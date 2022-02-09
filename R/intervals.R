@@ -10,6 +10,7 @@ nlme::intervals
 #' @param backtransform In case the model was fitted with mkin transformations,
 #'  should we backtransform the parameters where a one to one correlation
 #'  between transformed and backtransformed parameters exists?
+#' @param \dots For compatibility with the generic method
 #' @return An object with 'intervals.saem.mmkin' and 'intervals.lme' in the
 #'  class attribute
 #' @export
@@ -101,6 +102,7 @@ intervals.saem.mmkin <- function(object, level = 0.95, backtransform = TRUE, ...
 #' @param level The confidence level.
 #' @param backtransform Should we backtransform the parameters where a one to
 #'   one correlation between transformed and backtransformed parameters exists?
+#' @param \dots For compatibility with the generic method
 #' @importFrom nlme intervals
 #' @return An object with 'intervals.saem.mmkin' and 'intervals.lme' in the
 #'  class attribute

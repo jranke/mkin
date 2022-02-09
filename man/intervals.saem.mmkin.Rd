@@ -15,6 +15,8 @@ is available in the saemix object}
 \item{backtransform}{In case the model was fitted with mkin transformations,
 should we backtransform the parameters where a one to one correlation
 between transformed and backtransformed parameters exists?}
+
+\item{\dots}{For compatibility with the generic method}
 }
 \value{
 An object with 'intervals.saem.mmkin' and 'intervals.lme' in the

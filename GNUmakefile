@@ -80,6 +80,7 @@ clean:
 
 test: install
 	"$(RBIN)/Rscript" -e 'devtools::test()' 2>&1 | tee test.log
+	# The following does not have the desired effect with current testthat
 	sed -i -e "s/\r.*\r//" test.log
 
 devtest: install

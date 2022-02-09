@@ -104,8 +104,9 @@ plot.mixed.mmkin <- function(x,
 
   if (inherits(x, "saem.mmkin")) {
     if (x$transformations == "saemix") backtransform = FALSE
-    degparms_i <- saemix::psi(x$so)
-    rownames(degparms_i) <- ds_names
+    psi <- saemix::psi(x$so)
+    rownames(psi) <- x$saemix_ds_order
+    degparms_i <- psi[ds_names, ]
     degparms_i_names <- setdiff(x$so@results@name.fixed, names(fit_1$errparms))
     colnames(degparms_i) <- degparms_i_names
     residual_type = ifelse(standardized, "standardized", "residual")

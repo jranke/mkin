@@ -66,9 +66,9 @@ test_that("Parent fits using saemix are correctly implemented", {
   expect_true(all(rel_diff_mmkin[c("parent_0", "k1")] < 0.20))
   expect_true(all(rel_diff_mmkin_tested[c("parent_0", "k1", "k2")] < 0.20))
 
-  # We get < 30% deviations with transformations made in mkin
+  # We get < 15% deviations with transformations made in mkin
   rel_diff_1 <- (s_dfop_s1$confint_back[, "est."] - dfop_pop) / dfop_pop
-  expect_true(all(rel_diff_1 < 0.5))
+  expect_true(all(rel_diff_1 < 0.15))
 
   # We get < 20% deviations with transformations made in saemix
   rel_diff_2 <- (s_dfop_s2$confint_back[, "est."] - dfop_pop) / dfop_pop
