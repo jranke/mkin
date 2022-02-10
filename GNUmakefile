@@ -79,16 +79,15 @@ clean:
 	$(RM) Rplots.pdf
 
 test: install
-	"$(RBIN)/Rscript" -e 'devtools::test()' 2>&1 | tee test.log
-	# The following does not have the desired effect with current testthat
-	sed -i -e "s/\r.*\r//" test.log
+	"$(RBIN)/Rscript" -e 'options(cli.dynamic = TRUE); devtools::test()' 2>&1 | tee test.log
+	sed -i -e "s/.*\r.*\r//" test.log
 
 devtest: install
-	"$(RDEVBIN)/Rscript" -e 'devtools::test()' 2>&1 | tee test_dev.log
+	"$(RDEVBIN)/Rscript" -e 'options(cli.dynamic = TRUE); devtools::test()' 2>&1 | tee test_dev.log
 	sed -i -e "s/\r.*\r//" test_dev.log
 
 slowtests: install
-	NOT_CRAN=true "$(RBIN)/Rscript" -e 'library(mkin); testthat::test_dir("tests/testthat/slow")' 2>&1 | tee tests_slow.log
+	NOT_CRAN=true "$(RBIN)/Rscript" -e 'cli.dynamic = TRUE); library(mkin); testthat::test_dir("tests/testthat/slow")' 2>&1 | tee tests_slow.log
 	sed -i -e "s/\r.*\r//" tests_slow.log
 
 testcheck: roxygen test check
