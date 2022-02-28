@@ -201,6 +201,13 @@ dfop_saemix_2 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "saemix")
 saem_biphasic_m <- saem(mmkin_biphasic, transformations = "mkin", quiet = TRUE)
 saem_biphasic_s <- saem(mmkin_biphasic, transformations = "saemix", quiet = TRUE)
 
+# nlmixr saem
+tmp <- capture_output(nlmixr_saem_biphasic <- nlmixr(mmkin_biphasic, est = "saem",
+    control = nlmixr::saemControl(nBurn = 300, nEm = 100, nmc = 9, print = 0)))
+# The FOCEI fit takes too long...
+#tmp <- capture_output(nlmixr_focei_biphasic <- nlmixr(mmkin_biphasic, est = "focei",
+#    control = nlmixr::foceiControl(print = 0)))
+
 # UBA datasets
 ds_uba <- lapply(experimental_data_for_UBA_2019[6:10],
   function(x) subset(x$data[c("name", "time", "value")]))

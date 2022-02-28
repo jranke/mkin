@@ -72,3 +72,17 @@ test_that("saemix results are reproducible for biphasic fits", {
   expect_true(all(ci_dfop_sfo_s_d[no_k2, "lower"] < dfop_sfo_pop[no_k2]))
   expect_true(all(ci_dfop_sfo_s_d[no_k1, "upper"] > dfop_sfo_pop[no_k1]))
 })
+
+test_that("nlmixr results are reproducible for biphasic fits", {
+
+  test_summary <- summary(nlmixr_saem_biphasic)
+  test_summary$saemixversion <- "Dummy 0.0 for testing"
+  test_summary$mkinversion <- "Dummy 0.0 for testing"
+  test_summary$Rversion <- "Dummy R version for testing"
+  test_summary$date.fit <- "Dummy date for testing"
+  test_summary$date.summary <- "Dummy date for testing"
+  test_summary$time <- c(elapsed = "test time 0")
+
+  expect_known_output(print(test_summary, digits = 1), "summary_nlmixr_saem_biphasic.txt")
+})
+
