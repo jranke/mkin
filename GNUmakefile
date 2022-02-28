@@ -103,7 +103,7 @@ vignettes: vignettes/mkin.html vignettes/FOCUS_D.html vignettes/FOCUS_L.html vig
 vignettes/web_only/%.html: vignettes/references.bib vignettes/web_only/%.rmd
 	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/web_only/$*.rmd', dir = 'vignettes/web_only')"
 
-articles: vignettes/web_only/FOCUS_Z.html vignettes/web_only/compiled_models.html vignettes/web_only/benchmarks.html
+articles: vignettes/web_only/FOCUS_Z.html vignettes/web_only/compiled_models.html vignettes/web_only/benchmarks.html vignettes/web_only/dimethenamid_2018.html
 
 pd: roxygen
 	"$(RBIN)/Rscript" -e "pkgdown::build_site(run_dont_run = TRUE, lazy = TRUE)"
