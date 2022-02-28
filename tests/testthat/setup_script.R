@@ -183,28 +183,25 @@ ds_biphasic <- lapply(ds_biphasic_mean, function(ds) {
 })
 
 # Mixed model fits
-saemix_available <- FALSE
-if (requireNamespace("saemix", quietly = TRUE)) {
-  if(packageVersion("saemix") >= "3.0") saemix_available <- TRUE
-}
 mmkin_sfo_1 <- mmkin("SFO", ds_sfo, quiet = TRUE, error_model = "tc", cores = n_cores)
 mmkin_dfop_1 <- mmkin("DFOP", ds_dfop, quiet = TRUE, cores = n_cores)
 mmkin_biphasic <- mmkin(list("DFOP-SFO" = DFOP_SFO), ds_biphasic, quiet = TRUE, cores = n_cores)
 mmkin_biphasic_mixed <- mixed(mmkin_biphasic)
 
+# nlme
 dfop_nlme_1 <- nlme(mmkin_dfop_1)
 nlme_biphasic <- nlme(mmkin_biphasic)
 
-if (saemix_available) {
-  sfo_saem_1 <- saem(mmkin_sfo_1, quiet = TRUE, transformations = "saemix")
+# saemix
+sfo_saem_1 <- saem(mmkin_sfo_1, quiet = TRUE, transformations = "saemix")
 
-  dfop_saemix_1 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "mkin")
-  dfop_saemix_2 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "saemix")
+dfop_saemix_1 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "mkin")
+dfop_saemix_2 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "saemix")
 
-  saem_biphasic_m <- saem(mmkin_biphasic, transformations = "mkin", quiet = TRUE)
-  saem_biphasic_s <- saem(mmkin_biphasic, transformations = "saemix", quiet = TRUE)
-}
+saem_biphasic_m <- saem(mmkin_biphasic, transformations = "mkin", quiet = TRUE)
+saem_biphasic_s <- saem(mmkin_biphasic, transformations = "saemix", quiet = TRUE)
 
+# UBA datasets
 ds_uba <- lapply(experimental_data_for_UBA_2019[6:10],
   function(x) subset(x$data[c("name", "time", "value")]))
 names(ds_uba) <- paste("Dataset", 6:10)
@@ -216,7 +213,5 @@ f_uba_mmkin <- mmkin(list("SFO-SFO" = sfo_sfo_uba, "DFOP-SFO" = dfop_sfo_uba),
   ds_uba, quiet = TRUE, cores = n_cores)
 f_uba_dfop_sfo_mixed <- mixed(f_uba_mmkin[2, ])
 
-if (saemix_available) {
-  f_uba_sfo_sfo_saem <- saem(f_uba_mmkin["SFO-SFO", ], quiet = TRUE, transformations = "saemix")
-  f_uba_dfop_sfo_saem <- saem(f_uba_mmkin["DFOP-SFO", ], quiet = TRUE, transformations = "saemix")
-}
+f_uba_sfo_sfo_saem <- saem(f_uba_mmkin["SFO-SFO", ], quiet = TRUE, transformations = "saemix")
+f_uba_dfop_sfo_saem <- saem(f_uba_mmkin["DFOP-SFO", ], quiet = TRUE, transformations = "saemix")

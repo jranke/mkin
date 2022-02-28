@@ -1,7 +1,6 @@
 context("Nonlinear mixed-effects models")
 
 test_that("Parent fits using saemix are correctly implemented", {
-  skip_if(!saemix_available)
 
   expect_error(saem(fits), "Only row objects")
   # Some fits were done in the setup script
@@ -97,7 +96,6 @@ test_that("Print methods work", {
   expect_known_output(print(mmkin_biphasic_mixed, digits = 2), "print_mmkin_biphasic_mixed.txt")
   expect_known_output(print(nlme_biphasic, digits = 1), "print_nlme_biphasic.txt")
 
-  skip_if(!saemix_available)
   expect_known_output(print(sfo_saem_1, digits = 1), "print_sfo_saem_1.txt")
 })
 
@@ -126,7 +124,6 @@ test_that("nlme results are reproducible to some degree", {
 
 test_that("saem results are reproducible for biphasic fits", {
 
-  skip_if(!saemix_available)
   test_summary <- summary(saem_biphasic_s)
   test_summary$saemixversion <- "Dummy 0.0 for testing"
   test_summary$mkinversion <- "Dummy 0.0 for testing"
