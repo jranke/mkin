@@ -229,7 +229,7 @@ print.summary.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3)
   if (nrow(x$confint_trans) > 1) {
     corr <- x$corFixed
     class(corr) <- "correlation"
-    print(corr, title = "\nCorrelation:", ...)
+    print(corr, title = "\nCorrelation:", rdig = digits, ...)
   }
 
   cat("\nRandom effects:\n")
