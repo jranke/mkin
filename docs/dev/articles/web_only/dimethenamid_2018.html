@@ -20,6 +20,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -80,7 +82,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/jranke/mkin/">
+  <a href="https://github.com/jranke/mkin/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -95,96 +97,109 @@
 
       
 
-      </header><script src="dimethenamid_2018_files/header-attrs-2.11/header-attrs.js"></script><script src="dimethenamid_2018_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="dimethenamid_2018_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Example evaluations of the dimethenamid data from 2018</h1>
-                        <h4 class="author">Johannes Ranke</h4>
+                        <h4 data-toc-skip class="author">Johannes Ranke</h4>
             
-            <h4 class="date">Last change 11 January 2022, built on 11 Jan 2022</h4>
+            <h4 data-toc-skip class="date">Last change 10 February 2022, built on 28 Feb 2022</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/jranke/mkin/blob/master/vignettes/web_only/dimethenamid_2018.rmd"><code>vignettes/web_only/dimethenamid_2018.rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/jranke/mkin/blob/HEAD/vignettes/web_only/dimethenamid_2018.rmd" class="external-link"><code>vignettes/web_only/dimethenamid_2018.rmd</code></a></small>
       <div class="hidden name"><code>dimethenamid_2018.rmd</code></div>
 
     </div>
 
     
     
-<p><a href="http://www.jrwb.de">Wissenschaftlicher Berater, Kronacher Str. 12, 79639 Grenzach-Wyhlen, Germany</a></p>
-<div id="introduction" class="section level1">
-<h1 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h1>
+<p><a href="http://www.jrwb.de" class="external-link">Wissenschaftlicher Berater, Kronacher Str. 12, 79639 Grenzach-Wyhlen, Germany</a></p>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
 <p>During the preparation of the journal article on nonlinear mixed-effects models in degradation kinetics <span class="citation">(Ranke et al. 2021)</span> and the analysis of the dimethenamid degradation data analysed therein, a need for a more detailed analysis using not only nlme and saemix, but also nlmixr for fitting the mixed-effects models was identified, as many model variants do not converge when fitted with nlme, and not all relevant error models can be fitted with saemix.</p>
 <p>This vignette is an attempt to satisfy this need.</p>
 </div>
-<div id="data" class="section level1">
-<h1 class="hasAnchor">
-<a href="#data" class="anchor"></a>Data</h1>
-<p>Residue data forming the basis for the endpoints derived in the conclusion on the peer review of the pesticide risk assessment of dimethenamid-P published by the European Food Safety Authority (EFSA) in 2018 <span class="citation">(EFSA 2018)</span> were transcribed from the risk assessment report <span class="citation">(Rapporteur Member State Germany, Co-Rapporteur Member State Bulgaria 2018)</span> which can be downloaded from the Open EFSA repository <a href="https://open.efsa.europa.eu">https://open.efsa.europa.eu/study-inventory/EFSA-Q-2014-00716</a>.</p>
+<div class="section level2">
+<h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
+</h2>
+<p>Residue data forming the basis for the endpoints derived in the conclusion on the peer review of the pesticide risk assessment of dimethenamid-P published by the European Food Safety Authority (EFSA) in 2018 <span class="citation">(EFSA 2018)</span> were transcribed from the risk assessment report <span class="citation">(Rapporteur Member State Germany, Co-Rapporteur Member State Bulgaria 2018)</span> which can be downloaded from the Open EFSA repository <a href="https://open.efsa.europa.eu" class="external-link">https://open.efsa.europa.eu/study-inventory/EFSA-Q-2014-00716</a>.</p>
 <p>The data are <a href="https://pkgdown.jrwb.de/mkin/reference/dimethenamid_2018.html">available in the mkin package</a>. The following code (hidden by default, please use the button to the right to show it) treats the data available for the racemic mixture dimethenamid (DMTA) and its enantiomer dimethenamid-P (DMTAP) in the same way, as no difference between their degradation behaviour was identified in the EU risk assessment. The observation times of each dataset are multiplied with the corresponding normalisation factor also available in the dataset, in order to make it possible to describe all datasets with a single set of parameters.</p>
 <p>Also, datasets observed in the same soil are merged, resulting in dimethenamid (DMTA) data from six soils.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://pkgdown.jrwb.de/mkin/">mkin</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="va">dmta_ds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">7</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pkgdown.jrwb.de/mkin/">mkin</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="va">dmta_ds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">7</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span>
   <span class="va">ds_i</span> <span class="op">&lt;-</span> <span class="va">dimethenamid_2018</span><span class="op">$</span><span class="va">ds</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">data</span>
   <span class="va">ds_i</span><span class="op">[</span><span class="va">ds_i</span><span class="op">$</span><span class="va">name</span> <span class="op">==</span> <span class="st">"DMTAP"</span>, <span class="st">"name"</span><span class="op">]</span> <span class="op">&lt;-</span>  <span class="st">"DMTA"</span>
   <span class="va">ds_i</span><span class="op">$</span><span class="va">time</span> <span class="op">&lt;-</span> <span class="va">ds_i</span><span class="op">$</span><span class="va">time</span> <span class="op">*</span> <span class="va">dimethenamid_2018</span><span class="op">$</span><span class="va">f_time_norm</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>
   <span class="va">ds_i</span>
 <span class="op">}</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">dmta_ds</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="va">dimethenamid_2018</span><span class="op">$</span><span class="va">ds</span>, <span class="kw">function</span><span class="op">(</span><span class="va">ds</span><span class="op">)</span> <span class="va">ds</span><span class="op">$</span><span class="va">title</span><span class="op">)</span>
-<span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot 1"</span><span class="op">]</span><span class="op">]</span>, <span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot 2"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">dmta_ds</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">dimethenamid_2018</span><span class="op">$</span><span class="va">ds</span>, <span class="kw">function</span><span class="op">(</span><span class="va">ds</span><span class="op">)</span> <span class="va">ds</span><span class="op">$</span><span class="va">title</span><span class="op">)</span>
+<span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot 1"</span><span class="op">]</span><span class="op">]</span>, <span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot 2"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
 <span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot 1"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NULL</span>
 <span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot 2"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></code></pre></div>
 </div>
-<div id="parent-degradation" class="section level1">
-<h1 class="hasAnchor">
-<a href="#parent-degradation" class="anchor"></a>Parent degradation</h1>
+<div class="section level2">
+<h2 id="parent-degradation">Parent degradation<a class="anchor" aria-label="anchor" href="#parent-degradation"></a>
+</h2>
 <p>We evaluate the observed degradation of the parent compound using simple exponential decline (SFO) and biexponential decline (DFOP), using constant variance (const) and a two-component variance (tc) as error models.</p>
-<div id="separate-evaluations" class="section level2">
-<h2 class="hasAnchor">
-<a href="#separate-evaluations" class="anchor"></a>Separate evaluations</h2>
+<div class="section level3">
+<h3 id="separate-evaluations">Separate evaluations<a class="anchor" aria-label="anchor" href="#separate-evaluations"></a>
+</h3>
 <p>As a first step, to get a visual impression of the fit of the different models, we do separate evaluations for each soil using the mmkin function from the mkin package:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">f_parent_mkin_const</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mmkin.html">mmkin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"DFOP"</span><span class="op">)</span>, <span class="va">dmta_ds</span>,
+<code class="sourceCode R"><span class="va">f_parent_mkin_const</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mmkin.html">mmkin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"DFOP"</span><span class="op">)</span>, <span class="va">dmta_ds</span>,
   error_model <span class="op">=</span> <span class="st">"const"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="va">f_parent_mkin_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mmkin.html">mmkin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"DFOP"</span><span class="op">)</span>, <span class="va">dmta_ds</span>,
+<span class="va">f_parent_mkin_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mmkin.html">mmkin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"DFOP"</span><span class="op">)</span>, <span class="va">dmta_ds</span>,
   error_model <span class="op">=</span> <span class="st">"tc"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p>The plot of the individual SFO fits shown below suggests that at least in some datasets the degradation slows down towards later time points, and that the scatter of the residuals error is smaller for smaller values (panel to the right):</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu"><a href="../../reference/mixed.html">mixed</a></span><span class="op">(</span><span class="va">f_parent_mkin_const</span><span class="op">[</span><span class="st">"SFO"</span>, <span class="op">]</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/plot-SaemixObject-ANY-method.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../../reference/mixed.html">mixed</a></span><span class="op">(</span><span class="va">f_parent_mkin_const</span><span class="op">[</span><span class="st">"SFO"</span>, <span class="op">]</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="dimethenamid_2018_files/figure-html/f_parent_mkin_sfo_const-1.png" width="700"></p>
 <p>Using biexponential decline (DFOP) results in a slightly more random scatter of the residuals:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu"><a href="../../reference/mixed.html">mixed</a></span><span class="op">(</span><span class="va">f_parent_mkin_const</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/plot-SaemixObject-ANY-method.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../../reference/mixed.html">mixed</a></span><span class="op">(</span><span class="va">f_parent_mkin_const</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="dimethenamid_2018_files/figure-html/f_parent_mkin_dfop_const-1.png" width="700"></p>
 <p>The population curve (bold line) in the above plot results from taking the mean of the individual transformed parameters, i.e. of log k1 and log k2, as well as of the logit of the g parameter of the DFOP model). Here, this procedure does not result in parameters that represent the degradation well, because in some datasets the fitted value for k2 is extremely close to zero, leading to a log k2 value that dominates the average. This is alleviated if only rate constants that pass the t-test for significant difference from zero (on the untransformed scale) are considered in the averaging:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu"><a href="../../reference/mixed.html">mixed</a></span><span class="op">(</span><span class="va">f_parent_mkin_const</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span><span class="op">)</span>, test_log_parms <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/plot-SaemixObject-ANY-method.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../../reference/mixed.html">mixed</a></span><span class="op">(</span><span class="va">f_parent_mkin_const</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span><span class="op">)</span>, test_log_parms <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p><img src="dimethenamid_2018_files/figure-html/f_parent_mkin_dfop_const_test-1.png" width="700"></p>
 <p>While this is visually much more satisfactory, such an average procedure could introduce a bias, as not all results from the individual fits enter the population curve with the same weight. This is where nonlinear mixed-effects models can help out by treating all datasets with equally by fitting a parameter distribution model together with the degradation model and the error model (see below).</p>
 <p>The remaining trend of the residuals to be higher for higher predicted residues is reduced by using the two-component error model:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu"><a href="../../reference/mixed.html">mixed</a></span><span class="op">(</span><span class="va">f_parent_mkin_tc</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span><span class="op">)</span>, test_log_parms <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/plot-SaemixObject-ANY-method.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../../reference/mixed.html">mixed</a></span><span class="op">(</span><span class="va">f_parent_mkin_tc</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span><span class="op">)</span>, test_log_parms <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p><img src="dimethenamid_2018_files/figure-html/f_parent_mkin_dfop_tc_test-1.png" width="700"></p>
-</div>
-<div id="nonlinear-mixed-effects-models" class="section level2">
-<h2 class="hasAnchor">
-<a href="#nonlinear-mixed-effects-models" class="anchor"></a>Nonlinear mixed-effects models</h2>
-<p>Instead of taking a model selection decision for each of the individual fits, we fit nonlinear mixed-effects models (using different fitting algorithms as implemented in different packages) and do model selection using all available data at the same time. In order to make sure that these decisions are not unduly influenced by the type of algorithm used, by implementation details or by the use of wrong control parameters, we compare the model selection results obtained with different R packages, with different algorithms and checking control parameters.</p>
-<div id="nlme" class="section level3">
-<h3 class="hasAnchor">
-<a href="#nlme" class="anchor"></a>nlme</h3>
-<p>The nlme package was the first R extension providing facilities to fit nonlinear mixed-effects models. We would like to do model selection from all four combinations of degradation models and error models based on the AIC. However, fitting the DFOP model with constant variance and using default control parameters results in an error, signalling that the maximum number of 50 iterations was reached, potentially indicating overparameterisation. Nevertheless, the algorithm converges when the two-component error model is used in combination with the DFOP model. This can be explained by the fact that the smaller residues observed at later sampling times get more weight when using the two-component error model which will counteract the tendency of the algorithm to try parameter combinations unsuitable for fitting these data.</p>
+<p>However, note that in the case of using this error model, the fits to the Flaach and BBA 2.3 datasets appear to be ill-defined, indicated by the fact that they did not converge:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://svn.r-project.org/R-packages/trunk/nlme/">nlme</a></span><span class="op">)</span>
-<span class="va">f_parent_nlme_sfo_const</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html">nlme</a></span><span class="op">(</span><span class="va">f_parent_mkin_const</span><span class="op">[</span><span class="st">"SFO"</span>, <span class="op">]</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">f_parent_mkin_tc</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span><span class="op">)</span></code></pre></div>
+<pre><code>&lt;mmkin&gt; object
+Status of individual fits:
+
+      dataset
+model  Calke Borstel Flaach BBA 2.2 BBA 2.3 Elliot
+  DFOP OK    OK      C      OK      C       OK    
+
+OK: No warnings
+C: Optimisation did not converge:
+iteration limit reached without convergence (10)</code></pre>
+</div>
+<div class="section level3">
+<h3 id="nonlinear-mixed-effects-models">Nonlinear mixed-effects models<a class="anchor" aria-label="anchor" href="#nonlinear-mixed-effects-models"></a>
+</h3>
+<p>Instead of taking a model selection decision for each of the individual fits, we fit nonlinear mixed-effects models (using different fitting algorithms as implemented in different packages) and do model selection using all available data at the same time. In order to make sure that these decisions are not unduly influenced by the type of algorithm used, by implementation details or by the use of wrong control parameters, we compare the model selection results obtained with different R packages, with different algorithms and checking control parameters.</p>
+<div class="section level4">
+<h4 id="nlme">nlme<a class="anchor" aria-label="anchor" href="#nlme"></a>
+</h4>
+<p>The nlme package was the first R extension providing facilities to fit nonlinear mixed-effects models. We would like to do model selection from all four combinations of degradation models and error models based on the AIC. However, fitting the DFOP model with constant variance and using default control parameters results in an error, signalling that the maximum number of 50 iterations was reached, potentially indicating overparameterisation. Nevertheless, the algorithm converges when the two-component error model is used in combination with the DFOP model. This can be explained by the fact that the smaller residues observed at later sampling times get more weight when using the two-component error model which will counteract the tendency of the algorithm to try parameter combinations unsuitable for fitting these data.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://svn.r-project.org/R-packages/trunk/nlme/" class="external-link">nlme</a></span><span class="op">)</span>
+<span class="va">f_parent_nlme_sfo_const</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="external-link">nlme</a></span><span class="op">(</span><span class="va">f_parent_mkin_const</span><span class="op">[</span><span class="st">"SFO"</span>, <span class="op">]</span><span class="op">)</span>
 <span class="co"># f_parent_nlme_dfop_const &lt;- nlme(f_parent_mkin_const["DFOP", ])</span>
-<span class="va">f_parent_nlme_sfo_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html">nlme</a></span><span class="op">(</span><span class="va">f_parent_mkin_tc</span><span class="op">[</span><span class="st">"SFO"</span>, <span class="op">]</span><span class="op">)</span>
-<span class="va">f_parent_nlme_dfop_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html">nlme</a></span><span class="op">(</span><span class="va">f_parent_mkin_tc</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span><span class="op">)</span></code></pre></div>
+<span class="va">f_parent_nlme_sfo_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="external-link">nlme</a></span><span class="op">(</span><span class="va">f_parent_mkin_tc</span><span class="op">[</span><span class="st">"SFO"</span>, <span class="op">]</span><span class="op">)</span>
+<span class="va">f_parent_nlme_dfop_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="external-link">nlme</a></span><span class="op">(</span><span class="va">f_parent_mkin_tc</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span><span class="op">)</span></code></pre></div>
 <p>Note that a certain degree of overparameterisation is also indicated by a warning obtained when fitting DFOP with the two-component error model (‘false convergence’ in the ‘LME step’ in iteration 3). However, as this warning does not occur in later iterations, and specifically not in the last of the 6 iterations, we can ignore this warning.</p>
 <p>The model comparison function of the nlme package can directly be applied to these fits showing a much lower AIC for the DFOP model fitted with the two-component error model. Also, the likelihood ratio test indicates that this difference is significant as the p-value is below 0.0001.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span><span class="op">(</span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span>
   <span class="va">f_parent_nlme_sfo_const</span>, <span class="va">f_parent_nlme_sfo_tc</span>, <span class="va">f_parent_nlme_dfop_tc</span>
 <span class="op">)</span></code></pre></div>
 <pre><code>                        Model df    AIC    BIC  logLik   Test L.Ratio p-value
@@ -192,227 +207,215 @@ f_parent_nlme_sfo_const     1  5 796.60 811.82 -393.30
 f_parent_nlme_sfo_tc        2  6 798.60 816.86 -393.30 1 vs 2    0.00   0.998
 f_parent_nlme_dfop_tc       3 10 671.91 702.34 -325.96 2 vs 3  134.69  &lt;.0001</code></pre>
 <p>In addition to these fits, attempts were also made to include correlations between random effects by using the log Cholesky parameterisation of the matrix specifying them. The code used for these attempts can be made visible below.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">f_parent_nlme_sfo_const_logchol</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html">nlme</a></span><span class="op">(</span><span class="va">f_parent_mkin_const</span><span class="op">[</span><span class="st">"SFO"</span>, <span class="op">]</span>,
-  random <span class="op">=</span> <span class="fu">nlme</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/nlme/man/pdLogChol.html">pdLogChol</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">DMTA_0</span> <span class="op">~</span> <span class="fl">1</span>, <span class="va">log_k_DMTA</span> <span class="op">~</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span><span class="op">(</span><span class="va">f_parent_nlme_sfo_const</span>, <span class="va">f_parent_nlme_sfo_const_logchol</span><span class="op">)</span>
-<span class="va">f_parent_nlme_sfo_tc_logchol</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html">nlme</a></span><span class="op">(</span><span class="va">f_parent_mkin_tc</span><span class="op">[</span><span class="st">"SFO"</span>, <span class="op">]</span>,
-  random <span class="op">=</span> <span class="fu">nlme</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/nlme/man/pdLogChol.html">pdLogChol</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">DMTA_0</span> <span class="op">~</span> <span class="fl">1</span>, <span class="va">log_k_DMTA</span> <span class="op">~</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span><span class="op">(</span><span class="va">f_parent_nlme_sfo_tc</span>, <span class="va">f_parent_nlme_sfo_tc_logchol</span><span class="op">)</span>
-<span class="va">f_parent_nlme_dfop_tc_logchol</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html">nlme</a></span><span class="op">(</span><span class="va">f_parent_mkin_const</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span>,
-  random <span class="op">=</span> <span class="fu">nlme</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/nlme/man/pdLogChol.html">pdLogChol</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">DMTA_0</span> <span class="op">~</span> <span class="fl">1</span>, <span class="va">log_k1</span> <span class="op">~</span> <span class="fl">1</span>, <span class="va">log_k2</span> <span class="op">~</span> <span class="fl">1</span>, <span class="va">g_qlogis</span> <span class="op">~</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span><span class="op">(</span><span class="va">f_parent_nlme_dfop_tc</span>, <span class="va">f_parent_nlme_dfop_tc_logchol</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">f_parent_nlme_sfo_const_logchol</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="external-link">nlme</a></span><span class="op">(</span><span class="va">f_parent_mkin_const</span><span class="op">[</span><span class="st">"SFO"</span>, <span class="op">]</span>,
+  random <span class="op">=</span> <span class="fu">nlme</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/nlme/man/pdLogChol.html" class="external-link">pdLogChol</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">DMTA_0</span> <span class="op">~</span> <span class="fl">1</span>, <span class="va">log_k_DMTA</span> <span class="op">~</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_parent_nlme_sfo_const</span>, <span class="va">f_parent_nlme_sfo_const_logchol</span><span class="op">)</span>
+<span class="va">f_parent_nlme_sfo_tc_logchol</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="external-link">nlme</a></span><span class="op">(</span><span class="va">f_parent_mkin_tc</span><span class="op">[</span><span class="st">"SFO"</span>, <span class="op">]</span>,
+  random <span class="op">=</span> <span class="fu">nlme</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/nlme/man/pdLogChol.html" class="external-link">pdLogChol</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">DMTA_0</span> <span class="op">~</span> <span class="fl">1</span>, <span class="va">log_k_DMTA</span> <span class="op">~</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_parent_nlme_sfo_tc</span>, <span class="va">f_parent_nlme_sfo_tc_logchol</span><span class="op">)</span>
+<span class="va">f_parent_nlme_dfop_tc_logchol</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="external-link">nlme</a></span><span class="op">(</span><span class="va">f_parent_mkin_const</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span>,
+  random <span class="op">=</span> <span class="fu">nlme</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/nlme/man/pdLogChol.html" class="external-link">pdLogChol</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">DMTA_0</span> <span class="op">~</span> <span class="fl">1</span>, <span class="va">log_k1</span> <span class="op">~</span> <span class="fl">1</span>, <span class="va">log_k2</span> <span class="op">~</span> <span class="fl">1</span>, <span class="va">g_qlogis</span> <span class="op">~</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_parent_nlme_dfop_tc</span>, <span class="va">f_parent_nlme_dfop_tc_logchol</span><span class="op">)</span></code></pre></div>
 <p>While the SFO variants converge fast, the additional parameters introduced by this lead to convergence warnings for the DFOP model. The model comparison clearly show that adding correlations between random effects does not improve the fits.</p>
 <p>The selected model (DFOP with two-component error) fitted to the data assuming no correlations between random effects is shown below.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">f_parent_nlme_dfop_tc</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/plot-SaemixObject-ANY-method.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_parent_nlme_dfop_tc</span><span class="op">)</span></code></pre></div>
 <p><img src="dimethenamid_2018_files/figure-html/plot_parent_nlme-1.png" width="700"></p>
 </div>
-<div id="saemix" class="section level3">
-<h3 class="hasAnchor">
-<a href="#saemix" class="anchor"></a>saemix</h3>
+<div class="section level4">
+<h4 id="saemix">saemix<a class="anchor" aria-label="anchor" href="#saemix"></a>
+</h4>
 <p>The saemix package provided the first Open Source implementation of the Stochastic Approximation to the Expectation Maximisation (SAEM) algorithm. SAEM fits of degradation models can be conveniently performed using an interface to the saemix package available in current development versions of the mkin package.</p>
 <p>The corresponding SAEM fits of the four combinations of degradation and error models are fitted below. As there is no convergence criterion implemented in the saemix package, the convergence plots need to be manually checked for every fit. As we will compare the SAEM implementation of saemix to the results obtained using the nlmixr package later, we define control settings that work well for all the parent data fits shown in this vignette.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">saemix</span><span class="op">)</span>
-<span class="va">saemix_control</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/saemix/man/saemixControl.html">saemixControl</a></span><span class="op">(</span>nbiter.saemix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">800</span>, <span class="fl">300</span><span class="op">)</span>, nb.chains <span class="op">=</span> <span class="fl">15</span>,
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">saemix</span><span class="op">)</span>
+<span class="va">saemix_control</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/saemix/man/saemixControl.html" class="external-link">saemixControl</a></span><span class="op">(</span>nbiter.saemix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">800</span>, <span class="fl">300</span><span class="op">)</span>, nb.chains <span class="op">=</span> <span class="fl">15</span>,
     print <span class="op">=</span> <span class="cn">FALSE</span>, save <span class="op">=</span> <span class="cn">FALSE</span>, save.graphs <span class="op">=</span> <span class="cn">FALSE</span>, displayProgress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">saemix_control_moreiter</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/saemix/man/saemixControl.html">saemixControl</a></span><span class="op">(</span>nbiter.saemix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1600</span>, <span class="fl">300</span><span class="op">)</span>, nb.chains <span class="op">=</span> <span class="fl">15</span>,
+<span class="va">saemix_control_moreiter</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/saemix/man/saemixControl.html" class="external-link">saemixControl</a></span><span class="op">(</span>nbiter.saemix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1600</span>, <span class="fl">300</span><span class="op">)</span>, nb.chains <span class="op">=</span> <span class="fl">15</span>,
+    print <span class="op">=</span> <span class="cn">FALSE</span>, save <span class="op">=</span> <span class="cn">FALSE</span>, save.graphs <span class="op">=</span> <span class="cn">FALSE</span>, displayProgress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">saemix_control_10k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/saemix/man/saemixControl.html" class="external-link">saemixControl</a></span><span class="op">(</span>nbiter.saemix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10000</span>, <span class="fl">300</span><span class="op">)</span>, nb.chains <span class="op">=</span> <span class="fl">15</span>,
     print <span class="op">=</span> <span class="cn">FALSE</span>, save <span class="op">=</span> <span class="cn">FALSE</span>, save.graphs <span class="op">=</span> <span class="cn">FALSE</span>, displayProgress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <p>The convergence plot for the SFO model using constant variance is shown below.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">f_parent_saemix_sfo_const</span> <span class="op">&lt;-</span> <span class="fu">mkin</span><span class="fu">::</span><span class="fu"><a href="../../reference/saem.html">saem</a></span><span class="op">(</span><span class="va">f_parent_mkin_const</span><span class="op">[</span><span class="st">"SFO"</span>, <span class="op">]</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span>,
   control <span class="op">=</span> <span class="va">saemix_control</span>, transformations <span class="op">=</span> <span class="st">"saemix"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/saemix/man/plot-SaemixObject-ANY-method.html">plot</a></span><span class="op">(</span><span class="va">f_parent_saemix_sfo_const</span><span class="op">$</span><span class="va">so</span>, plot.type <span class="op">=</span> <span class="st">"convergence"</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/pkg/saemix/man/plot-SaemixObject-ANY-method.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_parent_saemix_sfo_const</span><span class="op">$</span><span class="va">so</span>, plot.type <span class="op">=</span> <span class="st">"convergence"</span><span class="op">)</span></code></pre></div>
 <p><img src="dimethenamid_2018_files/figure-html/f_parent_saemix_sfo_const-1.png" width="700"></p>
 <p>Obviously the default number of iterations is sufficient to reach convergence. This can also be said for the SFO fit using the two-component error model.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">f_parent_saemix_sfo_tc</span> <span class="op">&lt;-</span> <span class="fu">mkin</span><span class="fu">::</span><span class="fu"><a href="../../reference/saem.html">saem</a></span><span class="op">(</span><span class="va">f_parent_mkin_tc</span><span class="op">[</span><span class="st">"SFO"</span>, <span class="op">]</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span>,
   control <span class="op">=</span> <span class="va">saemix_control</span>, transformations <span class="op">=</span> <span class="st">"saemix"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/saemix/man/plot-SaemixObject-ANY-method.html">plot</a></span><span class="op">(</span><span class="va">f_parent_saemix_sfo_tc</span><span class="op">$</span><span class="va">so</span>, plot.type <span class="op">=</span> <span class="st">"convergence"</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/pkg/saemix/man/plot-SaemixObject-ANY-method.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_parent_saemix_sfo_tc</span><span class="op">$</span><span class="va">so</span>, plot.type <span class="op">=</span> <span class="st">"convergence"</span><span class="op">)</span></code></pre></div>
 <p><img src="dimethenamid_2018_files/figure-html/f_parent_saemix_sfo_tc-1.png" width="700"></p>
 <p>When fitting the DFOP model with constant variance (see below), parameter convergence is not as unambiguous.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">f_parent_saemix_dfop_const</span> <span class="op">&lt;-</span> <span class="fu">mkin</span><span class="fu">::</span><span class="fu"><a href="../../reference/saem.html">saem</a></span><span class="op">(</span><span class="va">f_parent_mkin_const</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span>,
   control <span class="op">=</span> <span class="va">saemix_control</span>, transformations <span class="op">=</span> <span class="st">"saemix"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/saemix/man/plot-SaemixObject-ANY-method.html">plot</a></span><span class="op">(</span><span class="va">f_parent_saemix_dfop_const</span><span class="op">$</span><span class="va">so</span>, plot.type <span class="op">=</span> <span class="st">"convergence"</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/pkg/saemix/man/plot-SaemixObject-ANY-method.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_parent_saemix_dfop_const</span><span class="op">$</span><span class="va">so</span>, plot.type <span class="op">=</span> <span class="st">"convergence"</span><span class="op">)</span></code></pre></div>
 <p><img src="dimethenamid_2018_files/figure-html/f_parent_saemix_dfop_const-1.png" width="700"></p>
 <p>This is improved when the DFOP model is fitted with the two-component error model. Convergence of the variance of k2 is enhanced, it remains more or less stable already after 200 iterations of the first phase.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">f_parent_saemix_dfop_tc</span> <span class="op">&lt;-</span> <span class="fu">mkin</span><span class="fu">::</span><span class="fu"><a href="../../reference/saem.html">saem</a></span><span class="op">(</span><span class="va">f_parent_mkin_tc</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span>,
   control <span class="op">=</span> <span class="va">saemix_control</span>, transformations <span class="op">=</span> <span class="st">"saemix"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/saemix/man/plot-SaemixObject-ANY-method.html">plot</a></span><span class="op">(</span><span class="va">f_parent_saemix_dfop_tc</span><span class="op">$</span><span class="va">so</span>, plot.type <span class="op">=</span> <span class="st">"convergence"</span><span class="op">)</span></code></pre></div>
-<p><img src="dimethenamid_2018_files/figure-html/f_parent_saemix_dfop_tc-1.png" width="700"></p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># The last time I tried (2022-01-11) this gives an error in solve.default(omega.eta)</span>
-<span class="co"># system is computationally singular: reciprocal condition number = 5e-17</span>
-<span class="co">#f_parent_saemix_dfop_tc_10k &lt;- mkin::saem(f_parent_mkin_tc["DFOP", ], quiet = TRUE,</span>
-<span class="co">#  control = saemix_control_10k, transformations = "saemix")</span>
-<span class="co"># Now we do not get a significant improvement by using twice the number of iterations</span>
 <span class="va">f_parent_saemix_dfop_tc_moreiter</span> <span class="op">&lt;-</span> <span class="fu">mkin</span><span class="fu">::</span><span class="fu"><a href="../../reference/saem.html">saem</a></span><span class="op">(</span><span class="va">f_parent_mkin_tc</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span>,
   control <span class="op">=</span> <span class="va">saemix_control_moreiter</span>, transformations <span class="op">=</span> <span class="st">"saemix"</span><span class="op">)</span>
-<span class="co">#plot(f_parent_saemix_dfop_tc_moreiter$so, plot.type = "convergence")</span></code></pre></div>
-<p>An alternative way to fit DFOP in combination with the two-component error model is to use the model formulation with transformed parameters as used per default in mkin.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">f_parent_saemix_dfop_tc_mkin</span> <span class="op">&lt;-</span> <span class="fu">mkin</span><span class="fu">::</span><span class="fu"><a href="../../reference/saem.html">saem</a></span><span class="op">(</span><span class="va">f_parent_mkin_tc</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span>,
-  control <span class="op">=</span> <span class="va">saemix_control</span>, transformations <span class="op">=</span> <span class="st">"mkin"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/saemix/man/plot-SaemixObject-ANY-method.html">plot</a></span><span class="op">(</span><span class="va">f_parent_saemix_dfop_tc_mkin</span><span class="op">$</span><span class="va">so</span>, plot.type <span class="op">=</span> <span class="st">"convergence"</span><span class="op">)</span></code></pre></div>
-<p><img src="dimethenamid_2018_files/figure-html/f_parent_saemix_dfop_tc_mkin-1.png" width="700"> As the convergence plots do not clearly indicate that the algorithm has converged, we again use four times the number of iterations, which leads to almost satisfactory convergence (see below).</p>
+<span class="fu"><a href="https://rdrr.io/pkg/saemix/man/plot-SaemixObject-ANY-method.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_parent_saemix_dfop_tc</span><span class="op">$</span><span class="va">so</span>, plot.type <span class="op">=</span> <span class="st">"convergence"</span><span class="op">)</span></code></pre></div>
+<p><img src="dimethenamid_2018_files/figure-html/f_parent_saemix_dfop_tc-1.png" width="700"></p>
+<p>Doubling the number of iterations in the first phase of the algorithm leads to a slightly lower likelihood, and therefore to slightly higher AIC and BIC values. With even more iterations, the algorithm stops with an error message. This is related to the variance of k2 approximating zero. This has been submitted as a <a href="https://github.com/saemixdevelopment/saemixextension/issues/29" class="external-link">bug to the saemix package</a>, as the algorithm does not converge in this case.</p>
+<p>An alternative way to fit DFOP in combination with the two-component error model is to use the model formulation with transformed parameters as used per default in mkin. When using this option, convergence is slower, but eventually the algorithm stops as well with the same error message.</p>
+<p>The four combinations (SFO/const, SFO/tc, DFOP/const and DFOP/tc) and the version with increased iterations can be compared using the model comparison function of the saemix package:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">saemix_control_muchmoreiter</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/saemix/man/saemixControl.html">saemixControl</a></span><span class="op">(</span>nbiter.saemix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">3200</span>, <span class="fl">300</span><span class="op">)</span>, nb.chains <span class="op">=</span> <span class="fl">15</span>,
-    print <span class="op">=</span> <span class="cn">FALSE</span>, save <span class="op">=</span> <span class="cn">FALSE</span>, save.graphs <span class="op">=</span> <span class="cn">FALSE</span>, displayProgress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">f_parent_saemix_dfop_tc_mkin_muchmoreiter</span> <span class="op">&lt;-</span> <span class="fu">mkin</span><span class="fu">::</span><span class="fu"><a href="../../reference/saem.html">saem</a></span><span class="op">(</span><span class="va">f_parent_mkin_tc</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span>,
-  control <span class="op">=</span> <span class="va">saemix_control_muchmoreiter</span>, transformations <span class="op">=</span> <span class="st">"mkin"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/saemix/man/plot-SaemixObject-ANY-method.html">plot</a></span><span class="op">(</span><span class="va">f_parent_saemix_dfop_tc_mkin_muchmoreiter</span><span class="op">$</span><span class="va">so</span>, plot.type <span class="op">=</span> <span class="st">"convergence"</span><span class="op">)</span></code></pre></div>
-<p><img src="dimethenamid_2018_files/figure-html/f_parent_saemix_dfop_tc_mkin_moreiter-1.png" width="700"></p>
-<p>The four combinations (SFO/const, SFO/tc, DFOP/const and DFOP/tc), including the variations of the DFOP/tc combination can be compared using the model comparison function of the saemix package:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">AIC_parent_saemix</span> <span class="op">&lt;-</span> <span class="fu">saemix</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/compare.saemix.html">compare.saemix</a></span><span class="op">(</span>
+<code class="sourceCode R"><span class="va">AIC_parent_saemix</span> <span class="op">&lt;-</span> <span class="fu">saemix</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/compare.saemix.html" class="external-link">compare.saemix</a></span><span class="op">(</span>
   <span class="va">f_parent_saemix_sfo_const</span><span class="op">$</span><span class="va">so</span>,
   <span class="va">f_parent_saemix_sfo_tc</span><span class="op">$</span><span class="va">so</span>,
   <span class="va">f_parent_saemix_dfop_const</span><span class="op">$</span><span class="va">so</span>,
   <span class="va">f_parent_saemix_dfop_tc</span><span class="op">$</span><span class="va">so</span>,
-  <span class="va">f_parent_saemix_dfop_tc_moreiter</span><span class="op">$</span><span class="va">so</span>,
-  <span class="va">f_parent_saemix_dfop_tc_mkin</span><span class="op">$</span><span class="va">so</span>,
-  <span class="va">f_parent_saemix_dfop_tc_mkin_muchmoreiter</span><span class="op">$</span><span class="va">so</span><span class="op">)</span></code></pre></div>
+  <span class="va">f_parent_saemix_dfop_tc_moreiter</span><span class="op">$</span><span class="va">so</span><span class="op">)</span></code></pre></div>
 <pre><code>Likelihoods calculated by importance sampling</code></pre>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">AIC_parent_saemix</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
-  <span class="st">"SFO const"</span>, <span class="st">"SFO tc"</span>, <span class="st">"DFOP const"</span>, <span class="st">"DFOP tc"</span>, <span class="st">"DFOP tc more iterations"</span>,
-  <span class="st">"DFOP tc mkintrans"</span>, <span class="st">"DFOP tc mkintrans more iterations"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">AIC_parent_saemix</span><span class="op">)</span></code></pre></div>
-<pre><code>                                     AIC    BIC
-SFO const                         796.38 795.34
-SFO tc                            798.38 797.13
-DFOP const                        705.75 703.88
-DFOP tc                           665.65 663.57
-DFOP tc more iterations           665.88 663.80
-DFOP tc mkintrans                 674.02 671.94
-DFOP tc mkintrans more iterations 667.94 665.86</code></pre>
-<p>As in the case of nlme fits, the DFOP model fitted with two-component error (number 4) gives the lowest AIC. Using a much larger number of iterations does not significantly change the AIC. When the mkin transformations are used instead of the saemix transformations, we need four times the number of iterations to obtain a goodness of fit that almost as good as the result obtained with saemix transformations.</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">AIC_parent_saemix</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
+  <span class="st">"SFO const"</span>, <span class="st">"SFO tc"</span>, <span class="st">"DFOP const"</span>, <span class="st">"DFOP tc"</span>, <span class="st">"DFOP tc more iterations"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">AIC_parent_saemix</span><span class="op">)</span></code></pre></div>
+<pre><code>                           AIC    BIC
+SFO const               796.38 795.34
+SFO tc                  798.38 797.13
+DFOP const              705.75 703.88
+DFOP tc                 665.65 663.57
+DFOP tc more iterations 665.88 663.80</code></pre>
 <p>In order to check the influence of the likelihood calculation algorithms implemented in saemix, the likelihood from Gaussian quadrature is added to the best fit, and the AIC values obtained from the three methods are compared.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">f_parent_saemix_dfop_tc</span><span class="op">$</span><span class="va">so</span> <span class="op">&lt;-</span>
-  <span class="fu">saemix</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/llgq.saemix.html">llgq.saemix</a></span><span class="op">(</span><span class="va">f_parent_saemix_dfop_tc</span><span class="op">$</span><span class="va">so</span><span class="op">)</span>
-<span class="va">AIC_parent_saemix_methods</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
-  is <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html">AIC</a></span><span class="op">(</span><span class="va">f_parent_saemix_dfop_tc</span><span class="op">$</span><span class="va">so</span>, method <span class="op">=</span> <span class="st">"is"</span><span class="op">)</span>,
-  gq <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html">AIC</a></span><span class="op">(</span><span class="va">f_parent_saemix_dfop_tc</span><span class="op">$</span><span class="va">so</span>, method <span class="op">=</span> <span class="st">"gq"</span><span class="op">)</span>,
-  lin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html">AIC</a></span><span class="op">(</span><span class="va">f_parent_saemix_dfop_tc</span><span class="op">$</span><span class="va">so</span>, method <span class="op">=</span> <span class="st">"lin"</span><span class="op">)</span>
+  <span class="fu">saemix</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/llgq.saemix.html" class="external-link">llgq.saemix</a></span><span class="op">(</span><span class="va">f_parent_saemix_dfop_tc</span><span class="op">$</span><span class="va">so</span><span class="op">)</span>
+<span class="va">AIC_parent_saemix_methods</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
+  is <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">f_parent_saemix_dfop_tc</span><span class="op">$</span><span class="va">so</span>, method <span class="op">=</span> <span class="st">"is"</span><span class="op">)</span>,
+  gq <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">f_parent_saemix_dfop_tc</span><span class="op">$</span><span class="va">so</span>, method <span class="op">=</span> <span class="st">"gq"</span><span class="op">)</span>,
+  lin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">f_parent_saemix_dfop_tc</span><span class="op">$</span><span class="va">so</span>, method <span class="op">=</span> <span class="st">"lin"</span><span class="op">)</span>
 <span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">AIC_parent_saemix_methods</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">AIC_parent_saemix_methods</span><span class="op">)</span></code></pre></div>
 <pre><code>    is     gq    lin 
 665.65 665.68 665.11 </code></pre>
-<p>The AIC values based on importance sampling and Gaussian quadrature are very similar. Using linearisation is known to be less accurate, but still gives a similar value.</p>
+<p>The AIC values based on importance sampling and Gaussian quadrature are very similar. Using linearisation is known to be less accurate, but still gives a similar value. In order to illustrate that the comparison of the three method depends on the degree of convergence obtained in the fit, the same comparison is shown below for the fit using the defaults for the number of iterations and the number of MCMC chains.</p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">f_parent_saemix_dfop_tc_defaults</span> <span class="op">&lt;-</span> <span class="fu">mkin</span><span class="fu">::</span><span class="fu"><a href="../../reference/saem.html">saem</a></span><span class="op">(</span><span class="va">f_parent_mkin_tc</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span><span class="op">)</span>
+<span class="va">f_parent_saemix_dfop_tc_defaults</span><span class="op">$</span><span class="va">so</span> <span class="op">&lt;-</span>
+  <span class="fu">saemix</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/llgq.saemix.html" class="external-link">llgq.saemix</a></span><span class="op">(</span><span class="va">f_parent_saemix_dfop_tc_defaults</span><span class="op">$</span><span class="va">so</span><span class="op">)</span>
+<span class="va">AIC_parent_saemix_methods_defaults</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
+  is <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">f_parent_saemix_dfop_tc_defaults</span><span class="op">$</span><span class="va">so</span>, method <span class="op">=</span> <span class="st">"is"</span><span class="op">)</span>,
+  gq <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">f_parent_saemix_dfop_tc_defaults</span><span class="op">$</span><span class="va">so</span>, method <span class="op">=</span> <span class="st">"gq"</span><span class="op">)</span>,
+  lin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">f_parent_saemix_dfop_tc_defaults</span><span class="op">$</span><span class="va">so</span>, method <span class="op">=</span> <span class="st">"lin"</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">AIC_parent_saemix_methods_defaults</span><span class="op">)</span></code></pre></div>
+<pre><code>    is     gq    lin 
+668.27 718.36 666.49 </code></pre>
 </div>
-<div id="nlmixr" class="section level3">
-<h3 class="hasAnchor">
-<a href="#nlmixr" class="anchor"></a>nlmixr</h3>
+<div class="section level4">
+<h4 id="nlmixr">nlmixr<a class="anchor" aria-label="anchor" href="#nlmixr"></a>
+</h4>
 <p>In the last years, a lot of effort has been put into the nlmixr package which is designed for pharmacokinetics, where nonlinear mixed-effects models are routinely used, but which can also be used for related data like chemical degradation data. A current development branch of the mkin package provides an interface between mkin and nlmixr. Here, we check if we get equivalent results when using a refined version of the First Order Conditional Estimation (FOCE) algorithm used in nlme, namely the First Order Conditional Estimation with Interaction (FOCEI), and the SAEM algorithm as implemented in nlmixr.</p>
-<p>First, the focei algorithm is used for the four model combinations. A number of warnings are produced with unclear significance.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/nlmixrdevelopment/nlmixr">nlmixr</a></span><span class="op">)</span>
-<span class="va">f_parent_nlmixr_focei_sfo_const</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/nlmixr.html">nlmixr</a></span><span class="op">(</span><span class="va">f_parent_mkin_const</span><span class="op">[</span><span class="st">"SFO"</span>, <span class="op">]</span>, est <span class="op">=</span> <span class="st">"focei"</span><span class="op">)</span>
-<span class="va">f_parent_nlmixr_focei_sfo_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/nlmixr.html">nlmixr</a></span><span class="op">(</span><span class="va">f_parent_mkin_tc</span><span class="op">[</span><span class="st">"SFO"</span>, <span class="op">]</span>, est <span class="op">=</span> <span class="st">"focei"</span><span class="op">)</span>
-<span class="va">f_parent_nlmixr_focei_dfop_const</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/nlmixr.html">nlmixr</a></span><span class="op">(</span><span class="va">f_parent_mkin_const</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span>, est <span class="op">=</span> <span class="st">"focei"</span><span class="op">)</span>
-<span class="va">f_parent_nlmixr_focei_dfop_tc</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/nlmixr.html">nlmixr</a></span><span class="op">(</span><span class="va">f_parent_mkin_tc</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span>, est <span class="op">=</span> <span class="st">"focei"</span><span class="op">)</span></code></pre></div>
+<p>First, the focei algorithm is used for the four model combinations.</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">aic_nlmixr_focei</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">f_parent_nlmixr_focei_sfo_const</span><span class="op">$</span><span class="va">nm</span>, <span class="va">f_parent_nlmixr_focei_sfo_tc</span><span class="op">$</span><span class="va">nm</span>,
-    <span class="va">f_parent_nlmixr_focei_dfop_const</span><span class="op">$</span><span class="va">nm</span>, <span class="va">f_parent_nlmixr_focei_dfop_tc</span><span class="op">$</span><span class="va">nm</span><span class="op">)</span>,
-  <span class="va">AIC</span><span class="op">)</span></code></pre></div>
-<p>The AIC values are very close to the ones obtained with nlme which are repeated below for convenience.</p>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/nlmixrdevelopment/nlmixr" class="external-link">nlmixr</a></span><span class="op">)</span>
+<span class="va">f_parent_nlmixr_focei_sfo_const</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/nlmixr.html" class="external-link">nlmixr</a></span><span class="op">(</span><span class="va">f_parent_mkin_const</span><span class="op">[</span><span class="st">"SFO"</span>, <span class="op">]</span>, est <span class="op">=</span> <span class="st">"focei"</span><span class="op">)</span>
+<span class="va">f_parent_nlmixr_focei_sfo_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/nlmixr.html" class="external-link">nlmixr</a></span><span class="op">(</span><span class="va">f_parent_mkin_tc</span><span class="op">[</span><span class="st">"SFO"</span>, <span class="op">]</span>, est <span class="op">=</span> <span class="st">"focei"</span><span class="op">)</span>
+<span class="va">f_parent_nlmixr_focei_dfop_const</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/nlmixr.html" class="external-link">nlmixr</a></span><span class="op">(</span><span class="va">f_parent_mkin_const</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span>, est <span class="op">=</span> <span class="st">"focei"</span><span class="op">)</span>
+<span class="va">f_parent_nlmixr_focei_dfop_tc</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/nlmixr.html" class="external-link">nlmixr</a></span><span class="op">(</span><span class="va">f_parent_mkin_tc</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span>, est <span class="op">=</span> <span class="st">"focei"</span><span class="op">)</span></code></pre></div>
+<p>For the SFO model with constant variance, the AIC values are the same, for the DFOP model, there are significant differences between the AIC values. These may be caused by different solutions that are found, but also by the fact that the AIC values for the nlmixr fits are calculated based on Gaussian quadrature, not on linearisation.</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">aic_nlme</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">f_parent_nlme_sfo_const</span>, <span class="cn">NA</span>, <span class="va">f_parent_nlme_sfo_tc</span>, <span class="va">f_parent_nlme_dfop_tc</span><span class="op">)</span>,
-  <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="cn">NA</span> <span class="kw">else</span> <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html">AIC</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>
-<span class="va">aic_nlme_nlmixr_focei</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
-  <span class="st">"Degradation model"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"SFO"</span>, <span class="st">"DFOP"</span>, <span class="st">"DFOP"</span><span class="op">)</span>,
-  <span class="st">"Error model"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"constant variance"</span>, <span class="st">"two-component"</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span>,
+<code class="sourceCode R"><span class="va">aic_nlmixr_focei</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">f_parent_nlmixr_focei_sfo_const</span><span class="op">$</span><span class="va">nm</span>, <span class="va">f_parent_nlmixr_focei_sfo_tc</span><span class="op">$</span><span class="va">nm</span>,
+    <span class="va">f_parent_nlmixr_focei_dfop_const</span><span class="op">$</span><span class="va">nm</span>, <span class="va">f_parent_nlmixr_focei_dfop_tc</span><span class="op">$</span><span class="va">nm</span><span class="op">)</span>,
+  <span class="va">AIC</span><span class="op">)</span>
+<span class="va">aic_nlme</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">f_parent_nlme_sfo_const</span>, <span class="cn">NA</span>, <span class="va">f_parent_nlme_sfo_tc</span>, <span class="va">f_parent_nlme_dfop_tc</span><span class="op">)</span>,
+  <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="cn">NA</span> <span class="kw">else</span> <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>
+<span class="va">aic_nlme_nlmixr_focei</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>
+  <span class="st">"Degradation model"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"SFO"</span>, <span class="st">"DFOP"</span>, <span class="st">"DFOP"</span><span class="op">)</span>,
+  <span class="st">"Error model"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"constant variance"</span>, <span class="st">"two-component"</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span>,
   <span class="st">"AIC (nlme)"</span> <span class="op">=</span> <span class="va">aic_nlme</span>,
   <span class="st">"AIC (nlmixr with FOCEI)"</span> <span class="op">=</span> <span class="va">aic_nlmixr_focei</span>,
   check.names <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">aic_nlme_nlmixr_focei</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">aic_nlme_nlmixr_focei</span><span class="op">)</span></code></pre></div>
 <pre><code>  Degradation model       Error model AIC (nlme) AIC (nlmixr with FOCEI)
 1               SFO constant variance     796.60                  796.60
 2               SFO     two-component         NA                  798.64
 3              DFOP constant variance     798.60                  745.87
 4              DFOP     two-component     671.91                  740.42</code></pre>
-<p>Secondly, we use the SAEM estimation routine and check the convergence plots. The control parameters also used for the saemix fits are defined beforehand.</p>
+<p>Secondly, we use the SAEM estimation routine and check the convergence plots. The control parameters, which were also used for the saemix fits, are defined beforehand.</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">nlmixr_saem_control_800</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/saemControl.html">saemControl</a></span><span class="op">(</span>logLik <span class="op">=</span> <span class="cn">TRUE</span>,
+<code class="sourceCode R"><span class="va">nlmixr_saem_control_800</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/saemControl.html" class="external-link">saemControl</a></span><span class="op">(</span>logLik <span class="op">=</span> <span class="cn">TRUE</span>,
   nBurn <span class="op">=</span> <span class="fl">800</span>, nEm <span class="op">=</span> <span class="fl">300</span>, nmc <span class="op">=</span> <span class="fl">15</span><span class="op">)</span>
-<span class="va">nlmixr_saem_control_1000</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/saemControl.html">saemControl</a></span><span class="op">(</span>logLik <span class="op">=</span> <span class="cn">TRUE</span>,
-  nBurn <span class="op">=</span> <span class="fl">1000</span>, nEm <span class="op">=</span> <span class="fl">300</span>, nmc <span class="op">=</span> <span class="fl">15</span><span class="op">)</span>
-<span class="va">nlmixr_saem_control_10k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/saemControl.html">saemControl</a></span><span class="op">(</span>logLik <span class="op">=</span> <span class="cn">TRUE</span>,
+<span class="va">nlmixr_saem_control_moreiter</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/saemControl.html" class="external-link">saemControl</a></span><span class="op">(</span>logLik <span class="op">=</span> <span class="cn">TRUE</span>,
+  nBurn <span class="op">=</span> <span class="fl">1600</span>, nEm <span class="op">=</span> <span class="fl">300</span>, nmc <span class="op">=</span> <span class="fl">15</span><span class="op">)</span>
+<span class="va">nlmixr_saem_control_10k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/saemControl.html" class="external-link">saemControl</a></span><span class="op">(</span>logLik <span class="op">=</span> <span class="cn">TRUE</span>,
   nBurn <span class="op">=</span> <span class="fl">10000</span>, nEm <span class="op">=</span> <span class="fl">1000</span>, nmc <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></code></pre></div>
 <p>Then we fit SFO with constant variance</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">f_parent_nlmixr_saem_sfo_const</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/nlmixr.html">nlmixr</a></span><span class="op">(</span><span class="va">f_parent_mkin_const</span><span class="op">[</span><span class="st">"SFO"</span>, <span class="op">]</span>, est <span class="op">=</span> <span class="st">"saem"</span>,
+<code class="sourceCode R"><span class="va">f_parent_nlmixr_saem_sfo_const</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/nlmixr.html" class="external-link">nlmixr</a></span><span class="op">(</span><span class="va">f_parent_mkin_const</span><span class="op">[</span><span class="st">"SFO"</span>, <span class="op">]</span>, est <span class="op">=</span> <span class="st">"saem"</span>,
   control <span class="op">=</span> <span class="va">nlmixr_saem_control_800</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/traceplot.html">traceplot</a></span><span class="op">(</span><span class="va">f_parent_nlmixr_saem_sfo_const</span><span class="op">$</span><span class="va">nm</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/traceplot.html" class="external-link">traceplot</a></span><span class="op">(</span><span class="va">f_parent_nlmixr_saem_sfo_const</span><span class="op">$</span><span class="va">nm</span><span class="op">)</span></code></pre></div>
 <p><img src="dimethenamid_2018_files/figure-html/f_parent_nlmixr_saem_sfo_const-1.png" width="700"></p>
 <p>and SFO with two-component error.</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">f_parent_nlmixr_saem_sfo_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/nlmixr.html">nlmixr</a></span><span class="op">(</span><span class="va">f_parent_mkin_tc</span><span class="op">[</span><span class="st">"SFO"</span>, <span class="op">]</span>, est <span class="op">=</span> <span class="st">"saem"</span>,
+<code class="sourceCode R"><span class="va">f_parent_nlmixr_saem_sfo_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/nlmixr.html" class="external-link">nlmixr</a></span><span class="op">(</span><span class="va">f_parent_mkin_tc</span><span class="op">[</span><span class="st">"SFO"</span>, <span class="op">]</span>, est <span class="op">=</span> <span class="st">"saem"</span>,
   control <span class="op">=</span> <span class="va">nlmixr_saem_control_800</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/traceplot.html">traceplot</a></span><span class="op">(</span><span class="va">f_parent_nlmixr_saem_sfo_tc</span><span class="op">$</span><span class="va">nm</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/traceplot.html" class="external-link">traceplot</a></span><span class="op">(</span><span class="va">f_parent_nlmixr_saem_sfo_tc</span><span class="op">$</span><span class="va">nm</span><span class="op">)</span></code></pre></div>
 <p><img src="dimethenamid_2018_files/figure-html/f_parent_nlmixr_saem_sfo_tc-1.png" width="700"></p>
-<p>For DFOP with constant variance, the convergence plots show considerable instability of the fit, which indicates overparameterisation which was already observed above for this model combination.</p>
+<p>For DFOP with constant variance, the convergence plots show considerable instability of the fit, which indicates overparameterisation which was already observed above for this model combination. Also note that the variance of k2 approximates zero, which was already observed in the saemix fits of the DFOP model.</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">f_parent_nlmixr_saem_dfop_const</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/nlmixr.html">nlmixr</a></span><span class="op">(</span><span class="va">f_parent_mkin_const</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span>, est <span class="op">=</span> <span class="st">"saem"</span>,
+<code class="sourceCode R"><span class="va">f_parent_nlmixr_saem_dfop_const</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/nlmixr.html" class="external-link">nlmixr</a></span><span class="op">(</span><span class="va">f_parent_mkin_const</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span>, est <span class="op">=</span> <span class="st">"saem"</span>,
   control <span class="op">=</span> <span class="va">nlmixr_saem_control_800</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/traceplot.html">traceplot</a></span><span class="op">(</span><span class="va">f_parent_nlmixr_saem_dfop_const</span><span class="op">$</span><span class="va">nm</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/traceplot.html" class="external-link">traceplot</a></span><span class="op">(</span><span class="va">f_parent_nlmixr_saem_dfop_const</span><span class="op">$</span><span class="va">nm</span><span class="op">)</span></code></pre></div>
 <p><img src="dimethenamid_2018_files/figure-html/f_parent_nlmixr_saem_dfop_const-1.png" width="700"></p>
-<p>For DFOP with two-component error, a less erratic convergence is seen.</p>
+<p>For DFOP with two-component error, a less erratic convergence is seen, but the variance of k2 again approximates zero.</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">f_parent_nlmixr_saem_dfop_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/nlmixr.html">nlmixr</a></span><span class="op">(</span><span class="va">f_parent_mkin_tc</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span>, est <span class="op">=</span> <span class="st">"saem"</span>,
+<code class="sourceCode R"><span class="va">f_parent_nlmixr_saem_dfop_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/nlmixr.html" class="external-link">nlmixr</a></span><span class="op">(</span><span class="va">f_parent_mkin_tc</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span>, est <span class="op">=</span> <span class="st">"saem"</span>,
   control <span class="op">=</span> <span class="va">nlmixr_saem_control_800</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/traceplot.html">traceplot</a></span><span class="op">(</span><span class="va">f_parent_nlmixr_saem_dfop_tc</span><span class="op">$</span><span class="va">nm</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/traceplot.html" class="external-link">traceplot</a></span><span class="op">(</span><span class="va">f_parent_nlmixr_saem_dfop_tc</span><span class="op">$</span><span class="va">nm</span><span class="op">)</span></code></pre></div>
 <p><img src="dimethenamid_2018_files/figure-html/f_parent_nlmixr_saem_dfop_tc-1.png" width="700"></p>
 <p>To check if an increase in the number of iterations improves the fit, we repeat the fit with 1000 iterations for the burn in phase and 300 iterations for the second phase.</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">f_parent_nlmixr_saem_dfop_tc_1000</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/nlmixr.html">nlmixr</a></span><span class="op">(</span><span class="va">f_parent_mkin_tc</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span>, est <span class="op">=</span> <span class="st">"saem"</span>,
-  control <span class="op">=</span> <span class="va">nlmixr_saem_control_1000</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/traceplot.html">traceplot</a></span><span class="op">(</span><span class="va">f_parent_nlmixr_saem_dfop_tc_1000</span><span class="op">$</span><span class="va">nm</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">f_parent_nlmixr_saem_dfop_tc_moreiter</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/nlmixr.html" class="external-link">nlmixr</a></span><span class="op">(</span><span class="va">f_parent_mkin_tc</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span>, est <span class="op">=</span> <span class="st">"saem"</span>,
+  control <span class="op">=</span> <span class="va">nlmixr_saem_control_moreiter</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/traceplot.html" class="external-link">traceplot</a></span><span class="op">(</span><span class="va">f_parent_nlmixr_saem_dfop_tc_moreiter</span><span class="op">$</span><span class="va">nm</span><span class="op">)</span></code></pre></div>
 <p><img src="dimethenamid_2018_files/figure-html/f_parent_nlmixr_saem_dfop_tc_1k-1.png" width="700"></p>
 <p>Here the fit looks very similar, but we will see below that it shows a higher AIC than the fit with 800 iterations in the burn in phase. Next we choose 10 000 iterations for the burn in phase and 1000 iterations for the second phase for comparison with saemix.</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">f_parent_nlmixr_saem_dfop_tc_10k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/nlmixr.html">nlmixr</a></span><span class="op">(</span><span class="va">f_parent_mkin_tc</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span>, est <span class="op">=</span> <span class="st">"saem"</span>,
+<code class="sourceCode R"><span class="va">f_parent_nlmixr_saem_dfop_tc_10k</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/nlmixr.html" class="external-link">nlmixr</a></span><span class="op">(</span><span class="va">f_parent_mkin_tc</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span>, est <span class="op">=</span> <span class="st">"saem"</span>,
   control <span class="op">=</span> <span class="va">nlmixr_saem_control_10k</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/traceplot.html">traceplot</a></span><span class="op">(</span><span class="va">f_parent_nlmixr_saem_dfop_tc_10k</span><span class="op">$</span><span class="va">nm</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/traceplot.html" class="external-link">traceplot</a></span><span class="op">(</span><span class="va">f_parent_nlmixr_saem_dfop_tc_10k</span><span class="op">$</span><span class="va">nm</span><span class="op">)</span></code></pre></div>
 <p><img src="dimethenamid_2018_files/figure-html/f_parent_nlmixr_saem_dfop_tc_10k-1.png" width="700"></p>
-<p>In the above convergence plot, the time course of ‘eta.DMTA_0’ and ‘log_k2’ indicate a false convergence.</p>
 <p>The AIC values are internally calculated using Gaussian quadrature.</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/AIC.html">AIC</a></span><span class="op">(</span><span class="va">f_parent_nlmixr_saem_sfo_const</span><span class="op">$</span><span class="va">nm</span>, <span class="va">f_parent_nlmixr_saem_sfo_tc</span><span class="op">$</span><span class="va">nm</span>,
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">f_parent_nlmixr_saem_sfo_const</span><span class="op">$</span><span class="va">nm</span>, <span class="va">f_parent_nlmixr_saem_sfo_tc</span><span class="op">$</span><span class="va">nm</span>,
   <span class="va">f_parent_nlmixr_saem_dfop_const</span><span class="op">$</span><span class="va">nm</span>, <span class="va">f_parent_nlmixr_saem_dfop_tc</span><span class="op">$</span><span class="va">nm</span>,
-  <span class="va">f_parent_nlmixr_saem_dfop_tc_1000</span><span class="op">$</span><span class="va">nm</span>,
+  <span class="va">f_parent_nlmixr_saem_dfop_tc_moreiter</span><span class="op">$</span><span class="va">nm</span>,
   <span class="va">f_parent_nlmixr_saem_dfop_tc_10k</span><span class="op">$</span><span class="va">nm</span><span class="op">)</span></code></pre></div>
-<pre><code>                                     df     AIC
-f_parent_nlmixr_saem_sfo_const$nm     5  798.71
-f_parent_nlmixr_saem_sfo_tc$nm        6  808.64
-f_parent_nlmixr_saem_dfop_const$nm    9 1995.96
-f_parent_nlmixr_saem_dfop_tc$nm      10  664.96
-f_parent_nlmixr_saem_dfop_tc_1000$nm 10  667.39
-f_parent_nlmixr_saem_dfop_tc_10k$nm  10     Inf</code></pre>
-<p>We can see that again, the DFOP/tc model shows the best goodness of fit. However, increasing the number of burn-in iterations from 800 to 1000 results in a higher AIC. If we further increase the number of iterations to 10 000 (burn-in) and 1000 (second phase), the AIC cannot be calculated for the nlmixr/saem fit, supporting that the fit did not converge properly.</p>
+<pre><code>                                         df     AIC
+f_parent_nlmixr_saem_sfo_const$nm         5  798.71
+f_parent_nlmixr_saem_sfo_tc$nm            6  808.64
+f_parent_nlmixr_saem_dfop_const$nm        9 1995.96
+f_parent_nlmixr_saem_dfop_tc$nm          10  664.96
+f_parent_nlmixr_saem_dfop_tc_moreiter$nm 10 4464.93
+f_parent_nlmixr_saem_dfop_tc_10k$nm      10     Inf</code></pre>
+<p>We can see that again, the DFOP/tc model shows the best goodness of fit. However, increasing the number of burn-in iterations from 800 to 1600 results in a higher AIC. If we further increase the number of iterations to 10 000 (burn-in) and 1000 (second phase), the AIC cannot be calculated for the nlmixr/saem fit, confirming that this fit does not converge properly with the SAEM algorithm.</p>
 </div>
-<div id="comparison" class="section level3">
-<h3 class="hasAnchor">
-<a href="#comparison" class="anchor"></a>Comparison</h3>
+<div class="section level4">
+<h4 id="comparison">Comparison<a class="anchor" aria-label="anchor" href="#comparison"></a>
+</h4>
 <p>The following table gives the AIC values obtained with the three packages using the same control parameters (800 iterations burn-in, 300 iterations second phase, 15 chains).</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">AIC_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
+<code class="sourceCode R"><span class="va">AIC_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>
   check.names <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="st">"Degradation model"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"SFO"</span>, <span class="st">"DFOP"</span>, <span class="st">"DFOP"</span><span class="op">)</span>,
-  <span class="st">"Error model"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"const"</span>, <span class="st">"tc"</span>, <span class="st">"const"</span>, <span class="st">"tc"</span><span class="op">)</span>,
-  nlme <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/AIC.html">AIC</a></span><span class="op">(</span><span class="va">f_parent_nlme_sfo_const</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html">AIC</a></span><span class="op">(</span><span class="va">f_parent_nlme_sfo_tc</span><span class="op">)</span>, <span class="cn">NA</span>, <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html">AIC</a></span><span class="op">(</span><span class="va">f_parent_nlme_dfop_tc</span><span class="op">)</span><span class="op">)</span>,
-  nlmixr_focei <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">f_parent_nlmixr_focei_sfo_const</span><span class="op">$</span><span class="va">nm</span>, <span class="va">f_parent_nlmixr_focei_sfo_tc</span><span class="op">$</span><span class="va">nm</span>,
+  <span class="st">"Degradation model"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"SFO"</span>, <span class="st">"DFOP"</span>, <span class="st">"DFOP"</span><span class="op">)</span>,
+  <span class="st">"Error model"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"const"</span>, <span class="st">"tc"</span>, <span class="st">"const"</span>, <span class="st">"tc"</span><span class="op">)</span>,
+  nlme <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">f_parent_nlme_sfo_const</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">f_parent_nlme_sfo_tc</span><span class="op">)</span>, <span class="cn">NA</span>, <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">f_parent_nlme_dfop_tc</span><span class="op">)</span><span class="op">)</span>,
+  nlmixr_focei <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">f_parent_nlmixr_focei_sfo_const</span><span class="op">$</span><span class="va">nm</span>, <span class="va">f_parent_nlmixr_focei_sfo_tc</span><span class="op">$</span><span class="va">nm</span>,
   <span class="va">f_parent_nlmixr_focei_dfop_const</span><span class="op">$</span><span class="va">nm</span>, <span class="va">f_parent_nlmixr_focei_dfop_tc</span><span class="op">$</span><span class="va">nm</span><span class="op">)</span>, <span class="va">AIC</span><span class="op">)</span>,
-  saemix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">f_parent_saemix_sfo_const</span><span class="op">$</span><span class="va">so</span>, <span class="va">f_parent_saemix_sfo_tc</span><span class="op">$</span><span class="va">so</span>,
+  saemix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">f_parent_saemix_sfo_const</span><span class="op">$</span><span class="va">so</span>, <span class="va">f_parent_saemix_sfo_tc</span><span class="op">$</span><span class="va">so</span>,
     <span class="va">f_parent_saemix_dfop_const</span><span class="op">$</span><span class="va">so</span>, <span class="va">f_parent_saemix_dfop_tc</span><span class="op">$</span><span class="va">so</span><span class="op">)</span>, <span class="va">AIC</span><span class="op">)</span>,
-  nlmixr_saem <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">f_parent_nlmixr_saem_sfo_const</span><span class="op">$</span><span class="va">nm</span>, <span class="va">f_parent_nlmixr_saem_sfo_tc</span><span class="op">$</span><span class="va">nm</span>,
+  nlmixr_saem <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">f_parent_nlmixr_saem_sfo_const</span><span class="op">$</span><span class="va">nm</span>, <span class="va">f_parent_nlmixr_saem_sfo_tc</span><span class="op">$</span><span class="va">nm</span>,
   <span class="va">f_parent_nlmixr_saem_dfop_const</span><span class="op">$</span><span class="va">nm</span>, <span class="va">f_parent_nlmixr_saem_dfop_tc</span><span class="op">$</span><span class="va">nm</span><span class="op">)</span>, <span class="va">AIC</span><span class="op">)</span>
 <span class="op">)</span>
 <span class="fu">kable</span><span class="op">(</span><span class="va">AIC_all</span><span class="op">)</span></code></pre></div>
@@ -460,132 +463,22 @@ f_parent_nlmixr_saem_dfop_tc_10k$nm  10     Inf</code></pre>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/nlme/man/intervals.html">intervals</a></span><span class="op">(</span><span class="va">f_parent_saemix_dfop_tc</span><span class="op">)</span></code></pre></div>
-<pre><code>Approximate 95% confidence intervals
-
- Fixed effects:
-            lower       est.      upper
-DMTA_0 96.3087887 98.2761715 100.243554
-k1      0.0336893  0.0643651   0.095041
-k2      0.0062993  0.0088001   0.011301
-g       0.9100426  0.9524920   0.994941
-
- Random effects:
-               lower      est.    upper
-sd(DMTA_0)   0.41868 2.0607469  3.70281
-sd(k1)       0.25611 0.5935653  0.93102
-sd(k2)     -10.29603 0.0029188 10.30187
-sd(g)        0.38083 1.0572543  1.73368
-
- 
-      lower     est.    upper
-a.1 0.86253 1.061610 1.260690
-b.1 0.02262 0.029666 0.036712</code></pre>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/nlme/man/intervals.html">intervals</a></span><span class="op">(</span><span class="va">f_parent_saemix_dfop_tc</span><span class="op">)</span></code></pre></div>
-<pre><code>Approximate 95% confidence intervals
-
- Fixed effects:
-            lower       est.      upper
-DMTA_0 96.3087887 98.2761715 100.243554
-k1      0.0336893  0.0643651   0.095041
-k2      0.0062993  0.0088001   0.011301
-g       0.9100426  0.9524920   0.994941
-
- Random effects:
-               lower      est.    upper
-sd(DMTA_0)   0.41868 2.0607469  3.70281
-sd(k1)       0.25611 0.5935653  0.93102
-sd(k2)     -10.29603 0.0029188 10.30187
-sd(g)        0.38083 1.0572543  1.73368
-
- 
-      lower     est.    upper
-a.1 0.86253 1.061610 1.260690
-b.1 0.02262 0.029666 0.036712</code></pre>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/nlme/man/intervals.html">intervals</a></span><span class="op">(</span><span class="va">f_parent_saemix_dfop_tc_mkin_muchmoreiter</span><span class="op">)</span></code></pre></div>
-<pre><code>Approximate 95% confidence intervals
-
- Fixed effects:
-            lower       est.      upper
-DMTA_0 96.3402070 98.2789378 100.217669
-k1      0.0397896  0.0641976   0.103578
-k2      0.0041987  0.0084427   0.016977
-g       0.8656257  0.9521509   0.983992
-
- Random effects:
-                lower    est.   upper
-sd(DMTA_0)    0.38907 2.01821 3.64735
-sd(log_k1)    0.25653 0.59512 0.93371
-sd(log_k2)   -0.20501 0.37610 0.95721
-sd(g_qlogis)  0.39712 1.18296 1.96879
-
- 
-       lower     est.    upper
-a.1 0.868558 1.070260 1.271963
-b.1 0.022461 0.029505 0.036548</code></pre>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/nlme/man/intervals.html">intervals</a></span><span class="op">(</span><span class="va">f_parent_nlmixr_saem_dfop_tc</span><span class="op">)</span></code></pre></div>
-<pre><code>Approximate 95% confidence intervals
-
- Fixed effects:
-            lower       est.      upper
-DMTA_0 96.3224806 98.2941093 100.265738
-k1      0.0402270  0.0648200   0.104448
-k2      0.0068547  0.0093928   0.012871
-g       0.8764066  0.9501419   0.980848
-
- Random effects:
-             lower     est. upper
-sd(DMTA_0)      NA 1.686509    NA
-sd(log_k1)      NA 0.592805    NA
-sd(log_k2)      NA 0.009766    NA
-sd(g_qlogis)    NA 1.082616    NA
-
- 
-          lower     est. upper
-sigma_low    NA 1.081677    NA
-rsd_high     NA 0.032073    NA</code></pre>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/nlme/man/intervals.html">intervals</a></span><span class="op">(</span><span class="va">f_parent_nlmixr_saem_dfop_tc_10k</span><span class="op">)</span></code></pre></div>
-<pre><code>Approximate 95% confidence intervals
-
- Fixed effects:
-            lower       est.      upper
-DMTA_0 96.2302085 98.1641090 100.098010
-k1      0.0398514  0.0643909   0.104041
-k2      0.0066292  0.0090784   0.012432
-g       0.8831478  0.9527284   0.981734
-
- Random effects:
-             lower       est. upper
-sd(DMTA_0)      NA 1.6257e+00    NA
-sd(log_k1)      NA 5.9627e-01    NA
-sd(log_k2)      NA 5.8400e-07    NA
-sd(g_qlogis)    NA 1.0676e+00    NA
-
- 
-          lower     est. upper
-sigma_low    NA 1.087722    NA
-rsd_high     NA 0.031883    NA</code></pre>
 </div>
 </div>
 </div>
-<div id="references" class="section level1">
-<h1 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h1>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
 <!-- vim: set foldmethod=syntax: -->
 <div id="refs" class="references hanging-indent">
 <div id="ref-efsa_2018_dimethenamid">
 <p>EFSA. 2018. “Peer Review of the Pesticide Risk Assessment of the Active Substance Dimethenamid-P.” <em>EFSA Journal</em> 16 (4): 5211.</p>
 </div>
 <div id="ref-ranke2021">
-<p>Ranke, Johannes, Janina Wöltjen, Jana Schmidt, and Emmanuelle Comets. 2021. “Taking Kinetic Evaluations of Degradation Data to the Next Level with Nonlinear Mixed-Effects Models.” <em>Environments</em> 8 (8). <a href="https://doi.org/10.3390/environments8080071">https://doi.org/10.3390/environments8080071</a>.</p>
+<p>Ranke, Johannes, Janina Wöltjen, Jana Schmidt, and Emmanuelle Comets. 2021. “Taking Kinetic Evaluations of Degradation Data to the Next Level with Nonlinear Mixed-Effects Models.” <em>Environments</em> 8 (8). <a href="https://doi.org/10.3390/environments8080071" class="external-link">https://doi.org/10.3390/environments8080071</a>.</p>
 </div>
 <div id="ref-dimethenamid_rar_2018_b8">
-<p>Rapporteur Member State Germany, Co-Rapporteur Member State Bulgaria. 2018. “Renewal Assessment Report Dimethenamid-P Volume 3 - B.8 Environmental fate and behaviour, Rev. 2 - November 2017.” <a href="https://open.efsa.europa.eu/study-inventory/EFSA-Q-2014-00716">https://open.efsa.europa.eu/study-inventory/EFSA-Q-2014-00716</a>.</p>
+<p>Rapporteur Member State Germany, Co-Rapporteur Member State Bulgaria. 2018. “Renewal Assessment Report Dimethenamid-P Volume 3 - B.8 Environmental fate and behaviour, Rev. 2 - November 2017.” <a href="https://open.efsa.europa.eu/study-inventory/EFSA-Q-2014-00716" class="external-link">https://open.efsa.europa.eu/study-inventory/EFSA-Q-2014-00716</a>.</p>
 </div>
 </div>
 </div>
@@ -602,11 +495,13 @@ rsd_high     NA 0.031883    NA</code></pre>
 
 
       <footer><div class="copyright">
-  <p>Developed by Johannes Ranke.</p>
+  <p></p>
+<p>Developed by Johannes Ranke.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -614,6 +509,8 @@ rsd_high     NA 0.031883    NA</code></pre>
 
   
 
+
+  
 
   </body>
 </html>
