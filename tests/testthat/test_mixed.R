@@ -41,7 +41,7 @@ test_that("saemix results are reproducible for biphasic fits", {
   test_summary$date.summary <- "Dummy date for testing"
   test_summary$time <- c(elapsed = "test time 0")
 
-  expect_known_output(print(test_summary, digits = 2), "summary_saem_biphasic_s.txt")
+  expect_known_output(print(test_summary, digits = 1), "summary_saem_biphasic_s.txt")
 
   dfop_sfo_pop <- as.numeric(dfop_sfo_pop)
   no_k1 <- c(1, 2, 3, 5, 6)
