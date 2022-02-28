@@ -201,7 +201,9 @@ print.summary.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3)
 
   cat("\nModel predictions using solution type", x$solution_type, "\n")
 
-  cat("\nFitted in", x$time[["elapsed"]],  "s using", paste(x$so@options$nbiter.saemix, collapse = ", "), "iterations\n")
+  cat("\nFitted in", x$time[["elapsed"]],  "s\n")
+  cat("Using", paste(x$so@options$nbiter.saemix, collapse = ", "), 
+    "iterations and", x$so@options$nb.chains, "chains\n")
 
   cat("\nVariance model: ")
   cat(switch(x$err_mod,
