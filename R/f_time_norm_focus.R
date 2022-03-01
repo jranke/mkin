@@ -107,7 +107,6 @@ f_time_norm_focus.mkindsg <- function(object,
   object$f_time_norm <- f_time_norm_focus(meta$temperature,
     moisture = study_moisture, field_moisture = field_moisture,
     Q10 = Q10, walker = walker, f_na = f_na)
-  cat("$time_norm was set to\n")
-  print(object$f_time_norm)
+  message("$f_time_norm was (re)set to normalised values")
   invisible(object$f_time_norm)
 }
