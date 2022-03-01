@@ -193,7 +193,7 @@ nlme.mmkin <- function(model, data = "auto",
   val$mkinmod <- model[[1]]$mkinmod
   val$data <- thisCall[["data"]]
   val$mmkin <- model
-  val$mean_dp_start <- start$fixed
+  val$mean_dp_start <- ifelse(is.list(start), start$fixed, start)
   val$transform_rates <- model[[1]]$transform_rates
   val$transform_fractions <- model[[1]]$transform_fractions
   val$solution_type <- model[[1]]$solution_type
