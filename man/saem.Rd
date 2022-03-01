@@ -34,6 +34,7 @@ saemix_model(
   transformations = c("mkin", "saemix"),
   degparms_start = numeric(),
   test_log_parms = FALSE,
+  conf.level = 0.6,
   verbose = FALSE,
   ...
 )

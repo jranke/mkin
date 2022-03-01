@@ -204,10 +204,10 @@ saem_biphasic_m <- saem(mmkin_biphasic, transformations = "mkin", quiet = TRUE)
 saem_biphasic_s <- saem(mmkin_biphasic, transformations = "saemix", quiet = TRUE)
 
 # nlmixr saem
-tmp <- capture_output(nlmixr_saem_biphasic <- nlmixr(mmkin_biphasic, est = "saem",
-    control = nlmixr::saemControl(nBurn = 300, nEm = 100, nmc = 9, print = 0)))
-tmp <- capture_output(nlmixr_saem_biphasic_tc <- nlmixr(mmkin_biphasic_tc, est = "saem",
-    control = nlmixr::saemControl(nBurn = 300, nEm = 100, nmc = 9, print = 0)))
+tmp <- suppressMessages(capture.output(nlmixr_saem_biphasic <- nlmixr(mmkin_biphasic, est = "saem",
+    control = nlmixr::saemControl(nBurn = 300, nEm = 100, nmc = 9, print = 0))))
+tmp <- suppressMessages(capture.output(nlmixr_saem_biphasic_tc <- nlmixr(mmkin_biphasic_tc, est = "saem",
+    control = nlmixr::saemControl(nBurn = 300, nEm = 100, nmc = 9, print = 0))))
 # The FOCEI fit takes too long...
 #tmp <- capture_output(nlmixr_focei_biphasic <- nlmixr(mmkin_biphasic, est = "focei",
 #    control = nlmixr::foceiControl(print = 0)))

@@ -139,8 +139,9 @@ dmta_sfo_sfo3p_tc <- mmkin(list("SFO-SFO3+" = sfo_sfo3p),
 
 test_that("Different backends get consistent results for SFO-SFO3+, dimethenamid data", {
 
-  nlme_sfo_sfo3p_tc <- nlme(dmta_sfo_sfo3p_tc,
-    start = mean_degparms(dmta_sfo_sfo3p_tc, test_log_parms = TRUE))
+  expect_warning(nlme_sfo_sfo3p_tc <- nlme(dmta_sfo_sfo3p_tc,
+    start = mean_degparms(dmta_sfo_sfo3p_tc, test_log_parms = TRUE)),
+    "Iteration 5, LME step.*not converge")
   ints_nlme_mets <- intervals(nlme_sfo_sfo3p_tc, which = "fixed")
 
   skip("Fitting this ODE model with saemix takes about 15 minutes on my system")
