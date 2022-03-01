@@ -111,7 +111,7 @@ test_that("Different backends get consistent results for DFOP tc, dimethenamid d
       ints_nlme$varStruct[, "upper"]))
 
   # nlmixr focei vs. nlme
-  # We only test for the proportional part (rsd_high), as the 
+  # We only test for the proportional part (rsd_high), as the
   # constant part (sigma_low) obtained with nlmixr/FOCEI is below the lower
   # bound of the confidence interval obtained with nlme
   expect_true(ints_nlmixr_focei[[3]]["rsd_high", "est."] >
@@ -120,48 +120,50 @@ test_that("Different backends get consistent results for DFOP tc, dimethenamid d
       ints_nlme$varStruct["prop", "upper"])
 })
 
-# Model definition from the 2020 paper https://doi.org/10.3390/environments8080071 
-# But note the data are different, as we did not pool the data from the same soils
-# for the paper
-# The model is called DFOP-SFO3+ in the paper
-dfop_sfo3p <- mkinmod(
-  DMTA = mkinsub("DFOP", c("M23", "M27", "M31")),
+# Compared to the 2020 paper https://doi.org/10.3390/environments8080071
+# the data are different, as there was an error in the handling of the
+# Borstel data in the mkin package at the time.
+# The model called DFOP-SFO3+ in the paper appears to be overparameterised with
+# the corrected data, we get lots of problems trying to use it with mmkin, nlme
+# and saemix
+sfo_sfo3p <- mkinmod(
+  DMTA = mkinsub("SFO", c("M23", "M27", "M31")),
   M23 = mkinsub("SFO"),
   M27 = mkinsub("SFO"),
   M31 = mkinsub("SFO", "M27", sink = FALSE),
   quiet = TRUE
 )
-dfop_sfo3 <- mkinmod(
-  DMTA = mkinsub("DFOP", c("M23", "M27", "M31")),
-  M23 = mkinsub("SFO"),
-  M27 = mkinsub("SFO"),
-  M31 = mkinsub("SFO"),
-  quiet = TRUE
-)
 
-# The following is work in progress
-#dmta_dfop_sfo3p_tc <- mmkin(list("DFOP-SFO3+" = dfop_sfo3p),
-#  dmta_ds, error_model = "tc", quiet = TRUE)
-# The Borstel dataset give false convergence
-#dmta_dfop_sfo3_tc <- mmkin(list("DFOP-SFO3" = dfop_sfo3),
-#  dmta_ds, error_model = "tc", quiet = TRUE)
-# We get convergence in all soils
+dmta_sfo_sfo3p_tc <- mmkin(list("SFO-SFO3+" = sfo_sfo3p),
+  dmta_ds, error_model = "tc", quiet = TRUE)
 
-#test_that("Different backends get consistent results for DFOP-SFO3+, dimethenamid data", {
+test_that("Different backends get consistent results for SFO-SFO3+, dimethenamid data", {
 
-  # nlme needs some help to converge
-#  nlme_dfop_sfo3p_tc <- nlme(dmta_dfop_sfo3p_tc,
-#    control = list(pnlsMaxIter = 30, tolerance = 3e-3))
-#  ints_nlme_dfop_sfo3p_tc <- intervals(nlme_dfop_sfo3p_tc, which = "fixed")
+  nlme_sfo_sfo3p_tc <- nlme(dmta_sfo_sfo3p_tc,
+    start = mean_degparms(dmta_sfo_sfo3p_tc, test_log_parms = TRUE))
+  ints_nlme_mets <- intervals(nlme_sfo_sfo3p_tc, which = "fixed")
 
-  # saemix does not succeed with these data, we get problems
-  # with the deSolve solutions, depending on the seed:
-  # Error in lsoda(y, times, func, parms, ...) :
-  #  illegal input detected before taking any integration steps - see
-  #  written message
-  # or:
-  # Error in out[available, var] : (subscript) logical subscript too long
-  #saem_saemix_dfop_sfo3p_tc <- saem(dmta_dfop_sfo3p_tc)
+  skip("Fitting this ODE model with saemix takes about 15 minutes on my system")
+  # As DFOP is overparameterised and leads to instabilities and errors, we
+  # need to use SFO.
+  # saem_saemix_sfo_sfo3p_tc <- saem(dmta_sfo_sfo3p_tc)
+  # The fit above, using SFO for the parent leads to low values of DMTA_0
+  # (confidence interval from 84.4 to 92.8) which is not consistent with what
+  # we know about this value.  Therefore, we fix it to the initial estimate
+  # obtained from the separate fits (95.6)
+  saem_saemix_sfo_sfo3p_tc_DMTA_0_fixed <- saem(dmta_sfo_sfo3p_tc,
+    fixed.estim = c(0, rep(1, 7)))
+  ints_saemix_mets <- intervals(saem_saemix_sfo_sfo3p_tc_DMTA_0_fixed)
 
-#})
+  # We need to exclude the ilr transformed formation fractions in these
+  # tests, as they do not have a one to one relation in the transformations
+  expect_true(all(ints_saemix_mets$fixed[, "est."][-c(6, 7, 8)] >
+      backtransform_odeparms(ints_nlme_mets$fixed[, "lower"][-c(6, 7, 8)], sfo_sfo3p)))
+  expect_true(all(ints_saemix_mets$fixed[, "est."][-c(6, 7, 8)] <
+      backtransform_odeparms(ints_nlme_mets$fixed[, "upper"], sfo_sfo3p)[-c(6, 7, 8)]))
+
+  # The model is not supported by nlmixr.mmkin
+  #saem_nlmixr_sfo_sfo3p_tc <- nlmixr(dmta_sfo_sfo3p_tc, est = "saem")
+
+})
 
