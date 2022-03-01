@@ -186,6 +186,8 @@ ds_biphasic <- lapply(ds_biphasic_mean, function(ds) {
 mmkin_sfo_1 <- mmkin("SFO", ds_sfo, quiet = TRUE, error_model = "tc", cores = n_cores)
 mmkin_dfop_1 <- mmkin("DFOP", ds_dfop, quiet = TRUE, cores = n_cores)
 mmkin_biphasic <- mmkin(list("DFOP-SFO" = DFOP_SFO), ds_biphasic, quiet = TRUE, cores = n_cores)
+mmkin_biphasic_tc <- mmkin(list("DFOP-SFO" = DFOP_SFO), ds_biphasic, quiet = TRUE, cores = n_cores,
+  error_model = "tc")
 mmkin_biphasic_mixed <- mixed(mmkin_biphasic)
 
 # nlme
@@ -203,6 +205,8 @@ saem_biphasic_s <- saem(mmkin_biphasic, transformations = "saemix", quiet = TRUE
 
 # nlmixr saem
 tmp <- capture_output(nlmixr_saem_biphasic <- nlmixr(mmkin_biphasic, est = "saem",
+    control = nlmixr::saemControl(nBurn = 300, nEm = 100, nmc = 9, print = 0)))
+tmp <- capture_output(nlmixr_saem_biphasic_tc <- nlmixr(mmkin_biphasic_tc, est = "saem",
     control = nlmixr::saemControl(nBurn = 300, nEm = 100, nmc = 9, print = 0)))
 # The FOCEI fit takes too long...
 #tmp <- capture_output(nlmixr_focei_biphasic <- nlmixr(mmkin_biphasic, est = "focei",

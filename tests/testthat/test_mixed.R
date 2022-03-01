@@ -83,6 +83,8 @@ test_that("nlmixr results are reproducible for biphasic fits", {
   test_summary$date.summary <- "Dummy date for testing"
   test_summary$time <- c(elapsed = "test time 0")
 
+  expect_known_output(print(nlmixr_saem_biphasic, digits = 1), "print_nlmixr_saem_biphasic.txt")
+  expect_known_output(print(nlmixr_saem_biphasic_tc, digits = 1), "print_nlmixr_saem_biphasic_tc.txt")
   expect_known_output(print(test_summary, digits = 1), "summary_nlmixr_saem_biphasic.txt")
 })
 
