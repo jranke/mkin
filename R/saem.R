@@ -236,7 +236,7 @@ print.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3), ...) {
 #' @return An [saemix::SaemixModel] object.
 #' @export
 saemix_model <- function(object, solution_type = "auto", transformations = c("mkin", "saemix"),
-  degparms_start = numeric(), test_log_parms = FALSE, verbose = FALSE, ...)
+  degparms_start = numeric(), test_log_parms = FALSE, conf.level = 0.6, verbose = FALSE, ...)
 {
   if (packageVersion("saemix") < "3.0") {
     stop("To use the interface to saemix, you need to install a version >= 3.0\n")
@@ -517,7 +517,8 @@ saemix_model <- function(object, solution_type = "auto", transformations = c("mk
     "Mixed model generated from mmkin object",
     transform.par = transform.par,
     error.model = error.model,
-    verbose = verbose
+    verbose = verbose,
+    ...
   )
   attr(res, "mean_dp_start") <- degparms_optim
   return(res)
