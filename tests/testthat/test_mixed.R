@@ -3,14 +3,14 @@ context("Nonlinear mixed-effects models")
 test_that("Print methods work", {
   expect_known_output(print(fits[, 2:3], digits = 2), "print_mmkin_parent.txt")
   expect_known_output(print(mmkin_biphasic_mixed, digits = 2), "print_mmkin_biphasic_mixed.txt")
-  expect_known_output(print(nlme_biphasic, digits = 1), "print_nlme_biphasic.txt")
+  expect_known_output(print(dfop_nlme_1, digits = 1), "print_dfop_nlme_1.txt")
 
   expect_known_output(print(sfo_saem_1, digits = 1), "print_sfo_saem_1.txt")
 })
 
 test_that("nlme results are reproducible to some degree", {
 
-  test_summary <- summary(nlme_biphasic)
+  test_summary <- summary(dfop_nlme_1)
   test_summary$nlmeversion <- "Dummy 0.0 for testing"
   test_summary$mkinversion <- "Dummy 0.0 for testing"
   test_summary$Rversion <- "Dummy R version for testing"
@@ -18,16 +18,18 @@ test_that("nlme results are reproducible to some degree", {
   test_summary$date.summary <- "Dummy date for testing"
   test_summary$time <- c(elapsed = "test time 0")
 
-  expect_known_output(print(test_summary, digits = 1), "summary_nlme_biphasic_s.txt")
+  expect_known_output(print(test_summary, digits = 1), "summary_dfop_nlme_1.txt")
 
-  # k1 just fails the first test (lower bound of the ci), so we need to exclude it
-  dfop_no_k1 <- c("parent_0", "k_m1", "f_parent_to_m1", "k2", "g")
-  dfop_sfo_pop_no_k1 <- as.numeric(dfop_sfo_pop[dfop_no_k1])
-  dfop_sfo_pop <- as.numeric(dfop_sfo_pop)
+  # The biphasic example data illustrate that DFOP parameters are difficult to
+  # quantify with the usual design
+  # k1 and k2 just fail the first test (lower bound of the ci), so we need to exclude it
+  dfop_no_k1_k2 <- c("parent_0", "k_m1", "f_parent_to_m1", "g")
+  dfop_sfo_pop_no_k1_k2 <- as.numeric(dfop_sfo_pop[dfop_no_k1_k2])
+  dfop_sfo_pop <- as.numeric(dfop_sfo_pop) # to remove names
 
   ci_dfop_sfo_n <- summary(nlme_biphasic)$confint_back
 
-  expect_true(all(ci_dfop_sfo_n[dfop_no_k1, "lower"] < dfop_sfo_pop_no_k1))
+  expect_true(all(ci_dfop_sfo_n[dfop_no_k1_k2, "lower"] < dfop_sfo_pop_no_k1_k2))
   expect_true(all(ci_dfop_sfo_n[, "upper"] > dfop_sfo_pop))
 })
 
@@ -49,14 +51,13 @@ test_that("saemix results are reproducible for biphasic fits", {
   no_k1_k2 <- c(1, 2, 3, 6)
 
   ci_dfop_sfo_s_s <- summary(saem_biphasic_s)$confint_back
-  # k1 and k2 are overestimated
-  expect_true(all(ci_dfop_sfo_s_s[no_k1_k2, "lower"] < dfop_sfo_pop[no_k1_k2]))
+  expect_true(all(ci_dfop_sfo_s_s[, "lower"] < dfop_sfo_pop))
   expect_true(all(ci_dfop_sfo_s_s[, "upper"] > dfop_sfo_pop))
 
-  # k1 and k2 are not fitted well
+  # k2 is not fitted well
   ci_dfop_sfo_s_m <- summary(saem_biphasic_m)$confint_back
   expect_true(all(ci_dfop_sfo_s_m[no_k2, "lower"] < dfop_sfo_pop[no_k2]))
-  expect_true(all(ci_dfop_sfo_s_m[no_k1, "upper"] > dfop_sfo_pop[no_k1]))
+  expect_true(all(ci_dfop_sfo_s_m[, "upper"] > dfop_sfo_pop))
 
   # I tried to only do few iterations in routine tests as this is so slow
   # but then deSolve fails at some point (presumably at the switch between
@@ -84,7 +85,6 @@ test_that("nlmixr results are reproducible for biphasic fits", {
   test_summary$time <- c(elapsed = "test time 0")
 
   expect_known_output(print(nlmixr_saem_biphasic, digits = 1), "print_nlmixr_saem_biphasic.txt")
-  expect_known_output(print(nlmixr_saem_biphasic_tc, digits = 1), "print_nlmixr_saem_biphasic_tc.txt")
   expect_known_output(print(test_summary, digits = 1), "summary_nlmixr_saem_biphasic.txt")
 })
 

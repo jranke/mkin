@@ -9,5 +9,6 @@ test_that("An mkindsg object can be created and printed", {
   testdata_group <- mkindsg$new("Experimental X", experimental_data_for_UBA_2019[6:10])
   expect_known_output(print(testdata_group), "experimental_data_for_UBA_2019_mkindsg.txt")
 
+  skip_on_cran() # we get uneven spacing on winbuilder for some reason (2022-03-02, R 4.1.2)
   expect_known_output(print(dimethenamid_2018), "dimethenamid_2018.txt")
 })

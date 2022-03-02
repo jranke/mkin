@@ -156,7 +156,6 @@ nlmixr::nlmixr
 #' # lowest AIC
 #' plot(f_nlmixr_fomc_sfo_focei_obs_tc)
 #' summary(f_nlmixr_fomc_sfo_focei_obs_tc)
-#' }
 #'
 #' # Two parallel metabolites
 #' dmta_ds <- lapply(1:7, function(i) {
@@ -180,7 +179,7 @@ nlmixr::nlmixr
 #'   dmta_ds, quiet = TRUE, error_model = "obs")
 #' nlmixr_model(f_dmta_sfo_sfo2)
 #' nlmixr_focei_dmta_sfo_sfo2 <- nlmixr(f_dmta_sfo_sfo2, est = "focei")
-#'
+#' }
 #' @export
 nlmixr.mmkin <- function(object, data = NULL,
   est = NULL, control = list(),

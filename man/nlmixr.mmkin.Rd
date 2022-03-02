@@ -215,7 +215,6 @@ AIC(
 # lowest AIC
 plot(f_nlmixr_fomc_sfo_focei_obs_tc)
 summary(f_nlmixr_fomc_sfo_focei_obs_tc)
-}
 
 # Two parallel metabolites
 dmta_ds <- lapply(1:7, function(i) {
@@ -239,7 +238,7 @@ f_dmta_sfo_sfo2 <- mmkin(
   dmta_ds, quiet = TRUE, error_model = "obs")
 nlmixr_model(f_dmta_sfo_sfo2)
 nlmixr_focei_dmta_sfo_sfo2 <- nlmixr(f_dmta_sfo_sfo2, est = "focei")
-
+}
 }
 \seealso{
 \link{summary.nlmixr.mmkin} \link{plot.mixed.mmkin}
