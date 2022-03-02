@@ -17,6 +17,7 @@ dmta_dfop_tc <- mmkin("DFOP", dmta_ds, error_model = "tc", quiet = TRUE)
 
 test_that("Different backends get consistent results for DFOP tc, dimethenamid data", {
 
+  skip_on_cran() # Time constraints
   # nlme
   expect_warning(
     nlme_dfop_tc <- nlme(dmta_dfop_tc),
@@ -141,6 +142,7 @@ dmta_sfo_sfo3p_tc <- mmkin(list("SFO-SFO3+" = sfo_sfo3p),
 
 test_that("Different backends get consistent results for SFO-SFO3+, dimethenamid data", {
 
+  skip_on_cran() # Time constraints
   expect_warning(nlme_sfo_sfo3p_tc <- nlme(dmta_sfo_sfo3p_tc,
     start = mean_degparms(dmta_sfo_sfo3p_tc, test_log_parms = TRUE)),
     "Iteration 5, LME step.*not converge")
