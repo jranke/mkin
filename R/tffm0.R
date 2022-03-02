@@ -1,15 +1,18 @@
 #' Transform formation fractions as in the first published mkin version
 #'
-#' The transformed fractions can be restricted between 0 and 1 in model
-#' optimisations. Therefore this transformation was used originally in mkin. It
-#' was later replaced by the [ilr] transformation because the ilr transformed
+#' This transformation was used originally in mkin, in order to implement a
+#' constraint for the sum of formation fractions to be smaller than 1.  It was
+#' later replaced by the [ilr] transformation because the ilr transformed
 #' fractions can assumed to follow normal distribution. As the ilr
 #' transformation is not available in [RxODE] and can therefore not be used in
-#' the nlmixr modelling language, this transformation is currently used for
-#' translating mkin models with formation fractions to more than one target
-#' compartment for fitting with nlmixr in [nlmixr_model]. However,
-#' this implementation cannot be used there, as it is not accessible
-#' from RxODE.
+#' the nlmixr modelling language, the original transformation is currently used
+#' for translating mkin models with formation fractions to more than one target
+#' compartment for fitting with nlmixr in [nlmixr_model]. However, this
+#' implementation cannot be used there, as it is not accessible from RxODE.
+#' 
+#' If the transformed formation fractions are restricted to the interval
+#' between 0 and 1, the sum of backtransformed values is restricted
+#' to this interval.
 #'
 #' @param ff Vector of untransformed formation fractions. The sum
 #'   must be smaller or equal to one
