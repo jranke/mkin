@@ -144,6 +144,19 @@ test_that("Different backends get consistent results for SFO-SFO3+, dimethenamid
     "Iteration 5, LME step.*not converge")
   ints_nlme_mets <- intervals(nlme_sfo_sfo3p_tc, which = "fixed")
 
+  # The saem fit with nlmixr takes only about 15 seconds
+  tmp <- capture.output(
+    saem_nlmixr_sfo_sfo3p_tc <- nlmixr(dmta_sfo_sfo3p_tc, est = "saem",
+      control = nlmixr::saemControl(print = 0)))
+  ints_nlmixr_saem_mets <- intervals(saem_nlmixr_sfo_sfo3p_tc)
+
+  # We need to exclude the ilr transformed formation fractions in these
+  # tests, as they do not have a one to one relation in the transformations
+  expect_true(all(ints_nlmixr_saem_mets$fixed[, "est."][-c(6, 7, 8)] >
+      backtransform_odeparms(ints_nlme_mets$fixed[, "lower"][-c(6, 7, 8)], sfo_sfo3p)))
+  expect_true(all(ints_nlmixr_saem_mets$fixed[, "est."][-c(6, 7, 8)] <
+      backtransform_odeparms(ints_nlme_mets$fixed[, "upper"], sfo_sfo3p)[-c(6, 7, 8)]))
+
   skip("Fitting this ODE model with saemix takes about 15 minutes on my system")
   # As DFOP is overparameterised and leads to instabilities and errors, we
   # need to use SFO.
@@ -156,15 +169,13 @@ test_that("Different backends get consistent results for SFO-SFO3+, dimethenamid
     fixed.estim = c(0, rep(1, 7)))
   ints_saemix_mets <- intervals(saem_saemix_sfo_sfo3p_tc_DMTA_0_fixed)
 
-  # We need to exclude the ilr transformed formation fractions in these
+  # Again, we need to exclude the ilr transformed formation fractions in these
   # tests, as they do not have a one to one relation in the transformations
   expect_true(all(ints_saemix_mets$fixed[, "est."][-c(6, 7, 8)] >
       backtransform_odeparms(ints_nlme_mets$fixed[, "lower"][-c(6, 7, 8)], sfo_sfo3p)))
   expect_true(all(ints_saemix_mets$fixed[, "est."][-c(6, 7, 8)] <
       backtransform_odeparms(ints_nlme_mets$fixed[, "upper"], sfo_sfo3p)[-c(6, 7, 8)]))
 
-  # The model is not supported by nlmixr.mmkin
-  #saem_nlmixr_sfo_sfo3p_tc <- nlmixr(dmta_sfo_sfo3p_tc, est = "saem")
 
 })
 

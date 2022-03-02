@@ -157,6 +157,30 @@ nlmixr::nlmixr
 #' plot(f_nlmixr_fomc_sfo_focei_obs_tc)
 #' summary(f_nlmixr_fomc_sfo_focei_obs_tc)
 #' }
+#'
+#' # Two parallel metabolites
+#' dmta_ds <- lapply(1:7, function(i) {
+#'   ds_i <- dimethenamid_2018$ds[[i]]$data
+#'   ds_i[ds_i$name == "DMTAP", "name"] <-  "DMTA"
+#'   ds_i$time <- ds_i$time * dimethenamid_2018$f_time_norm[i]
+#'   ds_i
+#' })
+#' names(dmta_ds) <- sapply(dimethenamid_2018$ds, function(ds) ds$title)
+#' dmta_ds[["Elliot"]] <- rbind(dmta_ds[["Elliot 1"]], dmta_ds[["Elliot 2"]])
+#' dmta_ds[["Elliot 1"]] <- NULL
+#' dmta_ds[["Elliot 2"]] <- NULL
+#' sfo_sfo2 <- mkinmod(
+#'   DMTA = mkinsub("SFO", c("M23", "M27")),
+#'   M23 = mkinsub("SFO"),
+#'   M27 = mkinsub("SFO"),
+#'   quiet = TRUE
+#' )
+#' f_dmta_sfo_sfo2 <- mmkin(
+#'   list("SFO-SFO2" = sfo_sfo2),
+#'   dmta_ds, quiet = TRUE, error_model = "obs")
+#' nlmixr_model(f_dmta_sfo_sfo2)
+#' nlmixr_focei_dmta_sfo_sfo2 <- nlmixr(f_dmta_sfo_sfo2, est = "focei")
+#'
 #' @export
 nlmixr.mmkin <- function(object, data = NULL,
   est = NULL, control = list(),
@@ -452,11 +476,15 @@ nlmixr_model <- function(object,
 
   # Population initial values for logit transformed parameters
   for (parm_name in grep("_qlogis$", names(degparms_start), value = TRUE)) {
-    parm_name_new <- names(
+    if (grepl("_tffm0_", parm_name)) {
+      parm_name_new <- gsub("_qlogis$", "", parm_name)
+    } else {
+      parm_name_new <- names(
       backtransform_odeparms(degparms_start[parm_name],
         object[[1]]$mkinmod,
         object[[1]]$transform_rates,
         object[[1]]$transform_fractions))
+    }
     model_block <- paste0(
       model_block,
       parm_name_new, " = ",
