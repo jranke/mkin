@@ -2,7 +2,7 @@ context("Nonlinear mixed-effects models")
 
 test_that("Print methods work", {
   expect_known_output(print(fits[, 2:3], digits = 2), "print_mmkin_parent.txt")
-  expect_known_output(print(mmkin_biphasic_mixed, digits = 2), "print_mmkin_biphasic_mixed.txt")
+  expect_known_output(print(mixed(mmkin_sfo_1), digits = 2), "print_mmkin_sfo_1_mixed.txt")
   expect_known_output(print(dfop_nlme_1, digits = 1), "print_dfop_nlme_1.txt")
 
   expect_known_output(print(sfo_saem_1, digits = 1), "print_sfo_saem_1.txt")

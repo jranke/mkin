@@ -57,6 +57,9 @@ build-no-vignettes: $(TGZVNR)
 install: build
 	"$(RBIN)/R" CMD INSTALL $(TGZ)
 
+devinstall: build
+	"$(RDEVBIN)/R" CMD INSTALL $(TGZ)
+
 quickinstall: build-no-vignettes
 	"$(RBIN)/R" CMD INSTALL $(TGZVNR)
 
@@ -82,7 +85,7 @@ test: install
 	"$(RBIN)/Rscript" -e 'options(cli.dynamic = TRUE); devtools::test()' 2>&1 | tee test.log
 	sed -i -e "s/.*\r.*\r//" test.log
 
-devtest: install
+devtest: devinstall
 	"$(RDEVBIN)/Rscript" -e 'options(cli.dynamic = TRUE); devtools::test()' 2>&1 | tee test_dev.log
 	sed -i -e "s/\r.*\r//" test_dev.log
 

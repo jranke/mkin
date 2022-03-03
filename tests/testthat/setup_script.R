@@ -187,7 +187,6 @@ mmkin_sfo_1 <- mmkin("SFO", ds_sfo, quiet = TRUE, error_model = "tc", cores = n_
 mmkin_dfop_1 <- mmkin("DFOP", ds_dfop, quiet = TRUE, cores = n_cores)
 mmkin_biphasic <- mmkin(list("DFOP-SFO" = DFOP_SFO), ds_biphasic, quiet = TRUE, cores = n_cores,
   error_model = "tc")
-mmkin_biphasic_mixed <- mixed(mmkin_biphasic)
 
 # nlme
 dfop_nlme_1 <- nlme(mmkin_dfop_1)
