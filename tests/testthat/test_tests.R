@@ -57,14 +57,21 @@ test_that("Updating fitted models works", {
 })
 
 test_that("We can do a likelihood ratio test using an update specification", {
-  skip("This test assigns to globalenv() to work in testthat")
-  # The following two assignments were made so the update.mkinfit function called
-  # by lrtest.mkinfit finds these objects when lrtest.mkinfit is called by
-  # testthat
-  assign("f_2_mkin", f_2_mkin, globalenv())
-  assign("DFOP_par_c", DFOP_par_c, globalenv())
-  test_2_mkin_k2 <- lrtest(f_2_mkin, fixed_parms = c(k2 = 0))
+  # The following commented assignments were made so the update.mkinfit
+  # function called by lrtest.mkinfit finds these objects when lrtest.mkinfit
+  # is called by testthat.
+  # assign("f_2_mkin", f_2_mkin, globalenv())
+  # assign("DFOP_par_c", DFOP_par_c, globalenv())
+
+  # As we should not risk overwriting something in the global environment, we use a
+  # workaround for these tests.
+
+  #test_2_mkin_k2 <- lrtest(f_2_mkin, fixed_parms = c(k2 = 0))
+  test_2_mkin_k2 <- lrtest(f_2_mkin, update(f_2_mkin, fixed_parms = c(k2 = 0)))
   expect_equivalent(test_2_mkin_k2[["2", "Pr(>Chisq)"]], 4.851e-8, tolerance = 1e-8)
-  test_2_mkin_tc <- lrtest(f_2_mkin, error_model = "tc")
+
+  #test_2_mkin_tc <- lrtest(f_2_mkin, error_model = "tc")
+  test_2_mkin_tc <- lrtest(f_2_mkin, update(f_2_mkin, error_model = "tc"))
   expect_equivalent(test_2_mkin_tc[["2", "Pr(>Chisq)"]], 7.302e-5, tolerance = 1e-7)
+
 })
