@@ -20,7 +20,7 @@
 #' @source Hellenic Ministry of Rural Development and Agriculture (2014)
 #'   Final addendum to the Renewal Assessment Report - public version - 2,4-D
 #'   Volume 3 Annex B.8 Fate and behaviour in the environment
-#'   \url{http://registerofquestions.efsa.europa.eu/roqFrontend/outputLoader?output=ON-3812}
+#'   \url{https://open.efsa.europa.eu/study-inventory/EFSA-Q-2013-00811}
 #' @examples
 #' print(D24_2014)
 #' \dontrun{
