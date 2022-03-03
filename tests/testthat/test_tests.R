@@ -57,6 +57,7 @@ test_that("Updating fitted models works", {
 })
 
 test_that("We can do a likelihood ratio test using an update specification", {
+  skip("This test assigns to globalenv() to work in testthat")
   # The following two assignments were made so the update.mkinfit function called
   # by lrtest.mkinfit finds these objects when lrtest.mkinfit is called by
   # testthat
