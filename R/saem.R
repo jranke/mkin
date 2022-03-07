@@ -227,7 +227,8 @@ print.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3), ...) {
   cat("\nFitted parameters:\n")
   conf.int <- x$so@results@conf.int[c("estimate", "lower", "upper")]
   rownames(conf.int) <- x$so@results@conf.int[["name"]]
-  print(conf.int, digits = digits)
+  conf.int.var <- grepl("^Var\\.", rownames(conf.int))
+  print(conf.int[!conf.int.var, ], digits = digits)
 
   invisible(x)
 }

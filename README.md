@@ -96,9 +96,16 @@ version is found in the ['dev' subdirectory](https://pkgdown.jrwb.de/mkin/dev/).
   interpretation of the model parameters.
 * Nonlinear mixed-effects models can be created from fits of the same degradation
   model to different datasets for the same compound by using the
-  [nlme.mmkin](https://pkgdown.jrwb.de/mkin/reference/nlme.mmkin.html) method.
-  Note that the convergence of the nlme fits depends on the quality of the data.
-  Convergence is better for simple models and data for many groups (e.g. soils).
+  [nlme.mmkin](https://pkgdown.jrwb.de/mkin/reference/nlme.mmkin.html) and
+  [saem.mmkin](https://pkgdown.jrwb.de/mkin/reference/saem.mmkin.html) and
+  methods. Note that the convergence of the nlme fits depends on the quality of
+  the data. Convergence is better for simple models and data for many groups
+  (e.g. soils). The saem method uses the `saemix` package as a backend. Analytical
+  solutions suitable for use with this package have been implemented for parent
+  only models and the most important models including one metabolite (SFO-SFO
+  and DFOP-SFO). Fitting other models with `saem.mmkin`, while it makes use
+  of the compiled ODE models that mkin provides, has longer run times (at least
+  six minutes on my system).
 
 ### Performance
 

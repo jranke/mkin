@@ -1,7 +1,7 @@
 ---
 title: Example evaluations of the dimethenamid data from 2018
 author: Johannes Ranke
-date: Last change 10 February 2022, built on `r format(Sys.Date(), format = "%d %b %Y")`
+date: Last change 7 March 2022, built on `r Sys.setlocale("LC_TIME", "C"); format(Sys.Date(), format = "%d %b %Y")`
 output:
   html_document:
     toc: true
@@ -30,14 +30,18 @@ opts_chunk$set(
 
 # Introduction
 
-During the preparation of the journal article on nonlinear mixed-effects models
-in degradation kinetics [@ranke2021] and the analysis of the dimethenamid
-degradation data analysed therein, a need for a more detailed analysis using
-not only nlme and saemix, but also nlmixr for fitting the mixed-effects models
-was identified, as many model variants do not converge when fitted with nlme,
-and not all relevant error models can be fitted with saemix.
+A first analysis of the data analysed here was presented in a recent journal
+article on nonlinear mixed-effects models in degradation kinetics [@ranke2021].
+That analysis was based on the `nlme` package and a development version
+of the `saemix` package that was unpublished at the time. Meanwhile, version
+3.0 of the `saemix` package is available from the CRAN repository. Also, it
+turned out that there was an error in the handling of the Borstel data in the
+mkin package at the time, leading to the duplication of a few data points from
+that soil. The dataset in the mkin package has been corrected, and the interface
+to `saemix` in the mkin package has been updated to use the released version.
 
-This vignette is an attempt to satisfy this need.
+This vignette is intended to present an up to date analysis of the data, using the
+corrected dataset and released versions of `mkin` and `saemix`.
 
 # Data
 
@@ -234,9 +238,8 @@ the mkin package.
 The corresponding SAEM fits of the four combinations of degradation and error
 models are fitted below. As there is no convergence criterion implemented in
 the saemix package, the convergence plots need to be manually checked for every
-fit. As we will compare the SAEM implementation of saemix to the results
-obtained using the nlmixr package later, we define control settings that
-work well for all the parent data fits shown in this vignette.
+fit. We define control settings that work well for all the parent data fits
+shown in this vignette.
 
 ```{r saemix_control, results='hide'}
 library(saemix)
@@ -256,7 +259,7 @@ f_parent_saemix_sfo_const <- mkin::saem(f_parent_mkin_const["SFO", ], quiet = TR
 plot(f_parent_saemix_sfo_const$so, plot.type = "convergence")
 ```
 
-Obviously the default number of iterations is sufficient to reach convergence.
+Obviously the selected number of iterations is sufficient to reach convergence.
 This can also be said for the SFO fit using the two-component error model.
 
 ```{r f_parent_saemix_sfo_tc, results = 'hide', dependson = "saemix_control"}
@@ -268,28 +271,35 @@ plot(f_parent_saemix_sfo_tc$so, plot.type = "convergence")
 When fitting the DFOP model with constant variance (see below), parameter
 convergence is not as unambiguous.
 
-```{r f_parent_saemix_dfop_const, results = 'hide', dependson = "saemix_control"}
+```{r f_parent_saemix_dfop_const, results = 'show', dependson = "saemix_control"}
 f_parent_saemix_dfop_const <- mkin::saem(f_parent_mkin_const["DFOP", ], quiet = TRUE,
   control = saemix_control, transformations = "saemix")
 plot(f_parent_saemix_dfop_const$so, plot.type = "convergence")
+print(f_parent_saemix_dfop_const)
 ```
 
-This is improved when the DFOP model is fitted with the two-component error
-model. Convergence of the variance of k2 is enhanced, it remains more or less
-stable already after 200 iterations of the first phase.
+While the other parameters converge to credible values, the variance of k2
+(`omega2.k2`) converges to a very small value. The printout of the `saem.mmkin`
+model shows that the estimated standard deviation of k2 across the population
+of soils (`SD.k2`) is ill-defined, indicating overparameterisation of this model.
 
-```{r f_parent_saemix_dfop_tc, results = 'hide', dependson = "saemix_control"}
+When the DFOP model is fitted with the two-component error model, we also
+observe that the estimated variance of k2 becomes very small, while being
+ill-defined, as illustrated by the excessive confidence interval of `SD.k2`.
+
+```{r f_parent_saemix_dfop_tc, results = 'show', dependson = "saemix_control"}
 f_parent_saemix_dfop_tc <- mkin::saem(f_parent_mkin_tc["DFOP", ], quiet = TRUE,
   control = saemix_control, transformations = "saemix")
 f_parent_saemix_dfop_tc_moreiter <- mkin::saem(f_parent_mkin_tc["DFOP", ], quiet = TRUE,
   control = saemix_control_moreiter, transformations = "saemix")
 plot(f_parent_saemix_dfop_tc$so, plot.type = "convergence")
+print(f_parent_saemix_dfop_tc)
 ```
 
 Doubling the number of iterations in the first phase of the algorithm
 leads to a slightly lower likelihood, and therefore to slightly higher AIC and BIC values.
 With even more iterations, the algorithm stops with an error message. This is
-related to the variance of k2 approximating zero. This has been submitted
+related to the variance of k2 approximating zero and has been submitted
 as a [bug to the saemix package](https://github.com/saemixdevelopment/saemixextension/issues/29),
 as the algorithm does not converge in this case.
 
@@ -329,7 +339,6 @@ AIC_parent_saemix_methods <- c(
 )
 print(AIC_parent_saemix_methods)
 ```
-
 The AIC values based on importance sampling and Gaussian quadrature are very
 similar. Using linearisation is known to be less accurate, but still gives a
 similar value. In order to illustrate that the comparison of the three method
@@ -349,142 +358,11 @@ AIC_parent_saemix_methods_defaults <- c(
 print(AIC_parent_saemix_methods_defaults)
 ```
 
-### nlmixr
+## Comparison
 
-In the last years, a lot of effort has been put into the nlmixr package which
-is designed for pharmacokinetics, where nonlinear mixed-effects models are
-routinely used, but which can also be used for related data like chemical
-degradation data. A current development branch of the mkin package provides
-an interface between mkin and nlmixr. Here, we check if we get equivalent
-results when using a refined version of the First Order Conditional Estimation
-(FOCE) algorithm used in nlme, namely the First Order Conditional Estimation
-with Interaction (FOCEI), and the SAEM algorithm as implemented in nlmixr.
-
-First, the focei algorithm is used for the four model combinations.
-
-```{r f_parent_nlmixr_focei, results = "hide", message = FALSE, warning = FALSE}
-library(nlmixr)
-f_parent_nlmixr_focei_sfo_const <- nlmixr(f_parent_mkin_const["SFO", ], est = "focei")
-f_parent_nlmixr_focei_sfo_tc <- nlmixr(f_parent_mkin_tc["SFO", ], est = "focei")
-f_parent_nlmixr_focei_dfop_const <- nlmixr(f_parent_mkin_const["DFOP", ], est = "focei")
-f_parent_nlmixr_focei_dfop_tc<- nlmixr(f_parent_mkin_tc["DFOP", ], est = "focei")
-```
-
-For the SFO model with constant variance, the AIC values are the same, for the 
-DFOP model, there are significant differences between the AIC values. These
-may be caused by different solutions that are found, but also by the fact that
-the AIC values for the nlmixr fits are calculated based on Gaussian quadrature,
-not on linearisation.
-
-```{r AIC_parent_nlmixr_nlme, cache = FALSE}
-aic_nlmixr_focei <- sapply(
-  list(f_parent_nlmixr_focei_sfo_const$nm, f_parent_nlmixr_focei_sfo_tc$nm,
-    f_parent_nlmixr_focei_dfop_const$nm, f_parent_nlmixr_focei_dfop_tc$nm),
-  AIC)
-aic_nlme <- sapply(
-  list(f_parent_nlme_sfo_const, NA, f_parent_nlme_sfo_tc, f_parent_nlme_dfop_tc),
-  function(x) if (is.na(x[1])) NA else AIC(x))
-aic_nlme_nlmixr_focei <- data.frame(
-  "Degradation model" = c("SFO", "SFO", "DFOP", "DFOP"),
-  "Error model" = rep(c("constant variance", "two-component"), 2),
-  "AIC (nlme)" = aic_nlme,
-  "AIC (nlmixr with FOCEI)" = aic_nlmixr_focei,
-  check.names = FALSE
-)
-print(aic_nlme_nlmixr_focei)
-```
-
-Secondly, we use the SAEM estimation routine and check the convergence plots. The
-control parameters, which were also used for the saemix fits, are defined beforehand.
-
-```{r nlmixr_saem_control}
-nlmixr_saem_control_800 <- saemControl(logLik = TRUE,
-  nBurn = 800, nEm = 300, nmc = 15)
-nlmixr_saem_control_moreiter <- saemControl(logLik = TRUE,
-  nBurn = 1600, nEm = 300, nmc = 15)
-nlmixr_saem_control_10k <- saemControl(logLik = TRUE,
-  nBurn = 10000, nEm = 1000, nmc = 15)
-```
-
-Then we fit SFO with constant variance
-
-```{r f_parent_nlmixr_saem_sfo_const, results = "hide", warning = FALSE, message = FALSE, dependson = "nlmixr_saem_control"}
-f_parent_nlmixr_saem_sfo_const <- nlmixr(f_parent_mkin_const["SFO", ], est = "saem",
-  control = nlmixr_saem_control_800)
-traceplot(f_parent_nlmixr_saem_sfo_const$nm)
-```
-
-and SFO with two-component error.
-
-```{r f_parent_nlmixr_saem_sfo_tc, results = "hide", warning = FALSE, message = FALSE, dependson = "nlmixr_saem_control"}
-f_parent_nlmixr_saem_sfo_tc <- nlmixr(f_parent_mkin_tc["SFO", ], est = "saem",
-  control = nlmixr_saem_control_800)
-traceplot(f_parent_nlmixr_saem_sfo_tc$nm)
-```
-
-For DFOP with constant variance, the convergence plots show considerable
-instability of the fit, which indicates overparameterisation which was already
-observed above for this model combination. Also note that the variance of k2
-approximates zero, which was already observed in the saemix fits of the DFOP
-model.
-
-```{r f_parent_nlmixr_saem_dfop_const, results = "hide", warning = FALSE, message = FALSE, dependson = "nlmixr_saem_control"}
-f_parent_nlmixr_saem_dfop_const <- nlmixr(f_parent_mkin_const["DFOP", ], est = "saem",
-  control = nlmixr_saem_control_800)
-traceplot(f_parent_nlmixr_saem_dfop_const$nm)
-```
-
-For DFOP with two-component error, a less erratic convergence is seen, but the
-variance of k2 again approximates zero.
-
-```{r f_parent_nlmixr_saem_dfop_tc, results = "hide", warning = FALSE, message = FALSE, dependson = "nlmixr_saem_control"}
-f_parent_nlmixr_saem_dfop_tc <- nlmixr(f_parent_mkin_tc["DFOP", ], est = "saem",
-  control = nlmixr_saem_control_800)
-traceplot(f_parent_nlmixr_saem_dfop_tc$nm)
-```
-
-To check if an increase in the number of iterations improves the fit, we repeat
-the fit with 1000 iterations for the burn in phase and 300 iterations for the
-second phase.
-
-```{r f_parent_nlmixr_saem_dfop_tc_1k, results = "hide", warning = FALSE, message = FALSE, dependson = "nlmixr_saem_control"}
-f_parent_nlmixr_saem_dfop_tc_moreiter <- nlmixr(f_parent_mkin_tc["DFOP", ], est = "saem",
-  control = nlmixr_saem_control_moreiter)
-traceplot(f_parent_nlmixr_saem_dfop_tc_moreiter$nm)
-```
-
-Here the fit looks very similar, but we will see below that it shows a higher AIC
-than the fit with 800 iterations in the burn in phase. Next we choose
-10 000 iterations for the burn in phase and 1000 iterations for the second
-phase for comparison with saemix.
-
-```{r f_parent_nlmixr_saem_dfop_tc_10k, results = "hide", warning = FALSE, message = FALSE, dependson = "nlmixr_saem_control"}
-f_parent_nlmixr_saem_dfop_tc_10k <- nlmixr(f_parent_mkin_tc["DFOP", ], est = "saem",
-  control = nlmixr_saem_control_10k)
-traceplot(f_parent_nlmixr_saem_dfop_tc_10k$nm)
-```
-
-The AIC values are internally calculated using Gaussian quadrature.
-
-```{r AIC_parent_nlmixr_saem, cache = FALSE}
-AIC(f_parent_nlmixr_saem_sfo_const$nm, f_parent_nlmixr_saem_sfo_tc$nm,
-  f_parent_nlmixr_saem_dfop_const$nm, f_parent_nlmixr_saem_dfop_tc$nm,
-  f_parent_nlmixr_saem_dfop_tc_moreiter$nm,
-  f_parent_nlmixr_saem_dfop_tc_10k$nm)
-```
-
-We can see that again, the DFOP/tc model shows the best goodness of fit.
-However, increasing the number of burn-in iterations from 800 to 1600 results
-in a higher AIC. If we further increase the number of iterations to 10 000
-(burn-in) and 1000 (second phase), the AIC cannot be calculated for the
-nlmixr/saem fit, confirming that this fit does not converge properly with
-the SAEM algorithm.
-
-### Comparison
-
-The following table gives the AIC values obtained with the three packages using
-the same control parameters (800 iterations burn-in, 300 iterations second
-phase, 15 chains).
+The following table gives the AIC values obtained with both backend packages
+using the same control parameters (800 iterations burn-in, 300 iterations
+second phase, 15 chains). Note that
 
 ```{r AIC_all, cache = FALSE}
 AIC_all <- data.frame(
@@ -492,15 +370,29 @@ AIC_all <- data.frame(
   "Degradation model" = c("SFO", "SFO", "DFOP", "DFOP"),
   "Error model" = c("const", "tc", "const", "tc"),
   nlme = c(AIC(f_parent_nlme_sfo_const), AIC(f_parent_nlme_sfo_tc), NA, AIC(f_parent_nlme_dfop_tc)),
-  nlmixr_focei = sapply(list(f_parent_nlmixr_focei_sfo_const$nm, f_parent_nlmixr_focei_sfo_tc$nm,
-  f_parent_nlmixr_focei_dfop_const$nm, f_parent_nlmixr_focei_dfop_tc$nm), AIC),
-  saemix = sapply(list(f_parent_saemix_sfo_const$so, f_parent_saemix_sfo_tc$so,
-    f_parent_saemix_dfop_const$so, f_parent_saemix_dfop_tc$so), AIC),
-  nlmixr_saem = sapply(list(f_parent_nlmixr_saem_sfo_const$nm, f_parent_nlmixr_saem_sfo_tc$nm,
-  f_parent_nlmixr_saem_dfop_const$nm, f_parent_nlmixr_saem_dfop_tc$nm), AIC)
+  saemix_lin = sapply(list(f_parent_saemix_sfo_const$so, f_parent_saemix_sfo_tc$so,
+    f_parent_saemix_dfop_const$so, f_parent_saemix_dfop_tc$so), AIC, method = "lin"),
+  saemix_is = sapply(list(f_parent_saemix_sfo_const$so, f_parent_saemix_sfo_tc$so,
+    f_parent_saemix_dfop_const$so, f_parent_saemix_dfop_tc$so), AIC, method = "is")
 )
 kable(AIC_all)
 ```
+
+# Conclusion
+
+A more detailed analysis of the dimethenamid dataset confirmed that the DFOP
+model provides the most appropriate description of the decline of the parent
+compound in these data. On the other hand, closer inspection of the results
+revealed that the variability of the k2 parameter across the population of
+soils is ill-defined. This coincides with the observation that this parameter
+cannot robustly be quantified in some for some of the soils.
+
+Regarding the regulatory use of these data, it is claimed that an improved
+characterisation of the mean parameter values across the population is
+obtained using the nonlinear mixed-effects models presented here. However,
+attempts to quantify the variability of the slower rate constant of the
+biphasic decline of dimethenamid indicate that the data are not sufficient
+to characterise this variability to a satisfactory precision.
 
 # References
 

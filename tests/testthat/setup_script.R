@@ -160,8 +160,8 @@ DFOP_SFO <- mkinmod(
   m1 = mkinsub("SFO"),
   quiet = TRUE)
 dfop_sfo_pop <- list(parent_0 = 100,
-  k_m1 = 0.005, f_parent_to_m1 = 0.5,
-  k1 = 0.05, k2 = 0.01, g = 0.5)
+  k_m1 = 0.007, f_parent_to_m1 = 0.5,
+  k1 = 0.1, k2 = 0.02, g = 0.5)
 syn_biphasic_parms <- as.matrix(data.frame(
   k1 = rlnorm(n_biphasic, log(dfop_sfo_pop$k1), log_sd),
   k2 = rlnorm(n_biphasic, log(dfop_sfo_pop$k2), log_sd),
@@ -186,11 +186,12 @@ ds_biphasic <- lapply(ds_biphasic_mean, function(ds) {
 mmkin_sfo_1 <- mmkin("SFO", ds_sfo, quiet = TRUE, error_model = "tc", cores = n_cores)
 mmkin_dfop_1 <- mmkin("DFOP", ds_dfop, quiet = TRUE, cores = n_cores)
 mmkin_biphasic <- mmkin(list("DFOP-SFO" = DFOP_SFO), ds_biphasic, quiet = TRUE, cores = n_cores,
+  control = list(eval.max = 500, iter.max = 400),
   error_model = "tc")
 
 # nlme
 dfop_nlme_1 <- nlme(mmkin_dfop_1)
-nlme_biphasic <- nlme(mmkin_biphasic)
+nlme_biphasic <- suppressWarnings(nlme(mmkin_biphasic))
 
 # saemix
 sfo_saem_1 <- saem(mmkin_sfo_1, quiet = TRUE, transformations = "saemix")
@@ -200,13 +201,6 @@ dfop_saemix_2 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "saemix")
 
 saem_biphasic_m <- saem(mmkin_biphasic, transformations = "mkin", quiet = TRUE)
 saem_biphasic_s <- saem(mmkin_biphasic, transformations = "saemix", quiet = TRUE)
-
-# nlmixr saem
-tmp <- suppressMessages(capture.output(nlmixr_saem_biphasic <- nlmixr(mmkin_biphasic, est = "saem",
-    control = nlmixr::saemControl(nBurn = 300, nEm = 100, nmc = 9, print = 0))))
-# The FOCEI fit takes too long...
-#tmp <- capture_output(nlmixr_focei_biphasic <- nlmixr(mmkin_biphasic, est = "focei",
-#    control = nlmixr::foceiControl(print = 0)))
 
 # UBA datasets
 ds_uba <- lapply(experimental_data_for_UBA_2019[6:10],

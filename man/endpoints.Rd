@@ -8,8 +8,8 @@ with mkinfit}
 endpoints(fit)
 }
 \arguments{
-\item{fit}{An object of class \link{mkinfit}, \link{nlme.mmkin}, \link{saem.mmkin} or
-\link{nlmixr.mmkin}. Or another object that has list components
+\item{fit}{An object of class \link{mkinfit}, \link{nlme.mmkin} or \link{saem.mmkin},
+or another object that has list components
 mkinmod containing an \link{mkinmod} degradation model, and two numeric vectors,
 bparms.optim and bparms.fixed, that contain parameter values
 for that model.}

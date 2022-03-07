@@ -2,8 +2,6 @@
 
 ## Mixed-effects models
 
-- Introduce an interface to nlmixr, supporting estimation methods 'saem' and 'focei': S3 method 'nlmixr.mmkin' using the helper functions 'nlmixr_model' and 'nlmixr_data' to set up nlmixr models for mmkin row objects, with summary and plot methods.
-
 - Reintroduce the interface to saemix (now on CRAN), in particular the generic function 'saem' with a generator 'saem.mmkin', currently using 'saemix_model' and 'saemix_data', summary and plot methods
 
 - 'mean_degparms': New argument 'test_log_parms' that makes the function only consider log-transformed parameters where the untransformed parameters pass the t-test for a certain confidence level. This can be used to obtain more plausible starting parameters for the different mixed-effects model backends
@@ -12,7 +10,7 @@
 
 - 'vignettes/web_only/dimethenamid_2018.rmd': Example evaluations of the dimethenamid data.
 
-- 'intervals': Provide methods of this nlme function for 'nlmixr.mmkin' and 'saem.mmkin' objects.
+- 'intervals': Provide a method of this nlme function for 'saem.mmkin' objects.
 
 # mkin 1.0.5 (2021-09-15)
 

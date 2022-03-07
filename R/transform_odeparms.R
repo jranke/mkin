@@ -230,11 +230,7 @@ backtransform_odeparms <- function(transparms, mkinmod,
       if(transform_fractions) {
         if (any(grepl("qlogis", names(trans_f)))) {
           f_tmp  <- plogis(trans_f)
-          if (any(grepl("_tffm0_.*_qlogis$", names(f_tmp)))) {
-            parms[f_names] <- invtffm0(f_tmp)
-          } else {
-            parms[f_names] <- f_tmp
-          }
+          parms[f_names] <- f_tmp
         } else {
           f_tmp <- invilr(trans_f)
           if (spec[[box]]$sink) {
