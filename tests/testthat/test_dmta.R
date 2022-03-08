@@ -12,8 +12,8 @@ dmta_ds[["Elliot"]] <- rbind(dmta_ds[["Elliot 1"]], dmta_ds[["Elliot 2"]])
 dmta_ds[["Elliot 1"]] <- dmta_ds[["Elliot 2"]] <- NULL
 
 # mkin
-dmta_dfop <- mmkin("DFOP", dmta_ds, quiet = TRUE)
-dmta_dfop_tc <- mmkin("DFOP", dmta_ds, error_model = "tc", quiet = TRUE)
+dmta_dfop <- mmkin("DFOP", dmta_ds, quiet = TRUE, cores = n_cores)
+dmta_dfop_tc <- mmkin("DFOP", dmta_ds, error_model = "tc", quiet = TRUE, cores = n_cores)
 
 test_that("Different backends get consistent results for DFOP tc, dimethenamid data", {
 
@@ -85,7 +85,7 @@ sfo_sfo3p <- mkinmod(
 )
 
 dmta_sfo_sfo3p_tc <- mmkin(list("SFO-SFO3+" = sfo_sfo3p),
-  dmta_ds, error_model = "tc", quiet = TRUE)
+  dmta_ds, error_model = "tc", quiet = TRUE, cores = n_cores)
 
 test_that("Different backends get consistent results for SFO-SFO3+, dimethenamid data", {
 
