@@ -87,11 +87,13 @@ ds_sfo_syn <- lapply(ds_sfo_mean, function(ds) {
     n = 1)[[1]]
 })
 
+\dontrun{
 # Evaluate using mmkin and nlme
 library(nlme)
 f_mmkin <- mmkin("SFO", ds_sfo_syn, quiet = TRUE, error_model = "tc", cores = 1)
 f_nlme <- nlme(f_mmkin)
 summary(f_nlme, data = TRUE)
+}
 
 }
 \author{

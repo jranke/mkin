@@ -1,9 +1,7 @@
 context("Analytical solutions for coupled models")
 
-# We do not want the warnings due to non-normality of residuals here
-warn_option <- options(warn=-1)
-
 test_that("The analytical solutions for SFO-SFO are correct", {
+  skip_on_cran()
   # No sink, no formation fractions
   SFO_SFO_nosink <- mkinmod(
     parent = mkinsub("SFO", to = "m1", sink = FALSE),
@@ -50,6 +48,7 @@ test_that("The analytical solutions for SFO-SFO are correct", {
 })
 
 test_that("The analytical solution for DFOP-SFO are correct", {
+  skip_on_cran()
   # With formation fraction
   f_dfop_sfo_analytical <- mkinfit(DFOP_SFO, FOCUS_D,
     solution_type = "analytical", quiet = TRUE)
@@ -61,5 +60,3 @@ test_that("The analytical solution for DFOP-SFO are correct", {
     tolerance = 5e-6
   )
 })
-
-options(warn = warn_option$warn)

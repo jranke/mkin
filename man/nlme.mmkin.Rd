@@ -92,12 +92,11 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
 \examples{
 ds <- lapply(experimental_data_for_UBA_2019[6:10],
  function(x) subset(x$data[c("name", "time", "value")], name == "parent"))
-f <- mmkin(c("SFO", "DFOP"), ds, quiet = TRUE, cores = 1)
-library(nlme)
-f_nlme_sfo <- nlme(f["SFO", ])
 
 \dontrun{
-
+  f <- mmkin(c("SFO", "DFOP"), ds, quiet = TRUE, cores = 1)
+  library(nlme)
+  f_nlme_sfo <- nlme(f["SFO", ])
   f_nlme_dfop <- nlme(f["DFOP", ])
   anova(f_nlme_sfo, f_nlme_dfop)
   print(f_nlme_dfop)

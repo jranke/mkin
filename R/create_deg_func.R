@@ -10,8 +10,8 @@
 #'   m1 = mkinsub("SFO"))
 #' FOCUS_D <- subset(FOCUS_2006_D, value != 0) # to avoid warnings
 #' fit_1 <- mkinfit(SFO_SFO, FOCUS_D, solution_type = "analytical", quiet = TRUE)
-#' fit_2 <- mkinfit(SFO_SFO, FOCUS_D, solution_type = "deSolve", quiet = TRUE)
 #' \dontrun{
+#' fit_2 <- mkinfit(SFO_SFO, FOCUS_D, solution_type = "deSolve", quiet = TRUE)
 #' if (require(rbenchmark))
 #'   benchmark(
 #'     analytical = mkinfit(SFO_SFO, FOCUS_D, solution_type = "analytical", quiet = TRUE),

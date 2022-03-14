@@ -2,6 +2,7 @@ context("saemix parent models")
 
 test_that("Parent fits using saemix are correctly implemented", {
 
+  skip_on_cran()
   expect_error(saem(fits), "Only row objects")
   # Some fits were done in the setup script
   mmkin_sfo_2 <- update(mmkin_sfo_1, fixed_initials = c(parent = 100))

@@ -30,6 +30,20 @@ test_that("Plotting mkinfit, mmkin and mixed model objects is reproducible", {
   plot_err_sfo_sfo <- function() plot_err(f_sfo_sfo_desolve)
   vdiffr::expect_doppelganger("plot_err for FOCUS D", plot_err_sfo_sfo)
 
+  # UBA datasets
+  ds_uba <- lapply(experimental_data_for_UBA_2019[6:10],
+    function(x) subset(x$data[c("name", "time", "value")]))
+  names(ds_uba) <- paste("Dataset", 6:10)
+  sfo_sfo_uba <- mkinmod(parent = mkinsub("SFO", "A1"),
+    A1 = mkinsub("SFO"), quiet = TRUE)
+  dfop_sfo_uba <- mkinmod(parent = mkinsub("DFOP", "A1"),
+    A1 = mkinsub("SFO"), quiet = TRUE)
+  f_uba_mmkin <- mmkin(list("DFOP-SFO" = dfop_sfo_uba),
+    ds_uba, quiet = TRUE, cores = n_cores)
+  f_uba_dfop_sfo_mixed <- mixed(f_uba_mmkin["DFOP-SFO", ])
+
+  f_uba_dfop_sfo_saem <- saem(f_uba_mmkin["DFOP-SFO", ], quiet = TRUE, transformations = "saemix")
+
   plot_biphasic_mmkin <- function() plot(f_uba_dfop_sfo_mixed)
   vdiffr::expect_doppelganger("mixed model fit for mmkin object", plot_biphasic_mmkin)
 

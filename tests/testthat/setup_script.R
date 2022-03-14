@@ -202,17 +202,3 @@ dfop_saemix_2 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "saemix")
 saem_biphasic_m <- saem(mmkin_biphasic, transformations = "mkin", quiet = TRUE)
 saem_biphasic_s <- saem(mmkin_biphasic, transformations = "saemix", quiet = TRUE)
 
-# UBA datasets
-ds_uba <- lapply(experimental_data_for_UBA_2019[6:10],
-  function(x) subset(x$data[c("name", "time", "value")]))
-names(ds_uba) <- paste("Dataset", 6:10)
-sfo_sfo_uba <- mkinmod(parent = mkinsub("SFO", "A1"),
-  A1 = mkinsub("SFO"), quiet = TRUE)
-dfop_sfo_uba <- mkinmod(parent = mkinsub("DFOP", "A1"),
-  A1 = mkinsub("SFO"), quiet = TRUE)
-f_uba_mmkin <- mmkin(list("SFO-SFO" = sfo_sfo_uba, "DFOP-SFO" = dfop_sfo_uba),
-  ds_uba, quiet = TRUE, cores = n_cores)
-f_uba_dfop_sfo_mixed <- mixed(f_uba_mmkin[2, ])
-
-f_uba_sfo_sfo_saem <- saem(f_uba_mmkin["SFO-SFO", ], quiet = TRUE, transformations = "saemix")
-f_uba_dfop_sfo_saem <- saem(f_uba_mmkin["DFOP-SFO", ], quiet = TRUE, transformations = "saemix")
