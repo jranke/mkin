@@ -1,4 +1,4 @@
-# mkin 1.1.0 (unreleased)
+# mkin 1.1.0 (2022-03-14)
 
 ## Mixed-effects models
 
