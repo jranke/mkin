@@ -156,65 +156,152 @@ specific pieces of information in the comments.</p>
 <span class="r-in"><span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot 1"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
 <span class="r-in"><span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot 2"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
 <span class="r-in"><span class="co"># \dontrun{</span></span>
-<span class="r-in"><span class="va">dfop_sfo3_plus</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinmod.html">mkinmod</a></span><span class="op">(</span></span>
-<span class="r-in">  DMTA <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"DFOP"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"M23"</span>, <span class="st">"M27"</span>, <span class="st">"M31"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span class="r-in">  M23 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,</span>
-<span class="r-in">  M27 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,</span>
-<span class="r-in">  M31 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"M27"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
-<span class="r-in">  quiet <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span class="r-in"><span class="co"># We don't use DFOP for the parent compound, as this gives numerical</span></span>
+<span class="r-in"><span class="co"># instabilities in the fits</span></span>
+<span class="r-in"><span class="va">sfo_sfo3p</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinmod.html">mkinmod</a></span><span class="op">(</span></span>
+<span class="r-in"> DMTA <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"M23"</span>, <span class="st">"M27"</span>, <span class="st">"M31"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span class="r-in"> M23 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,</span>
+<span class="r-in"> M27 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,</span>
+<span class="r-in"> M31 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"M27"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
+<span class="r-in"> quiet <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-in"><span class="va">f_dmta_mkin_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="mmkin.html">mmkin</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"DFOP-SFO3+"</span> <span class="op">=</span> <span class="va">dfop_sfo3_plus</span><span class="op">)</span>,</span>
-<span class="r-in">  <span class="va">dmta_ds</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span>, error_model <span class="op">=</span> <span class="st">"tc"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">nlmixr_model</span><span class="op">(</span><span class="va">f_dmta_mkin_tc</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in nlmixr_model(f_dmta_mkin_tc):</span> could not find function "nlmixr_model"</span>
-<span class="r-in"><span class="co"># The focei fit takes about four minutes on my system</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">f_dmta_nlmixr_focei</span> <span class="op">&lt;-</span> <span class="fu">nlmixr</span><span class="op">(</span><span class="va">f_dmta_mkin_tc</span>, est <span class="op">=</span> <span class="st">"focei"</span>,</span>
-<span class="r-in">    control <span class="op">=</span> <span class="fu">nlmixr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/foceiControl.html" class="external-link">foceiControl</a></span><span class="op">(</span>print <span class="op">=</span> <span class="fl">500</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in nlmixr(f_dmta_mkin_tc, est = "focei", control = nlmixr::foceiControl(print = 500)):</span> could not find function "nlmixr"</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Timing stopped at: 0 0 0</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">f_dmta_nlmixr_focei</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in summary(f_dmta_nlmixr_focei):</span> object 'f_dmta_nlmixr_focei' not found</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_dmta_nlmixr_focei</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in plot(f_dmta_nlmixr_focei):</span> object 'f_dmta_nlmixr_focei' not found</span>
-<span class="r-in"><span class="co"># Using saemix takes about 18 minutes</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">f_dmta_saemix</span> <span class="op">&lt;-</span> <span class="fu"><a href="saem.html">saem</a></span><span class="op">(</span><span class="va">f_dmta_mkin_tc</span>, test_log_parms <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> DINTDY-  T (=R1) illegal      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> In above message, R1 = 115.507</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       T not in interval TCUR - HU (= R1) to TCUR (=R2)      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> In above message, R1 = 112.133, R2 = 113.577</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> DLSODA-  At T (=R1), too much accuracy requested  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       for precision of machine..  See TOLSF (=R2) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> In above message, R1 = 55.3899, R2 = nan</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  </span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in out[available, var]:</span> (subscript) logical subscript too long</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Timing stopped at: 12.76 3.069 11.79</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Timing stopped at: 13.77 4.719 12.37</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># nlmixr with est = "saem" is pretty fast with default iteration numbers, most</span></span>
-<span class="r-in"><span class="co"># of the time (about 2.5 minutes) is spent for calculating the log likelihood at the end</span></span>
-<span class="r-in"><span class="co"># The likelihood calculated for the nlmixr fit is much lower than that found by saemix</span></span>
-<span class="r-in"><span class="co"># Also, the trace plot and the plot of the individual predictions is not</span></span>
-<span class="r-in"><span class="co"># convincing for the parent. It seems we are fitting an overparameterised</span></span>
-<span class="r-in"><span class="co"># model, so the result we get strongly depends on starting parameters and control settings.</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">f_dmta_nlmixr_saem</span> <span class="op">&lt;-</span> <span class="fu">nlmixr</span><span class="op">(</span><span class="va">f_dmta_mkin_tc</span>, est <span class="op">=</span> <span class="st">"saem"</span>,</span>
-<span class="r-in">    control <span class="op">=</span> <span class="fu">nlmixr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/saemControl.html" class="external-link">saemControl</a></span><span class="op">(</span>print <span class="op">=</span> <span class="fl">500</span>, logLik <span class="op">=</span> <span class="cn">TRUE</span>, nmc <span class="op">=</span> <span class="fl">9</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in nlmixr(f_dmta_mkin_tc, est = "saem", control = nlmixr::saemControl(print = 500,     logLik = TRUE, nmc = 9)):</span> could not find function "nlmixr"</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Timing stopped at: 0 0 0.001</span>
-<span class="r-in"><span class="fu">traceplot</span><span class="op">(</span><span class="va">f_dmta_nlmixr_saem</span><span class="op">$</span><span class="va">nm</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in traceplot(f_dmta_nlmixr_saem$nm):</span> could not find function "traceplot"</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">f_dmta_nlmixr_saem</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in summary(f_dmta_nlmixr_saem):</span> object 'f_dmta_nlmixr_saem' not found</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_dmta_nlmixr_saem</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in plot(f_dmta_nlmixr_saem):</span> object 'f_dmta_nlmixr_saem' not found</span>
+<span class="r-in"><span class="va">dmta_sfo_sfo3p_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="mmkin.html">mmkin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"SFO-SFO3+"</span> <span class="op">=</span> <span class="va">sfo_sfo3p</span><span class="op">)</span>,</span>
+<span class="r-in">  <span class="va">dmta_ds</span>, error_model <span class="op">=</span> <span class="st">"tc"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">dmta_sfo_sfo3p_tc</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;mmkin&gt; object</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Status of individual fits:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            dataset</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> model       Calke Borstel Flaach BBA 2.2 BBA 2.3 Elliot</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   SFO-SFO3+ OK    OK      OK     OK      OK      OK    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> OK: No warnings</span>
+<span class="r-in"><span class="co"># The default (test_log_parms = FALSE) gives an undue</span></span>
+<span class="r-in"><span class="co"># influence of ill-defined rate constants that have</span></span>
+<span class="r-in"><span class="co"># extremely small values:</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="mixed.html">mixed</a></span><span class="op">(</span><span class="va">dmta_sfo_sfo3p_tc</span><span class="op">)</span>, test_log_parms <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span class="r-plt img"><img src="dimethenamid_2018-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span class="co"># If we disregards ill-defined rate constants, the results</span></span>
+<span class="r-in"><span class="co"># look more plausible, but the truth is likely to be in</span></span>
+<span class="r-in"><span class="co"># between these variants</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="mixed.html">mixed</a></span><span class="op">(</span><span class="va">dmta_sfo_sfo3p_tc</span><span class="op">)</span>, test_log_parms <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-plt img"><img src="dimethenamid_2018-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span class="co"># Therefore we use nonlinear mixed-effects models</span></span>
+<span class="r-in"><span class="co"># f_dmta_nlme_tc &lt;- nlme(dmta_sfo_sfo3p_tc)</span></span>
+<span class="r-in"><span class="co"># nlme reaches maxIter = 50 without convergence</span></span>
+<span class="r-in"><span class="va">f_dmta_saem_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="saem.html">saem</a></span><span class="op">(</span><span class="va">dmta_sfo_sfo3p_tc</span><span class="op">)</span></span>
+<span class="r-in"><span class="co"># I am commenting out the convergence plot as rendering them</span></span>
+<span class="r-in"><span class="co"># with pkgdown fails (at least without further tweaks to the </span></span>
+<span class="r-in"><span class="co"># graphics device used)</span></span>
+<span class="r-in"><span class="co">#saemix::plot(f_dmta_saem_tc$so, plot.type = "convergence")</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">f_dmta_saem_tc</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> saemix version used for fitting:      3.0 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mkin version used for pre-fitting:  1.1.0 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> R version used for fitting:         4.1.3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Date of fit:     Wed Mar 16 14:32:04 2022 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Date of summary: Wed Mar 16 14:32:04 2022 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Equations:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> d_DMTA/dt = - k_DMTA * DMTA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> d_M23/dt = + f_DMTA_to_M23 * k_DMTA * DMTA - k_M23 * M23</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> d_M27/dt = + f_DMTA_to_M27 * k_DMTA * DMTA - k_M27 * M27 + k_M31 * M31</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> d_M31/dt = + f_DMTA_to_M31 * k_DMTA * DMTA - k_M31 * M31</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Data:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 563 observations of 4 variable(s) grouped in 6 datasets</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Model predictions using solution type deSolve </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fitted in 927.963 s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Using 300, 100 iterations and 9 chains</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Variance model: Two-component variance function </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mean of starting values for individual parameters:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       DMTA_0   log_k_DMTA    log_k_M23    log_k_M27    log_k_M31 f_DMTA_ilr_1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      95.5662      -2.9048      -3.8130      -4.1600      -4.1486       0.1341 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_DMTA_ilr_2 f_DMTA_ilr_3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       0.1385      -1.6700 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fixed degradation parameter values:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> None</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Results:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Likelihood computed by importance sampling</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    AIC  BIC logLik</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   2276 2272  -1120</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Optimised parameters:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 est.   lower   upper</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DMTA_0       88.5943 84.3961 92.7925</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_DMTA   -3.0466 -3.5609 -2.5322</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_M23    -4.0684 -4.9340 -3.2029</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_M27    -3.8628 -4.2627 -3.4628</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_M31    -3.9803 -4.4804 -3.4801</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_DMTA_ilr_1  0.1304 -0.2186  0.4795</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_DMTA_ilr_2  0.1490 -0.2559  0.5540</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_DMTA_ilr_3 -1.3970 -1.6976 -1.0964</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Correlation: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              DMTA_0  l__DMTA lg__M23 lg__M27 lg__M31 f_DMTA__1 f_DMTA__2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_DMTA    0.0309                                                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_M23    -0.0231 -0.0031                                            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_M27    -0.0381 -0.0048  0.0039                                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_M31    -0.0251 -0.0031  0.0021  0.0830                            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_DMTA_ilr_1 -0.0046 -0.0006  0.0417 -0.0437  0.0328                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_DMTA_ilr_2 -0.0008 -0.0002  0.0214 -0.0270 -0.0909 -0.0361            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_DMTA_ilr_3 -0.1832 -0.0135  0.0434  0.0804  0.0395 -0.0070    0.0059  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Random effects:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   est.   lower  upper</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.DMTA_0       3.3651 -0.9655 7.6956</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k_DMTA   0.6415  0.2774 1.0055</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k_M23    1.0176  0.3809 1.6543</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k_M27    0.4538  0.1522 0.7554</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k_M31    0.5684  0.1905 0.9464</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.f_DMTA_ilr_1 0.4111  0.1524 0.6699</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.f_DMTA_ilr_2 0.4788  0.1808 0.7768</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.f_DMTA_ilr_3 0.3501  0.1316 0.5685</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Variance model:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       est.  lower  upper</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> a.1 0.9349 0.8395 1.0302</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> b.1 0.1344 0.1176 0.1512</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Backtransformed parameters:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   est.     lower    upper</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DMTA_0        88.59431 84.396147 92.79246</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> k_DMTA         0.04752  0.028413  0.07948</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> k_M23          0.01710  0.007198  0.04064</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> k_M27          0.02101  0.014084  0.03134</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> k_M31          0.01868  0.011329  0.03080</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_DMTA_to_M23  0.14498        NA       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_DMTA_to_M27  0.12056        NA       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_DMTA_to_M31  0.11015        NA       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Resulting formation fractions:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               ff</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DMTA_M23  0.1450</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DMTA_M27  0.1206</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DMTA_M31  0.1101</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DMTA_sink 0.6243</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimated disappearance times:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       DT50   DT90</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DMTA 14.59  48.45</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> M23  40.52 134.62</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> M27  32.99 109.60</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> M31  37.11 123.26</span>
+<span class="r-in"><span class="co"># As the confidence interval for the random effects of DMTA_0</span></span>
+<span class="r-in"><span class="co"># includes zero, we could try an alternative model without</span></span>
+<span class="r-in"><span class="co"># such random effects</span></span>
+<span class="r-in"><span class="co"># f_dmta_saem_tc_2 &lt;- saem(dmta_sfo_sfo3p_tc,</span></span>
+<span class="r-in"><span class="co">#   covariance.model = diag(c(0, rep(1, 7))))</span></span>
+<span class="r-in"><span class="co"># saemix::plot(f_dmta_saem_tc_2$so, plot.type = "convergence")</span></span>
+<span class="r-in"><span class="co"># This does not perform better judged by AIC and BIC</span></span>
+<span class="r-in"><span class="fu">saemix</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/compare.saemix.html" class="external-link">compare.saemix</a></span><span class="op">(</span><span class="va">f_dmta_saem_tc</span><span class="op">$</span><span class="va">so</span>, <span class="va">f_dmta_saem_tc_2</span><span class="op">$</span><span class="va">so</span><span class="op">)</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in saemix::compare.saemix(f_dmta_saem_tc$so, f_dmta_saem_tc_2$so):</span> object 'f_dmta_saem_tc_2' not found</span>
 <span class="r-in"><span class="co"># }</span></span>
 </code></pre></div>
     </div>

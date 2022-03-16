@@ -42,42 +42,43 @@ dmta_ds[["Elliot"]] <- rbind(dmta_ds[["Elliot 1"]], dmta_ds[["Elliot 2"]])
 dmta_ds[["Elliot 1"]] <- NULL
 dmta_ds[["Elliot 2"]] <- NULL
 \dontrun{
-dfop_sfo3_plus <- mkinmod(
-  DMTA = mkinsub("DFOP", c("M23", "M27", "M31")),
-  M23 = mkinsub("SFO"),
-  M27 = mkinsub("SFO"),
-  M31 = mkinsub("SFO", "M27", sink = FALSE),
-  quiet = TRUE
+# We don't use DFOP for the parent compound, as this gives numerical
+# instabilities in the fits
+sfo_sfo3p <- mkinmod(
+ DMTA = mkinsub("SFO", c("M23", "M27", "M31")),
+ M23 = mkinsub("SFO"),
+ M27 = mkinsub("SFO"),
+ M31 = mkinsub("SFO", "M27", sink = FALSE),
+ quiet = TRUE
 )
-f_dmta_mkin_tc <- mmkin(
-  list("DFOP-SFO3+" = dfop_sfo3_plus),
-  dmta_ds, quiet = TRUE, error_model = "tc")
-nlmixr_model(f_dmta_mkin_tc)
-# The focei fit takes about four minutes on my system
-system.time(
-  f_dmta_nlmixr_focei <- nlmixr(f_dmta_mkin_tc, est = "focei",
-    control = nlmixr::foceiControl(print = 500))
-)
-summary(f_dmta_nlmixr_focei)
-plot(f_dmta_nlmixr_focei)
-# Using saemix takes about 18 minutes
-system.time(
-  f_dmta_saemix <- saem(f_dmta_mkin_tc, test_log_parms = TRUE)
-)
-
-# nlmixr with est = "saem" is pretty fast with default iteration numbers, most
-# of the time (about 2.5 minutes) is spent for calculating the log likelihood at the end
-# The likelihood calculated for the nlmixr fit is much lower than that found by saemix
-# Also, the trace plot and the plot of the individual predictions is not
-# convincing for the parent. It seems we are fitting an overparameterised
-# model, so the result we get strongly depends on starting parameters and control settings.
-system.time(
-  f_dmta_nlmixr_saem <- nlmixr(f_dmta_mkin_tc, est = "saem",
-    control = nlmixr::saemControl(print = 500, logLik = TRUE, nmc = 9))
-)
-traceplot(f_dmta_nlmixr_saem$nm)
-summary(f_dmta_nlmixr_saem)
-plot(f_dmta_nlmixr_saem)
+dmta_sfo_sfo3p_tc <- mmkin(list("SFO-SFO3+" = sfo_sfo3p),
+  dmta_ds, error_model = "tc", quiet = TRUE)
+print(dmta_sfo_sfo3p_tc)
+# The default (test_log_parms = FALSE) gives an undue
+# influence of ill-defined rate constants that have
+# extremely small values:
+plot(mixed(dmta_sfo_sfo3p_tc), test_log_parms = FALSE)
+# If we disregards ill-defined rate constants, the results
+# look more plausible, but the truth is likely to be in
+# between these variants
+plot(mixed(dmta_sfo_sfo3p_tc), test_log_parms = TRUE)
+# Therefore we use nonlinear mixed-effects models
+# f_dmta_nlme_tc <- nlme(dmta_sfo_sfo3p_tc)
+# nlme reaches maxIter = 50 without convergence
+f_dmta_saem_tc <- saem(dmta_sfo_sfo3p_tc)
+# I am commenting out the convergence plot as rendering them
+# with pkgdown fails (at least without further tweaks to the 
+# graphics device used)
+#saemix::plot(f_dmta_saem_tc$so, plot.type = "convergence")
+summary(f_dmta_saem_tc)
+# As the confidence interval for the random effects of DMTA_0
+# includes zero, we could try an alternative model without
+# such random effects
+# f_dmta_saem_tc_2 <- saem(dmta_sfo_sfo3p_tc,
+#   covariance.model = diag(c(0, rep(1, 7))))
+# saemix::plot(f_dmta_saem_tc_2$so, plot.type = "convergence")
+# This does not perform better judged by AIC and BIC
+saemix::compare.saemix(f_dmta_saem_tc$so, f_dmta_saem_tc_2$so)
 }
 }
 \keyword{datasets}

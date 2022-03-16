@@ -212,6 +212,10 @@ to ModelMaker 4.0, 2014-2015)
 - Project Number 146839 (Checking the feasibility of using mixed-effects models for
   the derivation of kinetic modelling parameters from degradation studies, 2020-2021)
 
+Thanks are due also to Emmanuelle Comets, maintainer of the saemix package, for
+the nice collaboration on using the SAEM algorithm and its implementation in
+saemix for the evaluation of chemical degradation data.
+
 ## References
 
 <table>
