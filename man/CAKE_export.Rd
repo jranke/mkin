@@ -11,11 +11,11 @@ CAKE_export(
   filename = "CAKE_export.csf",
   path = ".",
   overwrite = FALSE,
-  study = "Codlemone aerobic soil degradation",
+  study = "Degradinol aerobic soil degradation",
   description = "",
   time_unit = "days",
   res_unit = "\% AR",
-  comment = "Created using mkin::CAKE_export",
+  comment = "",
   date = Sys.Date(),
   optimiser = "IRLS"
 )

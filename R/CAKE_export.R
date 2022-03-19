@@ -28,11 +28,11 @@
 CAKE_export <- function(ds, map = c(parent = "Parent"),
   links = NA,
   filename = "CAKE_export.csf", path = ".", overwrite = FALSE,
-  study = "Codlemone aerobic soil degradation",
+  study = "Degradinol aerobic soil degradation",
   description = "",
   time_unit = "days",
   res_unit = "% AR",
-  comment = "Created using mkin::CAKE_export",
+  comment = "",
   date = Sys.Date(),
   optimiser = "IRLS")
 {
@@ -41,11 +41,16 @@ CAKE_export <- function(ds, map = c(parent = "Parent"),
   csf <- file(file, encoding = "latin1", open = "w+")
   on.exit(close(csf))
 
+  CAKE_compartments = c("Parent", "A1", "A2", "A3", "B1", "B2", "C1")
+  if (!all(map %in% CAKE_compartments)) {
+    stop("The elements of map have to be CAKE compartment names")
+  }
+
   add <- function(x) cat(paste0(x, "\r\n"), file = csf, append = TRUE)
   add0 <- function(x) cat(x, file = csf, append = TRUE)
 
   add("[FileInfo]")
-  add("CAKE-Version: 3.3 (Release)")
+  add("CAKE-Version: 3.4 (Release)")
   add(paste("Name:", study))
   add(paste("Description:", description))
   add(paste("MeasurementUnits:", res_unit))

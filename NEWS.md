@@ -2,6 +2,8 @@
 
 - 'dimethenamid_2018': Update example code to use saemix
 
+- 'CAKE_export': Check for validity of the map argument, updates
+
 # mkin 1.1.0 (2022-03-14)
 
 ## Mixed-effects models
