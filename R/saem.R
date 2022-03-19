@@ -239,10 +239,6 @@ print.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3), ...) {
 saemix_model <- function(object, solution_type = "auto", transformations = c("mkin", "saemix"),
   degparms_start = numeric(), test_log_parms = FALSE, conf.level = 0.6, verbose = FALSE, ...)
 {
-  if (packageVersion("saemix") < "3.0") {
-    stop("To use the interface to saemix, you need to install a version >= 3.0\n")
-  }
-
   if (nrow(object) > 1) stop("Only row objects allowed")
 
   mkin_model <- object[[1]]$mkinmod
@@ -444,9 +440,22 @@ saemix_model <- function(object, solution_type = "auto", transformations = c("mk
     solution_type = "analytical saemix"
   } else {
 
+    if (transformations == "saemix") {
+      stop("Using saemix transformations is only supported if an analytical solution is implemented for saemix")
+    }
+
     if (solution_type == "auto")
       solution_type <- object[[1]]$solution_type
 
+    # Define some variables to avoid function calls in model function
+    transparms_optim_names <- names(degparms_optim)
+    odeini_optim_names <- gsub('_0$', '', odeini_optim_parm_names)
+    diff_names <- names(mkin_model$diffs)
+    ode_transparms_optim_names <- setdiff(transparms_optim_names, odeini_optim_parm_names)
+    transform_rates <- object[[1]]$transform_rates
+    transform_fractions <- object[[1]]$transform_fractions
+
+    # Define the model function
     model_function <- function(psi, id, xidep) {
 
       uid <- unique(id)
@@ -454,22 +463,21 @@ saemix_model <- function(object, solution_type = "auto", transformations = c("mk
       res_list <- lapply(uid, function(i) {
 
         transparms_optim <- as.numeric(psi[i, ]) # psi[i, ] is a dataframe when called in saemix.predict
-        names(transparms_optim) <- names(degparms_optim)
+        names(transparms_optim) <- transparms_optim_names
 
         odeini_optim <- transparms_optim[odeini_optim_parm_names]
-        names(odeini_optim) <- gsub('_0$', '', odeini_optim_parm_names)
+        names(odeini_optim) <- odeini_optim_names
 
-        odeini <- c(odeini_optim, odeini_fixed)[names(mkin_model$diffs)]
+        odeini <- c(odeini_optim, odeini_fixed)[diff_names]
 
-        ode_transparms_optim_names <- setdiff(names(transparms_optim), odeini_optim_parm_names)
         odeparms_optim <- backtransform_odeparms(transparms_optim[ode_transparms_optim_names], mkin_model,
-          transform_rates = object[[1]]$transform_rates,
-          transform_fractions = object[[1]]$transform_fractions)
+          transform_rates = transform_rates,
+          transform_fractions = transform_fractions)
         odeparms <- c(odeparms_optim, odeparms_fixed)
 
-        xidep_i <- subset(xidep, id == i)
+        xidep_i <- xidep[which(id == i), ]
 
-        if (solution_type == "analytical") {
+        if (solution_type[1] == "analytical") {
           out_values <- mkin_model$deg_func(xidep_i, odeini, odeparms)
         } else {
 

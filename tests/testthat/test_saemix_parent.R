@@ -92,3 +92,15 @@ test_that("Parent fits using saemix are correctly implemented", {
   # HS would likely benefit from implemenation of transformations = "saemix"
 })
 
+test_that("We can also use mkin solution methods for saem", {
+  expect_error(saem(mmkin_dfop_1, quiet = TRUE, transformations = "saemix", solution_type = "analytical"),
+    "saemix transformations is only supported if an analytical solution is implemented"
+  )
+  skip_on_cran() # This still takes almost 2.5 minutes although we do not solve ODEs
+  dfop_saemix_3 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "mkin",
+    solution_type = "analytical")
+  distimes_dfop <- endpoints(dfop_saemix_1)$distimes
+  distimes_dfop_analytical <- endpoints(dfop_saemix_3)$distimes
+  rel_diff <- abs(distimes_dfop_analytical - distimes_dfop) / distimes_dfop
+  expect_true(all(rel_diff < 0.01))
+})

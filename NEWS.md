@@ -4,6 +4,8 @@
 
 - 'CAKE_export': Check for validity of the map argument, updates
 
+- 'saem()': Slightly improve speed in the case that no analytical solution for saemix is implemented, activate a test of the respective code
+
 # mkin 1.1.0 (2022-03-14)
 
 ## Mixed-effects models
