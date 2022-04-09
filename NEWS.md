@@ -6,6 +6,10 @@
 
 - 'saem()': Slightly improve speed in the case that no analytical solution for saemix is implemented, activate a test of the respective code
 
+- 'mean_degparms': New argument 'default_log_parms' that makes it possible to supply a surrogate value (default) for log parameters that fail the t-test
+
+- 'plot.mixed.mmkin': Pass the frame argument also to residual plots, take the 'default_log_parms' argument for 'mean_degparms' used for constructing approximate population curves, plot population curve last to avoid that it is covered by data
+
 # mkin 1.1.0 (2022-03-14)
 
 ## Mixed-effects models

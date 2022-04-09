@@ -4,7 +4,13 @@
 \alias{mean_degparms}
 \title{Calculate mean degradation parameters for an mmkin row object}
 \usage{
-mean_degparms(object, random = FALSE, test_log_parms = FALSE, conf.level = 0.6)
+mean_degparms(
+  object,
+  random = FALSE,
+  test_log_parms = FALSE,
+  conf.level = 0.6,
+  default_log_parms = NA
+)
 }
 \arguments{
 \item{object}{An mmkin row object containing several fits of the same model to different datasets}
@@ -17,6 +23,10 @@ rate constants) pass the t-test for significant difference from zero.}
 
 \item{conf.level}{Possibility to adjust the required confidence level
 for parameter that are tested if requested by 'test_log_parms'.}
+
+\item{default_log_parms}{If set to a numeric value, this is used
+as a default value for the tested log parameters that failed the
+t-test.}
 }
 \value{
 If random is FALSE (default), a named vector containing mean values

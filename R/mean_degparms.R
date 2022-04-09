@@ -11,8 +11,12 @@
 #'   rate constants) pass the t-test for significant difference from zero.
 #' @param conf.level Possibility to adjust the required confidence level
 #'   for parameter that are tested if requested by 'test_log_parms'.
+#' @param default_log_parms If set to a numeric value, this is used
+#'   as a default value for the tested log parameters that failed the
+#'   t-test.
 #' @export
-mean_degparms <- function(object, random = FALSE, test_log_parms = FALSE, conf.level = 0.6)
+mean_degparms <- function(object, random = FALSE, test_log_parms = FALSE, conf.level = 0.6,
+  default_log_parms = NA)
 {
   if (nrow(object) > 1) stop("Only row objects allowed")
   parm_mat_trans <- sapply(object, parms, transformed = TRUE)
@@ -33,7 +37,7 @@ mean_degparms <- function(object, random = FALSE, test_log_parms = FALSE, conf.l
       parm_mat_trans_OK <- parm_mat_trans
       for (trans_parm in log_parm_trans_names) {
         parm_mat_trans_OK[trans_parm, ] <- ifelse(t_test_back_OK[trans_parm, ],
-          parm_mat_trans[trans_parm, ], NA)
+          parm_mat_trans[trans_parm, ], default_log_parms)
       }
     } else {
     parm_mat_trans_OK <- parm_mat_trans

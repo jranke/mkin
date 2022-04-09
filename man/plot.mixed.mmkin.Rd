@@ -15,6 +15,7 @@
   pred_over = NULL,
   test_log_parms = FALSE,
   conf.level = 0.6,
+  default_log_parms = NA,
   ymax = "auto",
   maxabs = "auto",
   ncol.legend = ifelse(length(i) <= 3, length(i) + 1, ifelse(length(i) <= 8, 3, 4)),
@@ -55,6 +56,9 @@ from \link{mkinpredict} with a compatible \link{mkinmod}.}
 \link{mixed.mmkin} object}
 
 \item{conf.level}{Passed to \link{mean_degparms} in the case of an
+\link{mixed.mmkin} object}
+
+\item{default_log_parms}{Passed to \link{mean_degparms} in the case of an
 \link{mixed.mmkin} object}
 
 \item{ymax}{Vector of maximum y axis values}

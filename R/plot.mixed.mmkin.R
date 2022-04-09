@@ -14,6 +14,8 @@ utils::globalVariables("ds")
 #'   [mixed.mmkin] object
 #' @param conf.level Passed to [mean_degparms] in the case of an
 #'   [mixed.mmkin] object
+#' @param default_log_parms Passed to [mean_degparms] in the case of an
+#'   [mixed.mmkin] object
 #' @param rel.height.legend The relative height of the legend shown on top
 #' @param rel.height.bottom The relative height of the bottom plot row
 #' @param ymax Vector of maximum y axis values
@@ -69,6 +71,7 @@ plot.mixed.mmkin <- function(x,
   pred_over = NULL,
   test_log_parms = FALSE,
   conf.level = 0.6,
+  default_log_parms = NA,
   ymax = "auto", maxabs = "auto",
   ncol.legend = ifelse(length(i) <= 3, length(i) + 1, ifelse(length(i) <= 8, 3, 4)),
   nrow.legend = ceiling((length(i) + 1) / ncol.legend),
@@ -87,7 +90,8 @@ plot.mixed.mmkin <- function(x,
   backtransform = TRUE
 
   if (identical(class(x), "mixed.mmkin")) {
-    degparms_pop <- mean_degparms(x$mmkin, test_log_parms = test_log_parms, conf.level = conf.level)
+    degparms_pop <- mean_degparms(x$mmkin, test_log_parms = test_log_parms,
+      conf.level = conf.level, default_log_parms = default_log_parms)
 
     degparms_tmp <- parms(x$mmkin, transformed = TRUE)
     degparms_i <- as.data.frame(t(degparms_tmp[setdiff(rownames(degparms_tmp), names(fit_1$errparms)), ]))
@@ -247,8 +251,7 @@ plot.mixed.mmkin <- function(x,
       par(mar = c(3.0, 4.1, 1.1, 2.1))
     }
 
-    plot(pred_pop$time, pred_pop[[obs_var]],
-      type = "l", lwd = 2, lty = lty_pop,
+    plot(0, type = "n",
       xlim = xlim, ylim = ylim_row,
       xlab = xlab, ylab = paste("Residues", obs_var), frame = frame)
 
@@ -267,6 +270,9 @@ plot.mixed.mmkin <- function(x,
         col = col_ds[ds_i], lty = lty_ds[ds_i])
     }
 
+    lines(pred_pop$time, pred_pop[[obs_var]],
+      type = "l", lwd = 2, lty = lty_pop)
+
     if (identical(maxabs, "auto")) {
       maxabs = max(abs(observed_row$residual), na.rm = TRUE)
     }
@@ -274,7 +280,8 @@ plot.mixed.mmkin <- function(x,
     if (identical(resplot, "time")) {
       plot(0, type = "n", xlim = xlim, xlab = "Time",
         ylim = c(-1.2 * maxabs, 1.2 * maxabs),
-        ylab = if (standardized) "Standardized residual" else "Residual")
+        ylab = if (standardized) "Standardized residual" else "Residual",
+        frame = frame)
 
       abline(h = 0, lty = 2)
 
@@ -289,7 +296,8 @@ plot.mixed.mmkin <- function(x,
         xlim = c(0, max(pred_ds[[obs_var]])),
         xlab = "Predicted",
         ylim = c(-1.2 * maxabs, 1.2 * maxabs),
-        ylab = if (standardized) "Standardized residual" else "Residual")
+        ylab = if (standardized) "Standardized residual" else "Residual",
+        frame = frame)
 
       abline(h = 0, lty = 2)
 

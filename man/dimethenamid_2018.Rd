@@ -62,12 +62,16 @@ plot(mixed(dmta_sfo_sfo3p_tc), test_log_parms = FALSE)
 # look more plausible, but the truth is likely to be in
 # between these variants
 plot(mixed(dmta_sfo_sfo3p_tc), test_log_parms = TRUE)
-# Therefore we use nonlinear mixed-effects models
+# We can also specify a default value for the failing
+# log parameters, to mimic FOCUS guidance
+plot(mixed(dmta_sfo_sfo3p_tc), test_log_parms = TRUE,
+  default_log_parms = log(2)/1000)
+# As these attempts are not satisfying, we use nonlinear mixed-effects models
 # f_dmta_nlme_tc <- nlme(dmta_sfo_sfo3p_tc)
 # nlme reaches maxIter = 50 without convergence
 f_dmta_saem_tc <- saem(dmta_sfo_sfo3p_tc)
 # I am commenting out the convergence plot as rendering them
-# with pkgdown fails (at least without further tweaks to the 
+# with pkgdown fails (at least without further tweaks to the
 # graphics device used)
 #saemix::plot(f_dmta_saem_tc$so, plot.type = "convergence")
 summary(f_dmta_saem_tc)
@@ -78,7 +82,7 @@ summary(f_dmta_saem_tc)
 #   covariance.model = diag(c(0, rep(1, 7))))
 # saemix::plot(f_dmta_saem_tc_2$so, plot.type = "convergence")
 # This does not perform better judged by AIC and BIC
-saemix::compare.saemix(f_dmta_saem_tc$so, f_dmta_saem_tc_2$so)
+# saemix::compare.saemix(f_dmta_saem_tc$so, f_dmta_saem_tc_2$so)
 }
 }
 \keyword{datasets}
