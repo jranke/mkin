@@ -67,7 +67,8 @@ variables in the model.}
 
 \item{xlim}{Plot range in x direction.}
 
-\item{ylim}{Plot range in y direction.}
+\item{ylim}{Plot range in y direction. If given as a list, plot ranges
+for the different plot rows can be given for row layout.}
 
 \item{col_obs}{Colors used for plotting the observed data and the
 corresponding model prediction lines.}

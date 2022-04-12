@@ -10,6 +10,8 @@
 
 - 'plot.mixed.mmkin': Pass the frame argument also to residual plots, take the 'default_log_parms' argument for 'mean_degparms' used for constructing approximate population curves, plot population curve last to avoid that it is covered by data
 
+- 'plot.mkinfit': Respect argument 'maxabs' for residual plots, and make it possible to give ylim as a list, for row layouts
+
 # mkin 1.1.0 (2022-03-14)
 
 ## Mixed-effects models

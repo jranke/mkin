@@ -66,7 +66,7 @@ version is found in the ['dev' subdirectory](https://pkgdown.jrwb.de/mkin/dev/).
 * The chi-squared error level as defined in the FOCUS kinetics guidance
   (see below) is calculated for each observed variable.
 * The 'variance by variable' error model which is often fitted using
-  Iteratively Reweighted Least Squares (IRLS) should now be specified as
+  Iteratively Reweighted Least Squares (IRLS) can be specified as
   `error_model = "obs"`.
 
 ### Unique in mkin

@@ -20,7 +20,8 @@ utils::globalVariables(c("type", "variable", "observed"))
 #' @param xlab Label for the x axis.
 #' @param ylab Label for the y axis.
 #' @param xlim Plot range in x direction.
-#' @param ylim Plot range in y direction.
+#' @param ylim Plot range in y direction. If given as a list, plot ranges
+#'   for the different plot rows can be given for row layout.
 #' @param col_obs Colors used for plotting the observed data and the
 #'   corresponding model prediction lines.
 #' @param pch_obs Symbols to be used for plotting the data.
@@ -191,11 +192,15 @@ plot.mkinfit <- function(x, fit = x,
     row_obs_vars = if (sep_obs) obs_vars[plot_row] else obs_vars
 
     # Set ylim to sensible default, or to the specified value
-    if (ylim[[1]] == "default") {
-      ylim_row = c(0, max(c(subset(fit$data, variable %in% row_obs_vars)$observed,
-                          unlist(out[row_obs_vars])), na.rm = TRUE))
+    if (is.list(ylim)) {
+      ylim_row <- ylim[[plot_row]]
     } else {
-      ylim_row = ylim
+      if (ylim[[1]] == "default") {
+        ylim_row = c(0, max(c(subset(fit$data, variable %in% row_obs_vars)$observed,
+                            unlist(out[row_obs_vars])), na.rm = TRUE))
+      } else {
+        ylim_row = ylim
+      }
     }
 
     if (row_layout) {
@@ -278,7 +283,7 @@ plot.mkinfit <- function(x, fit = x,
     if (show_residuals) {
       mkinresplot(fit, obs_vars = row_obs_vars, standardized = standardized,
         pch_obs = pch_obs[row_obs_vars], col_obs = col_obs[row_obs_vars],
-        legend = FALSE, frame = frame, xlab = xlab, xlim = xlim)
+        legend = FALSE, frame = frame, xlab = xlab, xlim = xlim, maxabs = maxabs)
     }
 
     # Show error model plot if requested
