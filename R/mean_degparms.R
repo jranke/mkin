@@ -37,7 +37,7 @@ mean_degparms <- function(object, random = FALSE, test_log_parms = FALSE, conf.l
       parm_mat_trans_OK <- parm_mat_trans
       for (trans_parm in log_parm_trans_names) {
         parm_mat_trans_OK[trans_parm, ] <- ifelse(t_test_back_OK[trans_parm, ],
-          parm_mat_trans[trans_parm, ], default_log_parms)
+          parm_mat_trans[trans_parm, ], log(default_log_parms))
       }
     } else {
     parm_mat_trans_OK <- parm_mat_trans
@@ -47,6 +47,8 @@ mean_degparms <- function(object, random = FALSE, test_log_parms = FALSE, conf.l
   degparm_mat_trans <- parm_mat_trans[mean_degparm_names, , drop = FALSE]
   degparm_mat_trans_OK <- parm_mat_trans_OK[mean_degparm_names, , drop = FALSE]
 
+  # fixed in the sense of fixed effects, as this function was
+  # written to supply starting parameters for nlme
   fixed <- apply(degparm_mat_trans_OK, 1, mean, na.rm = TRUE)
   if (random) {
     random <- t(apply(degparm_mat_trans[mean_degparm_names, , drop = FALSE], 2, function(column) column - fixed))
