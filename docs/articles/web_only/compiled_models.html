@@ -43,7 +43,7 @@
   <a href="../../reference/index.html">Functions and data</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -105,7 +105,7 @@
       <h1 data-toc-skip>Performance benefit by using compiled model definitions in mkin</h1>
                         <h4 data-toc-skip class="author">Johannes Ranke</h4>
             
-            <h4 data-toc-skip class="date">2022-03-02</h4>
+            <h4 data-toc-skip class="date">2022-05-18</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jranke/mkin/blob/HEAD/vignettes/web_only/compiled_models.rmd" class="external-link"><code>vignettes/web_only/compiled_models.rmd</code></a></small>
       <div class="hidden name"><code>compiled_models.rmd</code></div>
@@ -141,11 +141,11 @@
   m1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## Temporary DLL for differentials generated and loaded</span></code></pre>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">FOCUS_D</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/saemix/man/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">FOCUS_2006_D</span>, <span class="va">value</span> <span class="op">!=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">FOCUS_D</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">FOCUS_2006_D</span>, <span class="va">value</span> <span class="op">!=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
 <p>We can compare the performance of the Eigenvalue based solution against the compiled version and the R implementation of the differential equations using the benchmark package. In the output of below code, the warnings about zero being removed from the FOCUS D dataset are suppressed. Since mkin version 0.9.49.11, an analytical solution is also implemented, which is included in the tests below.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">if</span> <span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="http://rbenchmark.googlecode.com" class="external-link">rbenchmark</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
-  <span class="va">b.1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rbenchmark/man/benchmark.html" class="external-link">benchmark</a></span><span class="op">(</span>
+  <span class="va">b.1</span> <span class="op">&lt;-</span> <span class="fu">benchmark</span><span class="op">(</span>
     <span class="st">"deSolve, not compiled"</span> <span class="op">=</span> <span class="fu"><a href="../../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">SFO_SFO</span>, <span class="va">FOCUS_D</span>,
        solution_type <span class="op">=</span> <span class="st">"deSolve"</span>,
        use_compiled <span class="op">=</span> <span class="cn">FALSE</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
@@ -162,11 +162,7 @@
 <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
   <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="st">"R package rbenchmark is not available"</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
-<pre><code><span class="co">##                    test replications relative elapsed</span>
-<span class="co">## 4            analytical            1    1.000   0.216</span>
-<span class="co">## 3     deSolve, compiled            1    1.708   0.369</span>
-<span class="co">## 2      Eigenvalue based            1    1.866   0.403</span>
-<span class="co">## 1 deSolve, not compiled            1   34.009   7.346</span></code></pre>
+<pre><code><span class="co">## [1] "R package rbenchmark is not available"</span></code></pre>
 <p>We see that using the compiled model is by more than a factor of 10 faster than using deSolve without compiled code.</p>
 </div>
 <div class="section level2">
@@ -179,7 +175,7 @@
     parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"FOMC"</span>, <span class="st">"m1"</span><span class="op">)</span>,
     m1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span> <span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span>
 
-  <span class="va">b.2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rbenchmark/man/benchmark.html" class="external-link">benchmark</a></span><span class="op">(</span>
+  <span class="va">b.2</span> <span class="op">&lt;-</span> <span class="fu">benchmark</span><span class="op">(</span>
     <span class="st">"deSolve, not compiled"</span> <span class="op">=</span> <span class="fu"><a href="../../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">FOMC_SFO</span>, <span class="va">FOCUS_D</span>,
                                       use_compiled <span class="op">=</span> <span class="cn">FALSE</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
     <span class="st">"deSolve, compiled"</span> <span class="op">=</span> <span class="fu"><a href="../../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">FOMC_SFO</span>, <span class="va">FOCUS_D</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
@@ -191,16 +187,14 @@
   <span class="va">factor_FOMC_SFO</span> <span class="op">&lt;-</span> <span class="cn">NA</span>
   <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="st">"R package benchmark is not available"</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
-<pre><code><span class="co">## Temporary DLL for differentials generated and loaded</span></code></pre>
-<pre><code><span class="co">##                    test replications relative elapsed</span>
-<span class="co">## 2     deSolve, compiled            1    1.000   0.533</span>
-<span class="co">## 1 deSolve, not compiled            1   25.146  13.403</span></code></pre>
-<p>Here we get a performance benefit of a factor of 25 using the version of the differential equation model compiled from C code!</p>
+<pre><code><span class="co">## Loading required package: rbenchmark</span></code></pre>
+<pre><code><span class="co">## [1] "R package benchmark is not available"</span></code></pre>
+<p>Here we get a performance benefit of a factor of NA using the version of the differential equation model compiled from C code!</p>
 <p>This vignette was built with mkin 1.1.0 on</p>
-<pre><code><span class="co">## R version 4.1.2 (2021-11-01)</span>
+<pre><code><span class="co">## R version 4.2.0 (2022-04-22)</span>
 <span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span>
 <span class="co">## Running under: Debian GNU/Linux 11 (bullseye)</span></code></pre>
-<pre><code><span class="co">## CPU model: AMD Ryzen 7 1700 Eight-Core Processor</span></code></pre>
+<pre><code><span class="co">## CPU model: Intel(R) Core(TM) i7-4710MQ CPU @ 2.50GHz</span></code></pre>
 </div>
   </div>
 
@@ -221,7 +215,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>

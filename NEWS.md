@@ -1,5 +1,9 @@
 # mkin 1.1.1
 
+- 'vignettes/FOCUS_L.rmd': Remove an outdated note referring to a failure to calculate the covariance matrix for DFOP with the L2 dataset. Since 0.9.45.5 the covariance matrix is available
+
+- 'vignettes/web_only/benchmarks.rmd': Add the first benchmark data using my laptop system, therefore add the CPU when showing the benchmark results.
+
 - 'dimethenamid_2018': Update example code to use saemix
 
 - 'CAKE_export': Check for validity of the map argument, updates

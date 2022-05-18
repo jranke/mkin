@@ -49,13 +49,13 @@ and value in order to be compatible with mkinfit}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{mkinds$new()}}
-\item \href{#method-clone}{\code{mkinds$clone()}}
+\item \href{#method-mkinds-new}{\code{mkinds$new()}}
+\item \href{#method-mkinds-clone}{\code{mkinds$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-mkinds-new"></a>}}
+\if{latex}{\out{\hypertarget{method-mkinds-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new mkinds object
 \subsection{Usage}{
@@ -77,8 +77,8 @@ Create a new mkinds object
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-mkinds-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-mkinds-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

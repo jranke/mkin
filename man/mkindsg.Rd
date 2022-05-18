@@ -53,13 +53,13 @@ or covariates like soil pH).}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{mkindsg$new()}}
-\item \href{#method-clone}{\code{mkindsg$clone()}}
+\item \href{#method-mkindsg-new}{\code{mkindsg$new()}}
+\item \href{#method-mkindsg-clone}{\code{mkindsg$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-mkindsg-new"></a>}}
+\if{latex}{\out{\hypertarget{method-mkindsg-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new mkindsg object
 \subsection{Usage}{
@@ -81,8 +81,8 @@ Create a new mkindsg object
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-mkindsg-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-mkindsg-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{
