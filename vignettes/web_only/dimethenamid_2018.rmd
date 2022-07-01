@@ -1,7 +1,7 @@
 ---
 title: Example evaluations of the dimethenamid data from 2018
 author: Johannes Ranke
-date: Last change 7 March 2022, built on `r Sys.setlocale("LC_TIME", "C"); format(Sys.Date(), format = "%d %b %Y")`
+date: Last change 1 July 2022, built on `r Sys.setlocale("LC_TIME", "C"); format(Sys.Date(), format = "%d %b %Y")`
 output:
   html_document:
     toc: true
@@ -341,10 +341,18 @@ print(AIC_parent_saemix_methods)
 ```
 The AIC values based on importance sampling and Gaussian quadrature are very
 similar. Using linearisation is known to be less accurate, but still gives a
-similar value. In order to illustrate that the comparison of the three method
+similar value.
+
+In order to illustrate that the comparison of the three method
 depends on the degree of convergence obtained in the fit, the same comparison
 is shown below for the fit using the defaults for the number of iterations and
 the number of MCMC chains.
+
+When using OpenBlas for linear algebra, there is a large difference in the
+values obtained with Gaussian quadrature, so the larger number of iterations
+makes a lot of difference. When using the LAPACK version coming with Debian
+Bullseye, the AIC based on Gaussian quadrature is almost the same as the one obtained
+with the other methods, also when using defaults for the fit.
 
 ```{r AIC_parent_saemix_methods_defaults, cache = FALSE}
 f_parent_saemix_dfop_tc_defaults <- mkin::saem(f_parent_mkin_tc["DFOP", ])
@@ -393,6 +401,12 @@ obtained using the nonlinear mixed-effects models presented here. However,
 attempts to quantify the variability of the slower rate constant of the
 biphasic decline of dimethenamid indicate that the data are not sufficient
 to characterise this variability to a satisfactory precision.
+
+# Session Info
+
+```{r sessionInfo, cache = FALSE}
+sessionInfo()
+```
 
 # References
 
