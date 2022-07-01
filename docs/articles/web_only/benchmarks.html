@@ -105,7 +105,7 @@
       <h1 data-toc-skip>Benchmark timings for mkin</h1>
                         <h4 data-toc-skip class="author">Johannes Ranke</h4>
             
-            <h4 data-toc-skip class="date">Last change 13 May 2020 (rebuilt 2022-05-18)</h4>
+            <h4 data-toc-skip class="date">Last change 30 June 2022 (rebuilt 2022-07-01)</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jranke/mkin/blob/HEAD/vignettes/web_only/benchmarks.rmd" class="external-link"><code>vignettes/web_only/benchmarks.rmd</code></a></small>
       <div class="hidden name"><code>benchmarks.rmd</code></div>
@@ -114,147 +114,200 @@
 
     
     
-<p>Each system is characterized by its CPU type, the operating system type and the mkin version. Currently only values for one system are available. A compiler was available, so if no analytical solution was available, compiled ODE models are used.</p>
+<p>Each system is characterized by the operating system type, the CPU type, the mkin version, and, as in June 2022 the current R version lead to worse performance, the R version. A compiler was available, so if no analytical solution was available, compiled ODE models are used.</p>
+<p>Every fit is only performed once, so the accuracy of the benchmarks is limited.</p>
 <div class="section level2">
 <h2 id="test-cases">Test cases<a class="anchor" aria-label="anchor" href="#test-cases"></a>
 </h2>
 <p>Parent only:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">FOCUS_C</span> <span class="op">&lt;-</span> <span class="va">FOCUS_2006_C</span>
-<span class="va">FOCUS_D</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">FOCUS_2006_D</span>, <span class="va">value</span> <span class="op">!=</span> <span class="fl">0</span><span class="op">)</span>
-<span class="va">parent_datasets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">FOCUS_C</span>, <span class="va">FOCUS_D</span><span class="op">)</span>
-
-<span class="va">t1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"FOMC"</span>, <span class="st">"DFOP"</span>, <span class="st">"HS"</span><span class="op">)</span>, <span class="va">parent_datasets</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span>
-<span class="va">t2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"FOMC"</span>, <span class="st">"DFOP"</span>, <span class="st">"HS"</span><span class="op">)</span>, <span class="va">parent_datasets</span>,
-    error_model <span class="op">=</span> <span class="st">"tc"</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">FOCUS_C</span> <span class="op">&lt;-</span> <span class="va">FOCUS_2006_C</span></span>
+<span><span class="va">FOCUS_D</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">FOCUS_2006_D</span>, <span class="va">value</span> <span class="op">!=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span><span class="va">parent_datasets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">FOCUS_C</span>, <span class="va">FOCUS_D</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">t1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"FOMC"</span>, <span class="st">"DFOP"</span>, <span class="st">"HS"</span><span class="op">)</span>, <span class="va">parent_datasets</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="va">t2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"FOMC"</span>, <span class="st">"DFOP"</span>, <span class="st">"HS"</span><span class="op">)</span>, <span class="va">parent_datasets</span>,</span>
+<span>    error_model <span class="op">=</span> <span class="st">"tc"</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
 <p>One metabolite:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">SFO_SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>
-  parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"m1"</span><span class="op">)</span>,
-  m1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span>
-<span class="va">FOMC_SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>
-  parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"FOMC"</span>, <span class="st">"m1"</span><span class="op">)</span>,
-  m1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span>
-<span class="va">DFOP_SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>
-  parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"FOMC"</span>, <span class="st">"m1"</span><span class="op">)</span>,
-  m1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span>
-<span class="va">t3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">SFO_SFO</span>, <span class="va">FOMC_SFO</span>, <span class="va">DFOP_SFO</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">FOCUS_D</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span>
-<span class="va">t4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">SFO_SFO</span>, <span class="va">FOMC_SFO</span>, <span class="va">DFOP_SFO</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">FOCUS_D</span><span class="op">)</span>,
-    error_model <span class="op">=</span> <span class="st">"tc"</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span>
-<span class="va">t5</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">SFO_SFO</span>, <span class="va">FOMC_SFO</span>, <span class="va">DFOP_SFO</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">FOCUS_D</span><span class="op">)</span>,
-    error_model <span class="op">=</span> <span class="st">"obs"</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">SFO_SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span></span>
+<span>  parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"m1"</span><span class="op">)</span>,</span>
+<span>  m1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">FOMC_SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span></span>
+<span>  parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"FOMC"</span>, <span class="st">"m1"</span><span class="op">)</span>,</span>
+<span>  m1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">DFOP_SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span></span>
+<span>  parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"FOMC"</span>, <span class="st">"m1"</span><span class="op">)</span>,</span>
+<span>  m1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">t3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">SFO_SFO</span>, <span class="va">FOMC_SFO</span>, <span class="va">DFOP_SFO</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">FOCUS_D</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="va">t4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">SFO_SFO</span>, <span class="va">FOMC_SFO</span>, <span class="va">DFOP_SFO</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">FOCUS_D</span><span class="op">)</span>,</span>
+<span>    error_model <span class="op">=</span> <span class="st">"tc"</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="va">t5</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">SFO_SFO</span>, <span class="va">FOMC_SFO</span>, <span class="va">DFOP_SFO</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">FOCUS_D</span><span class="op">)</span>,</span>
+<span>    error_model <span class="op">=</span> <span class="st">"obs"</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
 <p>Two metabolites, synthetic data:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">m_synth_SFO_lin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"M1"</span><span class="op">)</span>,
-                           M1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"M2"</span><span class="op">)</span>,
-                           M2 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,
-                           use_of_ff <span class="op">=</span> <span class="st">"max"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-
-<span class="va">m_synth_DFOP_par</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"DFOP"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"M1"</span>, <span class="st">"M2"</span><span class="op">)</span><span class="op">)</span>,
-                           M1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,
-                           M2 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,
-                           use_of_ff <span class="op">=</span> <span class="st">"max"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-
-<span class="va">SFO_lin_a</span> <span class="op">&lt;-</span> <span class="va">synthetic_data_for_UBA_2014</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">data</span>
-
-<span class="va">DFOP_par_c</span> <span class="op">&lt;-</span> <span class="va">synthetic_data_for_UBA_2014</span><span class="op">[[</span><span class="fl">12</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">data</span>
-
-<span class="va">t6</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">m_synth_SFO_lin</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">SFO_lin_a</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span>
-<span class="va">t7</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">m_synth_DFOP_par</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">DFOP_par_c</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span>
-
-<span class="va">t8</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">m_synth_SFO_lin</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">SFO_lin_a</span><span class="op">)</span>,
-    error_model <span class="op">=</span> <span class="st">"tc"</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span>
-<span class="va">t9</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">m_synth_DFOP_par</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">DFOP_par_c</span><span class="op">)</span>,
-    error_model <span class="op">=</span> <span class="st">"tc"</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span>
-
-<span class="va">t10</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">m_synth_SFO_lin</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">SFO_lin_a</span><span class="op">)</span>,
-    error_model <span class="op">=</span> <span class="st">"obs"</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span>
-<span class="va">t11</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">m_synth_DFOP_par</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">DFOP_par_c</span><span class="op">)</span>,
-    error_model <span class="op">=</span> <span class="st">"obs"</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">m_synth_SFO_lin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"M1"</span><span class="op">)</span>,</span>
+<span>                           M1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"M2"</span><span class="op">)</span>,</span>
+<span>                           M2 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,</span>
+<span>                           use_of_ff <span class="op">=</span> <span class="st">"max"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">m_synth_DFOP_par</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"DFOP"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"M1"</span>, <span class="st">"M2"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>                           M1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,</span>
+<span>                           M2 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,</span>
+<span>                           use_of_ff <span class="op">=</span> <span class="st">"max"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">SFO_lin_a</span> <span class="op">&lt;-</span> <span class="va">synthetic_data_for_UBA_2014</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">data</span></span>
+<span></span>
+<span><span class="va">DFOP_par_c</span> <span class="op">&lt;-</span> <span class="va">synthetic_data_for_UBA_2014</span><span class="op">[[</span><span class="fl">12</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">data</span></span>
+<span></span>
+<span><span class="va">t6</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">m_synth_SFO_lin</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">SFO_lin_a</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="va">t7</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">m_synth_DFOP_par</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">DFOP_par_c</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></span>
+<span></span>
+<span><span class="va">t8</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">m_synth_SFO_lin</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">SFO_lin_a</span><span class="op">)</span>,</span>
+<span>    error_model <span class="op">=</span> <span class="st">"tc"</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="va">t9</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">m_synth_DFOP_par</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">DFOP_par_c</span><span class="op">)</span>,</span>
+<span>    error_model <span class="op">=</span> <span class="st">"tc"</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></span>
+<span></span>
+<span><span class="va">t10</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">m_synth_SFO_lin</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">SFO_lin_a</span><span class="op">)</span>,</span>
+<span>    error_model <span class="op">=</span> <span class="st">"obs"</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="va">t11</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="fu">mmkin_bench</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">m_synth_DFOP_par</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">DFOP_par_c</span><span class="op">)</span>,</span>
+<span>    error_model <span class="op">=</span> <span class="st">"obs"</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="st">"elapsed"</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mkin_benchmarks</span><span class="op">[</span><span class="va">system_string</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"t"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">11</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">t1</span>, <span class="va">t2</span>, <span class="va">t3</span>, <span class="va">t4</span>, <span class="va">t5</span>, <span class="va">t6</span>, <span class="va">t7</span>, <span class="va">t8</span>, <span class="va">t9</span>, <span class="va">t10</span>, <span class="va">t11</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/save.html" class="external-link">save</a></span><span class="op">(</span><span class="va">mkin_benchmarks</span>, file <span class="op">=</span> <span class="st">"~/git/mkin/vignettes/web_only/mkin_benchmarks.rda"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">mkin_benchmarks</span><span class="op">[</span><span class="va">system_string</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"t"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">11</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">t1</span>, <span class="va">t2</span>, <span class="va">t3</span>, <span class="va">t4</span>, <span class="va">t5</span>, <span class="va">t6</span>, <span class="va">t7</span>, <span class="va">t8</span>, <span class="va">t9</span>, <span class="va">t10</span>, <span class="va">t11</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/save.html" class="external-link">save</a></span><span class="op">(</span><span class="va">mkin_benchmarks</span>, file <span class="op">=</span> <span class="va">benchmark_path</span><span class="op">)</span></span>
+<span><span class="co"># Hide rownames from kable for results section</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">mkin_benchmarks</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="results">Results<a class="anchor" aria-label="anchor" href="#results"></a>
 </h2>
-<p>Benchmarks for all available error models are shown.</p>
+<p>Benchmarks for all available error models are shown. They are intended for improving mkin, not for comparing CPUs or operating systems. All trademarks belong to their respective owners.</p>
 <div class="section level3">
 <h3 id="parent-only">Parent only<a class="anchor" aria-label="anchor" href="#parent-only"></a>
 </h3>
 <p>Constant variance (t1) and two-component error model (t2) for four models fitted to two datasets, i.e. eight fits for each test.</p>
-<table style="width:100%;" class="table">
-<colgroup>
-<col width="84%">
-<col width="7%">
-<col width="8%">
-</colgroup>
+<table class="table">
 <thead><tr class="header">
-<th align="left"></th>
+<th align="left">OS</th>
+<th align="left">CPU</th>
+<th align="left">R</th>
+<th align="left">mkin</th>
 <th align="right">t1</th>
 <th align="right">t2</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">0.9.48.1</td>
 <td align="right">3.610</td>
 <td align="right">11.019</td>
 </tr>
 <tr class="even">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">0.9.49.1</td>
 <td align="right">8.184</td>
 <td align="right">22.889</td>
 </tr>
 <tr class="odd">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">0.9.49.2</td>
 <td align="right">7.064</td>
 <td align="right">12.558</td>
 </tr>
 <tr class="even">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">0.9.49.3</td>
 <td align="right">7.296</td>
 <td align="right">21.239</td>
 </tr>
 <tr class="odd">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">0.9.49.4</td>
 <td align="right">5.936</td>
 <td align="right">20.545</td>
 </tr>
 <tr class="even">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.50.2</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">0.9.50.2</td>
 <td align="right">1.714</td>
 <td align="right">3.971</td>
 </tr>
 <tr class="odd">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.50.3</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">0.9.50.3</td>
 <td align="right">1.752</td>
 <td align="right">4.156</td>
 </tr>
 <tr class="even">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.50.4</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">0.9.50.4</td>
 <td align="right">1.786</td>
 <td align="right">3.729</td>
 </tr>
 <tr class="odd">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 1.0.3</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">1.0.3</td>
 <td align="right">1.881</td>
 <td align="right">3.504</td>
 </tr>
 <tr class="even">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 1.0.4</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">1.0.4</td>
 <td align="right">1.867</td>
 <td align="right">3.450</td>
 </tr>
 <tr class="odd">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 1.1.0</td>
-<td align="right">1.938</td>
-<td align="right">3.517</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">1.1.0</td>
+<td align="right">1.791</td>
+<td align="right">3.466</td>
 </tr>
 <tr class="even">
-<td align="left">Linux, Intel(R) Core(TM) i7-4710MQ CPU @ 2.50GHz, mkin version 1.1.0</td>
+<td align="left">Linux</td>
+<td align="left">i7-4710MQ</td>
+<td align="left">NA</td>
+<td align="left">1.1.0</td>
 <td align="right">1.621</td>
 <td align="right">3.123</td>
+</tr>
+<tr class="odd">
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">4.1.3</td>
+<td align="left">1.1.0</td>
+<td align="right">1.791</td>
+<td align="right">3.289</td>
+</tr>
+<tr class="even">
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">4.2.1</td>
+<td align="left">1.1.0</td>
+<td align="right">1.860</td>
+<td align="right">3.526</td>
 </tr>
 </tbody>
 </table>
@@ -264,90 +317,141 @@
 </h3>
 <p>Constant variance (t3), two-component error model (t4), and variance by variable (t5) for three models fitted to one dataset, i.e. three fits for each test.</p>
 <table class="table">
-<colgroup>
-<col width="78%">
-<col width="6%">
-<col width="7%">
-<col width="6%">
-</colgroup>
 <thead><tr class="header">
-<th align="left"></th>
+<th align="left">OS</th>
+<th align="left">CPU</th>
+<th align="left">R</th>
+<th align="left">mkin</th>
 <th align="right">t3</th>
 <th align="right">t4</th>
 <th align="right">t5</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">0.9.48.1</td>
 <td align="right">3.764</td>
 <td align="right">14.347</td>
 <td align="right">9.495</td>
 </tr>
 <tr class="even">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">0.9.49.1</td>
 <td align="right">4.649</td>
 <td align="right">13.789</td>
 <td align="right">6.395</td>
 </tr>
 <tr class="odd">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">0.9.49.2</td>
 <td align="right">4.786</td>
 <td align="right">8.461</td>
 <td align="right">5.675</td>
 </tr>
 <tr class="even">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">0.9.49.3</td>
 <td align="right">4.510</td>
 <td align="right">13.805</td>
 <td align="right">7.386</td>
 </tr>
 <tr class="odd">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">0.9.49.4</td>
 <td align="right">4.446</td>
 <td align="right">15.335</td>
 <td align="right">6.002</td>
 </tr>
 <tr class="even">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.50.2</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">0.9.50.2</td>
 <td align="right">1.402</td>
 <td align="right">6.174</td>
 <td align="right">2.764</td>
 </tr>
 <tr class="odd">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.50.3</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">0.9.50.3</td>
 <td align="right">1.430</td>
 <td align="right">6.615</td>
 <td align="right">2.878</td>
 </tr>
 <tr class="even">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.50.4</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">0.9.50.4</td>
 <td align="right">1.397</td>
 <td align="right">7.251</td>
 <td align="right">2.810</td>
 </tr>
 <tr class="odd">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 1.0.3</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">1.0.3</td>
 <td align="right">1.430</td>
 <td align="right">6.344</td>
 <td align="right">2.798</td>
 </tr>
 <tr class="even">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 1.0.4</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">1.0.4</td>
 <td align="right">1.415</td>
 <td align="right">6.364</td>
 <td align="right">2.820</td>
 </tr>
 <tr class="odd">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 1.1.0</td>
-<td align="right">1.470</td>
-<td align="right">6.508</td>
-<td align="right">2.894</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">1.1.0</td>
+<td align="right">3.901</td>
+<td align="right">21.574</td>
+<td align="right">8.564</td>
 </tr>
 <tr class="even">
-<td align="left">Linux, Intel(R) Core(TM) i7-4710MQ CPU @ 2.50GHz, mkin version 1.1.0</td>
+<td align="left">Linux</td>
+<td align="left">i7-4710MQ</td>
+<td align="left">NA</td>
+<td align="left">1.1.0</td>
 <td align="right">3.319</td>
 <td align="right">18.209</td>
 <td align="right">7.773</td>
+</tr>
+<tr class="odd">
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">4.1.3</td>
+<td align="left">1.1.0</td>
+<td align="right">1.310</td>
+<td align="right">6.279</td>
+<td align="right">2.681</td>
+</tr>
+<tr class="even">
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">4.2.1</td>
+<td align="left">1.1.0</td>
+<td align="right">4.237</td>
+<td align="right">23.882</td>
+<td align="right">9.508</td>
 </tr>
 </tbody>
 </table>
@@ -357,17 +461,11 @@
 </h3>
 <p>Constant variance (t6 and t7), two-component error model (t8 and t9), and variance by variable (t10 and t11) for one model fitted to one dataset, i.e. one fit for each test.</p>
 <table class="table">
-<colgroup>
-<col width="64%">
-<col width="5%">
-<col width="5%">
-<col width="5%">
-<col width="6%">
-<col width="5%">
-<col width="6%">
-</colgroup>
 <thead><tr class="header">
-<th align="left"></th>
+<th align="left">OS</th>
+<th align="left">CPU</th>
+<th align="left">R</th>
+<th align="left">mkin</th>
 <th align="right">t6</th>
 <th align="right">t7</th>
 <th align="right">t8</th>
@@ -377,7 +475,10 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.48.1</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">0.9.48.1</td>
 <td align="right">2.623</td>
 <td align="right">4.587</td>
 <td align="right">7.525</td>
@@ -386,7 +487,10 @@
 <td align="right">31.267</td>
 </tr>
 <tr class="even">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.1</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">0.9.49.1</td>
 <td align="right">2.542</td>
 <td align="right">4.128</td>
 <td align="right">4.632</td>
@@ -395,7 +499,10 @@
 <td align="right">5.636</td>
 </tr>
 <tr class="odd">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.2</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">0.9.49.2</td>
 <td align="right">2.723</td>
 <td align="right">4.478</td>
 <td align="right">4.862</td>
@@ -404,7 +511,10 @@
 <td align="right">5.574</td>
 </tr>
 <tr class="even">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.3</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">0.9.49.3</td>
 <td align="right">2.643</td>
 <td align="right">4.374</td>
 <td align="right">7.020</td>
@@ -413,7 +523,10 @@
 <td align="right">7.365</td>
 </tr>
 <tr class="odd">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.49.4</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">0.9.49.4</td>
 <td align="right">2.635</td>
 <td align="right">4.259</td>
 <td align="right">4.737</td>
@@ -422,7 +535,10 @@
 <td align="right">5.626</td>
 </tr>
 <tr class="even">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.50.2</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">0.9.50.2</td>
 <td align="right">0.777</td>
 <td align="right">1.236</td>
 <td align="right">1.332</td>
@@ -431,7 +547,10 @@
 <td align="right">2.987</td>
 </tr>
 <tr class="odd">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.50.3</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">0.9.50.3</td>
 <td align="right">0.858</td>
 <td align="right">1.264</td>
 <td align="right">1.333</td>
@@ -440,7 +559,10 @@
 <td align="right">3.073</td>
 </tr>
 <tr class="even">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 0.9.50.4</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">0.9.50.4</td>
 <td align="right">0.783</td>
 <td align="right">1.282</td>
 <td align="right">1.486</td>
@@ -449,7 +571,10 @@
 <td align="right">3.105</td>
 </tr>
 <tr class="odd">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 1.0.3</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">1.0.3</td>
 <td align="right">0.763</td>
 <td align="right">1.244</td>
 <td align="right">1.457</td>
@@ -458,7 +583,10 @@
 <td align="right">2.839</td>
 </tr>
 <tr class="even">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 1.0.4</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">1.0.4</td>
 <td align="right">0.785</td>
 <td align="right">1.252</td>
 <td align="right">1.466</td>
@@ -467,22 +595,52 @@
 <td align="right">2.826</td>
 </tr>
 <tr class="odd">
-<td align="left">Linux, AMD Ryzen 7 1700 Eight-Core Processor, mkin version 1.1.0</td>
-<td align="right">0.810</td>
-<td align="right">1.264</td>
-<td align="right">1.503</td>
-<td align="right">3.096</td>
-<td align="right">1.984</td>
-<td align="right">2.847</td>
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">NA</td>
+<td align="left">1.1.0</td>
+<td align="right">3.088</td>
+<td align="right">4.324</td>
+<td align="right">5.114</td>
+<td align="right">10.988</td>
+<td align="right">6.800</td>
+<td align="right">9.860</td>
 </tr>
 <tr class="even">
-<td align="left">Linux, Intel(R) Core(TM) i7-4710MQ CPU @ 2.50GHz, mkin version 1.1.0</td>
+<td align="left">Linux</td>
+<td align="left">i7-4710MQ</td>
+<td align="left">NA</td>
+<td align="left">1.1.0</td>
 <td align="right">2.348</td>
 <td align="right">3.579</td>
 <td align="right">4.254</td>
 <td align="right">11.315</td>
 <td align="right">5.981</td>
 <td align="right">8.368</td>
+</tr>
+<tr class="odd">
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">4.1.3</td>
+<td align="left">1.1.0</td>
+<td align="right">0.744</td>
+<td align="right">1.227</td>
+<td align="right">1.288</td>
+<td align="right">3.553</td>
+<td align="right">1.895</td>
+<td align="right">2.738</td>
+</tr>
+<tr class="even">
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">4.2.1</td>
+<td align="left">1.1.0</td>
+<td align="right">3.350</td>
+<td align="right">4.735</td>
+<td align="right">5.507</td>
+<td align="right">11.860</td>
+<td align="right">7.179</td>
+<td align="right">10.934</td>
 </tr>
 </tbody>
 </table>
@@ -507,7 +665,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer>

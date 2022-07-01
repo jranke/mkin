@@ -1,32 +1,9 @@
----
-title: "Benchmark timings for mkin"
-author: "Johannes Ranke"
-date: Last change 30 June 2022 (rebuilt `r Sys.Date()`)
-output:
-  html_document:
-    toc: true
-    toc_float: true
-    code_folding: show
-    fig_retina: null
-vignette: >
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
----
-
-```{r, include = FALSE}
+## ---- include = FALSE---------------------------------------------------------
 library(knitr)
 opts_chunk$set(tidy = FALSE, cache = FALSE)
 library("mkin")
-```
 
-Each system is characterized by the operating system type, the CPU type, the
-mkin version, and, as in June 2022 the current R version lead to worse
-performance, the R version. A compiler was available, so if no analytical
-solution was available, compiled ODE models are used.
-
-Every fit is only performed once, so the accuracy of the benchmarks is limited.
-
-```{r include = FALSE}
+## ----include = FALSE----------------------------------------------------------
 cpu_model <- benchmarkme::get_cpu()$model_name
 # Abbreviate CPU identifiers
 cpu_model <- gsub("AMD ", "", cpu_model)
@@ -63,13 +40,8 @@ if (mkin_version > "0.9.48.1") {
     mmkin(models, datasets, reweight.method = error_model, cores = 1, quiet = TRUE)
   }
 }
-```
 
-## Test cases
-
-Parent only:
-
-```{r parent_only, warning = FALSE}
+## ----parent_only, warning = FALSE---------------------------------------------
 FOCUS_C <- FOCUS_2006_C
 FOCUS_D <- subset(FOCUS_2006_D, value != 0)
 parent_datasets <- list(FOCUS_C, FOCUS_D)
@@ -77,11 +49,8 @@ parent_datasets <- list(FOCUS_C, FOCUS_D)
 t1 <- system.time(mmkin_bench(c("SFO", "FOMC", "DFOP", "HS"), parent_datasets))[["elapsed"]]
 t2 <- system.time(mmkin_bench(c("SFO", "FOMC", "DFOP", "HS"), parent_datasets,
     error_model = "tc"))[["elapsed"]]
-```
 
-One metabolite:
-
-```{r one_metabolite, message = FALSE}
+## ----one_metabolite, message = FALSE------------------------------------------
 SFO_SFO <- mkinmod(
   parent = mkinsub("SFO", "m1"),
   m1 = mkinsub("SFO"))
@@ -96,11 +65,8 @@ t4 <- system.time(mmkin_bench(list(SFO_SFO, FOMC_SFO, DFOP_SFO), list(FOCUS_D),
     error_model = "tc"))[["elapsed"]]
 t5 <- system.time(mmkin_bench(list(SFO_SFO, FOMC_SFO, DFOP_SFO), list(FOCUS_D),
     error_model = "obs"))[["elapsed"]]
-```
 
-Two metabolites, synthetic data:
-
-```{r two_metabolites, message = FALSE}
+## ----two_metabolites, message = FALSE-----------------------------------------
 m_synth_SFO_lin <- mkinmod(parent = mkinsub("SFO", "M1"),
                            M1 = mkinsub("SFO", "M2"),
                            M2 = mkinsub("SFO"),
@@ -127,46 +93,20 @@ t10 <- system.time(mmkin_bench(list(m_synth_SFO_lin), list(SFO_lin_a),
     error_model = "obs"))[["elapsed"]]
 t11 <- system.time(mmkin_bench(list(m_synth_DFOP_par), list(DFOP_par_c),
     error_model = "obs"))[["elapsed"]]
-```
 
-```{r results}
+## ----results------------------------------------------------------------------
 mkin_benchmarks[system_string, paste0("t", 1:11)] <-
   c(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11)
 save(mkin_benchmarks, file = benchmark_path)
 # Hide rownames from kable for results section
 rownames(mkin_benchmarks) <- NULL
-```
 
-## Results
-
-Benchmarks for all available error models are shown. They are intended for
-improving mkin, not for comparing CPUs or operating systems. All trademarks
-belong to their respective owners.
-
-### Parent only
-
-Constant variance (t1) and two-component error model (t2) for four models
-fitted to two datasets, i.e. eight fits for each test.
-
-```{r, echo = FALSE}
+## ---- echo = FALSE------------------------------------------------------------
 kable(mkin_benchmarks[, c(1:4, 5:6)])
-```
 
-### One metabolite
-
-Constant variance (t3), two-component error model (t4), and variance by variable (t5)
-for three models fitted to one dataset, i.e. three fits for each test.
-
-```{r, echo = FALSE}
+## ---- echo = FALSE------------------------------------------------------------
 kable(mkin_benchmarks[, c(1:4, 7:9)])
-```
 
-### Two metabolites
-
-Constant variance (t6 and t7), two-component error model (t8 and t9), and
-variance by variable (t10 and t11) for one model fitted to one dataset, i.e.
-one fit for each test.
-
-```{r, echo = FALSE}
+## ---- echo = FALSE------------------------------------------------------------
 kable(mkin_benchmarks[, c(1:4, 10:15)])
-```
+
