@@ -274,7 +274,7 @@ mkinfit <- function(mkinmod, observed,
   # Check mkinmod and generate a model for the variable whith the highest value
   # if a suitable string is given
   parent_models_available = c("SFO", "FOMC", "DFOP", "HS", "SFORB", "IORE", "logistic")
-  if (class(mkinmod) != "mkinmod") {
+  if (!inherits(mkinmod, "mkinmod")) {
     presumed_parent_name = observed[which.max(observed$value), "name"]
     if (mkinmod[[1]] %in% parent_models_available) {
       speclist <- list(list(type = mkinmod, sink = TRUE))
