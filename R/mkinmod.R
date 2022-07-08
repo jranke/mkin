@@ -464,9 +464,9 @@ mkinmod <- function(..., use_of_ff = "max", name = NULL,
     if (!inherits(model$cf, "try-error")) {
       if (is.null(dll_dir)) {
         if (!quiet) message("Temporary DLL for differentials generated and loaded")
-        dll_info <- inline::getDynLib(model$cf)
+        model$dll_info <- inline::getDynLib(model$cf)
       } else {
-        dll_info <- inline::moveDLL(model$cf, name, dll_dir,
+        model$dll_info <- inline::moveDLL(model$cf, name, dll_dir,
           unload = unload, overwrite = overwrite, verbose = !quiet)
       }
     }

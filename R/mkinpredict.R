@@ -177,7 +177,8 @@ mkinpredict.mkinmod <- function(x,
         times = outtimes,
         func = "diffs",
         initfunc = "initpar",
-        dllname = inline::getDynLib(x$cf)[["name"]],
+        dllname = if (is.null(x$dll_info)) inline::getDynLib(x$cf)[["name"]]
+          else x$dll_info[["name"]],
         parms = odeparms[x$parms], # Order matters when using compiled models
         method = method.ode,
         atol = atol,

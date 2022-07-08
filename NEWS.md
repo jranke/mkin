@@ -1,5 +1,7 @@
 # mkin 1.1.1
 
+- 'R/{mkinmod,mkinpredict}.R: Store DLL information in mkinmod objects and use that information in mkinpredict to avoid a performance regression brought by a bugfix in R 4.2.x. Thanks to Tomas Kalibera for his analysis of the problem on the r-package-devel list and his suggestion on how to fix it.
+
 - 'vignettes/FOCUS_L.rmd': Remove an outdated note referring to a failure to calculate the covariance matrix for DFOP with the L2 dataset. Since 0.9.45.5 the covariance matrix is available
 
 - 'vignettes/web_only/benchmarks.rmd': Add the first benchmark data using my laptop system, therefore add the CPU when showing the benchmark results.
