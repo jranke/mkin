@@ -25,7 +25,7 @@ test_that("nlme_function works correctly", {
   d3 <- add_err(d_SFO_3, function(value) 4, n = 1, seed = 345678)
   ds <- c(d1 = d1, d2 = d2, d3 = d3)
 
-  f <- mmkin("SFO", ds, cores = 1, quiet = TRUE)
+  f <- mmkin("SFO", ds, cores = n_cores, quiet = TRUE)
 
   mean_dp <- mean_degparms(f)
   grouped_data <- nlme_data(f)
@@ -113,7 +113,7 @@ test_that("nlme_function works correctly in other cases", {
   names(ds_me_sfo_5) <- paste("Dataset", 1:15)
   dimnames(ds_me_sfo_5) <- list(Subset = 1:3, DT50 = dt50_in)
 
-  f_me_sfo_5 <- mmkin("SFO", ds_me_sfo_5, quiet = TRUE)
+  f_me_sfo_5 <- mmkin("SFO", ds_me_sfo_5, cores = n_cores, quiet = TRUE)
 
   ds_me_sfo_5_grouped_mkin <- nlme_data(f_me_sfo_5)
   ds_me_sfo_5_mean_dp <- mean_degparms(f_me_sfo_5)
