@@ -3,19 +3,19 @@ Loading required package: parallel
 ℹ Testing mkin
 ✔ | F W S  OK | Context
 ✔ |         5 | AIC calculation
-✔ |         5 | Analytical solutions for coupled models [2.9s]
+✔ |         5 | Analytical solutions for coupled models [3.2s]
 ✔ |         5 | Calculation of Akaike weights
 ✔ |         3 | Export dataset for reading into CAKE
-✔ |        12 | Confidence intervals and p-values [0.9s]
-✔ |     1  12 | Dimethenamid data from 2018 [32.4s]
+✔ |        12 | Confidence intervals and p-values [1.0s]
+✔ |     1  12 | Dimethenamid data from 2018 [32.1s]
 ────────────────────────────────────────────────────────────────────────────────
 Skip (test_dmta.R:98:3): Different backends get consistent results for SFO-SFO3+, dimethenamid data
 Reason: Fitting this ODE model with saemix takes about 15 minutes on my system
 ────────────────────────────────────────────────────────────────────────────────
-✔ |        14 | Error model fitting [6.6s]
+✔ |        14 | Error model fitting [4.8s]
 ✔ |         5 | Time step normalisation
-✔ |         4 | Calculation of FOCUS chi2 error levels [0.5s]
-✔ |        14 | Results for FOCUS D established in expertise for UBA (Ranke 2014) [0.7s]
+✔ |         4 | Calculation of FOCUS chi2 error levels [0.6s]
+✔ |        14 | Results for FOCUS D established in expertise for UBA (Ranke 2014) [0.8s]
 ✔ |         4 | Test fitting the decline of metabolites from their maximum [0.3s]
 ✔ |         1 | Fitting the logistic model [0.2s]
 ✔ |     1  12 | Nonlinear mixed-effects models [0.2s]
@@ -24,28 +24,45 @@ Skip (test_mixed.R:68:3): saemix results are reproducible for biphasic fits
 Reason: Fitting with saemix takes around 10 minutes when using deSolve
 ────────────────────────────────────────────────────────────────────────────────
 ✔ |         3 | Test dataset classes mkinds and mkindsg
-✔ |        10 | Special cases of mkinfit calls [0.3s]
-✔ |         3 | mkinfit features [0.6s]
+✔ |        10 | Special cases of mkinfit calls [0.4s]
+✔ |         3 | mkinfit features [0.7s]
 ✔ |         8 | mkinmod model generation and printing [0.2s]
-✔ |         3 | Model predictions with mkinpredict [0.3s]
-✔ |        16 | Evaluations according to 2015 NAFTA guidance [1.3s]
-✔ |         9 | Nonlinear mixed-effects models with nlme [7.9s]
-✔ |        16 | Plotting [10.2s]
+✔ |         3 | Model predictions with mkinpredict [0.4s]
+✔ |        16 | Evaluations according to 2015 NAFTA guidance [1.5s]
+✔ |         9 | Nonlinear mixed-effects models with nlme [8.1s]
+✖ | 2      14 | Plotting [10.5s]
+────────────────────────────────────────────────────────────────────────────────
+Failure (test_plot.R:56:3): Plotting mkinfit, mmkin and mixed model objects is reproducible
+Snapshot of `testcase` to 'plot/mixed-model-fit-for-nlme-object.svg' has changed
+Run `testthat::snapshot_review('plot/')` to review changes
+Backtrace:
+ 1. vdiffr::expect_doppelganger(...)
+      at test_plot.R:56:2
+ 3. testthat::expect_snapshot_file(...)
+
+Failure (test_plot.R:64:3): Plotting mkinfit, mmkin and mixed model objects is reproducible
+Snapshot of `testcase` to 'plot/mixed-model-fit-for-saem-object-with-mkin-transformations.svg' has changed
+Run `testthat::snapshot_review('plot/')` to review changes
+Backtrace:
+ 1. vdiffr::expect_doppelganger(...)
+      at test_plot.R:64:2
+ 3. testthat::expect_snapshot_file(...)
+────────────────────────────────────────────────────────────────────────────────
 ✔ |         4 | Residuals extracted from mkinfit models
-✔ |        25 | saemix parent models [157.4s]
+✔ |        25 | saemix parent models [171.7s]
 ✔ |         2 | Complex test case from Schaefer et al. (2007) Piacenza paper [1.3s]
-✔ |         7 | Fitting the SFORB model [3.2s]
+✔ |         7 | Fitting the SFORB model [3.6s]
 ✔ |         1 | Summaries of old mkinfit objects
 ✔ |         4 | Summary [0.1s]
-✔ |         4 | Results for synthetic data established in expertise for UBA (Ranke 2014) [1.9s]
-✔ |         9 | Hypothesis tests [6.6s]
-✔ |         4 | Calculation of maximum time weighted average concentrations (TWAs) [1.8s]
+✔ |         4 | Results for synthetic data established in expertise for UBA (Ranke 2014) [2.1s]
+✔ |         9 | Hypothesis tests [7.7s]
+✔ |         4 | Calculation of maximum time weighted average concentrations (TWAs) [2.3s]
 
 ══ Results ═════════════════════════════════════════════════════════════════════
-Duration: 238.2 s
+Duration: 254.3 s
 
 ── Skipped tests  ──────────────────────────────────────────────────────────────
 • Fitting this ODE model with saemix takes about 15 minutes on my system (1)
 • Fitting with saemix takes around 10 minutes when using deSolve (1)
 
-[ FAIL 0 | WARN 0 | SKIP 2 | PASS 224 ]
+[ FAIL 2 | WARN 0 | SKIP 2 | PASS 222 ]

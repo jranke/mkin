@@ -1,7 +1,7 @@
 require(mkin)
 require(testthat)
 
-# Per default (on my box where I set NOT_CRAN) use all cores minus one
+# Per default (on my box where I set NOT_CRAN in .Rprofile) use all cores minus one
 if (identical(Sys.getenv("NOT_CRAN"), "true")) {
   n_cores <- parallel::detectCores() - 1
 } else {
