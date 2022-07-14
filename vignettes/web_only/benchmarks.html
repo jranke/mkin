@@ -1599,19 +1599,30 @@ div.tocify {
 
 <h1 class="title toc-ignore">Benchmark timings for mkin</h1>
 <h4 class="author">Johannes Ranke</h4>
-<h4 class="date">Last change 1 July 2022 (rebuilt 2022-07-12)</h4>
+<h4 class="date">Last change 14 July 2022 (rebuilt 2022-07-14)</h4>
 
 </div>
 
 
 <p>Each system is characterized by the operating system type, the CPU type, the mkin version, and, as in June 2022 the current R version lead to worse performance, the R version. A compiler was available, so if no analytical solution was available, compiled ODE models are used.</p>
 <p>Every fit is only performed once, so the accuracy of the benchmarks is limited.</p>
+<p>The following wrapper function for <code>mmkin</code> is used because the way the error model is specified was changed in mkin version 0.9.49.1.</p>
+<pre class="r"><code>if (packageVersion(&quot;mkin&quot;) &gt; &quot;0.9.48.1&quot;) {
+  mmkin_bench &lt;- function(models, datasets, error_model = &quot;const&quot;) {
+    mmkin(models, datasets, error_model = error_model, cores = 1, quiet = TRUE)
+  }
+} else {
+  mmkin_bench &lt;- function(models, datasets, error_model = NULL) {
+    mmkin(models, datasets, reweight.method = error_model, cores = 1, quiet = TRUE)
+  }
+}</code></pre>
 <div id="test-cases" class="section level2">
 <h2>Test cases</h2>
 <p>Parent only:</p>
 <pre class="r"><code>FOCUS_C &lt;- FOCUS_2006_C
 FOCUS_D &lt;- subset(FOCUS_2006_D, value != 0)
 parent_datasets &lt;- list(FOCUS_C, FOCUS_D)
+
 
 t1 &lt;- system.time(mmkin_bench(c(&quot;SFO&quot;, &quot;FOMC&quot;, &quot;DFOP&quot;, &quot;HS&quot;), parent_datasets))[[&quot;elapsed&quot;]]
 t2 &lt;- system.time(mmkin_bench(c(&quot;SFO&quot;, &quot;FOMC&quot;, &quot;DFOP&quot;, &quot;HS&quot;), parent_datasets,
@@ -1658,11 +1669,6 @@ t10 &lt;- system.time(mmkin_bench(list(m_synth_SFO_lin), list(SFO_lin_a),
     error_model = &quot;obs&quot;))[[&quot;elapsed&quot;]]
 t11 &lt;- system.time(mmkin_bench(list(m_synth_DFOP_par), list(DFOP_par_c),
     error_model = &quot;obs&quot;))[[&quot;elapsed&quot;]]</code></pre>
-<pre class="r"><code>mkin_benchmarks[system_string, paste0(&quot;t&quot;, 1:11)] &lt;-
-  c(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11)
-save(mkin_benchmarks, file = benchmark_path)
-# Hide rownames from kable for results section
-rownames(mkin_benchmarks) &lt;- NULL</code></pre>
 </div>
 <div id="results" class="section level2">
 <h2>Results</h2>
@@ -1807,8 +1813,8 @@ rownames(mkin_benchmarks) &lt;- NULL</code></pre>
 <td align="left">Ryzen 7 1700</td>
 <td align="left">4.2.1</td>
 <td align="left">1.1.1</td>
-<td align="right">1.767</td>
-<td align="right">3.396</td>
+<td align="right">1.770</td>
+<td align="right">3.377</td>
 </tr>
 </tbody>
 </table>
@@ -1969,9 +1975,9 @@ rownames(mkin_benchmarks) &lt;- NULL</code></pre>
 <td align="left">Ryzen 7 1700</td>
 <td align="left">4.2.1</td>
 <td align="left">1.1.1</td>
-<td align="right">1.320</td>
-<td align="right">5.774</td>
-<td align="right">2.575</td>
+<td align="right">1.308</td>
+<td align="right">5.758</td>
+<td align="right">2.558</td>
 </tr>
 </tbody>
 </table>
@@ -2180,12 +2186,12 @@ rownames(mkin_benchmarks) &lt;- NULL</code></pre>
 <td align="left">Ryzen 7 1700</td>
 <td align="left">4.2.1</td>
 <td align="left">1.1.1</td>
-<td align="right">0.700</td>
-<td align="right">1.146</td>
-<td align="right">1.334</td>
-<td align="right">2.807</td>
-<td align="right">1.750</td>
-<td align="right">2.593</td>
+<td align="right">0.696</td>
+<td align="right">1.124</td>
+<td align="right">1.321</td>
+<td align="right">2.786</td>
+<td align="right">1.744</td>
+<td align="right">2.566</td>
 </tr>
 </tbody>
 </table>
