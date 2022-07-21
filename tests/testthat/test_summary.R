@@ -47,7 +47,7 @@ test_that("Summaries are reproducible", {
 })
 
 test_that("Summaries of mmkin objects are reproducible", {
-  test_summary <- summary(fits)
+  test_summary <- summary(fits[ , 2:3])
   test_summary$time <- c(elapsed = "test time 0")
   expect_known_output(print(test_summary), "summary_parent_FOCUS_2006.txt")
 })
