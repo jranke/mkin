@@ -47,7 +47,7 @@
 #'   \url{http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics}
 #' @examples
 #'
-#'   summary(mkinfit(mkinmod(parent = mkinsub("SFO")), FOCUS_2006_A, quiet = TRUE))
+#'   summary(mkinfit("SFO", FOCUS_2006_A, quiet = TRUE))
 #'
 #' @export
 summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, ...) {
@@ -172,7 +172,7 @@ summary.mkinfit <- function(object, data = TRUE, distimes = TRUE, alpha = 0.05, 
   if (distimes) ans$distimes <- ep$distimes
   if (length(ep$SFORB) != 0) ans$SFORB <- ep$SFORB
   if (!is.null(object$d_3_message)) ans$d_3_message <- object$d_3_message
-  class(ans) <- c("summary.mkinfit", "summary.modFit")
+  class(ans) <- "summary.mkinfit"
   return(ans)
 }
 
