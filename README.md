@@ -1,7 +1,3 @@
----
-title: README
----
-
 # mkin
 
 [![](https://www.r-pkg.org/badges/version/mkin)](https://cran.r-project.org/package=mkin)
