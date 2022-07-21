@@ -114,15 +114,18 @@ mmkin <- function(models = c("SFO", "FOMC", "DFOP"), datasets,
     return(res)
   }
 
-  if (is.null(cluster)) {
-    results <- parallel::mclapply(as.list(1:n.fits), fit_function,
-      mc.cores = cores, mc.preschedule = FALSE)
-  } else {
-    results <- parallel::parLapply(cluster, as.list(1:n.fits), fit_function)
-  }
+  fit_time <- system.time({
+    if (is.null(cluster)) {
+      results <- parallel::mclapply(as.list(1:n.fits), fit_function,
+        mc.cores = cores, mc.preschedule = FALSE)
+    } else {
+      results <- parallel::parLapply(cluster, as.list(1:n.fits), fit_function)
+    }
+  })
 
   attributes(results) <- attributes(fit_indices)
   attr(results, "call") <- call
+  attr(results, "time") <- fit_time
   class(results) <- "mmkin"
   return(results)
 }
@@ -168,41 +171,7 @@ mmkin <- function(models = c("SFO", "FOMC", "DFOP"), datasets,
 print.mmkin <- function(x, ...) {
   cat("<mmkin> object\n")
   cat("Status of individual fits:\n\n")
-  all_summary_warnings <- character()
-  sww <- 0 # Counter for Shapiro-Wilks warnings
-
-  display <- lapply(x,
-    function(fit) {
-      if (inherits(fit, "try-error")) return("E")
-      sw <- fit$summary_warnings
-      swn <- names(sw)
-      if (length(sw) > 0) {
-        if (any(grepl("S", swn))) {
-          sww <<- sww + 1
-          swn <- gsub("S", paste0("S", sww), swn)
-        }
-        warnstring <- paste(swn, collapse = ", ")
-        names(sw) <- swn
-        all_summary_warnings <<- c(all_summary_warnings, sw)
-        return(warnstring)
-      } else {
-        return("OK")
-      }
-    })
-  display <- unlist(display)
-  dim(display) <- dim(x)
-  dimnames(display) <- dimnames(x)
-  print(display, quote = FALSE)
-
-  cat("\n")
-  if (any(display == "OK")) cat("OK: No warnings\n")
-  if (any(display == "E")) cat("E: Error\n")
-  u_swn <- unique(names(all_summary_warnings))
-  u_w <- all_summary_warnings[u_swn]
-  for (i in seq_along(u_w)) {
-    cat(names(u_w)[i], ": ", u_w[i], "\n", sep = "")
-  }
-
+  print(convergence(x))
 }
 
 #' @export

@@ -46,6 +46,12 @@ test_that("Summaries are reproducible", {
   expect_known_output(print(test_summary_3), "summary_DFOP_FOCUS_D_deSolve.txt")
 })
 
+test_that("Summaries of mmkin objects are reproducible", {
+  test_summary <- summary(fits)
+  test_summary$time <- c(elapsed = "test time 0")
+  expect_known_output(print(test_summary), "summary_parent_FOCUS_2006.txt")
+})
+
 test_that("A fit generated with mkin 0.9.48.1 can be summarised", {
   # Generated with mkin 0.9.48.1
   # SFO_SFO <- mkinmod(parent = list(type = "SFO", to = "m1"),

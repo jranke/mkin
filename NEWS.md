@@ -1,3 +1,11 @@
+# mkin 1.1.2
+
+- 'R/convergence.R': New generic to show convergence information with a method for 'mmin' objects.
+
+- 'R/illparms.R': New generic to show ill-defined parameters with methods for 'mkinfit' and 'mmkin' objects.
+
+- 'R/summary.mmkin.R': Summary method for mmkin objects.
+
 # mkin 1.1.1
 
 - 'R/{mkinmod,mkinpredict}.R: Store DLL information in mkinmod objects and use that information in mkinpredict to avoid a performance regression brought by a bugfix in R 4.2.x. Thanks to Tomas Kalibera for his analysis of the problem on the r-package-devel list and his suggestion on how to fix it.

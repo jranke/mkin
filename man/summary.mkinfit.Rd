@@ -60,7 +60,7 @@ values.
 }
 \examples{
 
-  summary(mkinfit(mkinmod(parent = mkinsub("SFO")), FOCUS_2006_A, quiet = TRUE))
+  summary(mkinfit("SFO", FOCUS_2006_A, quiet = TRUE))
 
 }
 \references{
