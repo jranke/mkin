@@ -30,8 +30,7 @@ pkgfiles = \
 	NEWS.md \
 	R/* \
 	tests/* \
-	tests/testthat* \
-	TODO
+	tests/testthat*
 
 all: build
 
