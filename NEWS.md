@@ -6,7 +6,7 @@
 
 - 'R/summary.mmkin.R': Summary method for mmkin objects.
 
-# mkin 1.1.1
+# mkin 1.1.1 (2022-07-12)
 
 - 'R/{mkinmod,mkinpredict}.R: Store DLL information in mkinmod objects and use that information in mkinpredict to avoid a performance regression brought by a bugfix in R 4.2.x. Thanks to Tomas Kalibera for his analysis of the problem on the r-package-devel list and his suggestion on how to fix it.
 
