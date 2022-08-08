@@ -252,7 +252,7 @@ saemix_model <- function(object, solution_type = "auto", transformations = c("mk
   }
   degparms_fixed <- object[[1]]$bparms.fixed
 
-  # Transformations are done in the degradation function
+  # Transformations are done in the degradation function by default
   transform.par = rep(0, length(degparms_optim))
 
   odeini_optim_parm_names <- grep('_0$', names(degparms_optim), value = TRUE)
@@ -339,13 +339,24 @@ saemix_model <- function(object, solution_type = "auto", transformations = c("mk
           }
         }
         if (parent_type == "HS") {
-          model_function <- function(psi, id, xidep) {
-            tb <- exp(psi[id, 4])
-            t <- xidep[, "time"]
-            k1 = exp(psi[id, 2])
-            psi[id, 1] * ifelse(t <= tb,
-              exp(- k1 * t),
-              exp(- k1 * tb) * exp(- exp(psi[id, 3]) * (t - tb)))
+          if (transformations == "mkin") {
+            model_function <- function(psi, id, xidep) {
+              tb <- exp(psi[id, 4])
+              t <- xidep[, "time"]
+              k1 <- exp(psi[id, 2])
+              psi[id, 1] * ifelse(t <= tb,
+                exp(- k1 * t),
+                exp(- k1 * tb) * exp(- exp(psi[id, 3]) * (t - tb)))
+            }
+          } else {
+            model_function <- function(psi, id, xidep) {
+              tb <- exp(psi[id, 4])
+              t <- xidep[, "time"]
+              psi[id, 1] * ifelse(t <= tb,
+                exp(- psi[id, 2] * t),
+                exp(- psi[id, 2] * tb) * exp(- psi[id, 3] * (t - tb)))
+            }
+            transform.par = c(0, 1, 1, 1)
           }
         }
       }

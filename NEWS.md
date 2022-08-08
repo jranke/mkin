@@ -1,5 +1,7 @@
 # mkin 1.1.2
 
+- 'R/saem.R': Implement and test saemix transformations for HS.
+
 - 'R/convergence.R': New generic to show convergence information with a method for 'mmin' objects.
 
 - 'R/illparms.R': New generic to show ill-defined parameters with methods for 'mkinfit' and 'mmkin' objects.

@@ -10,6 +10,7 @@ test_that("Parent fits using saemix are correctly implemented", {
 
   sfo_saem_2 <- saem(mmkin_sfo_1, quiet = TRUE, transformations = "mkin")
   sfo_saem_3 <- expect_error(saem(mmkin_sfo_2, quiet = TRUE), "at least two parameters")
+  expect_equal(endpoints(sfo_saem_1), endpoints(sfo_saem_2), tol = 0.01)
   s_sfo_s1 <- summary(sfo_saem_1)
   s_sfo_s2 <- summary(sfo_saem_2)
 
@@ -76,20 +77,20 @@ test_that("Parent fits using saemix are correctly implemented", {
 
   mmkin_hs_1 <- mmkin("HS", ds_hs, quiet = TRUE, error_model = "const", cores = n_cores)
   hs_saem_1 <- saem(mmkin_hs_1, quiet = TRUE)
+  hs_saem_2 <- saem(mmkin_hs_1, quiet = TRUE, transformations = "mkin")
+  expect_equal(endpoints(hs_saem_1), endpoints(hs_saem_2), tol = 0.01)
   ci_hs_s1 <- summary(hs_saem_1)$confint_back
 
   hs_pop <- as.numeric(hs_pop)
-  # expect_true(all(ci_hs_s1[, "lower"] < hs_pop)) # k1 is overestimated
+  #expect_true(all(ci_hs_s1[, "lower"] < hs_pop)) # k1 is overestimated
   expect_true(all(ci_hs_s1[, "upper"] > hs_pop))
 
   mmkin_hs_2 <- update(mmkin_hs_1, state.ini = 100, fixed_initials = "parent")
-  hs_saem_2 <- saem(mmkin_hs_2, quiet = TRUE)
-  ci_hs_s2 <- summary(hs_saem_2)$confint_back
+  hs_saem_3 <- saem(mmkin_hs_2, quiet = TRUE)
+  ci_hs_s3 <- summary(hs_saem_3)$confint_back
 
-  #expect_true(all(ci_hs_s2[, "lower"] < hs_pop[2:4])) # k1 again overestimated
-  expect_true(all(ci_hs_s2[, "upper"] > hs_pop[2:4]))
-
-  # HS would likely benefit from implemenation of transformations = "saemix"
+  #expect_true(all(ci_hs_s3[, "lower"] < hs_pop[2:4])) # k1 again overestimated
+  expect_true(all(ci_hs_s3[, "upper"] > hs_pop[2:4]))
 })
 
 test_that("We can also use mkin solution methods for saem", {
