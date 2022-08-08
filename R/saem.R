@@ -253,6 +253,7 @@ saemix_model <- function(object, solution_type = "auto", transformations = c("mk
   degparms_fixed <- object[[1]]$bparms.fixed
 
   # Transformations are done in the degradation function by default
+  # (transformations = "mkin")
   transform.par = rep(0, length(degparms_optim))
 
   odeini_optim_parm_names <- grep('_0$', names(degparms_optim), value = TRUE)
@@ -276,6 +277,9 @@ saemix_model <- function(object, solution_type = "auto", transformations = c("mk
     if (length(mkin_model$spec) == 1) {
       parent_type <- mkin_model$spec[[1]]$type
       if (length(odeini_fixed) == 1) {
+        if (transformations == "saemix") {
+          stop("saemix transformations are not supported for parent fits with fixed initial parent value")
+        }
         if (parent_type == "SFO") {
           stop("saemix needs at least two parameters to work on.")
         }
@@ -316,8 +320,15 @@ saemix_model <- function(object, solution_type = "auto", transformations = c("mk
           }
         }
         if (parent_type == "FOMC") {
-          model_function <- function(psi, id, xidep) {
-            psi[id, 1] / (xidep[, "time"]/exp(psi[id, 3]) + 1)^exp(psi[id, 2])
+          if (transformations == "mkin") {
+            model_function <- function(psi, id, xidep) {
+              psi[id, 1] / (xidep[, "time"]/exp(psi[id, 3]) + 1)^exp(psi[id, 2])
+            }
+          } else {
+            model_function <- function(psi, id, xidep) {
+              psi[id, 1] / (xidep[, "time"]/psi[id, 3] + 1)^psi[id, 2]
+            }
+            transform.par = c(0, 1, 1)
           }
         }
         if (parent_type == "DFOP") {

@@ -1,6 +1,6 @@
 # mkin 1.1.2
 
-- 'R/saem.R': Implement and test saemix transformations for HS.
+- 'R/saem.R': Implement and test saemix transformations for FOMC and HS. Also, error out if saemix transformations are requested but not supported.
 
 - 'R/convergence.R': New generic to show convergence information with a method for 'mmin' objects.
 

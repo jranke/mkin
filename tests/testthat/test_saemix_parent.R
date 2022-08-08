@@ -30,12 +30,14 @@ test_that("Parent fits using saemix are correctly implemented", {
     round(s_sfo_n$confint_back["k_parent", "est."], 3))
 
   mmkin_fomc_1 <- mmkin("FOMC", ds_fomc, quiet = TRUE, error_model = "tc", cores = n_cores)
-  fomc_saem_1 <- saem(mmkin_fomc_1, quiet = TRUE)
+  fomc_saem_1 <- saem(mmkin_fomc_1, quiet = TRUE, transformations = "saemix")
+  fomc_saem_2 <- saem(mmkin_fomc_1, quiet = TRUE, transformations = "mkin")
   ci_fomc_s1 <- summary(fomc_saem_1)$confint_back
 
   fomc_pop <- as.numeric(fomc_pop)
   expect_true(all(ci_fomc_s1[, "lower"] < fomc_pop))
   expect_true(all(ci_fomc_s1[, "upper"] > fomc_pop))
+  expect_equal(endpoints(fomc_saem_1), endpoints(fomc_saem_2), tol = 0.01)
 
   mmkin_fomc_2 <- update(mmkin_fomc_1, state.ini = 100, fixed_initials = "parent")
   fomc_saem_2 <- saem(mmkin_fomc_2, quiet = TRUE, transformations = "mkin")
