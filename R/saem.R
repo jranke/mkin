@@ -20,9 +20,9 @@ utils::globalVariables(c("predicted", "std"))
 #'   type [saemix::SaemixModel] and [saemix::SaemixData]?
 #' @param transformations Per default, all parameter transformations are done
 #'   in mkin. If this argument is set to 'saemix', parameter transformations
-#'   are done in 'saemix' for the supported cases. Currently this is only
-#'   supported in cases where the initial concentration of the parent is not fixed,
-#'   SFO or DFOP is used for the parent and there is either no metabolite or one.
+#'   are done in 'saemix' for the supported cases, i.e. (as of version 1.1.2)
+#'   SFO, FOMC, DFOP and HS without fixing `parent_0`, and SFO or DFOP with
+#'   one SFO metabolite.
 #' @param degparms_start Parameter values given as a named numeric vector will
 #'   be used to override the starting values obtained from the 'mmkin' object.
 #' @param test_log_parms If TRUE, an attempt is made to use more robust starting
