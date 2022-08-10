@@ -77,8 +77,9 @@ intervals.saem.mmkin <- function(object, level = 0.95, backtransform = TRUE, ...
   attr(confint_ret, "label") <- "Fixed effects:"
 
   # Random effects
-  ranef_ret <- as.matrix(conf.int[paste0("SD.", pnames), c("lower", "est.", "upper")])
-  rownames(ranef_ret) <- paste0(gsub("SD\\.", "sd(", rownames(ranef_ret)), ")")
+  sdnames <- intersect(rownames(conf.int), paste("SD", pnames, sep = "."))
+  ranef_ret <- as.matrix(conf.int[sdnames, c("lower", "est.", "upper")])
+  rownames(ranef_ret) <- paste0(gsub("SD\\.", "sd(", sdnames), ")")
   attr(ranef_ret, "label") <- "Random effects:"
 
 

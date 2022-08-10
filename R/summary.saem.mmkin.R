@@ -73,7 +73,12 @@
 #' f_mmkin_dfop_sfo <- mmkin(list(dfop_sfo), ds_syn_dfop_sfo,
 #'   quiet = TRUE, error_model = "tc", cores = 5)
 #' f_saem_dfop_sfo <- saem(f_mmkin_dfop_sfo)
-#' summary(f_saem_dfop_sfo, data = TRUE)
+#' print(f_saem_dfop_sfo)
+#' illparms(f_saem_dfop_sfo)
+#' f_saem_dfop_sfo_2 <- update(f_saem_dfop_sfo, covariance.model = diag(c(0, 0, 1, 1, 1, 0)))
+#' illparms(f_saem_dfop_sfo_2)
+#' intervals(f_saem_dfop_sfo_2)
+#' summary(f_saem_dfop_sfo_2, data = TRUE)
 #' }
 #'
 #' @export
@@ -138,8 +143,8 @@ summary.saem.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes =
     list(pnames, pnames))
 
   # Random effects
-  rnames <- paste0("SD.", pnames)
-  confint_ranef <- as.matrix(conf.int[rnames, c("estimate", "lower", "upper")])
+  sdnames <- intersect(rownames(conf.int), paste0("SD.", pnames))
+  confint_ranef <- as.matrix(conf.int[sdnames, c("estimate", "lower", "upper")])
   colnames(confint_ranef)[1] <- "est."
 
   # Error model
@@ -202,7 +207,7 @@ print.summary.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3)
   cat("\nModel predictions using solution type", x$solution_type, "\n")
 
   cat("\nFitted in", x$time[["elapsed"]],  "s\n")
-  cat("Using", paste(x$so@options$nbiter.saemix, collapse = ", "), 
+  cat("Using", paste(x$so@options$nbiter.saemix, collapse = ", "),
     "iterations and", x$so@options$nb.chains, "chains\n")
 
   cat("\nVariance model: ")

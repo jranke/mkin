@@ -29,4 +29,15 @@ test_that("Multiple hierarchical kinetic models can be fitted and diagnosed", {
   hfit_sfo_tc <- update(hfits[["SFO", "tc"]],
     covariance.model = diag(c(0, 1)))
   expect_equal(illparms(hfit_sfo_tc), character(0))
+
+  test_summary <- summary(hfit_sfo_tc)
+  test_summary$saemixversion <- "Dummy 0.0 for testing"
+  test_summary$mkinversion <- "Dummy 0.0 for testing"
+  test_summary$Rversion <- "Dummy R version for testing"
+  test_summary$date.fit <- "Dummy date for testing"
+  test_summary$date.summary <- "Dummy date for testing"
+  test_summary$time <- c(elapsed = "test time 0")
+
+  expect_known_output(print(test_summary, digits = 1),
+    "summary_hfit_sfo_tc.txt")
 })
