@@ -20,6 +20,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -32,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.0.3.9000</span>
+        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.1.2</span>
       </span>
     </div>
 
@@ -42,7 +44,7 @@
   <a href="../reference/index.html">Functions and data</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -56,6 +58,9 @@
     </li>
     <li>
       <a href="../articles/FOCUS_L.html">Example evaluation of FOCUS Laboratory Data L1 to L3</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
     </li>
     <li>
       <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
@@ -80,7 +85,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/jranke/mkin/">
+  <a href="https://github.com/jranke/mkin/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -95,693 +100,693 @@
 
       
 
-      </header><script src="FOCUS_L_files/header-attrs-2.6/header-attrs.js"></script><script src="FOCUS_L_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="FOCUS_L_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Example evaluation of FOCUS Laboratory Data L1 to L3</h1>
-                        <h4 class="author">Johannes Ranke</h4>
+                        <h4 data-toc-skip class="author">Johannes Ranke</h4>
             
-            <h4 class="date">Last change 17 November 2016 (rebuilt 2021-02-15)</h4>
+            <h4 data-toc-skip class="date">Last change 18 May 2022 (rebuilt 2022-08-10)</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/jranke/mkin/blob/master/vignettes/FOCUS_L.rmd"><code>vignettes/FOCUS_L.rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/jranke/mkin/blob/HEAD/vignettes/FOCUS_L.rmd" class="external-link"><code>vignettes/FOCUS_L.rmd</code></a></small>
       <div class="hidden name"><code>FOCUS_L.rmd</code></div>
 
     </div>
 
     
     
-<div id="laboratory-data-l1" class="section level1">
-<h1 class="hasAnchor">
-<a href="#laboratory-data-l1" class="anchor"></a>Laboratory Data L1</h1>
+<div class="section level2">
+<h2 id="laboratory-data-l1">Laboratory Data L1<a class="anchor" aria-label="anchor" href="#laboratory-data-l1"></a>
+</h2>
 <p>The following code defines example dataset L1 from the FOCUS kinetics report, p. 284:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://pkgdown.jrwb.de/mkin/">"mkin"</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="va">FOCUS_2006_L1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
-  t <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">5</span>, <span class="fl">7</span>, <span class="fl">14</span>, <span class="fl">21</span>, <span class="fl">30</span><span class="op">)</span>, each <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,
-  parent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">88.3</span>, <span class="fl">91.4</span>, <span class="fl">85.6</span>, <span class="fl">84.5</span>, <span class="fl">78.9</span>, <span class="fl">77.6</span>,
-             <span class="fl">72.0</span>, <span class="fl">71.9</span>, <span class="fl">50.3</span>, <span class="fl">59.4</span>, <span class="fl">47.0</span>, <span class="fl">45.1</span>,
-             <span class="fl">27.7</span>, <span class="fl">27.3</span>, <span class="fl">10.0</span>, <span class="fl">10.4</span>, <span class="fl">2.9</span>, <span class="fl">4.0</span><span class="op">)</span><span class="op">)</span>
-<span class="va">FOCUS_2006_L1_mkin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkin_wide_to_long.html">mkin_wide_to_long</a></span><span class="op">(</span><span class="va">FOCUS_2006_L1</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://pkgdown.jrwb.de/mkin/">"mkin"</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">FOCUS_2006_L1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  t <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">5</span>, <span class="fl">7</span>, <span class="fl">14</span>, <span class="fl">21</span>, <span class="fl">30</span><span class="op">)</span>, each <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
+<span>  parent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">88.3</span>, <span class="fl">91.4</span>, <span class="fl">85.6</span>, <span class="fl">84.5</span>, <span class="fl">78.9</span>, <span class="fl">77.6</span>,</span>
+<span>             <span class="fl">72.0</span>, <span class="fl">71.9</span>, <span class="fl">50.3</span>, <span class="fl">59.4</span>, <span class="fl">47.0</span>, <span class="fl">45.1</span>,</span>
+<span>             <span class="fl">27.7</span>, <span class="fl">27.3</span>, <span class="fl">10.0</span>, <span class="fl">10.4</span>, <span class="fl">2.9</span>, <span class="fl">4.0</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">FOCUS_2006_L1_mkin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkin_wide_to_long.html">mkin_wide_to_long</a></span><span class="op">(</span><span class="va">FOCUS_2006_L1</span><span class="op">)</span></span></code></pre></div>
 <p>Here we use the assumptions of simple first order (SFO), the case of declining rate constant over time (FOMC) and the case of two different phases of the kinetics (DFOP). For a more detailed discussion of the models, please see the FOCUS kinetics report.</p>
 <p>Since mkin version 0.9-32 (July 2014), we can use shorthand notation like <code>"SFO"</code> for parent only degradation models. The following two lines fit the model and produce the summary report of the model fit. This covers the numerical analysis given in the FOCUS report.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">m.L1.SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="va">FOCUS_2006_L1_mkin</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/saemix/man/summary-methods.html">summary</a></span><span class="op">(</span><span class="va">m.L1.SFO</span><span class="op">)</span></code></pre></div>
-<pre><code>## mkin version used for fitting:    1.0.3.9000 
-## R version used for fitting:       4.0.3 
-## Date of fit:     Mon Feb 15 17:13:39 2021 
-## Date of summary: Mon Feb 15 17:13:39 2021 
-## 
-## Equations:
-## d_parent/dt = - k_parent * parent
-## 
-## Model predictions using solution type analytical 
-## 
-## Fitted using 133 model solutions performed in 0.032 s
-## 
-## Error model: Constant variance 
-## 
-## Error model algorithm: OLS 
-## 
-## Starting values for parameters to be optimised:
-##          value   type
-## parent_0 89.85  state
-## k_parent  0.10 deparm
-## 
-## Starting values for the transformed parameters actually optimised:
-##                  value lower upper
-## parent_0     89.850000  -Inf   Inf
-## log_k_parent -2.302585  -Inf   Inf
-## 
-## Fixed parameter values:
-## None
-## 
-## Results:
-## 
-##        AIC     BIC    logLik
-##   93.88778 96.5589 -43.94389
-## 
-## Optimised, transformed parameters with symmetric confidence intervals:
-##              Estimate Std. Error  Lower  Upper
-## parent_0       92.470    1.28200 89.740 95.200
-## log_k_parent   -2.347    0.03763 -2.428 -2.267
-## sigma           2.780    0.46330  1.792  3.767
-## 
-## Parameter correlation:
-##                parent_0 log_k_parent      sigma
-## parent_0      1.000e+00    6.186e-01 -1.516e-09
-## log_k_parent  6.186e-01    1.000e+00 -3.124e-09
-## sigma        -1.516e-09   -3.124e-09  1.000e+00
-## 
-## Backtransformed parameters:
-## Confidence intervals for internally transformed parameters are asymmetric.
-## t-test (unrealistically) based on the assumption of normal distribution
-## for estimators of untransformed parameters.
-##          Estimate t value    Pr(&gt;t)    Lower   Upper
-## parent_0 92.47000   72.13 8.824e-21 89.74000 95.2000
-## k_parent  0.09561   26.57 2.487e-14  0.08824  0.1036
-## sigma     2.78000    6.00 1.216e-05  1.79200  3.7670
-## 
-## FOCUS Chi2 error levels in percent:
-##          err.min n.optim df
-## All data   3.424       2  7
-## parent     3.424       2  7
-## 
-## Estimated disappearance times:
-##         DT50  DT90
-## parent 7.249 24.08
-## 
-## Data:
-##  time variable observed predicted residual
-##     0   parent     88.3    92.471  -4.1710
-##     0   parent     91.4    92.471  -1.0710
-##     1   parent     85.6    84.039   1.5610
-##     1   parent     84.5    84.039   0.4610
-##     2   parent     78.9    76.376   2.5241
-##     2   parent     77.6    76.376   1.2241
-##     3   parent     72.0    69.412   2.5884
-##     3   parent     71.9    69.412   2.4884
-##     5   parent     50.3    57.330  -7.0301
-##     5   parent     59.4    57.330   2.0699
-##     7   parent     47.0    47.352  -0.3515
-##     7   parent     45.1    47.352  -2.2515
-##    14   parent     27.7    24.247   3.4528
-##    14   parent     27.3    24.247   3.0528
-##    21   parent     10.0    12.416  -2.4163
-##    21   parent     10.4    12.416  -2.0163
-##    30   parent      2.9     5.251  -2.3513
-##    30   parent      4.0     5.251  -1.2513</code></pre>
+<code class="sourceCode R"><span><span class="va">m.L1.SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="va">FOCUS_2006_L1_mkin</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">m.L1.SFO</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## mkin version used for fitting:    1.1.2 </span></span>
+<span><span class="co">## R version used for fitting:       4.2.1 </span></span>
+<span><span class="co">## Date of fit:     Wed Aug 10 15:28:18 2022 </span></span>
+<span><span class="co">## Date of summary: Wed Aug 10 15:28:18 2022 </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Equations:</span></span>
+<span><span class="co">## d_parent/dt = - k_parent * parent</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Model predictions using solution type analytical </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Fitted using 133 model solutions performed in 0.031 s</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Error model: Constant variance </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Error model algorithm: OLS </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Starting values for parameters to be optimised:</span></span>
+<span><span class="co">##          value   type</span></span>
+<span><span class="co">## parent_0 89.85  state</span></span>
+<span><span class="co">## k_parent  0.10 deparm</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Starting values for the transformed parameters actually optimised:</span></span>
+<span><span class="co">##                  value lower upper</span></span>
+<span><span class="co">## parent_0     89.850000  -Inf   Inf</span></span>
+<span><span class="co">## log_k_parent -2.302585  -Inf   Inf</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Fixed parameter values:</span></span>
+<span><span class="co">## None</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Results:</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##        AIC     BIC    logLik</span></span>
+<span><span class="co">##   93.88778 96.5589 -43.94389</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Optimised, transformed parameters with symmetric confidence intervals:</span></span>
+<span><span class="co">##              Estimate Std. Error  Lower  Upper</span></span>
+<span><span class="co">## parent_0       92.470    1.28200 89.740 95.200</span></span>
+<span><span class="co">## log_k_parent   -2.347    0.03763 -2.428 -2.267</span></span>
+<span><span class="co">## sigma           2.780    0.46330  1.792  3.767</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Parameter correlation:</span></span>
+<span><span class="co">##                parent_0 log_k_parent      sigma</span></span>
+<span><span class="co">## parent_0      1.000e+00    6.186e-01 -1.516e-09</span></span>
+<span><span class="co">## log_k_parent  6.186e-01    1.000e+00 -3.124e-09</span></span>
+<span><span class="co">## sigma        -1.516e-09   -3.124e-09  1.000e+00</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Backtransformed parameters:</span></span>
+<span><span class="co">## Confidence intervals for internally transformed parameters are asymmetric.</span></span>
+<span><span class="co">## t-test (unrealistically) based on the assumption of normal distribution</span></span>
+<span><span class="co">## for estimators of untransformed parameters.</span></span>
+<span><span class="co">##          Estimate t value    Pr(&gt;t)    Lower   Upper</span></span>
+<span><span class="co">## parent_0 92.47000   72.13 8.824e-21 89.74000 95.2000</span></span>
+<span><span class="co">## k_parent  0.09561   26.57 2.487e-14  0.08824  0.1036</span></span>
+<span><span class="co">## sigma     2.78000    6.00 1.216e-05  1.79200  3.7670</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## FOCUS Chi2 error levels in percent:</span></span>
+<span><span class="co">##          err.min n.optim df</span></span>
+<span><span class="co">## All data   3.424       2  7</span></span>
+<span><span class="co">## parent     3.424       2  7</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Estimated disappearance times:</span></span>
+<span><span class="co">##         DT50  DT90</span></span>
+<span><span class="co">## parent 7.249 24.08</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Data:</span></span>
+<span><span class="co">##  time variable observed predicted residual</span></span>
+<span><span class="co">##     0   parent     88.3    92.471  -4.1710</span></span>
+<span><span class="co">##     0   parent     91.4    92.471  -1.0710</span></span>
+<span><span class="co">##     1   parent     85.6    84.039   1.5610</span></span>
+<span><span class="co">##     1   parent     84.5    84.039   0.4610</span></span>
+<span><span class="co">##     2   parent     78.9    76.376   2.5241</span></span>
+<span><span class="co">##     2   parent     77.6    76.376   1.2241</span></span>
+<span><span class="co">##     3   parent     72.0    69.412   2.5884</span></span>
+<span><span class="co">##     3   parent     71.9    69.412   2.4884</span></span>
+<span><span class="co">##     5   parent     50.3    57.330  -7.0301</span></span>
+<span><span class="co">##     5   parent     59.4    57.330   2.0699</span></span>
+<span><span class="co">##     7   parent     47.0    47.352  -0.3515</span></span>
+<span><span class="co">##     7   parent     45.1    47.352  -2.2515</span></span>
+<span><span class="co">##    14   parent     27.7    24.247   3.4528</span></span>
+<span><span class="co">##    14   parent     27.3    24.247   3.0528</span></span>
+<span><span class="co">##    21   parent     10.0    12.416  -2.4163</span></span>
+<span><span class="co">##    21   parent     10.4    12.416  -2.0163</span></span>
+<span><span class="co">##    30   parent      2.9     5.251  -2.3513</span></span>
+<span><span class="co">##    30   parent      4.0     5.251  -1.2513</span></span></code></pre>
 <p>A plot of the fit is obtained with the plot function for mkinfit objects.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/plot-SaemixObject-method.html">plot</a></span><span class="op">(</span><span class="va">m.L1.SFO</span>, show_errmin <span class="op">=</span> <span class="cn">TRUE</span>, main <span class="op">=</span> <span class="st">"FOCUS L1 - SFO"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">m.L1.SFO</span>, show_errmin <span class="op">=</span> <span class="cn">TRUE</span>, main <span class="op">=</span> <span class="st">"FOCUS L1 - SFO"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="FOCUS_L_files/figure-html/unnamed-chunk-4-1.png" width="576"></p>
 <p>The residual plot can be easily obtained by</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/mkinresplot.html">mkinresplot</a></span><span class="op">(</span><span class="va">m.L1.SFO</span>, ylab <span class="op">=</span> <span class="st">"Observed"</span>, xlab <span class="op">=</span> <span class="st">"Time"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/mkinresplot.html">mkinresplot</a></span><span class="op">(</span><span class="va">m.L1.SFO</span>, ylab <span class="op">=</span> <span class="st">"Observed"</span>, xlab <span class="op">=</span> <span class="st">"Time"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="FOCUS_L_files/figure-html/unnamed-chunk-5-1.png" width="576"></p>
 <p>For comparison, the FOMC model is fitted as well, and the <span class="math inline">\(\chi^2\)</span> error level is checked.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">m.L1.FOMC</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="st">"FOMC"</span>, <span class="va">FOCUS_2006_L1_mkin</span>, quiet<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<pre><code>## Warning in mkinfit("FOMC", FOCUS_2006_L1_mkin, quiet = TRUE): Optimisation did not converge:
-## false convergence (8)</code></pre>
+<code class="sourceCode R"><span><span class="va">m.L1.FOMC</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="st">"FOMC"</span>, <span class="va">FOCUS_2006_L1_mkin</span>, quiet<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning in mkinfit("FOMC", FOCUS_2006_L1_mkin, quiet = TRUE): Optimisation did not converge:</span></span>
+<span><span class="co">## false convergence (8)</span></span></code></pre>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/plot-SaemixObject-method.html">plot</a></span><span class="op">(</span><span class="va">m.L1.FOMC</span>, show_errmin <span class="op">=</span> <span class="cn">TRUE</span>, main <span class="op">=</span> <span class="st">"FOCUS L1 - FOMC"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">m.L1.FOMC</span>, show_errmin <span class="op">=</span> <span class="cn">TRUE</span>, main <span class="op">=</span> <span class="st">"FOCUS L1 - FOMC"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="FOCUS_L_files/figure-html/unnamed-chunk-6-1.png" width="576"></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/summary-methods.html">summary</a></span><span class="op">(</span><span class="va">m.L1.FOMC</span>, data <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<pre><code>## Warning in sqrt(diag(covar)): NaNs produced</code></pre>
-<pre><code>## Warning in sqrt(1/diag(V)): NaNs produced</code></pre>
-<pre><code>## Warning in cov2cor(ans$covar): diag(.) had 0 or NA entries; non-finite result is
-## doubtful</code></pre>
-<pre><code>## mkin version used for fitting:    1.0.3.9000 
-## R version used for fitting:       4.0.3 
-## Date of fit:     Mon Feb 15 17:13:40 2021 
-## Date of summary: Mon Feb 15 17:13:40 2021 
-## 
-## Equations:
-## d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent
-## 
-## Model predictions using solution type analytical 
-## 
-## Fitted using 369 model solutions performed in 0.084 s
-## 
-## Error model: Constant variance 
-## 
-## Error model algorithm: OLS 
-## 
-## Starting values for parameters to be optimised:
-##          value   type
-## parent_0 89.85  state
-## alpha     1.00 deparm
-## beta     10.00 deparm
-## 
-## Starting values for the transformed parameters actually optimised:
-##               value lower upper
-## parent_0  89.850000  -Inf   Inf
-## log_alpha  0.000000  -Inf   Inf
-## log_beta   2.302585  -Inf   Inf
-## 
-## Fixed parameter values:
-## None
-## 
-## 
-## Warning(s): 
-## Optimisation did not converge:
-## false convergence (8)
-## 
-## Results:
-## 
-##        AIC      BIC   logLik
-##   95.88781 99.44929 -43.9439
-## 
-## Optimised, transformed parameters with symmetric confidence intervals:
-##           Estimate Std. Error  Lower  Upper
-## parent_0     92.47     1.2820 89.720 95.220
-## log_alpha    13.78        NaN    NaN    NaN
-## log_beta     16.13        NaN    NaN    NaN
-## sigma         2.78     0.4598  1.794  3.766
-## 
-## Parameter correlation:
-##            parent_0 log_alpha log_beta     sigma
-## parent_0  1.0000000       NaN      NaN 0.0001671
-## log_alpha       NaN         1      NaN       NaN
-## log_beta        NaN       NaN        1       NaN
-## sigma     0.0001671       NaN      NaN 1.0000000
-## 
-## Backtransformed parameters:
-## Confidence intervals for internally transformed parameters are asymmetric.
-## t-test (unrealistically) based on the assumption of normal distribution
-## for estimators of untransformed parameters.
-##           Estimate t value Pr(&gt;t)  Lower  Upper
-## parent_0 9.247e+01      NA     NA 89.720 95.220
-## alpha    9.658e+05      NA     NA     NA     NA
-## beta     1.010e+07      NA     NA     NA     NA
-## sigma    2.780e+00      NA     NA  1.794  3.766
-## 
-## FOCUS Chi2 error levels in percent:
-##          err.min n.optim df
-## All data   3.619       3  6
-## parent     3.619       3  6
-## 
-## Estimated disappearance times:
-##        DT50  DT90 DT50back
-## parent 7.25 24.08     7.25</code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">m.L1.FOMC</span>, data <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning in sqrt(diag(covar)): NaNs produced</span></span></code></pre>
+<pre><code><span><span class="co">## Warning in sqrt(1/diag(V)): NaNs produced</span></span></code></pre>
+<pre><code><span><span class="co">## Warning in cov2cor(ans$covar): diag(.) had 0 or NA entries; non-finite result is</span></span>
+<span><span class="co">## doubtful</span></span></code></pre>
+<pre><code><span><span class="co">## mkin version used for fitting:    1.1.2 </span></span>
+<span><span class="co">## R version used for fitting:       4.2.1 </span></span>
+<span><span class="co">## Date of fit:     Wed Aug 10 15:28:18 2022 </span></span>
+<span><span class="co">## Date of summary: Wed Aug 10 15:28:18 2022 </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Equations:</span></span>
+<span><span class="co">## d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Model predictions using solution type analytical </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Fitted using 369 model solutions performed in 0.082 s</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Error model: Constant variance </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Error model algorithm: OLS </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Starting values for parameters to be optimised:</span></span>
+<span><span class="co">##          value   type</span></span>
+<span><span class="co">## parent_0 89.85  state</span></span>
+<span><span class="co">## alpha     1.00 deparm</span></span>
+<span><span class="co">## beta     10.00 deparm</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Starting values for the transformed parameters actually optimised:</span></span>
+<span><span class="co">##               value lower upper</span></span>
+<span><span class="co">## parent_0  89.850000  -Inf   Inf</span></span>
+<span><span class="co">## log_alpha  0.000000  -Inf   Inf</span></span>
+<span><span class="co">## log_beta   2.302585  -Inf   Inf</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Fixed parameter values:</span></span>
+<span><span class="co">## None</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Warning(s): </span></span>
+<span><span class="co">## Optimisation did not converge:</span></span>
+<span><span class="co">## false convergence (8)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Results:</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##        AIC      BIC   logLik</span></span>
+<span><span class="co">##   95.88781 99.44929 -43.9439</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Optimised, transformed parameters with symmetric confidence intervals:</span></span>
+<span><span class="co">##           Estimate Std. Error  Lower  Upper</span></span>
+<span><span class="co">## parent_0     92.47     1.2820 89.720 95.220</span></span>
+<span><span class="co">## log_alpha    13.78        NaN    NaN    NaN</span></span>
+<span><span class="co">## log_beta     16.13        NaN    NaN    NaN</span></span>
+<span><span class="co">## sigma         2.78     0.4598  1.794  3.766</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Parameter correlation:</span></span>
+<span><span class="co">##            parent_0 log_alpha log_beta     sigma</span></span>
+<span><span class="co">## parent_0  1.0000000       NaN      NaN 0.0001671</span></span>
+<span><span class="co">## log_alpha       NaN         1      NaN       NaN</span></span>
+<span><span class="co">## log_beta        NaN       NaN        1       NaN</span></span>
+<span><span class="co">## sigma     0.0001671       NaN      NaN 1.0000000</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Backtransformed parameters:</span></span>
+<span><span class="co">## Confidence intervals for internally transformed parameters are asymmetric.</span></span>
+<span><span class="co">## t-test (unrealistically) based on the assumption of normal distribution</span></span>
+<span><span class="co">## for estimators of untransformed parameters.</span></span>
+<span><span class="co">##           Estimate t value Pr(&gt;t)  Lower  Upper</span></span>
+<span><span class="co">## parent_0 9.247e+01      NA     NA 89.720 95.220</span></span>
+<span><span class="co">## alpha    9.658e+05      NA     NA     NA     NA</span></span>
+<span><span class="co">## beta     1.010e+07      NA     NA     NA     NA</span></span>
+<span><span class="co">## sigma    2.780e+00      NA     NA  1.794  3.766</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## FOCUS Chi2 error levels in percent:</span></span>
+<span><span class="co">##          err.min n.optim df</span></span>
+<span><span class="co">## All data   3.619       3  6</span></span>
+<span><span class="co">## parent     3.619       3  6</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Estimated disappearance times:</span></span>
+<span><span class="co">##        DT50  DT90 DT50back</span></span>
+<span><span class="co">## parent 7.25 24.08     7.25</span></span></code></pre>
 <p>We get a warning that the default optimisation algorithm <code>Port</code> did not converge, which is an indication that the model is overparameterised, <em>i.e.</em> contains too many parameters that are ill-defined as a consequence.</p>
 <p>And in fact, due to the higher number of parameters, and the lower number of degrees of freedom of the fit, the <span class="math inline">\(\chi^2\)</span> error level is actually higher for the FOMC model (3.6%) than for the SFO model (3.4%). Additionally, the parameters <code>log_alpha</code> and <code>log_beta</code> internally fitted in the model have excessive confidence intervals, that span more than 25 orders of magnitude (!) when backtransformed to the scale of <code>alpha</code> and <code>beta</code>. Also, the t-test for significant difference from zero does not indicate such a significant difference, with p-values greater than 0.1, and finally, the parameter correlation of <code>log_alpha</code> and <code>log_beta</code> is 1.000, clearly indicating that the model is overparameterised.</p>
 <p>The <span class="math inline">\(\chi^2\)</span> error levels reported in Appendix 3 and Appendix 7 to the FOCUS kinetics report are rounded to integer percentages and partly deviate by one percentage point from the results calculated by mkin. The reason for this is not known. However, mkin gives the same <span class="math inline">\(\chi^2\)</span> error levels as the kinfit package and the calculation routines of the kinfit package have been extensively compared to the results obtained by the KinGUI software, as documented in the kinfit package vignette. KinGUI was the first widely used standard package in this field. Also, the calculation of <span class="math inline">\(\chi^2\)</span> error levels was compared with KinGUII, CAKE and DegKin manager in a project sponsored by the German Umweltbundesamt <span class="citation">(Ranke 2014)</span>.</p>
 </div>
-<div id="laboratory-data-l2" class="section level1">
-<h1 class="hasAnchor">
-<a href="#laboratory-data-l2" class="anchor"></a>Laboratory Data L2</h1>
+<div class="section level2">
+<h2 id="laboratory-data-l2">Laboratory Data L2<a class="anchor" aria-label="anchor" href="#laboratory-data-l2"></a>
+</h2>
 <p>The following code defines example dataset L2 from the FOCUS kinetics report, p. 287:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">FOCUS_2006_L2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
-  t <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">7</span>, <span class="fl">14</span>, <span class="fl">28</span><span class="op">)</span>, each <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,
-  parent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">96.1</span>, <span class="fl">91.8</span>, <span class="fl">41.4</span>, <span class="fl">38.7</span>,
-             <span class="fl">19.3</span>, <span class="fl">22.3</span>, <span class="fl">4.6</span>, <span class="fl">4.6</span>,
-             <span class="fl">2.6</span>, <span class="fl">1.2</span>, <span class="fl">0.3</span>, <span class="fl">0.6</span><span class="op">)</span><span class="op">)</span>
-<span class="va">FOCUS_2006_L2_mkin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkin_wide_to_long.html">mkin_wide_to_long</a></span><span class="op">(</span><span class="va">FOCUS_2006_L2</span><span class="op">)</span></code></pre></div>
-<div id="sfo-fit-for-l2" class="section level2">
-<h2 class="hasAnchor">
-<a href="#sfo-fit-for-l2" class="anchor"></a>SFO fit for L2</h2>
+<code class="sourceCode R"><span><span class="va">FOCUS_2006_L2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  t <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">7</span>, <span class="fl">14</span>, <span class="fl">28</span><span class="op">)</span>, each <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
+<span>  parent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">96.1</span>, <span class="fl">91.8</span>, <span class="fl">41.4</span>, <span class="fl">38.7</span>,</span>
+<span>             <span class="fl">19.3</span>, <span class="fl">22.3</span>, <span class="fl">4.6</span>, <span class="fl">4.6</span>,</span>
+<span>             <span class="fl">2.6</span>, <span class="fl">1.2</span>, <span class="fl">0.3</span>, <span class="fl">0.6</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">FOCUS_2006_L2_mkin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkin_wide_to_long.html">mkin_wide_to_long</a></span><span class="op">(</span><span class="va">FOCUS_2006_L2</span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="sfo-fit-for-l2">SFO fit for L2<a class="anchor" aria-label="anchor" href="#sfo-fit-for-l2"></a>
+</h3>
 <p>Again, the SFO model is fitted and the result is plotted. The residual plot can be obtained simply by adding the argument <code>show_residuals</code> to the plot command.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">m.L2.SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="va">FOCUS_2006_L2_mkin</span>, quiet<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/saemix/man/plot-SaemixObject-method.html">plot</a></span><span class="op">(</span><span class="va">m.L2.SFO</span>, show_residuals <span class="op">=</span> <span class="cn">TRUE</span>, show_errmin <span class="op">=</span> <span class="cn">TRUE</span>,
-     main <span class="op">=</span> <span class="st">"FOCUS L2 - SFO"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">m.L2.SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="va">FOCUS_2006_L2_mkin</span>, quiet<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">m.L2.SFO</span>, show_residuals <span class="op">=</span> <span class="cn">TRUE</span>, show_errmin <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>     main <span class="op">=</span> <span class="st">"FOCUS L2 - SFO"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="FOCUS_L_files/figure-html/unnamed-chunk-8-1.png" width="672"></p>
 <p>The <span class="math inline">\(\chi^2\)</span> error level of 14% suggests that the model does not fit very well. This is also obvious from the plots of the fit, in which we have included the residual plot.</p>
 <p>In the FOCUS kinetics report, it is stated that there is no apparent systematic error observed from the residual plot up to the measured DT90 (approximately at day 5), and there is an underestimation beyond that point.</p>
 <p>We may add that it is difficult to judge the random nature of the residuals just from the three samplings at days 0, 1 and 3. Also, it is not clear <em>a priori</em> why a consistent underestimation after the approximate DT90 should be irrelevant. However, this can be rationalised by the fact that the FOCUS fate models generally only implement SFO kinetics.</p>
 </div>
-<div id="fomc-fit-for-l2" class="section level2">
-<h2 class="hasAnchor">
-<a href="#fomc-fit-for-l2" class="anchor"></a>FOMC fit for L2</h2>
+<div class="section level3">
+<h3 id="fomc-fit-for-l2">FOMC fit for L2<a class="anchor" aria-label="anchor" href="#fomc-fit-for-l2"></a>
+</h3>
 <p>For comparison, the FOMC model is fitted as well, and the <span class="math inline">\(\chi^2\)</span> error level is checked.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">m.L2.FOMC</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="st">"FOMC"</span>, <span class="va">FOCUS_2006_L2_mkin</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/saemix/man/plot-SaemixObject-method.html">plot</a></span><span class="op">(</span><span class="va">m.L2.FOMC</span>, show_residuals <span class="op">=</span> <span class="cn">TRUE</span>,
-     main <span class="op">=</span> <span class="st">"FOCUS L2 - FOMC"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">m.L2.FOMC</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="st">"FOMC"</span>, <span class="va">FOCUS_2006_L2_mkin</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">m.L2.FOMC</span>, show_residuals <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>     main <span class="op">=</span> <span class="st">"FOCUS L2 - FOMC"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="FOCUS_L_files/figure-html/unnamed-chunk-9-1.png" width="672"></p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/summary-methods.html">summary</a></span><span class="op">(</span><span class="va">m.L2.FOMC</span>, data <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<pre><code>## mkin version used for fitting:    1.0.3.9000 
-## R version used for fitting:       4.0.3 
-## Date of fit:     Mon Feb 15 17:13:40 2021 
-## Date of summary: Mon Feb 15 17:13:40 2021 
-## 
-## Equations:
-## d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent
-## 
-## Model predictions using solution type analytical 
-## 
-## Fitted using 239 model solutions performed in 0.05 s
-## 
-## Error model: Constant variance 
-## 
-## Error model algorithm: OLS 
-## 
-## Starting values for parameters to be optimised:
-##          value   type
-## parent_0 93.95  state
-## alpha     1.00 deparm
-## beta     10.00 deparm
-## 
-## Starting values for the transformed parameters actually optimised:
-##               value lower upper
-## parent_0  93.950000  -Inf   Inf
-## log_alpha  0.000000  -Inf   Inf
-## log_beta   2.302585  -Inf   Inf
-## 
-## Fixed parameter values:
-## None
-## 
-## Results:
-## 
-##        AIC      BIC    logLik
-##   61.78966 63.72928 -26.89483
-## 
-## Optimised, transformed parameters with symmetric confidence intervals:
-##           Estimate Std. Error    Lower   Upper
-## parent_0   93.7700     1.6130 90.05000 97.4900
-## log_alpha   0.3180     0.1559 -0.04149  0.6776
-## log_beta    0.2102     0.2493 -0.36460  0.7850
-## sigma       2.2760     0.4645  1.20500  3.3470
-## 
-## Parameter correlation:
-##             parent_0  log_alpha   log_beta      sigma
-## parent_0   1.000e+00 -1.151e-01 -2.085e-01 -7.828e-09
-## log_alpha -1.151e-01  1.000e+00  9.741e-01 -1.602e-07
-## log_beta  -2.085e-01  9.741e-01  1.000e+00 -1.372e-07
-## sigma     -7.828e-09 -1.602e-07 -1.372e-07  1.000e+00
-## 
-## Backtransformed parameters:
-## Confidence intervals for internally transformed parameters are asymmetric.
-## t-test (unrealistically) based on the assumption of normal distribution
-## for estimators of untransformed parameters.
-##          Estimate t value    Pr(&gt;t)   Lower  Upper
-## parent_0   93.770  58.120 4.267e-12 90.0500 97.490
-## alpha       1.374   6.414 1.030e-04  0.9594  1.969
-## beta        1.234   4.012 1.942e-03  0.6945  2.192
-## sigma       2.276   4.899 5.977e-04  1.2050  3.347
-## 
-## FOCUS Chi2 error levels in percent:
-##          err.min n.optim df
-## All data   6.205       3  3
-## parent     6.205       3  3
-## 
-## Estimated disappearance times:
-##          DT50  DT90 DT50back
-## parent 0.8092 5.356    1.612</code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">m.L2.FOMC</span>, data <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## mkin version used for fitting:    1.1.2 </span></span>
+<span><span class="co">## R version used for fitting:       4.2.1 </span></span>
+<span><span class="co">## Date of fit:     Wed Aug 10 15:28:19 2022 </span></span>
+<span><span class="co">## Date of summary: Wed Aug 10 15:28:19 2022 </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Equations:</span></span>
+<span><span class="co">## d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Model predictions using solution type analytical </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Fitted using 239 model solutions performed in 0.048 s</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Error model: Constant variance </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Error model algorithm: OLS </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Starting values for parameters to be optimised:</span></span>
+<span><span class="co">##          value   type</span></span>
+<span><span class="co">## parent_0 93.95  state</span></span>
+<span><span class="co">## alpha     1.00 deparm</span></span>
+<span><span class="co">## beta     10.00 deparm</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Starting values for the transformed parameters actually optimised:</span></span>
+<span><span class="co">##               value lower upper</span></span>
+<span><span class="co">## parent_0  93.950000  -Inf   Inf</span></span>
+<span><span class="co">## log_alpha  0.000000  -Inf   Inf</span></span>
+<span><span class="co">## log_beta   2.302585  -Inf   Inf</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Fixed parameter values:</span></span>
+<span><span class="co">## None</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Results:</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##        AIC      BIC    logLik</span></span>
+<span><span class="co">##   61.78966 63.72928 -26.89483</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Optimised, transformed parameters with symmetric confidence intervals:</span></span>
+<span><span class="co">##           Estimate Std. Error    Lower   Upper</span></span>
+<span><span class="co">## parent_0   93.7700     1.6130 90.05000 97.4900</span></span>
+<span><span class="co">## log_alpha   0.3180     0.1559 -0.04149  0.6776</span></span>
+<span><span class="co">## log_beta    0.2102     0.2493 -0.36460  0.7850</span></span>
+<span><span class="co">## sigma       2.2760     0.4645  1.20500  3.3470</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Parameter correlation:</span></span>
+<span><span class="co">##             parent_0  log_alpha   log_beta      sigma</span></span>
+<span><span class="co">## parent_0   1.000e+00 -1.151e-01 -2.085e-01 -7.828e-09</span></span>
+<span><span class="co">## log_alpha -1.151e-01  1.000e+00  9.741e-01 -1.602e-07</span></span>
+<span><span class="co">## log_beta  -2.085e-01  9.741e-01  1.000e+00 -1.372e-07</span></span>
+<span><span class="co">## sigma     -7.828e-09 -1.602e-07 -1.372e-07  1.000e+00</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Backtransformed parameters:</span></span>
+<span><span class="co">## Confidence intervals for internally transformed parameters are asymmetric.</span></span>
+<span><span class="co">## t-test (unrealistically) based on the assumption of normal distribution</span></span>
+<span><span class="co">## for estimators of untransformed parameters.</span></span>
+<span><span class="co">##          Estimate t value    Pr(&gt;t)   Lower  Upper</span></span>
+<span><span class="co">## parent_0   93.770  58.120 4.267e-12 90.0500 97.490</span></span>
+<span><span class="co">## alpha       1.374   6.414 1.030e-04  0.9594  1.969</span></span>
+<span><span class="co">## beta        1.234   4.012 1.942e-03  0.6945  2.192</span></span>
+<span><span class="co">## sigma       2.276   4.899 5.977e-04  1.2050  3.347</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## FOCUS Chi2 error levels in percent:</span></span>
+<span><span class="co">##          err.min n.optim df</span></span>
+<span><span class="co">## All data   6.205       3  3</span></span>
+<span><span class="co">## parent     6.205       3  3</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Estimated disappearance times:</span></span>
+<span><span class="co">##          DT50  DT90 DT50back</span></span>
+<span><span class="co">## parent 0.8092 5.356    1.612</span></span></code></pre>
 <p>The error level at which the <span class="math inline">\(\chi^2\)</span> test passes is much lower in this case. Therefore, the FOMC model provides a better description of the data, as less experimental error has to be assumed in order to explain the data.</p>
 </div>
-<div id="dfop-fit-for-l2" class="section level2">
-<h2 class="hasAnchor">
-<a href="#dfop-fit-for-l2" class="anchor"></a>DFOP fit for L2</h2>
+<div class="section level3">
+<h3 id="dfop-fit-for-l2">DFOP fit for L2<a class="anchor" aria-label="anchor" href="#dfop-fit-for-l2"></a>
+</h3>
 <p>Fitting the four parameter DFOP model further reduces the <span class="math inline">\(\chi^2\)</span> error level.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">m.L2.DFOP</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="st">"DFOP"</span>, <span class="va">FOCUS_2006_L2_mkin</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/saemix/man/plot-SaemixObject-method.html">plot</a></span><span class="op">(</span><span class="va">m.L2.DFOP</span>, show_residuals <span class="op">=</span> <span class="cn">TRUE</span>, show_errmin <span class="op">=</span> <span class="cn">TRUE</span>,
-     main <span class="op">=</span> <span class="st">"FOCUS L2 - DFOP"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">m.L2.DFOP</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="st">"DFOP"</span>, <span class="va">FOCUS_2006_L2_mkin</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">m.L2.DFOP</span>, show_residuals <span class="op">=</span> <span class="cn">TRUE</span>, show_errmin <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>     main <span class="op">=</span> <span class="st">"FOCUS L2 - DFOP"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="FOCUS_L_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/summary-methods.html">summary</a></span><span class="op">(</span><span class="va">m.L2.DFOP</span>, data <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<pre><code>## mkin version used for fitting:    1.0.3.9000 
-## R version used for fitting:       4.0.3 
-## Date of fit:     Mon Feb 15 17:13:41 2021 
-## Date of summary: Mon Feb 15 17:13:41 2021 
-## 
-## Equations:
-## d_parent/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *
-##            time)) / (g * exp(-k1 * time) + (1 - g) * exp(-k2 * time)))
-##            * parent
-## 
-## Model predictions using solution type analytical 
-## 
-## Fitted using 581 model solutions performed in 0.134 s
-## 
-## Error model: Constant variance 
-## 
-## Error model algorithm: OLS 
-## 
-## Starting values for parameters to be optimised:
-##          value   type
-## parent_0 93.95  state
-## k1        0.10 deparm
-## k2        0.01 deparm
-## g         0.50 deparm
-## 
-## Starting values for the transformed parameters actually optimised:
-##              value lower upper
-## parent_0 93.950000  -Inf   Inf
-## log_k1   -2.302585  -Inf   Inf
-## log_k2   -4.605170  -Inf   Inf
-## g_qlogis  0.000000  -Inf   Inf
-## 
-## Fixed parameter values:
-## None
-## 
-## Results:
-## 
-##        AIC      BIC    logLik
-##   52.36695 54.79148 -21.18347
-## 
-## Optimised, transformed parameters with symmetric confidence intervals:
-##          Estimate Std. Error      Lower     Upper
-## parent_0   93.950  9.998e-01    91.5900   96.3100
-## log_k1      3.112  1.842e+03 -4353.0000 4359.0000
-## log_k2     -1.088  6.285e-02    -1.2370   -0.9394
-## g_qlogis   -0.399  9.946e-02    -0.6342   -0.1638
-## sigma       1.414  2.886e-01     0.7314    2.0960
-## 
-## Parameter correlation:
-##            parent_0     log_k1     log_k2   g_qlogis      sigma
-## parent_0  1.000e+00  6.783e-07 -3.390e-10  2.665e-01 -2.967e-10
-## log_k1    6.783e-07  1.000e+00  1.116e-04 -2.196e-04 -1.031e-05
-## log_k2   -3.390e-10  1.116e-04  1.000e+00 -7.903e-01  2.917e-09
-## g_qlogis  2.665e-01 -2.196e-04 -7.903e-01  1.000e+00 -4.408e-09
-## sigma    -2.967e-10 -1.031e-05  2.917e-09 -4.408e-09  1.000e+00
-## 
-## Backtransformed parameters:
-## Confidence intervals for internally transformed parameters are asymmetric.
-## t-test (unrealistically) based on the assumption of normal distribution
-## for estimators of untransformed parameters.
-##          Estimate   t value    Pr(&gt;t)   Lower   Upper
-## parent_0  93.9500 9.397e+01 2.036e-12 91.5900 96.3100
-## k1        22.4800 5.553e-04 4.998e-01  0.0000     Inf
-## k2         0.3369 1.591e+01 4.697e-07  0.2904  0.3909
-## g          0.4016 1.680e+01 3.238e-07  0.3466  0.4591
-## sigma      1.4140 4.899e+00 8.776e-04  0.7314  2.0960
-## 
-## FOCUS Chi2 error levels in percent:
-##          err.min n.optim df
-## All data    2.53       4  2
-## parent      2.53       4  2
-## 
-## Estimated disappearance times:
-##          DT50  DT90 DT50back DT50_k1 DT50_k2
-## parent 0.5335 5.311    1.599 0.03084   2.058</code></pre>
-<p>Here, the DFOP model is clearly the best-fit model for dataset L2 based on the chi^2 error level criterion. However, the failure to calculate the covariance matrix indicates that the parameter estimates correlate excessively. Therefore, the FOMC model may be preferred for this dataset.</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">m.L2.DFOP</span>, data <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## mkin version used for fitting:    1.1.2 </span></span>
+<span><span class="co">## R version used for fitting:       4.2.1 </span></span>
+<span><span class="co">## Date of fit:     Wed Aug 10 15:28:19 2022 </span></span>
+<span><span class="co">## Date of summary: Wed Aug 10 15:28:19 2022 </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Equations:</span></span>
+<span><span class="co">## d_parent/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *</span></span>
+<span><span class="co">##            time)) / (g * exp(-k1 * time) + (1 - g) * exp(-k2 * time)))</span></span>
+<span><span class="co">##            * parent</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Model predictions using solution type analytical </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Fitted using 581 model solutions performed in 0.132 s</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Error model: Constant variance </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Error model algorithm: OLS </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Starting values for parameters to be optimised:</span></span>
+<span><span class="co">##          value   type</span></span>
+<span><span class="co">## parent_0 93.95  state</span></span>
+<span><span class="co">## k1        0.10 deparm</span></span>
+<span><span class="co">## k2        0.01 deparm</span></span>
+<span><span class="co">## g         0.50 deparm</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Starting values for the transformed parameters actually optimised:</span></span>
+<span><span class="co">##              value lower upper</span></span>
+<span><span class="co">## parent_0 93.950000  -Inf   Inf</span></span>
+<span><span class="co">## log_k1   -2.302585  -Inf   Inf</span></span>
+<span><span class="co">## log_k2   -4.605170  -Inf   Inf</span></span>
+<span><span class="co">## g_qlogis  0.000000  -Inf   Inf</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Fixed parameter values:</span></span>
+<span><span class="co">## None</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Results:</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##        AIC      BIC    logLik</span></span>
+<span><span class="co">##   52.36695 54.79148 -21.18347</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Optimised, transformed parameters with symmetric confidence intervals:</span></span>
+<span><span class="co">##          Estimate Std. Error      Lower     Upper</span></span>
+<span><span class="co">## parent_0   93.950  9.998e-01    91.5900   96.3100</span></span>
+<span><span class="co">## log_k1      3.112  1.842e+03 -4353.0000 4359.0000</span></span>
+<span><span class="co">## log_k2     -1.088  6.285e-02    -1.2370   -0.9394</span></span>
+<span><span class="co">## g_qlogis   -0.399  9.946e-02    -0.6342   -0.1638</span></span>
+<span><span class="co">## sigma       1.414  2.886e-01     0.7314    2.0960</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Parameter correlation:</span></span>
+<span><span class="co">##            parent_0     log_k1     log_k2   g_qlogis      sigma</span></span>
+<span><span class="co">## parent_0  1.000e+00  6.783e-07 -3.390e-10  2.665e-01 -2.967e-10</span></span>
+<span><span class="co">## log_k1    6.783e-07  1.000e+00  1.116e-04 -2.196e-04 -1.031e-05</span></span>
+<span><span class="co">## log_k2   -3.390e-10  1.116e-04  1.000e+00 -7.903e-01  2.917e-09</span></span>
+<span><span class="co">## g_qlogis  2.665e-01 -2.196e-04 -7.903e-01  1.000e+00 -4.408e-09</span></span>
+<span><span class="co">## sigma    -2.967e-10 -1.031e-05  2.917e-09 -4.408e-09  1.000e+00</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Backtransformed parameters:</span></span>
+<span><span class="co">## Confidence intervals for internally transformed parameters are asymmetric.</span></span>
+<span><span class="co">## t-test (unrealistically) based on the assumption of normal distribution</span></span>
+<span><span class="co">## for estimators of untransformed parameters.</span></span>
+<span><span class="co">##          Estimate   t value    Pr(&gt;t)   Lower   Upper</span></span>
+<span><span class="co">## parent_0  93.9500 9.397e+01 2.036e-12 91.5900 96.3100</span></span>
+<span><span class="co">## k1        22.4800 5.553e-04 4.998e-01  0.0000     Inf</span></span>
+<span><span class="co">## k2         0.3369 1.591e+01 4.697e-07  0.2904  0.3909</span></span>
+<span><span class="co">## g          0.4016 1.680e+01 3.238e-07  0.3466  0.4591</span></span>
+<span><span class="co">## sigma      1.4140 4.899e+00 8.776e-04  0.7314  2.0960</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## FOCUS Chi2 error levels in percent:</span></span>
+<span><span class="co">##          err.min n.optim df</span></span>
+<span><span class="co">## All data    2.53       4  2</span></span>
+<span><span class="co">## parent      2.53       4  2</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Estimated disappearance times:</span></span>
+<span><span class="co">##          DT50  DT90 DT50back DT50_k1 DT50_k2</span></span>
+<span><span class="co">## parent 0.5335 5.311    1.599 0.03084   2.058</span></span></code></pre>
+<p>Here, the DFOP model is clearly the best-fit model for dataset L2 based on the chi^2 error level criterion.</p>
 </div>
 </div>
-<div id="laboratory-data-l3" class="section level1">
-<h1 class="hasAnchor">
-<a href="#laboratory-data-l3" class="anchor"></a>Laboratory Data L3</h1>
+<div class="section level2">
+<h2 id="laboratory-data-l3">Laboratory Data L3<a class="anchor" aria-label="anchor" href="#laboratory-data-l3"></a>
+</h2>
 <p>The following code defines example dataset L3 from the FOCUS kinetics report, p. 290.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">FOCUS_2006_L3</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
-  t <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">3</span>, <span class="fl">7</span>, <span class="fl">14</span>, <span class="fl">30</span>, <span class="fl">60</span>, <span class="fl">91</span>, <span class="fl">120</span><span class="op">)</span>,
-  parent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">97.8</span>, <span class="fl">60</span>, <span class="fl">51</span>, <span class="fl">43</span>, <span class="fl">35</span>, <span class="fl">22</span>, <span class="fl">15</span>, <span class="fl">12</span><span class="op">)</span><span class="op">)</span>
-<span class="va">FOCUS_2006_L3_mkin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkin_wide_to_long.html">mkin_wide_to_long</a></span><span class="op">(</span><span class="va">FOCUS_2006_L3</span><span class="op">)</span></code></pre></div>
-<div id="fit-multiple-models" class="section level2">
-<h2 class="hasAnchor">
-<a href="#fit-multiple-models" class="anchor"></a>Fit multiple models</h2>
+<code class="sourceCode R"><span><span class="va">FOCUS_2006_L3</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  t <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">3</span>, <span class="fl">7</span>, <span class="fl">14</span>, <span class="fl">30</span>, <span class="fl">60</span>, <span class="fl">91</span>, <span class="fl">120</span><span class="op">)</span>,</span>
+<span>  parent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">97.8</span>, <span class="fl">60</span>, <span class="fl">51</span>, <span class="fl">43</span>, <span class="fl">35</span>, <span class="fl">22</span>, <span class="fl">15</span>, <span class="fl">12</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">FOCUS_2006_L3_mkin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkin_wide_to_long.html">mkin_wide_to_long</a></span><span class="op">(</span><span class="va">FOCUS_2006_L3</span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="fit-multiple-models">Fit multiple models<a class="anchor" aria-label="anchor" href="#fit-multiple-models"></a>
+</h3>
 <p>As of mkin version 0.9-39 (June 2015), we can fit several models to one or more datasets in one call to the function <code>mmkin</code>. The datasets have to be passed in a list, in this case a named list holding only the L3 dataset prepared above.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Only use one core here, not to offend the CRAN checks</span>
-<span class="va">mm.L3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mmkin.html">mmkin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"FOMC"</span>, <span class="st">"DFOP"</span><span class="op">)</span>, cores <span class="op">=</span> <span class="fl">1</span>,
-               <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"FOCUS L3"</span> <span class="op">=</span> <span class="va">FOCUS_2006_L3_mkin</span><span class="op">)</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/saemix/man/plot-SaemixObject-method.html">plot</a></span><span class="op">(</span><span class="va">mm.L3</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Only use one core here, not to offend the CRAN checks</span></span>
+<span><span class="va">mm.L3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mmkin.html">mmkin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"FOMC"</span>, <span class="st">"DFOP"</span><span class="op">)</span>, cores <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>               <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"FOCUS L3"</span> <span class="op">=</span> <span class="va">FOCUS_2006_L3_mkin</span><span class="op">)</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mm.L3</span><span class="op">)</span></span></code></pre></div>
 <p><img src="FOCUS_L_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
 <p>The <span class="math inline">\(\chi^2\)</span> error level of 21% as well as the plot suggest that the SFO model does not fit very well. The FOMC model performs better, with an error level at which the <span class="math inline">\(\chi^2\)</span> test passes of 7%. Fitting the four parameter DFOP model further reduces the <span class="math inline">\(\chi^2\)</span> error level considerably.</p>
 </div>
-<div id="accessing-mmkin-objects" class="section level2">
-<h2 class="hasAnchor">
-<a href="#accessing-mmkin-objects" class="anchor"></a>Accessing mmkin objects</h2>
+<div class="section level3">
+<h3 id="accessing-mmkin-objects">Accessing mmkin objects<a class="anchor" aria-label="anchor" href="#accessing-mmkin-objects"></a>
+</h3>
 <p>The objects returned by mmkin are arranged like a matrix, with models as a row index and datasets as a column index.</p>
 <p>We can extract the summary and plot for <em>e.g.</em> the DFOP fit, using square brackets for indexing which will result in the use of the summary and plot functions working on mkinfit objects.</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/summary-methods.html">summary</a></span><span class="op">(</span><span class="va">mm.L3</span><span class="op">[[</span><span class="st">"DFOP"</span>, <span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></code></pre></div>
-<pre><code>## mkin version used for fitting:    1.0.3.9000 
-## R version used for fitting:       4.0.3 
-## Date of fit:     Mon Feb 15 17:13:41 2021 
-## Date of summary: Mon Feb 15 17:13:42 2021 
-## 
-## Equations:
-## d_parent/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *
-##            time)) / (g * exp(-k1 * time) + (1 - g) * exp(-k2 * time)))
-##            * parent
-## 
-## Model predictions using solution type analytical 
-## 
-## Fitted using 376 model solutions performed in 0.082 s
-## 
-## Error model: Constant variance 
-## 
-## Error model algorithm: OLS 
-## 
-## Starting values for parameters to be optimised:
-##          value   type
-## parent_0 97.80  state
-## k1        0.10 deparm
-## k2        0.01 deparm
-## g         0.50 deparm
-## 
-## Starting values for the transformed parameters actually optimised:
-##              value lower upper
-## parent_0 97.800000  -Inf   Inf
-## log_k1   -2.302585  -Inf   Inf
-## log_k2   -4.605170  -Inf   Inf
-## g_qlogis  0.000000  -Inf   Inf
-## 
-## Fixed parameter values:
-## None
-## 
-## Results:
-## 
-##        AIC      BIC    logLik
-##   32.97732 33.37453 -11.48866
-## 
-## Optimised, transformed parameters with symmetric confidence intervals:
-##          Estimate Std. Error   Lower      Upper
-## parent_0  97.7500    1.01900 94.5000 101.000000
-## log_k1    -0.6612    0.10050 -0.9812  -0.341300
-## log_k2    -4.2860    0.04322 -4.4230  -4.148000
-## g_qlogis  -0.1739    0.05270 -0.3416  -0.006142
-## sigma      1.0170    0.25430  0.2079   1.827000
-## 
-## Parameter correlation:
-##            parent_0     log_k1     log_k2   g_qlogis      sigma
-## parent_0  1.000e+00  1.732e-01  2.282e-02  4.009e-01 -9.664e-08
-## log_k1    1.732e-01  1.000e+00  4.945e-01 -5.809e-01  7.147e-07
-## log_k2    2.282e-02  4.945e-01  1.000e+00 -6.812e-01  1.022e-06
-## g_qlogis  4.009e-01 -5.809e-01 -6.812e-01  1.000e+00 -7.926e-07
-## sigma    -9.664e-08  7.147e-07  1.022e-06 -7.926e-07  1.000e+00
-## 
-## Backtransformed parameters:
-## Confidence intervals for internally transformed parameters are asymmetric.
-## t-test (unrealistically) based on the assumption of normal distribution
-## for estimators of untransformed parameters.
-##          Estimate t value    Pr(&gt;t)    Lower     Upper
-## parent_0 97.75000  95.960 1.248e-06 94.50000 101.00000
-## k1        0.51620   9.947 1.081e-03  0.37490   0.71090
-## k2        0.01376  23.140 8.840e-05  0.01199   0.01579
-## g         0.45660  34.920 2.581e-05  0.41540   0.49850
-## sigma     1.01700   4.000 1.400e-02  0.20790   1.82700
-## 
-## FOCUS Chi2 error levels in percent:
-##          err.min n.optim df
-## All data   2.225       4  4
-## parent     2.225       4  4
-## 
-## Estimated disappearance times:
-##         DT50 DT90 DT50back DT50_k1 DT50_k2
-## parent 7.464  123    37.03   1.343   50.37
-## 
-## Data:
-##  time variable observed predicted residual
-##     0   parent     97.8     97.75  0.05396
-##     3   parent     60.0     60.45 -0.44933
-##     7   parent     51.0     49.44  1.56338
-##    14   parent     43.0     43.84 -0.83632
-##    30   parent     35.0     35.15 -0.14707
-##    60   parent     22.0     23.26 -1.25919
-##    91   parent     15.0     15.18 -0.18181
-##   120   parent     12.0     10.19  1.81395</code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mm.L3</span><span class="op">[[</span><span class="st">"DFOP"</span>, <span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## mkin version used for fitting:    1.1.2 </span></span>
+<span><span class="co">## R version used for fitting:       4.2.1 </span></span>
+<span><span class="co">## Date of fit:     Wed Aug 10 15:28:20 2022 </span></span>
+<span><span class="co">## Date of summary: Wed Aug 10 15:28:20 2022 </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Equations:</span></span>
+<span><span class="co">## d_parent/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *</span></span>
+<span><span class="co">##            time)) / (g * exp(-k1 * time) + (1 - g) * exp(-k2 * time)))</span></span>
+<span><span class="co">##            * parent</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Model predictions using solution type analytical </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Fitted using 376 model solutions performed in 0.079 s</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Error model: Constant variance </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Error model algorithm: OLS </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Starting values for parameters to be optimised:</span></span>
+<span><span class="co">##          value   type</span></span>
+<span><span class="co">## parent_0 97.80  state</span></span>
+<span><span class="co">## k1        0.10 deparm</span></span>
+<span><span class="co">## k2        0.01 deparm</span></span>
+<span><span class="co">## g         0.50 deparm</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Starting values for the transformed parameters actually optimised:</span></span>
+<span><span class="co">##              value lower upper</span></span>
+<span><span class="co">## parent_0 97.800000  -Inf   Inf</span></span>
+<span><span class="co">## log_k1   -2.302585  -Inf   Inf</span></span>
+<span><span class="co">## log_k2   -4.605170  -Inf   Inf</span></span>
+<span><span class="co">## g_qlogis  0.000000  -Inf   Inf</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Fixed parameter values:</span></span>
+<span><span class="co">## None</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Results:</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##        AIC      BIC    logLik</span></span>
+<span><span class="co">##   32.97732 33.37453 -11.48866</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Optimised, transformed parameters with symmetric confidence intervals:</span></span>
+<span><span class="co">##          Estimate Std. Error   Lower      Upper</span></span>
+<span><span class="co">## parent_0  97.7500    1.01900 94.5000 101.000000</span></span>
+<span><span class="co">## log_k1    -0.6612    0.10050 -0.9812  -0.341300</span></span>
+<span><span class="co">## log_k2    -4.2860    0.04322 -4.4230  -4.148000</span></span>
+<span><span class="co">## g_qlogis  -0.1739    0.05270 -0.3416  -0.006142</span></span>
+<span><span class="co">## sigma      1.0170    0.25430  0.2079   1.827000</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Parameter correlation:</span></span>
+<span><span class="co">##            parent_0     log_k1     log_k2   g_qlogis      sigma</span></span>
+<span><span class="co">## parent_0  1.000e+00  1.732e-01  2.282e-02  4.009e-01 -9.664e-08</span></span>
+<span><span class="co">## log_k1    1.732e-01  1.000e+00  4.945e-01 -5.809e-01  7.147e-07</span></span>
+<span><span class="co">## log_k2    2.282e-02  4.945e-01  1.000e+00 -6.812e-01  1.022e-06</span></span>
+<span><span class="co">## g_qlogis  4.009e-01 -5.809e-01 -6.812e-01  1.000e+00 -7.926e-07</span></span>
+<span><span class="co">## sigma    -9.664e-08  7.147e-07  1.022e-06 -7.926e-07  1.000e+00</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Backtransformed parameters:</span></span>
+<span><span class="co">## Confidence intervals for internally transformed parameters are asymmetric.</span></span>
+<span><span class="co">## t-test (unrealistically) based on the assumption of normal distribution</span></span>
+<span><span class="co">## for estimators of untransformed parameters.</span></span>
+<span><span class="co">##          Estimate t value    Pr(&gt;t)    Lower     Upper</span></span>
+<span><span class="co">## parent_0 97.75000  95.960 1.248e-06 94.50000 101.00000</span></span>
+<span><span class="co">## k1        0.51620   9.947 1.081e-03  0.37490   0.71090</span></span>
+<span><span class="co">## k2        0.01376  23.140 8.840e-05  0.01199   0.01579</span></span>
+<span><span class="co">## g         0.45660  34.920 2.581e-05  0.41540   0.49850</span></span>
+<span><span class="co">## sigma     1.01700   4.000 1.400e-02  0.20790   1.82700</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## FOCUS Chi2 error levels in percent:</span></span>
+<span><span class="co">##          err.min n.optim df</span></span>
+<span><span class="co">## All data   2.225       4  4</span></span>
+<span><span class="co">## parent     2.225       4  4</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Estimated disappearance times:</span></span>
+<span><span class="co">##         DT50 DT90 DT50back DT50_k1 DT50_k2</span></span>
+<span><span class="co">## parent 7.464  123    37.03   1.343   50.37</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Data:</span></span>
+<span><span class="co">##  time variable observed predicted residual</span></span>
+<span><span class="co">##     0   parent     97.8     97.75  0.05396</span></span>
+<span><span class="co">##     3   parent     60.0     60.45 -0.44933</span></span>
+<span><span class="co">##     7   parent     51.0     49.44  1.56338</span></span>
+<span><span class="co">##    14   parent     43.0     43.84 -0.83632</span></span>
+<span><span class="co">##    30   parent     35.0     35.15 -0.14707</span></span>
+<span><span class="co">##    60   parent     22.0     23.26 -1.25919</span></span>
+<span><span class="co">##    91   parent     15.0     15.18 -0.18181</span></span>
+<span><span class="co">##   120   parent     12.0     10.19  1.81395</span></span></code></pre>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/plot-SaemixObject-method.html">plot</a></span><span class="op">(</span><span class="va">mm.L3</span><span class="op">[[</span><span class="st">"DFOP"</span>, <span class="fl">1</span><span class="op">]</span><span class="op">]</span>, show_errmin <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mm.L3</span><span class="op">[[</span><span class="st">"DFOP"</span>, <span class="fl">1</span><span class="op">]</span><span class="op">]</span>, show_errmin <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="FOCUS_L_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
 <p>Here, a look to the model plot, the confidence intervals of the parameters and the correlation matrix suggest that the parameter estimates are reliable, and the DFOP model can be used as the best-fit model based on the <span class="math inline">\(\chi^2\)</span> error level criterion for laboratory data L3.</p>
 <p>This is also an example where the standard t-test for the parameter <code>g_ilr</code> is misleading, as it tests for a significant difference from zero. In this case, zero appears to be the correct value for this parameter, and the confidence interval for the backtransformed parameter <code>g</code> is quite narrow.</p>
 </div>
 </div>
-<div id="laboratory-data-l4" class="section level1">
-<h1 class="hasAnchor">
-<a href="#laboratory-data-l4" class="anchor"></a>Laboratory Data L4</h1>
+<div class="section level2">
+<h2 id="laboratory-data-l4">Laboratory Data L4<a class="anchor" aria-label="anchor" href="#laboratory-data-l4"></a>
+</h2>
 <p>The following code defines example dataset L4 from the FOCUS kinetics report, p. 293:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">FOCUS_2006_L4</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
-  t <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">3</span>, <span class="fl">7</span>, <span class="fl">14</span>, <span class="fl">30</span>, <span class="fl">60</span>, <span class="fl">91</span>, <span class="fl">120</span><span class="op">)</span>,
-  parent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">96.6</span>, <span class="fl">96.3</span>, <span class="fl">94.3</span>, <span class="fl">88.8</span>, <span class="fl">74.9</span>, <span class="fl">59.9</span>, <span class="fl">53.5</span>, <span class="fl">49.0</span><span class="op">)</span><span class="op">)</span>
-<span class="va">FOCUS_2006_L4_mkin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkin_wide_to_long.html">mkin_wide_to_long</a></span><span class="op">(</span><span class="va">FOCUS_2006_L4</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">FOCUS_2006_L4</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  t <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">3</span>, <span class="fl">7</span>, <span class="fl">14</span>, <span class="fl">30</span>, <span class="fl">60</span>, <span class="fl">91</span>, <span class="fl">120</span><span class="op">)</span>,</span>
+<span>  parent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">96.6</span>, <span class="fl">96.3</span>, <span class="fl">94.3</span>, <span class="fl">88.8</span>, <span class="fl">74.9</span>, <span class="fl">59.9</span>, <span class="fl">53.5</span>, <span class="fl">49.0</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">FOCUS_2006_L4_mkin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkin_wide_to_long.html">mkin_wide_to_long</a></span><span class="op">(</span><span class="va">FOCUS_2006_L4</span><span class="op">)</span></span></code></pre></div>
 <p>Fits of the SFO and FOMC models, plots and summaries are produced below:</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Only use one core here, not to offend the CRAN checks</span>
-<span class="va">mm.L4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mmkin.html">mmkin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"FOMC"</span><span class="op">)</span>, cores <span class="op">=</span> <span class="fl">1</span>,
-               <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"FOCUS L4"</span> <span class="op">=</span> <span class="va">FOCUS_2006_L4_mkin</span><span class="op">)</span>,
-               quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/saemix/man/plot-SaemixObject-method.html">plot</a></span><span class="op">(</span><span class="va">mm.L4</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Only use one core here, not to offend the CRAN checks</span></span>
+<span><span class="va">mm.L4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mmkin.html">mmkin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"FOMC"</span><span class="op">)</span>, cores <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>               <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"FOCUS L4"</span> <span class="op">=</span> <span class="va">FOCUS_2006_L4_mkin</span><span class="op">)</span>,</span>
+<span>               quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mm.L4</span><span class="op">)</span></span></code></pre></div>
 <p><img src="FOCUS_L_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
 <p>The <span class="math inline">\(\chi^2\)</span> error level of 3.3% as well as the plot suggest that the SFO model fits very well. The error level at which the <span class="math inline">\(\chi^2\)</span> test passes is slightly lower for the FOMC model. However, the difference appears negligible.</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/summary-methods.html">summary</a></span><span class="op">(</span><span class="va">mm.L4</span><span class="op">[[</span><span class="st">"SFO"</span>, <span class="fl">1</span><span class="op">]</span><span class="op">]</span>, data <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<pre><code>## mkin version used for fitting:    1.0.3.9000 
-## R version used for fitting:       4.0.3 
-## Date of fit:     Mon Feb 15 17:13:42 2021 
-## Date of summary: Mon Feb 15 17:13:42 2021 
-## 
-## Equations:
-## d_parent/dt = - k_parent * parent
-## 
-## Model predictions using solution type analytical 
-## 
-## Fitted using 142 model solutions performed in 0.03 s
-## 
-## Error model: Constant variance 
-## 
-## Error model algorithm: OLS 
-## 
-## Starting values for parameters to be optimised:
-##          value   type
-## parent_0  96.6  state
-## k_parent   0.1 deparm
-## 
-## Starting values for the transformed parameters actually optimised:
-##                  value lower upper
-## parent_0     96.600000  -Inf   Inf
-## log_k_parent -2.302585  -Inf   Inf
-## 
-## Fixed parameter values:
-## None
-## 
-## Results:
-## 
-##        AIC      BIC    logLik
-##   47.12133 47.35966 -20.56067
-## 
-## Optimised, transformed parameters with symmetric confidence intervals:
-##              Estimate Std. Error  Lower   Upper
-## parent_0       96.440    1.69900 92.070 100.800
-## log_k_parent   -5.030    0.07059 -5.211  -4.848
-## sigma           3.162    0.79050  1.130   5.194
-## 
-## Parameter correlation:
-##               parent_0 log_k_parent     sigma
-## parent_0     1.000e+00    5.938e-01 3.387e-07
-## log_k_parent 5.938e-01    1.000e+00 5.830e-07
-## sigma        3.387e-07    5.830e-07 1.000e+00
-## 
-## Backtransformed parameters:
-## Confidence intervals for internally transformed parameters are asymmetric.
-## t-test (unrealistically) based on the assumption of normal distribution
-## for estimators of untransformed parameters.
-##           Estimate t value    Pr(&gt;t)     Lower     Upper
-## parent_0 96.440000   56.77 1.604e-08 92.070000 1.008e+02
-## k_parent  0.006541   14.17 1.578e-05  0.005455 7.842e-03
-## sigma     3.162000    4.00 5.162e-03  1.130000 5.194e+00
-## 
-## FOCUS Chi2 error levels in percent:
-##          err.min n.optim df
-## All data   3.287       2  6
-## parent     3.287       2  6
-## 
-## Estimated disappearance times:
-##        DT50 DT90
-## parent  106  352</code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mm.L4</span><span class="op">[[</span><span class="st">"SFO"</span>, <span class="fl">1</span><span class="op">]</span><span class="op">]</span>, data <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## mkin version used for fitting:    1.1.2 </span></span>
+<span><span class="co">## R version used for fitting:       4.2.1 </span></span>
+<span><span class="co">## Date of fit:     Wed Aug 10 15:28:21 2022 </span></span>
+<span><span class="co">## Date of summary: Wed Aug 10 15:28:21 2022 </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Equations:</span></span>
+<span><span class="co">## d_parent/dt = - k_parent * parent</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Model predictions using solution type analytical </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Fitted using 142 model solutions performed in 0.03 s</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Error model: Constant variance </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Error model algorithm: OLS </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Starting values for parameters to be optimised:</span></span>
+<span><span class="co">##          value   type</span></span>
+<span><span class="co">## parent_0  96.6  state</span></span>
+<span><span class="co">## k_parent   0.1 deparm</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Starting values for the transformed parameters actually optimised:</span></span>
+<span><span class="co">##                  value lower upper</span></span>
+<span><span class="co">## parent_0     96.600000  -Inf   Inf</span></span>
+<span><span class="co">## log_k_parent -2.302585  -Inf   Inf</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Fixed parameter values:</span></span>
+<span><span class="co">## None</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Results:</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##        AIC      BIC    logLik</span></span>
+<span><span class="co">##   47.12133 47.35966 -20.56067</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Optimised, transformed parameters with symmetric confidence intervals:</span></span>
+<span><span class="co">##              Estimate Std. Error  Lower   Upper</span></span>
+<span><span class="co">## parent_0       96.440    1.69900 92.070 100.800</span></span>
+<span><span class="co">## log_k_parent   -5.030    0.07059 -5.211  -4.848</span></span>
+<span><span class="co">## sigma           3.162    0.79050  1.130   5.194</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Parameter correlation:</span></span>
+<span><span class="co">##               parent_0 log_k_parent     sigma</span></span>
+<span><span class="co">## parent_0     1.000e+00    5.938e-01 3.387e-07</span></span>
+<span><span class="co">## log_k_parent 5.938e-01    1.000e+00 5.830e-07</span></span>
+<span><span class="co">## sigma        3.387e-07    5.830e-07 1.000e+00</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Backtransformed parameters:</span></span>
+<span><span class="co">## Confidence intervals for internally transformed parameters are asymmetric.</span></span>
+<span><span class="co">## t-test (unrealistically) based on the assumption of normal distribution</span></span>
+<span><span class="co">## for estimators of untransformed parameters.</span></span>
+<span><span class="co">##           Estimate t value    Pr(&gt;t)     Lower     Upper</span></span>
+<span><span class="co">## parent_0 96.440000   56.77 1.604e-08 92.070000 1.008e+02</span></span>
+<span><span class="co">## k_parent  0.006541   14.17 1.578e-05  0.005455 7.842e-03</span></span>
+<span><span class="co">## sigma     3.162000    4.00 5.162e-03  1.130000 5.194e+00</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## FOCUS Chi2 error levels in percent:</span></span>
+<span><span class="co">##          err.min n.optim df</span></span>
+<span><span class="co">## All data   3.287       2  6</span></span>
+<span><span class="co">## parent     3.287       2  6</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Estimated disappearance times:</span></span>
+<span><span class="co">##        DT50 DT90</span></span>
+<span><span class="co">## parent  106  352</span></span></code></pre>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/summary-methods.html">summary</a></span><span class="op">(</span><span class="va">mm.L4</span><span class="op">[[</span><span class="st">"FOMC"</span>, <span class="fl">1</span><span class="op">]</span><span class="op">]</span>, data <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<pre><code>## mkin version used for fitting:    1.0.3.9000 
-## R version used for fitting:       4.0.3 
-## Date of fit:     Mon Feb 15 17:13:42 2021 
-## Date of summary: Mon Feb 15 17:13:42 2021 
-## 
-## Equations:
-## d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent
-## 
-## Model predictions using solution type analytical 
-## 
-## Fitted using 224 model solutions performed in 0.046 s
-## 
-## Error model: Constant variance 
-## 
-## Error model algorithm: OLS 
-## 
-## Starting values for parameters to be optimised:
-##          value   type
-## parent_0  96.6  state
-## alpha      1.0 deparm
-## beta      10.0 deparm
-## 
-## Starting values for the transformed parameters actually optimised:
-##               value lower upper
-## parent_0  96.600000  -Inf   Inf
-## log_alpha  0.000000  -Inf   Inf
-## log_beta   2.302585  -Inf   Inf
-## 
-## Fixed parameter values:
-## None
-## 
-## Results:
-## 
-##        AIC      BIC    logLik
-##   40.37255 40.69032 -16.18628
-## 
-## Optimised, transformed parameters with symmetric confidence intervals:
-##           Estimate Std. Error   Lower    Upper
-## parent_0   99.1400     1.2670 95.6300 102.7000
-## log_alpha  -0.3506     0.2616 -1.0770   0.3756
-## log_beta    4.1740     0.3938  3.0810   5.2670
-## sigma       1.8300     0.4575  0.5598   3.1000
-## 
-## Parameter correlation:
-##             parent_0  log_alpha   log_beta      sigma
-## parent_0   1.000e+00 -4.696e-01 -5.543e-01 -2.468e-07
-## log_alpha -4.696e-01  1.000e+00  9.889e-01  2.478e-08
-## log_beta  -5.543e-01  9.889e-01  1.000e+00  5.211e-08
-## sigma     -2.468e-07  2.478e-08  5.211e-08  1.000e+00
-## 
-## Backtransformed parameters:
-## Confidence intervals for internally transformed parameters are asymmetric.
-## t-test (unrealistically) based on the assumption of normal distribution
-## for estimators of untransformed parameters.
-##          Estimate t value    Pr(&gt;t)   Lower   Upper
-## parent_0  99.1400  78.250 7.993e-08 95.6300 102.700
-## alpha      0.7042   3.823 9.365e-03  0.3407   1.456
-## beta      64.9800   2.540 3.201e-02 21.7800 193.900
-## sigma      1.8300   4.000 8.065e-03  0.5598   3.100
-## 
-## FOCUS Chi2 error levels in percent:
-##          err.min n.optim df
-## All data   2.029       3  5
-## parent     2.029       3  5
-## 
-## Estimated disappearance times:
-##         DT50 DT90 DT50back
-## parent 108.9 1644    494.9</code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mm.L4</span><span class="op">[[</span><span class="st">"FOMC"</span>, <span class="fl">1</span><span class="op">]</span><span class="op">]</span>, data <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## mkin version used for fitting:    1.1.2 </span></span>
+<span><span class="co">## R version used for fitting:       4.2.1 </span></span>
+<span><span class="co">## Date of fit:     Wed Aug 10 15:28:21 2022 </span></span>
+<span><span class="co">## Date of summary: Wed Aug 10 15:28:21 2022 </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Equations:</span></span>
+<span><span class="co">## d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Model predictions using solution type analytical </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Fitted using 224 model solutions performed in 0.045 s</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Error model: Constant variance </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Error model algorithm: OLS </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Starting values for parameters to be optimised:</span></span>
+<span><span class="co">##          value   type</span></span>
+<span><span class="co">## parent_0  96.6  state</span></span>
+<span><span class="co">## alpha      1.0 deparm</span></span>
+<span><span class="co">## beta      10.0 deparm</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Starting values for the transformed parameters actually optimised:</span></span>
+<span><span class="co">##               value lower upper</span></span>
+<span><span class="co">## parent_0  96.600000  -Inf   Inf</span></span>
+<span><span class="co">## log_alpha  0.000000  -Inf   Inf</span></span>
+<span><span class="co">## log_beta   2.302585  -Inf   Inf</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Fixed parameter values:</span></span>
+<span><span class="co">## None</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Results:</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##        AIC      BIC    logLik</span></span>
+<span><span class="co">##   40.37255 40.69032 -16.18628</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Optimised, transformed parameters with symmetric confidence intervals:</span></span>
+<span><span class="co">##           Estimate Std. Error   Lower    Upper</span></span>
+<span><span class="co">## parent_0   99.1400     1.2670 95.6300 102.7000</span></span>
+<span><span class="co">## log_alpha  -0.3506     0.2616 -1.0770   0.3756</span></span>
+<span><span class="co">## log_beta    4.1740     0.3938  3.0810   5.2670</span></span>
+<span><span class="co">## sigma       1.8300     0.4575  0.5598   3.1000</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Parameter correlation:</span></span>
+<span><span class="co">##             parent_0  log_alpha   log_beta      sigma</span></span>
+<span><span class="co">## parent_0   1.000e+00 -4.696e-01 -5.543e-01 -2.468e-07</span></span>
+<span><span class="co">## log_alpha -4.696e-01  1.000e+00  9.889e-01  2.478e-08</span></span>
+<span><span class="co">## log_beta  -5.543e-01  9.889e-01  1.000e+00  5.211e-08</span></span>
+<span><span class="co">## sigma     -2.468e-07  2.478e-08  5.211e-08  1.000e+00</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Backtransformed parameters:</span></span>
+<span><span class="co">## Confidence intervals for internally transformed parameters are asymmetric.</span></span>
+<span><span class="co">## t-test (unrealistically) based on the assumption of normal distribution</span></span>
+<span><span class="co">## for estimators of untransformed parameters.</span></span>
+<span><span class="co">##          Estimate t value    Pr(&gt;t)   Lower   Upper</span></span>
+<span><span class="co">## parent_0  99.1400  78.250 7.993e-08 95.6300 102.700</span></span>
+<span><span class="co">## alpha      0.7042   3.823 9.365e-03  0.3407   1.456</span></span>
+<span><span class="co">## beta      64.9800   2.540 3.201e-02 21.7800 193.900</span></span>
+<span><span class="co">## sigma      1.8300   4.000 8.065e-03  0.5598   3.100</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## FOCUS Chi2 error levels in percent:</span></span>
+<span><span class="co">##          err.min n.optim df</span></span>
+<span><span class="co">## All data   2.029       3  5</span></span>
+<span><span class="co">## parent     2.029       3  5</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Estimated disappearance times:</span></span>
+<span><span class="co">##         DT50 DT90 DT50back</span></span>
+<span><span class="co">## parent 108.9 1644    494.9</span></span></code></pre>
 </div>
-<div id="references" class="section level1 unnumbered">
-<h1 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h1>
+<div class="section level2">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
 <div id="refs" class="references hanging-indent">
 <div id="ref-ranke2014">
 <p>Ranke, Johannes. 2014. “Prüfung und Validierung von Modellierungssoftware als Alternative zu ModelMaker 4.0.” Umweltbundesamt Projektnummer 27452.</p>
@@ -801,11 +806,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Johannes Ranke.</p>
+  <p></p>
+<p>Developed by Johannes Ranke.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
@@ -813,6 +820,8 @@
 
   
 
+
+  
 
   </body>
 </html>

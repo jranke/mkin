@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.1.0</span>
+        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.1.2</span>
       </span>
     </div>
 
@@ -26,7 +26,7 @@
   <a href="../reference/index.html">Functions and data</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -39,6 +39,9 @@
     </li>
     <li>
       <a href="../articles/FOCUS_L.html">Example evaluation of FOCUS Laboratory Data L1 to L3</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
     </li>
     <li>
       <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
@@ -79,21 +82,40 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="1.1.0" id="mkin-110-unreleased">mkin 1.1.0 (unreleased)<a class="anchor" aria-label="anchor" href="#mkin-110-unreleased"></a></h2>
+<h2 class="page-header" data-toc-text="1.1.2" id="mkin-112">mkin 1.1.2<a class="anchor" aria-label="anchor" href="#mkin-112"></a></h2>
+<ul><li><p>‘R/mhmkin.R’: New method for performing multiple hierarchical mkin fits in one function call, optionally in parallel.</p></li>
+<li><p>‘R/saem.R’: Implement and test saemix transformations for FOMC and HS. Also, error out if saemix transformations are requested but not supported.</p></li>
+<li><p>‘R/saem.R’: ‘logLik’ and ‘update’ methods for ‘saem.mmkin’ objects.</p></li>
+<li><p>‘R/convergence.R’: New generic to show convergence information with methods for ‘mmkin’ and ‘mhmkin’ objects.</p></li>
+<li><p>‘R/illparms.R’: New generic to show ill-defined parameters with methods for ‘mkinfit’, ‘mmkin’, ‘saem.mmkin’ and ‘mhmkin’ objects.</p></li>
+<li><p>‘R/summary.mmkin.R’: Summary method for mmkin objects.</p></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.1.1" id="mkin-111-2022-07-12">mkin 1.1.1 (2022-07-12)<a class="anchor" aria-label="anchor" href="#mkin-111-2022-07-12"></a></h2>
+<ul><li><p>’R/{mkinmod,mkinpredict}.R: Store DLL information in mkinmod objects and use that information in mkinpredict to avoid a performance regression brought by a bugfix in R 4.2.x. Thanks to Tomas Kalibera for his analysis of the problem on the r-package-devel list and his suggestion on how to fix it.</p></li>
+<li><p>‘vignettes/FOCUS_L.rmd’: Remove an outdated note referring to a failure to calculate the covariance matrix for DFOP with the L2 dataset. Since 0.9.45.5 the covariance matrix is available</p></li>
+<li><p>‘vignettes/web_only/benchmarks.rmd’: Add the first benchmark data using my laptop system, therefore add the CPU when showing the benchmark results.</p></li>
+<li><p>‘dimethenamid_2018’: Update example code to use saemix</p></li>
+<li><p>‘CAKE_export’: Check for validity of the map argument, updates</p></li>
+<li><p>‘saem()’: Slightly improve speed in the case that no analytical solution for saemix is implemented, activate a test of the respective code</p></li>
+<li><p>‘mean_degparms’: New argument ‘default_log_parms’ that makes it possible to supply a surrogate value (default) for log parameters that fail the t-test</p></li>
+<li><p>‘plot.mixed.mmkin’: Pass the frame argument also to residual plots, take the ‘default_log_parms’ argument for ‘mean_degparms’ used for constructing approximate population curves, plot population curve last to avoid that it is covered by data</p></li>
+<li><p>‘plot.mkinfit’: Respect argument ‘maxabs’ for residual plots, and make it possible to give ylim as a list, for row layouts</p></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.1.0" id="mkin-110-2022-03-14">mkin 1.1.0 (2022-03-14)<a class="anchor" aria-label="anchor" href="#mkin-110-2022-03-14"></a></h2>
 <div class="section level3">
 <h3 id="mixed-effects-models-1-1-0">Mixed-effects models<a class="anchor" aria-label="anchor" href="#mixed-effects-models-1-1-0"></a></h3>
-<ul><li><p>Introduce an interface to nlmixr, supporting estimation methods ‘saem’ and ‘focei’: S3 method ‘nlmixr.mmkin’ using the helper functions ‘nlmixr_model’ and ‘nlmixr_data’ to set up nlmixr models for mmkin row objects, with summary and plot methods.</p></li>
-<li><p>Reintroduce the interface to saemix (now on CRAN), in particular the generic function ‘saem’ with a generator ‘saem.mmkin’, currently using ‘saemix_model’ and ‘saemix_data’, summary and plot methods</p></li>
+<ul><li><p>Reintroduce the interface to saemix version 3.0 (now on CRAN), in particular the generic function ‘saem’ with a generator ‘saem.mmkin’, currently using ‘saemix_model’ and ‘saemix_data’, summary and plot methods</p></li>
 <li><p>‘mean_degparms’: New argument ‘test_log_parms’ that makes the function only consider log-transformed parameters where the untransformed parameters pass the t-test for a certain confidence level. This can be used to obtain more plausible starting parameters for the different mixed-effects model backends</p></li>
 <li><p>‘plot.mixed.mmkin’: Gains arguments ‘test_log_parms’ and ‘conf.level’</p></li>
 <li><p>‘vignettes/web_only/dimethenamid_2018.rmd’: Example evaluations of the dimethenamid data.</p></li>
-<li><p>‘intervals’: Provide methods of this nlme function for ‘nlmixr.mmkin’ and ‘saem.mmkin’ objects.</p></li>
+<li><p>‘intervals’: Provide a method of this nlme function for ‘saem.mmkin’ objects.</p></li>
 </ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.5" id="mkin-105-2021-09-15">mkin 1.0.5 (2021-09-15)<a class="anchor" aria-label="anchor" href="#mkin-105-2021-09-15"></a></h2>
-<ul><li>‘dimethenamid_2018’: Correct the data for the Borstel soil. The five observations from Staudenmaier (2013) that were previously stored as “Borstel 2” are actually just a subset of the 16 observations in “Borstel 1” which is now simply “Borstel”</li>
-</ul></div>
+<ul><li>‘dimethenamid_2018’: Correct the data for the Borstel soil. The five observations from Staudenmaier (2013) that were previously stored as “Borstel 2” are actually just a subset of the 16 observations in “Borstel 1” which is now simply “Borstel”</li></ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.4" id="mkin-104-2021-04-20">mkin 1.0.4 (2021-04-20)<a class="anchor" aria-label="anchor" href="#mkin-104-2021-04-20"></a></h2>
 <ul><li><p>All plotting functions setting graphical parameters: Use on.exit() for resetting graphical parameters</p></li>
@@ -102,12 +124,10 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.3" id="mkin-103-2021-02-15">mkin 1.0.3 (2021-02-15)<a class="anchor" aria-label="anchor" href="#mkin-103-2021-02-15"></a></h2>
-<ul><li>Review and update README, the ‘Introduction to mkin’ vignette and some of the help pages</li>
-</ul></div>
+<ul><li>Review and update README, the ‘Introduction to mkin’ vignette and some of the help pages</li></ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.2" id="mkin-102-unreleased">mkin 1.0.2 (Unreleased)<a class="anchor" aria-label="anchor" href="#mkin-102-unreleased"></a></h2>
-<ul><li>‘mkinfit’: Keep model names stored in ‘mkinmod’ objects, avoiding their loss in ‘gmkin’</li>
-</ul></div>
+<ul><li>‘mkinfit’: Keep model names stored in ‘mkinmod’ objects, avoiding their loss in ‘gmkin’</li></ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0.1" id="mkin-101-2021-02-10">mkin 1.0.1 (2021-02-10)<a class="anchor" aria-label="anchor" href="#mkin-101-2021-02-10"></a></h2>
 <ul><li><p>‘confint.mmkin’, ‘nlme.mmkin’, ‘transform_odeparms’: Fix example code in dontrun sections that failed with current defaults</p></li>
@@ -162,8 +182,7 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.9.49.11" id="mkin-094911-2020-04-20">mkin 0.9.49.11 (2020-04-20)<a class="anchor" aria-label="anchor" href="#mkin-094911-2020-04-20"></a></h2>
-<ul><li>Increase a test tolerance to make it pass on all CRAN check machines</li>
-</ul></div>
+<ul><li>Increase a test tolerance to make it pass on all CRAN check machines</li></ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.9.49.10" id="mkin-094910-2020-04-18">mkin 0.9.49.10 (2020-04-18)<a class="anchor" aria-label="anchor" href="#mkin-094910-2020-04-18"></a></h2>
 <ul><li><p>‘nlme.mmkin’: An nlme method for mmkin row objects and an associated S3 class with print, plot, anova and endpoint methods</p></li>
@@ -278,8 +297,7 @@
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.9.46" id="mkin-0946-2017-07-24">mkin 0.9.46 (2017-07-24)<a class="anchor" aria-label="anchor" href="#mkin-0946-2017-07-24"></a></h2>
-<ul><li>Remove <code>test_FOMC_ill-defined.R</code> as it is too platform dependent</li>
-</ul></div>
+<ul><li>Remove <code>test_FOMC_ill-defined.R</code> as it is too platform dependent</li></ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.9.45.2" id="mkin-09452-2017-07-24">mkin 0.9.45.2 (2017-07-24)<a class="anchor" aria-label="anchor" href="#mkin-09452-2017-07-24"></a></h2>
 <ul><li><p>Rename <code>twa</code> to <code>max_twa_parent</code> to avoid conflict with <code>twa</code> from my <code>pfm</code> package</p></li>
@@ -291,8 +309,7 @@
 <h2 class="page-header" data-toc-text="0.9.45.1" id="mkin-09451-2016-12-20">mkin 0.9.45.1 (2016-12-20)<a class="anchor" aria-label="anchor" href="#mkin-09451-2016-12-20"></a></h2>
 <div class="section level3">
 <h3 id="new-features-0-9-45-1">New features<a class="anchor" aria-label="anchor" href="#new-features-0-9-45-1"></a></h3>
-<ul><li>A <code>twa</code> function, calculating maximum time weighted average concentrations for the parent (SFO, FOMC and DFOP).</li>
-</ul></div>
+<ul><li>A <code>twa</code> function, calculating maximum time weighted average concentrations for the parent (SFO, FOMC and DFOP).</li></ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.9.45" id="mkin-0945-2016-12-08">mkin 0.9.45 (2016-12-08)<a class="anchor" aria-label="anchor" href="#mkin-0945-2016-12-08"></a></h2>
@@ -307,8 +324,7 @@
 <h2 class="page-header" data-toc-text="0.9.44" id="mkin-0944-2016-06-29">mkin 0.9.44 (2016-06-29)<a class="anchor" aria-label="anchor" href="#mkin-0944-2016-06-29"></a></h2>
 <div class="section level3">
 <h3 id="bug-fixes-0-9-44">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-9-44"></a></h3>
-<ul><li>The test <code>test_FOMC_ill-defined</code> failed on several architectures, so the test is now skipped</li>
-</ul></div>
+<ul><li>The test <code>test_FOMC_ill-defined</code> failed on several architectures, so the test is now skipped</li></ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.9.43" id="mkin-0943-2016-06-28">mkin 0.9.43 (2016-06-28)<a class="anchor" aria-label="anchor" href="#mkin-0943-2016-06-28"></a></h2>
@@ -342,8 +358,7 @@
 <h2 class="page-header" data-toc-text="0.9.42" id="mkin-0942-2016-03-25">mkin 0.9.42 (2016-03-25)<a class="anchor" aria-label="anchor" href="#mkin-0942-2016-03-25"></a></h2>
 <div class="section level3">
 <h3 id="major-changes-0-9-42">Major changes<a class="anchor" aria-label="anchor" href="#major-changes-0-9-42"></a></h3>
-<ul><li>Add the argument <code>from_max_mean</code> to <code>mkinfit</code>, for fitting only the decline from the maximum observed value for models with a single observed variable</li>
-</ul></div>
+<ul><li>Add the argument <code>from_max_mean</code> to <code>mkinfit</code>, for fitting only the decline from the maximum observed value for models with a single observed variable</li></ul></div>
 <div class="section level3">
 <h3 id="minor-changes-0-9-42">Minor changes<a class="anchor" aria-label="anchor" href="#minor-changes-0-9-42"></a></h3>
 <ul><li><p>Add plots to <code>compiled_models</code> vignette</p></li>
@@ -363,21 +378,18 @@
 <div class="section level3">
 <h3 id="bug-fixes-0-9-41">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-9-41"></a></h3>
 <ul><li>
-<code><a href="../reference/summary.mkinfit.html">print.summary.mkinfit()</a></code>: Avoid an error that occurred when printing summaries generated with mkin versions before 0.9-36</li>
-</ul></div>
+<code><a href="../reference/summary.mkinfit.html">print.summary.mkinfit()</a></code>: Avoid an error that occurred when printing summaries generated with mkin versions before 0.9-36</li></ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.9-40" id="mkin-09-40-2015-07-21">mkin 0.9-40 (2015-07-21)<a class="anchor" aria-label="anchor" href="#mkin-09-40-2015-07-21"></a></h2>
 <div class="section level3">
 <h3 id="bug-fixes-0-9-40">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-9-40"></a></h3>
 <ul><li>
-<code><a href="../reference/endpoints.html">endpoints()</a></code>: For DFOP and SFORB models, where <code><a href="https://rdrr.io/r/stats/optimize.html" class="external-link">optimize()</a></code> is used, make use of the fact that the DT50 must be between DT50_k1 and DT50_k2 (DFOP) or DT50_b1 and DT50_b2 (SFORB), as <code><a href="https://rdrr.io/r/stats/optimize.html" class="external-link">optimize()</a></code> sometimes did not find the minimum. Likewise for finding DT90 values. Also fit on the log scale to make the function more efficient.</li>
-</ul></div>
+<code><a href="../reference/endpoints.html">endpoints()</a></code>: For DFOP and SFORB models, where <code><a href="https://rdrr.io/r/stats/optimize.html" class="external-link">optimize()</a></code> is used, make use of the fact that the DT50 must be between DT50_k1 and DT50_k2 (DFOP) or DT50_b1 and DT50_b2 (SFORB), as <code><a href="https://rdrr.io/r/stats/optimize.html" class="external-link">optimize()</a></code> sometimes did not find the minimum. Likewise for finding DT90 values. Also fit on the log scale to make the function more efficient.</li></ul></div>
 <div class="section level3">
 <h3 id="internal-changes-0-9-40">Internal changes<a class="anchor" aria-label="anchor" href="#internal-changes-0-9-40"></a></h3>
 <ul><li>
-<code>DESCRIPTION</code>, <code>NAMESPACE</code>, <code>R/*.R</code>: Import (from) stats, graphics and methods packages, and qualify some function calls for non-base packages installed with R to avoid NOTES made by R CMD check –as-cran with upcoming R versions.</li>
-</ul></div>
+<code>DESCRIPTION</code>, <code>NAMESPACE</code>, <code>R/*.R</code>: Import (from) stats, graphics and methods packages, and qualify some function calls for non-base packages installed with R to avoid NOTES made by R CMD check –as-cran with upcoming R versions.</li></ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.9-39" id="mkin-09-39-2015-06-26">mkin 0.9-39 (2015-06-26)<a class="anchor" aria-label="anchor" href="#mkin-09-39-2015-06-26"></a></h2>
@@ -389,8 +401,7 @@
 <div class="section level3">
 <h3 id="bug-fixes-0-9-39">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-9-39"></a></h3>
 <ul><li>
-<code><a href="../reference/mkinparplot.html">mkinparplot()</a></code>: Fix the x axis scaling for rate constants and formation fractions that got confused by the introduction of the t-values of transformed parameters.</li>
-</ul></div>
+<code><a href="../reference/mkinparplot.html">mkinparplot()</a></code>: Fix the x axis scaling for rate constants and formation fractions that got confused by the introduction of the t-values of transformed parameters.</li></ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.9-38" id="mkin-09-38-2015-06-24">mkin 0.9-38 (2015-06-24)<a class="anchor" aria-label="anchor" href="#mkin-09-38-2015-06-24"></a></h2>
@@ -402,8 +413,7 @@
 <div class="section level3">
 <h3 id="bug-fixes-0-9-38">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-9-38"></a></h3>
 <ul><li>
-<code><a href="../reference/mkinmod.html">mkinmod()</a></code>: When generating the C code for the derivatives, only declare the time variable when it is needed and remove the ‘-W-no-unused-variable’ compiler flag as the C compiler used in the CRAN checks on Solaris does not know it.</li>
-</ul></div>
+<code><a href="../reference/mkinmod.html">mkinmod()</a></code>: When generating the C code for the derivatives, only declare the time variable when it is needed and remove the ‘-W-no-unused-variable’ compiler flag as the C compiler used in the CRAN checks on Solaris does not know it.</li></ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.9-36" id="mkin-09-36-2015-06-21">mkin 0.9-36 (2015-06-21)<a class="anchor" aria-label="anchor" href="#mkin-09-36-2015-06-21"></a></h2>
@@ -416,15 +426,13 @@
 </ul></div>
 <div class="section level3">
 <h3 id="minor-changes-0-9-36">Minor changes<a class="anchor" aria-label="anchor" href="#minor-changes-0-9-36"></a></h3>
-<ul><li>Added a simple showcase vignette with an evaluation of FOCUS example dataset D</li>
-</ul></div>
+<ul><li>Added a simple showcase vignette with an evaluation of FOCUS example dataset D</li></ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.9-35" id="mkin-09-35-2015-05-15">mkin 0.9-35 (2015-05-15)<a class="anchor" aria-label="anchor" href="#mkin-09-35-2015-05-15"></a></h2>
 <div class="section level3">
 <h3 id="major-changes-0-9-35">Major changes<a class="anchor" aria-label="anchor" href="#major-changes-0-9-35"></a></h3>
-<ul><li>Switch from RUnit to testthat for testing</li>
-</ul></div>
+<ul><li>Switch from RUnit to testthat for testing</li></ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-0-9-35">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-9-35"></a></h3>
 <ul><li><p><code><a href="../reference/mkinparplot.html">mkinparplot()</a></code>: Avoid warnings that occurred when not all confidence intervals were available in the summary of the fit</p></li>
@@ -506,15 +514,13 @@
 <h2 class="page-header" data-toc-text="0.9-31" id="mkin-09-31-2014-07-14">mkin 0.9-31 (2014-07-14)<a class="anchor" aria-label="anchor" href="#mkin-09-31-2014-07-14"></a></h2>
 <div class="section level3">
 <h3 id="bug-fixes-0-9-31">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-9-31"></a></h3>
-<ul><li>The internal renaming of optimised parameters in Version 0.9-30 led to errors in the determination of the degrees of freedom for the chi2 error level calulations in <code><a href="../reference/mkinerrmin.html">mkinerrmin()</a></code> used by the summary function.</li>
-</ul></div>
+<ul><li>The internal renaming of optimised parameters in Version 0.9-30 led to errors in the determination of the degrees of freedom for the chi2 error level calulations in <code><a href="../reference/mkinerrmin.html">mkinerrmin()</a></code> used by the summary function.</li></ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.9-30" id="mkin-09-30-2014-07-11">mkin 0.9-30 (2014-07-11)<a class="anchor" aria-label="anchor" href="#mkin-09-30-2014-07-11"></a></h2>
 <div class="section level3">
 <h3 id="new-features-0-9-30">New features<a class="anchor" aria-label="anchor" href="#new-features-0-9-30"></a></h3>
-<ul><li>It is now possible to use formation fractions in combination with turning off the sink in <code><a href="../reference/mkinmod.html">mkinmod()</a></code>.</li>
-</ul></div>
+<ul><li>It is now possible to use formation fractions in combination with turning off the sink in <code><a href="../reference/mkinmod.html">mkinmod()</a></code>.</li></ul></div>
 <div class="section level3">
 <h3 id="major-changes-0-9-30">Major changes<a class="anchor" aria-label="anchor" href="#major-changes-0-9-30"></a></h3>
 <ul><li><p>The original and the transformed parameters now have different names (e.g. <code>k_parent</code> and <code>log_k_parent</code>. They also differ in how many they are when we have formation fractions but no pathway to sink.</p></li>
@@ -597,7 +603,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>
