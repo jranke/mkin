@@ -22,7 +22,7 @@ constrained by data protection regulations."><meta name="robots" content="noinde
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.1.0</span>
+        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.1.2</span>
       </span>
     </div>
 
@@ -31,7 +31,7 @@ constrained by data protection regulations."><meta name="robots" content="noinde
   <a href="../reference/index.html">Functions and data</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -44,6 +44,9 @@ constrained by data protection regulations."><meta name="robots" content="noinde
     </li>
     <li>
       <a href="../articles/FOCUS_L.html">Example evaluation of FOCUS Laboratory Data L1 to L3</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
     </li>
     <li>
       <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
@@ -94,7 +97,7 @@ constrained by data protection regulations.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="va">dimethenamid_2018</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="va">dimethenamid_2018</span></span></code></pre></div>
     </div>
 
     <div id="format">
@@ -117,7 +120,7 @@ specific pieces of information in the comments.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">dimethenamid_2018</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">dimethenamid_2018</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;mkindsg&gt; holding 7 mkinds objects</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Title $title:  Aerobic soil degradation data on dimethenamid-P from the EU assessment in 2018 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Occurrence of observed compounds $observed_n:</span>
@@ -142,296 +145,168 @@ specific pieces of information in the comments.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Flaach                   NA          20</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> BBA 2.2                  NA          20</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> BBA 2.3                  NA          20</span>
-<span class="r-in"><span class="va">dmta_ds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">7</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in">  <span class="va">ds_i</span> <span class="op">&lt;-</span> <span class="va">dimethenamid_2018</span><span class="op">$</span><span class="va">ds</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">data</span></span>
-<span class="r-in">  <span class="va">ds_i</span><span class="op">[</span><span class="va">ds_i</span><span class="op">$</span><span class="va">name</span> <span class="op">==</span> <span class="st">"DMTAP"</span>, <span class="st">"name"</span><span class="op">]</span> <span class="op">&lt;-</span>  <span class="st">"DMTA"</span></span>
-<span class="r-in">  <span class="va">ds_i</span><span class="op">$</span><span class="va">time</span> <span class="op">&lt;-</span> <span class="va">ds_i</span><span class="op">$</span><span class="va">time</span> <span class="op">*</span> <span class="va">dimethenamid_2018</span><span class="op">$</span><span class="va">f_time_norm</span><span class="op">[</span><span class="va">i</span><span class="op">]</span></span>
-<span class="r-in">  <span class="va">ds_i</span></span>
-<span class="r-in"><span class="op">}</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">dmta_ds</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">dimethenamid_2018</span><span class="op">$</span><span class="va">ds</span>, <span class="kw">function</span><span class="op">(</span><span class="va">ds</span><span class="op">)</span> <span class="va">ds</span><span class="op">$</span><span class="va">title</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot 1"</span><span class="op">]</span><span class="op">]</span>, <span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot 2"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot 1"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
-<span class="r-in"><span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot 2"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
-<span class="r-in"><span class="co"># \dontrun{</span></span>
-<span class="r-in"><span class="va">dfop_sfo3_plus</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinmod.html">mkinmod</a></span><span class="op">(</span></span>
-<span class="r-in">  DMTA <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"DFOP"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"M23"</span>, <span class="st">"M27"</span>, <span class="st">"M31"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span class="r-in">  M23 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,</span>
-<span class="r-in">  M27 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,</span>
-<span class="r-in">  M31 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"M27"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
-<span class="r-in">  quiet <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"><span class="va">f_dmta_mkin_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="mmkin.html">mmkin</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"DFOP-SFO3+"</span> <span class="op">=</span> <span class="va">dfop_sfo3_plus</span><span class="op">)</span>,</span>
-<span class="r-in">  <span class="va">dmta_ds</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span>, error_model <span class="op">=</span> <span class="st">"tc"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="nlmixr.mmkin.html">nlmixr_model</a></span><span class="op">(</span><span class="va">f_dmta_mkin_tc</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> With est = 'saem', a different error model is required for each observed variableChanging the error model to 'obs_tc' (Two-component error for each observed variable)</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>number of items to replace is not a multiple of replacement length</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> function () </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     ini({</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         DMTA_0 = 99</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         eta.DMTA_0 ~ 2.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         log_k_M23 = -3.9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         eta.log_k_M23 ~ 0.55</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         log_k_M27 = -4.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         eta.log_k_M27 ~ 0.86</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         log_k_M31 = -4.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         eta.log_k_M31 ~ 0.75</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         log_k1 = -2.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         eta.log_k1 ~ 0.9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         log_k2 = -3.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         eta.log_k2 ~ 1.6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         g_qlogis = 0.44</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         eta.g_qlogis ~ 3.1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         f_DMTA_tffm0_1_qlogis = -2.1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         eta.f_DMTA_tffm0_1_qlogis ~ 0.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         f_DMTA_tffm0_2_qlogis = -2.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         eta.f_DMTA_tffm0_2_qlogis ~ 0.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         f_DMTA_tffm0_3_qlogis = -2.1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         eta.f_DMTA_tffm0_3_qlogis ~ 0.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         sigma_low_DMTA = 0.7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         rsd_high_DMTA = 0.026</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         sigma_low_M23 = 0.7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         rsd_high_M23 = 0.026</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         sigma_low_M27 = 0.7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         rsd_high_M27 = 0.026</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         sigma_low_M31 = 0.7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         rsd_high_M31 = 0.026</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     })</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     model({</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         DMTA_0_model = DMTA_0 + eta.DMTA_0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         DMTA(0) = DMTA_0_model</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         k_M23 = exp(log_k_M23 + eta.log_k_M23)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         k_M27 = exp(log_k_M27 + eta.log_k_M27)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         k_M31 = exp(log_k_M31 + eta.log_k_M31)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         k1 = exp(log_k1 + eta.log_k1)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         k2 = exp(log_k2 + eta.log_k2)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         g = expit(g_qlogis + eta.g_qlogis)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         f_DMTA_to_M23 = expit(f_DMTA_tffm0_1_qlogis + eta.f_DMTA_tffm0_1_qlogis)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         f_DMTA_to_M23 = expit(f_DMTA_tffm0_2_qlogis + eta.f_DMTA_tffm0_2_qlogis)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         f_DMTA_to_M23 = expit(f_DMTA_tffm0_3_qlogis + eta.f_DMTA_tffm0_3_qlogis)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         f_DMTA_to_M23 = f_DMTA_tffm0_1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         f_DMTA_to_M27 = f_DMTA_tffm0_2 * (1 - f_DMTA_tffm0_1)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         f_DMTA_to_M31 = f_DMTA_tffm0_3 * (1 - f_DMTA_tffm0_2) * </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             (1 - f_DMTA_tffm0_1)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         d/dt(DMTA) = -((k1 * g * exp(-k1 * time) + k2 * (1 - </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             g) * exp(-k2 * time))/(g * exp(-k1 * time) + (1 - </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             g) * exp(-k2 * time))) * DMTA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         d/dt(M23) = +f_DMTA_to_M23 * ((k1 * g * exp(-k1 * time) + </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             k2 * (1 - g) * exp(-k2 * time))/(g * exp(-k1 * time) + </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             (1 - g) * exp(-k2 * time))) * DMTA - k_M23 * M23</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         d/dt(M27) = +f_DMTA_to_M27 * ((k1 * g * exp(-k1 * time) + </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             k2 * (1 - g) * exp(-k2 * time))/(g * exp(-k1 * time) + </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             (1 - g) * exp(-k2 * time))) * DMTA - k_M27 * M27 + </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             k_M31 * M31</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         d/dt(M31) = +f_DMTA_to_M31 * ((k1 * g * exp(-k1 * time) + </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             k2 * (1 - g) * exp(-k2 * time))/(g * exp(-k1 * time) + </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             (1 - g) * exp(-k2 * time))) * DMTA - k_M31 * M31</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         DMTA ~ add(sigma_low_DMTA) + prop(rsd_high_DMTA)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         M23 ~ add(sigma_low_M23) + prop(rsd_high_M23)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         M27 ~ add(sigma_low_M27) + prop(rsd_high_M27)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         M31 ~ add(sigma_low_M31) + prop(rsd_high_M31)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     })</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x55555fca3790&gt;</span>
-<span class="r-in"><span class="co"># The focei fit takes about four minutes on my system</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">f_dmta_nlmixr_focei</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/nlmixr.html" class="external-link">nlmixr</a></span><span class="op">(</span><span class="va">f_dmta_mkin_tc</span>, est <span class="op">=</span> <span class="st">"focei"</span>,</span>
-<span class="r-in">    control <span class="op">=</span> <span class="fu">nlmixr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/foceiControl.html" class="external-link">foceiControl</a></span><span class="op">(</span>print <span class="op">=</span> <span class="fl">500</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>number of items to replace is not a multiple of replacement length</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> parameter labels from comments are typically ignored in non-interactive mode</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Need to run with the source intact to parse comments</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> → creating full model...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> → pruning branches (`if`/`else`)...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> done</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> → loading into <span style="color: #0000BB;">symengine</span> environment...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> done</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> → creating full model...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> → pruning branches (`if`/`else`)...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> done</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> → loading into <span style="color: #0000BB;">symengine</span> environment...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> done</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> → calculate jacobian</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [====|====|====|====|====|====|====|====|====|====] 0:00:01 </span>
+<span class="r-in"><span><span class="va">dmta_ds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">7</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="va">ds_i</span> <span class="op">&lt;-</span> <span class="va">dimethenamid_2018</span><span class="op">$</span><span class="va">ds</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">data</span></span></span>
+<span class="r-in"><span>  <span class="va">ds_i</span><span class="op">[</span><span class="va">ds_i</span><span class="op">$</span><span class="va">name</span> <span class="op">==</span> <span class="st">"DMTAP"</span>, <span class="st">"name"</span><span class="op">]</span> <span class="op">&lt;-</span>  <span class="st">"DMTA"</span></span></span>
+<span class="r-in"><span>  <span class="va">ds_i</span><span class="op">$</span><span class="va">time</span> <span class="op">&lt;-</span> <span class="va">ds_i</span><span class="op">$</span><span class="va">time</span> <span class="op">*</span> <span class="va">dimethenamid_2018</span><span class="op">$</span><span class="va">f_time_norm</span><span class="op">[</span><span class="va">i</span><span class="op">]</span></span></span>
+<span class="r-in"><span>  <span class="va">ds_i</span></span></span>
+<span class="r-in"><span><span class="op">}</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">dmta_ds</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">dimethenamid_2018</span><span class="op">$</span><span class="va">ds</span>, <span class="kw">function</span><span class="op">(</span><span class="va">ds</span><span class="op">)</span> <span class="va">ds</span><span class="op">$</span><span class="va">title</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot 1"</span><span class="op">]</span><span class="op">]</span>, <span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot 2"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot 1"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span></span>
+<span class="r-in"><span><span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot 2"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span></span>
+<span class="r-in"><span><span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="co"># We don't use DFOP for the parent compound, as this gives numerical</span></span></span>
+<span class="r-in"><span><span class="co"># instabilities in the fits</span></span></span>
+<span class="r-in"><span><span class="va">sfo_sfo3p</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinmod.html">mkinmod</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span> DMTA <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"M23"</span>, <span class="st">"M27"</span>, <span class="st">"M31"</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span> M23 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span> M27 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span> M31 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"M27"</span>, sink <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span> quiet <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dmta_sfo_sfo3p_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="mmkin.html">mmkin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"SFO-SFO3+"</span> <span class="op">=</span> <span class="va">sfo_sfo3p</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="va">dmta_ds</span>, error_model <span class="op">=</span> <span class="st">"tc"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">dmta_sfo_sfo3p_tc</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;mmkin&gt; object</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Status of individual fits:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> → calculate sensitivities</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [====|====|====|====|====|====|====|====|====|====] 0:00:03 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            dataset</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> model       Calke Borstel Flaach BBA 2.2 BBA 2.3 Elliot</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   SFO-SFO3+ OK    OK      OK     OK      OK      OK    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> → calculate ∂(f)/∂(η)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [====|====|====|====|====|====|====|====|====|====] 0:00:01 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> OK: No warnings</span>
+<span class="r-in"><span><span class="co"># The default (test_log_parms = FALSE) gives an undue</span></span></span>
+<span class="r-in"><span><span class="co"># influence of ill-defined rate constants that have</span></span></span>
+<span class="r-in"><span><span class="co"># extremely small values:</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="mixed.html">mixed</a></span><span class="op">(</span><span class="va">dmta_sfo_sfo3p_tc</span><span class="op">)</span>, test_log_parms <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="dimethenamid_2018-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="co"># If we disregards ill-defined rate constants, the results</span></span></span>
+<span class="r-in"><span><span class="co"># look more plausible, but the truth is likely to be in</span></span></span>
+<span class="r-in"><span><span class="co"># between these variants</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="mixed.html">mixed</a></span><span class="op">(</span><span class="va">dmta_sfo_sfo3p_tc</span><span class="op">)</span>, test_log_parms <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="dimethenamid_2018-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="co"># We can also specify a default value for the failing</span></span></span>
+<span class="r-in"><span><span class="co"># log parameters, to mimic FOCUS guidance</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="mixed.html">mixed</a></span><span class="op">(</span><span class="va">dmta_sfo_sfo3p_tc</span><span class="op">)</span>, test_log_parms <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>  default_log_parms <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">/</span><span class="fl">1000</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="dimethenamid_2018-3.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="co"># As these attempts are not satisfying, we use nonlinear mixed-effects models</span></span></span>
+<span class="r-in"><span><span class="co"># f_dmta_nlme_tc &lt;- nlme(dmta_sfo_sfo3p_tc)</span></span></span>
+<span class="r-in"><span><span class="co"># nlme reaches maxIter = 50 without convergence</span></span></span>
+<span class="r-in"><span><span class="va">f_dmta_saem_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="saem.html">saem</a></span><span class="op">(</span><span class="va">dmta_sfo_sfo3p_tc</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># I am commenting out the convergence plot as rendering them</span></span></span>
+<span class="r-in"><span><span class="co"># with pkgdown fails (at least without further tweaks to the</span></span></span>
+<span class="r-in"><span><span class="co"># graphics device used)</span></span></span>
+<span class="r-in"><span><span class="co">#saemix::plot(f_dmta_saem_tc$so, plot.type = "convergence")</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">f_dmta_saem_tc</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> saemix version used for fitting:      3.1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mkin version used for pre-fitting:  1.1.2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> R version used for fitting:         4.2.1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Date of fit:     Wed Aug 10 15:24:12 2022 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Date of summary: Wed Aug 10 15:24:12 2022 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> → calculate ∂(R²)/∂(η)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [====|====|====|====|====|====|====|====|====|====] 0:00:08 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Equations:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> d_DMTA/dt = - k_DMTA * DMTA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> d_M23/dt = + f_DMTA_to_M23 * k_DMTA * DMTA - k_M23 * M23</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> d_M27/dt = + f_DMTA_to_M27 * k_DMTA * DMTA - k_M27 * M27 + k_M31 * M31</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> d_M31/dt = + f_DMTA_to_M31 * k_DMTA * DMTA - k_M31 * M31</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> → finding duplicate expressions in inner model...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [====|====|====|====|====|====|====|====|====|====] 0:00:07 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Data:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 563 observations of 4 variable(s) grouped in 6 datasets</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> → optimizing duplicate expressions in inner model...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [====|====|====|====|====|====|====|====|====|====] 0:00:06 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Model predictions using solution type deSolve </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> → finding duplicate expressions in EBE model...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [====|====|====|====|====|====|====|====|====|====] 0:00:00 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fitted in 791.863 s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Using 300, 100 iterations and 9 chains</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> → optimizing duplicate expressions in EBE model...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [====|====|====|====|====|====|====|====|====|====] 0:00:00 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Variance model: Two-component variance function </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> → compiling inner model...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> done</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> → finding duplicate expressions in FD model...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mean of starting values for individual parameters:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       DMTA_0   log_k_DMTA    log_k_M23    log_k_M27    log_k_M31 f_DMTA_ilr_1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      95.5662      -2.9048      -3.8130      -4.1600      -4.1486       0.1341 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_DMTA_ilr_2 f_DMTA_ilr_3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       0.1385      -1.6700 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> → optimizing duplicate expressions in FD model...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fixed degradation parameter values:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> None</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> → compiling EBE model...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> done</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> → compiling events FD model...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>  </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> done</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Model:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> cmt(DMTA);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> cmt(M23);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> cmt(M27);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> cmt(M31);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_14~ETA[1]+THETA[1];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> DMTA(0)=rx_expr_14;</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_15~ETA[5]+THETA[5];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_16~ETA[7]+THETA[7];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_17~ETA[6]+THETA[6];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_24~exp(rx_expr_15);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_25~exp(rx_expr_17);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_29~t*rx_expr_24;</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_30~t*rx_expr_25;</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_31~exp(-(rx_expr_16));</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_35~1+rx_expr_31;</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_40~1/(rx_expr_35);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_42~(rx_expr_40);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_43~1-rx_expr_42;</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> d/dt(DMTA)=-DMTA*(exp(rx_expr_15-rx_expr_29)/(rx_expr_35)+exp(rx_expr_17-rx_expr_30)*(rx_expr_43))/(exp(-t*rx_expr_24)/(rx_expr_35)+exp(-t*rx_expr_25)*(rx_expr_43));</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_18~ETA[2]+THETA[2];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_26~exp(rx_expr_18);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> d/dt(M23)=-rx_expr_26*M23+DMTA*(exp(rx_expr_15-rx_expr_29)/(rx_expr_35)+exp(rx_expr_17-rx_expr_30)*(rx_expr_43))*f_DMTA_tffm0_1/(exp(-t*rx_expr_24)/(rx_expr_35)+exp(-t*rx_expr_25)*(rx_expr_43));</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_19~ETA[3]+THETA[3];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_20~ETA[4]+THETA[4];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_21~1-f_DMTA_tffm0_1;</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_27~exp(rx_expr_19);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_28~exp(rx_expr_20);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> d/dt(M27)=-rx_expr_27*M27+rx_expr_28*M31+DMTA*(rx_expr_21)*(exp(rx_expr_15-rx_expr_29)/(rx_expr_35)+exp(rx_expr_17-rx_expr_30)*(rx_expr_43))*f_DMTA_tffm0_2/(exp(-t*rx_expr_24)/(rx_expr_35)+exp(-t*rx_expr_25)*(rx_expr_43));</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_22~1-f_DMTA_tffm0_2;</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> d/dt(M31)=-rx_expr_28*M31+DMTA*(rx_expr_22)*(rx_expr_21)*(exp(rx_expr_15-rx_expr_29)/(rx_expr_35)+exp(rx_expr_17-rx_expr_30)*(rx_expr_43))*f_DMTA_tffm0_3/(exp(-t*rx_expr_24)/(rx_expr_35)+exp(-t*rx_expr_25)*(rx_expr_43));</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_0~CMT==4;</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_1~CMT==2;</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_2~CMT==1;</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_3~CMT==3;</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_4~1-(rx_expr_0);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_5~1-(rx_expr_1);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_6~1-(rx_expr_3);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_yj_~(rx_expr_4)*((2*(rx_expr_5)*(rx_expr_2)+2*(rx_expr_1))*(rx_expr_6)+2*(rx_expr_3))+2*(rx_expr_0);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_7~(rx_expr_1);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_8~(rx_expr_3);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_9~(rx_expr_0);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_13~(rx_expr_5);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_32~rx_expr_13*(rx_expr_2);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_lambda_~(rx_expr_4)*((rx_expr_32+rx_expr_7)*(rx_expr_6)+rx_expr_8)+rx_expr_9;</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_hi_~(rx_expr_4)*((rx_expr_32+rx_expr_7)*(rx_expr_6)+rx_expr_8)+rx_expr_9;</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_low_~0;</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_10~M31*(rx_expr_0);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_11~M27*(rx_expr_3);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_12~M23*(rx_expr_1);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_23~DMTA*(rx_expr_5);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_36~rx_expr_23*(rx_expr_2);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_pred_=(rx_expr_4)*((rx_expr_10+(rx_expr_4)*(rx_expr_11+(rx_expr_12+rx_expr_36)*(rx_expr_6)))*(rx_expr_3)+((rx_expr_1)*(rx_expr_10+(rx_expr_4)*(rx_expr_11+(rx_expr_12+rx_expr_36)*(rx_expr_6)))+(rx_expr_5)*(rx_expr_10+(rx_expr_4)*(rx_expr_11+(rx_expr_12+rx_expr_36)*(rx_expr_6)))*(rx_expr_2))*(rx_expr_6))+(rx_expr_0)*(rx_expr_10+(rx_expr_4)*(rx_expr_11+(rx_expr_12+rx_expr_36)*(rx_expr_6)));</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_33~Rx_pow_di(THETA[12],2);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_expr_34~Rx_pow_di(THETA[11],2);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rx_r_=(rx_expr_4)*((rx_expr_33*Rx_pow_di(((rx_expr_10+(rx_expr_4)*(rx_expr_11+(rx_expr_12+rx_expr_36)*(rx_expr_6)))*(rx_expr_3)+((rx_expr_1)*(rx_expr_10+(rx_expr_4)*(rx_expr_11+(rx_expr_12+rx_expr_36)*(rx_expr_6)))+(rx_expr_5)*(rx_expr_10+(rx_expr_4)*(rx_expr_11+(rx_expr_12+rx_expr_36)*(rx_expr_6)))*(rx_expr_2))*(rx_expr_6)),2)+rx_expr_34)*(rx_expr_3)+((rx_expr_1)*(rx_expr_33*Rx_pow_di(((rx_expr_1)*(rx_expr_10+(rx_expr_4)*(rx_expr_11+(rx_expr_12+rx_expr_36)*(rx_expr_6)))+(rx_expr_5)*(rx_expr_10+(rx_expr_4)*(rx_expr_11+(rx_expr_12+rx_expr_36)*(rx_expr_6)))*(rx_expr_2)),2)+rx_expr_34)+(rx_expr_33*Rx_pow_di(((rx_expr_10+(rx_expr_4)*(rx_expr_11+(rx_expr_12+rx_expr_36)*(rx_expr_6)))*(rx_expr_2)),2)+rx_expr_34)*(rx_expr_5)*(rx_expr_2))*(rx_expr_6))+(rx_expr_0)*(rx_expr_33*Rx_pow_di(((rx_expr_4)*((rx_expr_10+(rx_expr_4)*(rx_expr_11+(rx_expr_12+rx_expr_36)*(rx_expr_6)))*(rx_expr_3)+((rx_expr_1)*(rx_expr_10+(rx_expr_4)*(rx_expr_11+(rx_expr_12+rx_expr_36)*(rx_expr_6)))+(rx_expr_5)*(rx_expr_10+(rx_expr_4)*(rx_expr_11+(rx_expr_12+rx_expr_36)*(rx_expr_6)))*(rx_expr_2))*(rx_expr_6))+(rx_expr_0)*(rx_expr_10+(rx_expr_4)*(rx_expr_11+(rx_expr_12+rx_expr_36)*(rx_expr_6)))),2)+rx_expr_34);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> DMTA_0=THETA[1];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> log_k_M23=THETA[2];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> log_k_M27=THETA[3];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> log_k_M31=THETA[4];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> log_k1=THETA[5];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> log_k2=THETA[6];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> g_qlogis=THETA[7];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> f_DMTA_tffm0_1_qlogis=THETA[8];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> f_DMTA_tffm0_2_qlogis=THETA[9];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> f_DMTA_tffm0_3_qlogis=THETA[10];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> sigma_low=THETA[11];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rsd_high=THETA[12];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> eta.DMTA_0=ETA[1];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> eta.log_k_M23=ETA[2];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> eta.log_k_M27=ETA[3];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> eta.log_k_M31=ETA[4];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> eta.log_k1=ETA[5];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> eta.log_k2=ETA[6];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> eta.g_qlogis=ETA[7];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> eta.f_DMTA_tffm0_1_qlogis=ETA[8];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> eta.f_DMTA_tffm0_2_qlogis=ETA[9];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> eta.f_DMTA_tffm0_3_qlogis=ETA[10];</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> DMTA_0_model=rx_expr_14;</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> k_M23=rx_expr_26;</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> k_M27=rx_expr_27;</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> k_M31=rx_expr_28;</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> k1=rx_expr_24;</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> k2=rx_expr_25;</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> g=1/(rx_expr_35);</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> f_DMTA_to_M23=1/(1+exp(-(ETA[8]+THETA[8])));</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> f_DMTA_to_M23=1/(1+exp(-(ETA[9]+THETA[9])));</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> f_DMTA_to_M23=1/(1+exp(-(ETA[10]+THETA[10])));</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> f_DMTA_to_M23=f_DMTA_tffm0_1;</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> f_DMTA_to_M27=(rx_expr_21)*f_DMTA_tffm0_2;</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> f_DMTA_to_M31=(rx_expr_22)*(rx_expr_21)*f_DMTA_tffm0_3;</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> tad=tad();</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> dosenum=dosenum();</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Needed Covariates:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> [1] "f_DMTA_tffm0_1" "f_DMTA_tffm0_2" "f_DMTA_tffm0_3" "CMT"           </span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in (function (data, inits, PKpars, model = NULL, pred = NULL, err = NULL,     lower = -Inf, upper = Inf, fixed = NULL, skipCov = NULL,     control = foceiControl(), thetaNames = NULL, etaNames = NULL,     etaMat = NULL, ..., env = NULL, keep = NULL, drop = NULL) {    set.seed(control$seed)    .pt &lt;- proc.time()    RxODE::.setWarnIdSort(FALSE)    on.exit(RxODE::.setWarnIdSort(TRUE))    loadNamespace("n1qn1")    if (!RxODE::rxIs(control, "foceiControl")) {        control &lt;- do.call(foceiControl, control)    }    if (is.null(env)) {        .ret &lt;- new.env(parent = emptyenv())    }    else {        .ret &lt;- env    }    .ret$origData &lt;- data    .ret$etaNames &lt;- etaNames    .ret$thetaFixed &lt;- fixed    .ret$control &lt;- control    .ret$control$focei.mu.ref &lt;- integer(0)    if (is(model, "RxODE") || is(model, "character")) {        .ret$ODEmodel &lt;- TRUE        if (class(pred) != "function") {            stop("pred must be a function specifying the prediction variables in this model.")        }    }    else {        .ret$ODEmodel &lt;- TRUE        model &lt;- RxODE::rxGetLin(PKpars)        pred &lt;- eval(parse(text = "function(){return(Central);}"))    }    .square &lt;- function(x) x * x    .ret$diagXformInv &lt;- c(sqrt = ".square", log = "exp", identity = "identity")[control$diagXform]    if (is.null(err)) {        err &lt;- eval(parse(text = paste0("function(){err", paste(inits$ERROR[[1]],             collapse = ""), "}")))    }    .covNames &lt;- .parNames &lt;- c()    .ret$adjLik &lt;- control$adjLik    .mixed &lt;- !is.null(inits$OMGA) &amp;&amp; length(inits$OMGA) &gt; 0    if (!exists("noLik", envir = .ret)) {        .atol &lt;- rep(control$atol, length(RxODE::rxModelVars(model)$state))        .rtol &lt;- rep(control$rtol, length(RxODE::rxModelVars(model)$state))        .ssAtol &lt;- rep(control$ssAtol, length(RxODE::rxModelVars(model)$state))        .ssRtol &lt;- rep(control$ssRtol, length(RxODE::rxModelVars(model)$state))        .ret$model &lt;- RxODE::rxSymPySetupPred(model, pred, PKpars,             err, grad = (control$derivMethod == 2L), pred.minus.dv = TRUE,             sum.prod = control$sumProd, theta.derivs = FALSE,             optExpression = control$optExpression, interaction = (control$interaction ==                 1L), only.numeric = !.mixed, run.internal = TRUE,             addProp = control$addProp)        if (!is.null(.ret$model$inner)) {            .atol &lt;- c(.atol, rep(control$atolSens, length(RxODE::rxModelVars(.ret$model$inner)$state) -                 length(.atol)))            .rtol &lt;- c(.rtol, rep(control$rtolSens, length(RxODE::rxModelVars(.ret$model$inner)$state) -                 length(.rtol)))            .ret$control$rxControl$atol &lt;- .atol            .ret$control$rxControl$rtol &lt;- .rtol            .ssAtol &lt;- c(.ssAtol, rep(control$ssAtolSens, length(RxODE::rxModelVars(.ret$model$inner)$state) -                 length(.ssAtol)))            .ssRtol &lt;- c(.ssRtol, rep(control$ssRtolSens, length(RxODE::rxModelVars(.ret$model$inner)$state) -                 length(.ssRtol)))            .ret$control$rxControl$ssAtol &lt;- .ssAtol            .ret$control$rxControl$ssRtol &lt;- .ssRtol        }        .covNames &lt;- .parNames &lt;- RxODE::rxParams(.ret$model$pred.only)        .covNames &lt;- .covNames[regexpr(rex::rex(start, or("THETA",             "ETA"), "[", numbers, "]", end), .covNames) == -1]        colnames(data) &lt;- sapply(names(data), function(x) {            if (any(x == .covNames)) {                return(x)            }            else {                return(toupper(x))            }        })        .lhs &lt;- c(names(RxODE::rxInits(.ret$model$pred.only)),             RxODE::rxLhs(.ret$model$pred.only))        if (length(.lhs) &gt; 0) {            .covNames &lt;- .covNames[regexpr(rex::rex(start, or(.lhs),                 end), .covNames) == -1]        }        if (length(.covNames) &gt; 0) {            if (!all(.covNames %in% names(data))) {                message("Model:")                RxODE::rxCat(.ret$model$pred.only)                message("Needed Covariates:")                nlmixrPrint(.covNames)                stop("Not all the covariates are in the dataset.")            }            message("Needed Covariates:")            print(.covNames)        }        .extraPars &lt;- .ret$model$extra.pars    }    else {        if (.ret$noLik) {            .atol &lt;- rep(control$atol, length(RxODE::rxModelVars(model)$state))            .rtol &lt;- rep(control$rtol, length(RxODE::rxModelVars(model)$state))            .ret$model &lt;- RxODE::rxSymPySetupPred(model, pred,                 PKpars, err, grad = FALSE, pred.minus.dv = TRUE,                 sum.prod = control$sumProd, theta.derivs = FALSE,                 optExpression = control$optExpression, run.internal = TRUE,                 only.numeric = TRUE, addProp = control$addProp)            if (!is.null(.ret$model$inner)) {                .atol &lt;- c(.atol, rep(control$atolSens, length(RxODE::rxModelVars(.ret$model$inner)$state) -                   length(.atol)))                .rtol &lt;- c(.rtol, rep(control$rtolSens, length(RxODE::rxModelVars(.ret$model$inner)$state) -                   length(.rtol)))                .ret$control$rxControl$atol &lt;- .atol                .ret$control$rxControl$rtol &lt;- .rtol            }            .covNames &lt;- .parNames &lt;- RxODE::rxParams(.ret$model$pred.only)            .covNames &lt;- .covNames[regexpr(rex::rex(start, or("THETA",                 "ETA"), "[", numbers, "]", end), .covNames) ==                 -1]            colnames(data) &lt;- sapply(names(data), function(x) {                if (any(x == .covNames)) {                  return(x)                }                else {                  return(toupper(x))                }            })            .lhs &lt;- c(names(RxODE::rxInits(.ret$model$pred.only)),                 RxODE::rxLhs(.ret$model$pred.only))            if (length(.lhs) &gt; 0) {                .covNames &lt;- .covNames[regexpr(rex::rex(start,                   or(.lhs), end), .covNames) == -1]            }            if (length(.covNames) &gt; 0) {                if (!all(.covNames %in% names(data))) {                  message("Model:")                  RxODE::rxCat(.ret$model$pred.only)                  message("Needed Covariates:")                  nlmixrPrint(.covNames)                  stop("Not all the covariates are in the dataset.")                }                message("Needed Covariates:")                print(.covNames)            }            .extraPars &lt;- .ret$model$extra.pars        }        else {            .extraPars &lt;- NULL        }    }    .ret$skipCov &lt;- skipCov    if (is.null(skipCov)) {        if (is.null(fixed)) {            .tmp &lt;- rep(FALSE, length(inits$THTA))        }        else {            if (length(fixed) &lt; length(inits$THTA)) {                .tmp &lt;- c(fixed, rep(FALSE, length(inits$THTA) -                   length(fixed)))            }            else {                .tmp &lt;- fixed[1:length(inits$THTA)]            }        }        if (exists("uif", envir = .ret)) {            .uifErr &lt;- .ret$uif$ini$err[!is.na(.ret$uif$ini$ntheta)]            .uifErr &lt;- sapply(.uifErr, function(x) {                if (is.na(x)) {                  return(FALSE)                }                return(!any(x == c("pow2", "tbs", "tbsYj")))            })            .tmp &lt;- (.tmp | .uifErr)        }        .ret$skipCov &lt;- c(.tmp, rep(TRUE, length(.extraPars)))        .ret$control$focei.mu.ref &lt;- .ret$uif$focei.mu.ref    }    if (is.null(.extraPars)) {        .nms &lt;- c(sprintf("THETA[%s]", seq_along(inits$THTA)))    }    else {        .nms &lt;- c(sprintf("THETA[%s]", seq_along(inits$THTA)),             sprintf("ERR[%s]", seq_along(.extraPars)))    }    if (!is.null(thetaNames) &amp;&amp; (length(inits$THTA) + length(.extraPars)) ==         length(thetaNames)) {        .nms &lt;- thetaNames    }    .ret$thetaNames &lt;- .nms    .thetaReset$thetaNames &lt;- .nms    if (length(lower) == 1) {        lower &lt;- rep(lower, length(inits$THTA))    }    else if (length(lower) != length(inits$THTA)) {        print(inits$THTA)        print(lower)        stop("Lower must be a single constant for all the THETA lower bounds, or match the dimension of THETA.")    }    if (length(upper) == 1) {        upper &lt;- rep(upper, length(inits$THTA))    }    else if (length(lower) != length(inits$THTA)) {        stop("Upper must be a single constant for all the THETA lower bounds, or match the dimension of THETA.")    }    if (!is.null(.extraPars)) {        .ret$model$extra.pars &lt;- eval(call(control$diagXform,             .ret$model$extra.pars))        if (length(.ret$model$extra.pars) &gt; 0) {            inits$THTA &lt;- c(inits$THTA, .ret$model$extra.pars)            .lowerErr &lt;- rep(control$atol[1] * 10, length(.ret$model$extra.pars))            .upperErr &lt;- rep(Inf, length(.ret$model$extra.pars))            lower &lt;- c(lower, .lowerErr)            upper &lt;- c(upper, .upperErr)        }    }    if (is.null(data$ID))         stop("\"ID\" not found in data")    if (is.null(data$DV))         stop("\"DV\" not found in data")    if (is.null(data$EVID))         data$EVID &lt;- 0    if (is.null(data$AMT))         data$AMT &lt;- 0    for (.v in c("TIME", "AMT", "DV", .covNames)) {        data[[.v]] &lt;- as.double(data[[.v]])    }    .ret$dataSav &lt;- data    .ds &lt;- data[data$EVID != 0 &amp; data$EVID != 2, c("ID", "TIME",         "AMT", "EVID", .covNames)]    .w &lt;- which(tolower(names(data)) == "limit")    .limitName &lt;- NULL    if (length(.w) == 1L) {        .limitName &lt;- names(data)[.w]    }    .censName &lt;- NULL    .w &lt;- which(tolower(names(data)) == "cens")    if (length(.w) == 1L) {        .censName &lt;- names(data[.w])    }    data &lt;- data[data$EVID == 0 | data$EVID == 2, c("ID", "TIME",         "DV", "EVID", .covNames, .limitName, .censName)]    .w &lt;- which(!(names(.ret$dataSav) %in% c(.covNames, keep)))    names(.ret$dataSav)[.w] &lt;- tolower(names(.ret$dataSav[.w]))    if (.mixed) {        .lh &lt;- .parseOM(inits$OMGA)        .nlh &lt;- sapply(.lh, length)        .osplt &lt;- rep(1:length(.lh), .nlh)        .lini &lt;- list(inits$THTA, unlist(.lh))        .nlini &lt;- sapply(.lini, length)        .nsplt &lt;- rep(1:length(.lini), .nlini)        .om0 &lt;- .genOM(.lh)        if (length(etaNames) == dim(.om0)[1]) {            .ret$etaNames &lt;- .ret$etaNames        }        else {            .ret$etaNames &lt;- sprintf("ETA[%d]", seq(1, dim(.om0)[1]))        }        .ret$rxInv &lt;- RxODE::rxSymInvCholCreate(mat = .om0, diag.xform = control$diagXform)        .ret$xType &lt;- .ret$rxInv$xType        .om0a &lt;- .om0        .om0a &lt;- .om0a/control$diagOmegaBoundLower        .om0b &lt;- .om0        .om0b &lt;- .om0b * control$diagOmegaBoundUpper        .om0a &lt;- RxODE::rxSymInvCholCreate(mat = .om0a, diag.xform = control$diagXform)        .om0b &lt;- RxODE::rxSymInvCholCreate(mat = .om0b, diag.xform = control$diagXform)        .omdf &lt;- data.frame(a = .om0a$theta, m = .ret$rxInv$theta,             b = .om0b$theta, diag = .om0a$theta.diag)        .omdf$lower &lt;- with(.omdf, ifelse(a &gt; b, b, a))        .omdf$lower &lt;- with(.omdf, ifelse(lower == m, -Inf, lower))        .omdf$lower &lt;- with(.omdf, ifelse(!diag, -Inf, lower))        .omdf$upper &lt;- with(.omdf, ifelse(a &lt; b, b, a))        .omdf$upper &lt;- with(.omdf, ifelse(upper == m, Inf, upper))        .omdf$upper &lt;- with(.omdf, ifelse(!diag, Inf, upper))        .ret$control$nomega &lt;- length(.omdf$lower)        .ret$control$neta &lt;- sum(.omdf$diag)        .ret$control$ntheta &lt;- length(lower)        .ret$control$nfixed &lt;- sum(fixed)        lower &lt;- c(lower, .omdf$lower)        upper &lt;- c(upper, .omdf$upper)    }    else {        .ret$control$nomega &lt;- 0        .ret$control$neta &lt;- 0        .ret$xType &lt;- -1        .ret$control$ntheta &lt;- length(lower)        .ret$control$nfixed &lt;- sum(fixed)    }    .ret$lower &lt;- lower    .ret$upper &lt;- upper    .ret$thetaIni &lt;- inits$THTA    .scaleC &lt;- double(length(lower))    if (is.null(control$scaleC)) {        .scaleC &lt;- rep(NA_real_, length(lower))    }    else {        .scaleC &lt;- as.double(control$scaleC)        if (length(lower) &gt; length(.scaleC)) {            .scaleC &lt;- c(.scaleC, rep(NA_real_, length(lower) -                 length(.scaleC)))        }        else if (length(lower) &lt; length(.scaleC)) {            .scaleC &lt;- .scaleC[seq(1, length(lower))]            warning("scaleC control option has more options than estimated population parameters, please check.")        }    }    .ret$scaleC &lt;- .scaleC    if (exists("uif", envir = .ret)) {        .ini &lt;- as.data.frame(.ret$uif$ini)[!is.na(.ret$uif$ini$err),             c("est", "err", "ntheta")]        for (.i in seq_along(.ini$err)) {            if (is.na(.ret$scaleC[.ini$ntheta[.i]])) {                if (any(.ini$err[.i] == c("boxCox", "yeoJohnson",                   "pow2", "tbs", "tbsYj"))) {                  .ret$scaleC[.ini$ntheta[.i]] &lt;- 1                }                else if (any(.ini$err[.i] == c("prop", "add",                   "norm", "dnorm", "logn", "dlogn", "lnorm",                   "dlnorm"))) {                  .ret$scaleC[.ini$ntheta[.i]] &lt;- 0.5 * abs(.ini$est[.i])                }            }        }        for (.i in .ini$model$extraProps$powTheta) {            if (is.na(.ret$scaleC[.i]))                 .ret$scaleC[.i] &lt;- 1        }        .ini &lt;- as.data.frame(.ret$uif$ini)        for (.i in .ini$model$extraProps$factorial) {            if (is.na(.ret$scaleC[.i]))                 .ret$scaleC[.i] &lt;- abs(1/digamma(.ini$est[.i] +                   1))        }        for (.i in .ini$model$extraProps$gamma) {            if (is.na(.ret$scaleC[.i]))                 .ret$scaleC[.i] &lt;- abs(1/digamma(.ini$est[.i]))        }        for (.i in .ini$model$extraProps$log) {            if (is.na(.ret$scaleC[.i]))                 .ret$scaleC[.i] &lt;- log(abs(.ini$est[.i])) * abs(.ini$est[.i])        }        for (.i in .ret$logitThetas) {            .b &lt;- .ret$logitThetasLow[.i]            .c &lt;- .ret$logitThetasHi[.i]            .a &lt;- .ini$est[.i]            if (is.na(.ret$scaleC[.i])) {                .ret$scaleC[.i] &lt;- 1 * (-.b + .c) * exp(-.a)/((1 +                   exp(-.a))^2 * (.b + 1 * (-.b + .c)/(1 + exp(-.a))))            }        }    }    names(.ret$thetaIni) &lt;- sprintf("THETA[%d]", seq_along(.ret$thetaIni))    if (is.null(etaMat) &amp; !is.null(control$etaMat)) {        .ret$etaMat &lt;- control$etaMat    }    else {        .ret$etaMat &lt;- etaMat    }    .ret$setupTime &lt;- (proc.time() - .pt)["elapsed"]    if (exists("uif", envir = .ret)) {        .tmp &lt;- .ret$uif$logThetasList        .ret$logThetas &lt;- .tmp[[1]]        .ret$logThetasF &lt;- .tmp[[2]]        .tmp &lt;- .ret$uif$logitThetasList        .ret$logitThetas &lt;- .tmp[[1]]        .ret$logitThetasF &lt;- .tmp[[2]]        .tmp &lt;- .ret$uif$logitThetasListLow        .ret$logitThetasLow &lt;- .tmp[[1]]        .ret$logitThetasLowF &lt;- .tmp[[2]]        .tmp &lt;- .ret$uif$logitThetasListHi        .ret$logitThetasHi &lt;- .tmp[[1]]        .ret$logitThetasHiF &lt;- .tmp[[2]]        .tmp &lt;- .ret$uif$probitThetasList        .ret$probitThetas &lt;- .tmp[[1]]        .ret$probitThetasF &lt;- .tmp[[2]]        .tmp &lt;- .ret$uif$probitThetasListLow        .ret$probitThetasLow &lt;- .tmp[[1]]        .ret$probitThetasLowF &lt;- .tmp[[2]]        .tmp &lt;- .ret$uif$probitThetasListHi        .ret$probitThetasHi &lt;- .tmp[[1]]        .ret$probitThetasHiF &lt;- .tmp[[2]]    }    else {        .ret$logThetasF &lt;- integer(0)        .ret$logitThetasF &lt;- integer(0)        .ret$logitThetasHiF &lt;- numeric(0)        .ret$logitThetasLowF &lt;- numeric(0)        .ret$logitThetas &lt;- integer(0)        .ret$logitThetasHi &lt;- numeric(0)        .ret$logitThetasLow &lt;- numeric(0)        .ret$probitThetasF &lt;- integer(0)        .ret$probitThetasHiF &lt;- numeric(0)        .ret$probitThetasLowF &lt;- numeric(0)        .ret$probitThetas &lt;- integer(0)        .ret$probitThetasHi &lt;- numeric(0)        .ret$probitThetasLow &lt;- numeric(0)    }    if (exists("noLik", envir = .ret)) {        if (!.ret$noLik) {            .ret$.params &lt;- c(sprintf("THETA[%d]", seq_along(.ret$thetaIni)),                 sprintf("ETA[%d]", seq(1, dim(.om0)[1])))            .ret$.thetan &lt;- length(.ret$thetaIni)            .ret$nobs &lt;- sum(data$EVID == 0)        }    }    .ret$control$printTop &lt;- TRUE    .ret$control$nF &lt;- 0    .est0 &lt;- .ret$thetaIni    if (!is.null(.ret$model$pred.nolhs)) {        .ret$control$predNeq &lt;- length(.ret$model$pred.nolhs$state)    }    else {        .ret$control$predNeq &lt;- 0L    }    .fitFun &lt;- function(.ret) {        this.env &lt;- environment()        assign("err", "theta reset", this.env)        while (this.env$err == "theta reset") {            assign("err", "", this.env)            .ret0 &lt;- tryCatch({                foceiFitCpp_(.ret)            }, error = function(e) {                if (regexpr("theta reset", e$message) != -1) {                  assign("zeroOuter", FALSE, this.env)                  assign("zeroGrad", FALSE, this.env)                  if (regexpr("theta reset0", e$message) != -1) {                    assign("zeroGrad", TRUE, this.env)                  }                  else if (regexpr("theta resetZ", e$message) !=                     -1) {                    assign("zeroOuter", TRUE, this.env)                  }                  assign("err", "theta reset", this.env)                }                else {                  assign("err", e$message, this.env)                }            })            if (this.env$err == "theta reset") {                .nm &lt;- names(.ret$thetaIni)                .ret$thetaIni &lt;- setNames(.thetaReset$thetaIni +                   0, .nm)                .ret$rxInv$theta &lt;- .thetaReset$omegaTheta                .ret$control$printTop &lt;- FALSE                .ret$etaMat &lt;- .thetaReset$etaMat                .ret$control$etaMat &lt;- .thetaReset$etaMat                .ret$control$maxInnerIterations &lt;- .thetaReset$maxInnerIterations                .ret$control$nF &lt;- .thetaReset$nF                .ret$control$gillRetC &lt;- .thetaReset$gillRetC                .ret$control$gillRet &lt;- .thetaReset$gillRet                .ret$control$gillRet &lt;- .thetaReset$gillRet                .ret$control$gillDf &lt;- .thetaReset$gillDf                .ret$control$gillDf2 &lt;- .thetaReset$gillDf2                .ret$control$gillErr &lt;- .thetaReset$gillErr                .ret$control$rEps &lt;- .thetaReset$rEps                .ret$control$aEps &lt;- .thetaReset$aEps                .ret$control$rEpsC &lt;- .thetaReset$rEpsC                .ret$control$aEpsC &lt;- .thetaReset$aEpsC                .ret$control$c1 &lt;- .thetaReset$c1                .ret$control$c2 &lt;- .thetaReset$c2                if (this.env$zeroOuter) {                  message("Posthoc reset")                  .ret$control$maxOuterIterations &lt;- 0L                }                else if (this.env$zeroGrad) {                  message("Theta reset (zero gradient values); Switch to bobyqa")                  RxODE::rxReq("minqa")                  .ret$control$outerOptFun &lt;- .bobyqa                  .ret$control$outerOpt &lt;- -1L                }                else {                  message("Theta reset (ETA drift)")                }            }        }        if (this.env$err != "") {            stop(this.env$err)        }        else {            return(.ret0)        }    }    .ret0 &lt;- try(.fitFun(.ret))    .n &lt;- 1    while (inherits(.ret0, "try-error") &amp;&amp; control$maxOuterIterations !=         0 &amp;&amp; .n &lt;= control$nRetries) {        message(sprintf("Restart %s", .n))        .ret$control$nF &lt;- 0        .estNew &lt;- .est0 + 0.2 * .n * abs(.est0) * stats::runif(length(.est0)) -             0.1 * .n        .estNew &lt;- sapply(seq_along(.est0), function(.i) {            if (.ret$thetaFixed[.i]) {                return(.est0[.i])            }            else if (.estNew[.i] &lt; lower[.i]) {                return(lower + (.Machine$double.eps)^(1/7))            }            else if (.estNew[.i] &gt; upper[.i]) {                return(upper - (.Machine$double.eps)^(1/7))            }            else {                return(.estNew[.i])            }        })        .ret$thetaIni &lt;- .estNew        .ret0 &lt;- try(.fitFun(.ret))        .n &lt;- .n + 1    }    if (inherits(.ret0, "try-error"))         stop("Could not fit data.")    .ret &lt;- .ret0    if (exists("parHistData", .ret)) {        .tmp &lt;- .ret$parHistData        .tmp &lt;- .tmp[.tmp$type == "Unscaled", names(.tmp) !=             "type"]        .iter &lt;- .tmp$iter        .tmp &lt;- .tmp[, names(.tmp) != "iter"]        .ret$parHistStacked &lt;- data.frame(stack(.tmp), iter = .iter)        names(.ret$parHistStacked) &lt;- c("val", "par", "iter")        .ret$parHist &lt;- data.frame(iter = .iter, .tmp)    }    if (.mixed) {        .etas &lt;- .ret$ranef        .thetas &lt;- .ret$fixef        .pars &lt;- .Call(`_nlmixr_nlmixrParameters`, .thetas, .etas)        .ret$shrink &lt;- .Call(`_nlmixr_calcShrinkOnly`, .ret$omega,             .pars$eta.lst, length(.etas$ID))        .updateParFixed(.ret)    }    else {        .updateParFixed(.ret)    }    if (!exists("table", .ret)) {        .ret$table &lt;- tableControl()    }    if (control$calcTables) {        .ret &lt;- addTable(.ret, updateObject = "no", keep = keep,             drop = drop, table = .ret$table)    }    .ret})(data = dat, inits = .FoceiInits, PKpars = .pars, model = .mod,     pred = function() {        return(nlmixr_pred)    }, err = uif$error, lower = uif$focei.lower, upper = uif$focei.upper,     fixed = uif$focei.fixed, thetaNames = uif$focei.names, etaNames = uif$eta.names,     control = control, env = env, keep = .keep, drop = .drop):</span> Not all the covariates are in the dataset.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Timing stopped at: 119.8 9.331 129.2</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Timing stopped at: 120 9.331 129.3</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">f_dmta_nlmixr_focei</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in summary(f_dmta_nlmixr_focei):</span> object 'f_dmta_nlmixr_focei' not found</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_dmta_nlmixr_focei</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in plot(f_dmta_nlmixr_focei):</span> object 'f_dmta_nlmixr_focei' not found</span>
-<span class="r-in"><span class="co"># Using saemix takes about 18 minutes</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">f_dmta_saemix</span> <span class="op">&lt;-</span> <span class="fu"><a href="saem.html">saem</a></span><span class="op">(</span><span class="va">f_dmta_mkin_tc</span>, test_log_parms <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> DINTDY-  T (=R1) illegal      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> In above message, R1 = 115.507</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       T not in interval TCUR - HU (= R1) to TCUR (=R2)      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> In above message, R1 = 112.133, R2 = 113.577</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> DLSODA-  At T (=R1), too much accuracy requested  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       for precision of machine..  See TOLSF (=R2) </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> In above message, R1 = 55.3899, R2 = nan</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  </span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in out[available, var]:</span> (subscript) logical subscript too long</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Timing stopped at: 11.84 0.008 11.85</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Timing stopped at: 12.16 0.008 12.17</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># nlmixr with est = "saem" is pretty fast with default iteration numbers, most</span></span>
-<span class="r-in"><span class="co"># of the time (about 2.5 minutes) is spent for calculating the log likelihood at the end</span></span>
-<span class="r-in"><span class="co"># The likelihood calculated for the nlmixr fit is much lower than that found by saemix</span></span>
-<span class="r-in"><span class="co"># Also, the trace plot and the plot of the individual predictions is not</span></span>
-<span class="r-in"><span class="co"># convincing for the parent. It seems we are fitting an overparameterised</span></span>
-<span class="r-in"><span class="co"># model, so the result we get strongly depends on starting parameters and control settings.</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">f_dmta_nlmixr_saem</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/nlmixr.html" class="external-link">nlmixr</a></span><span class="op">(</span><span class="va">f_dmta_mkin_tc</span>, est <span class="op">=</span> <span class="st">"saem"</span>,</span>
-<span class="r-in">    control <span class="op">=</span> <span class="fu">nlmixr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/nlmixr/man/saemControl.html" class="external-link">saemControl</a></span><span class="op">(</span>print <span class="op">=</span> <span class="fl">500</span>, logLik <span class="op">=</span> <span class="cn">TRUE</span>, nmc <span class="op">=</span> <span class="fl">9</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> With est = 'saem', a different error model is required for each observed variableChanging the error model to 'obs_tc' (Two-component error for each observed variable)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> parameter labels from comments are typically ignored in non-interactive mode</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Need to run with the source intact to parse comments</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(substitute(expr), data, enclos = parent.frame()):</span> Cannot run SAEM since some of the parameters are not mu-referenced (eta.f_DMTA_tffm0_1_qlogis, eta.f_DMTA_tffm0_2_qlogis, eta.f_DMTA_tffm0_3_qlogis)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Timing stopped at: 0.892 0.004 0.896</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Timing stopped at: 1.096 0.005 1.1</span>
-<span class="r-in"><span class="fu">traceplot</span><span class="op">(</span><span class="va">f_dmta_nlmixr_saem</span><span class="op">$</span><span class="va">nm</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in traceplot(f_dmta_nlmixr_saem$nm):</span> could not find function "traceplot"</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">f_dmta_nlmixr_saem</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in summary(f_dmta_nlmixr_saem):</span> object 'f_dmta_nlmixr_saem' not found</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_dmta_nlmixr_saem</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in plot(f_dmta_nlmixr_saem):</span> object 'f_dmta_nlmixr_saem' not found</span>
-<span class="r-in"><span class="co"># }</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Results:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Likelihood computed by importance sampling</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    AIC  BIC logLik</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   2276 2272  -1120</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Optimised parameters:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 est.   lower   upper</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DMTA_0       88.5943 84.3961 92.7925</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_DMTA   -3.0466 -3.5609 -2.5322</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_M23    -4.0684 -4.9340 -3.2029</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_M27    -3.8628 -4.2627 -3.4628</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_M31    -3.9803 -4.4804 -3.4801</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_DMTA_ilr_1  0.1304 -0.2186  0.4795</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_DMTA_ilr_2  0.1490 -0.2559  0.5540</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_DMTA_ilr_3 -1.3970 -1.6976 -1.0964</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Correlation: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              DMTA_0  l__DMTA lg__M23 lg__M27 lg__M31 f_DMTA__1 f_DMTA__2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_DMTA    0.0309                                                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_M23    -0.0231 -0.0031                                            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_M27    -0.0381 -0.0048  0.0039                                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_M31    -0.0251 -0.0031  0.0021  0.0830                            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_DMTA_ilr_1 -0.0046 -0.0006  0.0417 -0.0437  0.0328                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_DMTA_ilr_2 -0.0008 -0.0002  0.0214 -0.0270 -0.0909 -0.0361            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_DMTA_ilr_3 -0.1832 -0.0135  0.0434  0.0804  0.0395 -0.0070    0.0059  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Random effects:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   est.   lower  upper</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.DMTA_0       3.3651 -0.9649 7.6951</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k_DMTA   0.6415  0.2774 1.0055</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k_M23    1.0176  0.3809 1.6543</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k_M27    0.4538  0.1522 0.7554</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k_M31    0.5684  0.1905 0.9464</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.f_DMTA_ilr_1 0.4111  0.1524 0.6699</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.f_DMTA_ilr_2 0.4788  0.1808 0.7768</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.f_DMTA_ilr_3 0.3501  0.1316 0.5685</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Variance model:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       est.  lower upper</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> a.1 0.9349 0.8409 1.029</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> b.1 0.1344 0.1178 0.151</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Backtransformed parameters:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   est.     lower    upper</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DMTA_0        88.59431 84.396147 92.79246</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> k_DMTA         0.04752  0.028413  0.07948</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> k_M23          0.01710  0.007198  0.04064</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> k_M27          0.02101  0.014084  0.03134</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> k_M31          0.01868  0.011329  0.03080</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_DMTA_to_M23  0.14498        NA       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_DMTA_to_M27  0.12056        NA       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_DMTA_to_M31  0.11015        NA       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Resulting formation fractions:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               ff</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DMTA_M23  0.1450</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DMTA_M27  0.1206</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DMTA_M31  0.1101</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DMTA_sink 0.6243</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Estimated disappearance times:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       DT50   DT90</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DMTA 14.59  48.45</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> M23  40.52 134.62</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> M27  32.99 109.60</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> M31  37.11 123.26</span>
+<span class="r-in"><span><span class="co"># As the confidence interval for the random effects of DMTA_0</span></span></span>
+<span class="r-in"><span><span class="co"># includes zero, we could try an alternative model without</span></span></span>
+<span class="r-in"><span><span class="co"># such random effects</span></span></span>
+<span class="r-in"><span><span class="co"># f_dmta_saem_tc_2 &lt;- saem(dmta_sfo_sfo3p_tc,</span></span></span>
+<span class="r-in"><span><span class="co">#   covariance.model = diag(c(0, rep(1, 7))))</span></span></span>
+<span class="r-in"><span><span class="co"># saemix::plot(f_dmta_saem_tc_2$so, plot.type = "convergence")</span></span></span>
+<span class="r-in"><span><span class="co"># This does not perform better judged by AIC and BIC</span></span></span>
+<span class="r-in"><span><span class="co"># saemix::compare.saemix(f_dmta_saem_tc$so, f_dmta_saem_tc_2$so)</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -446,7 +321,7 @@ specific pieces of information in the comments.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>
