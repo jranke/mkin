@@ -1,12 +1,29 @@
 #' Method to get the names of ill-defined parameters
 #'
+#' The method for generalised nonlinear regression fits as obtained
+#' with [mkinfit] and [mmkin] checks if the degradation parameters
+#' pass the Wald test (in degradation kinetics often simply called t-test) for
+#' significant difference from zero. For this test, the parameterisation
+#' without parameter transformations is used.
+#'
+#' The method for hierarchical model fits, also known as nonlinear
+#' mixed-effects model fits as obtained with [saem] and [mhmkin]
+#' checks if any of the confidence intervals for the random
+#' effects expressed as standard deviations include zero, and if
+#' the confidence intervals for the error model parameters include
+#' zero.
+#'
 #' @param object The object to investigate
 #' @param x The object to be printed
 #' @param conf.level The confidence level for checking p values
 #' @param \dots For potential future extensions
-#' @return For [mkinfit] objects, a character vector of parameter names
-#' For [mmkin] objects, an object of class 'illparms.mmkin' with a
-#' suitable printing method.
+#' @param random For hierarchical fits, should random effects be tested?
+#' @param errmod For hierarchical fits, should error model parameters be
+#' tested?
+#' @return For [mkinfit] or [saem] objects, a character vector of parameter
+#' names. For [mmkin] or [mhmkin] objects, a matrix like object of class
+#' 'illparms.mmkin' or 'illparms.mhmkin'. The latter objects have a suitable
+#' printing method.
 #' @export
 illparms <- function(object, ...)
 {
@@ -57,6 +74,53 @@ illparms.mmkin <- function(object, conf.level = 0.95, ...) {
 #' @rdname illparms
 #' @export
 print.illparms.mmkin <- function(x, ...) {
+  class(x) <- NULL
+  print(x, quote = FALSE)
+}
+
+#' @rdname illparms
+#' @export
+illparms.saem.mmkin <- function(object, conf.level = 0.95, random = TRUE, errmod = TRUE, ...) {
+  if (inherits(object, "try-error")) {
+    return(NA)
+  } else {
+    ints <- intervals(object, conf.level = conf.level)
+    failed <- NULL
+    if (random) {
+      failed_random <- ints$random[, "lower"] < 0
+      failed <- c(failed, names(which(failed_random)))
+    }
+    if (errmod) {
+      failed_errmod <- ints$errmod[, "lower"] < 0 & ints$errmod[, "est."] > 0
+      failed <- c(failed, names(which(failed_errmod)))
+    }
+  }
+  return(failed)
+}
+
+#' @rdname illparms
+#' @export
+illparms.mhmkin <- function(object, conf.level = 0.95, random = TRUE, errmod = TRUE, ...) {
+  result <- lapply(object,
+    function(fit) {
+      if (inherits(fit, "try-error")) return("E")
+      ill <- illparms(fit, conf.level = conf.level, random = random, errmod = errmod)
+      if (length(ill) > 0) {
+        return(paste(ill, collapse = ", "))
+      } else {
+        return("")
+      }
+    })
+  result <- unlist(result)
+  dim(result) <- dim(object)
+  dimnames(result) <- dimnames(object)
+  class(result) <- "illparms.mhmkin"
+  return(result)
+}
+
+#' @rdname illparms
+#' @export
+print.illparms.mhmkin <- function(x, ...) {
   class(x) <- NULL
   print(x, quote = FALSE)
 }

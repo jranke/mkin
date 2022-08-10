@@ -8,8 +8,8 @@ if (identical(Sys.getenv("NOT_CRAN"), "true")) {
   n_cores <- 1
 }
 
-# We are only allowed one core on travis, but they also set NOT_CRAN=true
-if (Sys.getenv("TRAVIS") != "") n_cores = 1
+# Use the two available cores on travis
+if (Sys.getenv("TRAVIS") != "") n_cores = 2
 
 # On Windows we would need to make a cluster first
 if (Sys.info()["sysname"] == "Windows") n_cores = 1

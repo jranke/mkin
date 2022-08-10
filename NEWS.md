@@ -1,10 +1,14 @@
 # mkin 1.1.2
 
+- 'R/mhmkin.R': New method for performing multiple hierarchical mkin fits in one function call, optionally in parallel.
+
 - 'R/saem.R': Implement and test saemix transformations for FOMC and HS. Also, error out if saemix transformations are requested but not supported.
 
-- 'R/convergence.R': New generic to show convergence information with a method for 'mmin' objects.
+- 'R/saem.R': 'logLik' and 'update' methods for 'saem.mmkin' objects.
 
-- 'R/illparms.R': New generic to show ill-defined parameters with methods for 'mkinfit' and 'mmkin' objects.
+- 'R/convergence.R': New generic to show convergence information with methods for 'mmkin' and 'mhmkin' objects.
+
+- 'R/illparms.R': New generic to show ill-defined parameters with methods for 'mkinfit', 'mmkin', 'saem.mmkin' and 'mhmkin' objects.
 
 - 'R/summary.mmkin.R': Summary method for mmkin objects.
 

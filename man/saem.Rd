@@ -49,9 +49,9 @@ saemix_data(object, verbose = FALSE, ...)
 
 \item{transformations}{Per default, all parameter transformations are done
 in mkin. If this argument is set to 'saemix', parameter transformations
-are done in 'saemix' for the supported cases. Currently this is only
-supported in cases where the initial concentration of the parent is not fixed,
-SFO or DFOP is used for the parent and there is either no metabolite or one.}
+are done in 'saemix' for the supported cases, i.e. (as of version 1.1.2)
+SFO, FOMC, DFOP and HS without fixing \code{parent_0}, and SFO or DFOP with
+one SFO metabolite.}
 
 \item{degparms_start}{Parameter values given as a named numeric vector will
 be used to override the starting values obtained from the 'mmkin' object.}
@@ -120,6 +120,9 @@ f_mmkin_parent <- mmkin(c("SFO", "FOMC", "DFOP"), ds, quiet = TRUE)
 f_saem_sfo <- saem(f_mmkin_parent["SFO", ])
 f_saem_fomc <- saem(f_mmkin_parent["FOMC", ])
 f_saem_dfop <- saem(f_mmkin_parent["DFOP", ])
+illparms(f_saem_dfop)
+update(f_saem_dfop, covariance.model = diag(c(1, 1, 1, 0)))
+AIC(f_saem_dfop)
 
 # The returned saem.mmkin object contains an SaemixObject, therefore we can use
 # functions from saemix

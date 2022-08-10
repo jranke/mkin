@@ -5,6 +5,9 @@
 \alias{illparms.mkinfit}
 \alias{illparms.mmkin}
 \alias{print.illparms.mmkin}
+\alias{illparms.saem.mmkin}
+\alias{illparms.mhmkin}
+\alias{print.illparms.mhmkin}
 \title{Method to get the names of ill-defined parameters}
 \usage{
 illparms(object, ...)
@@ -14,6 +17,12 @@ illparms(object, ...)
 \method{illparms}{mmkin}(object, conf.level = 0.95, ...)
 
 \method{print}{illparms.mmkin}(x, ...)
+
+\method{illparms}{saem.mmkin}(object, conf.level = 0.95, random = TRUE, errmod = TRUE, ...)
+
+\method{illparms}{mhmkin}(object, conf.level = 0.95, random = TRUE, errmod = TRUE, ...)
+
+\method{print}{illparms.mhmkin}(x, ...)
 }
 \arguments{
 \item{object}{The object to investigate}
@@ -23,14 +32,32 @@ illparms(object, ...)
 \item{conf.level}{The confidence level for checking p values}
 
 \item{x}{The object to be printed}
+
+\item{random}{For hierarchical fits, should random effects be tested?}
+
+\item{errmod}{For hierarchical fits, should error model parameters be
+tested?}
 }
 \value{
-For \link{mkinfit} objects, a character vector of parameter names
-For \link{mmkin} objects, an object of class 'illparms.mmkin' with a
-suitable printing method.
+For \link{mkinfit} or \link{saem} objects, a character vector of parameter
+names. For \link{mmkin} or \link{mhmkin} objects, a matrix like object of class
+'illparms.mmkin' or 'illparms.mhmkin'. The latter objects have a suitable
+printing method.
 }
 \description{
-Method to get the names of ill-defined parameters
+The method for generalised nonlinear regression fits as obtained
+with \link{mkinfit} and \link{mmkin} checks if the degradation parameters
+pass the Wald test (in degradation kinetics often simply called t-test) for
+significant difference from zero. For this test, the parameterisation
+without parameter transformations is used.
+}
+\details{
+The method for hierarchical model fits, also known as nonlinear
+mixed-effects model fits as obtained with \link{saem} and \link{mhmkin}
+checks if any of the confidence intervals for the random
+effects expressed as standard deviations include zero, and if
+the confidence intervals for the error model parameters include
+zero.
 }
 \examples{
 fit <- mkinfit("FOMC", FOCUS_2006_A, quiet = TRUE)

@@ -58,6 +58,9 @@ utils::globalVariables(c("predicted", "std"))
 #' f_saem_sfo <- saem(f_mmkin_parent["SFO", ])
 #' f_saem_fomc <- saem(f_mmkin_parent["FOMC", ])
 #' f_saem_dfop <- saem(f_mmkin_parent["DFOP", ])
+#' illparms(f_saem_dfop)
+#' update(f_saem_dfop, covariance.model = diag(c(1, 1, 1, 0)))
+#' AIC(f_saem_dfop)
 #'
 #' # The returned saem.mmkin object contains an SaemixObject, therefore we can use
 #' # functions from saemix
@@ -125,6 +128,7 @@ saem.mmkin <- function(object,
   fail_with_errors = TRUE,
   verbose = FALSE, quiet = FALSE, ...)
 {
+  call <- match.call()
   transformations <- match.arg(transformations)
   m_saemix <- saemix_model(object, verbose = verbose,
     degparms_start = degparms_start,
@@ -184,6 +188,7 @@ saem.mmkin <- function(object,
     transform_rates = object[[1]]$transform_rates,
     transform_fractions = object[[1]]$transform_fractions,
     so = f_saemix,
+    call = call,
     time = fit_time,
     mean_dp_start = attr(m_saemix, "mean_dp_start"),
     bparms.optim = bparms_optim,
@@ -578,4 +583,33 @@ saemix_data <- function(object, verbose = FALSE, ...) {
     verbose = verbose,
     ...)
   return(res)
+}
+
+#' @export
+logLik.saem.mmkin <- function(object, ...) return(logLik(object$so))
+
+#' @export
+update.saem.mmkin <- function(object, ..., evaluate = TRUE) {
+  call <- object$call
+  # For some reason we get saem.mmkin in the call when using mhmkin
+  # so we need to fix this in order to avoid exporting saem.mmkin
+  # in addition to the S3 method
+  call[[1]] <- saem
+  update_arguments <- match.call(expand.dots = FALSE)$...
+
+  if (length(update_arguments) > 0) {
+    update_arguments_in_call <- !is.na(match(names(update_arguments), names(call)))
+  }
+
+  for (a in names(update_arguments)[update_arguments_in_call]) {
+    call[[a]] <- update_arguments[[a]]
+  }
+
+  update_arguments_not_in_call <- !update_arguments_in_call
+  if(any(update_arguments_not_in_call)) {
+    call <- c(as.list(call), update_arguments[update_arguments_not_in_call])
+    call <- as.call(call)
+  }
+  if(evaluate) eval(call, parent.frame())
+  else call
 }
