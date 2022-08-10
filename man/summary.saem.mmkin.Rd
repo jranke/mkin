@@ -90,7 +90,12 @@ ds_syn_dfop_sfo <- lapply(ds_mean_dfop_sfo, function(ds) {
 f_mmkin_dfop_sfo <- mmkin(list(dfop_sfo), ds_syn_dfop_sfo,
   quiet = TRUE, error_model = "tc", cores = 5)
 f_saem_dfop_sfo <- saem(f_mmkin_dfop_sfo)
-summary(f_saem_dfop_sfo, data = TRUE)
+print(f_saem_dfop_sfo)
+illparms(f_saem_dfop_sfo)
+f_saem_dfop_sfo_2 <- update(f_saem_dfop_sfo, covariance.model = diag(c(0, 0, 1, 1, 1, 0)))
+illparms(f_saem_dfop_sfo_2)
+intervals(f_saem_dfop_sfo_2)
+summary(f_saem_dfop_sfo_2, data = TRUE)
 }
 
 }
