@@ -1,5 +1,7 @@
 # mkin 1.1.2
 
+- 'R/multistart.R': New method for testing multiple start parameters for hierarchical model fits.
+
 - 'R/mhmkin.R': New method for performing multiple hierarchical mkin fits in one function call, optionally in parallel.
 
 - 'R/saem.R': Implement and test saemix transformations for FOMC and HS. Also, error out if saemix transformations are requested but not supported.
