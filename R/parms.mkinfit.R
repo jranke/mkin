@@ -8,9 +8,9 @@
 #'  [mkinfit()] objects and for [mmkin()] objects.
 #' @param \dots Not used
 #' @return For mkinfit objects, a numeric vector of fitted model parameters.
-#'  For mmkin row objects, a matrix with the parameters with a
-#'  row for each dataset. If the mmkin object has more than one row, a list of
-#'  such matrices is returned.
+#' For mmkin row objects, a matrix with the parameters with a row for each
+#' dataset. If the mmkin object has more than one row, a list of such matrices
+#' is returned.
 #' @examples
 #' # mkinfit objects
 #' fit <- mkinfit("SFO", FOCUS_2006_C, quiet = TRUE)
@@ -34,27 +34,35 @@ parms <- function(object, ...)
   UseMethod("parms", object)
 }
 
-#' @param transformed Should the parameters be returned
-#'   as used internally during the optimisation?
+#' @param transformed Should the parameters be returned as used internally
+#' during the optimisation?
+#' @param errparms Should the error model parameters be returned
+#' in addition to the degradation parameters?
 #' @rdname parms
 #' @export
-parms.mkinfit <- function(object, transformed = FALSE, ...)
+parms.mkinfit <- function(object, transformed = FALSE, errparms = TRUE, ...)
 {
-  if (transformed) object$par
-  else c(object$bparms.optim, object$errparms)
+  res <- if (transformed) object$par
+    else c(object$bparms.optim, object$errparms)
+  if (!errparms) {
+    res[setdiff(names(res), names(object$errparms))]
+  }
+  else return(res)
 }
 
 #' @rdname parms
 #' @export
-parms.mmkin <- function(object, transformed = FALSE, ...)
+parms.mmkin <- function(object, transformed = FALSE, errparms = TRUE, ...)
 {
   if (nrow(object) == 1) {
-    res <- sapply(object, parms, transformed = transformed, ...)
+    res <- sapply(object, parms, transformed = transformed,
+      errparms = errparms, ...)
     colnames(res) <- colnames(object)
   } else {
     res <- list()
     for (i in 1:nrow(object)) {
-      res[[i]] <- parms(object[i, ], transformed = transformed, ...)
+      res[[i]] <- parms(object[i, ], transformed = transformed,
+        errparms = errparms, ...)
     }
     names(res) <- rownames(object)
   }

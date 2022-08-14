@@ -8,9 +8,9 @@
 \usage{
 parms(object, ...)
 
-\method{parms}{mkinfit}(object, transformed = FALSE, ...)
+\method{parms}{mkinfit}(object, transformed = FALSE, errparms = TRUE, ...)
 
-\method{parms}{mmkin}(object, transformed = FALSE, ...)
+\method{parms}{mmkin}(object, transformed = FALSE, errparms = TRUE, ...)
 }
 \arguments{
 \item{object}{A fitted model object. Methods are implemented for
@@ -18,14 +18,17 @@ parms(object, ...)
 
 \item{\dots}{Not used}
 
-\item{transformed}{Should the parameters be returned
-as used internally during the optimisation?}
+\item{transformed}{Should the parameters be returned as used internally
+during the optimisation?}
+
+\item{errparms}{Should the error model parameters be returned
+in addition to the degradation parameters?}
 }
 \value{
 For mkinfit objects, a numeric vector of fitted model parameters.
-For mmkin row objects, a matrix with the parameters with a
-row for each dataset. If the mmkin object has more than one row, a list of
-such matrices is returned.
+For mmkin row objects, a matrix with the parameters with a row for each
+dataset. If the mmkin object has more than one row, a list of such matrices
+is returned.
 }
 \description{
 This function always returns degradation model parameters as well as error
