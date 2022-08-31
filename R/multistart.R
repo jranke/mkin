@@ -37,8 +37,23 @@ multistart.saem.mmkin <- function(object, n = 50, cores = 1, ...) {
   )
 
   res <- parallel::mclapply(1:n, function(x) {
-    update(object, degparms_start = start_parms[x], ...)
+    update(object, degparms_start = start_parms[x, ], ...)
   }, mc.cores = cores)
   class(res) <- c("multistart.saem.mmkin", "multistart")
   return(res)
+}
+
+#' @rdname multistart
+#' @export
+print.multistart <- function(x, ...) {
+  cat("Multistart object with", length(x), "fits of the following type:\n\n")
+  print(x[[1]])
+}
+
+#' @rdname multistart
+#' @export
+summary.multistart.saem.mmkin <- function(object) {
+
+  parm_matrix <- sapply(object, parms)
+  parm_matrix
 }

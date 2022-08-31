@@ -230,10 +230,8 @@ print.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3), ...) {
       row.names = " "), digits = digits)
 
   cat("\nFitted parameters:\n")
-  conf.int <- x$so@results@conf.int[c("estimate", "lower", "upper")]
-  rownames(conf.int) <- x$so@results@conf.int[["name"]]
-  conf.int.var <- grepl("^Var\\.", rownames(conf.int))
-  print(conf.int[!conf.int.var, ], digits = digits)
+  conf.int <- parms(x, ci = TRUE)
+  print(conf.int, digits = digits)
 
   invisible(x)
 }
@@ -612,4 +610,19 @@ update.saem.mmkin <- function(object, ..., evaluate = TRUE) {
   }
   if(evaluate) eval(call, parent.frame())
   else call
+}
+
+#' @export
+#' @rdname saem
+#' @param ci Should a matrix with estimates and confidence interval boundaries
+#' be returned? If FALSE (default), a vector of estimates is returned.
+parms.saem.mmkin <- function(x, ci = FALSE, ...) {
+  conf.int <- x$so@results@conf.int[c("estimate", "lower", "upper")]
+  rownames(conf.int) <- x$so@results@conf.int[["name"]]
+  conf.int.var <- grepl("^Var\\.", rownames(conf.int))
+  conf.int <- conf.int[!conf.int.var, ]
+  estimate <- conf.int[, "estimate"]
+  names(estimate) <- rownames(conf.int)
+  if (ci) return(conf.int)
+  else return(estimate)
 }
