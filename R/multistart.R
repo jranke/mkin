@@ -39,6 +39,7 @@ multistart.saem.mmkin <- function(object, n = 50, cores = 1, ...) {
   res <- parallel::mclapply(1:n, function(x) {
     update(object, degparms_start = start_parms[x, ], ...)
   }, mc.cores = cores)
+  attr(res, "start_parms") <- start_parms
   class(res) <- c("multistart.saem.mmkin", "multistart")
   return(res)
 }

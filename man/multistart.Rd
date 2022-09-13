@@ -3,11 +3,17 @@
 \name{multistart}
 \alias{multistart}
 \alias{multistart.saem.mmkin}
+\alias{print.multistart}
+\alias{summary.multistart.saem.mmkin}
 \title{Perform a hierarchical model fit with multiple starting values}
 \usage{
 multistart(object, n = 50, cores = 1, ...)
 
 \method{multistart}{saem.mmkin}(object, n = 50, cores = 1, ...)
+
+\method{print}{multistart}(x, ...)
+
+\method{summary}{multistart.saem.mmkin}(object)
 }
 \arguments{
 \item{object}{The fit object to work with}
