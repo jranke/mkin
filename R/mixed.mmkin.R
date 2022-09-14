@@ -1,5 +1,6 @@
 #' Create a mixed effects model from an mmkin row object
 #'
+#' @importFrom rlang !!!
 #' @param object An [mmkin] row object
 #' @param method The method to be used
 #' @param \dots Currently not used
@@ -65,7 +66,7 @@ mixed.mmkin <- function(object, method = c("none"), ...) {
       function(x) x$data[c("variable", "time", "observed", "predicted", "residual")])
 
     names(ds_list) <- ds_names
-    res$data <- purrr::map_dfr(ds_list, function(x) x, .id = "ds")
+    res$data <- vctrs::vec_rbind(!!!ds_list, .names_to = "ds")
     names(res$data)[1:4] <- c("ds", "name", "time", "value")
     res$data$name <- as.character(res$data$name)
     res$data$ds <- ordered(res$data$ds, levels = unique(res$data$ds))

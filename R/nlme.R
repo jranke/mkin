@@ -125,7 +125,7 @@ nlme_function <- function(object) {
 }
 
 #' @rdname nlme
-#' @importFrom purrr map_dfr
+#' @importFrom rlang !!!
 #' @return A \code{\link{groupedData}} object
 #' @export
 nlme_data <- function(object) {
@@ -134,7 +134,7 @@ nlme_data <- function(object) {
 
   ds_list <- lapply(object, function(x) x$data[c("time", "variable", "observed")])
   names(ds_list) <- ds_names
-  ds_nlme <- purrr::map_dfr(ds_list, function(x) x, .id = "ds")
+  ds_nlme <- vctrs::vec_rbind(!!!ds_list, .names_to = "ds")
   ds_nlme$variable <- as.character(ds_nlme$variable)
   ds_nlme$ds <- ordered(ds_nlme$ds, levels = unique(ds_nlme$ds))
   ds_nlme_renamed <- data.frame(ds = ds_nlme$ds, name = ds_nlme$variable,

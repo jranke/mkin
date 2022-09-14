@@ -153,7 +153,7 @@ plot.mixed.mmkin <- function(x,
   outtimes <- sort(unique(c(x$data$time,
     seq(xlim[1], xlim[2], length.out = 50))))
 
-  pred_ds <- purrr::map_dfr(i, function(ds_i)   {
+  pred_list <- lapply(i, function(ds_i)   {
     odeparms_trans <- degparms_all[ds_i, odeparms_names]
     names(odeparms_trans) <- odeparms_names # needed if only one odeparm
     if (backtransform) {
@@ -171,8 +171,9 @@ plot.mixed.mmkin <- function(x,
     out <- mkinpredict(x$mkinmod, odeparms, odeini,
       outtimes, solution_type = solution_type,
       atol = fit_1$atol, rtol = fit_1$rtol)
-    return(cbind(as.data.frame(out), ds = ds_names[ds_i]))
   })
+  names(pred_list) <- ds_names[i]
+  pred_ds <- vctrs::vec_rbind(!!!pred_list, .names_to = "ds")
 
   odeparms_pop_trans <- degparms_all_pop[odeparms_names]
 

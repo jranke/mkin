@@ -559,6 +559,7 @@ saemix_model <- function(object, solution_type = "auto", transformations = c("mk
 }
 
 #' @rdname saem
+#' @importFrom rlang !!!
 #' @return An [saemix::SaemixData] object.
 #' @export
 saemix_data <- function(object, verbose = FALSE, ...) {
