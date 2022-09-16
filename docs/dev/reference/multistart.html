@@ -49,10 +49,13 @@ mixed-effects models by Duchesne et al (2021)."><meta name="robots" content="noi
       <a href="../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
     </li>
     <li>
-      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
+      <a href="../articles/web_only/multistart.html">Short demo of the multistart method</a>
     </li>
     <li>
       <a href="../articles/web_only/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
     </li>
     <li>
       <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
@@ -106,11 +109,7 @@ mixed-effects models by Duchesne et al (2021).</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for multistart</span></span>
-<span><span class="fu"><a href="parms.html">parms</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">parhist</span><span class="op">(</span><span class="va">object</span>, lpos <span class="op">=</span> <span class="st">"topleft"</span>, main <span class="op">=</span> <span class="st">""</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">llhist</span><span class="op">(</span><span class="va">object</span>, breaks <span class="op">=</span> <span class="st">"Sturges"</span>, lpos <span class="op">=</span> <span class="st">"topleft"</span>, main <span class="op">=</span> <span class="st">""</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="parms.html">parms</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -129,24 +128,11 @@ used?</p></dd>
 
 
 <dt>...</dt>
-<dd><p>Passed to the update function, or to the basic plotting
-function in the case of the graphical functions.</p></dd>
+<dd><p>Passed to the update function.</p></dd>
 
 
 <dt>x</dt>
 <dd><p>The multistart object to print</p></dd>
-
-
-<dt>lpos</dt>
-<dd><p>Positioning of the legend.</p></dd>
-
-
-<dt>main</dt>
-<dd><p>title of the plot</p></dd>
-
-
-<dt>breaks</dt>
-<dd><p>Passed to <a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></p></dd>
 
 </dl></div>
     <div id="value">
@@ -160,6 +146,11 @@ function in the case of the graphical functions.</p></dd>
     <h2>Details</h2>
     <p>Currently, parallel execution of the fits is only supported using
 <a href="https://rdrr.io/r/parallel/mclapply.html" class="external-link">parallel::mclapply</a>, i.e. not available on Windows.</p>
+<p>In case the online version of this help page contains error messages
+in the example code and no plots, this is due to the multistart method
+not working when called by pkgdown. Please refer to the
+<a href="https://pkgdown.jrwb.de/mkin/dev/articles/web_only/multistart.html">online vignette</a>
+in this case.</p>
     </div>
     <div id="references">
     <h2>References</h2>
@@ -168,7 +159,40 @@ identifiability in the frame of nonlinear mixed effects models: the example
 of the in vitro erythropoiesis. BMC Bioinformatics. 2021 Oct 4;22(1):478.
 doi: 10.1186/s12859-021-04373-4.</p>
     </div>
+    <div id="see-also">
+    <h2>See also</h2>
+    <div class="dont-index"><p><a href="parhist.html">parhist</a>, <a href="llhist.html">llhist</a></p></div>
+    </div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pkgdown.jrwb.de/mkin/">mkin</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dmta_ds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">7</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="va">ds_i</span> <span class="op">&lt;-</span> <span class="va">dimethenamid_2018</span><span class="op">$</span><span class="va">ds</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">data</span></span></span>
+<span class="r-in"><span>  <span class="va">ds_i</span><span class="op">[</span><span class="va">ds_i</span><span class="op">$</span><span class="va">name</span> <span class="op">==</span> <span class="st">"DMTAP"</span>, <span class="st">"name"</span><span class="op">]</span> <span class="op">&lt;-</span>  <span class="st">"DMTA"</span></span></span>
+<span class="r-in"><span>  <span class="va">ds_i</span><span class="op">$</span><span class="va">time</span> <span class="op">&lt;-</span> <span class="va">ds_i</span><span class="op">$</span><span class="va">time</span> <span class="op">*</span> <span class="va">dimethenamid_2018</span><span class="op">$</span><span class="va">f_time_norm</span><span class="op">[</span><span class="va">i</span><span class="op">]</span></span></span>
+<span class="r-in"><span>  <span class="va">ds_i</span></span></span>
+<span class="r-in"><span><span class="op">}</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">dmta_ds</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">dimethenamid_2018</span><span class="op">$</span><span class="va">ds</span>, <span class="kw">function</span><span class="op">(</span><span class="va">ds</span><span class="op">)</span> <span class="va">ds</span><span class="op">$</span><span class="va">title</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot 1"</span><span class="op">]</span><span class="op">]</span>, <span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot 2"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot 1"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot 2"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">f_mmkin</span> <span class="op">&lt;-</span> <span class="fu"><a href="mmkin.html">mmkin</a></span><span class="op">(</span><span class="st">"DFOP"</span>, <span class="va">dmta_ds</span>, error_model <span class="op">=</span> <span class="st">"tc"</span>, cores <span class="op">=</span> <span class="fl">7</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">f_saem_full</span> <span class="op">&lt;-</span> <span class="fu"><a href="saem.html">saem</a></span><span class="op">(</span><span class="va">f_mmkin</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">f_saem_full_multi</span> <span class="op">&lt;-</span> <span class="fu">multistart</span><span class="op">(</span><span class="va">f_saem_full</span>, n <span class="op">=</span> <span class="fl">16</span>, cores <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>all scheduled cores encountered errors in user code</span>
+<span class="r-in"><span><span class="fu"><a href="parhist.html">parhist</a></span><span class="op">(</span><span class="va">f_saem_full_multi</span>, lpos <span class="op">=</span> <span class="st">"bottomright"</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in UseMethod("parms", object):</span> no applicable method for 'parms' applied to an object of class "try-error"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">f_saem_reduced</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">f_saem_full</span>, covariance.model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">f_saem_reduced_multi</span> <span class="op">&lt;-</span> <span class="fu">multistart</span><span class="op">(</span><span class="va">f_saem_reduced</span>, n <span class="op">=</span> <span class="fl">16</span>, cores <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>all scheduled cores encountered errors in user code</span>
+<span class="r-in"><span><span class="fu"><a href="parhist.html">parhist</a></span><span class="op">(</span><span class="va">f_saem_reduced_multi</span>, lpos <span class="op">=</span> <span class="st">"bottomright"</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in UseMethod("parms", object):</span> no applicable method for 'parms' applied to an object of class "try-error"</span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>

@@ -5,8 +5,6 @@
 \alias{multistart.saem.mmkin}
 \alias{print.multistart}
 \alias{parms.multistart}
-\alias{parhist}
-\alias{llhist}
 \title{Perform a hierarchical model fit with multiple starting values}
 \usage{
 multistart(object, n = 50, cores = 1, ...)
@@ -16,10 +14,6 @@ multistart(object, n = 50, cores = 1, ...)
 \method{print}{multistart}(x, ...)
 
 \method{parms}{multistart}(object, ...)
-
-parhist(object, lpos = "topleft", main = "", ...)
-
-llhist(object, breaks = "Sturges", lpos = "topleft", main = "", ...)
 }
 \arguments{
 \item{object}{The fit object to work with}
@@ -29,16 +23,9 @@ used?}
 
 \item{cores}{How many fits should be run in parallel?}
 
-\item{\dots}{Passed to the update function, or to the basic plotting
-function in the case of the graphical functions.}
+\item{\dots}{Passed to the update function.}
 
 \item{x}{The multistart object to print}
-
-\item{lpos}{Positioning of the legend.}
-
-\item{main}{title of the plot}
-
-\item{breaks}{Passed to \link{hist}}
 }
 \value{
 A list of \link{saem.mmkin} objects, with class attributes
@@ -55,10 +42,42 @@ mixed-effects models by Duchesne et al (2021).
 \details{
 Currently, parallel execution of the fits is only supported using
 \link[parallel:mclapply]{parallel::mclapply}, i.e. not available on Windows.
+
+In case the online version of this help page contains error messages
+in the example code and no plots, this is due to the multistart method
+not working when called by pkgdown. Please refer to the
+\href{https://pkgdown.jrwb.de/mkin/dev/articles/web_only/multistart.html}{online vignette}
+in this case.
+}
+\examples{
+\dontrun{
+library(mkin)
+dmta_ds <- lapply(1:7, function(i) {
+  ds_i <- dimethenamid_2018$ds[[i]]$data
+  ds_i[ds_i$name == "DMTAP", "name"] <-  "DMTA"
+  ds_i$time <- ds_i$time * dimethenamid_2018$f_time_norm[i]
+  ds_i
+})
+names(dmta_ds) <- sapply(dimethenamid_2018$ds, function(ds) ds$title)
+dmta_ds[["Elliot"]] <- rbind(dmta_ds[["Elliot 1"]], dmta_ds[["Elliot 2"]])
+dmta_ds[["Elliot 1"]] <- dmta_ds[["Elliot 2"]] <- NULL
+
+f_mmkin <- mmkin("DFOP", dmta_ds, error_model = "tc", cores = 7, quiet = TRUE)
+f_saem_full <- saem(f_mmkin)
+f_saem_full_multi <- multistart(f_saem_full, n = 16, cores = 16)
+parhist(f_saem_full_multi, lpos = "bottomright")
+
+f_saem_reduced <- update(f_saem_full, covariance.model = diag(c(1, 1, 0, 1)))
+f_saem_reduced_multi <- multistart(f_saem_reduced, n = 16, cores = 16)
+parhist(f_saem_reduced_multi, lpos = "bottomright")
+}
 }
 \references{
 Duchesne R, Guillemin A, Gandrillon O, Crauste F. Practical
 identifiability in the frame of nonlinear mixed effects models: the example
 of the in vitro erythropoiesis. BMC Bioinformatics. 2021 Oct 4;22(1):478.
 doi: 10.1186/s12859-021-04373-4.
+}
+\seealso{
+\link{parhist}, \link{llhist}
 }

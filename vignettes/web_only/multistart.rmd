@@ -1,0 +1,48 @@
+---
+title: Short demo of the multistart method
+author: Johannes Ranke
+date: Last change 16 September 2022 (rebuilt `r Sys.Date()`)
+output:
+  html_document
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Short demo of the multistart method}
+  %\VignetteEncoding{UTF-8}
+---
+
+This is a vignette, because the multistart method does not seem to work in
+pkgdown example code and I wanted to show the plots in the online docs.
+The dimethenamid data from 2018 from seven soils is used as example data.
+
+```{r}
+library(mkin)
+dmta_ds <- lapply(1:7, function(i) {
+  ds_i <- dimethenamid_2018$ds[[i]]$data
+  ds_i[ds_i$name == "DMTAP", "name"] <-  "DMTA"
+  ds_i$time <- ds_i$time * dimethenamid_2018$f_time_norm[i]
+  ds_i
+})
+names(dmta_ds) <- sapply(dimethenamid_2018$ds, function(ds) ds$title)
+dmta_ds[["Elliot"]] <- rbind(dmta_ds[["Elliot 1"]], dmta_ds[["Elliot 2"]])
+dmta_ds[["Elliot 1"]] <- dmta_ds[["Elliot 2"]] <- NULL
+```
+
+First, we check the DFOP model with the two-component error model and
+random effects for all degradation parameters.
+
+```{r}
+f_mmkin <- mmkin("DFOP", dmta_ds, error_model = "tc", cores = 7, quiet = TRUE)
+f_saem_full <- saem(f_mmkin)
+f_saem_full_multi <- multistart(f_saem_full, n = 16, cores = 16)
+parhist(f_saem_full_multi, lpos = "bottomright")
+```
+
+We see that not all variability parameters are identifiable, most problematic
+is the variance of k2. So we reduce the parameter distribution model by
+removing the intersoil variability for this parameter.
+
+```{r}
+f_saem_reduced <- update(f_saem_full, covariance.model = diag(c(1, 1, 0, 1)))
+f_saem_reduced_multi <- multistart(f_saem_reduced, n = 16, cores = 16)
+parhist(f_saem_reduced_multi, lpos = "bottomright")
+```
