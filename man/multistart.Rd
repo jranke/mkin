@@ -17,9 +17,9 @@ multistart(object, n = 50, cores = 1, ...)
 
 \method{parms}{multistart}(object, ...)
 
-parhist(object, lpos = "topleft", ...)
+parhist(object, lpos = "topleft", main = "", ...)
 
-llhist(object, breaks = "Sturges", main = "", lpos = "topleft", ...)
+llhist(object, breaks = "Sturges", lpos = "topleft", main = "", ...)
 }
 \arguments{
 \item{object}{The fit object to work with}
@@ -30,15 +30,15 @@ used?}
 \item{cores}{How many fits should be run in parallel?}
 
 \item{\dots}{Passed to the update function, or to the basic plotting
-function in the case of the graphical function.}
+function in the case of the graphical functions.}
 
 \item{x}{The multistart object to print}
 
 \item{lpos}{Positioning of the legend.}
 
-\item{breaks}{Passed to \link{hist}}
-
 \item{main}{title of the plot}
+
+\item{breaks}{Passed to \link{hist}}
 }
 \value{
 A list of \link{saem.mmkin} objects, with class attributes

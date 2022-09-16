@@ -15,7 +15,7 @@
 #' used?
 #' @param cores How many fits should be run in parallel?
 #' @param \dots Passed to the update function, or to the basic plotting
-#' function in the case of the graphical function.
+#' function in the case of the graphical functions.
 #' @param x The multistart object to print
 #' @param breaks Passed to [hist]
 #' @param main title of the plot
@@ -66,7 +66,7 @@ parms.multistart <- function(object, ...) {
 #' @rdname multistart
 #' @importFrom stats median
 #' @export
-parhist <- function(object, lpos = "topleft", ...) {
+parhist <- function(object, lpos = "topleft", main = "", ...) {
   orig <- attr(object, "orig")
   orig_parms <- parms(orig)
   start_parms <- orig$mean_dp_start
@@ -79,7 +79,7 @@ parhist <- function(object, lpos = "topleft", ...) {
   start_scaled_parms[names(start_parms)] <-
     start_parms / median_parms[names(start_parms)]
 
-  boxplot(all_scaled_parms, log = "y", ...)
+  boxplot(all_scaled_parms, log = "y", main = main, ...)
   points(orig_scaled_parms, col = 2, cex = 2)
   points(start_scaled_parms, col = 3, cex = 3)
   legend(lpos, inset = c(0.05, 0.05), bty = "n",
@@ -93,7 +93,7 @@ parhist <- function(object, lpos = "topleft", ...) {
 #' @rdname multistart
 #' @importFrom KernSmooth bkde
 #' @export
-llhist <- function(object, breaks = "Sturges", main = "", lpos = "topleft", ...) {
+llhist <- function(object, breaks = "Sturges", lpos = "topleft", main = "", ...) {
   ll <- sapply(object, logLik)
   kde <- KernSmooth::bkde(ll)
   h <- hist(ll, freq = TRUE,

@@ -4,7 +4,7 @@
 \alias{parms}
 \alias{parms.mkinfit}
 \alias{parms.mmkin}
-\title{Extract model parameters from mkinfit models}
+\title{Extract model parameters}
 \usage{
 parms(object, ...)
 
@@ -13,8 +13,7 @@ parms(object, ...)
 \method{parms}{mmkin}(object, transformed = FALSE, errparms = TRUE, ...)
 }
 \arguments{
-\item{object}{A fitted model object. Methods are implemented for
-\code{\link[=mkinfit]{mkinfit()}} objects and for \code{\link[=mmkin]{mmkin()}} objects.}
+\item{object}{A fitted model object.}
 
 \item{\dots}{Not used}
 
@@ -25,15 +24,14 @@ during the optimisation?}
 in addition to the degradation parameters?}
 }
 \value{
-For mkinfit objects, a numeric vector of fitted model parameters.
-For mmkin row objects, a matrix with the parameters with a row for each
-dataset. If the mmkin object has more than one row, a list of such matrices
-is returned.
+Depending on the object, a numeric vector of fitted model parameters,
+a matrix (e.g. for mmkin row objects), or a list of matrices (e.g. for
+mmkin objects with more than one row).
 }
 \description{
-This function always returns degradation model parameters as well as error
-model parameters, in order to avoid working with a fitted model without
-considering the error structure that was assumed for the fit.
+This function returns degradation model parameters as well as error
+model parameters per default, in order to avoid working with a fitted model
+without considering the error structure that was assumed for the fit.
 }
 \examples{
 # mkinfit objects
@@ -52,4 +50,7 @@ parms(fits[, 2])
 parms(fits)
 parms(fits, transformed = TRUE)
 }
+}
+\seealso{
+\link{saem}, \link{multistart}
 }

@@ -1,16 +1,15 @@
-#' Extract model parameters from mkinfit models
+#' Extract model parameters
 #'
-#' This function always returns degradation model parameters as well as error
-#' model parameters, in order to avoid working with a fitted model without
-#' considering the error structure that was assumed for the fit.
+#' This function returns degradation model parameters as well as error
+#' model parameters per default, in order to avoid working with a fitted model
+#' without considering the error structure that was assumed for the fit.
 #'
-#' @param object A fitted model object. Methods are implemented for
-#'  [mkinfit()] objects and for [mmkin()] objects.
+#' @param object A fitted model object.
 #' @param \dots Not used
-#' @return For mkinfit objects, a numeric vector of fitted model parameters.
-#' For mmkin row objects, a matrix with the parameters with a row for each
-#' dataset. If the mmkin object has more than one row, a list of such matrices
-#' is returned.
+#' @return Depending on the object, a numeric vector of fitted model parameters,
+#' a matrix (e.g. for mmkin row objects), or a list of matrices (e.g. for
+#' mmkin objects with more than one row).
+#' @seealso [saem], [multistart]
 #' @examples
 #' # mkinfit objects
 #' fit <- mkinfit("SFO", FOCUS_2006_C, quiet = TRUE)
