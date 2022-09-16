@@ -30,6 +30,14 @@
 #' @export
 aw <- function(object, ...) UseMethod("aw")
 
+.aw <- function(all_objects) {
+  AIC_all <- sapply(all_objects, AIC)
+  delta_i <- AIC_all - min(AIC_all)
+  denom <- sum(exp(-delta_i/2))
+  w_i <- exp(-delta_i/2) / denom
+  return(w_i)
+}
+
 #' @export
 #' @rdname aw
 aw.mkinfit <- function(object, ...) {
@@ -43,16 +51,34 @@ aw.mkinfit <- function(object, ...) {
     }
   }
   all_objects <- list(object, ...)
-  AIC_all <- sapply(all_objects, AIC)
-  delta_i <- AIC_all - min(AIC_all)
-  denom <- sum(exp(-delta_i/2))
-  w_i <- exp(-delta_i/2) / denom
-  return(w_i)
+  .aw(all_objects)
 }
 
 #' @export
 #' @rdname aw
 aw.mmkin <- function(object, ...) {
   if (ncol(object) > 1) stop("Please supply an mmkin column object")
+  do.call(aw, object)
+}
+
+#' @export
+#' @rdname aw
+aw.mixed.mmkin <- function(object, ...) {
+  oo <- list(...)
+  data_object <- object$data[c("ds", "name", "time", "value")]
+  for (i in seq_along(oo)) {
+    if (!inherits(oo[[i]], "mixed.mmkin")) stop("Please supply objects inheriting from mixed.mmkin")
+    data_other_object <- oo[[i]]$data[c("ds", "name", "time", "value")]
+    if (!identical(data_object, data_other_object)) {
+      stop("It seems that the mixed.mmkin objects have not all been fitted to the same data")
+    }
+  }
+  all_objects <- list(object, ...)
+  .aw(all_objects)
+}
+
+#' @export
+#' @rdname aw
+aw.multistart <- function(object, ...) {
   do.call(aw, object)
 }

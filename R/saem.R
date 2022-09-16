@@ -568,7 +568,7 @@ saemix_data <- function(object, verbose = FALSE, ...) {
 
   ds_list <- lapply(object, function(x) x$data[c("time", "variable", "observed")])
   names(ds_list) <- ds_names
-  ds_saemix_all <- purrr::map_dfr(ds_list, function(x) x, .id = "ds")
+  ds_saemix_all <- vctrs::vec_rbind(!!!ds_list, .names_to = "ds")
   ds_saemix <- data.frame(ds = ds_saemix_all$ds,
     name = as.character(ds_saemix_all$variable),
     time = ds_saemix_all$time,
@@ -617,9 +617,9 @@ update.saem.mmkin <- function(object, ..., evaluate = TRUE) {
 #' @rdname saem
 #' @param ci Should a matrix with estimates and confidence interval boundaries
 #' be returned? If FALSE (default), a vector of estimates is returned.
-parms.saem.mmkin <- function(x, ci = FALSE, ...) {
-  conf.int <- x$so@results@conf.int[c("estimate", "lower", "upper")]
-  rownames(conf.int) <- x$so@results@conf.int[["name"]]
+parms.saem.mmkin <- function(object, ci = FALSE, ...) {
+  conf.int <- object$so@results@conf.int[c("estimate", "lower", "upper")]
+  rownames(conf.int) <- object$so@results@conf.int[["name"]]
   conf.int.var <- grepl("^Var\\.", rownames(conf.int))
   conf.int <- conf.int[!conf.int.var, ]
   estimate <- conf.int[, "estimate"]

@@ -1,6 +1,6 @@
 # mkin 1.1.2
 
-- 'R/multistart.R': New method for testing multiple start parameters for hierarchical model fits.
+- 'R/multistart.R': New method for testing multiple start parameters for hierarchical model fits, with diagnostic plotting functions 'llhist' and 'parhist'.
 
 - 'R/mhmkin.R': New method for performing multiple hierarchical mkin fits in one function call, optionally in parallel.
 

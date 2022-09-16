@@ -4,7 +4,9 @@
 \alias{multistart}
 \alias{multistart.saem.mmkin}
 \alias{print.multistart}
-\alias{summary.multistart.saem.mmkin}
+\alias{parms.multistart}
+\alias{parhist}
+\alias{llhist}
 \title{Perform a hierarchical model fit with multiple starting values}
 \usage{
 multistart(object, n = 50, cores = 1, ...)
@@ -13,7 +15,11 @@ multistart(object, n = 50, cores = 1, ...)
 
 \method{print}{multistart}(x, ...)
 
-\method{summary}{multistart.saem.mmkin}(object)
+\method{parms}{multistart}(object, ...)
+
+parhist(object, lpos = "topleft", ...)
+
+llhist(object, breaks = "Sturges", main = "", lpos = "topleft", ...)
 }
 \arguments{
 \item{object}{The fit object to work with}
@@ -23,7 +29,16 @@ used?}
 
 \item{cores}{How many fits should be run in parallel?}
 
-\item{\dots}{Passed to the update function.}
+\item{\dots}{Passed to the update function, or to the basic plotting
+function in the case of the graphical function.}
+
+\item{x}{The multistart object to print}
+
+\item{lpos}{Positioning of the legend.}
+
+\item{breaks}{Passed to \link{hist}}
+
+\item{main}{title of the plot}
 }
 \value{
 A list of \link{saem.mmkin} objects, with class attributes

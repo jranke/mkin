@@ -42,7 +42,7 @@ saemix_model(
 
 saemix_data(object, verbose = FALSE, ...)
 
-\method{parms}{saem.mmkin}(x, ci = FALSE, ...)
+\method{parms}{saem.mmkin}(object, ci = FALSE, ...)
 }
 \arguments{
 \item{object}{An \link{mmkin} row object containing several fits of the same

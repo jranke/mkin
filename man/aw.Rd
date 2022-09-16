@@ -4,6 +4,8 @@
 \alias{aw}
 \alias{aw.mkinfit}
 \alias{aw.mmkin}
+\alias{aw.mixed.mmkin}
+\alias{aw.multistart}
 \title{Calculate Akaike weights for model averaging}
 \usage{
 aw(object, ...)
@@ -11,6 +13,10 @@ aw(object, ...)
 \method{aw}{mkinfit}(object, ...)
 
 \method{aw}{mmkin}(object, ...)
+
+\method{aw}{mixed.mmkin}(object, ...)
+
+\method{aw}{multistart}(object, ...)
 }
 \arguments{
 \item{object}{An \link{mmkin} column object, containing two or more
