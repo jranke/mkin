@@ -46,3 +46,14 @@ f_saem_reduced <- update(f_saem_full, covariance.model = diag(c(1, 1, 0, 1)))
 f_saem_reduced_multi <- multistart(f_saem_reduced, n = 16, cores = 16)
 parhist(f_saem_reduced_multi, lpos = "bottomright")
 ```
+
+We can also analyse the log-likelihoods obtained in the multiple runs:
+
+```{r}
+llhist(f_saem_reduced_multi)
+```
+
+The one run with the lower likelihood is probably responsible for the outliers
+in the boxplots above, and caused by some weird starting value combination. In
+any case, the converged values from the original fit (red circles) appear
+perfectly acceptable, supporting the choice of starting values made by mkin.
