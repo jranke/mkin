@@ -1,6 +1,6 @@
 #' Plot the distribution of log likelihoods from multistart objects
 #'
-#' Produces a histogram of log-likelihoods, and an overlayed kernel density 
+#' Produces a histogram of log-likelihoods, and an overlayed kernel density
 #' estimate. In addition, the likelihood of the original fit is shown as
 #' a red vertical line.
 #'
@@ -13,8 +13,13 @@
 #' @importFrom KernSmooth bkde
 #' @export
 llhist <- function(object, breaks = "Sturges", lpos = "topleft", main = "", ...) {
+  oldpar <- par(no.readonly = TRUE)
+  on.exit(par(oldpar, no.readonly = TRUE))
+
   ll <- sapply(object, logLik)
   kde <- KernSmooth::bkde(ll)
+
+  par(las = 1)
   h <- hist(ll, freq = TRUE,
     xlim = range(kde$x),
     xlab = "", main = main,

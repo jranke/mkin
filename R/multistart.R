@@ -12,7 +12,7 @@
 #'
 #' In case the online version of this help page contains error messages
 #' in the example code and no plots, this is due to the multistart method
-#' not working when called by pkgdown. Please refer to the 
+#' not working when called by pkgdown. Please refer to the
 #' [online vignette](https://pkgdown.jrwb.de/mkin/dev/articles/web_only/multistart.html)
 #' in this case.
 #'
@@ -61,13 +61,13 @@ multistart <- function(object, n = 50, cores = 1, ...)
 #' @rdname multistart
 #' @export
 multistart.saem.mmkin <- function(object, n = 50, cores = 1, ...) {
+  if (n <= 1) stop("Please specify an n of at least 2")
 
   mmkin_parms <- parms(object$mmkin, errparms = FALSE,
     transformed = object$transformations == "mkin")
   start_parms <- apply(
     mmkin_parms, 1,
     function(x) stats::runif(n, min(x), max(x)))
-  if (n == 1) dim(start_parms) <- c(1, length(start_parms))
 
   res <- parallel::mclapply(1:n, function(x) {
     update(object, degparms_start = start_parms[x, ], ...)

@@ -4,7 +4,7 @@
 \alias{parhist}
 \title{Plot parameter distributions from multistart objects}
 \usage{
-parhist(object, lpos = "topleft", main = "", ...)
+parhist(object, lpos = "bottomleft", main = "", ...)
 }
 \arguments{
 \item{object}{The \link{multistart} object}
@@ -16,12 +16,8 @@ parhist(object, lpos = "topleft", main = "", ...)
 \item{\dots}{Passed to \link{boxplot}}
 }
 \description{
-Produces a boxplot with all parameters from the multiple runs, scaled using
-their medians. If parameter transformations were done by mkin (default in
-\link{saem}), then the parameters found by saem are on the transformed scale, and
-scaling is simply done by subtracting the median. If parameter
-transformations were done by saemix, scaling is done by dividing by the
-median, as in the paper by Duchesne et al. (2021).
+Produces a boxplot with all parameters from the multiple runs, divided by
+using their medians as in the paper by Duchesne et al. (2021).
 }
 \references{
 Duchesne R, Guillemin A, Gandrillon O, Crauste F. Practical

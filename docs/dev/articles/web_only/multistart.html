@@ -109,7 +109,7 @@
       <h1 data-toc-skip>Short demo of the multistart method</h1>
                         <h4 data-toc-skip class="author">Johannes Ranke</h4>
             
-            <h4 data-toc-skip class="date">Last change 16 September 2022 (rebuilt 2022-09-16)</h4>
+            <h4 data-toc-skip class="date">Last change 19 September 2022 (rebuilt 2022-09-19)</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jranke/mkin/blob/HEAD/vignettes/web_only/multistart.rmd" class="external-link"><code>vignettes/web_only/multistart.rmd</code></a></small>
       <div class="hidden name"><code>multistart.rmd</code></div>
@@ -135,13 +135,13 @@
 <code class="sourceCode R"><span><span class="va">f_mmkin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mmkin.html">mmkin</a></span><span class="op">(</span><span class="st">"DFOP"</span>, <span class="va">dmta_ds</span>, error_model <span class="op">=</span> <span class="st">"tc"</span>, cores <span class="op">=</span> <span class="fl">7</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">f_saem_full</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/saem.html">saem</a></span><span class="op">(</span><span class="va">f_mmkin</span><span class="op">)</span></span>
 <span><span class="va">f_saem_full_multi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/multistart.html">multistart</a></span><span class="op">(</span><span class="va">f_saem_full</span>, n <span class="op">=</span> <span class="fl">16</span>, cores <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../../reference/parhist.html">parhist</a></span><span class="op">(</span><span class="va">f_saem_full_multi</span>, lpos <span class="op">=</span> <span class="st">"bottomright"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../../reference/parhist.html">parhist</a></span><span class="op">(</span><span class="va">f_saem_full_multi</span><span class="op">)</span></span></code></pre></div>
 <p><img src="multistart_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
 <p>We see that not all variability parameters are identifiable, most problematic is the variance of k2. So we reduce the parameter distribution model by removing the intersoil variability for this parameter.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">f_saem_reduced</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">f_saem_full</span>, covariance.model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">f_saem_reduced_multi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/multistart.html">multistart</a></span><span class="op">(</span><span class="va">f_saem_reduced</span>, n <span class="op">=</span> <span class="fl">16</span>, cores <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../../reference/parhist.html">parhist</a></span><span class="op">(</span><span class="va">f_saem_reduced_multi</span>, lpos <span class="op">=</span> <span class="st">"bottomright"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../../reference/parhist.html">parhist</a></span><span class="op">(</span><span class="va">f_saem_reduced_multi</span>, lpos <span class="op">=</span> <span class="st">"topright"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="multistart_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 <p>We can also analyse the log-likelihoods obtained in the multiple runs:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">

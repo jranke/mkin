@@ -1,7 +1,7 @@
 ---
 title: Short demo of the multistart method
 author: Johannes Ranke
-date: Last change 16 September 2022 (rebuilt `r Sys.Date()`)
+date: Last change 19 September 2022 (rebuilt `r Sys.Date()`)
 output:
   html_document
 vignette: >
@@ -34,7 +34,7 @@ random effects for all degradation parameters.
 f_mmkin <- mmkin("DFOP", dmta_ds, error_model = "tc", cores = 7, quiet = TRUE)
 f_saem_full <- saem(f_mmkin)
 f_saem_full_multi <- multistart(f_saem_full, n = 16, cores = 16)
-parhist(f_saem_full_multi, lpos = "bottomright")
+parhist(f_saem_full_multi)
 ```
 
 We see that not all variability parameters are identifiable, most problematic
@@ -44,7 +44,7 @@ removing the intersoil variability for this parameter.
 ```{r}
 f_saem_reduced <- update(f_saem_full, covariance.model = diag(c(1, 1, 0, 1)))
 f_saem_reduced_multi <- multistart(f_saem_reduced, n = 16, cores = 16)
-parhist(f_saem_reduced_multi, lpos = "bottomright")
+parhist(f_saem_reduced_multi, lpos = "topright")
 ```
 
 We can also analyse the log-likelihoods obtained in the multiple runs:

@@ -14,10 +14,13 @@ dmta_ds[["Elliot 1"]] <- dmta_ds[["Elliot 2"]] <- NULL
 f_mmkin <- mmkin("DFOP", dmta_ds, error_model = "tc", cores = 7, quiet = TRUE)
 f_saem_full <- saem(f_mmkin)
 f_saem_full_multi <- multistart(f_saem_full, n = 16, cores = 16)
-parhist(f_saem_full_multi, lpos = "bottomright")
+parhist(f_saem_full_multi)
 
 ## -----------------------------------------------------------------------------
 f_saem_reduced <- update(f_saem_full, covariance.model = diag(c(1, 1, 0, 1)))
 f_saem_reduced_multi <- multistart(f_saem_reduced, n = 16, cores = 16)
-parhist(f_saem_reduced_multi, lpos = "bottomright")
+parhist(f_saem_reduced_multi, lpos = "topright")
+
+## -----------------------------------------------------------------------------
+llhist(f_saem_reduced_multi)
 
