@@ -7,9 +7,15 @@
 \alias{parms.multistart}
 \title{Perform a hierarchical model fit with multiple starting values}
 \usage{
-multistart(object, n = 50, cores = 1, ...)
+multistart(
+  object,
+  n = 50,
+  cores = if (Sys.info()["sysname"] == "Windows") 1 else parallel::detectCores(),
+  cluster = NULL,
+  ...
+)
 
-\method{multistart}{saem.mmkin}(object, n = 50, cores = 1, ...)
+\method{multistart}{saem.mmkin}(object, n = 50, cores = 1, cluster = NULL, ...)
 
 \method{print}{multistart}(x, ...)
 
@@ -21,7 +27,10 @@ multistart(object, n = 50, cores = 1, ...)
 \item{n}{How many different combinations of starting parameters should be
 used?}
 
-\item{cores}{How many fits should be run in parallel?}
+\item{cores}{How many fits should be run in parallel (only on posix platforms)?}
+
+\item{cluster}{A cluster as returned by \link[parallel:makeCluster]{parallel::makeCluster} to be used
+for parallel execution.}
 
 \item{\dots}{Passed to the update function.}
 
@@ -40,9 +49,6 @@ inspired by the article on practical identifiabiliy in the frame of nonlinear
 mixed-effects models by Duchesne et al (2021).
 }
 \details{
-Currently, parallel execution of the fits is only supported using
-\link[parallel:mclapply]{parallel::mclapply}, i.e. not available on Windows.
-
 In case the online version of this help page contains error messages
 in the example code and no plots, this is due to the multistart method
 not working when called by pkgdown. Please refer to the
@@ -68,7 +74,13 @@ f_saem_full_multi <- multistart(f_saem_full, n = 16, cores = 16)
 parhist(f_saem_full_multi, lpos = "bottomright")
 
 f_saem_reduced <- update(f_saem_full, covariance.model = diag(c(1, 1, 0, 1)))
-f_saem_reduced_multi <- multistart(f_saem_reduced, n = 16, cores = 16)
+# On Windows, we need to create a cluster first. When working with
+# such a cluster, we need to export the mmkin object to the cluster
+# nodes, as it is referred to when updating the saem object on the nodes.
+library(parallel)
+cl <- makePSOCKcluster(12)
+clusterExport(cl, "f_mmkin")
+f_saem_reduced_multi <- multistart(f_saem_reduced, n = 16, cluster = cl)
 parhist(f_saem_reduced_multi, lpos = "bottomright")
 }
 }

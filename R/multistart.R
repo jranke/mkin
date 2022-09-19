@@ -7,9 +7,6 @@
 #' inspired by the article on practical identifiabiliy in the frame of nonlinear
 #' mixed-effects models by Duchesne et al (2021).
 #'
-#' Currently, parallel execution of the fits is only supported using
-#' [parallel::mclapply], i.e. not available on Windows.
-#'
 #' In case the online version of this help page contains error messages
 #' in the example code and no plots, this is due to the multistart method
 #' not working when called by pkgdown. Please refer to the
@@ -19,7 +16,9 @@
 #' @param object The fit object to work with
 #' @param n How many different combinations of starting parameters should be
 #' used?
-#' @param cores How many fits should be run in parallel?
+#' @param cores How many fits should be run in parallel (only on posix platforms)?
+#' @param cluster A cluster as returned by [parallel::makeCluster] to be used
+#'   for parallel execution.
 #' @param \dots Passed to the update function.
 #' @param x The multistart object to print
 #' @return A list of [saem.mmkin] objects, with class attributes
@@ -50,17 +49,26 @@
 #' parhist(f_saem_full_multi, lpos = "bottomright")
 #'
 #' f_saem_reduced <- update(f_saem_full, covariance.model = diag(c(1, 1, 0, 1)))
-#' f_saem_reduced_multi <- multistart(f_saem_reduced, n = 16, cores = 16)
+#' # On Windows, we need to create a cluster first. When working with
+#' # such a cluster, we need to export the mmkin object to the cluster
+#' # nodes, as it is referred to when updating the saem object on the nodes.
+#' library(parallel)
+#' cl <- makePSOCKcluster(12)
+#' clusterExport(cl, "f_mmkin")
+#' f_saem_reduced_multi <- multistart(f_saem_reduced, n = 16, cluster = cl)
 #' parhist(f_saem_reduced_multi, lpos = "bottomright")
 #' }
-multistart <- function(object, n = 50, cores = 1, ...)
+multistart <- function(object, n = 50,
+  cores = if (Sys.info()["sysname"] == "Windows") 1 else parallel::detectCores(),
+  cluster = NULL, ...)
 {
   UseMethod("multistart", object)
 }
 
 #' @rdname multistart
 #' @export
-multistart.saem.mmkin <- function(object, n = 50, cores = 1, ...) {
+multistart.saem.mmkin <- function(object, n = 50, cores = 1,
+  cluster = NULL, ...) {
   if (n <= 1) stop("Please specify an n of at least 2")
 
   mmkin_parms <- parms(object$mmkin, errparms = FALSE,
@@ -69,9 +77,15 @@ multistart.saem.mmkin <- function(object, n = 50, cores = 1, ...) {
     mmkin_parms, 1,
     function(x) stats::runif(n, min(x), max(x)))
 
-  res <- parallel::mclapply(1:n, function(x) {
-    update(object, degparms_start = start_parms[x, ], ...)
-  }, mc.cores = cores)
+  if (is.null(cluster)) {
+    res <- parallel::mclapply(1:n, function (x) {
+      update(object, degparms_start = start_parms[x, ], ...)
+    }, mc.cores = cores)
+  } else {
+    res <- parallel::parLapply(cluster, 1:n, function(x) {
+      update(object, degparms_start = start_parms[x, ], ...)
+    })
+  }
   attr(res, "orig") <- object
   attr(res, "start_parms") <- start_parms
   class(res) <- c("multistart.saem.mmkin", "multistart")
