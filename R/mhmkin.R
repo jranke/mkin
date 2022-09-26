@@ -177,7 +177,10 @@ AIC.mhmkin <- function(object, ..., k = 2) {
 
 #' @export
 BIC.mhmkin <- function(object, ...) {
-  res <- sapply(object, function(x) BIC(x$so))
+  res <- sapply(object, function(x) {
+    if (inherits(x, "try-error")) return(NA)
+    else return(BIC(x$so, k = k))
+  })
   dim(res) <- dim(object)
   dimnames(res) <- dimnames(object)
   return(res)
