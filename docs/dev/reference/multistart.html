@@ -100,16 +100,19 @@ mixed-effects models by Duchesne et al (2021).</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">multistart</span><span class="op">(</span><span class="va">object</span>, n <span class="op">=</span> <span class="fl">50</span>, cores <span class="op">=</span> <span class="fl">1</span>, <span class="va">...</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">multistart</span><span class="op">(</span></span>
+<span>  <span class="va">object</span>,</span>
+<span>  n <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>  cores <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.info.html" class="external-link">Sys.info</a></span><span class="op">(</span><span class="op">)</span><span class="op">[</span><span class="st">"sysname"</span><span class="op">]</span> <span class="op">==</span> <span class="st">"Windows"</span><span class="op">)</span> <span class="fl">1</span> <span class="kw">else</span> <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">detectCores</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  cluster <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for saem.mmkin</span></span>
-<span><span class="fu">multistart</span><span class="op">(</span><span class="va">object</span>, n <span class="op">=</span> <span class="fl">50</span>, cores <span class="op">=</span> <span class="fl">1</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">multistart</span><span class="op">(</span><span class="va">object</span>, n <span class="op">=</span> <span class="fl">50</span>, cores <span class="op">=</span> <span class="fl">1</span>, cluster <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for multistart</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># S3 method for multistart</span></span>
-<span><span class="fu"><a href="parms.html">parms</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -124,7 +127,12 @@ used?</p></dd>
 
 
 <dt>cores</dt>
-<dd><p>How many fits should be run in parallel?</p></dd>
+<dd><p>How many fits should be run in parallel (only on posix platforms)?</p></dd>
+
+
+<dt>cluster</dt>
+<dd><p>A cluster as returned by <a href="https://rdrr.io/r/parallel/makeCluster.html" class="external-link">parallel::makeCluster</a> to be used
+for parallel execution.</p></dd>
 
 
 <dt>...</dt>
@@ -144,9 +152,7 @@ used?</p></dd>
     </div>
     <div id="details">
     <h2>Details</h2>
-    <p>Currently, parallel execution of the fits is only supported using
-<a href="https://rdrr.io/r/parallel/mclapply.html" class="external-link">parallel::mclapply</a>, i.e. not available on Windows.</p>
-<p>In case the online version of this help page contains error messages
+    <p>In case the online version of this help page contains error messages
 in the example code and no plots, this is due to the multistart method
 not working when called by pkgdown. Please refer to the
 <a href="https://pkgdown.jrwb.de/mkin/dev/articles/web_only/multistart.html">online vignette</a>
@@ -186,10 +192,18 @@ doi: 10.1186/s12859-021-04373-4.</p>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in UseMethod("parms", object):</span> no applicable method for 'parms' applied to an object of class "try-error"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">f_saem_reduced</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">f_saem_full</span>, covariance.model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">f_saem_reduced_multi</span> <span class="op">&lt;-</span> <span class="fu">multistart</span><span class="op">(</span><span class="va">f_saem_reduced</span>, n <span class="op">=</span> <span class="fl">16</span>, cores <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>all scheduled cores encountered errors in user code</span>
+<span class="r-in"><span><span class="co"># On Windows, we need to create a cluster first. When working with</span></span></span>
+<span class="r-in"><span><span class="co"># such a cluster, we need to export the mmkin object to the cluster</span></span></span>
+<span class="r-in"><span><span class="co"># nodes, as it is referred to when updating the saem object on the nodes.</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">parallel</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">cl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/parallel/makeCluster.html" class="external-link">makePSOCKcluster</a></span><span class="op">(</span><span class="fl">12</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/parallel/clusterApply.html" class="external-link">clusterExport</a></span><span class="op">(</span><span class="va">cl</span>, <span class="st">"f_mmkin"</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in get(name, envir = envir):</span> object 'f_mmkin' not found</span>
+<span class="r-in"><span><span class="va">f_saem_reduced_multi</span> <span class="op">&lt;-</span> <span class="fu">multistart</span><span class="op">(</span><span class="va">f_saem_reduced</span>, n <span class="op">=</span> <span class="fl">16</span>, cluster <span class="op">=</span> <span class="va">cl</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in checkForRemoteErrors(val):</span> 12 nodes produced errors; first error: object 'f_mmkin' not found</span>
 <span class="r-in"><span><span class="fu"><a href="parhist.html">parhist</a></span><span class="op">(</span><span class="va">f_saem_reduced_multi</span>, lpos <span class="op">=</span> <span class="st">"bottomright"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in UseMethod("parms", object):</span> no applicable method for 'parms' applied to an object of class "try-error"</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in parhist(f_saem_reduced_multi, lpos = "bottomright"):</span> object 'f_saem_reduced_multi' not found</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>calling par(new=TRUE) with no plot</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
