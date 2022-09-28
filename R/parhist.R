@@ -29,20 +29,20 @@ parhist <- function(object, lpos = "bottomleft", main = "", ...) {
     degparm_index <- which(names(orig_parms) %in% degparm_names_transformed)
     orig_parms[degparm_names_transformed] <- backtransform_odeparms(
       orig_parms[degparm_names_transformed],
-      orig$mmkin$mkinmod,
+      orig$mmkin[[1]]$mkinmod,
       transform_rates = orig$mmkin[[1]]$transform_rates,
       transform_fractions = orig$mmkin[[1]]$transform_fractions)
     start_parms <- backtransform_odeparms(start_parms,
-      orig$mmkin$mkinmod,
+      orig$mmkin[[1]]$mkinmod,
       transform_rates = orig$mmkin[[1]]$transform_rates,
       transform_fractions = orig$mmkin[[1]]$transform_fractions)
     degparm_names <- names(start_parms)
 
     names(orig_parms) <- c(degparm_names, names(orig_parms[-degparm_index]))
-    
+
     all_parms[, degparm_names_transformed] <-
       t(apply(all_parms[, degparm_names_transformed], 1, backtransform_odeparms,
-      orig$mmkin$mkinmod,
+      orig$mmkin[[1]]$mkinmod,
       transform_rates = orig$mmkin[[1]]$transform_rates,
       transform_fractions = orig$mmkin[[1]]$transform_fractions))
     colnames(all_parms)[1:length(degparm_names)] <- degparm_names

@@ -92,15 +92,51 @@ multistart.saem.mmkin <- function(object, n = 50, cores = 1,
   return(res)
 }
 
-#' @rdname multistart
 #' @export
-print.multistart <- function(x, ...) {
-  cat("Multistart object with", length(x), "fits of the following type:\n\n")
-  print(x[[1]])
+convergence.multistart <- function(object, ...) {
+  all_summary_warnings <- character()
+
+  result <- lapply(object,
+    function(fit) {
+      if (inherits(fit, "try-error")) return("E")
+      else {
+        return("OK")
+      }
+  })
+  result <- unlist(result)
+
+  class(result) <- "convergence.multistart"
+  return(result)
+}
+
+#' @export
+convergence.multistart.saem.mmkin <- function(object, ...) {
+  all_summary_warnings <- character()
+
+  result <- lapply(object,
+    function(fit) {
+      if (inherits(fit$so, "try-error")) return("E")
+      else {
+        return("OK")
+      }
+  })
+  result <- unlist(result)
+
+  class(result) <- "convergence.multistart"
+  return(result)
+}
+
+#' @export
+print.convergence.multistart <- function(x, ...) {
+  class(x) <- NULL
+  print(table(x, dnn = NULL))
+  if (any(x == "OK")) cat("OK: Fit terminated successfully\n")
+  if (any(x == "E")) cat("E: Error\n")
 }
 
 #' @rdname multistart
 #' @export
-parms.multistart <- function(object, ...) {
-  t(sapply(object, parms))
+print.multistart <- function(x, ...) {
+  cat("<multistart> object with", length(x), "fits:\n")
+  print(convergence(x))
 }

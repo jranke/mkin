@@ -4,7 +4,6 @@
 \alias{multistart}
 \alias{multistart.saem.mmkin}
 \alias{print.multistart}
-\alias{parms.multistart}
 \title{Perform a hierarchical model fit with multiple starting values}
 \usage{
 multistart(
@@ -18,8 +17,6 @@ multistart(
 \method{multistart}{saem.mmkin}(object, n = 50, cores = 1, cluster = NULL, ...)
 
 \method{print}{multistart}(x, ...)
-
-\method{parms}{multistart}(object, ...)
 }
 \arguments{
 \item{object}{The fit object to work with}

@@ -137,9 +137,16 @@ saem.mmkin <- function(object,
     transformations = transformations, ...)
   d_saemix <- saemix_data(object, verbose = verbose)
 
+  fit_failed <- FALSE
+  FIM_failed <- NULL
   fit_time <- system.time({
-    utils::capture.output(f_saemix <- saemix::saemix(m_saemix, d_saemix, control), split = !quiet)
-    FIM_failed <- NULL
+    utils::capture.output(f_saemix <- try(saemix::saemix(m_saemix, d_saemix, control)), split = !quiet)
+    if (inherits(f_saemix, "try-error")) fit_failed <- TRUE
+  })
+
+  return_data <- nlme_data(object)
+
+  if (!fit_failed) {
     if (any(is.na(f_saemix@results@se.fixed))) FIM_failed <- c(FIM_failed, "fixed effects")
     if (any(is.na(c(f_saemix@results@se.omega, f_saemix@results@se.respar)))) {
       FIM_failed <- c(FIM_failed, "random effects and residual error parameters")
@@ -147,38 +154,37 @@ saem.mmkin <- function(object,
     if (!is.null(FIM_failed) & fail_with_errors) {
       stop("Could not invert FIM for ", paste(FIM_failed, collapse = " and "))
     }
-  })
 
-  transparms_optim <- f_saemix@results@fixed.effects
-  names(transparms_optim) <- f_saemix@results@name.fixed
+    transparms_optim <- f_saemix@results@fixed.effects
+    names(transparms_optim) <- f_saemix@results@name.fixed
 
-  if (transformations == "mkin") {
-    bparms_optim <- backtransform_odeparms(transparms_optim,
-      object[[1]]$mkinmod,
-      object[[1]]$transform_rates,
-      object[[1]]$transform_fractions)
-  } else {
-    bparms_optim <- transparms_optim
+    if (transformations == "mkin") {
+      bparms_optim <- backtransform_odeparms(transparms_optim,
+        object[[1]]$mkinmod,
+        object[[1]]$transform_rates,
+        object[[1]]$transform_fractions)
+    } else {
+      bparms_optim <- transparms_optim
+    }
+
+    saemix_data_ds <- f_saemix@data@data$ds
+    mkin_ds_order <- as.character(unique(return_data$ds))
+    saemix_ds_order <- unique(saemix_data_ds)
+
+    psi <- saemix::psi(f_saemix)
+    rownames(psi) <- saemix_ds_order
+    return_data$predicted <- f_saemix@model@model(
+      psi = psi[mkin_ds_order, ],
+      id = as.numeric(return_data$ds),
+      xidep = return_data[c("time", "name")])
+
+    return_data <- transform(return_data,
+      residual = value - predicted,
+      std = sigma_twocomp(predicted,
+        f_saemix@results@respar[1], f_saemix@results@respar[2]))
+    return_data <- transform(return_data,
+      standardized = residual / std)
   }
-
-  return_data <- nlme_data(object)
-  saemix_data_ds <- f_saemix@data@data$ds
-  mkin_ds_order <- as.character(unique(return_data$ds))
-  saemix_ds_order <- unique(saemix_data_ds)
-
-  psi <- saemix::psi(f_saemix)
-  rownames(psi) <- saemix_ds_order
-  return_data$predicted <- f_saemix@model@model(
-    psi = psi[mkin_ds_order, ],
-    id = as.numeric(return_data$ds),
-    xidep = return_data[c("time", "name")])
-
-  return_data <- transform(return_data,
-    residual = value - predicted,
-    std = sigma_twocomp(predicted,
-      f_saemix@results@respar[1], f_saemix@results@respar[2]))
-  return_data <- transform(return_data,
-    standardized = residual / std)
 
   result <- list(
     mkinmod = object[[1]]$mkinmod,
@@ -187,21 +193,25 @@ saem.mmkin <- function(object,
     transformations = transformations,
     transform_rates = object[[1]]$transform_rates,
     transform_fractions = object[[1]]$transform_fractions,
+    sm = m_saemix,
     so = f_saemix,
     call = call,
     time = fit_time,
     mean_dp_start = attr(m_saemix, "mean_dp_start"),
-    bparms.optim = bparms_optim,
     bparms.fixed = object[[1]]$bparms.fixed,
     data = return_data,
-    mkin_ds_order = mkin_ds_order,
-    saemix_ds_order = saemix_ds_order,
     err_mod = object[[1]]$err_mod,
     date.fit = date(),
     saemixversion = as.character(utils::packageVersion("saemix")),
     mkinversion = as.character(utils::packageVersion("mkin")),
     Rversion = paste(R.version$major, R.version$minor, sep=".")
   )
+
+  if (!fit_failed) {
+    result$mkin_ds_order <- mkin_ds_order
+    result$saemix_ds_order <- saemix_ds_order
+    result$bparms.optim <- bparms_optim
+  }
 
   class(result) <- c("saem.mmkin", "mixed.mmkin")
   return(result)
@@ -222,16 +232,20 @@ print.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3), ...) {
     length(unique(x$data$name)), "variable(s) grouped in",
     length(unique(x$data$ds)), "datasets\n")
 
-  cat("\nLikelihood computed by importance sampling\n")
-  print(data.frame(
-      AIC = AIC(x$so, type = "is"),
-      BIC = BIC(x$so, type = "is"),
-      logLik = logLik(x$so, type = "is"),
-      row.names = " "), digits = digits)
+  if (inherits(x$so, "try-error")) {
+    cat("\nFit did not terminate successfully\n")
+  } else {
+    cat("\nLikelihood computed by importance sampling\n")
+    print(data.frame(
+        AIC = AIC(x$so, type = "is"),
+        BIC = BIC(x$so, type = "is"),
+        logLik = logLik(x$so, type = "is"),
+        row.names = " "), digits = digits)
 
-  cat("\nFitted parameters:\n")
-  conf.int <- parms(x, ci = TRUE)
-  print(conf.int, digits = digits)
+    cat("\nFitted parameters:\n")
+    conf.int <- parms(x, ci = TRUE)
+    print(conf.int, digits = digits)
+  }
 
   invisible(x)
 }
@@ -618,12 +632,27 @@ update.saem.mmkin <- function(object, ..., evaluate = TRUE) {
 #' @param ci Should a matrix with estimates and confidence interval boundaries
 #' be returned? If FALSE (default), a vector of estimates is returned.
 parms.saem.mmkin <- function(object, ci = FALSE, ...) {
-  conf.int <- object$so@results@conf.int[c("estimate", "lower", "upper")]
-  rownames(conf.int) <- object$so@results@conf.int[["name"]]
-  conf.int.var <- grepl("^Var\\.", rownames(conf.int))
-  conf.int <- conf.int[!conf.int.var, ]
+  cov.mod <- object$sm@covariance.model
+  n_cov_mod_parms <- sum(cov.mod[upper.tri(cov.mod, diag = TRUE)])
+  n_parms <- length(object$sm@name.modpar) +
+    n_cov_mod_parms +
+    length(object$sm@name.sigma)
+
+  if (inherits(object$so, "try-error")) {
+    conf.int <- matrix(rep(NA, 3 * n_parms), ncol = 3)
+    colnames(conf.int) <- c("estimate", "lower", "upper")
+  } else {
+    conf.int <- object$so@results@conf.int[c("estimate", "lower", "upper")]
+    rownames(conf.int) <- object$so@results@conf.int[["name"]]
+    conf.int.var <- grepl("^Var\\.", rownames(conf.int))
+    conf.int <- conf.int[!conf.int.var, ]
+    conf.int.cov <- grepl("^Cov\\.", rownames(conf.int))
+    conf.int <- conf.int[!conf.int.cov, ]
+  }
   estimate <- conf.int[, "estimate"]
+
   names(estimate) <- rownames(conf.int)
+
   if (ci) return(conf.int)
   else return(estimate)
 }

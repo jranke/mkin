@@ -16,7 +16,16 @@ llhist <- function(object, breaks = "Sturges", lpos = "topleft", main = "", ...)
   oldpar <- par(no.readonly = TRUE)
   on.exit(par(oldpar, no.readonly = TRUE))
 
-  ll <- sapply(object, logLik)
+  if (inherits(object, "multistart.saem.mmkin")) {
+    llfunc <- function(object) {
+      if (inherits(object$so, "try-error")) return(NA)
+      else return(logLik(object$so))
+    }
+  } else {
+    stop("llhist is only implemented for multistart.saem.mmkin objects")
+  }
+
+  ll <- stats::na.omit(sapply(object, llfunc))
   kde <- KernSmooth::bkde(ll)
 
   par(las = 1)

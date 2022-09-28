@@ -67,3 +67,16 @@ parms.mmkin <- function(object, transformed = FALSE, errparms = TRUE, ...)
   }
   return(res)
 }
+
+#' @param exclude_failed For [multistart] objects, should rows for failed fits
+#' be removed from the returned parameter matrix?
+#' @rdname parms
+#' @export
+parms.multistart <- function(object, exclude_failed = TRUE, ...) {
+  res <- t(sapply(object, parms))
+  successful <- which(!is.na(res[, 1]))
+  first_success <- successful[1]
+  colnames(res) <- names(parms(object[[first_success]]))
+  if (exclude_failed) res <- res[successful, ]
+  return(res)
+}
