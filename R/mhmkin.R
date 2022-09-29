@@ -140,13 +140,15 @@ print.mhmkin <- function(x, ...) {
 convergence.mhmkin <- function(object, ...) {
   all_summary_warnings <- character()
 
-  result <- lapply(object,
-    function(fit) {
-      if (inherits(fit, "try-error")) return("E")
-      else {
-        return("OK")
-      }
-  })
+  if (inherits(object[[1]], "saem.mmkin")) {
+    test_func <- function(fit) {
+      if (inherits(fit$so, "try-error")) return("E")
+      else return("OK")
+    }
+  } else {
+    stop("Only mhmkin objects containing saem.mmkin objects currently supported")
+  }
+  result <- lapply(object, test_func)
   result <- unlist(result)
   dim(result) <- dim(object)
   dimnames(result) <- dimnames(object)

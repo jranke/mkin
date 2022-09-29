@@ -101,9 +101,12 @@ illparms.saem.mmkin <- function(object, conf.level = 0.95, random = TRUE, errmod
 #' @rdname illparms
 #' @export
 illparms.mhmkin <- function(object, conf.level = 0.95, random = TRUE, errmod = TRUE, ...) {
+  if (inherits(object[[1]], "saem.mmkin")) {
+    check_failed <- function(x) if (inherits(x$so, "try-error")) TRUE else FALSE
+  }
   result <- lapply(object,
     function(fit) {
-      if (inherits(fit, "try-error")) return("E")
+      if (check_failed(fit)) return("E")
       ill <- illparms(fit, conf.level = conf.level, random = random, errmod = errmod)
       if (length(ill) > 0) {
         return(paste(ill, collapse = ", "))
