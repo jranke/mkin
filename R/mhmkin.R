@@ -168,8 +168,11 @@ print.convergence.mhmkin <- function(x, ...) {
 
 #' @export
 AIC.mhmkin <- function(object, ..., k = 2) {
+  if (inherits(object[[1]], "saem.mmkin")) {
+    check_failed <- function(x) if (inherits(x$so, "try-error")) TRUE else FALSE
+  }
   res <- sapply(object, function(x) {
-    if (inherits(x, "try-error")) return(NA)
+    if (check_failed(x)) return(NA)
     else return(AIC(x$so, k = k))
   })
   dim(res) <- dim(object)
@@ -179,8 +182,11 @@ AIC.mhmkin <- function(object, ..., k = 2) {
 
 #' @export
 BIC.mhmkin <- function(object, ...) {
+  if (inherits(object[[1]], "saem.mmkin")) {
+    check_failed <- function(x) if (inherits(x$so, "try-error")) TRUE else FALSE
+  }
   res <- sapply(object, function(x) {
-    if (inherits(x, "try-error")) return(NA)
+    if (check_failed(x)) return(NA)
     else return(BIC(x$so))
   })
   dim(res) <- dim(object)
