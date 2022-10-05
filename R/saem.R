@@ -33,6 +33,12 @@ utils::globalVariables(c("predicted", "std"))
 #'   for parameter that are tested if requested by 'test_log_parms'.
 #' @param solution_type Possibility to specify the solution type in case the
 #'   automatic choice is not desired
+#' @param no_random_effect Character vector of degradation parameters for
+#'   which there should be no variability over the groups. Only used
+#'   if the covariance model is not explicitly specified.
+#' @param covariance.model Will be passed to [saemix::SaemixModel()]. Per
+#'   default, uncorrelated random effects are specified for all degradation
+#'   parameters.
 #' @param fail_with_errors Should a failure to compute standard errors
 #'   from the inverse of the Fisher Information Matrix be a failure?
 #' @param quiet Should we suppress the messages saemix prints at the beginning
@@ -121,6 +127,8 @@ saem.mmkin <- function(object,
   test_log_parms = TRUE,
   conf.level = 0.6,
   solution_type = "auto",
+  covariance.model = "auto",
+  no_random_effect = NULL,
   nbiter.saemix = c(300, 100),
   control = list(displayProgress = FALSE, print = FALSE,
     nbiter.saemix = nbiter.saemix,
@@ -134,7 +142,10 @@ saem.mmkin <- function(object,
     degparms_start = degparms_start,
     test_log_parms = test_log_parms, conf.level = conf.level,
     solution_type = solution_type,
-    transformations = transformations, ...)
+    transformations = transformations,
+    covariance.model = covariance.model,
+    no_random_effect = no_random_effect,
+    ...)
   d_saemix <- saemix_data(object, verbose = verbose)
 
   fit_failed <- FALSE
@@ -253,14 +264,22 @@ print.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3), ...) {
 #' @rdname saem
 #' @return An [saemix::SaemixModel] object.
 #' @export
-saemix_model <- function(object, solution_type = "auto", transformations = c("mkin", "saemix"),
-  degparms_start = numeric(), test_log_parms = FALSE, conf.level = 0.6, verbose = FALSE, ...)
+saemix_model <- function(object, solution_type = "auto",
+  transformations = c("mkin", "saemix"), degparms_start = numeric(),
+  covariance.model = "auto", no_random_effect = NULL,
+  test_log_parms = FALSE, conf.level = 0.6, verbose = FALSE, ...)
 {
   if (nrow(object) > 1) stop("Only row objects allowed")
 
   mkin_model <- object[[1]]$mkinmod
 
   degparms_optim <-  mean_degparms(object, test_log_parms = test_log_parms)
+  na_degparms <- names(which(is.na(degparms_optim)))
+  if (length(na_degparms) > 0) {
+    message("Did not find valid starting values for ", paste(na_degparms, collapse = ", "), "\n",
+      "Now trying with test_log_parms = FALSE")
+    degparms_optim <-  mean_degparms(object, test_log_parms = FALSE)
+  }
   if (transformations == "saemix") {
     degparms_optim <- backtransform_odeparms(degparms_optim,
       object[[1]]$mkinmod,
@@ -378,7 +397,7 @@ saemix_model <- function(object, solution_type = "auto", transformations = c("mk
             }
           } else {
             model_function <- function(psi, id, xidep) {
-              tb <- exp(psi[id, 4])
+              tb <- psi[id, 4]
               t <- xidep[, "time"]
               psi[id, 1] * ifelse(t <= tb,
                 exp(- psi[id, 2] * t),
@@ -560,12 +579,22 @@ saemix_model <- function(object, solution_type = "auto", transformations = c("mk
   psi0_matrix <- matrix(degparms_psi0, nrow = 1)
   colnames(psi0_matrix) <- names(degparms_psi0)
 
+  if (covariance.model[1] == "auto") {
+    covariance_diagonal <- rep(1, length(degparms_optim))
+    if (!is.null(no_random_effect)) {
+      degparms_no_random <- which(names(degparms_psi0) %in% no_random_effect)
+      covariance_diagonal[degparms_no_random] <- 0
+    }
+    covariance.model = diag(covariance_diagonal)
+  }
+
   res <- saemix::saemixModel(model_function,
     psi0 = psi0_matrix,
     "Mixed model generated from mmkin object",
     transform.par = transform.par,
     error.model = error.model,
     verbose = verbose,
+    covariance.model = covariance.model,
     ...
   )
   attr(res, "mean_dp_start") <- degparms_optim

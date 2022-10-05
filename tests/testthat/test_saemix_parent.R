@@ -4,30 +4,54 @@ test_that("Parent fits using saemix are correctly implemented", {
 
   skip_on_cran()
   expect_error(saem(fits), "Only row objects")
-  # Some fits were done in the setup script
+
+  # mmkin_sfo_1 was generated in the setup script
+  # We did not introduce variance of parent_0 in the data generation
+  # This is correctly detected
+  expect_equal(illparms(sfo_saem_1), "sd(parent_0)")
+  # So we remove this variance
+  sfo_saem_1_reduced <- update(sfo_saem_1, no_random_effect = "parent_0")
+  expect_equal(illparms(sfo_saem_1_reduced), character(0))
+
+  # We cannot currently do the fit with completely fixed initial values
   mmkin_sfo_2 <- update(mmkin_sfo_1, fixed_initials = c(parent = 100))
+  sfo_saem_3 <- expect_error(saem(mmkin_sfo_2, quiet = TRUE), "at least two parameters")
+
+  # We get an error if we do not supply a suitable model specification
   expect_error(update(mmkin_sfo_1, models = c("SFOOO")), "Please supply models.*")
 
-  sfo_saem_2 <- saem(mmkin_sfo_1, quiet = TRUE, transformations = "mkin")
-  sfo_saem_3 <- expect_error(saem(mmkin_sfo_2, quiet = TRUE), "at least two parameters")
-  expect_equal(endpoints(sfo_saem_1), endpoints(sfo_saem_2), tol = 0.01)
-  s_sfo_s1 <- summary(sfo_saem_1)
-  s_sfo_s2 <- summary(sfo_saem_2)
+  sfo_saem_1_mkin <- saem(mmkin_sfo_1, quiet = TRUE, transformations = "mkin")
+  expect_equal(illparms(sfo_saem_1_mkin), "sd(parent_0)")
+  sfo_saem_1_reduced_mkin <- update(sfo_saem_1_mkin, no_random_effect = "parent_0")
+
+  # The endpoints obtained do not depend on the transformation
+  expect_equal(endpoints(sfo_saem_1), endpoints(sfo_saem_1_mkin), tol = 0.01)
+  expect_equal(endpoints(sfo_saem_1_reduced), endpoints(sfo_saem_1_reduced_mkin), tol = 0.01)
+
+  s_sfo_saem_1 <- summary(sfo_saem_1)
+  s_sfo_saem_1_reduced <- summary(sfo_saem_1_reduced)
+  s_sfo_saem_1_mkin <- summary(sfo_saem_1_mkin)
+  s_sfo_saem_1_reduced_mkin <- summary(sfo_saem_1_reduced_mkin)
 
   sfo_nlme_1 <- expect_warning(nlme(mmkin_sfo_1), "not converge")
-  s_sfo_n <- summary(sfo_nlme_1)
+  s_sfo_nlme_1 <- summary(sfo_nlme_1)
 
   # Compare with input
-  expect_equal(round(s_sfo_s2$confint_ranef["SD.log_k_parent", "est."], 1), 0.3)
+  expect_equal(round(s_sfo_saem_1$confint_ranef["SD.k_parent", "est."], 1), 0.3)
+  expect_equal(round(s_sfo_saem_1_mkin$confint_ranef["SD.log_k_parent", "est."], 1), 0.3)
   # k_parent is a bit different from input 0.03 here
-  expect_equal(round(s_sfo_s1$confint_back["k_parent", "est."], 3), 0.035)
-  expect_equal(round(s_sfo_s2$confint_back["k_parent", "est."], 3), 0.035)
+  expect_equal(round(s_sfo_saem_1$confint_back["k_parent", "est."], 3), 0.035)
+  expect_equal(round(s_sfo_saem_1_mkin$confint_back["k_parent", "est."], 3), 0.035)
 
   # But the result is pretty unanimous between methods
-  expect_equal(round(s_sfo_s1$confint_back["k_parent", "est."], 3),
-    round(s_sfo_s2$confint_back["k_parent", "est."], 3))
-  expect_equal(round(s_sfo_s1$confint_back["k_parent", "est."], 3),
-    round(s_sfo_n$confint_back["k_parent", "est."], 3))
+  expect_equal(round(s_sfo_saem_1_reduced$confint_back["k_parent", "est."], 3),
+    round(s_sfo_saem_1$confint_back["k_parent", "est."], 3))
+  expect_equal(round(s_sfo_saem_1_mkin$confint_back["k_parent", "est."], 3),
+    round(s_sfo_saem_1$confint_back["k_parent", "est."], 3))
+  expect_equal(round(s_sfo_saem_1_reduced_mkin$confint_back["k_parent", "est."], 3),
+    round(s_sfo_saem_1$confint_back["k_parent", "est."], 3))
+  expect_equal(round(s_sfo_nlme_1$confint_back["k_parent", "est."], 3),
+    round(s_sfo_saem_1$confint_back["k_parent", "est."], 3))
 
   mmkin_fomc_1 <- mmkin("FOMC", ds_fomc, quiet = TRUE, error_model = "tc", cores = n_cores)
   fomc_saem_1 <- saem(mmkin_fomc_1, quiet = TRUE, transformations = "saemix")

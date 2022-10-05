@@ -18,6 +18,8 @@ saem(object, ...)
   test_log_parms = TRUE,
   conf.level = 0.6,
   solution_type = "auto",
+  covariance.model = "auto",
+  no_random_effect = NULL,
   nbiter.saemix = c(300, 100),
   control = list(displayProgress = FALSE, print = FALSE, nbiter.saemix = nbiter.saemix,
     save = FALSE, save.graphs = FALSE),
@@ -34,6 +36,8 @@ saemix_model(
   solution_type = "auto",
   transformations = c("mkin", "saemix"),
   degparms_start = numeric(),
+  covariance.model = "auto",
+  no_random_effect = NULL,
   test_log_parms = FALSE,
   conf.level = 0.6,
   verbose = FALSE,
@@ -69,6 +73,14 @@ for parameter that are tested if requested by 'test_log_parms'.}
 
 \item{solution_type}{Possibility to specify the solution type in case the
 automatic choice is not desired}
+
+\item{covariance.model}{Will be passed to \code{\link[saemix:SaemixModel-class]{saemix::SaemixModel()}}. Per
+default, uncorrelated random effects are specified for all degradation
+parameters.}
+
+\item{no_random_effect}{Character vector of degradation parameters for
+which there should be no variability over the groups. Only used
+if the covariance model is not explicitly specified.}
 
 \item{nbiter.saemix}{Convenience option to increase the number of
 iterations}
