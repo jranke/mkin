@@ -4,10 +4,19 @@
 \alias{parhist}
 \title{Plot parameter distributions from multistart objects}
 \usage{
-parhist(object, lpos = "bottomleft", main = "", ...)
+parhist(
+  object,
+  scale = c("best", "median"),
+  lpos = "bottomleft",
+  main = "",
+  ...
+)
 }
 \arguments{
 \item{object}{The \link{multistart} object}
+
+\item{scale}{By default, scale parameters using the best available fit.
+If 'median', parameters are scaled using the median parameters from all fits.}
 
 \item{lpos}{Positioning of the legend.}
 
@@ -16,8 +25,9 @@ parhist(object, lpos = "bottomleft", main = "", ...)
 \item{\dots}{Passed to \link{boxplot}}
 }
 \description{
-Produces a boxplot with all parameters from the multiple runs, divided by
-using their medians as in the paper by Duchesne et al. (2021).
+Produces a boxplot with all parameters from the multiple runs, scaled
+either by the parameters of the run with the highest likelihood,
+or by their medians as proposed in the paper by Duchesne et al. (2021).
 }
 \references{
 Duchesne R, Guillemin A, Gandrillon O, Crauste F. Practical

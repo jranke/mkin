@@ -4,6 +4,10 @@
 \alias{multistart}
 \alias{multistart.saem.mmkin}
 \alias{print.multistart}
+\alias{best}
+\alias{best.default}
+\alias{which.best}
+\alias{which.best.default}
 \title{Perform a hierarchical model fit with multiple starting values}
 \usage{
 multistart(
@@ -17,6 +21,14 @@ multistart(
 \method{multistart}{saem.mmkin}(object, n = 50, cores = 1, cluster = NULL, ...)
 
 \method{print}{multistart}(x, ...)
+
+best(object, ...)
+
+\method{best}{default}(object, ...)
+
+which.best(object, ...)
+
+\method{which.best}{default}(object, ...)
 }
 \arguments{
 \item{object}{The fit object to work with}
@@ -36,6 +48,10 @@ for parallel execution.}
 \value{
 A list of \link{saem.mmkin} objects, with class attributes
 'multistart.saem.mmkin' and 'multistart'.
+
+The object with the highest likelihood
+
+The index of the object with the highest likelihood
 }
 \description{
 The purpose of this method is to check if a certain algorithm for fitting
@@ -69,8 +85,10 @@ f_mmkin <- mmkin("DFOP", dmta_ds, error_model = "tc", cores = 7, quiet = TRUE)
 f_saem_full <- saem(f_mmkin)
 f_saem_full_multi <- multistart(f_saem_full, n = 16, cores = 16)
 parhist(f_saem_full_multi, lpos = "bottomright")
+illparms(f_saem_full)
 
-f_saem_reduced <- update(f_saem_full, covariance.model = diag(c(1, 1, 0, 1)))
+f_saem_reduced <- update(f_saem_full, no_random_effect = "log_k2")
+illparms(f_saem_reduced)
 # On Windows, we need to create a cluster first. When working with
 # such a cluster, we need to export the mmkin object to the cluster
 # nodes, as it is referred to when updating the saem object on the nodes.

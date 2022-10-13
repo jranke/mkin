@@ -1,12 +1,15 @@
 #' Plot parameter distributions from multistart objects
 #'
-#' Produces a boxplot with all parameters from the multiple runs, divided by
-#' using their medians as in the paper by Duchesne et al. (2021).
+#' Produces a boxplot with all parameters from the multiple runs, scaled
+#' either by the parameters of the run with the highest likelihood,
+#' or by their medians as proposed in the paper by Duchesne et al. (2021).
 #'
 #' @param object The [multistart] object
-#' @param \dots Passed to [boxplot]
+#' @param scale By default, scale parameters using the best available fit.
+#' If 'median', parameters are scaled using the median parameters from all fits.
 #' @param main Title of the plot
 #' @param lpos Positioning of the legend.
+#' @param \dots Passed to [boxplot]
 #' @references Duchesne R, Guillemin A, Gandrillon O, Crauste F. Practical
 #' identifiability in the frame of nonlinear mixed effects models: the example
 #' of the in vitro erythropoiesis. BMC Bioinformatics. 2021 Oct 4;22(1):478.
@@ -14,7 +17,9 @@
 #' @seealso [multistart]
 #' @importFrom stats median
 #' @export
-parhist <- function(object, lpos = "bottomleft", main = "", ...) {
+parhist <- function(object, scale = c("best", "median"),
+  lpos = "bottomleft", main = "", ...)
+{
   oldpar <- par(no.readonly = TRUE)
   on.exit(par(oldpar, no.readonly = TRUE))
 
@@ -48,23 +53,34 @@ parhist <- function(object, lpos = "bottomleft", main = "", ...) {
     colnames(all_parms)[1:length(degparm_names)] <- degparm_names
   }
 
-  median_parms <- apply(all_parms, 2, median)
-  start_scaled_parms <- rep(NA_real_, length(orig_parms))
-  names(start_scaled_parms) <- names(orig_parms)
+  scale <- match.arg(scale)
+  parm_scale <- switch(scale,
+    best = all_parms[which.best(object), ],
+    median = apply(all_parms, 2, median)
+  )
 
-  orig_scaled_parms <- orig_parms / median_parms
-  all_scaled_parms <- t(apply(all_parms, 1, function(x) x / median_parms))
-  start_scaled_parms[names(start_parms)] <-
-    start_parms / median_parms[names(start_parms)]
+  # Boxplots of all scaled parameters
+  all_scaled_parms <- t(apply(all_parms, 1, function(x) x / parm_scale))
   boxplot(all_scaled_parms, log = "y", main = main, ,
     ylab = "Normalised parameters", ...)
 
-  points(orig_scaled_parms, col = 2, cex = 2)
+  # Show starting parameters
+  start_scaled_parms <- rep(NA_real_, length(orig_parms))
+  names(start_scaled_parms) <- names(orig_parms)
+  start_scaled_parms[names(start_parms)] <-
+    start_parms / parm_scale[names(start_parms)]
   points(start_scaled_parms, col = 3, cex = 3)
+
+  # Show parameters of original run
+  orig_scaled_parms <- orig_parms / parm_scale
+  points(orig_scaled_parms, col = 2, cex = 2)
+
+  abline(h = 1, lty = 2)
+
   legend(lpos, inset = c(0.05, 0.05), bty = "n",
     pch = 1, col = 3:1, lty = c(NA, NA, 1),
     legend = c(
       "Starting parameters",
-      "Converged parameters",
+      "Original run",
       "Multistart runs"))
 }

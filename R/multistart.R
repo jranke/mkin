@@ -47,8 +47,10 @@
 #' f_saem_full <- saem(f_mmkin)
 #' f_saem_full_multi <- multistart(f_saem_full, n = 16, cores = 16)
 #' parhist(f_saem_full_multi, lpos = "bottomright")
+#' illparms(f_saem_full)
 #'
-#' f_saem_reduced <- update(f_saem_full, covariance.model = diag(c(1, 1, 0, 1)))
+#' f_saem_reduced <- update(f_saem_full, no_random_effect = "log_k2")
+#' illparms(f_saem_reduced)
 #' # On Windows, we need to create a cluster first. When working with
 #' # such a cluster, we need to export the mmkin object to the cluster
 #' # nodes, as it is referred to when updating the saem object on the nodes.
@@ -139,4 +141,40 @@ print.convergence.multistart <- function(x, ...) {
 print.multistart <- function(x, ...) {
   cat("<multistart> object with", length(x), "fits:\n")
   print(convergence(x))
+}
+
+#' @rdname multistart
+#' @export
+best <- function(object, ...)
+{
+  UseMethod("best", object)
+}
+
+#' @export
+#' @return The object with the highest likelihood
+#' @rdname multistart
+best.default <- function(object, ...)
+{
+  return(object[[which.best(object)]])
+}
+
+#' @return The index of the object with the highest likelihood
+#' @rdname multistart
+#' @export
+which.best <- function(object, ...)
+{
+  UseMethod("which.best", object)
+}
+
+#' @rdname multistart
+#' @export
+which.best.default <- function(object, ...)
+{
+  llfunc <- function(object) {
+    ret <- try(logLik(object))
+    if (inherits(ret, "try-error")) return(NA)
+    else return(ret)
+  }
+  ll <- sapply(object, llfunc)
+  return(which.max(ll))
 }
