@@ -138,12 +138,19 @@ print.mhmkin <- function(x, ...) {
 
 #' @export
 convergence.mhmkin <- function(object, ...) {
-  all_summary_warnings <- character()
-
   if (inherits(object[[1]], "saem.mmkin")) {
     test_func <- function(fit) {
-      if (inherits(fit$so, "try-error")) return("E")
-      else return("OK")
+      if (inherits(fit$so, "try-error")) {
+        return("E")
+      } else {
+        if (!is.null(fit$FIM_failed)) {
+          return_values <- c("fixed effects" = "Fth",
+            "random effects and error model parameters" = "FO")
+          return(paste(return_values[fit$FIM_failed], collapse = ", "))
+        } else {
+          return("OK")
+        }
+      }
     }
   } else {
     stop("Only mhmkin objects containing saem.mmkin objects currently supported")
@@ -163,6 +170,9 @@ print.convergence.mhmkin <- function(x, ...) {
   print(x, quote = FALSE)
   cat("\n")
   if (any(x == "OK")) cat("OK: Fit terminated successfully\n")
+  if (any(x == "Fth")) cat("Fth: Could not invert FIM for fixed effects\n")
+  if (any(x == "FO")) cat("FO: Could not invert FIM for random effects and error model parameters\n")
+  if (any(x == "Fth, FO")) cat("Fth, FO: Could not invert FIM for fixed effects, nor for random effects and error model parameters\n")
   if (any(x == "E")) cat("E: Error\n")
 }
 

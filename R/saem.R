@@ -160,7 +160,7 @@ saem.mmkin <- function(object,
   if (!fit_failed) {
     if (any(is.na(f_saemix@results@se.fixed))) FIM_failed <- c(FIM_failed, "fixed effects")
     if (any(is.na(c(f_saemix@results@se.omega, f_saemix@results@se.respar)))) {
-      FIM_failed <- c(FIM_failed, "random effects and residual error parameters")
+      FIM_failed <- c(FIM_failed, "random effects and error model parameters")
     }
     if (!is.null(FIM_failed) & fail_with_errors) {
       stop("Could not invert FIM for ", paste(FIM_failed, collapse = " and "))
@@ -208,6 +208,7 @@ saem.mmkin <- function(object,
     so = f_saemix,
     call = call,
     time = fit_time,
+    FIM_failed = FIM_failed,
     mean_dp_start = attr(m_saemix, "mean_dp_start"),
     bparms.fixed = object[[1]]$bparms.fixed,
     data = return_data,

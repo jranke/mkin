@@ -106,12 +106,20 @@ illparms.mhmkin <- function(object, conf.level = 0.95, random = TRUE, errmod = T
   }
   result <- lapply(object,
     function(fit) {
-      if (check_failed(fit)) return("E")
-      ill <- illparms(fit, conf.level = conf.level, random = random, errmod = errmod)
-      if (length(ill) > 0) {
-        return(paste(ill, collapse = ", "))
+      if (check_failed(fit)) {
+        return("E")
       } else {
-        return("")
+        if (!is.null(fit$FIM_failed) &&
+          "random effects and error model parameters" %in% fit$FIM_failed) {
+          return("NA")
+        } else {
+          ill <- illparms(fit, conf.level = conf.level, random = random, errmod = errmod)
+          if (length(ill) > 0) {
+            return(paste(ill, collapse = ", "))
+          } else {
+            return("")
+          }
+        }
       }
     })
   result <- unlist(result)
