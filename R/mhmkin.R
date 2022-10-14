@@ -203,3 +203,26 @@ BIC.mhmkin <- function(object, ...) {
   dimnames(res) <- dimnames(object)
   return(res)
 }
+
+#' @export
+update.mhmkin <- function(object, ..., evaluate = TRUE) {
+  call <- attr(object, "call")
+
+  update_arguments <- match.call(expand.dots = FALSE)$...
+
+  if (length(update_arguments) > 0) {
+    update_arguments_in_call <- !is.na(match(names(update_arguments), names(call)))
+  }
+
+  for (a in names(update_arguments)[update_arguments_in_call]) {
+    call[[a]] <- update_arguments[[a]]
+  }
+
+  update_arguments_not_in_call <- !update_arguments_in_call
+  if(any(update_arguments_not_in_call)) {
+    call <- c(as.list(call), update_arguments[update_arguments_not_in_call])
+    call <- as.call(call)
+  }
+  if(evaluate) eval(call, parent.frame())
+  else call
+}

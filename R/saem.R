@@ -635,8 +635,8 @@ logLik.saem.mmkin <- function(object, ...) return(logLik(object$so))
 update.saem.mmkin <- function(object, ..., evaluate = TRUE) {
   call <- object$call
   # For some reason we get saem.mmkin in the call when using mhmkin
-  # so we need to fix this in order to avoid exporting saem.mmkin
-  # in addition to the S3 method
+  # so we need to fix this so we do not have to export saem.mmkin in
+  # addition to the S3 method
   call[[1]] <- saem
   update_arguments <- match.call(expand.dots = FALSE)$...
 
