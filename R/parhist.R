@@ -5,6 +5,7 @@
 #' or by their medians as proposed in the paper by Duchesne et al. (2021).
 #'
 #' @param object The [multistart] object
+#' @param llmin The minimum likelihood of objects to be shown
 #' @param scale By default, scale parameters using the best available fit.
 #' If 'median', parameters are scaled using the median parameters from all fits.
 #' @param main Title of the plot
@@ -17,7 +18,7 @@
 #' @seealso [multistart]
 #' @importFrom stats median
 #' @export
-parhist <- function(object, scale = c("best", "median"),
+parhist <- function(object, llmin = -Inf, scale = c("best", "median"),
   lpos = "bottomleft", main = "", ...)
 {
   oldpar <- par(no.readonly = TRUE)
@@ -27,6 +28,18 @@ parhist <- function(object, scale = c("best", "median"),
   orig_parms <- parms(orig)
   start_parms <- orig$mean_dp_start
   all_parms <- parms(object)
+
+  if (inherits(object, "multistart.saem.mmkin")) {
+    llfunc <- function(object) {
+      if (inherits(object$so, "try-error")) return(NA)
+      else return(logLik(object$so))
+    }
+  } else {
+    stop("parhist is only implemented for multistart.saem.mmkin objects")
+  }
+  ll <- sapply(object, llfunc)
+  selected <- which(ll > llmin)
+  selected_parms <- all_parms[selected, ]
 
   par(las = 1)
   if (orig$transformations == "mkin") {
@@ -45,23 +58,23 @@ parhist <- function(object, scale = c("best", "median"),
 
     names(orig_parms) <- c(degparm_names, names(orig_parms[-degparm_index]))
 
-    all_parms[, degparm_names_transformed] <-
-      t(apply(all_parms[, degparm_names_transformed], 1, backtransform_odeparms,
+    selected_parms[, degparm_names_transformed] <-
+      t(apply(selected_parms[, degparm_names_transformed], 1, backtransform_odeparms,
       orig$mmkin[[1]]$mkinmod,
       transform_rates = orig$mmkin[[1]]$transform_rates,
       transform_fractions = orig$mmkin[[1]]$transform_fractions))
-    colnames(all_parms)[1:length(degparm_names)] <- degparm_names
+    colnames(selected_parms)[1:length(degparm_names)] <- degparm_names
   }
 
   scale <- match.arg(scale)
   parm_scale <- switch(scale,
-    best = all_parms[which.best(object), ],
-    median = apply(all_parms, 2, median)
+    best = selected_parms[which.best(object[selected]), ],
+    median = apply(selected_parms, 2, median)
   )
 
   # Boxplots of all scaled parameters
-  all_scaled_parms <- t(apply(all_parms, 1, function(x) x / parm_scale))
-  boxplot(all_scaled_parms, log = "y", main = main, ,
+  selected_scaled_parms <- t(apply(selected_parms, 1, function(x) x / parm_scale))
+  boxplot(selected_scaled_parms, log = "y", main = main, ,
     ylab = "Normalised parameters", ...)
 
   # Show starting parameters
