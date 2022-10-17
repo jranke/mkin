@@ -207,6 +207,10 @@ BIC.mhmkin <- function(object, ...) {
 #' @export
 update.mhmkin <- function(object, ..., evaluate = TRUE) {
   call <- attr(object, "call")
+  # For some reason we get mhkin.list in call[[1]] when using mhmkin from the
+  # loaded package so we need to fix this so we do not have to export
+  # mhmkin.list in addition to the S3 method mhmkin
+  call[[1]] <- mhmkin
 
   update_arguments <- match.call(expand.dots = FALSE)$...
 

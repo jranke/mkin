@@ -101,6 +101,21 @@ test_that("Parent fits using saemix are correctly implemented", {
   rel_diff_2 <- (s_dfop_s2$confint_back[, "est."] - dfop_pop) / dfop_pop
   expect_true(all(rel_diff_2 < 0.2))
 
+  # We use constant error for SFORB because tc is overparameterised (b.1 is ill-defined in saem)
+  mmkin_sforb_2 <- mmkin("SFORB", ds_dfop, quiet = TRUE, error_model = "const", cores = n_cores)
+  sforb_saemix_1 <- saem(mmkin_sforb_2, quiet = TRUE,
+    no_random_effect = c("parent_free_0", "k_parent_free_bound"),
+    transformations = "saemix")
+  sforb_saemix_2 <- saem(mmkin_sforb_2, quiet = TRUE,
+    no_random_effect = c("parent_free_0", "log_k_parent_free_bound"),
+    transformations = "mkin")
+  expect_equal(
+    log(endpoints(dfop_saemix_1)$distimes[1:2]),
+    log(endpoints(sforb_saemix_1)$distimes[1:2]), tolerance = 0.01)
+  expect_equal(
+    log(endpoints(sforb_saemix_1)$distimes[1:2]),
+    log(endpoints(sforb_saemix_2)$distimes[1:2]), tolerance = 0.01)
+
   mmkin_hs_1 <- mmkin("HS", ds_hs, quiet = TRUE, error_model = "const", cores = n_cores)
   hs_saem_1 <- saem(mmkin_hs_1, quiet = TRUE)
   hs_saem_2 <- saem(mmkin_hs_1, quiet = TRUE, transformations = "mkin")

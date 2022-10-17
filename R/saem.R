@@ -313,7 +313,7 @@ saemix_model <- function(object, solution_type = "auto",
     # Parent only
     if (length(mkin_model$spec) == 1) {
       parent_type <- mkin_model$spec[[1]]$type
-      if (length(odeini_fixed) == 1) {
+      if (length(odeini_fixed) == 1 && !grepl("_bound$", names(odeini_fixed))) {
         if (transformations == "saemix") {
           stop("saemix transformations are not supported for parent fits with fixed initial parent value")
         }
@@ -344,6 +344,9 @@ saemix_model <- function(object, solution_type = "auto",
           }
         }
       } else {
+        if (length(odeini_fixed) == 2) {
+          stop("SFORB with fixed initial parent value is not supported")
+        }
         if (parent_type == "SFO") {
           if (transformations == "mkin") {
             model_function <- function(psi, id, xidep) {
@@ -384,6 +387,38 @@ saemix_model <- function(object, solution_type = "auto",
                 (1 - g) * exp(- psi[id, 3] * t))
             }
             transform.par = c(0, 1, 1, 3)
+          }
+        }
+        if (parent_type == "SFORB") {
+          if (transformations == "mkin") {
+            model_function <- function(psi, id, xidep) {
+              k_12 <- exp(psi[id, 3])
+              k_21 <- exp(psi[id, 4])
+              k_1output <- exp(psi[id, 2])
+              t <- xidep[, "time"]
+
+              sqrt_exp = sqrt(1/4 * (k_12 + k_21 + k_1output)^2 + k_12 * k_21 - (k_12 + k_1output) * k_21)
+              b1 = 0.5 * (k_12 + k_21 + k_1output) + sqrt_exp
+              b2 = 0.5 * (k_12 + k_21 + k_1output) - sqrt_exp
+
+              psi[id, 1] * (((k_12 + k_21 - b1)/(b2 - b1)) * exp(-b1 * t) +
+                ((k_12 + k_21 - b2)/(b1 - b2)) * exp(-b2 * t))
+            }
+          } else {
+            model_function <- function(psi, id, xidep) {
+              k_12 <- psi[id, 3]
+              k_21 <- psi[id, 4]
+              k_1output <- psi[id, 2]
+              t <- xidep[, "time"]
+
+              sqrt_exp = sqrt(1/4 * (k_12 + k_21 + k_1output)^2 + k_12 * k_21 - (k_12 + k_1output) * k_21)
+              b1 = 0.5 * (k_12 + k_21 + k_1output) + sqrt_exp
+              b2 = 0.5 * (k_12 + k_21 + k_1output) - sqrt_exp
+
+              psi[id, 1] * (((k_12 + k_21 - b1)/(b2 - b1)) * exp(-b1 * t) +
+                ((k_12 + k_21 - b2)/(b1 - b2)) * exp(-b2 * t))
+            }
+            transform.par = c(0, 1, 1, 1)
           }
         }
         if (parent_type == "HS") {

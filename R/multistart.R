@@ -71,6 +71,7 @@ multistart <- function(object, n = 50,
 #' @export
 multistart.saem.mmkin <- function(object, n = 50, cores = 1,
   cluster = NULL, ...) {
+  call <- match.call()
   if (n <= 1) stop("Please specify an n of at least 2")
 
   mmkin_parms <- parms(object$mmkin, errparms = FALSE,
@@ -90,6 +91,7 @@ multistart.saem.mmkin <- function(object, n = 50, cores = 1,
   }
   attr(res, "orig") <- object
   attr(res, "start_parms") <- start_parms
+  attr(res, "call") <- call
   class(res) <- c("multistart.saem.mmkin", "multistart")
   return(res)
 }
@@ -177,4 +179,31 @@ which.best.default <- function(object, ...)
   }
   ll <- sapply(object, llfunc)
   return(which.max(ll))
+}
+
+#' @export
+update.multistart <- function(object, ..., evaluate = TRUE) {
+  call <- attr(object, "call")
+  # For some reason we get multistart.saem.mmkin in call[[1]] when using multistart
+  # from the loaded package so we need to fix this so we do not have to export
+  # multistart.saem.mmkin
+  call[[1]] <- multistart
+
+  update_arguments <- match.call(expand.dots = FALSE)$...
+
+  if (length(update_arguments) > 0) {
+    update_arguments_in_call <- !is.na(match(names(update_arguments), names(call)))
+  }
+
+  for (a in names(update_arguments)[update_arguments_in_call]) {
+    call[[a]] <- update_arguments[[a]]
+  }
+
+  update_arguments_not_in_call <- !update_arguments_in_call
+  if(any(update_arguments_not_in_call)) {
+    call <- c(as.list(call), update_arguments[update_arguments_not_in_call])
+    call <- as.call(call)
+  }
+  if(evaluate) eval(call, parent.frame())
+  else call
 }
