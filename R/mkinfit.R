@@ -844,8 +844,13 @@ mkinfit <- function(mkinmod, observed,
       }
     }
 
+    dim_hessian <- length(c(degparms, errparms))
+
     fit$hessian <- try(numDeriv::hessian(cost_function, c(degparms, errparms), OLS = FALSE,
         update_data = FALSE), silent = TRUE)
+    if (inherits(fit$hessian, "try-error")) {
+      fit$hessian <- matrix(NA, nrow = dim_hessian, ncol = dim_hessian)
+    }
     dimnames(fit$hessian) <- list(names(c(degparms, errparms)),
       names(c(degparms, errparms)))
 
@@ -858,7 +863,9 @@ mkinfit <- function(mkinmod, observed,
 
     fit$hessian_notrans <- try(numDeriv::hessian(cost_function, c(bparms.optim, errparms),
         OLS = FALSE, trans = FALSE, update_data = FALSE), silent = TRUE)
-
+    if (inherits(fit$hessian_notrans, "try-error")) {
+      fit$hessian_notrans <- matrix(NA, nrow = dim_hessian, ncol = dim_hessian)
+    }
     dimnames(fit$hessian_notrans) <- list(names(c(bparms.optim, errparms)),
       names(c(bparms.optim, errparms)))
   })
