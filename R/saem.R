@@ -128,6 +128,8 @@ saem.mmkin <- function(object,
   conf.level = 0.6,
   solution_type = "auto",
   covariance.model = "auto",
+  covariates = NULL,
+  covariate_models = NULL,
   no_random_effect = NULL,
   nbiter.saemix = c(300, 100),
   control = list(displayProgress = FALSE, print = FALSE,
@@ -144,9 +146,11 @@ saem.mmkin <- function(object,
     solution_type = solution_type,
     transformations = transformations,
     covariance.model = covariance.model,
+    covariates = covariates,
+    covariate_models = covariate_models,
     no_random_effect = no_random_effect,
     ...)
-  d_saemix <- saemix_data(object, verbose = verbose)
+  d_saemix <- saemix_data(object, covariates = covariates, verbose = verbose)
 
   fit_failed <- FALSE
   FIM_failed <- NULL
@@ -268,6 +272,7 @@ print.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3), ...) {
 saemix_model <- function(object, solution_type = "auto",
   transformations = c("mkin", "saemix"), degparms_start = numeric(),
   covariance.model = "auto", no_random_effect = NULL,
+  covariates = NULL, covariate_models = NULL,
   test_log_parms = FALSE, conf.level = 0.6, verbose = FALSE, ...)
 {
   if (nrow(object) > 1) stop("Only row objects allowed")
@@ -612,8 +617,8 @@ saemix_model <- function(object, solution_type = "auto",
 
   degparms_psi0 <- degparms_optim
   degparms_psi0[names(degparms_start)] <- degparms_start
-  psi0_matrix <- matrix(degparms_psi0, nrow = 1)
-  colnames(psi0_matrix) <- names(degparms_psi0)
+  psi0_matrix <- matrix(degparms_psi0, nrow = 1,
+    dimnames = list("(Intercept)", names(degparms_psi0)))
 
   if (covariance.model[1] == "auto") {
     covariance_diagonal <- rep(1, length(degparms_optim))
@@ -624,6 +629,41 @@ saemix_model <- function(object, solution_type = "auto",
     covariance.model = diag(covariance_diagonal)
   }
 
+  if (is.null(covariate_models)) {
+    covariate.model <- matrix(nrow = 0, ncol = 0) # default in saemixModel()
+  } else {
+    degparms_dependent <- sapply(covariate_models, function(x) as.character(x[[2]]))
+    covariates_in_models = unique(unlist(lapply(
+      covariate_models, function(x)
+        colnames(attr(terms(x), "factors"))
+      )))
+    covariates_not_available <- setdiff(covariates_in_models, names(covariates))
+    if (length(covariates_not_available) > 0) {
+      stop("Covariate(s) ", paste(covariates_not_available, collapse = ", "),
+        " used in the covariate models not available in the covariate data")
+    }
+    psi0_matrix <- rbind(psi0_matrix,
+      matrix(0, nrow = length(covariates), ncol = ncol(psi0_matrix),
+        dimnames = list(names(covariates), colnames(psi0_matrix))))
+    covariate.model <- matrix(0, nrow = length(covariates),
+      ncol = ncol(psi0_matrix),
+      dimnames = list(
+        covariates = names(covariates),
+        degparms = colnames(psi0_matrix)))
+    if (transformations == "saemix") {
+      stop("Covariate models with saemix transformations currently not supported")
+    }
+    parms_trans <- as.data.frame(t(sapply(object, parms, transformed = TRUE)))
+    for (covariate_model in covariate_models) {
+      covariate_name <- as.character(covariate_model[[2]])
+      model_data <- cbind(parms_trans, covariates)
+      ini_model <- lm(covariate_model, data = model_data)
+      ini_coef <- coef(ini_model)
+      psi0_matrix[names(ini_coef), covariate_name] <- ini_coef
+      covariate.model[names(ini_coef)[-1], covariate_name] <- as.numeric(as.logical(ini_coef[-1]))
+    }
+  }
+
   res <- saemix::saemixModel(model_function,
     psi0 = psi0_matrix,
     "Mixed model generated from mmkin object",
@@ -631,6 +671,7 @@ saemix_model <- function(object, solution_type = "auto",
     error.model = error.model,
     verbose = verbose,
     covariance.model = covariance.model,
+    covariate.model = covariate.model,
     ...
   )
   attr(res, "mean_dp_start") <- degparms_optim
@@ -641,7 +682,7 @@ saemix_model <- function(object, solution_type = "auto",
 #' @importFrom rlang !!!
 #' @return An [saemix::SaemixData] object.
 #' @export
-saemix_data <- function(object, verbose = FALSE, ...) {
+saemix_data <- function(object, covariates = NULL, verbose = FALSE, ...) {
   if (nrow(object) > 1) stop("Only row objects allowed")
   ds_names <- colnames(object)
 
@@ -653,11 +694,19 @@ saemix_data <- function(object, verbose = FALSE, ...) {
     time = ds_saemix_all$time,
     value = ds_saemix_all$observed,
     stringsAsFactors = FALSE)
+  if (!is.null(covariates)) {
+    name.covariates <- names(covariates)
+    covariates$ds <- rownames(covariates)
+    ds_saemix <- merge(ds_saemix, covariates, sort = FALSE)
+  } else {
+    name.covariates <- character(0)
+  }
 
   res <- saemix::saemixData(ds_saemix,
     name.group = "ds",
     name.predictors = c("time", "name"),
     name.response = "value",
+    name.covariates = name.covariates,
     verbose = verbose,
     ...)
   return(res)
