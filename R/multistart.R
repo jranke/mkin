@@ -80,14 +80,18 @@ multistart.saem.mmkin <- function(object, n = 50, cores = 1,
     mmkin_parms, 1,
     function(x) stats::runif(n, min(x), max(x)))
 
+  fit_function <- function(x) {
+    ret <- update(object, degparms_start = start_parms[x, ], ...)
+    ret$call[[4]] <- str2lang(
+      paste0(capture.output(dput(start_parms[x, ])),
+        collapse = ""))
+    return(ret)
+  }
+
   if (is.null(cluster)) {
-    res <- parallel::mclapply(1:n, function (x) {
-      update(object, degparms_start = start_parms[x, ], ...)
-    }, mc.cores = cores)
+    res <- parallel::mclapply(1:n, fit_function, mc.cores = cores)
   } else {
-    res <- parallel::parLapply(cluster, 1:n, function(x) {
-      update(object, degparms_start = start_parms[x, ], ...)
-    })
+    res <- parallel::parLapply(cluster, 1:n, fit_function)
   }
   attr(res, "orig") <- object
   attr(res, "start_parms") <- start_parms
