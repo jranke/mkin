@@ -1,7 +1,8 @@
 #' Anova method for saem.mmkin objects
 #'
 #' Generate an anova object. The method to calculate the BIC is that from
-#' the saemix package.
+#' the saemix package. As in other prominent anova methods, models are sorted
+## by likelihood, and the test is relative to the model on the previous line.
 #'
 #' @param object An [saem.mmkin] object
 #' @param ...   further such objects
