@@ -6,6 +6,7 @@
 \usage{
 parhist(
   object,
+  llmin = -Inf,
   scale = c("best", "median"),
   lpos = "bottomleft",
   main = "",
@@ -14,6 +15,8 @@ parhist(
 }
 \arguments{
 \item{object}{The \link{multistart} object}
+
+\item{llmin}{The minimum likelihood of objects to be shown}
 
 \item{scale}{By default, scale parameters using the best available fit.
 If 'median', parameters are scaled using the median parameters from all fits.}

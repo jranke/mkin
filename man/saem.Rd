@@ -19,6 +19,8 @@ saem(object, ...)
   conf.level = 0.6,
   solution_type = "auto",
   covariance.model = "auto",
+  covariates = NULL,
+  covariate_models = NULL,
   no_random_effect = NULL,
   nbiter.saemix = c(300, 100),
   control = list(displayProgress = FALSE, print = FALSE, nbiter.saemix = nbiter.saemix,
@@ -38,13 +40,15 @@ saemix_model(
   degparms_start = numeric(),
   covariance.model = "auto",
   no_random_effect = NULL,
+  covariates = NULL,
+  covariate_models = NULL,
   test_log_parms = FALSE,
   conf.level = 0.6,
   verbose = FALSE,
   ...
 )
 
-saemix_data(object, verbose = FALSE, ...)
+saemix_data(object, covariates = NULL, verbose = FALSE, ...)
 
 \method{parms}{saem.mmkin}(object, ci = FALSE, ...)
 }

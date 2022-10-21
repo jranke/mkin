@@ -64,10 +64,13 @@ utils::globalVariables(c("predicted", "std"))
 #' f_saem_sfo <- saem(f_mmkin_parent["SFO", ])
 #' f_saem_fomc <- saem(f_mmkin_parent["FOMC", ])
 #' f_saem_dfop <- saem(f_mmkin_parent["DFOP", ])
+#' anova(f_saem_sfo, f_saem_fomc, f_saem_dfop)
+#' anova(f_saem_sfo, f_saem_dfop, test = TRUE)
 #' illparms(f_saem_dfop)
-#' update(f_saem_dfop, covariance.model = diag(c(1, 1, 1, 0)))
-#' AIC(f_saem_dfop)
+#' f_saem_dfop_red <- update(f_saem_dfop, no_random_effect = "g_qlogis")
+#' anova(f_saem_dfop, f_saem_dfop_red, test = TRUE)
 #'
+#' anova(f_saem_sfo, f_saem_fomc, f_saem_dfop)
 #' # The returned saem.mmkin object contains an SaemixObject, therefore we can use
 #' # functions from saemix
 #' library(saemix)
@@ -79,7 +82,7 @@ utils::globalVariables(c("predicted", "std"))
 #'
 #' f_mmkin_parent_tc <- update(f_mmkin_parent, error_model = "tc")
 #' f_saem_fomc_tc <- saem(f_mmkin_parent_tc["FOMC", ])
-#' compare.saemix(f_saem_fomc$so, f_saem_fomc_tc$so)
+#' anova(f_saem_fomc, f_saem_fomc_tc, test = TRUE)
 #'
 #' sfo_sfo <- mkinmod(parent = mkinsub("SFO", "A1"),
 #'   A1 = mkinsub("SFO"))
@@ -712,8 +715,14 @@ saemix_data <- function(object, covariates = NULL, verbose = FALSE, ...) {
   return(res)
 }
 
+#' logLik method for saem.mmkin objects
+#'
+#' @param method Passed to [saemix::logLik.SaemixObject]
 #' @export
-logLik.saem.mmkin <- function(object, ...) return(logLik(object$so))
+logLik.saem.mmkin <- function(object, ..., method = c("lin", "is", "gq")) {
+  method <- match.arg(method)
+  return(logLik(object$so, method = method))
+}
 
 #' @export
 update.saem.mmkin <- function(object, ..., evaluate = TRUE) {
