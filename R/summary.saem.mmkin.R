@@ -87,18 +87,19 @@ summary.saem.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes =
   mod_vars <- names(object$mkinmod$diffs)
 
   pnames <- names(object$mean_dp_start)
-  np <- length(pnames)
+  names_fixed_effects <- object$so@results@name.fixed
+  n_fixed <- length(names_fixed_effects)
 
   conf.int <- object$so@results@conf.int
   rownames(conf.int) <- conf.int$name
-  confint_trans <- as.matrix(conf.int[pnames, c("estimate", "lower", "upper")])
+  confint_trans <- as.matrix(parms(object, ci = TRUE))
   colnames(confint_trans)[1] <- "est."
 
   # In case objects were produced by earlier versions of saem
   if (is.null(object$transformations)) object$transformations <- "mkin"
 
   if (object$transformations == "mkin") {
-    bp <- backtransform_odeparms(confint_trans[, "est."], object$mkinmod,
+    bp <- backtransform_odeparms(confint_trans[pnames, "est."], object$mkinmod,
       object$transform_rates, object$transform_fractions)
     bpnames <- names(bp)
 
@@ -135,12 +136,12 @@ summary.saem.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes =
   }
 
   #  Correlation of fixed effects (inspired by summary.nlme)
-  varFix <- vcov(object$so)[1:np, 1:np]
+  varFix <- vcov(object$so)[1:n_fixed, 1:n_fixed]
   stdFix <- sqrt(diag(varFix))
   object$corFixed <- array(
     t(varFix/stdFix)/stdFix,
     dim(varFix),
-    list(pnames, pnames))
+    list(names_fixed_effects, names_fixed_effects))
 
   # Random effects
   sdnames <- intersect(rownames(conf.int), paste0("SD.", pnames))
@@ -151,7 +152,6 @@ summary.saem.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes =
   enames <- if (object$err_mod == "const") "a.1" else c("a.1", "b.1")
   confint_errmod <- as.matrix(conf.int[enames, c("estimate", "lower", "upper")])
   colnames(confint_errmod)[1] <- "est."
-
 
   object$confint_trans <- confint_trans
   object$confint_ranef <- confint_ranef
@@ -210,7 +210,6 @@ print.summary.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3)
   cat("Using", paste(x$so@options$nbiter.saemix, collapse = ", "),
     "iterations and", x$so@options$nb.chains, "chains\n")
 
-  cat("\nVariance model: ")
   cat(switch(x$err_mod,
     const = "Constant variance",
     obs = "Variance unique to each observed variable",
