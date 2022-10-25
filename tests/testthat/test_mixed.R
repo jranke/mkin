@@ -24,7 +24,6 @@ test_that("nlme results are reproducible to some degree", {
   test_summary$date.summary <- "Dummy date for testing"
   test_summary$time <- c(elapsed = "test time 0")
 
-  print(test_summary, digits = 1)
   expect_known_output(print(test_summary, digits = 1), "summary_dfop_nlme_1.txt")
 
   # The biphasic example data illustrate that DFOP parameters are difficult to

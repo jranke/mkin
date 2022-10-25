@@ -74,17 +74,34 @@ multistart.saem.mmkin <- function(object, n = 50, cores = 1,
   call <- match.call()
   if (n <= 1) stop("Please specify an n of at least 2")
 
-  mmkin_parms <- parms(object$mmkin, errparms = FALSE,
+  mmkin_object <- object$mmkin
+
+  mmkin_parms <- parms(mmkin_object, errparms = FALSE,
     transformed = object$transformations == "mkin")
   start_parms <- apply(
     mmkin_parms, 1,
     function(x) stats::runif(n, min(x), max(x)))
 
+  saem_call <- object$call
+  saem_call[[1]] <- saem
+  saem_call[[2]] <- mmkin_object
+  i_startparms <- which(names(saem_call) == "degparms_start")
+
   fit_function <- function(x) {
-    ret <- update(object, degparms_start = start_parms[x, ], ...)
-    ret$call[[4]] <- str2lang(
+
+    new_startparms <- str2lang(
       paste0(capture.output(dput(start_parms[x, ])),
         collapse = ""))
+
+    if (length(i_startparms) == 0) {
+      saem_call <- c(as.list(saem_call), degparms_start = new_startparms)
+      saem_call <- as.call(saem_call)
+    } else {
+      saem_call[i_startparms] <- new_startparms
+    }
+
+    ret <- eval(saem_call)
+
     return(ret)
   }
 

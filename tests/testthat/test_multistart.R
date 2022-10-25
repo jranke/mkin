@@ -1,4 +1,6 @@
-test_that("multistart works for saem.mmix models", {
+context("Multistart method for saem.mmkin models")
+
+test_that("multistart works for saem.mmkin models", {
   saem_biphasic_m_multi <- multistart(saem_biphasic_m, n = 8,
     cores = n_cores)
   expect_known_output(print(saem_biphasic_m_multi),

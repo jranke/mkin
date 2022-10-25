@@ -140,7 +140,7 @@ test_that("We can also use mkin solution methods for saem", {
   expect_error(saem(mmkin_dfop_1, quiet = TRUE, transformations = "saemix", solution_type = "analytical"),
     "saemix transformations is only supported if an analytical solution is implemented"
   )
-  skip_on_cran() # This still takes almost 2.5 minutes although we do not solve ODEs
+  skip("This still takes almost 2.5 minutes although we do not solve ODEs")
   dfop_saemix_3 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "mkin",
     solution_type = "analytical", no_random_effect = "parent_0")
   distimes_dfop <- endpoints(dfop_saemix_1)$distimes
