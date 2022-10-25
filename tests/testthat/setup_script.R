@@ -14,25 +14,12 @@ if (Sys.getenv("TRAVIS") != "") n_cores = 2
 # On Windows we would need to make a cluster first
 if (Sys.info()["sysname"] == "Windows") n_cores = 1
 
-# We set up some models and fits with nls for comparisons
-SFO_trans <- function(t, parent_0, log_k_parent_sink) {
-  parent_0 * exp(- exp(log_k_parent_sink) * t)
-}
-SFO_notrans <- function(t, parent_0, k_parent_sink) {
-  parent_0 * exp(- k_parent_sink * t)
-}
-f_1_nls_trans <- nls(value ~ SFO_trans(time, parent_0, log_k_parent_sink),
-  data = FOCUS_2006_A,
-  start = list(parent_0 = 100, log_k_parent_sink = log(0.1)))
-f_1_nls_notrans <- nls(value ~ SFO_notrans(time, parent_0, k_parent_sink),
-  data = FOCUS_2006_A,
-  start = list(parent_0 = 100, k_parent_sink = 0.1))
-
+# Very simple example fits
 f_1_mkin_trans <- mkinfit("SFO", FOCUS_2006_A, quiet = TRUE)
 f_1_mkin_notrans <- mkinfit("SFO", FOCUS_2006_A, quiet = TRUE,
   transform_rates = FALSE)
 
-# mmkin object of parent fits for tests
+# mmkin object of parent fits
 models <- c("SFO", "FOMC", "DFOP", "HS")
 fits <- suppressWarnings( # FOCUS A FOMC was, it seems, in testthat output
   mmkin(models,
@@ -72,9 +59,8 @@ DFOP_par_c <- synthetic_data_for_UBA_2014[[12]]$data
 
 f_2_mkin <- mkinfit("DFOP", DFOP_par_c, quiet = TRUE)
 f_2_nls <- nls(value ~ SSbiexp(time, A1, lrc1, A2, lrc2), data = subset(DFOP_par_c, name == "parent"))
-f_2_anova <- lm(value ~ as.factor(time), data = subset(DFOP_par_c, name == "parent"))
 
-# Two metabolites
+# mkinfit with two metabolites
 m_synth_SFO_lin <- mkinmod(
   parent = mkinsub("SFO", "M1"),
   M1 = mkinsub("SFO", "M2"),
@@ -137,7 +123,7 @@ set.seed(123456)
 ds_dfop <- lapply(1:n, function(i) {
   ds_mean <- mkinpredict(DFOP, dfop_parms[i, ],
     c(parent = dfop_pop$parent_0), sampling_times)
-  add_err(ds_mean, const, n = 1)[[1]]
+  add_err(ds_mean, tc, n = 1)[[1]]
 })
 
 set.seed(123456)
@@ -184,20 +170,21 @@ ds_biphasic <- lapply(ds_biphasic_mean, function(ds) {
 
 # Mixed model fits
 mmkin_sfo_1 <- mmkin("SFO", ds_sfo, quiet = TRUE, error_model = "tc", cores = n_cores)
-mmkin_dfop_1 <- mmkin("DFOP", ds_dfop, quiet = TRUE, cores = n_cores)
+mmkin_dfop_1 <- mmkin("DFOP", ds_dfop, quiet = TRUE, cores = n_cores,
+  error_model = "tc")
+
 mmkin_biphasic <- mmkin(list("DFOP-SFO" = DFOP_SFO), ds_biphasic, quiet = TRUE, cores = n_cores,
   control = list(eval.max = 500, iter.max = 400),
   error_model = "tc")
 
 # nlme
-dfop_nlme_1 <- nlme(mmkin_dfop_1)
+dfop_nlme_1 <- suppressWarnings(nlme(mmkin_dfop_1))
 nlme_biphasic <- suppressWarnings(nlme(mmkin_biphasic))
 
 # saemix
 sfo_saem_1 <- saem(mmkin_sfo_1, quiet = TRUE, transformations = "saemix")
-
-dfop_saemix_1 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "mkin")
-dfop_saemix_2 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "saemix")
+dfop_saemix_1 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "mkin",
+  no_random_effect = "parent_0")
 
 saem_biphasic_m <- saem(mmkin_biphasic, transformations = "mkin", quiet = TRUE)
 saem_biphasic_s <- saem(mmkin_biphasic, transformations = "saemix", quiet = TRUE)

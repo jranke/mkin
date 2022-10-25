@@ -5,6 +5,7 @@ test_that("Parent fits using saemix are correctly implemented", {
   skip_on_cran()
   expect_error(saem(fits), "Only row objects")
 
+  # SFO
   # mmkin_sfo_1 was generated in the setup script
   # We did not introduce variance of parent_0 in the data generation
   # This is correctly detected
@@ -53,9 +54,16 @@ test_that("Parent fits using saemix are correctly implemented", {
   expect_equal(round(s_sfo_nlme_1$confint_back["k_parent", "est."], 3),
     round(s_sfo_saem_1$confint_back["k_parent", "est."], 3))
 
+  # Compare fits
+  expect_known_output(anova(sfo_saem_1, sfo_saem_1_reduced,
+    sfo_saem_1_mkin, sfo_saem_1_reduced_mkin, test = TRUE),
+    file = "anova_sfo_saem.txt"
+  )
+
+  # FOMC
   mmkin_fomc_1 <- mmkin("FOMC", ds_fomc, quiet = TRUE, error_model = "tc", cores = n_cores)
-  fomc_saem_1 <- saem(mmkin_fomc_1, quiet = TRUE, transformations = "saemix")
-  fomc_saem_2 <- saem(mmkin_fomc_1, quiet = TRUE, transformations = "mkin")
+  fomc_saem_1 <- saem(mmkin_fomc_1, quiet = TRUE, transformations = "saemix", no_random_effect = "parent_0")
+  fomc_saem_2 <- update(fomc_saem_1, transformations = "mkin")
   ci_fomc_s1 <- summary(fomc_saem_1)$confint_back
 
   fomc_pop <- as.numeric(fomc_pop)
@@ -70,45 +78,39 @@ test_that("Parent fits using saemix are correctly implemented", {
   expect_true(all(ci_fomc_s2[, "lower"] < fomc_pop[2:3]))
   expect_true(all(ci_fomc_s2[, "upper"] > fomc_pop[2:3]))
 
+  # DFOP
+  dfop_saemix_2 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "saemix",
+    no_random_effect = "parent_0")
+
   s_dfop_s1 <- summary(dfop_saemix_1)
   s_dfop_s2 <- summary(dfop_saemix_2)
   s_dfop_n <- summary(dfop_nlme_1)
 
   dfop_pop <- as.numeric(dfop_pop)
-  expect_true(all(s_dfop_s1$confint_back[, "lower"] < dfop_pop))
-  expect_true(all(s_dfop_s1$confint_back[, "upper"] > dfop_pop))
+
+  # When using DFOP with mkin transformations, k1 and k2 are sometimes swapped
+  swap_k1_k2 <- function(p) c(p[1], p[3], p[2], 1 - p[4])
+  expect_true(all(s_dfop_s1$confint_back[, "lower"] < swap_k1_k2(dfop_pop)))
+  expect_true(all(s_dfop_s1$confint_back[, "upper"] > swap_k1_k2(dfop_pop)))
   expect_true(all(s_dfop_s2$confint_back[, "lower"] < dfop_pop))
   expect_true(all(s_dfop_s2$confint_back[, "upper"] > dfop_pop))
 
-  dfop_mmkin_means_trans_tested <- mean_degparms(mmkin_dfop_1, test_log_parms = TRUE)
-  dfop_mmkin_means_trans <- apply(parms(mmkin_dfop_1, transformed = TRUE), 1, mean)
-
-  dfop_mmkin_means_tested <- backtransform_odeparms(dfop_mmkin_means_trans_tested, mmkin_dfop_1$mkinmod)
-  dfop_mmkin_means <- backtransform_odeparms(dfop_mmkin_means_trans, mmkin_dfop_1$mkinmod)
-
-  # We get < 20% deviations for parent_0 and k1 by averaging the transformed parameters
-  # If we average only parameters passing the t-test, the deviation for k2 is also < 20%
-  rel_diff_mmkin <- (dfop_mmkin_means - dfop_pop) / dfop_pop
-  rel_diff_mmkin_tested <- (dfop_mmkin_means_tested - dfop_pop) / dfop_pop
-  expect_true(all(rel_diff_mmkin[c("parent_0", "k1")] < 0.20))
-  expect_true(all(rel_diff_mmkin_tested[c("parent_0", "k1", "k2")] < 0.20))
-
-  # We get < 20% deviations with transformations made in mkin
-  rel_diff_1 <- (s_dfop_s1$confint_back[, "est."] - dfop_pop) / dfop_pop
+  # We get < 20% deviations with transformations made in mkin (need to swap k1 and k2)
+  rel_diff_1 <- (swap_k1_k2(s_dfop_s1$confint_back[, "est."]) - dfop_pop) / dfop_pop
   expect_true(all(rel_diff_1 < 0.20))
 
   # We get < 20% deviations with transformations made in saemix
   rel_diff_2 <- (s_dfop_s2$confint_back[, "est."] - dfop_pop) / dfop_pop
   expect_true(all(rel_diff_2 < 0.2))
 
-  # We use constant error for SFORB because tc is overparameterised (b.1 is ill-defined in saem)
-  mmkin_sforb_2 <- mmkin("SFORB", ds_dfop, quiet = TRUE, error_model = "const", cores = n_cores)
-  sforb_saemix_1 <- saem(mmkin_sforb_2, quiet = TRUE,
-    no_random_effect = c("parent_free_0", "k_parent_free_bound"),
-    transformations = "saemix")
-  sforb_saemix_2 <- saem(mmkin_sforb_2, quiet = TRUE,
-    no_random_effect = c("parent_free_0", "log_k_parent_free_bound"),
+  # SFORB
+  mmkin_sforb_1 <- mmkin("SFORB", ds_dfop, quiet = TRUE, cores = n_cores)
+  sforb_saemix_1 <- saem(mmkin_sforb_1, quiet = TRUE,
+    no_random_effect = c("parent_free_0"),
     transformations = "mkin")
+  sforb_saemix_2 <- saem(mmkin_sforb_1, quiet = TRUE,
+    no_random_effect = c("parent_free_0"),
+    transformations = "saemix")
   expect_equal(
     log(endpoints(dfop_saemix_1)$distimes[1:2]),
     log(endpoints(sforb_saemix_1)$distimes[1:2]), tolerance = 0.03)
@@ -140,7 +142,7 @@ test_that("We can also use mkin solution methods for saem", {
   )
   skip_on_cran() # This still takes almost 2.5 minutes although we do not solve ODEs
   dfop_saemix_3 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "mkin",
-    solution_type = "analytical")
+    solution_type = "analytical", no_random_effect = "parent_0")
   distimes_dfop <- endpoints(dfop_saemix_1)$distimes
   distimes_dfop_analytical <- endpoints(dfop_saemix_3)$distimes
   rel_diff <- abs(distimes_dfop_analytical - distimes_dfop) / distimes_dfop

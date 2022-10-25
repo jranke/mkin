@@ -8,6 +8,7 @@ test_that("The lack-of-fit test works and can be reproduced using nls", {
 
   # This code is a slightly modified version of that given in Ritz and Streibig
   # (2008) Nonlinear Regression using R, p. 64
+  f_2_anova <- lm(value ~ as.factor(time), data = subset(DFOP_par_c, name == "parent"))
   Q <- as.numeric(- 2 * (logLik(f_2_nls) -  logLik(f_2_anova)))
   df.Q <- df.residual(f_2_nls) - df.residual(f_2_anova)
   p_nls <- 1 - pchisq(Q, df.Q)

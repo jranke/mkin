@@ -1,5 +1,19 @@
 context("Confidence intervals and p-values")
 
+# We set up some models and fits with nls for comparisons
+SFO_trans <- function(t, parent_0, log_k_parent_sink) {
+  parent_0 * exp(- exp(log_k_parent_sink) * t)
+}
+SFO_notrans <- function(t, parent_0, k_parent_sink) {
+  parent_0 * exp(- k_parent_sink * t)
+}
+f_1_nls_trans <- nls(value ~ SFO_trans(time, parent_0, log_k_parent_sink),
+  data = FOCUS_2006_A,
+  start = list(parent_0 = 100, log_k_parent_sink = log(0.1)))
+f_1_nls_notrans <- nls(value ~ SFO_notrans(time, parent_0, k_parent_sink),
+  data = FOCUS_2006_A,
+  start = list(parent_0 = 100, k_parent_sink = 0.1))
+
 test_that("The confint method 'quadratic' is consistent with the summary", {
   expect_equivalent(
     confint(fit_nw_1, parm = "parent_0", method = "quadratic"),
