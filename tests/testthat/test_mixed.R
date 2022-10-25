@@ -1,5 +1,11 @@
 context("Nonlinear mixed-effects models")
 
+# Round error model parameters as they are not rounded in print methods
+dfop_nlme_1$modelStruct$varStruct$const <-
+  signif(dfop_nlme_1$modelStruct$varStruct$const, 3)
+dfop_nlme_1$modelStruct$varStruct$prop <-
+  signif(dfop_nlme_1$modelStruct$varStruct$prop, 4)
+
 test_that("Print methods work", {
   expect_known_output(print(fits[, 2:3], digits = 2), "print_mmkin_parent.txt")
   expect_known_output(print(mixed(mmkin_sfo_1), digits = 2), "print_mmkin_sfo_1_mixed.txt")
@@ -10,11 +16,6 @@ test_that("Print methods work", {
 
 test_that("nlme results are reproducible to some degree", {
 
-  # Round error model parameters as they are not rounded in the summary
-  dfop_nlme_1$modelStruct$varStruct$const <-
-    signif(dfop_nlme_1$modelStruct$varStruct$const, 3)
-  dfop_nlme_1$modelStruct$varStruct$prop <-
-    signif(dfop_nlme_1$modelStruct$varStruct$prop, 4)
   test_summary <- summary(dfop_nlme_1)
   test_summary$nlmeversion <- "Dummy 0.0 for testing"
   test_summary$mkinversion <- "Dummy 0.0 for testing"
