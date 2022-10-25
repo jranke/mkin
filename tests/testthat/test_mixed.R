@@ -12,7 +12,7 @@ test_that("nlme results are reproducible to some degree", {
 
   # Round error model parameters as they are not rounded in the summary
   dfop_nlme_1$modelStruct$varStruct$const <-
-    signif(dfop_nlme_1$modelStruct$varStruct$const, 4)
+    signif(dfop_nlme_1$modelStruct$varStruct$const, 3)
   dfop_nlme_1$modelStruct$varStruct$prop <-
     signif(dfop_nlme_1$modelStruct$varStruct$prop, 4)
   test_summary <- summary(dfop_nlme_1)
