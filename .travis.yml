@@ -12,6 +12,7 @@ jobs:
 env:
   global:
     - USE_BSPM="true"
+    - NOT_CRAN="true"
 
 before_install:
   - curl -OLs https://eddelbuettel.github.io/r-ci/run.sh
@@ -19,7 +20,7 @@ before_install:
   - ./run.sh bootstrap
 
 install:
-  - ./run.sh install_r nlme covr
+  - ./run.sh install_r nlme
   - ./run.sh install_all
   - ./run.sh install_github jranke/saemixextension@installable_dev_version
 
@@ -30,7 +31,7 @@ after_failure:
   - ./run.sh dump_logs
 
 after_success:
-  - travis_wait NOT_CRAN=true ./run.sh coverage
+  - travis_wait ./run.sh coverage
 
 notifications:
   email:
