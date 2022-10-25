@@ -7,6 +7,10 @@
 \method{logLik}{saem.mmkin}(object, ..., method = c("lin", "is", "gq"))
 }
 \arguments{
+\item{object}{The fitted \link{saem.mmkin} object}
+
+\item{\dots}{Passed to \link[saemix:logLik]{saemix::logLik.SaemixObject}}
+
 \item{method}{Passed to \link[saemix:logLik]{saemix::logLik.SaemixObject}}
 }
 \description{

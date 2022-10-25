@@ -723,6 +723,7 @@ saemix_data <- function(object, covariates = NULL, verbose = FALSE, ...) {
 #' logLik method for saem.mmkin objects
 #'
 #' @param object The fitted [saem.mmkin] object
+#' @param \dots Passed to [saemix::logLik.SaemixObject]
 #' @param method Passed to [saemix::logLik.SaemixObject]
 #' @export
 logLik.saem.mmkin <- function(object, ..., method = c("lin", "is", "gq")) {

@@ -31,5 +31,6 @@ only be done for nested models.}
 an "anova" data frame; the traditional (S3) result of anova()
 }
 \description{
-Anova method for saem.mmkin objects
+Generate an anova object. The method to calculate the BIC is that from
+the saemix package. As in other prominent anova methods, models are sorted
 }

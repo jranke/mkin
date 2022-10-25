@@ -13,7 +13,9 @@
 #' the alternative models are tested against the first model. Should
 #' only be done for nested models.
 #' @param model.names Optional character vector of model names
-#' @importFrom stats anova logLik update
+#' @importFrom stats anova logLik update pchisq terms
+#' @importFrom methods is
+#' @importFrom utils capture.output
 #' @export
 #' @return an "anova" data frame; the traditional (S3) result of anova()
 anova.saem.mmkin <- function(object, ...,

@@ -132,7 +132,7 @@ summary.saem.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes =
       }
     }
   } else {
-    confint_back <- confint_trans
+    confint_back <- confint_trans[names_fixed_effects, ]
   }
 
   #  Correlation of fixed effects (inspired by summary.nlme)
@@ -210,6 +210,7 @@ print.summary.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3)
   cat("Using", paste(x$so@options$nbiter.saemix, collapse = ", "),
     "iterations and", x$so@options$nb.chains, "chains\n")
 
+  cat("\nVariance model: ")
   cat(switch(x$err_mod,
     const = "Constant variance",
     obs = "Variance unique to each observed variable",
