@@ -10,6 +10,7 @@ test_that("Print methods work", {
 
 test_that("nlme results are reproducible to some degree", {
 
+  # Round error model parameters as they are not rounded in the summary
   dfop_nlme_1$modelStruct$varStruct$const <-
     signif(dfop_nlme_1$modelStruct$varStruct$const, 4)
   dfop_nlme_1$modelStruct$varStruct$prop <-
