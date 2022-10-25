@@ -111,7 +111,7 @@ test_that("Parent fits using saemix are correctly implemented", {
     transformations = "mkin")
   expect_equal(
     log(endpoints(dfop_saemix_1)$distimes[1:2]),
-    log(endpoints(sforb_saemix_1)$distimes[1:2]), tolerance = 0.01)
+    log(endpoints(sforb_saemix_1)$distimes[1:2]), tolerance = 0.03)
   expect_equal(
     log(endpoints(sforb_saemix_1)$distimes[1:2]),
     log(endpoints(sforb_saemix_2)$distimes[1:2]), tolerance = 0.01)

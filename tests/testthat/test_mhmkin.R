@@ -9,10 +9,6 @@ test_that("Multiple hierarchical kinetic models can be fitted and diagnosed", {
   fits_synth_tc <- suppressWarnings(
     update(fits_synth_const, error_model = "tc"))
 
-  expect_known_output(
-    print(fits_synth_const),
-    "print_fits_synth_const.txt")
-
   hfits <- mhmkin(list(fits_synth_const, fits_synth_tc))
 
   expect_known_output(
@@ -40,4 +36,13 @@ test_that("Multiple hierarchical kinetic models can be fitted and diagnosed", {
 
   expect_known_output(print(test_summary, digits = 1),
     "summary_hfit_sfo_tc.txt")
+
+  # It depends on the platform exactly which of the 
+  # SFO datasets fail to converge with FOMC
+  skip_on_travis()
+
+  expect_known_output(
+    print(fits_synth_const),
+    "print_fits_synth_const.txt")
+
 })
