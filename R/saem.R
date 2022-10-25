@@ -15,41 +15,46 @@ utils::globalVariables(c("predicted", "std"))
 #'
 #' @importFrom utils packageVersion
 #' @param object An [mmkin] row object containing several fits of the same
-#'   [mkinmod] model to different datasets
+#' [mkinmod] model to different datasets
 #' @param verbose Should we print information about created objects of
-#'   type [saemix::SaemixModel] and [saemix::SaemixData]?
+#' type [saemix::SaemixModel] and [saemix::SaemixData]?
 #' @param transformations Per default, all parameter transformations are done
-#'   in mkin. If this argument is set to 'saemix', parameter transformations
-#'   are done in 'saemix' for the supported cases, i.e. (as of version 1.1.2)
-#'   SFO, FOMC, DFOP and HS without fixing `parent_0`, and SFO or DFOP with
-#'   one SFO metabolite.
+#' in mkin. If this argument is set to 'saemix', parameter transformations
+#' are done in 'saemix' for the supported cases, i.e. (as of version 1.1.2)
+#' SFO, FOMC, DFOP and HS without fixing `parent_0`, and SFO or DFOP with
+#' one SFO metabolite.
 #' @param degparms_start Parameter values given as a named numeric vector will
-#'   be used to override the starting values obtained from the 'mmkin' object.
+#' be used to override the starting values obtained from the 'mmkin' object.
 #' @param test_log_parms If TRUE, an attempt is made to use more robust starting
-#'   values for population parameters fitted as log parameters in mkin (like
-#'   rate constants) by only considering rate constants that pass the t-test
-#'   when calculating mean degradation parameters using [mean_degparms].
+#' values for population parameters fitted as log parameters in mkin (like
+#' rate constants) by only considering rate constants that pass the t-test
+#' when calculating mean degradation parameters using [mean_degparms].
 #' @param conf.level Possibility to adjust the required confidence level
-#'   for parameter that are tested if requested by 'test_log_parms'.
+#' for parameter that are tested if requested by 'test_log_parms'.
 #' @param solution_type Possibility to specify the solution type in case the
-#'   automatic choice is not desired
+#' automatic choice is not desired
 #' @param no_random_effect Character vector of degradation parameters for
-#'   which there should be no variability over the groups. Only used
-#'   if the covariance model is not explicitly specified.
+#' which there should be no variability over the groups. Only used
+#' if the covariance model is not explicitly specified.
 #' @param covariance.model Will be passed to [saemix::SaemixModel()]. Per
-#'   default, uncorrelated random effects are specified for all degradation
-#'   parameters.
+#' default, uncorrelated random effects are specified for all degradation
+#' parameters.
+#' @param covariates A data frame with covariate data for use in
+#' 'covariate_models', with dataset names as row names.
+#' @param covariate_models A list containing linear model formulas with one explanatory
+#' variable, i.e. of the type 'parameter ~ covariate'. Covariates must be available
+#' in the 'covariates' data frame.
 #' @param fail_with_errors Should a failure to compute standard errors
-#'   from the inverse of the Fisher Information Matrix be a failure?
+#' from the inverse of the Fisher Information Matrix be a failure?
 #' @param quiet Should we suppress the messages saemix prints at the beginning
-#'   and the end of the optimisation process?
+#' and the end of the optimisation process?
 #' @param nbiter.saemix Convenience option to increase the number of
-#'   iterations
+#' iterations
 #' @param control Passed to [saemix::saemix].
 #' @param \dots Further parameters passed to [saemix::saemixModel].
 #' @return An S3 object of class 'saem.mmkin', containing the fitted
-#'   [saemix::SaemixObject] as a list component named 'so'. The
-#'   object also inherits from 'mixed.mmkin'.
+#' [saemix::SaemixObject] as a list component named 'so'. The
+#' object also inherits from 'mixed.mmkin'.
 #' @seealso [summary.saem.mmkin] [plot.mixed.mmkin]
 #' @examples
 #' \dontrun{
@@ -717,6 +722,7 @@ saemix_data <- function(object, covariates = NULL, verbose = FALSE, ...) {
 
 #' logLik method for saem.mmkin objects
 #'
+#' @param object The fitted [saem.mmkin] object
 #' @param method Passed to [saemix::logLik.SaemixObject]
 #' @export
 logLik.saem.mmkin <- function(object, ..., method = c("lin", "is", "gq")) {
