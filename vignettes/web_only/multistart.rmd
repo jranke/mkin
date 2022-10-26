@@ -1,7 +1,7 @@
 ---
 title: Short demo of the multistart method
 author: Johannes Ranke
-date: Last change 19 September 2022 (rebuilt `r Sys.Date()`)
+date: Last change 26 September 2022 (rebuilt `r Sys.Date()`)
 output:
   html_document
 vignette: >
@@ -10,9 +10,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-This is a vignette, because the multistart method does not seem to work in
-pkgdown example code and I wanted to show the plots in the online docs.
-The dimethenamid data from 2018 from seven soils is used as example data.
+The dimethenamid data from 2018 from seven soils is used as example data in this vignette.
 
 ```{r}
 library(mkin)
@@ -33,19 +31,31 @@ random effects for all degradation parameters.
 ```{r}
 f_mmkin <- mmkin("DFOP", dmta_ds, error_model = "tc", cores = 7, quiet = TRUE)
 f_saem_full <- saem(f_mmkin)
+illparms(f_saem_full)
+```
+We see that not all variability parameters are identifiable. The `illparms`
+function tells us that the confidence interval for the standard deviation
+of 'log_k2' includes zero. We check this assessment using multiple runs
+with different starting values.
+
+```{r}
 f_saem_full_multi <- multistart(f_saem_full, n = 16, cores = 16)
 parhist(f_saem_full_multi)
 ```
 
-We see that not all variability parameters are identifiable, most problematic
-is the variance of k2. So we reduce the parameter distribution model by
-removing the intersoil variability for this parameter.
+This confirms that the variance of k2 is the most problematic parameter, so we
+reduce the parameter distribution model by removing the intersoil variability
+for k2.
 
 ```{r}
-f_saem_reduced <- update(f_saem_full, covariance.model = diag(c(1, 1, 0, 1)))
+f_saem_reduced <- update(f_saem_full, no_random_effect = "log_k2")
+illparms(f_saem_reduced)
 f_saem_reduced_multi <- multistart(f_saem_reduced, n = 16, cores = 16)
 parhist(f_saem_reduced_multi, lpos = "topright")
 ```
+
+The results confirm that all remaining parameters can be determined with sufficient
+certainty.
 
 We can also analyse the log-likelihoods obtained in the multiple runs:
 
@@ -53,7 +63,20 @@ We can also analyse the log-likelihoods obtained in the multiple runs:
 llhist(f_saem_reduced_multi)
 ```
 
-The one run with the lower likelihood is probably responsible for the outliers
-in the boxplots above, and caused by some weird starting value combination. In
-any case, the converged values from the original fit (red circles) appear
-perfectly acceptable, supporting the choice of starting values made by mkin.
+The parameter histograms can be further improved by excluding the result with
+the low likelihood.
+
+```{r}
+parhist(f_saem_reduced_multi, lpos = "topright", llmin = -326, ylim = c(0.5, 2))
+```
+
+We can use the `anova` method to compare the models, including a likelihood ratio
+test if the models are nested.
+
+```{r}
+anova(f_saem_full, best(f_saem_reduced_multi), test = TRUE)
+```
+
+While AIC and BIC are lower for the reduced model, the likelihood ratio test
+does not indicate a significant difference between the fits.
+

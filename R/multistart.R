@@ -7,18 +7,12 @@
 #' inspired by the article on practical identifiabiliy in the frame of nonlinear
 #' mixed-effects models by Duchesne et al (2021).
 #'
-#' In case the online version of this help page contains error messages
-#' in the example code and no plots, this is due to the multistart method
-#' not working when called by pkgdown. Please refer to the
-#' [online vignette](https://pkgdown.jrwb.de/mkin/dev/articles/web_only/multistart.html)
-#' in this case.
-#'
 #' @param object The fit object to work with
 #' @param n How many different combinations of starting parameters should be
 #' used?
 #' @param cores How many fits should be run in parallel (only on posix platforms)?
 #' @param cluster A cluster as returned by [parallel::makeCluster] to be used
-#'   for parallel execution.
+#' for parallel execution.
 #' @param \dots Passed to the update function.
 #' @param x The multistart object to print
 #' @return A list of [saem.mmkin] objects, with class attributes
@@ -46,7 +40,7 @@
 #' f_mmkin <- mmkin("DFOP", dmta_ds, error_model = "tc", cores = 7, quiet = TRUE)
 #' f_saem_full <- saem(f_mmkin)
 #' f_saem_full_multi <- multistart(f_saem_full, n = 16, cores = 16)
-#' parhist(f_saem_full_multi, lpos = "bottomright")
+#' parhist(f_saem_full_multi, lpos = "bottomleft")
 #' illparms(f_saem_full)
 #'
 #' f_saem_reduced <- update(f_saem_full, no_random_effect = "log_k2")
@@ -58,7 +52,7 @@
 #' cl <- makePSOCKcluster(12)
 #' clusterExport(cl, "f_mmkin")
 #' f_saem_reduced_multi <- multistart(f_saem_reduced, n = 16, cluster = cl)
-#' parhist(f_saem_reduced_multi, lpos = "bottomright")
+#' parhist(f_saem_reduced_multi, lpos = "topright")
 #' }
 multistart <- function(object, n = 50,
   cores = if (Sys.info()["sysname"] == "Windows") 1 else parallel::detectCores(),
