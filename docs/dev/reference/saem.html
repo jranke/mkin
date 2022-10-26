@@ -46,10 +46,13 @@ Expectation Maximisation algorithm (SAEM)."><meta name="robots" content="noindex
       <a href="../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
     </li>
     <li>
-      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
+      <a href="../articles/web_only/multistart.html">Short demo of the multistart method</a>
     </li>
     <li>
       <a href="../articles/web_only/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
     </li>
     <li>
       <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
@@ -101,6 +104,10 @@ Expectation Maximisation algorithm (SAEM).</p>
 <span>  test_log_parms <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  conf.level <span class="op">=</span> <span class="fl">0.6</span>,</span>
 <span>  solution_type <span class="op">=</span> <span class="st">"auto"</span>,</span>
+<span>  covariance.model <span class="op">=</span> <span class="st">"auto"</span>,</span>
+<span>  covariates <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  covariate_models <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  no_random_effect <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  nbiter.saemix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">300</span>, <span class="fl">100</span><span class="op">)</span>,</span>
 <span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>displayProgress <span class="op">=</span> <span class="cn">FALSE</span>, print <span class="op">=</span> <span class="cn">FALSE</span>, nbiter.saemix <span class="op">=</span> <span class="va">nbiter.saemix</span>,</span>
 <span>    save <span class="op">=</span> <span class="cn">FALSE</span>, save.graphs <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
@@ -118,13 +125,17 @@ Expectation Maximisation algorithm (SAEM).</p>
 <span>  solution_type <span class="op">=</span> <span class="st">"auto"</span>,</span>
 <span>  transformations <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mkin"</span>, <span class="st">"saemix"</span><span class="op">)</span>,</span>
 <span>  degparms_start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  covariance.model <span class="op">=</span> <span class="st">"auto"</span>,</span>
+<span>  no_random_effect <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  covariates <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  covariate_models <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  test_log_parms <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  conf.level <span class="op">=</span> <span class="fl">0.6</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">saemix_data</span><span class="op">(</span><span class="va">object</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">saemix_data</span><span class="op">(</span><span class="va">object</span>, covariates <span class="op">=</span> <span class="cn">NULL</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for saem.mmkin</span></span>
 <span><span class="fu"><a href="parms.html">parms</a></span><span class="op">(</span><span class="va">object</span>, ci <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
@@ -169,6 +180,29 @@ for parameter that are tested if requested by 'test_log_parms'.</p></dd>
 <dt>solution_type</dt>
 <dd><p>Possibility to specify the solution type in case the
 automatic choice is not desired</p></dd>
+
+
+<dt>covariance.model</dt>
+<dd><p>Will be passed to <code><a href="https://rdrr.io/pkg/saemix/man/SaemixModel-class.html" class="external-link">saemix::SaemixModel()</a></code>. Per
+default, uncorrelated random effects are specified for all degradation
+parameters.</p></dd>
+
+
+<dt>covariates</dt>
+<dd><p>A data frame with covariate data for use in
+'covariate_models', with dataset names as row names.</p></dd>
+
+
+<dt>covariate_models</dt>
+<dd><p>A list containing linear model formulas with one explanatory
+variable, i.e. of the type 'parameter ~ covariate'. Covariates must be available
+in the 'covariates' data frame.</p></dd>
+
+
+<dt>no_random_effect</dt>
+<dd><p>Character vector of degradation parameters for
+which there should be no variability over the groups. Only used
+if the covariance model is not explicitly specified.</p></dd>
 
 
 <dt>nbiter.saemix</dt>
@@ -249,40 +283,43 @@ using <a href="mmkin.html">mmkin</a>.</p>
 <span class="r-in"><span><span class="va">f_saem_sfo</span> <span class="op">&lt;-</span> <span class="fu">saem</span><span class="op">(</span><span class="va">f_mmkin_parent</span><span class="op">[</span><span class="st">"SFO"</span>, <span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">f_saem_fomc</span> <span class="op">&lt;-</span> <span class="fu">saem</span><span class="op">(</span><span class="va">f_mmkin_parent</span><span class="op">[</span><span class="st">"FOMC"</span>, <span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">f_saem_dfop</span> <span class="op">&lt;-</span> <span class="fu">saem</span><span class="op">(</span><span class="va">f_mmkin_parent</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_saem_sfo</span>, <span class="va">f_saem_fomc</span>, <span class="va">f_saem_dfop</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Data: 90 observations of 1 variable(s) grouped in 5 datasets</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             npar    AIC    BIC     Lik</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_saem_sfo     5 624.26 622.31 -307.13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_saem_fomc    7 467.87 465.13 -226.93</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_saem_dfop    9 493.98 490.47 -237.99</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_saem_sfo</span>, <span class="va">f_saem_dfop</span>, test <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Data: 90 observations of 1 variable(s) grouped in 5 datasets</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             npar    AIC    BIC     Lik  Chisq Df Pr(&gt;Chisq)    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_saem_sfo     5 624.26 622.31 -307.13                         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_saem_dfop    9 493.98 490.47 -237.99 138.28  4  &lt; 2.2e-16 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ---</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</span>
 <span class="r-in"><span><span class="fu"><a href="illparms.html">illparms</a></span><span class="op">(</span><span class="va">f_saem_dfop</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "sd(g_qlogis)"</span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">f_saem_dfop</span>, covariance.model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Kinetic nonlinear mixed-effects model fit by SAEM</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Structural model:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> d_parent/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            time)) / (g * exp(-k1 * time) + (1 - g) * exp(-k2 * time)))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            * parent</span>
+<span class="r-in"><span><span class="va">f_saem_dfop_red</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">f_saem_dfop</span>, no_random_effect <span class="op">=</span> <span class="st">"g_qlogis"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_saem_dfop</span>, <span class="va">f_saem_dfop_red</span>, test <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Data: 90 observations of 1 variable(s) grouped in 5 datasets</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Data:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 90 observations of 1 variable(s) grouped in 5 datasets</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Likelihood computed by importance sampling</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     AIC   BIC logLik</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   490.6 487.5 -237.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fitted parameters:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             estimate   lower   upper</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0      93.902 91.3695 96.4339</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> log_k1        -2.936 -3.9950 -1.8762</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> log_k2        -3.091 -4.9290 -1.2523</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> g_qlogis      -0.366 -0.6484 -0.0836</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> a.1            2.385  2.0033  2.7664</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SD.parent_0    2.476  0.3890  4.5623</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k1      1.195  0.4381  1.9517</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k2      2.092  0.7906  3.3932</span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">f_saem_dfop</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 493.9811</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 npar    AIC    BIC     Lik Chisq Df Pr(&gt;Chisq)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_saem_dfop_red    8 490.64 487.52 -237.32                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_saem_dfop        9 493.98 490.47 -237.99     0  1          1</span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_saem_sfo</span>, <span class="va">f_saem_fomc</span>, <span class="va">f_saem_dfop</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Data: 90 observations of 1 variable(s) grouped in 5 datasets</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             npar    AIC    BIC     Lik</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_saem_sfo     5 624.26 622.31 -307.13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_saem_fomc    7 467.87 465.13 -226.93</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_saem_dfop    9 493.98 490.47 -237.99</span>
 <span class="r-in"><span><span class="co"># The returned saem.mmkin object contains an SaemixObject, therefore we can use</span></span></span>
 <span class="r-in"><span><span class="co"># functions from saemix</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">saemix</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: npde</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Package saemix, version 3.1</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Package saemix, version 3.2</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   please direct bugs, questions and feedback to emmanuelle.comets@inserm.fr</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘saemix’</span>
@@ -308,11 +345,12 @@ using <a href="mmkin.html">mmkin</a>.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">f_mmkin_parent_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">f_mmkin_parent</span>, error_model <span class="op">=</span> <span class="st">"tc"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">f_saem_fomc_tc</span> <span class="op">&lt;-</span> <span class="fu">saem</span><span class="op">(</span><span class="va">f_mmkin_parent_tc</span><span class="op">[</span><span class="st">"FOMC"</span>, <span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/compare.saemix.html" class="external-link">compare.saemix</a></span><span class="op">(</span><span class="va">f_saem_fomc</span><span class="op">$</span><span class="va">so</span>, <span class="va">f_saem_fomc_tc</span><span class="op">$</span><span class="va">so</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Likelihoods calculated by importance sampling</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        AIC      BIC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 467.8664 465.1324</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 469.8018 466.6773</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_saem_fomc</span>, <span class="va">f_saem_fomc_tc</span>, test <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Data: 90 observations of 1 variable(s) grouped in 5 datasets</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                npar    AIC    BIC     Lik  Chisq Df Pr(&gt;Chisq)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_saem_fomc       7 467.87 465.13 -226.93                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_saem_fomc_tc    8 469.80 466.68 -226.90 0.0645  1     0.7995</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">sfo_sfo</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"A1"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  A1 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -370,11 +408,11 @@ using <a href="mmkin.html">mmkin</a>.</p>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_saem_dfop_sfo</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="saem-4.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">f_saem_dfop_sfo</span>, data <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> saemix version used for fitting:      3.1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> saemix version used for fitting:      3.2 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mkin version used for pre-fitting:  1.1.2 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> R version used for fitting:         4.2.1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Date of fit:     Fri Sep 16 10:30:47 2022 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Date of summary: Fri Sep 16 10:30:47 2022 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Date of fit:     Wed Oct 26 09:20:37 2022 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Date of summary: Wed Oct 26 09:20:37 2022 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Equations:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> d_parent/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *</span>
@@ -389,7 +427,7 @@ using <a href="mmkin.html">mmkin</a>.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model predictions using solution type analytical </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fitted in 9.651 s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fitted in 8.902 s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Using 300, 100 iterations and 10 chains</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Variance model: Constant variance </span>
@@ -410,13 +448,20 @@ using <a href="mmkin.html">mmkin</a>.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   842 836.9   -408</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Optimised parameters:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    est.   lower   upper</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0        93.7701 91.1458 96.3945</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_A1        -5.8116 -7.5998 -4.0234</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_qlogis -0.9608 -1.3654 -0.5562</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> log_k1          -2.5841 -3.6876 -1.4805</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> log_k2          -3.5228 -5.3254 -1.7203</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> g_qlogis        -0.1027 -0.8719  0.6665</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                       est.   lower   upper</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0           93.7701 91.1458 96.3945</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_A1           -5.8116 -7.5998 -4.0234</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_qlogis    -0.9608 -1.3654 -0.5562</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k1             -2.5841 -3.6876 -1.4805</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k2             -3.5228 -5.3254 -1.7203</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> g_qlogis           -0.1027 -0.8719  0.6665</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> a.1                 1.8856  1.6676  2.1037</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.parent_0         2.7682  0.7668  4.7695</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k_A1         1.7447  0.4047  3.0848</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.f_parent_qlogis  0.4525  0.1620  0.7431</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k1           1.2423  0.4560  2.0285</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k2           2.0390  0.7601  3.3180</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.g_qlogis         0.4439 -0.3069  1.1947</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Correlation: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 parnt_0 lg_k_A1 f_prnt_ log_k1  log_k2 </span>
