@@ -18,9 +18,8 @@ llhist(object, breaks = "Sturges", lpos = "topleft", main = "", ...)
 \item{\dots}{Passed to \link{hist}}
 }
 \description{
-Produces a histogram of log-likelihoods, and an overlayed kernel density
-estimate. In addition, the likelihood of the original fit is shown as
-a red vertical line.
+Produces a histogram of log-likelihoods. In addition, the likelihood of the
+original fit is shown as a red vertical line.
 }
 \seealso{
 \link{multistart}
