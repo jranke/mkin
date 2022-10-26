@@ -738,6 +738,11 @@ update.saem.mmkin <- function(object, ..., evaluate = TRUE) {
   # so we need to fix this so we do not have to export saem.mmkin in
   # addition to the S3 method
   call[[1]] <- saem
+
+  # We also need to provide the mmkin object in the call, so it
+  # will also be found when called by testthat or pkgdown
+  call[[2]] <- object$mmkin
+
   update_arguments <- match.call(expand.dots = FALSE)$...
 
   if (length(update_arguments) > 0) {

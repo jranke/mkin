@@ -53,11 +53,21 @@ test_that("Parent fits using saemix are correctly implemented", {
   expect_equal(round(s_sfo_nlme_1$confint_back["k_parent", "est."], 3),
     round(s_sfo_saem_1$confint_back["k_parent", "est."], 3))
 
-  # Compare fits
-  expect_known_output(anova(sfo_saem_1, sfo_saem_1_reduced,
-    sfo_saem_1_mkin, sfo_saem_1_reduced_mkin, test = TRUE),
-    file = "anova_sfo_saem.txt"
-  )
+  # Compare fits with heavy rounding to avoid platform dependent results
+  anova_sfo <- anova(
+      sfo_saem_1, sfo_saem_1_reduced,
+      sfo_saem_1_mkin, sfo_saem_1_reduced_mkin,
+      test = TRUE)
+  anova_sfo_rounded <- round(anova_sfo, 0)
+  expect_known_output(print(anova_sfo_rounded), file = "anova_sfo_saem.txt")
+
+  # Check the influence of an invented covariate
+  set.seed(123456) # In my first attempt I hit a false positive by chance...
+  pH <- data.frame(pH = runif(15, 5, 8), row.names = as.character(1:15))
+  sfo_saem_pH <- update(sfo_saem_1_reduced_mkin, covariates = pH,
+    covariate_models = list(log_k_parent ~ pH))
+  # We expect that this is not significantly better, as the covariate values were completely random
+  expect_true(anova(sfo_saem_1_reduced_mkin, sfo_saem_pH, test = TRUE)[2, "Pr(>Chisq)"] > 0.05)
 
   # FOMC
   mmkin_fomc_1 <- mmkin("FOMC", ds_fomc, quiet = TRUE, error_model = "tc", cores = n_cores)
