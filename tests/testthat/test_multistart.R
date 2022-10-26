@@ -8,6 +8,7 @@ test_that("multistart works for saem.mmkin models", {
     file = "print_multistart_biphasic.txt")
 
   skip_on_cran()
+  skip_on_travis()
 
   llhist_biphasic <- function() llhist(saem_biphasic_m_multi)
   parhist_biphasic <- function() parhist(saem_biphasic_m_multi,
