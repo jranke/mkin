@@ -10,8 +10,7 @@ test_that("Parent fits using saemix are correctly implemented", {
   # We did not introduce variance of parent_0 in the data generation
   # This is correctly detected
   expect_equal(illparms(sfo_saem_1), "sd(parent_0)")
-  # So we remove this variance
-  sfo_saem_1_reduced <- update(sfo_saem_1, no_random_effect = "parent_0")
+  # So we have also done a fit without this variance
   expect_equal(illparms(sfo_saem_1_reduced), character(0))
 
   # We cannot currently do the fit with completely fixed initial values

@@ -1,10 +1,14 @@
 context("Multistart method for saem.mmkin models")
 
 test_that("multistart works for saem.mmkin models", {
-  saem_sfo_s_multi <- multistart(sfo_saem_1, n = 8, cores = n_cores)
+  set.seed(123456)
+  saem_sfo_s_multi <- multistart(sfo_saem_1_reduced, n = 8, cores = n_cores,
+    no_random_effect = "parent_0")
 
-  llhist_sfo <- function() llhist(saem_sfo_s_multi, xlim = c(-644, -647))
+  llhist_sfo <- function() llhist(saem_sfo_s_multi)
+  parhist_sfo <- function() parhist(saem_sfo_s_multi, ylim = c(0.5, 2))
   vdiffr::expect_doppelganger("llhist for sfo fit", llhist_sfo)
+  vdiffr::expect_doppelganger("parhist for sfo fit", parhist_sfo)
 
   set.seed(123456)
   saem_biphasic_m_multi <- multistart(saem_biphasic_m, n = 8,
