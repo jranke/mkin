@@ -136,45 +136,6 @@ print.mhmkin <- function(x, ...) {
   print(status(x))
 }
 
-status.mhmkin <- function(object, ...) {
-  if (inherits(object[[1]], "saem.mmkin")) {
-    test_func <- function(fit) {
-      if (inherits(fit$so, "try-error")) {
-        return("E")
-      } else {
-        if (!is.null(fit$FIM_failed)) {
-          return_values <- c("fixed effects" = "Fth",
-            "random effects and error model parameters" = "FO")
-          return(paste(return_values[fit$FIM_failed], collapse = ", "))
-        } else {
-          return("OK")
-        }
-      }
-    }
-  } else {
-    stop("Only mhmkin objects containing saem.mmkin objects currently supported")
-  }
-  result <- lapply(object, test_func)
-  result <- unlist(result)
-  dim(result) <- dim(object)
-  dimnames(result) <- dimnames(object)
-
-  class(result) <- "status.mhmkin"
-  return(result)
-}
-
-#' @export
-print.status.mhmkin <- function(x, ...) {
-  class(x) <- NULL
-  print(x, quote = FALSE)
-  cat("\n")
-  if (any(x == "OK")) cat("OK: Fit terminated successfully\n")
-  if (any(x == "Fth")) cat("Fth: Could not invert FIM for fixed effects\n")
-  if (any(x == "FO")) cat("FO: Could not invert FIM for random effects and error model parameters\n")
-  if (any(x == "Fth, FO")) cat("Fth, FO: Could not invert FIM for fixed effects, nor for random effects and error model parameters\n")
-  if (any(x == "E")) cat("E: Error\n")
-}
-
 #' @export
 AIC.mhmkin <- function(object, ..., k = 2) {
   if (inherits(object[[1]], "saem.mmkin")) {

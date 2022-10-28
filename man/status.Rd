@@ -4,6 +4,8 @@
 \alias{status}
 \alias{status.mmkin}
 \alias{print.status.mmkin}
+\alias{status.mhmkin}
+\alias{print.status.mhmkin}
 \title{Method to get status information for fit array objects}
 \usage{
 status(object, ...)
@@ -11,6 +13,10 @@ status(object, ...)
 \method{status}{mmkin}(object, ...)
 
 \method{print}{status.mmkin}(x, ...)
+
+\method{status}{mhmkin}(object, ...)
+
+\method{print}{status.mhmkin}(x, ...)
 }
 \arguments{
 \item{object}{The object to investigate}
