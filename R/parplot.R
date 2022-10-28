@@ -1,4 +1,4 @@
-#' Plot parameter distributions from multistart objects
+#' Plot parameter variability of multistart objects
 #'
 #' Produces a boxplot with all parameters from the multiple runs, scaled
 #' either by the parameters of the run with the highest likelihood,
@@ -18,7 +18,13 @@
 #' @seealso [multistart]
 #' @importFrom stats median
 #' @export
-parhist <- function(object, llmin = -Inf, scale = c("best", "median"),
+parplot <- function(object, ...) {
+  UseMethod("parplot")
+}
+
+#' @rdname parplot
+#' @export
+parplot.multistart.saem.mmkin <- function(object, llmin = -Inf, scale = c("best", "median"),
   lpos = "bottomleft", main = "", ...)
 {
   oldpar <- par(no.readonly = TRUE)
@@ -35,7 +41,7 @@ parhist <- function(object, llmin = -Inf, scale = c("best", "median"),
       else return(logLik(object$so))
     }
   } else {
-    stop("parhist is only implemented for multistart.saem.mmkin objects")
+    stop("parplot is only implemented for multistart.saem.mmkin objects")
   }
   ll <- sapply(object, llfunc)
   selected <- which(ll > llmin)

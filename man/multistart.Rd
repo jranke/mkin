@@ -77,7 +77,7 @@ dmta_ds[["Elliot 1"]] <- dmta_ds[["Elliot 2"]] <- NULL
 f_mmkin <- mmkin("DFOP", dmta_ds, error_model = "tc", cores = 7, quiet = TRUE)
 f_saem_full <- saem(f_mmkin)
 f_saem_full_multi <- multistart(f_saem_full, n = 16, cores = 16)
-parhist(f_saem_full_multi, lpos = "bottomleft")
+parplot(f_saem_full_multi, lpos = "bottomleft")
 illparms(f_saem_full)
 
 f_saem_reduced <- update(f_saem_full, no_random_effect = "log_k2")
@@ -89,7 +89,7 @@ library(parallel)
 cl <- makePSOCKcluster(12)
 clusterExport(cl, "f_mmkin")
 f_saem_reduced_multi <- multistart(f_saem_reduced, n = 16, cluster = cl)
-parhist(f_saem_reduced_multi, lpos = "topright")
+parplot(f_saem_reduced_multi, lpos = "topright")
 }
 }
 \references{
@@ -99,5 +99,5 @@ of the in vitro erythropoiesis. BMC Bioinformatics. 2021 Oct 4;22(1):478.
 doi: 10.1186/s12859-021-04373-4.
 }
 \seealso{
-\link{parhist}, \link{llhist}
+\link{parplot}, \link{llhist}
 }

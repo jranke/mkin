@@ -40,7 +40,7 @@ with different starting values.
 
 ```{r}
 f_saem_full_multi <- multistart(f_saem_full, n = 16, cores = 16)
-parhist(f_saem_full_multi)
+parplot(f_saem_full_multi)
 ```
 
 This confirms that the variance of k2 is the most problematic parameter, so we
@@ -51,7 +51,7 @@ for k2.
 f_saem_reduced <- update(f_saem_full, no_random_effect = "log_k2")
 illparms(f_saem_reduced)
 f_saem_reduced_multi <- multistart(f_saem_reduced, n = 16, cores = 16)
-parhist(f_saem_reduced_multi, lpos = "topright")
+parplot(f_saem_reduced_multi, lpos = "topright")
 ```
 
 The results confirm that all remaining parameters can be determined with sufficient
@@ -67,7 +67,7 @@ The parameter histograms can be further improved by excluding the result with
 the low likelihood.
 
 ```{r}
-parhist(f_saem_reduced_multi, lpos = "topright", llmin = -326, ylim = c(0.5, 2))
+parplot(f_saem_reduced_multi, lpos = "topright", llmin = -326, ylim = c(0.5, 2))
 ```
 
 We can use the `anova` method to compare the models, including a likelihood ratio

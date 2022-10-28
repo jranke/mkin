@@ -25,14 +25,14 @@ test_that("multistart works for saem.mmkin models", {
   skip_on_travis() # Plots are platform dependent
 
   llhist_sfo <- function() llhist(saem_sfo_s_multi)
-  parhist_sfo <- function() parhist(saem_sfo_s_multi, ylim = c(0.5, 2))
+  parplot_sfo <- function() parplot(saem_sfo_s_multi, ylim = c(0.5, 2))
   vdiffr::expect_doppelganger("llhist for sfo fit", llhist_sfo)
-  vdiffr::expect_doppelganger("parhist for sfo fit", parhist_sfo)
+  vdiffr::expect_doppelganger("parplot for sfo fit", parplot_sfo)
 
   llhist_biphasic <- function() llhist(saem_biphasic_m_multi)
-  parhist_biphasic <- function() parhist(saem_biphasic_m_multi,
+  parplot_biphasic <- function() parplot(saem_biphasic_m_multi,
     ylim = c(0.5, 2))
 
   vdiffr::expect_doppelganger("llhist for biphasic saemix fit", llhist_biphasic)
-  vdiffr::expect_doppelganger("parhist for biphasic saemix fit", parhist_biphasic)
+  vdiffr::expect_doppelganger("parplot for biphasic saemix fit", parplot_biphasic)
 })

@@ -4,7 +4,7 @@
 \alias{logLik.saem.mmkin}
 \title{logLik method for saem.mmkin objects}
 \usage{
-\method{logLik}{saem.mmkin}(object, ..., method = c("lin", "is", "gq"))
+\method{logLik}{saem.mmkin}(object, ..., method = c("is", "lin", "gq"))
 }
 \arguments{
 \item{object}{The fitted \link{saem.mmkin} object}

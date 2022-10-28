@@ -1,6 +1,6 @@
 # mkin 1.1.2
 
-- 'R/multistart.R': New method for testing multiple start parameters for hierarchical model fits, with diagnostic plotting functions 'llhist' and 'parhist'.
+- 'R/multistart.R': New method for testing multiple start parameters for hierarchical model fits, with diagnostic plotting functions 'llhist' and 'parplot'.
 
 - 'R/mhmkin.R': New method for performing multiple hierarchical mkin fits in one function call, optionally in parallel.
 
@@ -8,7 +8,7 @@
 
 - 'R/saem.R': 'logLik' and 'update' methods for 'saem.mmkin' objects.
 
-- 'R/convergence.R': New generic to show convergence information with methods for 'mmkin' and 'mhmkin' objects.
+- 'R/status.R': New generic to show status information for fit array objects with methods for 'mmkin' and 'mhmkin' objects.
 
 - 'R/illparms.R': New generic to show ill-defined parameters with methods for 'mkinfit', 'mmkin', 'saem.mmkin' and 'mhmkin' objects.
 

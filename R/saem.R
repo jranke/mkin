@@ -726,7 +726,7 @@ saemix_data <- function(object, covariates = NULL, verbose = FALSE, ...) {
 #' @param \dots Passed to [saemix::logLik.SaemixObject]
 #' @param method Passed to [saemix::logLik.SaemixObject]
 #' @export
-logLik.saem.mmkin <- function(object, ..., method = c("lin", "is", "gq")) {
+logLik.saem.mmkin <- function(object, ..., method = c("is", "lin", "gq")) {
   method <- match.arg(method)
   return(logLik(object$so, method = method))
 }

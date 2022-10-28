@@ -17,7 +17,7 @@
 #' @param x The multistart object to print
 #' @return A list of [saem.mmkin] objects, with class attributes
 #' 'multistart.saem.mmkin' and 'multistart'.
-#' @seealso [parhist], [llhist]
+#' @seealso [parplot], [llhist]
 #'
 #' @references Duchesne R, Guillemin A, Gandrillon O, Crauste F. Practical
 #' identifiability in the frame of nonlinear mixed effects models: the example
@@ -40,7 +40,7 @@
 #' f_mmkin <- mmkin("DFOP", dmta_ds, error_model = "tc", cores = 7, quiet = TRUE)
 #' f_saem_full <- saem(f_mmkin)
 #' f_saem_full_multi <- multistart(f_saem_full, n = 16, cores = 16)
-#' parhist(f_saem_full_multi, lpos = "bottomleft")
+#' parplot(f_saem_full_multi, lpos = "bottomleft")
 #' illparms(f_saem_full)
 #'
 #' f_saem_reduced <- update(f_saem_full, no_random_effect = "log_k2")
@@ -52,7 +52,7 @@
 #' cl <- makePSOCKcluster(12)
 #' clusterExport(cl, "f_mmkin")
 #' f_saem_reduced_multi <- multistart(f_saem_reduced, n = 16, cluster = cl)
-#' parhist(f_saem_reduced_multi, lpos = "topright")
+#' parplot(f_saem_reduced_multi, lpos = "topright")
 #' }
 multistart <- function(object, n = 50,
   cores = if (Sys.info()["sysname"] == "Windows") 1 else parallel::detectCores(),

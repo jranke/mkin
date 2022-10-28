@@ -25,6 +25,7 @@ llhist <- function(object, breaks = "Sturges", lpos = "topleft", main = "",
     stop("llhist is only implemented for multistart.saem.mmkin objects")
   }
 
+  ll_orig <- logLik(attr(object, "orig"))
   ll <- stats::na.omit(sapply(object, llfunc))
 
   par(las = 1)
@@ -34,7 +35,7 @@ llhist <- function(object, breaks = "Sturges", lpos = "topleft", main = "",
 
   freq_factor <- h$counts[1] / h$density[1]
 
-  abline(v = logLik(attr(object, "orig")), col = 2)
+  abline(v = ll_orig, col = 2)
 
   legend(lpos, inset = c(0.05, 0.05), bty = "n",
     lty = 1, col = c(2),
