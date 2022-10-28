@@ -109,7 +109,7 @@
       <h1 data-toc-skip>Short demo of the multistart method</h1>
                         <h4 data-toc-skip class="author">Johannes Ranke</h4>
             
-            <h4 data-toc-skip class="date">Last change 26 September 2022 (rebuilt 2022-10-26)</h4>
+            <h4 data-toc-skip class="date">Last change 26 September 2022 (rebuilt 2022-10-28)</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jranke/mkin/blob/HEAD/vignettes/web_only/multistart.rmd" class="external-link"><code>vignettes/web_only/multistart.rmd</code></a></small>
       <div class="hidden name"><code>multistart.rmd</code></div>
@@ -139,7 +139,7 @@
 <p>We see that not all variability parameters are identifiable. The <code>illparms</code> function tells us that the confidence interval for the standard deviation of ‘log_k2’ includes zero. We check this assessment using multiple runs with different starting values.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">f_saem_full_multi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/multistart.html">multistart</a></span><span class="op">(</span><span class="va">f_saem_full</span>, n <span class="op">=</span> <span class="fl">16</span>, cores <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../../reference/parhist.html">parhist</a></span><span class="op">(</span><span class="va">f_saem_full_multi</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../../reference/parplot.html">parplot</a></span><span class="op">(</span><span class="va">f_saem_full_multi</span><span class="op">)</span></span></code></pre></div>
 <p><img src="multistart_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 <p>This confirms that the variance of k2 is the most problematic parameter, so we reduce the parameter distribution model by removing the intersoil variability for k2.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -148,7 +148,7 @@
 <pre><code><span><span class="co">## character(0)</span></span></code></pre>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">f_saem_reduced_multi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/multistart.html">multistart</a></span><span class="op">(</span><span class="va">f_saem_reduced</span>, n <span class="op">=</span> <span class="fl">16</span>, cores <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../../reference/parhist.html">parhist</a></span><span class="op">(</span><span class="va">f_saem_reduced_multi</span>, lpos <span class="op">=</span> <span class="st">"topright"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../../reference/parplot.html">parplot</a></span><span class="op">(</span><span class="va">f_saem_reduced_multi</span>, lpos <span class="op">=</span> <span class="st">"topright"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="multistart_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 <p>The results confirm that all remaining parameters can be determined with sufficient certainty.</p>
 <p>We can also analyse the log-likelihoods obtained in the multiple runs:</p>
@@ -157,7 +157,7 @@
 <p><img src="multistart_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 <p>The parameter histograms can be further improved by excluding the result with the low likelihood.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../../reference/parhist.html">parhist</a></span><span class="op">(</span><span class="va">f_saem_reduced_multi</span>, lpos <span class="op">=</span> <span class="st">"topright"</span>, llmin <span class="op">=</span> <span class="op">-</span><span class="fl">326</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/parplot.html">parplot</a></span><span class="op">(</span><span class="va">f_saem_reduced_multi</span>, lpos <span class="op">=</span> <span class="st">"topright"</span>, llmin <span class="op">=</span> <span class="op">-</span><span class="fl">326</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="multistart_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 <p>We can use the <code>anova</code> method to compare the models, including a likelihood ratio test if the models are nested.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
@@ -165,7 +165,7 @@
 <pre><code><span><span class="co">## Data: 155 observations of 1 variable(s) grouped in 6 datasets</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##                            npar    AIC    BIC     Lik Chisq Df Pr(&gt;Chisq)</span></span>
-<span><span class="co">## best(f_saem_reduced_multi)    9 663.81 661.93 -322.90                    </span></span>
+<span><span class="co">## best(f_saem_reduced_multi)    9 663.64 661.77 -322.82                    </span></span>
 <span><span class="co">## f_saem_full                  10 668.27 666.19 -324.13     0  1          1</span></span></code></pre>
 <p>While AIC and BIC are lower for the reduced model, the likelihood ratio test does not indicate a significant difference between the fits.</p>
   </div>
