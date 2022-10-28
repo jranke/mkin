@@ -133,11 +133,10 @@ mhmkin.list <- function(objects, backend = "saemix",
 print.mhmkin <- function(x, ...) {
   cat("<mhmkin> object\n")
   cat("Status of individual fits:\n\n")
-  print(convergence(x))
+  print(status(x))
 }
 
-#' @export
-convergence.mhmkin <- function(object, ...) {
+status.mhmkin <- function(object, ...) {
   if (inherits(object[[1]], "saem.mmkin")) {
     test_func <- function(fit) {
       if (inherits(fit$so, "try-error")) {
@@ -160,12 +159,12 @@ convergence.mhmkin <- function(object, ...) {
   dim(result) <- dim(object)
   dimnames(result) <- dimnames(object)
 
-  class(result) <- "convergence.mhmkin"
+  class(result) <- "status.mhmkin"
   return(result)
 }
 
 #' @export
-print.convergence.mhmkin <- function(x, ...) {
+print.status.mhmkin <- function(x, ...) {
   class(x) <- NULL
   print(x, quote = FALSE)
   cat("\n")

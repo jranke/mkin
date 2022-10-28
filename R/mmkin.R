@@ -171,7 +171,7 @@ mmkin <- function(models = c("SFO", "FOMC", "DFOP"), datasets,
 print.mmkin <- function(x, ...) {
   cat("<mmkin> object\n")
   cat("Status of individual fits:\n\n")
-  print(convergence(x))
+  print(status(x))
 }
 
 #' @export

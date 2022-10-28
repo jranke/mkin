@@ -21,7 +21,7 @@
 \item{digits}{number of digits to use for printing}
 }
 \description{
-Shows convergence information on the \link{mkinfit} objects contained in the object
+Shows status information on the \link{mkinfit} objects contained in the object
 and gives an overview of ill-defined parameters calculated by \link{illparms}.
 }
 \examples{

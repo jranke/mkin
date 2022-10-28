@@ -1,18 +1,17 @@
-#' Method to get convergence information
+#' Method to get status information for fit array objects
 #'
 #' @param object The object to investigate
 #' @param x The object to be printed
 #' @param \dots For potential future extensions
-#' @return For [mkinfit] objects, a character vector containing
-#' For [mmkin] objects, an object of class 'convergence.mmkin' with a
+#' @return  An object with the same dimensions as the fit array
 #' suitable printing method.
 #' @export
-convergence <- function(object, ...)
+status <- function(object, ...)
 {
-  UseMethod("convergence", object)
+  UseMethod("status", object)
 }
 
-#' @rdname convergence
+#' @rdname status
 #' @export
 #' @examples
 #' \dontrun{
@@ -21,9 +20,9 @@ convergence <- function(object, ...)
 #'   list("FOCUS A" = FOCUS_2006_A,
 #'        "FOCUS B" = FOCUS_2006_C),
 #'   quiet = TRUE)
-#' convergence(fits)
+#' status(fits)
 #' }
-convergence.mmkin <- function(object, ...) {
+status.mmkin <- function(object, ...) {
   all_summary_warnings <- character()
   sww <- 0 # Counter for Shapiro-Wilks warnings
 
@@ -51,13 +50,13 @@ convergence.mmkin <- function(object, ...) {
 
   u_swn <- unique(names(all_summary_warnings))
   attr(result, "unique_warnings") <- all_summary_warnings[u_swn]
-  class(result) <- "convergence.mmkin"
+  class(result) <- "status.mmkin"
   return(result)
 }
 
-#' @rdname convergence
+#' @rdname status
 #' @export
-print.convergence.mmkin <- function(x, ...) {
+print.status.mmkin <- function(x, ...) {
   u_w <- attr(x, "unique_warnings")
   attr(x, "unique_warnings") <- NULL
   class(x) <- NULL

@@ -112,7 +112,7 @@ multistart.saem.mmkin <- function(object, n = 50, cores = 1,
 }
 
 #' @export
-convergence.multistart <- function(object, ...) {
+status.multistart <- function(object, ...) {
   all_summary_warnings <- character()
 
   result <- lapply(object,
@@ -124,12 +124,12 @@ convergence.multistart <- function(object, ...) {
   })
   result <- unlist(result)
 
-  class(result) <- "convergence.multistart"
+  class(result) <- "status.multistart"
   return(result)
 }
 
 #' @export
-convergence.multistart.saem.mmkin <- function(object, ...) {
+status.multistart.saem.mmkin <- function(object, ...) {
   all_summary_warnings <- character()
 
   result <- lapply(object,
@@ -141,12 +141,12 @@ convergence.multistart.saem.mmkin <- function(object, ...) {
   })
   result <- unlist(result)
 
-  class(result) <- "convergence.multistart"
+  class(result) <- "status.multistart"
   return(result)
 }
 
 #' @export
-print.convergence.multistart <- function(x, ...) {
+print.status.multistart <- function(x, ...) {
   class(x) <- NULL
   print(table(x, dnn = NULL))
   if (any(x == "OK")) cat("OK: Fit terminated successfully\n")
@@ -157,7 +157,7 @@ print.convergence.multistart <- function(x, ...) {
 #' @export
 print.multistart <- function(x, ...) {
   cat("<multistart> object with", length(x), "fits:\n")
-  print(convergence(x))
+  print(status(x))
 }
 
 #' @rdname multistart

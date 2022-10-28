@@ -1,6 +1,6 @@
 #' Summary method for class "mmkin"
 #'
-#' Shows convergence information on the [mkinfit] objects contained in the object
+#' Shows status information on the [mkinfit] objects contained in the object
 #' and gives an overview of ill-defined parameters calculated by [illparms].
 #'
 #' @param object an object of class [mmkin]
@@ -24,7 +24,7 @@ summary.mmkin <- function(object, conf.level = 0.95, ...) {
     err_mod = object[[1, 1]]$err_mod,
     time = attr(object, "time"),
     illparms = illparms(object),
-    convergence = convergence(object)
+    status = status(object)
   )
 
   class(ans) <- c("summary.mmkin")
@@ -43,8 +43,8 @@ print.summary.mmkin <- function(x, digits = max(3, getOption("digits") - 3), ...
   }
   cat("Fitted in", x$time[["elapsed"]],  "s\n")
 
-  cat("\nConvergence:\n")
-  print(x$convergence)
+  cat("\nStatus:\n")
+  print(x$status)
 
   if (any(x$illparms != "")) {
     cat("\nIll-defined parameters:\n")
