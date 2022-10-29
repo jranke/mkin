@@ -11,7 +11,7 @@ test_that("Print methods work", {
   expect_known_output(print(mixed(mmkin_sfo_1), digits = 2), "print_mmkin_sfo_1_mixed.txt")
   expect_known_output(print(dfop_nlme_1, digits = 1), "print_dfop_nlme_1.txt")
 
-  expect_known_output(print(sfo_saem_1_reduced, digits = 1), "print_sfo_saem_1_reduced.txt")
+  expect_known_output(print(dfop_saemix_1, digits = 1), "print_dfop_saemix_1.txt")
 })
 
 test_that("nlme results are reproducible to some degree", {
