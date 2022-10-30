@@ -136,12 +136,16 @@ summary.saem.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes =
   }
 
   #  Correlation of fixed effects (inspired by summary.nlme)
-  varFix <- vcov(object$so)[1:n_fixed, 1:n_fixed]
-  stdFix <- sqrt(diag(varFix))
-  object$corFixed <- array(
-    t(varFix/stdFix)/stdFix,
-    dim(varFix),
-    list(names_fixed_effects, names_fixed_effects))
+  varFix <- try(vcov(object$so)[1:n_fixed, 1:n_fixed])
+  if (inherits(varFix, "try-error")) {
+    object$corFixed <- NA
+  } else {
+    stdFix <- sqrt(diag(varFix))
+    object$corFixed <- array(
+      t(varFix/stdFix)/stdFix,
+      dim(varFix),
+      list(names_fixed_effects, names_fixed_effects))
+  }
 
   # Random effects
   sdnames <- intersect(rownames(conf.int), paste0("SD.", pnames))
@@ -231,7 +235,9 @@ print.summary.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3)
   cat("\nOptimised parameters:\n")
   print(x$confint_trans, digits = digits)
 
-  if (nrow(x$confint_trans) > 1) {
+  if (identical(x$corFixed, NA)) {
+    cat("\nCorrelation is not available\n")
+  } else {
     corr <- x$corFixed
     class(corr) <- "correlation"
     print(corr, title = "\nCorrelation:", rdig = digits, ...)
