@@ -35,6 +35,12 @@ mhmkin <- function(objects, backend = "saemix", algorithm = "saem", ...) {
 
 #' @export
 #' @rdname mhmkin
+mhmkin.mmkin <- function(object, ...) {
+  mhmkin(list(object), ...)
+}
+
+#' @export
+#' @rdname mhmkin
 mhmkin.list <- function(objects, backend = "saemix",
   ...,
   cores = if (Sys.info()["sysname"] == "Windows") 1 else parallel::detectCores(), cluster = NULL)
@@ -190,3 +196,13 @@ update.mhmkin <- function(object, ..., evaluate = TRUE) {
   if(evaluate) eval(call, parent.frame())
   else call
 }
+
+#' export
+anova.mhmkin <- function(object, ...,
+  method = c("is", "lin", "gq"), test = FALSE, model.names = "auto") {
+  if (identical(model.names, "auto")) {
+    model.names <- paste(rownames(object), "-", colnames(object))
+  }
+  rlang::inject(anova(!!!(object), method = method, test = test, model.names = model.names))
+}
+
