@@ -23,6 +23,7 @@ utils::globalVariables(c("predicted", "std"))
 #' are done in 'saemix' for the supported cases, i.e. (as of version 1.1.2)
 #' SFO, FOMC, DFOP and HS without fixing `parent_0`, and SFO or DFOP with
 #' one SFO metabolite.
+#' @param error_model Possibility to override the error model used in the mmkin object
 #' @param degparms_start Parameter values given as a named numeric vector will
 #' be used to override the starting values obtained from the 'mmkin' object.
 #' @param test_log_parms If TRUE, an attempt is made to use more robust starting
@@ -131,6 +132,7 @@ saem <- function(object, ...) UseMethod("saem")
 #' @export
 saem.mmkin <- function(object,
   transformations = c("mkin", "saemix"),
+  error_model = "auto",
   degparms_start = numeric(),
   test_log_parms = TRUE,
   conf.level = 0.6,
@@ -149,6 +151,7 @@ saem.mmkin <- function(object,
   call <- match.call()
   transformations <- match.arg(transformations)
   m_saemix <- saemix_model(object, verbose = verbose,
+    error_model = error_model,
     degparms_start = degparms_start,
     test_log_parms = test_log_parms, conf.level = conf.level,
     solution_type = solution_type,
@@ -278,7 +281,8 @@ print.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3), ...) {
 #' @return An [saemix::SaemixModel] object.
 #' @export
 saemix_model <- function(object, solution_type = "auto",
-  transformations = c("mkin", "saemix"), degparms_start = numeric(),
+  transformations = c("mkin", "saemix"), error_model = "auto",
+  degparms_start = numeric(),
   covariance.model = "auto", no_random_effect = NULL,
   covariates = NULL, covariate_models = NULL,
   test_log_parms = FALSE, conf.level = 0.6, verbose = FALSE, ...)
@@ -608,20 +612,17 @@ saemix_model <- function(object, solution_type = "auto",
     }
   }
 
-  error.model <- switch(object[[1]]$err_mod,
+  if (identical(error_model, "auto")) {
+    error_model = object[[1]]$err_mod
+  }
+  error.model <- switch(error_model,
     const = "constant",
     tc = "combined",
     obs = "constant")
 
-  if (object[[1]]$err_mod == "obs") {
+  if (error_model == "obs") {
     warning("The error model 'obs' (variance by variable) can currently not be transferred to an saemix model")
   }
-
-  error.init <- switch(object[[1]]$err_mod,
-    const = c(a = mean(sapply(object, function(x) x$errparms)), b = 1),
-    tc = c(a = mean(sapply(object, function(x) x$errparms[1])),
-      b = mean(sapply(object, function(x) x$errparms[2]))),
-    obs = c(a = mean(sapply(object, function(x) x$errparms)), b = 1))
 
   degparms_psi0 <- degparms_optim
   degparms_psi0[names(degparms_start)] <- degparms_start

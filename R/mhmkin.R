@@ -108,7 +108,9 @@ mhmkin.list <- function(objects, backend = "saemix",
   attributes(results) <- attributes(fit_indices)
   attr(results, "call") <- call
   attr(results, "time") <- fit_time
-  class(results) <- "mhmkin"
+  class(results) <- switch(backend,
+    saemix = c("mhmkin.saem.mmkin", "mhmkin")
+  )
   return(results)
 }
 
@@ -201,7 +203,7 @@ update.mhmkin <- function(object, ..., evaluate = TRUE) {
 anova.mhmkin <- function(object, ...,
   method = c("is", "lin", "gq"), test = FALSE, model.names = "auto") {
   if (identical(model.names, "auto")) {
-    model.names <- paste(rownames(object), "-", colnames(object))
+    model.names <- outer(rownames(object), colnames(object), paste)
   }
   rlang::inject(anova(!!!(object), method = method, test = test, model.names = model.names))
 }
