@@ -31,6 +31,8 @@ only be done for nested models.}
 an "anova" data frame; the traditional (S3) result of anova()
 }
 \description{
-Generate an anova object. The method to calculate the BIC is that from
-the saemix package. As in other prominent anova methods, models are sorted
+Generate an anova object. The method to calculate the BIC is that from the
+saemix package. As in other prominent anova methods, models are sorted by
+number of parameters, and the tests (if requested) are always relative to
+the model on the previous line.
 }

@@ -14,6 +14,7 @@ saem(object, ...)
 \method{saem}{mmkin}(
   object,
   transformations = c("mkin", "saemix"),
+  error_model = "auto",
   degparms_start = numeric(),
   test_log_parms = TRUE,
   conf.level = 0.6,
@@ -37,6 +38,7 @@ saemix_model(
   object,
   solution_type = "auto",
   transformations = c("mkin", "saemix"),
+  error_model = "auto",
   degparms_start = numeric(),
   covariance.model = "auto",
   no_random_effect = NULL,
@@ -63,6 +65,8 @@ in mkin. If this argument is set to 'saemix', parameter transformations
 are done in 'saemix' for the supported cases, i.e. (as of version 1.1.2)
 SFO, FOMC, DFOP and HS without fixing \code{parent_0}, and SFO or DFOP with
 one SFO metabolite.}
+
+\item{error_model}{Possibility to override the error model used in the mmkin object}
 
 \item{degparms_start}{Parameter values given as a named numeric vector will
 be used to override the starting values obtained from the 'mmkin' object.}

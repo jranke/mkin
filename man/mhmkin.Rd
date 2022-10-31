@@ -2,6 +2,7 @@
 % Please edit documentation in R/mhmkin.R
 \name{mhmkin}
 \alias{mhmkin}
+\alias{mhmkin.mmkin}
 \alias{mhmkin.list}
 \alias{[.mhmkin}
 \alias{print.mhmkin}
@@ -9,6 +10,8 @@
 degradation models and one or more error models}
 \usage{
 mhmkin(objects, backend = "saemix", algorithm = "saem", ...)
+
+\method{mhmkin}{mmkin}(objects, ...)
 
 \method{mhmkin}{list}(
   objects,
@@ -24,7 +27,9 @@ mhmkin(objects, backend = "saemix", algorithm = "saem", ...)
 }
 \arguments{
 \item{objects}{A list of \link{mmkin} objects containing fits of the same
-degradation models to the same data, but using different error models.}
+degradation models to the same data, but using different error models.
+Alternatively, a single \link{mmkin} object containing fits of several
+degradation models to the same data}
 
 \item{backend}{The backend to be used for fitting. Currently, only saemix is
 supported}

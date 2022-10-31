@@ -8,6 +8,8 @@
 #'
 #' @param objects A list of [mmkin] objects containing fits of the same
 #' degradation models to the same data, but using different error models.
+#' Alternatively, a single [mmkin] object containing fits of several
+#' degradation models to the same data
 #' @param backend The backend to be used for fitting. Currently, only saemix is
 #' supported
 #' @param algorithm The algorithm to be used for fitting (currently not used)
@@ -35,8 +37,8 @@ mhmkin <- function(objects, backend = "saemix", algorithm = "saem", ...) {
 
 #' @export
 #' @rdname mhmkin
-mhmkin.mmkin <- function(object, ...) {
-  mhmkin(list(object), ...)
+mhmkin.mmkin <- function(objects, ...) {
+  mhmkin(list(objects), ...)
 }
 
 #' @export
@@ -199,7 +201,7 @@ update.mhmkin <- function(object, ..., evaluate = TRUE) {
   else call
 }
 
-#' export
+#' @export
 anova.mhmkin <- function(object, ...,
   method = c("is", "lin", "gq"), test = FALSE, model.names = "auto") {
   if (identical(model.names, "auto")) {
