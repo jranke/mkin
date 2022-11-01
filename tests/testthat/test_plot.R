@@ -44,7 +44,7 @@ test_that("Plotting mkinfit, mmkin and mixed model objects is reproducible", {
 
   f_uba_dfop_sfo_saem <- saem(f_uba_mmkin["DFOP-SFO", ], quiet = TRUE, transformations = "saemix")
 
-  plot_biphasic_mmkin <- function() plot(f_uba_dfop_sfo_mixed)
+  plot_biphasic_mmkin <- function() plot(f_uba_dfop_sfo_mixed, pop_curve = TRUE)
   vdiffr::expect_doppelganger("mixed model fit for mmkin object", plot_biphasic_mmkin)
 
   plot_biphasic_saem_s <- function() plot(f_uba_dfop_sfo_saem)

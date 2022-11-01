@@ -3,9 +3,11 @@
 \name{illparms}
 \alias{illparms}
 \alias{illparms.mkinfit}
+\alias{print.illparms.mkinfit}
 \alias{illparms.mmkin}
 \alias{print.illparms.mmkin}
 \alias{illparms.saem.mmkin}
+\alias{print.illparms.saem.mmkin}
 \alias{illparms.mhmkin}
 \alias{print.illparms.mhmkin}
 \title{Method to get the names of ill-defined parameters}
@@ -14,11 +16,15 @@ illparms(object, ...)
 
 \method{illparms}{mkinfit}(object, conf.level = 0.95, ...)
 
+\method{print}{illparms.mkinfit}(x, ...)
+
 \method{illparms}{mmkin}(object, conf.level = 0.95, ...)
 
 \method{print}{illparms.mmkin}(x, ...)
 
 \method{illparms}{saem.mmkin}(object, conf.level = 0.95, random = TRUE, errmod = TRUE, ...)
+
+\method{print}{illparms.saem.mmkin}(x, ...)
 
 \method{illparms}{mhmkin}(object, conf.level = 0.95, random = TRUE, errmod = TRUE, ...)
 

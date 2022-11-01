@@ -12,6 +12,7 @@
   xlab = "Time",
   xlim = range(x$data$time),
   resplot = c("predicted", "time"),
+  pop_curve = "auto",
   pred_over = NULL,
   test_log_parms = FALSE,
   conf.level = 0.6,
@@ -48,6 +49,10 @@ variables in the model.}
 
 \item{resplot}{Should the residuals plotted against time or against
 predicted values?}
+
+\item{pop_curve}{Per default, a population curve is drawn in case
+population parameters are fitted by the model, e.g. for saem objects.
+In case there is a covariate model, no population curve is currently shown.}
 
 \item{pred_over}{Named list of alternative predictions as obtained
 from \link{mkinpredict} with a compatible \link{mkinmod}.}

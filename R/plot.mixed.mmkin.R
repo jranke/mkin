@@ -4,27 +4,30 @@ utils::globalVariables("ds")
 #'
 #' @param x An object of class [mixed.mmkin], [saem.mmkin] or [nlme.mmkin]
 #' @param i A numeric index to select datasets for which to plot the individual predictions,
-#'   in case plots get too large
+#' in case plots get too large
 #' @inheritParams plot.mkinfit
 #' @param standardized Should the residuals be standardized? Only takes effect if
-#'   `resplot = "time"`.
+#' `resplot = "time"`.
+#' @param pop_curve Per default, a population curve is drawn in case
+#' population parameters are fitted by the model, e.g. for saem objects.
+#' In case there is a covariate model, no population curve is currently shown.
 #' @param pred_over Named list of alternative predictions as obtained
-#'   from [mkinpredict] with a compatible [mkinmod].
+#' from [mkinpredict] with a compatible [mkinmod].
 #' @param test_log_parms Passed to [mean_degparms] in the case of an
-#'   [mixed.mmkin] object
+#' [mixed.mmkin] object
 #' @param conf.level Passed to [mean_degparms] in the case of an
-#'   [mixed.mmkin] object
+#' [mixed.mmkin] object
 #' @param default_log_parms Passed to [mean_degparms] in the case of an
-#'   [mixed.mmkin] object
+#' [mixed.mmkin] object
 #' @param rel.height.legend The relative height of the legend shown on top
 #' @param rel.height.bottom The relative height of the bottom plot row
 #' @param ymax Vector of maximum y axis values
 #' @param ncol.legend Number of columns to use in the legend
 #' @param nrow.legend Number of rows to use in the legend
 #' @param resplot Should the residuals plotted against time or against
-#'   predicted values?
+#' predicted values?
 #' @param col_ds Colors used for plotting the observed data and the
-#'   corresponding model prediction lines for the different datasets.
+#' corresponding model prediction lines for the different datasets.
 #' @param pch_ds Symbols to be used for plotting the data.
 #' @param lty_ds Line types to be used for the model predictions.
 #' @importFrom stats coefficients
@@ -68,6 +71,7 @@ plot.mixed.mmkin <- function(x,
   xlab = "Time",
   xlim = range(x$data$time),
   resplot = c("predicted", "time"),
+  pop_curve = "auto",
   pred_over = NULL,
   test_log_parms = FALSE,
   conf.level = 0.6,
@@ -90,8 +94,15 @@ plot.mixed.mmkin <- function(x,
   backtransform = TRUE
 
   if (identical(class(x), "mixed.mmkin")) {
-    degparms_pop <- mean_degparms(x$mmkin, test_log_parms = test_log_parms,
-      conf.level = conf.level, default_log_parms = default_log_parms)
+    if (identical(pop_curve, "auto")) {
+      pop_curve <- FALSE
+    } else {
+      pop_curve <- TRUE
+    }
+    if (pop_curve) {
+      degparms_pop <- mean_degparms(x$mmkin, test_log_parms = test_log_parms,
+        conf.level = conf.level, default_log_parms = default_log_parms)
+    }
 
     degparms_tmp <- parms(x$mmkin, transformed = TRUE)
     degparms_i <- as.data.frame(t(degparms_tmp[setdiff(rownames(degparms_tmp), names(fit_1$errparms)), ]))
@@ -100,6 +111,11 @@ plot.mixed.mmkin <- function(x,
   }
 
   if (inherits(x, "nlme.mmkin")) {
+    if (identical(pop_curve, "auto")) {
+      pop_curve <- TRUE
+    } else {
+      pop_curve <- FALSE
+    }
     degparms_i <- coefficients(x)
     degparms_pop <- nlme::fixef(x)
     residuals <- residuals(x,
@@ -111,24 +127,21 @@ plot.mixed.mmkin <- function(x,
     psi <- saemix::psi(x$so)
     rownames(psi) <- x$saemix_ds_order
     degparms_i <- psi[ds_names, ]
-    degparms_i_names <- setdiff(x$so@results@name.fixed, names(fit_1$errparms))
-    colnames(degparms_i) <- degparms_i_names
+    degparms_i_names <- colnames(degparms_i)
     residual_type = ifelse(standardized, "standardized", "residual")
     residuals <- x$data[[residual_type]]
-    degparms_pop <- x$so@results@fixed.effects
-    names(degparms_pop) <- degparms_i_names
-  }
 
-  if (inherits(x, "nlmixr.mmkin")) {
-    eta_i <- random.effects(x$nm)[-1]
-    names(eta_i) <- gsub("^eta.", "", names(eta_i))
-    degparms_i <- eta_i
-    degparms_pop <- x$nm$theta
-    for (parm_name in names(degparms_i)) {
-      degparms_i[parm_name] <- eta_i[parm_name] + degparms_pop[parm_name]
+    if (identical(pop_curve, "auto")) {
+      if (nrow(x$sm@covariate.model) == 0) {
+        pop_curve <- TRUE
+      } else {
+        pop_curve <- FALSE
+      }
     }
-    residual_type = ifelse(standardized, "standardized", "residual")
-    residuals <- x$data[[residual_type]]
+    if (pop_curve) {
+      degparms_pop <- x$so@results@fixed.effects
+      names(degparms_pop) <- degparms_i_names
+    }
   }
 
   degparms_fixed <- fit_1$fixed$value
@@ -139,8 +152,6 @@ plot.mixed.mmkin <- function(x,
       nrow = nrow(degparms_i), byrow = TRUE))
   degparms_all_names <- c(names(degparms_i), names(degparms_fixed))
   colnames(degparms_all) <- degparms_all_names
-
-  degparms_all_pop <- c(degparms_pop, degparms_fixed)
 
   odeini_names <- grep("_0$", degparms_all_names, value = TRUE)
   odeparms_names <- setdiff(degparms_all_names, odeini_names)
@@ -175,24 +186,29 @@ plot.mixed.mmkin <- function(x,
   names(pred_list) <- ds_names[i]
   pred_ds <- vctrs::vec_rbind(!!!pred_list, .names_to = "ds")
 
-  odeparms_pop_trans <- degparms_all_pop[odeparms_names]
+  if (pop_curve) {
+    degparms_all_pop <- c(degparms_pop, degparms_fixed)
+    odeparms_pop_trans <- degparms_all_pop[odeparms_names]
 
-  if (backtransform) {
-    odeparms_pop <- backtransform_odeparms(odeparms_pop_trans,
-      x$mkinmod,
-      transform_rates = fit_1$transform_rates,
-      transform_fractions = fit_1$transform_fractions)
+    if (backtransform) {
+      odeparms_pop <- backtransform_odeparms(odeparms_pop_trans,
+        x$mkinmod,
+        transform_rates = fit_1$transform_rates,
+        transform_fractions = fit_1$transform_fractions)
+    } else {
+      odeparms_pop <- odeparms_pop_trans
+    }
+
+    odeini_pop <- degparms_all_pop[odeini_names]
+    names(odeini_pop) <- gsub("_0", "", odeini_names)
+
+    pred_pop <- as.data.frame(
+      mkinpredict(x$mkinmod, odeparms_pop, odeini_pop,
+        outtimes, solution_type = solution_type,
+        atol = fit_1$atol, rtol = fit_1$rtol))
   } else {
-    odeparms_pop <- odeparms_pop_trans
+    pred_pop <- NULL
   }
-
-  odeini_pop <- degparms_all_pop[odeini_names]
-  names(odeini_pop) <- gsub("_0", "", odeini_names)
-
-  pred_pop <- as.data.frame(
-    mkinpredict(x$mkinmod, odeparms_pop, odeini_pop,
-      outtimes, solution_type = solution_type,
-      atol = fit_1$atol, rtol = fit_1$rtol))
 
   # Start of graphical section
   oldpar <- par(no.readonly = TRUE)
@@ -217,12 +233,18 @@ plot.mixed.mmkin <- function(x,
   # Empty plot with legend
   if (!is.null(pred_over)) lty_over <- seq(2, length.out = length(pred_over))
   else lty_over <- NULL
-  n_pop <- 1 + length(lty_over)
-  lty_pop <- c(1, lty_over)
+  if (pop_curve) {
+    lty_pop <- 1
+    names(lty_pop) <- "Population"
+  } else {
+    lty_pop <- NULL
+  }
+  n_pop <- length(lty_pop) + length(lty_over)
+  lty_pop <- c(lty_pop, lty_over)
 
   plot(0, type = "n", axes = FALSE, ann = FALSE)
   legend("center", bty = "n", ncol = ncol.legend,
-    legend = c("Population", names(pred_over), ds_names[i]),
+    legend = c(names(lty_pop), names(pred_over), ds_names[i]),
     lty = c(lty_pop, lty_ds),
     lwd = c(rep(2, n_pop), rep(1, length(i))),
     col = c(rep(1, n_pop), col_ds),
@@ -271,8 +293,10 @@ plot.mixed.mmkin <- function(x,
         col = col_ds[ds_i], lty = lty_ds[ds_i])
     }
 
-    lines(pred_pop$time, pred_pop[[obs_var]],
-      type = "l", lwd = 2, lty = lty_pop)
+    if (pop_curve) {
+      lines(pred_pop$time, pred_pop[[obs_var]],
+        type = "l", lwd = 2, lty = lty_pop)
+    }
 
     if (identical(maxabs, "auto")) {
       maxabs = max(abs(observed_row$residual), na.rm = TRUE)

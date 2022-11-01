@@ -45,7 +45,7 @@ illparms.mkinfit <- function(object, conf.level = 0.95, ...) {
   return(ret)
 }
 
-#' @rdname
+#' @rdname illparms
 #' @export
 print.illparms.mkinfit <- function(x, ...) {
   class(x) <- NULL
@@ -111,6 +111,7 @@ illparms.saem.mmkin <- function(object, conf.level = 0.95, random = TRUE, errmod
   return(failed)
 }
 
+#' @rdname illparms
 #' @export
 print.illparms.saem.mmkin <- print.illparms.mkinfit
 
