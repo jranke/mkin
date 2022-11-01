@@ -23,7 +23,7 @@
 #' @return For [mkinfit] or [saem] objects, a character vector of parameter
 #' names. For [mmkin] or [mhmkin] objects, a matrix like object of class
 #' 'illparms.mmkin' or 'illparms.mhmkin'.
-#' @note All objects have printing methods. For the single fits, printing
+#' @note All return objects have printing methods. For the single fits, printing
 #' does not output anything in the case no ill-defined parameters are found.
 #' @export
 illparms <- function(object, ...)

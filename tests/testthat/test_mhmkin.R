@@ -24,7 +24,7 @@ test_that("Multiple hierarchical kinetic models can be fitted and diagnosed", {
 
   hfit_sfo_tc <- update(hfits[["SFO", "tc"]],
     covariance.model = diag(c(0, 1)))
-  expect_equal(illparms(hfit_sfo_tc), character(0))
+  expect_equal(as.character(illparms(hfit_sfo_tc)), character(0))
   expect_silent(print(illparms(hfit_sfo_tc)))
 
   test_summary <- summary(hfit_sfo_tc)

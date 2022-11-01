@@ -59,7 +59,7 @@ the confidence intervals for the error model parameters include
 zero.
 }
 \note{
-All objects have printing methods. For the single fits, printing
+All return objects have printing methods. For the single fits, printing
 does not output anything in the case no ill-defined parameters are found.
 }
 \examples{

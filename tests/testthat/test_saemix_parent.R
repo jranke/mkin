@@ -9,9 +9,9 @@ test_that("Parent fits using saemix are correctly implemented", {
   # mmkin_sfo_1 was generated in the setup script
   # We did not introduce variance of parent_0 in the data generation
   # This is correctly detected
-  expect_equal(illparms(sfo_saem_1), "sd(parent_0)")
+  expect_equal(as.character(illparms(sfo_saem_1)), "sd(parent_0)")
   # So we have also done a fit without this variance
-  expect_equal(illparms(sfo_saem_1_reduced), character(0))
+  expect_equal(as.character(illparms(sfo_saem_1_reduced)), character(0))
   expect_silent(print(illparms(sfo_saem_1_reduced)))
 
   # We cannot currently do the fit with completely fixed initial values
@@ -22,7 +22,7 @@ test_that("Parent fits using saemix are correctly implemented", {
   expect_error(update(mmkin_sfo_1, models = c("SFOOO")), "Please supply models.*")
 
   sfo_saem_1_mkin <- saem(mmkin_sfo_1, quiet = TRUE, transformations = "mkin")
-  expect_equal(illparms(sfo_saem_1_mkin), "sd(parent_0)")
+  expect_equal(as.character(illparms(sfo_saem_1_mkin)), "sd(parent_0)")
   sfo_saem_1_reduced_mkin <- update(sfo_saem_1_mkin, no_random_effect = "parent_0")
 
   # The endpoints obtained do not depend on the transformation
