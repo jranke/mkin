@@ -97,7 +97,7 @@ illparms.saem.mmkin <- function(object, conf.level = 0.95, random = TRUE, errmod
     failed <- NA
   } else {
     ints <- intervals(object, conf.level = conf.level)
-    failed <- NULL
+    failed <- character(0)
     if (random) {
       failed_random <- ints$random[, "lower"] < 0
       failed <- c(failed, names(which(failed_random)))
