@@ -41,8 +41,7 @@ tested?}
 \value{
 For \link{mkinfit} or \link{saem} objects, a character vector of parameter
 names. For \link{mmkin} or \link{mhmkin} objects, a matrix like object of class
-'illparms.mmkin' or 'illparms.mhmkin'. The latter objects have a suitable
-printing method.
+'illparms.mmkin' or 'illparms.mhmkin'.
 }
 \description{
 The method for generalised nonlinear regression fits as obtained
@@ -58,6 +57,10 @@ checks if any of the confidence intervals for the random
 effects expressed as standard deviations include zero, and if
 the confidence intervals for the error model parameters include
 zero.
+}
+\note{
+All objects have printing methods. For the single fits, printing
+does not output anything in the case no ill-defined parameters are found.
 }
 \examples{
 fit <- mkinfit("FOMC", FOCUS_2006_A, quiet = TRUE)

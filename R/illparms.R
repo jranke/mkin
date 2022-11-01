@@ -22,8 +22,9 @@
 #' tested?
 #' @return For [mkinfit] or [saem] objects, a character vector of parameter
 #' names. For [mmkin] or [mhmkin] objects, a matrix like object of class
-#' 'illparms.mmkin' or 'illparms.mhmkin'. The latter objects have a suitable
-#' printing method.
+#' 'illparms.mmkin' or 'illparms.mhmkin'.
+#' @note All objects have printing methods. For the single fits, printing
+#' does not output anything in the case no ill-defined parameters are found.
 #' @export
 illparms <- function(object, ...)
 {
@@ -39,7 +40,18 @@ illparms.mkinfit <- function(object, conf.level = 0.95, ...) {
   p_values <- suppressWarnings(summary(object)$bpar[, "Pr(>t)"])
   na <- is.na(p_values)
   failed <- p_values > 1 - conf.level
-  names(parms(object))[na | failed]
+  ret <- names(parms(object))[na | failed]
+  class(ret) <- "illparms.mkinfit"
+  return(ret)
+}
+
+#' @rdname
+#' @export
+print.illparms.mkinfit <- function(x, ...) {
+  class(x) <- NULL
+  if (length(x) > 0) {
+    print(as.character(x))
+  }
 }
 
 #' @rdname illparms
@@ -82,7 +94,7 @@ print.illparms.mmkin <- function(x, ...) {
 #' @export
 illparms.saem.mmkin <- function(object, conf.level = 0.95, random = TRUE, errmod = TRUE, ...) {
   if (inherits(object, "try-error")) {
-    return(NA)
+    failed <- NA
   } else {
     ints <- intervals(object, conf.level = conf.level)
     failed <- NULL
@@ -95,8 +107,12 @@ illparms.saem.mmkin <- function(object, conf.level = 0.95, random = TRUE, errmod
       failed <- c(failed, names(which(failed_errmod)))
     }
   }
+  class(failed) <- "illparms.saem.mmkin"
   return(failed)
 }
+
+#' @export
+print.illparms.saem.mmkin <- print.illparms.mkinfit
 
 #' @rdname illparms
 #' @export

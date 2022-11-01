@@ -5,18 +5,27 @@
 ✔ |         5 | Calculation of Akaike weights
 ✔ |         3 | Export dataset for reading into CAKE
 ✔ |        12 | Confidence intervals and p-values [1.0s]
-✔ |     1  12 | Dimethenamid data from 2018 [31.9s]
+✔ |     1  12 | Dimethenamid data from 2018 [31.6s]
 ────────────────────────────────────────────────────────────────────────────────
 Skip (test_dmta.R:98:3): Different backends get consistent results for SFO-SFO3+, dimethenamid data
 Reason: Fitting this ODE model with saemix takes about 15 minutes on my system
 ────────────────────────────────────────────────────────────────────────────────
-✔ |        14 | Error model fitting [4.9s]
+✔ |        14 | Error model fitting [4.8s]
 ✔ |         5 | Time step normalisation
 ✔ |         4 | Calculation of FOCUS chi2 error levels [0.6s]
 ✔ |        14 | Results for FOCUS D established in expertise for UBA (Ranke 2014) [0.8s]
 ✔ |         4 | Test fitting the decline of metabolites from their maximum [0.3s]
 ✔ |         1 | Fitting the logistic model [0.2s]
-✔ |         7 | Batch fitting and diagnosing hierarchical kinetic models [15.8s]
+✖ | 1       7 | Batch fitting and diagnosing hierarchical kinetic models [14.4s]
+────────────────────────────────────────────────────────────────────────────────
+Failure (test_mhmkin.R:27:3): Multiple hierarchical kinetic models can be fitted and diagnosed
+illparms(hfit_sfo_tc) not equal to character(0).
+Attributes: < Modes: list, NULL >
+Attributes: < Lengths: 1, 0 >
+Attributes: < names for target but not for current >
+Attributes: < current is not list-like >
+target is illparms.saem.mmkin, current is character
+────────────────────────────────────────────────────────────────────────────────
 ✔ |     1  12 | Nonlinear mixed-effects models [0.3s]
 ────────────────────────────────────────────────────────────────────────────────
 Skip (test_mixed.R:74:3): saemix results are reproducible for biphasic fits
@@ -27,14 +36,38 @@ Reason: Fitting with saemix takes around 10 minutes when using deSolve
 ✔ |         3 | mkinfit features [0.7s]
 ✔ |         8 | mkinmod model generation and printing [0.2s]
 ✔ |         3 | Model predictions with mkinpredict [0.3s]
-✔ |         7 | Multistart method for saem.mmkin models [36.3s]
-✔ |        16 | Evaluations according to 2015 NAFTA guidance [2.4s]
-✔ |         9 | Nonlinear mixed-effects models with nlme [8.9s]
-✔ |        16 | Plotting [9.9s]
+✔ |         7 | Multistart method for saem.mmkin models [35.7s]
+✔ |        16 | Evaluations according to 2015 NAFTA guidance [2.3s]
+✔ |         9 | Nonlinear mixed-effects models with nlme [8.6s]
+✔ |        16 | Plotting [10.1s]
 ✔ |         4 | Residuals extracted from mkinfit models
-✔ |     1  36 | saemix parent models [72.6s]
+✖ | 3   1  34 | saemix parent models [70.9s]
 ────────────────────────────────────────────────────────────────────────────────
-Skip (test_saemix_parent.R:152:3): We can also use mkin solution methods for saem
+Failure (test_saemix_parent.R:12:3): Parent fits using saemix are correctly implemented
+illparms(sfo_saem_1) not equal to "sd(parent_0)".
+Attributes: < Modes: list, NULL >
+Attributes: < Lengths: 1, 0 >
+Attributes: < names for target but not for current >
+Attributes: < current is not list-like >
+target is illparms.saem.mmkin, current is character
+
+Failure (test_saemix_parent.R:14:3): Parent fits using saemix are correctly implemented
+illparms(sfo_saem_1_reduced) not equal to character(0).
+Attributes: < Modes: list, NULL >
+Attributes: < Lengths: 1, 0 >
+Attributes: < names for target but not for current >
+Attributes: < current is not list-like >
+target is illparms.saem.mmkin, current is character
+
+Failure (test_saemix_parent.R:25:3): Parent fits using saemix are correctly implemented
+illparms(sfo_saem_1_mkin) not equal to "sd(parent_0)".
+Attributes: < Modes: list, NULL >
+Attributes: < Lengths: 1, 0 >
+Attributes: < names for target but not for current >
+Attributes: < current is not list-like >
+target is illparms.saem.mmkin, current is character
+
+Skip (test_saemix_parent.R:153:3): We can also use mkin solution methods for saem
 Reason: This still takes almost 2.5 minutes although we do not solve ODEs
 ────────────────────────────────────────────────────────────────────────────────
 ✔ |         2 | Complex test case from Schaefer et al. (2007) Piacenza paper [1.4s]
@@ -42,16 +75,16 @@ Reason: This still takes almost 2.5 minutes although we do not solve ODEs
 ✔ |         7 | Fitting the SFORB model [3.7s]
 ✔ |         1 | Summaries of old mkinfit objects
 ✔ |         5 | Summary [0.2s]
-✔ |         4 | Results for synthetic data established in expertise for UBA (Ranke 2014) [2.2s]
-✔ |         9 | Hypothesis tests [8.1s]
-✔ |         4 | Calculation of maximum time weighted average concentrations (TWAs) [2.2s]
+✔ |         4 | Results for synthetic data established in expertise for UBA (Ranke 2014) [2.1s]
+✔ |         9 | Hypothesis tests [8.0s]
+✔ |         4 | Calculation of maximum time weighted average concentrations (TWAs) [2.3s]
 
 ══ Results ═════════════════════════════════════════════════════════════════════
-Duration: 209.2 s
+Duration: 204.9 s
 
 ── Skipped tests  ──────────────────────────────────────────────────────────────
 • Fitting this ODE model with saemix takes about 15 minutes on my system (1)
 • Fitting with saemix takes around 10 minutes when using deSolve (1)
 • This still takes almost 2.5 minutes although we do not solve ODEs (1)
 
-[ FAIL 0 | WARN 0 | SKIP 3 | PASS 261 ]
+[ FAIL 4 | WARN 0 | SKIP 3 | PASS 259 ]

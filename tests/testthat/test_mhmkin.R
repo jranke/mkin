@@ -25,6 +25,7 @@ test_that("Multiple hierarchical kinetic models can be fitted and diagnosed", {
   hfit_sfo_tc <- update(hfits[["SFO", "tc"]],
     covariance.model = diag(c(0, 1)))
   expect_equal(illparms(hfit_sfo_tc), character(0))
+  expect_silent(print(illparms(hfit_sfo_tc)))
 
   test_summary <- summary(hfit_sfo_tc)
   test_summary$saemixversion <- "Dummy 0.0 for testing"
@@ -37,7 +38,7 @@ test_that("Multiple hierarchical kinetic models can be fitted and diagnosed", {
   expect_known_output(print(test_summary, digits = 1),
     "summary_hfit_sfo_tc.txt")
 
-  # It depends on the platform exactly which of the 
+  # It depends on the platform exactly which of the
   # SFO datasets fail to converge with FOMC
   skip_on_travis()
 

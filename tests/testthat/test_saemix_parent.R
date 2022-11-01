@@ -12,6 +12,7 @@ test_that("Parent fits using saemix are correctly implemented", {
   expect_equal(illparms(sfo_saem_1), "sd(parent_0)")
   # So we have also done a fit without this variance
   expect_equal(illparms(sfo_saem_1_reduced), character(0))
+  expect_silent(print(illparms(sfo_saem_1_reduced)))
 
   # We cannot currently do the fit with completely fixed initial values
   mmkin_sfo_2 <- update(mmkin_sfo_1, fixed_initials = c(parent = 100))
