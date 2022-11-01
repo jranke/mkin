@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">mkin</a>
-        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.1.2</span>
+        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.2.0</span>
       </span>
     </div>
 
@@ -109,7 +109,7 @@
       <h1 data-toc-skip>Short demo of the multistart method</h1>
                         <h4 data-toc-skip class="author">Johannes Ranke</h4>
             
-            <h4 data-toc-skip class="date">Last change 26 September 2022 (rebuilt 2022-10-28)</h4>
+            <h4 data-toc-skip class="date">Last change 26 September 2022 (rebuilt 2022-11-01)</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jranke/mkin/blob/HEAD/vignettes/web_only/multistart.rmd" class="external-link"><code>vignettes/web_only/multistart.rmd</code></a></small>
       <div class="hidden name"><code>multistart.rmd</code></div>
@@ -144,23 +144,21 @@
 <p>This confirms that the variance of k2 is the most problematic parameter, so we reduce the parameter distribution model by removing the intersoil variability for k2.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">f_saem_reduced</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">f_saem_full</span>, no_random_effect <span class="op">=</span> <span class="st">"log_k2"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../../reference/illparms.html">illparms</a></span><span class="op">(</span><span class="va">f_saem_reduced</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## character(0)</span></span></code></pre>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">f_saem_reduced_multi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/multistart.html">multistart</a></span><span class="op">(</span><span class="va">f_saem_reduced</span>, n <span class="op">=</span> <span class="fl">16</span>, cores <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../../reference/illparms.html">illparms</a></span><span class="op">(</span><span class="va">f_saem_reduced</span><span class="op">)</span></span>
+<span><span class="va">f_saem_reduced_multi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/multistart.html">multistart</a></span><span class="op">(</span><span class="va">f_saem_reduced</span>, n <span class="op">=</span> <span class="fl">16</span>, cores <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../../reference/parplot.html">parplot</a></span><span class="op">(</span><span class="va">f_saem_reduced_multi</span>, lpos <span class="op">=</span> <span class="st">"topright"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="multistart_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 <p>The results confirm that all remaining parameters can be determined with sufficient certainty.</p>
 <p>We can also analyse the log-likelihoods obtained in the multiple runs:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/llhist.html">llhist</a></span><span class="op">(</span><span class="va">f_saem_reduced_multi</span><span class="op">)</span></span></code></pre></div>
 <p><img src="multistart_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 <p>The parameter histograms can be further improved by excluding the result with the low likelihood.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/parplot.html">parplot</a></span><span class="op">(</span><span class="va">f_saem_reduced_multi</span>, lpos <span class="op">=</span> <span class="st">"topright"</span>, llmin <span class="op">=</span> <span class="op">-</span><span class="fl">326</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="multistart_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 <p>We can use the <code>anova</code> method to compare the models, including a likelihood ratio test if the models are nested.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_saem_full</span>, <span class="fu"><a href="../../reference/multistart.html">best</a></span><span class="op">(</span><span class="va">f_saem_reduced_multi</span><span class="op">)</span>, test <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Data: 155 observations of 1 variable(s) grouped in 6 datasets</span></span>
 <span><span class="co">## </span></span>

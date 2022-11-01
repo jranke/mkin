@@ -19,7 +19,7 @@ Expectation Maximisation algorithm (SAEM)."><meta name="robots" content="noindex
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.1.2</span>
+        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.2.0</span>
       </span>
     </div>
 
@@ -100,6 +100,7 @@ Expectation Maximisation algorithm (SAEM).</p>
 <span><span class="fu">saem</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
 <span>  transformations <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mkin"</span>, <span class="st">"saemix"</span><span class="op">)</span>,</span>
+<span>  error_model <span class="op">=</span> <span class="st">"auto"</span>,</span>
 <span>  degparms_start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  test_log_parms <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  conf.level <span class="op">=</span> <span class="fl">0.6</span>,</span>
@@ -124,6 +125,7 @@ Expectation Maximisation algorithm (SAEM).</p>
 <span>  <span class="va">object</span>,</span>
 <span>  solution_type <span class="op">=</span> <span class="st">"auto"</span>,</span>
 <span>  transformations <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mkin"</span>, <span class="st">"saemix"</span><span class="op">)</span>,</span>
+<span>  error_model <span class="op">=</span> <span class="st">"auto"</span>,</span>
 <span>  degparms_start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  covariance.model <span class="op">=</span> <span class="st">"auto"</span>,</span>
 <span>  no_random_effect <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -158,6 +160,10 @@ in mkin. If this argument is set to 'saemix', parameter transformations
 are done in 'saemix' for the supported cases, i.e. (as of version 1.1.2)
 SFO, FOMC, DFOP and HS without fixing <code>parent_0</code>, and SFO or DFOP with
 one SFO metabolite.</p></dd>
+
+
+<dt>error_model</dt>
+<dd><p>Possibility to override the error model used in the mmkin object</p></dd>
 
 
 <dt>degparms_start</dt>
@@ -409,10 +415,10 @@ using <a href="mmkin.html">mmkin</a>.</p>
 <span class="r-plt img"><img src="saem-4.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">f_saem_dfop_sfo</span>, data <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> saemix version used for fitting:      3.2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mkin version used for pre-fitting:  1.1.2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> R version used for fitting:         4.2.1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Date of fit:     Wed Oct 26 09:20:37 2022 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Date of summary: Wed Oct 26 09:20:37 2022 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mkin version used for pre-fitting:  1.2.0 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> R version used for fitting:         4.2.2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Date of fit:     Tue Nov  1 14:12:07 2022 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Date of summary: Tue Nov  1 14:12:07 2022 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Equations:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> d_parent/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *</span>
@@ -427,7 +433,7 @@ using <a href="mmkin.html">mmkin</a>.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model predictions using solution type analytical </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fitted in 8.902 s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fitted in 8.45 s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Using 300, 100 iterations and 10 chains</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Variance model: Constant variance </span>
