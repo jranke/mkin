@@ -16,6 +16,10 @@
 
 - 'R/saem.R': Implement and test saemix transformations for FOMC and HS. Also, error out if saemix transformations are requested but not supported.
 
+- 'R/read_spreadsheet.R': Conveniently read in data from a spreadsheet file.
+
+- 'R/tex_listings.R': Conveniently include summaries of fit objects in R markdown documents that are compiled to LaTeX.
+
 # mkin 1.1.1 (2022-07-12)
 
 - 'R/{mkinmod,mkinpredict}.R: Store DLL information in mkinmod objects and use that information in mkinpredict to avoid a performance regression brought by a bugfix in R 4.2.x. Thanks to Tomas Kalibera for his analysis of the problem on the r-package-devel list and his suggestion on how to fix it.
