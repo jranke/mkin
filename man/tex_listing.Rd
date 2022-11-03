@@ -16,5 +16,6 @@ tex_listing(object, caption = NULL, label = NULL, clearpage = TRUE)
 \item{clearpage}{Should a new page be started after the listing?}
 }
 \description{
-Wrap the output of a summary function in tex listing environment
+This function can be used in a R markdown code chunk with the chunk
+option \code{results = "asis"}.
 }
