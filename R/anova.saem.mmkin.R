@@ -30,9 +30,10 @@ anova.saem.mmkin <- function(object, ...,
   is_model <- sapply(dots, is, "saem.mmkin")
   if (any(is_model)) {
     mods <- c(list(object), dots[is_model])
+    successful <- sapply(mods, function(x) !inherits(x$so, "try-error"))
 
     # Ensure same data, ignoring covariates
-    same_data <- sapply(dots[is_model], function(x) {
+    same_data <- sapply(mods[successful], function(x) {
       identical(object$data[c("ds", "name", "time", "value")],
         x$data[c("ds", "name", "time", "value")])
     })
@@ -56,7 +57,7 @@ anova.saem.mmkin <- function(object, ...,
     }
     names(mods) <- model.names
 
-    llks <- lapply(model.names, function(x) {
+    llks <- lapply(model.names[successful], function(x) {
       llk <- try(logLik(mods[[x]], method = method))
       if (inherits(llk, "try-error"))
         stop("Could not obtain log likelihood with '", method, "' method for ", x)

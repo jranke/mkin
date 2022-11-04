@@ -93,22 +93,22 @@ print.illparms.mmkin <- function(x, ...) {
 #' @rdname illparms
 #' @export
 illparms.saem.mmkin <- function(object, conf.level = 0.95, random = TRUE, errmod = TRUE, ...) {
-  if (inherits(object, "try-error")) {
-    failed <- NA
+  if (inherits(object$so, "try-error")) {
+    ill_parms <- NA
   } else {
     ints <- intervals(object, conf.level = conf.level)
-    failed <- character(0)
+    ill_parms <- character(0)
     if (random) {
-      failed_random <- ints$random[, "lower"] < 0
-      failed <- c(failed, names(which(failed_random)))
+      ill_parms_random <- ints$random[, "lower"] < 0
+      ill_parms <- c(ill_parms, names(which(ill_parms_random)))
     }
     if (errmod) {
-      failed_errmod <- ints$errmod[, "lower"] < 0 & ints$errmod[, "est."] > 0
-      failed <- c(failed, names(which(failed_errmod)))
+      ill_parms_errmod <- ints$errmod[, "lower"] < 0 & ints$errmod[, "est."] > 0
+      ill_parms <- c(ill_parms, names(which(ill_parms_errmod)))
     }
   }
-  class(failed) <- "illparms.saem.mmkin"
-  return(failed)
+  class(ill_parms) <- "illparms.saem.mmkin"
+  return(ill_parms)
 }
 
 #' @rdname illparms

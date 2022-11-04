@@ -207,6 +207,7 @@ anova.mhmkin <- function(object, ...,
   if (identical(model.names, "auto")) {
     model.names <- outer(rownames(object), colnames(object), paste)
   }
-  rlang::inject(anova(!!!(object), method = method, test = test, model.names = model.names))
+  rlang::inject(anova(!!!(object), method = method, test = test, 
+      model.names = model.names))
 }
 
