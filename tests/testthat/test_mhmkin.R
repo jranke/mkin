@@ -38,12 +38,22 @@ test_that("Multiple hierarchical kinetic models can be fitted and diagnosed", {
   expect_known_output(print(test_summary, digits = 1),
     "summary_hfit_sfo_tc.txt")
 
-  # It depends on the platform exactly which of the
-  # SFO datasets fail to converge with FOMC
+  # It depends on the platform exactly which of the datasets fail to converge
+  # with FOMC, because they were generated to be SFO
   skip_on_travis()
 
   expect_known_output(
     print(fits_synth_const),
     "print_fits_synth_const.txt")
+
+  hfits_no_ranef_auto <- update(hfits, no_random_effect = "auto", auto_ranef_threshold = 2)
+
+  expect_known_output(
+    print(hfits_no_ranef_auto),
+    "print_hfits_synth_no_ranef_auto.txt")
+
+  expect_known_output(
+    print(illparms(hfits_no_ranef_auto)),
+    "illparms_hfits_synth_no_ranef_auto.txt")
 
 })

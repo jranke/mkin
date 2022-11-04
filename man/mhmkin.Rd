@@ -9,13 +9,16 @@
 \title{Fit nonlinear mixed-effects models built from one or more kinetic
 degradation models and one or more error models}
 \usage{
-mhmkin(objects, backend = "saemix", algorithm = "saem", ...)
+mhmkin(objects, ...)
 
 \method{mhmkin}{mmkin}(objects, ...)
 
 \method{mhmkin}{list}(
   objects,
   backend = "saemix",
+  algorithm = "saem",
+  no_random_effect = NULL,
+  auto_ranef_threshold = 3,
   ...,
   cores = if (Sys.info()["sysname"] == "Windows") 1 else parallel::detectCores(),
   cluster = NULL
@@ -31,13 +34,22 @@ degradation models to the same data, but using different error models.
 Alternatively, a single \link{mmkin} object containing fits of several
 degradation models to the same data}
 
+\item{\dots}{Further arguments that will be passed to the nonlinear mixed-effects
+model fitting function.}
+
 \item{backend}{The backend to be used for fitting. Currently, only saemix is
 supported}
 
 \item{algorithm}{The algorithm to be used for fitting (currently not used)}
 
-\item{\dots}{Further arguments that will be passed to the nonlinear mixed-effects
-model fitting function.}
+\item{no_random_effect}{Default is NULL and will be passed to \link{saem}. If
+you specify "auto", random effects are only included if the number
+of datasets in which the parameter passed the t-test is at least 'auto_ranef_threshold'.
+Beware that while this may make for convenient model reduction or even
+numerical stability of the algorithm, it will likely lead to
+underparameterised models.}
+
+\item{auto_ranef_threshold}{See 'no_random_effect.}
 
 \item{cores}{The number of cores to be used for multicore processing. This
 is only used when the \code{cluster} argument is \code{NULL}. On Windows

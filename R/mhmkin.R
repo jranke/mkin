@@ -12,6 +12,13 @@
 #' degradation models to the same data
 #' @param backend The backend to be used for fitting. Currently, only saemix is
 #' supported
+#' @param no_random_effect Default is NULL and will be passed to [saem]. If
+#' you specify "auto", random effects are only included if the number
+#' of datasets in which the parameter passed the t-test is at least 'auto_ranef_threshold'.
+#' Beware that while this may make for convenient model reduction or even
+#' numerical stability of the algorithm, it will likely lead to
+#' underparameterised models.
+#' @param auto_ranef_threshold See 'no_random_effect.
 #' @param algorithm The algorithm to be used for fitting (currently not used)
 #' @param \dots Further arguments that will be passed to the nonlinear mixed-effects
 #' model fitting function.
@@ -31,7 +38,7 @@
 #' @author Johannes Ranke
 #' @seealso \code{\link{[.mhmkin}} for subsetting [mhmkin] objects
 #' @export
-mhmkin <- function(objects, backend = "saemix", algorithm = "saem", ...) {
+mhmkin <- function(objects, ...) {
   UseMethod("mhmkin")
 }
 
@@ -43,7 +50,8 @@ mhmkin.mmkin <- function(objects, ...) {
 
 #' @export
 #' @rdname mhmkin
-mhmkin.list <- function(objects, backend = "saemix",
+mhmkin.list <- function(objects, backend = "saemix", algorithm = "saem",
+  no_random_effect = NULL, auto_ranef_threshold = 3,
   ...,
   cores = if (Sys.info()["sysname"] == "Windows") 1 else parallel::detectCores(), cluster = NULL)
 {
@@ -94,7 +102,19 @@ mhmkin.list <- function(objects, backend = "saemix",
     deg_index <- w[1]
     error_index <- w[2]
     mmkin_row <- objects[[error_index]][deg_index, ]
-    res <- try(do.call(backend_function, args = c(list(mmkin_row), dot_args)))
+    if (identical(no_random_effect, "auto")) {
+      ip <- illparms(mmkin_row)
+      ipt <- table(unlist(lapply(as.list(ip), strsplit, ", ")))
+      no_ranef <- names(ipt)[which((length(ds) - ipt) <= auto_ranef_threshold)]
+      transparms <- rownames(mmkin_row[[1]]$start_transformed)
+      bparms <- rownames(mmkin_row[[1]]$start)
+      names(transparms) <- bparms
+      no_ranef_trans <- transparms[no_ranef]
+    } else {
+      no_ranef_trans <- no_random_effect
+    }
+    res <- try(do.call(backend_function,
+        args = c(list(mmkin_row), dot_args, list(no_random_effect = no_ranef_trans))))
     return(res)
   }
 
@@ -207,7 +227,7 @@ anova.mhmkin <- function(object, ...,
   if (identical(model.names, "auto")) {
     model.names <- outer(rownames(object), colnames(object), paste)
   }
-  rlang::inject(anova(!!!(object), method = method, test = test, 
+  rlang::inject(anova(!!!(object), method = method, test = test,
       model.names = model.names))
 }
 
