@@ -56,13 +56,19 @@ anova.saem.mmkin <- function(object, ...,
       model.names <- paste0("MODEL",seq_along(model.names))
     }
     names(mods) <- model.names
+    mods <- mods[successful]
 
-    llks <- lapply(model.names[successful], function(x) {
-      llk <- try(logLik(mods[[x]], method = method))
-      if (inherits(llk, "try-error"))
-        stop("Could not obtain log likelihood with '", method, "' method for ", x)
+    llks <- lapply(names(mods), function(x) {
+      llk <- try(logLik(mods[[x]], method = method), silent = TRUE)
+      if (inherits(llk, "try-error")) {
+        warning("Could not obtain log likelihood with '", method, "' method for ", x)
+        llk <- NA
+      }
       return(llk)
     })
+    available <- !sapply(llks, is.na)
+    llks <- llks[available]
+    mods <- mods[available]
 
     # Order models by increasing degrees of freedom:
     npar <- vapply(llks, attr, FUN.VALUE=numeric(1), "df")
