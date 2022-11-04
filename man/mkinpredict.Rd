@@ -18,6 +18,7 @@ mkinpredict(x, odeparms, odeini, outtimes, ...)
   method.ode = "lsoda",
   atol = 1e-08,
   rtol = 1e-10,
+  maxsteps = 20000,
   map_output = TRUE,
   na_stop = TRUE,
   ...
@@ -38,13 +39,13 @@ mkinpredict(x, odeparms, odeini, outtimes, ...)
 )
 }
 \arguments{
-\item{x}{A kinetic model as produced by \code{\link{mkinmod}}, or a kinetic
-fit as fitted by \code{\link{mkinfit}}. In the latter case, the fitted
-parameters are used for the prediction.}
+\item{x}{A kinetic model as produced by \link{mkinmod}, or a kinetic fit as
+fitted by \link{mkinfit}. In the latter case, the fitted parameters are used for
+the prediction.}
 
 \item{odeparms}{A numeric vector specifying the parameters used in the
-kinetic model, which is generally defined as a set of ordinary
-differential equations.}
+kinetic model, which is generally defined as a set of ordinary differential
+equations.}
 
 \item{odeini}{A numeric vector containing the initial values of the state
 variables of the model. Note that the state variables can differ from the
@@ -63,31 +64,33 @@ variables. The third possibility "eigen" is faster but not applicable to
 some models e.g.  using FOMC for the parent compound.}
 
 \item{use_compiled}{If set to \code{FALSE}, no compiled version of the
-\code{\link{mkinmod}} model is used, even if is present.}
+\link{mkinmod} model is used, even if is present.}
 
-\item{method.ode}{The solution method passed via \code{\link{mkinpredict}}
-to \code{\link{ode}} in case the solution type is "deSolve". The default
-"lsoda" is performant, but sometimes fails to converge.}
+\item{method.ode}{The solution method passed via \link{mkinpredict} to \link{ode}] in
+case the solution type is "deSolve". The default "lsoda" is performant, but
+sometimes fails to converge.}
 
-\item{atol}{Absolute error tolerance, passed to \code{\link{ode}}. Default
-is 1e-8, lower than in \code{\link{lsoda}}.}
+\item{atol}{Absolute error tolerance, passed to \link{ode}. Default is 1e-8,
+lower than in \link{lsoda}.}
 
-\item{rtol}{Absolute error tolerance, passed to \code{\link{ode}}. Default
-is 1e-10, much lower than in \code{\link{lsoda}}.}
+\item{rtol}{Absolute error tolerance, passed to \link{ode}. Default is 1e-10,
+much lower than in \link{lsoda}.}
+
+\item{maxsteps}{Maximum number of steps, passed to \link{ode}.}
 
 \item{map_output}{Boolean to specify if the output should list values for
 the observed variables (default) or for all state variables (if set to
 FALSE). Setting this to FALSE has no effect for analytical solutions,
 as these always return mapped output.}
 
-\item{na_stop}{Should it be an error if deSolve::ode returns NaN values}
+\item{na_stop}{Should it be an error if \link{ode} returns NaN values}
 }
 \value{
 A matrix with the numeric solution in wide format
 }
 \description{
 This function produces a time series for all the observed variables in a
-kinetic model as specified by \code{\link{mkinmod}}, using a specific set of
+kinetic model as specified by \link{mkinmod}, using a specific set of
 kinetic parameters and initial values for the state variables.
 }
 \examples{
