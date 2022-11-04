@@ -32,15 +32,6 @@ anova.saem.mmkin <- function(object, ...,
     mods <- c(list(object), dots[is_model])
     successful <- sapply(mods, function(x) !inherits(x$so, "try-error"))
 
-    # Ensure same data, ignoring covariates
-    same_data <- sapply(mods[successful], function(x) {
-      identical(object$data[c("ds", "name", "time", "value")],
-        x$data[c("ds", "name", "time", "value")])
-    })
-    if (!all(same_data)) {
-      stop(sum(!same_data), " objects have not been fitted to the same data")
-    }
-
     if (is.null(model.names))
         model.names <- vapply(as.list(mCall)[c(FALSE, TRUE, is_model)], deparse1, "")
 
@@ -57,6 +48,15 @@ anova.saem.mmkin <- function(object, ...,
     }
     names(mods) <- model.names
     mods <- mods[successful]
+
+    # Ensure same data, ignoring covariates
+    same_data <- sapply(mods[-1], function(x) {
+      identical(mods[[1]]$data[c("ds", "name", "time", "value")],
+        x$data[c("ds", "name", "time", "value")])
+    })
+    if (!all(same_data)) {
+      stop(sum(!same_data), " objects have not been fitted to the same data")
+    }
 
     llks <- lapply(names(mods), function(x) {
       llk <- try(logLik(mods[[x]], method = method), silent = TRUE)
