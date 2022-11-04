@@ -45,8 +45,6 @@ utils::globalVariables(c("predicted", "std"))
 #' @param covariate_models A list containing linear model formulas with one explanatory
 #' variable, i.e. of the type 'parameter ~ covariate'. Covariates must be available
 #' in the 'covariates' data frame.
-#' @param fail_with_errors Should a failure to compute standard errors
-#' from the inverse of the Fisher Information Matrix be a failure?
 #' @param quiet Should we suppress the messages saemix prints at the beginning
 #' and the end of the optimisation process?
 #' @param nbiter.saemix Convenience option to increase the number of
@@ -145,7 +143,6 @@ saem.mmkin <- function(object,
   control = list(displayProgress = FALSE, print = FALSE,
     nbiter.saemix = nbiter.saemix,
     save = FALSE, save.graphs = FALSE),
-  fail_with_errors = TRUE,
   verbose = FALSE, quiet = FALSE, ...)
 {
   call <- match.call()
@@ -176,9 +173,6 @@ saem.mmkin <- function(object,
     if (any(is.na(f_saemix@results@se.fixed))) FIM_failed <- c(FIM_failed, "fixed effects")
     if (any(is.na(c(f_saemix@results@se.omega, f_saemix@results@se.respar)))) {
       FIM_failed <- c(FIM_failed, "random effects and error model parameters")
-    }
-    if (!is.null(FIM_failed) & fail_with_errors) {
-      stop("Could not invert FIM for ", paste(FIM_failed, collapse = " and "))
     }
 
     transparms_optim <- f_saemix@results@fixed.effects

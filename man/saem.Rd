@@ -26,7 +26,6 @@ saem(object, ...)
   nbiter.saemix = c(300, 100),
   control = list(displayProgress = FALSE, print = FALSE, nbiter.saemix = nbiter.saemix,
     save = FALSE, save.graphs = FALSE),
-  fail_with_errors = TRUE,
   verbose = FALSE,
   quiet = FALSE,
   ...
@@ -101,9 +100,6 @@ if the covariance model is not explicitly specified.}
 iterations}
 
 \item{control}{Passed to \link[saemix:saemix]{saemix::saemix}.}
-
-\item{fail_with_errors}{Should a failure to compute standard errors
-from the inverse of the Fisher Information Matrix be a failure?}
 
 \item{verbose}{Should we print information about created objects of
 type \link[saemix:SaemixModel-class]{saemix::SaemixModel} and \link[saemix:SaemixData-class]{saemix::SaemixData}?}
