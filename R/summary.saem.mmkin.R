@@ -176,9 +176,14 @@ summary.saem.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes =
   object$verbose <- verbose
 
   object$fixed <- object$mmkin_orig[[1]]$fixed
-  object$AIC = AIC(object$so)
-  object$BIC = BIC(object$so)
-  object$logLik = logLik(object$so, method = "is")
+  ll <-try(logLik(object$so, method = "is"), silent = TRUE)
+  if (inherits(ll, "try-error")) {
+    object$logLik <- object$AIC <- object $BIC <- NA
+  } else {
+    object$logLik = logLik(object$so, method = "is")
+    object$AIC = AIC(object$so)
+    object$BIC = BIC(object$so)
+  }
 
   ep <- endpoints(object)
   if (length(ep$ff) != 0)

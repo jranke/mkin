@@ -257,11 +257,16 @@ print.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3), ...) {
     cat("\nFit did not terminate successfully\n")
   } else {
     cat("\nLikelihood computed by importance sampling\n")
-    print(data.frame(
-        AIC = AIC(x$so, type = "is"),
-        BIC = BIC(x$so, type = "is"),
-        logLik = logLik(x$so, type = "is"),
-        row.names = " "), digits = digits)
+    ll <- try(logLik(x$so, type = "is"), silent = TRUE)
+    if (inherits(ll, "try-error")) {
+      cat("Not available\n")
+    } else {
+      print(data.frame(
+          AIC = AIC(x$so, type = "is"),
+          BIC = BIC(x$so, type = "is"),
+          logLik = logLik(x$so, type = "is"),
+          row.names = " "), digits = digits)
+    }
 
     cat("\nFitted parameters:\n")
     conf.int <- parms(x, ci = TRUE)
