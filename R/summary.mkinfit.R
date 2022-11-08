@@ -6,14 +6,14 @@
 #' and optionally the data, consisting of observed, predicted and residual
 #' values.
 #'
-#' @param object an object of class \code{\link{mkinfit}}.
+#' @param object an object of class [mkinfit].
 #' @param x an object of class \code{summary.mkinfit}.
 #' @param data logical, indicating whether the data should be included in the
-#'   summary.
+#' summary.
 #' @param distimes logical, indicating whether DT50 and DT90 values should be
-#'   included.
+#' included.
 #' @param alpha error level for confidence interval estimation from t
-#'   distribution
+#' distribution
 #' @param digits Number of digits to use for printing
 #' @param \dots optional arguments passed to methods like \code{print}.
 #' @importFrom stats qt pt cov2cor
@@ -37,7 +37,8 @@
 #'   \item{ff}{The estimated formation fractions derived from the fitted
 #'      model.}
 #'   \item{distimes}{The DT50 and DT90 values for each observed variable.}
-#'   \item{SFORB}{If applicable, eigenvalues of SFORB components of the model.}
+#'   \item{SFORB}{If applicable, eigenvalues and fractional eigenvector component
+#'      g of SFORB systems in the model.}
 #'   The print method is called for its side effect, i.e. printing the summary.
 #' @author Johannes Ranke
 #' @references FOCUS (2006) \dQuote{Guidance Document on Estimating Persistence
@@ -264,7 +265,7 @@ print.summary.mkinfit <- function(x, digits = max(3, getOption("digits") - 3), .
 
   printSFORB <- !is.null(x$SFORB)
   if(printSFORB){
-    cat("\nEstimated Eigenvalues of SFORB model(s):\n")
+    cat("\nEstimated Eigenvalues and DFOP g parameter of SFORB model(s):\n")
     print(x$SFORB, digits=digits,...)
   }
 

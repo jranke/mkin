@@ -162,6 +162,7 @@ endpoints <- function(fit) {
       sqrt_exp = sqrt(1/4 * (k_12 + k_21 + k_1output)^2 - k_1output * k_21)
       b1 = 0.5 * (k_12 + k_21 + k_1output) + sqrt_exp
       b2 = 0.5 * (k_12 + k_21 + k_1output) - sqrt_exp
+      g = (k_12 + k_21 - b1)/(b2 - b1)
 
       DT50_b1 = log(2)/b1
       DT50_b2 = log(2)/b2
@@ -169,8 +170,7 @@ endpoints <- function(fit) {
       DT90_b2 = log(10)/b2
 
       SFORB_fraction = function(t) {
-        ((k_12 + k_21 - b1)/(b2 - b1)) * exp(-b1 * t) +
-        ((k_12 + k_21 - b2)/(b1 - b2)) * exp(-b2 * t)
+        g * exp(-b1 * t) + (1 - g) * exp(-b2 * t)
       }
 
       f_50 <- function(log_t) (SFORB_fraction(exp(log_t)) - 0.5)^2
@@ -195,6 +195,8 @@ endpoints <- function(fit) {
       # Return the eigenvalues for comparison with DFOP rate constants
       ep$SFORB[[paste(obs_var, "b1", sep="_")]] = b1
       ep$SFORB[[paste(obs_var, "b2", sep="_")]] = b2
+      # Return g for comparison with DFOP
+      ep$SFORB[[paste(obs_var, "g", sep="_")]] = g
 
       ep$distimes[obs_var, c("DT50back")] = DT50_back
       ep$distimes[obs_var, c(paste("DT50", obs_var, "b1", sep = "_"))] = DT50_b1

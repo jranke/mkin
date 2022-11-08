@@ -10,7 +10,7 @@
 \method{print}{summary.mkinfit}(x, digits = max(3, getOption("digits") - 3), ...)
 }
 \arguments{
-\item{object}{an object of class \code{\link{mkinfit}}.}
+\item{object}{an object of class \link{mkinfit}.}
 
 \item{data}{logical, indicating whether the data should be included in the
 summary.}
@@ -48,7 +48,8 @@ parameters, for use as starting parameters for related models.}
 \item{ff}{The estimated formation fractions derived from the fitted
 model.}
 \item{distimes}{The DT50 and DT90 values for each observed variable.}
-\item{SFORB}{If applicable, eigenvalues of SFORB components of the model.}
+\item{SFORB}{If applicable, eigenvalues and fractional eigenvector component
+g of SFORB systems in the model.}
 The print method is called for its side effect, i.e. printing the summary.
 }
 \description{
