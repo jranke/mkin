@@ -8,17 +8,16 @@ with mkinfit}
 endpoints(fit)
 }
 \arguments{
-\item{fit}{An object of class \link{mkinfit}, \link{nlme.mmkin} or \link{saem.mmkin},
-or another object that has list components
-mkinmod containing an \link{mkinmod} degradation model, and two numeric vectors,
-bparms.optim and bparms.fixed, that contain parameter values
-for that model.}
+\item{fit}{An object of class \link{mkinfit}, \link{nlme.mmkin} or \link{saem.mmkin}, or
+another object that has list components mkinmod containing an \link{mkinmod}
+degradation model, and two numeric vectors, bparms.optim and bparms.fixed,
+that contain parameter values for that model.}
 }
 \value{
-A list with a matrix of dissipation times named distimes,
-and, if applicable, a vector of formation fractions named ff
-and, if the SFORB model was in use, a vector of eigenvalues
-of these SFORB models, equivalent to DFOP rate constants
+A list with a matrix of dissipation times named distimes, and, if
+applicable, a vector of formation fractions named ff and, if the SFORB model
+was in use, a vector of eigenvalues of these SFORB models, equivalent to
+DFOP rate constants
 }
 \description{
 This function calculates DT50 and DT90 values as well as formation fractions

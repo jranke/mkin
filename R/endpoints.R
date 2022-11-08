@@ -10,18 +10,17 @@
 #' Additional DT50 values are calculated from the FOMC DT90 and k1 and k2 from
 #' HS and DFOP, as well as from Eigenvalues b1 and b2 of any SFORB models
 #'
-#' @param fit An object of class [mkinfit], [nlme.mmkin] or [saem.mmkin],
-#'  or another object that has list components
-#'  mkinmod containing an [mkinmod] degradation model, and two numeric vectors,
-#'  bparms.optim and bparms.fixed, that contain parameter values
-#'  for that model.
+#' @param fit An object of class [mkinfit], [nlme.mmkin] or [saem.mmkin], or
+#' another object that has list components mkinmod containing an [mkinmod]
+#' degradation model, and two numeric vectors, bparms.optim and bparms.fixed,
+#' that contain parameter values for that model.
 #' @importFrom stats optimize
-#' @return A list with a matrix of dissipation times named distimes,
-#'   and, if applicable, a vector of formation fractions named ff
-#'   and, if the SFORB model was in use, a vector of eigenvalues
-#'   of these SFORB models, equivalent to DFOP rate constants
+#' @return A list with a matrix of dissipation times named distimes, and, if
+#' applicable, a vector of formation fractions named ff and, if the SFORB model
+#' was in use, a vector of eigenvalues of these SFORB models, equivalent to
+#' DFOP rate constants
 #' @note The function is used internally by [summary.mkinfit],
-#'   [summary.nlme.mmkin] and [summary.saem.mmkin].
+#' [summary.nlme.mmkin] and [summary.saem.mmkin].
 #' @author Johannes Ranke
 #' @examples
 #'
@@ -160,7 +159,7 @@ endpoints <- function(fit) {
       k_12 = degparms[paste("k", obs_var, "free", "bound", sep="_")]
       k_21 = degparms[paste("k", obs_var, "bound", "free", sep="_")]
 
-      sqrt_exp = sqrt(1/4 * (k_12 + k_21 + k_1output)^2 + k_12 * k_21 - (k_12 + k_1output) * k_21)
+      sqrt_exp = sqrt(1/4 * (k_12 + k_21 + k_1output)^2 - k_1output * k_21)
       b1 = 0.5 * (k_12 + k_21 + k_1output) + sqrt_exp
       b2 = 0.5 * (k_12 + k_21 + k_1output) - sqrt_exp
 
