@@ -37,9 +37,9 @@ guidance for details.
     fit.iore <- mkinfit("IORE", FOCUS_2006_C, quiet = TRUE)
     fit.iore.deS <- mkinfit("IORE", FOCUS_2006_C, solution_type = "deSolve", quiet = TRUE)
 
-    print(data.frame(fit.fomc$par, fit.iore$par, fit.iore.deS$par, 
+    print(data.frame(fit.fomc$par, fit.iore$par, fit.iore.deS$par,
                      row.names = paste("model par", 1:4)))
-    print(rbind(fomc = endpoints(fit.fomc)$distimes, iore = endpoints(fit.iore)$distimes, 
+    print(rbind(fomc = endpoints(fit.fomc)$distimes, iore = endpoints(fit.iore)$distimes,
                 iore.deS = endpoints(fit.iore)$distimes))
   }
 

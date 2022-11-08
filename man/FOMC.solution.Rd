@@ -30,8 +30,8 @@ in the original equation.
 }
 \note{
 The solution of the FOMC kinetic model reduces to the
-\code{\link{SFO.solution}} for large values of \code{alpha} and
-\code{beta} with \eqn{k = \frac{\beta}{\alpha}}{k = beta/alpha}.
+\code{\link{SFO.solution}} for large values of \code{alpha} and \code{beta}
+with \eqn{k = \frac{\beta}{\alpha}}{k = beta/alpha}.
 }
 \examples{
 
