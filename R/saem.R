@@ -413,7 +413,7 @@ saemix_model <- function(object, solution_type = "auto",
               k_1output <- exp(psi[id, 2])
               t <- xidep[, "time"]
 
-              sqrt_exp = sqrt(1/4 * (k_12 + k_21 + k_1output)^2 + k_12 * k_21 - (k_12 + k_1output) * k_21)
+              sqrt_exp = sqrt(1/4 * (k_12 + k_21 + k_1output)^2 - k_1output * k_21)
               b1 = 0.5 * (k_12 + k_21 + k_1output) + sqrt_exp
               b2 = 0.5 * (k_12 + k_21 + k_1output) - sqrt_exp
 
@@ -427,7 +427,7 @@ saemix_model <- function(object, solution_type = "auto",
               k_1output <- psi[id, 2]
               t <- xidep[, "time"]
 
-              sqrt_exp = sqrt(1/4 * (k_12 + k_21 + k_1output)^2 + k_12 * k_21 - (k_12 + k_1output) * k_21)
+              sqrt_exp = sqrt(1/4 * (k_12 + k_21 + k_1output)^2 - k_1output * k_21)
               b1 = 0.5 * (k_12 + k_21 + k_1output) + sqrt_exp
               b2 = 0.5 * (k_12 + k_21 + k_1output) - sqrt_exp
 
