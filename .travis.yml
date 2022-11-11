@@ -1,5 +1,3 @@
-# Run CI for R using https://eddelbuettel.github.io/r-ci/
-
 language: c
 sudo: required
 dist: focal
@@ -15,12 +13,10 @@ env:
     - NOT_CRAN="true"
 
 before_install:
-  - curl -OLs https://eddelbuettel.github.io/r-ci/run.sh
-  - chmod 0755 run.sh
+  - curl -OLs https://eddelbuettel.github.io/r-ci/run.sh && chmod 0755 run.sh
   - ./run.sh bootstrap
 
 install:
-  - ./run.sh install_r nlme
   - ./run.sh install_all
   - ./run.sh install_github jranke/saemixextension@installable_dev_version
 
@@ -32,8 +28,3 @@ after_failure:
 
 after_success:
   - travis_wait ./run.sh coverage
-
-notifications:
-  email:
-    on_success: change
-    on_failure: change
