@@ -20,9 +20,11 @@ saem(object, ...)
   conf.level = 0.6,
   solution_type = "auto",
   covariance.model = "auto",
+  omega.init = "auto",
   covariates = NULL,
   covariate_models = NULL,
   no_random_effect = NULL,
+  error.init = c(3, 0.1),
   nbiter.saemix = c(300, 100),
   control = list(displayProgress = FALSE, print = FALSE, nbiter.saemix = nbiter.saemix,
     save = FALSE, save.graphs = FALSE),
@@ -41,8 +43,10 @@ saemix_model(
   degparms_start = numeric(),
   covariance.model = "auto",
   no_random_effect = NULL,
+  omega.init = "auto",
   covariates = NULL,
   covariate_models = NULL,
+  error.init = numeric(),
   test_log_parms = FALSE,
   conf.level = 0.6,
   verbose = FALSE,
@@ -81,9 +85,17 @@ for parameter that are tested if requested by 'test_log_parms'.}
 \item{solution_type}{Possibility to specify the solution type in case the
 automatic choice is not desired}
 
-\item{covariance.model}{Will be passed to \code{\link[saemix:SaemixModel-class]{saemix::SaemixModel()}}. Per
+\item{covariance.model}{Will be passed to \code{\link[saemix:saemixModel]{saemix::saemixModel()}}. Per
 default, uncorrelated random effects are specified for all degradation
 parameters.}
+
+\item{omega.init}{Will be passed to \code{\link[saemix:saemixModel]{saemix::saemixModel()}}. If using
+mkin transformations and the default covariance model with optionally
+excluded random effects, the variances of the degradation parameters
+are estimated using \link{mean_degparms}, with testing of untransformed
+log parameters for significant difference from zero. If not using
+mkin transformations or a custom covariance model, the default
+initialisation of \link[saemix:saemixModel]{saemix::saemixModel} is used for omega.init.}
 
 \item{covariates}{A data frame with covariate data for use in
 'covariate_models', with dataset names as row names.}
@@ -95,6 +107,8 @@ in the 'covariates' data frame.}
 \item{no_random_effect}{Character vector of degradation parameters for
 which there should be no variability over the groups. Only used
 if the covariance model is not explicitly specified.}
+
+\item{error.init}{Will be passed to \code{\link[saemix:saemixModel]{saemix::saemixModel()}}.}
 
 \item{nbiter.saemix}{Convenience option to increase the number of
 iterations}

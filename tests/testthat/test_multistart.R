@@ -21,7 +21,10 @@ test_that("multistart works for saem.mmkin models", {
   anova_biphasic <- anova(saem_biphasic_m,
     best(saem_biphasic_m_multi))
 
-  expect_true(anova_biphasic[2, "AIC"] < anova_biphasic[1, "AIC"])
+  # With the new starting parameters we do not improve
+  # with multistart any more
+  expect_equal(anova_biphasic[2, "AIC"], anova_biphasic[1, "AIC"],
+    tolerance = 1e-4)
   skip_on_travis() # Plots are platform dependent
 
   llhist_sfo <- function() llhist(saem_sfo_s_multi)

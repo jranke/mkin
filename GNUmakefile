@@ -103,7 +103,7 @@ vignettes/%.html: vignettes/mkin_vignettes.css vignettes/references.bib vignette
 vignettes: vignettes/mkin.html vignettes/FOCUS_D.html vignettes/FOCUS_L.html vignettes/twa.html
 
 vignettes/web_only/%.html: vignettes/references.bib vignettes/web_only/%.rmd
-	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/web_only/$*.rmd', dir = 'vignettes/web_only', keep='mkin_benchmarks.rda')"
+	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/web_only/$*.rmd', dir = 'vignettes/web_only', keep=c('mkin_benchmarks.rda', 'saem_benchmarks.rda'))"
 
 articles: vignettes/web_only/FOCUS_Z.html vignettes/web_only/compiled_models.html vignettes/web_only/benchmarks.html vignettes/web_only/dimethenamid_2018.html vignettes/web_only/multistart.html
 

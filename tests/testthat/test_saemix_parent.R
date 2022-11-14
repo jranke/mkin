@@ -73,40 +73,36 @@ test_that("Parent fits using saemix are correctly implemented", {
   # FOMC
   mmkin_fomc_1 <- mmkin("FOMC", ds_fomc, quiet = TRUE, error_model = "tc", cores = n_cores)
   fomc_saem_1 <- saem(mmkin_fomc_1, quiet = TRUE, transformations = "saemix", no_random_effect = "parent_0")
-  fomc_saem_2 <- update(fomc_saem_1, transformations = "mkin")
-  ci_fomc_s1 <- summary(fomc_saem_1)$confint_back
 
   fomc_pop <- as.numeric(fomc_pop)
+  ci_fomc_s1 <- summary(fomc_saem_1)$confint_back
   expect_true(all(ci_fomc_s1[, "lower"] < fomc_pop))
   expect_true(all(ci_fomc_s1[, "upper"] > fomc_pop))
-  expect_equal(endpoints(fomc_saem_1), endpoints(fomc_saem_2), tol = 0.01)
 
-  mmkin_fomc_2 <- update(mmkin_fomc_1, state.ini = 100, fixed_initials = "parent")
-  fomc_saem_2 <- saem(mmkin_fomc_2, quiet = TRUE, transformations = "mkin")
+  fomc_saem_2 <- update(fomc_saem_1, transformations = "mkin")
   ci_fomc_s2 <- summary(fomc_saem_2)$confint_back
+  expect_true(all(ci_fomc_s2[, "lower"] < fomc_pop))
+  expect_true(all(ci_fomc_s2[, "upper"] > fomc_pop))
 
-  expect_true(all(ci_fomc_s2[, "lower"] < fomc_pop[2:3]))
-  expect_true(all(ci_fomc_s2[, "upper"] > fomc_pop[2:3]))
+  expect_equal(endpoints(fomc_saem_1), endpoints(fomc_saem_2), tol = 0.01)
 
   # DFOP
   dfop_saemix_2 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "saemix",
     no_random_effect = "parent_0")
 
-  s_dfop_s1 <- summary(dfop_saemix_1)
-  s_dfop_s2 <- summary(dfop_saemix_2)
+  s_dfop_s1 <- summary(dfop_saemix_1) # mkin transformations
+  s_dfop_s2 <- summary(dfop_saemix_2) # saemix transformations
   s_dfop_n <- summary(dfop_nlme_1)
 
   dfop_pop <- as.numeric(dfop_pop)
 
-  # When using DFOP with mkin transformations, k1 and k2 are sometimes swapped
-  swap_k1_k2 <- function(p) c(p[1], p[3], p[2], 1 - p[4])
-  expect_true(all(s_dfop_s1$confint_back[, "lower"] < swap_k1_k2(dfop_pop)))
-  expect_true(all(s_dfop_s1$confint_back[, "upper"] > swap_k1_k2(dfop_pop)))
+  expect_true(all(s_dfop_s1$confint_back[, "lower"] < dfop_pop))
+  expect_true(all(s_dfop_s1$confint_back[, "upper"] > dfop_pop))
   expect_true(all(s_dfop_s2$confint_back[, "lower"] < dfop_pop))
   expect_true(all(s_dfop_s2$confint_back[, "upper"] > dfop_pop))
 
-  # We get < 20% deviations with transformations made in mkin (need to swap k1 and k2)
-  rel_diff_1 <- (swap_k1_k2(s_dfop_s1$confint_back[, "est."]) - dfop_pop) / dfop_pop
+  # We get < 20% deviations with transformations made in mkin
+  rel_diff_1 <- (s_dfop_s1$confint_back[, "est."] - dfop_pop) / dfop_pop
   expect_true(all(rel_diff_1 < 0.20))
 
   # We get < 20% deviations with transformations made in saemix
@@ -123,27 +119,21 @@ test_that("Parent fits using saemix are correctly implemented", {
     transformations = "saemix")
   expect_equal(
     log(endpoints(dfop_saemix_1)$distimes[1:2]),
-    log(endpoints(sforb_saemix_1)$distimes[1:2]), tolerance = 0.03)
+    log(endpoints(sforb_saemix_1)$distimes[1:2]), tolerance = 0.01)
   expect_equal(
     log(endpoints(sforb_saemix_1)$distimes[1:2]),
     log(endpoints(sforb_saemix_2)$distimes[1:2]), tolerance = 0.01)
 
   mmkin_hs_1 <- mmkin("HS", ds_hs, quiet = TRUE, error_model = "const", cores = n_cores)
-  hs_saem_1 <- saem(mmkin_hs_1, quiet = TRUE)
-  hs_saem_2 <- saem(mmkin_hs_1, quiet = TRUE, transformations = "mkin")
+  hs_saem_1 <- saem(mmkin_hs_1, quiet = TRUE, no_random_effect = "parent_0")
+  hs_saem_2 <- saem(mmkin_hs_1, quiet = TRUE, transformations = "mkin",
+    no_random_effect = "parent_0")
   expect_equal(endpoints(hs_saem_1), endpoints(hs_saem_2), tol = 0.01)
   ci_hs_s1 <- summary(hs_saem_1)$confint_back
 
   hs_pop <- as.numeric(hs_pop)
   #expect_true(all(ci_hs_s1[, "lower"] < hs_pop)) # k1 is overestimated
   expect_true(all(ci_hs_s1[, "upper"] > hs_pop))
-
-  mmkin_hs_2 <- update(mmkin_hs_1, state.ini = 100, fixed_initials = "parent")
-  hs_saem_3 <- saem(mmkin_hs_2, quiet = TRUE)
-  ci_hs_s3 <- summary(hs_saem_3)$confint_back
-
-  #expect_true(all(ci_hs_s3[, "lower"] < hs_pop[2:4])) # k1 again overestimated
-  expect_true(all(ci_hs_s3[, "upper"] > hs_pop[2:4]))
 })
 
 test_that("We can also use mkin solution methods for saem", {

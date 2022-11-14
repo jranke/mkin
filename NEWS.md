@@ -10,6 +10,8 @@
 
 - 'R/saem.R': 'logLik', 'update' and 'anova' methods for 'saem.mmkin' objects.
 
+- 'R/saem.R': Automatic estimation of start parameters for random effects for the case of mkin transformations, nicely improving convergence and reducing problems with iterative ODE solutions.
+
 - 'R/status.R': New generic to show status information for fit array objects with methods for 'mmkin', 'mhmkin' and 'multistart' objects.
 
 - 'R/summary.mmkin.R': Summary method for mmkin objects.

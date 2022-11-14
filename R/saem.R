@@ -37,14 +37,22 @@ utils::globalVariables(c("predicted", "std"))
 #' @param no_random_effect Character vector of degradation parameters for
 #' which there should be no variability over the groups. Only used
 #' if the covariance model is not explicitly specified.
-#' @param covariance.model Will be passed to [saemix::SaemixModel()]. Per
+#' @param covariance.model Will be passed to [saemix::saemixModel()]. Per
 #' default, uncorrelated random effects are specified for all degradation
 #' parameters.
+#' @param omega.init Will be passed to [saemix::saemixModel()]. If using
+#' mkin transformations and the default covariance model with optionally
+#' excluded random effects, the variances of the degradation parameters
+#' are estimated using [mean_degparms], with testing of untransformed
+#' log parameters for significant difference from zero. If not using
+#' mkin transformations or a custom covariance model, the default
+#' initialisation of [saemix::saemixModel] is used for omega.init.
 #' @param covariates A data frame with covariate data for use in
 #' 'covariate_models', with dataset names as row names.
 #' @param covariate_models A list containing linear model formulas with one explanatory
 #' variable, i.e. of the type 'parameter ~ covariate'. Covariates must be available
 #' in the 'covariates' data frame.
+#' @param error.init Will be passed to [saemix::saemixModel()].
 #' @param quiet Should we suppress the messages saemix prints at the beginning
 #' and the end of the optimisation process?
 #' @param nbiter.saemix Convenience option to increase the number of
@@ -136,9 +144,11 @@ saem.mmkin <- function(object,
   conf.level = 0.6,
   solution_type = "auto",
   covariance.model = "auto",
+  omega.init = "auto",
   covariates = NULL,
   covariate_models = NULL,
   no_random_effect = NULL,
+  error.init = c(3, 0.1),
   nbiter.saemix = c(300, 100),
   control = list(displayProgress = FALSE, print = FALSE,
     nbiter.saemix = nbiter.saemix,
@@ -154,8 +164,10 @@ saem.mmkin <- function(object,
     solution_type = solution_type,
     transformations = transformations,
     covariance.model = covariance.model,
+    omega.init = omega.init,
     covariates = covariates,
     covariate_models = covariate_models,
+    error.init = error.init,
     no_random_effect = no_random_effect,
     ...)
   d_saemix <- saemix_data(object, covariates = covariates, verbose = verbose)
@@ -283,7 +295,9 @@ saemix_model <- function(object, solution_type = "auto",
   transformations = c("mkin", "saemix"), error_model = "auto",
   degparms_start = numeric(),
   covariance.model = "auto", no_random_effect = NULL,
+  omega.init = "auto",
   covariates = NULL, covariate_models = NULL,
+  error.init = numeric(),
   test_log_parms = FALSE, conf.level = 0.6, verbose = FALSE, ...)
 {
   if (nrow(object) > 1) stop("Only row objects allowed")
@@ -637,6 +651,18 @@ saemix_model <- function(object, solution_type = "auto",
     covariance.model = diag(covariance_diagonal)
   }
 
+  if (omega.init[1] == "auto") {
+    if (transformations == "mkin") {
+      degparms_eta_ini <- as.numeric( # remove names
+        mean_degparms(object,
+          random = TRUE, test_log_parms = TRUE)$eta)
+
+      omega.init <- 2 * diag(degparms_eta_ini^2)
+    } else {
+      omega.init <- matrix(nrow = 0, ncol = 0)
+    }
+  }
+
   if (is.null(covariate_models)) {
     covariate.model <- matrix(nrow = 0, ncol = 0) # default in saemixModel()
   } else {
@@ -680,6 +706,7 @@ saemix_model <- function(object, solution_type = "auto",
     verbose = verbose,
     covariance.model = covariance.model,
     covariate.model = covariate.model,
+    omega.init = omega.init,
     ...
   )
   attr(res, "mean_dp_start") <- degparms_optim
