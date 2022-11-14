@@ -99,7 +99,7 @@ mixed-effects model fitting functions.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre><code>mhmkin(objects, backend = "saemix", algorithm = "saem", ...)
+    <div class="sourceCode"><pre><code>mhmkin(objects, ...)
 
 # S3 method for mmkin
 mhmkin(objects, ...)
@@ -108,6 +108,9 @@ mhmkin(objects, ...)
 mhmkin(
   objects,
   backend = "saemix",
+  algorithm = "saem",
+  no_random_effect = NULL,
+  auto_ranef_threshold = 3,
   ...,
   cores = if (Sys.info()["sysname"] == "Windows") 1 else parallel::detectCores(),
   cluster = NULL
@@ -129,6 +132,11 @@ Alternatively, a single <a href="mmkin.html">mmkin</a> object containing fits of
 degradation models to the same data</p></dd>
 
 
+<dt>...</dt>
+<dd><p>Further arguments that will be passed to the nonlinear mixed-effects
+model fitting function.</p></dd>
+
+
 <dt>backend</dt>
 <dd><p>The backend to be used for fitting. Currently, only saemix is
 supported</p></dd>
@@ -138,9 +146,17 @@ supported</p></dd>
 <dd><p>The algorithm to be used for fitting (currently not used)</p></dd>
 
 
-<dt>...</dt>
-<dd><p>Further arguments that will be passed to the nonlinear mixed-effects
-model fitting function.</p></dd>
+<dt>no_random_effect</dt>
+<dd><p>Default is NULL and will be passed to <a href="saem.html">saem</a>. If
+you specify "auto", random effects are only included if the number
+of datasets in which the parameter passed the t-test is at least 'auto_ranef_threshold'.
+Beware that while this may make for convenient model reduction or even
+numerical stability of the algorithm, it will likely lead to
+underparameterised models.</p></dd>
+
+
+<dt>auto_ranef_threshold</dt>
+<dd><p>See 'no_random_effect.</p></dd>
 
 
 <dt>cores</dt>
