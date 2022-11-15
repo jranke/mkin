@@ -14,6 +14,7 @@ utils::globalVariables(c("predicted", "std"))
 #' using [mmkin].
 #'
 #' @importFrom utils packageVersion
+#' @importFrom saemix saemix
 #' @param object An [mmkin] row object containing several fits of the same
 #' [mkinmod] model to different datasets
 #' @param verbose Should we print information about created objects of
@@ -175,7 +176,7 @@ saem.mmkin <- function(object,
   fit_failed <- FALSE
   FIM_failed <- NULL
   fit_time <- system.time({
-    utils::capture.output(f_saemix <- try(saemix::saemix(m_saemix, d_saemix, control)), split = !quiet)
+    utils::capture.output(f_saemix <- try(saemix(m_saemix, d_saemix, control)), split = !quiet)
     if (inherits(f_saemix, "try-error")) fit_failed <- TRUE
   })
 
