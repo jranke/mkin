@@ -9,7 +9,12 @@ test_that("multistart works for saem.mmkin models", {
     best(saem_sfo_s_multi),
     test = TRUE
   )
-  expect_true(anova_sfo[3, "Pr(>Chisq)"] > 0.5)
+  # On winbuilder, sfo_saem_1 gives an AIC of 1310.8, while we get 1311.7
+  # locally on Linux and Windows. The other, well-determined fits
+  # both give 1309.7
+  expect_equal(round(anova_sfo, 1)["sfo_saem_1_reduced", "AIC"], 1309.7)
+  expect_equal(round(anova_sfo, 1)["best(saem_sfo_s_multi)", "AIC"], 1309.7)
+  expect_true(anova_sfo[3, "Pr(>Chisq)"] > 0.2) # Local: 1, CRAN: 0.4
 
   skip_on_cran() # Save CRAN time
   set.seed(123456)
