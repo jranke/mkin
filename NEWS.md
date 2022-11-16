@@ -1,5 +1,11 @@
 # mkin 1.2.0 (unreleased)
 
+- 'R/saem.R': 'logLik', 'update' and 'anova' methods for 'saem.mmkin' objects.
+
+- 'R/saem.R': Automatic estimation of start parameters for random effects for the case of mkin transformations, nicely improving convergence and reducing problems with iterative ODE solutions.
+
+- 'R/status.R': New generic to show status information for fit array objects with methods for 'mmkin', 'mhmkin' and 'multistart' objects.
+
 - 'R/mhmkin.R': New method for performing multiple hierarchical mkin fits in one function call, optionally in parallel.
 
 - 'R/mhmkin.R': 'anova.mhmkin' for conveniently comparing the resulting fits.
@@ -7,12 +13,6 @@
 - 'R/illparms.R': New generic to show ill-defined parameters with methods for 'mkinfit', 'mmkin', 'saem.mmkin' and 'mhmkin' objects.
 
 - 'R/multistart.R': New method for testing multiple start parameters for hierarchical model fits, with function 'llhist' and new generic 'parplot' for diagnostics, and new generics 'which.best' and 'best' for extracting the fit with the highest likelihood
-
-- 'R/saem.R': 'logLik', 'update' and 'anova' methods for 'saem.mmkin' objects.
-
-- 'R/saem.R': Automatic estimation of start parameters for random effects for the case of mkin transformations, nicely improving convergence and reducing problems with iterative ODE solutions.
-
-- 'R/status.R': New generic to show status information for fit array objects with methods for 'mmkin', 'mhmkin' and 'multistart' objects.
 
 - 'R/summary.mmkin.R': Summary method for mmkin objects.
 
