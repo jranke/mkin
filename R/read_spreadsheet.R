@@ -37,7 +37,7 @@
 #' and moisture normalisation factors in the sheet 'Datasets'?
 #' @export
 read_spreadsheet <- function(path, valid_datasets = "all",
-  parent_only = TRUE, normalize = TRUE)
+  parent_only = FALSE, normalize = TRUE)
 {
   if (!requireNamespace("readxl", quietly = TRUE))
     stop("Please install the readxl package to use this function")
