@@ -120,12 +120,12 @@ utils::globalVariables(c("predicted", "std"))
 #' summary(f_saem_dfop_sfo, data = TRUE)
 #'
 #' # The following takes about 6 minutes
-#' #f_saem_dfop_sfo_deSolve <- saem(f_mmkin["DFOP-SFO", ], solution_type = "deSolve",
-#' #  control = list(nbiter.saemix = c(200, 80), nbdisplay = 10))
+#' f_saem_dfop_sfo_deSolve <- saem(f_mmkin["DFOP-SFO", ], solution_type = "deSolve",
+#'   nbiter.saemix = c(200, 80))
 #'
-#' #saemix::compare.saemix(list(
-#' #  f_saem_dfop_sfo$so,
-#' #  f_saem_dfop_sfo_deSolve$so))
+#' #anova(
+#' #  f_saem_dfop_sfo,
+#' #  f_saem_dfop_sfo_deSolve))
 #'
 #' # If the model supports it, we can also use eigenvalue based solutions, which
 #' # take a similar amount of time
@@ -580,6 +580,15 @@ saemix_model <- function(object, solution_type = "auto",
     transform_rates <- object[[1]]$transform_rates
     transform_fractions <- object[[1]]$transform_fractions
 
+    # Get native symbol info for speed
+    call_lsoda <- getNativeSymbolInfo("call_lsoda", PACKAGE = "deSolve")
+    if (solution_type == "deSolve" & !is.null(mkin_model$cf)) {
+      mkin_model$diffs_address <- getNativeSymbolInfo("diffs",
+        PACKAGE = mkin_model$dll_info[["name"]])$address
+      mkin_model$initpar_address <- getNativeSymbolInfo("initpar",
+        PACKAGE = mkin_model$dll_info[["name"]])$address
+    }
+
     # Define the model function
     model_function <- function(psi, id, xidep) {
 
@@ -613,7 +622,8 @@ saemix_model <- function(object, solution_type = "auto",
             odeparms = odeparms, odeini = odeini,
             solution_type = solution_type,
             outtimes = sort(unique(i_time)),
-            na_stop = FALSE
+            na_stop = FALSE,
+            call_lsoda = call_lsoda
           )
 
           out_index <- cbind(as.character(i_time), as.character(i_name))

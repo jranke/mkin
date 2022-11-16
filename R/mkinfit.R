@@ -500,6 +500,15 @@ mkinfit <- function(mkinmod, observed,
     }
   }
 
+  # Get native symbol before iterations info for speed
+  call_lsoda <- getNativeSymbolInfo("call_lsoda", PACKAGE = "deSolve")
+  if (solution_type == "deSolve" & use_compiled[1] != FALSE) {
+    mkinmod$diffs_address <- getNativeSymbolInfo("diffs",
+      PACKAGE = mkinmod$dll_info[["name"]])$address
+    mkinmod$initpar_address <- getNativeSymbolInfo("initpar",
+      PACKAGE = mkinmod$dll_info[["name"]])$address
+  }
+
   # Get the error model and the algorithm for fitting
   err_mod <- match.arg(error_model)
   error_model_algorithm = match.arg(error_model_algorithm)
@@ -610,7 +619,8 @@ mkinfit <- function(mkinmod, observed,
                          solution_type = solution_type,
                          use_compiled = use_compiled,
                          method.ode = method.ode,
-                         atol = atol, rtol = rtol, ...)
+                         atol = atol, rtol = rtol,
+                         call_lsoda = call_lsoda, ...)
 
       observed_index <- cbind(as.character(observed$time), as.character(observed$name))
       observed$predicted <- out[observed_index]
@@ -892,7 +902,10 @@ mkinfit <- function(mkinmod, observed,
   fit$calls <- calls
   fit$time <- fit_time
 
-  # We also need the model and a model name for summary and plotting
+  # We also need the model and a model name for summary and plotting,
+  # but without address info that will become invalid
+  mkinmod$diffs_address <- NULL
+  mkinmod$initpar_address <- NULL
   fit$mkinmod <- mkinmod
   fit$mkinmod$name <- mkinmod_name
   fit$obs_vars <- obs_vars

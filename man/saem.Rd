@@ -206,12 +206,12 @@ plot(f_saem_dfop_sfo)
 summary(f_saem_dfop_sfo, data = TRUE)
 
 # The following takes about 6 minutes
-#f_saem_dfop_sfo_deSolve <- saem(f_mmkin["DFOP-SFO", ], solution_type = "deSolve",
-#  control = list(nbiter.saemix = c(200, 80), nbdisplay = 10))
+f_saem_dfop_sfo_deSolve <- saem(f_mmkin["DFOP-SFO", ], solution_type = "deSolve",
+  nbiter.saemix = c(200, 80))
 
-#saemix::compare.saemix(list(
-#  f_saem_dfop_sfo$so,
-#  f_saem_dfop_sfo_deSolve$so))
+#anova(
+#  f_saem_dfop_sfo,
+#  f_saem_dfop_sfo_deSolve))
 
 # If the model supports it, we can also use eigenvalue based solutions, which
 # take a similar amount of time

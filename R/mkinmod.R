@@ -45,7 +45,9 @@
 #' @param dll_dir Directory where an DLL object, if generated internally by
 #'   [inline::cfunction()], should be saved.  The DLL will only be stored in a
 #'   permanent location for use in future sessions, if 'dll_dir' and 'name'
-#'   are specified.
+#'   are specified. This is helpful if fit objects are cached e.g. by knitr,
+#'   as the cache remains functional across sessions if the DLL is stored in
+#'   a user defined location.
 #' @param unload If a DLL from the target location in 'dll_dir' is already
 #'   loaded, should that be unloaded first?
 #' @param overwrite If a file exists at the target DLL location in 'dll_dir',

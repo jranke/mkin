@@ -18,9 +18,10 @@ mkinpredict(x, odeparms, odeini, outtimes, ...)
   method.ode = "lsoda",
   atol = 1e-08,
   rtol = 1e-10,
-  maxsteps = 20000,
+  maxsteps = 20000L,
   map_output = TRUE,
   na_stop = TRUE,
+  call_lsoda = NULL,
   ...
 )
 
@@ -60,23 +61,21 @@ solver is used.}
 \item{solution_type}{The method that should be used for producing the
 predictions. This should generally be "analytical" if there is only one
 observed variable, and usually "deSolve" in the case of several observed
-variables. The third possibility "eigen" is faster but not applicable to
-some models e.g.  using FOMC for the parent compound.}
+variables. The third possibility "eigen" is fast in comparison to uncompiled
+ODE models, but not applicable to some models, e.g. using FOMC for the
+parent compound.}
 
 \item{use_compiled}{If set to \code{FALSE}, no compiled version of the
 \link{mkinmod} model is used, even if is present.}
 
 \item{method.ode}{The solution method passed via \link{mkinpredict} to \link{ode}] in
-case the solution type is "deSolve". The default "lsoda" is performant, but
-sometimes fails to converge.}
+case the solution type is "deSolve" and we are not using compiled code.}
 
-\item{atol}{Absolute error tolerance, passed to \link{ode}. Default is 1e-8,
-lower than in \link{lsoda}.}
+\item{atol}{Absolute error tolerance, passed to the ode solver.}
 
-\item{rtol}{Absolute error tolerance, passed to \link{ode}. Default is 1e-10,
-much lower than in \link{lsoda}.}
+\item{rtol}{Absolute error tolerance, passed to the ode solver.}
 
-\item{maxsteps}{Maximum number of steps, passed to \link{ode}.}
+\item{maxsteps}{Maximum number of steps, passed to the ode solver.}
 
 \item{map_output}{Boolean to specify if the output should list values for
 the observed variables (default) or for all state variables (if set to
@@ -84,6 +83,8 @@ FALSE). Setting this to FALSE has no effect for analytical solutions,
 as these always return mapped output.}
 
 \item{na_stop}{Should it be an error if \link{ode} returns NaN values}
+
+\item{call_lsoda}{The address of the compiled function "call_lsoda"}
 }
 \value{
 A matrix with the numeric solution in wide format

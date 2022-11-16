@@ -186,10 +186,24 @@ nlme.mmkin <- function(model, data = "auto",
     thisCall[["control"]] <- control
   }
 
+  # Provide the address of call_lsoda to the fitting function
+  call_lsoda <- getNativeSymbolInfo("call_lsoda", PACKAGE = "deSolve")
+  if (model[[1]]$solution_type == "deSolve" & !is.null(model[[1]]$mkinmod$cf)) {
+    # The mkinmod stored in the first fit will be used by nlme
+    model[[1]]$mkinmod$diffs_address <- getNativeSymbolInfo("diffs",
+      PACKAGE = model[[1]]$mkinmod$dll_info[["name"]])$address
+    model[[1]]$mkinmod$initpar_address <- getNativeSymbolInfo("initpar",
+      PACKAGE = model[[1]]$mkinmod$dll_info[["name"]])$address
+  }
+
   fit_time <- system.time(val <- do.call("nlme.formula", thisCall))
   val$time <- fit_time
 
   val$mkinmod <- model[[1]]$mkinmod
+  # Don't return addresses that will become invalid
+  val$mkinmod$diffs_address <- NULL
+  val$mkinmod$initpar_address <- NULL
+
   val$data <- thisCall[["data"]]
   val$mmkin <- model
   if (is.list(start)) val$mean_dp_start <- start$fixed

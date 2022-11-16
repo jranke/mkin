@@ -85,7 +85,8 @@ sfo_sfo3p <- mkinmod(
 )
 
 dmta_sfo_sfo3p_tc <- mmkin(list("SFO-SFO3+" = sfo_sfo3p),
-  dmta_ds, error_model = "tc", quiet = TRUE, cores = n_cores)
+  dmta_ds, error_model = "tc", quiet = TRUE,
+  cores = n_cores)
 
 test_that("Different backends get consistent results for SFO-SFO3+, dimethenamid data", {
 

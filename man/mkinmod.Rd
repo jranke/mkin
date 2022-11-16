@@ -58,7 +58,9 @@ applicable to give detailed information about the C function being built.}
 \item{dll_dir}{Directory where an DLL object, if generated internally by
 \code{\link[inline:cfunction]{inline::cfunction()}}, should be saved.  The DLL will only be stored in a
 permanent location for use in future sessions, if 'dll_dir' and 'name'
-are specified.}
+are specified. This is helpful if fit objects are cached e.g. by knitr,
+as the cache remains functional across sessions if the DLL is stored in
+a user defined location.}
 
 \item{unload}{If a DLL from the target location in 'dll_dir' is already
 loaded, should that be unloaded first?}
