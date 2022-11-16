@@ -1,6 +1,7 @@
 context("Multistart method for saem.mmkin models")
 
 test_that("multistart works for saem.mmkin models", {
+  skip_on_cran() # Save CRAN time
   set.seed(123456)
   saem_sfo_s_multi <- multistart(sfo_saem_1_reduced, n = 8, cores = n_cores,
     no_random_effect = "parent_0")
@@ -16,7 +17,6 @@ test_that("multistart works for saem.mmkin models", {
   expect_equal(round(anova_sfo, 1)["best(saem_sfo_s_multi)", "AIC"], 1309.7)
   expect_true(anova_sfo[3, "Pr(>Chisq)"] > 0.2) # Local: 1, CRAN: 0.4
 
-  skip_on_cran() # Save CRAN time
   set.seed(123456)
   saem_biphasic_m_multi <- multistart(saem_biphasic_m, n = 8,
     cores = n_cores)

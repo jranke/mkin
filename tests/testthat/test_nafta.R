@@ -4,6 +4,7 @@ test_that("Data for more than one compound are rejected",
   expect_error(nafta(FOCUS_2006_D, cores = 1)))
 
 test_that("Test data from Appendix B are correctly evaluated", {
+  skip_on_cran()
   expect_message(res <- nafta(NAFTA_SOP_Appendix_B, "aerobic aquatic", cores = 1))
 
   # From Figure D.1
@@ -25,6 +26,7 @@ test_that("Test data from Appendix B are correctly evaluated", {
 })
 
 test_that("Test data from Appendix D are correctly evaluated", {
+  skip_on_cran()
   # We are not interested in the warnings about non-normal residuals here
   suppressWarnings(
   res <- nafta(NAFTA_SOP_Appendix_D, "MRID 555555", 
