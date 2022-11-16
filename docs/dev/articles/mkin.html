@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.1.0</span>
+        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.2.0</span>
       </span>
     </div>
 
@@ -44,7 +44,7 @@
   <a href="../reference/index.html">Functions and data</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -60,10 +60,16 @@
       <a href="../articles/FOCUS_L.html">Example evaluation of FOCUS Laboratory Data L1 to L3</a>
     </li>
     <li>
-      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
+      <a href="../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/multistart.html">Short demo of the multistart method</a>
     </li>
     <li>
       <a href="../articles/web_only/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
     </li>
     <li>
       <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
@@ -72,7 +78,10 @@
       <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
     <li>
-      <a href="../articles/web_only/benchmarks.html">Some benchmark timings</a>
+      <a href="../articles/web_only/benchmarks.html">Benchmark timings for mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/saem_benchmarks.html">Benchmark timings for saem.mmkin</a>
     </li>
   </ul>
 </li>
@@ -103,7 +112,7 @@
       <h1 data-toc-skip>Introduction to mkin</h1>
                         <h4 data-toc-skip class="author">Johannes Ranke</h4>
             
-            <h4 data-toc-skip class="date">Last change 15 February 2021 (rebuilt 2022-02-28)</h4>
+            <h4 data-toc-skip class="date">Last change 15 February 2021 (rebuilt 2022-11-16)</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jranke/mkin/blob/HEAD/vignettes/mkin.rmd" class="external-link"><code>vignettes/mkin.rmd</code></a></small>
       <div class="hidden name"><code>mkin.rmd</code></div>
@@ -118,34 +127,34 @@
 </h2>
 <p>In the regulatory evaluation of chemical substances like plant protection products (pesticides), biocides and other chemicals, degradation data play an important role. For the evaluation of pesticide degradation experiments, detailed guidance has been developed, based on nonlinear optimisation. The <code>R</code> add-on package <code>mkin</code> implements fitting some of the models recommended in this guidance from within R and calculates some statistical measures for data series within one or more compartments, for parent and metabolites.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://pkgdown.jrwb.de/mkin/">"mkin"</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co"># Define the kinetic model</span>
-<span class="va">m_SFO_SFO_SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"M1"</span><span class="op">)</span>,
-                         M1 <span class="op">=</span> <span class="fu"><a href="../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"M2"</span><span class="op">)</span>,
-                         M2 <span class="op">=</span> <span class="fu"><a href="../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,
-                         use_of_ff <span class="op">=</span> <span class="st">"max"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-
-
-<span class="co"># Produce model predictions using some arbitrary parameters</span>
-<span class="va">sampling_times</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">7</span>, <span class="fl">14</span>, <span class="fl">28</span>, <span class="fl">60</span>, <span class="fl">90</span>, <span class="fl">120</span><span class="op">)</span>
-<span class="va">d_SFO_SFO_SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkinpredict.html">mkinpredict</a></span><span class="op">(</span><span class="va">m_SFO_SFO_SFO</span>,
-  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_parent <span class="op">=</span> <span class="fl">0.03</span>,
-    f_parent_to_M1 <span class="op">=</span> <span class="fl">0.5</span>, k_M1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">/</span><span class="fl">100</span>,
-    f_M1_to_M2 <span class="op">=</span> <span class="fl">0.9</span>, k_M2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">/</span><span class="fl">50</span><span class="op">)</span>,
-  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fl">100</span>, M1 <span class="op">=</span> <span class="fl">0</span>, M2 <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,
-  <span class="va">sampling_times</span><span class="op">)</span>
-
-<span class="co"># Generate a dataset by adding normally distributed errors with</span>
-<span class="co"># standard deviation 3, for two replicates at each sampling time</span>
-<span class="va">d_SFO_SFO_SFO_err</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_err.html">add_err</a></span><span class="op">(</span><span class="va">d_SFO_SFO_SFO</span>, reps <span class="op">=</span> <span class="fl">2</span>,
-                             sdfunc <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fl">3</span>,
-                             n <span class="op">=</span> <span class="fl">1</span>, seed <span class="op">=</span> <span class="fl">123456789</span> <span class="op">)</span>
-
-<span class="co"># Fit the model to the dataset</span>
-<span class="va">f_SFO_SFO_SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">m_SFO_SFO_SFO</span>, <span class="va">d_SFO_SFO_SFO_err</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-
-<span class="co"># Plot the results separately for parent and metabolites</span>
-<span class="fu"><a href="../reference/plot.mkinfit.html">plot_sep</a></span><span class="op">(</span><span class="va">f_SFO_SFO_SFO</span>, lpos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"topright"</span>, <span class="st">"bottomright"</span>, <span class="st">"bottomright"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://pkgdown.jrwb.de/mkin/">"mkin"</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co"># Define the kinetic model</span></span>
+<span><span class="va">m_SFO_SFO_SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"M1"</span><span class="op">)</span>,</span>
+<span>                         M1 <span class="op">=</span> <span class="fu"><a href="../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"M2"</span><span class="op">)</span>,</span>
+<span>                         M2 <span class="op">=</span> <span class="fu"><a href="../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,</span>
+<span>                         use_of_ff <span class="op">=</span> <span class="st">"max"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="co"># Produce model predictions using some arbitrary parameters</span></span>
+<span><span class="va">sampling_times</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">7</span>, <span class="fl">14</span>, <span class="fl">28</span>, <span class="fl">60</span>, <span class="fl">90</span>, <span class="fl">120</span><span class="op">)</span></span>
+<span><span class="va">d_SFO_SFO_SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkinpredict.html">mkinpredict</a></span><span class="op">(</span><span class="va">m_SFO_SFO_SFO</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_parent <span class="op">=</span> <span class="fl">0.03</span>,</span>
+<span>    f_parent_to_M1 <span class="op">=</span> <span class="fl">0.5</span>, k_M1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">/</span><span class="fl">100</span>,</span>
+<span>    f_M1_to_M2 <span class="op">=</span> <span class="fl">0.9</span>, k_M2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">/</span><span class="fl">50</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fl">100</span>, M1 <span class="op">=</span> <span class="fl">0</span>, M2 <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,</span>
+<span>  <span class="va">sampling_times</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Generate a dataset by adding normally distributed errors with</span></span>
+<span><span class="co"># standard deviation 3, for two replicates at each sampling time</span></span>
+<span><span class="va">d_SFO_SFO_SFO_err</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_err.html">add_err</a></span><span class="op">(</span><span class="va">d_SFO_SFO_SFO</span>, reps <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>                             sdfunc <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fl">3</span>,</span>
+<span>                             n <span class="op">=</span> <span class="fl">1</span>, seed <span class="op">=</span> <span class="fl">123456789</span> <span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Fit the model to the dataset</span></span>
+<span><span class="va">f_SFO_SFO_SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">m_SFO_SFO_SFO</span>, <span class="va">d_SFO_SFO_SFO_err</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Plot the results separately for parent and metabolites</span></span>
+<span><span class="fu"><a href="../reference/plot.mkinfit.html">plot_sep</a></span><span class="op">(</span><span class="va">f_SFO_SFO_SFO</span>, lpos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"topright"</span>, <span class="st">"bottomright"</span>, <span class="st">"bottomright"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="mkin_files/figure-html/unnamed-chunk-2-1.png" width="768"></p>
 </div>
 <div class="section level2">
@@ -224,10 +233,10 @@
 <p>Ranke, J. 2021. <em>‘mkin‘: Kinetic Evaluation of Chemical Degradation Data</em>. <a href="https://CRAN.R-project.org/package=mkin" class="external-link">https://CRAN.R-project.org/package=mkin</a>.</p>
 </div>
 <div id="ref-ranke2012">
-<p>Ranke, J., and R. Lehmann. 2012. “Parameter Reliability in Kinetic Evaluation of Environmental Metabolism Data - Assessment and the Influence of Model Specification.” In <em>SETAC World 20-24 May</em>. Berlin.</p>
+<p>Ranke, J., and R. Lehmann. 2012. “Parameter Reliability in Kinetic Evaluation of Environmental Metabolism Data - Assessment and the Influence of Model Specification.” In <em>SETAC World 20-24 May</em>. Berlin. <a href="https://jrwb.de/posters/Poster_SETAC_2012_Kinetic_parameter_uncertainty_model_parameterization_Lehmann_Ranke.pdf" class="external-link">https://jrwb.de/posters/Poster_SETAC_2012_Kinetic_parameter_uncertainty_model_parameterization_Lehmann_Ranke.pdf</a>.</p>
 </div>
 <div id="ref-ranke2015">
-<p>———. 2015. “To T-Test or Not to T-Test, That Is the Question.” In <em>XV Symposium on Pesticide Chemistry 2-4 September 2015</em>. Piacenza. <a href="http://chem.uft.uni-bremen.de/ranke/posters/piacenza_2015.pdf" class="external-link">http://chem.uft.uni-bremen.de/ranke/posters/piacenza_2015.pdf</a>.</p>
+<p>———. 2015. “To T-Test or Not to T-Test, That Is the Question.” In <em>XV Symposium on Pesticide Chemistry 2-4 September 2015</em>. Piacenza. <a href="https://jrwb.de/posters/piacenza_2015.pdf" class="external-link">https://jrwb.de/posters/piacenza_2015.pdf</a>.</p>
 </div>
 <div id="ref-ranke2019">
 <p>Ranke, Johannes, and Stefan Meinecke. 2019. “Error Models for the Kinetic Evaluation of Chemical Degradation Data.” <em>Environments</em> 6 (12). <a href="https://doi.org/10.3390/environments6120124" class="external-link">https://doi.org/10.3390/environments6120124</a>.</p>
@@ -262,7 +271,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
