@@ -45,7 +45,7 @@ Dataset 12 is from the Renewal Assessment Report (RAR) for thifensulfuron-methyl
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -72,10 +72,13 @@ Dataset 12 is from the Renewal Assessment Report (RAR) for thifensulfuron-methyl
       <a href="../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
     </li>
     <li>
-      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
+      <a href="../articles/web_only/multistart.html">Short demo of the multistart method</a>
     </li>
     <li>
       <a href="../articles/web_only/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
     </li>
     <li>
       <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
@@ -84,7 +87,10 @@ Dataset 12 is from the Renewal Assessment Report (RAR) for thifensulfuron-methyl
       <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
     <li>
-      <a href="../articles/web_only/benchmarks.html">Some benchmark timings</a>
+      <a href="../articles/web_only/benchmarks.html">Benchmark timings for mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/saem_benchmarks.html">Benchmark timings for saem.mmkin</a>
     </li>
   </ul></li>
 <li>
@@ -143,7 +149,7 @@ Dataset 12 is from the Renewal Assessment Report (RAR) for thifensulfuron-methyl
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="va">experimental_data_for_UBA_2019</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="va">experimental_data_for_UBA_2019</span></span></code></pre></div>
     </div>
 
     <div id="format">
@@ -182,48 +188,48 @@ Dataset 12 is from the Renewal Assessment Report (RAR) for thifensulfuron-methyl
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># \dontrun{</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Model definitions</span></span>
-<span class="r-in"><span class="va">sfo_sfo</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinmod.html">mkinmod</a></span><span class="op">(</span></span>
-<span class="r-in">  parent <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, to <span class="op">=</span> <span class="st">"A1"</span><span class="op">)</span>,</span>
-<span class="r-in">  A1 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,</span>
-<span class="r-in">  use_of_ff <span class="op">=</span> <span class="st">"max"</span></span>
-<span class="r-in"><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Model definitions</span></span></span>
+<span class="r-in"><span><span class="va">sfo_sfo</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinmod.html">mkinmod</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  parent <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, to <span class="op">=</span> <span class="st">"A1"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  A1 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  use_of_ff <span class="op">=</span> <span class="st">"max"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Temporary DLL for differentials generated and loaded</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">dfop_sfo</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinmod.html">mkinmod</a></span><span class="op">(</span></span>
-<span class="r-in">  parent <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"DFOP"</span>, to <span class="op">=</span> <span class="st">"A1"</span><span class="op">)</span>,</span>
-<span class="r-in">  A1 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,</span>
-<span class="r-in">  use_of_ff <span class="op">=</span> <span class="st">"max"</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">dfop_sfo</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinmod.html">mkinmod</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  parent <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"DFOP"</span>, to <span class="op">=</span> <span class="st">"A1"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  A1 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  use_of_ff <span class="op">=</span> <span class="st">"max"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Temporary DLL for differentials generated and loaded</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">sfo_sfo_sfo</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinmod.html">mkinmod</a></span><span class="op">(</span></span>
-<span class="r-in">  parent <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, to <span class="op">=</span> <span class="st">"A1"</span><span class="op">)</span>,</span>
-<span class="r-in">  A1 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, to <span class="op">=</span> <span class="st">"A2"</span><span class="op">)</span>,</span>
-<span class="r-in">  A2 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,</span>
-<span class="r-in">  use_of_ff <span class="op">=</span> <span class="st">"max"</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">sfo_sfo_sfo</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinmod.html">mkinmod</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  parent <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, to <span class="op">=</span> <span class="st">"A1"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  A1 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, to <span class="op">=</span> <span class="st">"A2"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  A2 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  use_of_ff <span class="op">=</span> <span class="st">"max"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Temporary DLL for differentials generated and loaded</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">dfop_sfo_sfo</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinmod.html">mkinmod</a></span><span class="op">(</span></span>
-<span class="r-in">  parent <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"DFOP"</span>, to <span class="op">=</span> <span class="st">"A1"</span><span class="op">)</span>,</span>
-<span class="r-in">  A1 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, to <span class="op">=</span> <span class="st">"A2"</span><span class="op">)</span>,</span>
-<span class="r-in">  A2 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,</span>
-<span class="r-in">  use_of_ff <span class="op">=</span> <span class="st">"max"</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">dfop_sfo_sfo</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinmod.html">mkinmod</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  parent <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"DFOP"</span>, to <span class="op">=</span> <span class="st">"A1"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  A1 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, to <span class="op">=</span> <span class="st">"A2"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  A2 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  use_of_ff <span class="op">=</span> <span class="st">"max"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Temporary DLL for differentials generated and loaded</span>
-<span class="r-in"><span class="va">d_1_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">experimental_data_for_UBA_2019</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">d_1_2</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Soil"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">f_1_2_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="mmkin.html">mmkin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"DFOP-SFO-SFO"</span> <span class="op">=</span> <span class="va">dfop_sfo_sfo</span><span class="op">)</span>, <span class="va">d_1_2</span>, error_model <span class="op">=</span> <span class="st">"tc"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_1_2_tc</span>, resplot <span class="op">=</span> <span class="st">"errmod"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">d_1_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">experimental_data_for_UBA_2019</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">d_1_2</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Soil"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">f_1_2_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="mmkin.html">mmkin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"DFOP-SFO-SFO"</span> <span class="op">=</span> <span class="va">dfop_sfo_sfo</span><span class="op">)</span>, <span class="va">d_1_2</span>, error_model <span class="op">=</span> <span class="st">"tc"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_1_2_tc</span>, resplot <span class="op">=</span> <span class="st">"errmod"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="experimental_data_for_UBA-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># }</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -238,7 +244,7 @@ Dataset 12 is from the Renewal Assessment Report (RAR) for thifensulfuron-methyl
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

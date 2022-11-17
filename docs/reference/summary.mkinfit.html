@@ -21,7 +21,7 @@ values."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mat
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -48,10 +48,13 @@ values."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mat
       <a href="../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
     </li>
     <li>
-      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
+      <a href="../articles/web_only/multistart.html">Short demo of the multistart method</a>
     </li>
     <li>
       <a href="../articles/web_only/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
     </li>
     <li>
       <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
@@ -60,7 +63,10 @@ values."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mat
       <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
     <li>
-      <a href="../articles/web_only/benchmarks.html">Some benchmark timings</a>
+      <a href="../articles/web_only/benchmarks.html">Benchmark timings for mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/saem_benchmarks.html">Benchmark timings for saem.mmkin</a>
     </li>
   </ul></li>
 <li>
@@ -96,7 +102,7 @@ values.</p>
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for mkinfit</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">object</span>, data <span class="op">=</span> <span class="cn">TRUE</span>, distimes <span class="op">=</span> <span class="cn">TRUE</span>, alpha <span class="op">=</span> <span class="fl">0.05</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">object</span>, data <span class="op">=</span> <span class="cn">TRUE</span>, distimes <span class="op">=</span> <span class="cn">TRUE</span>, alpha <span class="op">=</span> <span class="fl">0.05</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for summary.mkinfit</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, digits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"digits"</span><span class="op">)</span> <span class="op">-</span> <span class="fl">3</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
@@ -105,7 +111,7 @@ values.</p>
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>object</dt>
-<dd><p>an object of class <code><a href="mkinfit.html">mkinfit</a></code>.</p></dd>
+<dd><p>an object of class <a href="mkinfit.html">mkinfit</a>.</p></dd>
 
 
 <dt>data</dt>
@@ -186,7 +192,8 @@ model.</p></dd>
 <dd><p>The DT50 and DT90 values for each observed variable.</p></dd>
 
 <dt>SFORB</dt>
-<dd><p>If applicable, eigenvalues of SFORB components of the model.</p></dd>
+<dd><p>If applicable, eigenvalues and fractional eigenvector component
+g of SFORB systems in the model.</p></dd>
 
 </dl><p>The print method is called for its side effect, i.e. printing the summary.</p>
     </div>
@@ -206,11 +213,11 @@ EC Document Reference Sanco/10058/2005 version 2.0, 434 pp,
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="va">FOCUS_2006_A</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mkin version used for fitting:    1.1.2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> R version used for fitting:       4.2.1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Date of fit:     Fri Jul 22 11:39:29 2022 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Date of summary: Fri Jul 22 11:39:29 2022 </span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/saemix/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="va">FOCUS_2006_A</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mkin version used for fitting:    1.2.0 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> R version used for fitting:       4.2.2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Date of fit:     Thu Nov 17 14:03:23 2022 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Date of summary: Thu Nov 17 14:03:23 2022 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Equations:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> d_parent/dt = - k_parent * parent</span>
@@ -296,7 +303,7 @@ EC Document Reference Sanco/10058/2005 version 2.0, 434 pp,
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

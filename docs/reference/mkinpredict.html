@@ -19,7 +19,7 @@ kinetic parameters and initial values for the state variables."><!-- mathjax -->
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -46,10 +46,13 @@ kinetic parameters and initial values for the state variables."><!-- mathjax -->
       <a href="../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
     </li>
     <li>
-      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
+      <a href="../articles/web_only/multistart.html">Short demo of the multistart method</a>
     </li>
     <li>
       <a href="../articles/web_only/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
     </li>
     <li>
       <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
@@ -58,7 +61,10 @@ kinetic parameters and initial values for the state variables."><!-- mathjax -->
       <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
     <li>
-      <a href="../articles/web_only/benchmarks.html">Some benchmark timings</a>
+      <a href="../articles/web_only/benchmarks.html">Benchmark timings for mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/saem_benchmarks.html">Benchmark timings for saem.mmkin</a>
     </li>
   </ul></li>
 <li>
@@ -86,95 +92,125 @@ kinetic parameters and initial values for the state variables."><!-- mathjax -->
 
     <div class="ref-description">
     <p>This function produces a time series for all the observed variables in a
-kinetic model as specified by <code><a href="mkinmod.html">mkinmod</a></code>, using a specific set of
+kinetic model as specified by <a href="mkinmod.html">mkinmod</a>, using a specific set of
 kinetic parameters and initial values for the state variables.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">mkinpredict</span><span class="op">(</span><span class="va">x</span>, <span class="va">odeparms</span>, <span class="va">odeini</span>, <span class="va">outtimes</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for mkinmod</span>
-<span class="fu">mkinpredict</span><span class="op">(</span>
-  <span class="va">x</span>,
-  odeparms <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_parent_sink <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>,
-  odeini <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>,
-  outtimes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">120</span>, by <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>,
-  solution_type <span class="op">=</span> <span class="st">"deSolve"</span>,
-  use_compiled <span class="op">=</span> <span class="st">"auto"</span>,
-  method.ode <span class="op">=</span> <span class="st">"lsoda"</span>,
-  atol <span class="op">=</span> <span class="fl">1e-08</span>,
-  rtol <span class="op">=</span> <span class="fl">1e-10</span>,
-  map_output <span class="op">=</span> <span class="cn">TRUE</span>,
-  na_stop <span class="op">=</span> <span class="cn">TRUE</span>,
-  <span class="va">...</span>
-<span class="op">)</span>
-
-<span class="co"># S3 method for mkinfit</span>
-<span class="fu">mkinpredict</span><span class="op">(</span>
-  <span class="va">x</span>,
-  odeparms <span class="op">=</span> <span class="va">x</span><span class="op">$</span><span class="va">bparms.ode</span>,
-  odeini <span class="op">=</span> <span class="va">x</span><span class="op">$</span><span class="va">bparms.state</span>,
-  outtimes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">120</span>, by <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>,
-  solution_type <span class="op">=</span> <span class="st">"deSolve"</span>,
-  use_compiled <span class="op">=</span> <span class="st">"auto"</span>,
-  method.ode <span class="op">=</span> <span class="st">"lsoda"</span>,
-  atol <span class="op">=</span> <span class="fl">1e-08</span>,
-  rtol <span class="op">=</span> <span class="fl">1e-10</span>,
-  map_output <span class="op">=</span> <span class="cn">TRUE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mkinpredict</span><span class="op">(</span><span class="va">x</span>, <span class="va">odeparms</span>, <span class="va">odeini</span>, <span class="va">outtimes</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for mkinmod</span></span>
+<span><span class="fu">mkinpredict</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  odeparms <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_parent_sink <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>,</span>
+<span>  odeini <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>,</span>
+<span>  outtimes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">120</span>, by <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>,</span>
+<span>  solution_type <span class="op">=</span> <span class="st">"deSolve"</span>,</span>
+<span>  use_compiled <span class="op">=</span> <span class="st">"auto"</span>,</span>
+<span>  method.ode <span class="op">=</span> <span class="st">"lsoda"</span>,</span>
+<span>  atol <span class="op">=</span> <span class="fl">1e-08</span>,</span>
+<span>  rtol <span class="op">=</span> <span class="fl">1e-10</span>,</span>
+<span>  maxsteps <span class="op">=</span> <span class="fl">20000</span>,</span>
+<span>  map_output <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  na_stop <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for mkinfit</span></span>
+<span><span class="fu">mkinpredict</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  odeparms <span class="op">=</span> <span class="va">x</span><span class="op">$</span><span class="va">bparms.ode</span>,</span>
+<span>  odeini <span class="op">=</span> <span class="va">x</span><span class="op">$</span><span class="va">bparms.state</span>,</span>
+<span>  outtimes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">120</span>, by <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>,</span>
+<span>  solution_type <span class="op">=</span> <span class="st">"deSolve"</span>,</span>
+<span>  use_compiled <span class="op">=</span> <span class="st">"auto"</span>,</span>
+<span>  method.ode <span class="op">=</span> <span class="st">"lsoda"</span>,</span>
+<span>  atol <span class="op">=</span> <span class="fl">1e-08</span>,</span>
+<span>  rtol <span class="op">=</span> <span class="fl">1e-10</span>,</span>
+<span>  map_output <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
-<dd><p>A kinetic model as produced by <code><a href="mkinmod.html">mkinmod</a></code>, or a kinetic
-fit as fitted by <code><a href="mkinfit.html">mkinfit</a></code>. In the latter case, the fitted
-parameters are used for the prediction.</p></dd>
+<dd><p>A kinetic model as produced by <a href="mkinmod.html">mkinmod</a>, or a kinetic fit as
+fitted by <a href="mkinfit.html">mkinfit</a>. In the latter case, the fitted parameters are used for
+the prediction.</p></dd>
+
+
 <dt>odeparms</dt>
 <dd><p>A numeric vector specifying the parameters used in the
-kinetic model, which is generally defined as a set of ordinary
-differential equations.</p></dd>
+kinetic model, which is generally defined as a set of ordinary differential
+equations.</p></dd>
+
+
 <dt>odeini</dt>
 <dd><p>A numeric vector containing the initial values of the state
 variables of the model. Note that the state variables can differ from the
 observed variables, for example in the case of the SFORB model.</p></dd>
+
+
 <dt>outtimes</dt>
 <dd><p>A numeric vector specifying the time points for which model
 predictions should be generated.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Further arguments passed to the ode solver in case such a
 solver is used.</p></dd>
+
+
 <dt>solution_type</dt>
 <dd><p>The method that should be used for producing the
 predictions. This should generally be "analytical" if there is only one
 observed variable, and usually "deSolve" in the case of several observed
 variables. The third possibility "eigen" is faster but not applicable to
 some models e.g.  using FOMC for the parent compound.</p></dd>
+
+
 <dt>use_compiled</dt>
 <dd><p>If set to <code>FALSE</code>, no compiled version of the
-<code><a href="mkinmod.html">mkinmod</a></code> model is used, even if is present.</p></dd>
+<a href="mkinmod.html">mkinmod</a> model is used, even if is present.</p></dd>
+
+
 <dt>method.ode</dt>
-<dd><p>The solution method passed via <code>mkinpredict</code>
-to <code>ode</code> in case the solution type is "deSolve". The default
-"lsoda" is performant, but sometimes fails to converge.</p></dd>
+<dd><p>The solution method passed via mkinpredict to ode] in
+case the solution type is "deSolve". The default "lsoda" is performant, but
+sometimes fails to converge.</p></dd>
+
+
 <dt>atol</dt>
-<dd><p>Absolute error tolerance, passed to <code>ode</code>. Default
-is 1e-8, lower than in <code>lsoda</code>.</p></dd>
+<dd><p>Absolute error tolerance, passed to ode. Default is 1e-8,
+lower than in lsoda.</p></dd>
+
+
 <dt>rtol</dt>
-<dd><p>Absolute error tolerance, passed to <code>ode</code>. Default
-is 1e-10, much lower than in <code>lsoda</code>.</p></dd>
+<dd><p>Absolute error tolerance, passed to ode. Default is 1e-10,
+much lower than in lsoda.</p></dd>
+
+
+<dt>maxsteps</dt>
+<dd><p>Maximum number of steps, passed to ode.</p></dd>
+
+
 <dt>map_output</dt>
 <dd><p>Boolean to specify if the output should list values for
 the observed variables (default) or for all state variables (if set to
 FALSE). Setting this to FALSE has no effect for analytical solutions,
 as these always return mapped output.</p></dd>
+
+
 <dt>na_stop</dt>
-<dd><p>Should it be an error if deSolve::ode returns NaN values</p></dd>
+<dd><p>Should it be an error if ode returns NaN values</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A matrix with the numeric solution in wide format</p>
+    
+
+<p>A matrix with the numeric solution in wide format</p>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -183,11 +219,11 @@ as these always return mapped output.</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="va">SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinmod.html">mkinmod</a></span><span class="op">(</span>degradinol <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="co"># Compare solution types</span></span>
-<span class="r-in"><span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_degradinol <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>degradinol <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">20</span>,</span>
-<span class="r-in">      solution_type <span class="op">=</span> <span class="st">"analytical"</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinmod.html">mkinmod</a></span><span class="op">(</span>degradinol <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Compare solution types</span></span></span>
+<span class="r-in"><span><span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_degradinol <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>degradinol <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">20</span>,</span></span>
+<span class="r-in"><span>      solution_type <span class="op">=</span> <span class="st">"analytical"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    time  degradinol</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 0     0 100.0000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     1  74.0818221</span>
@@ -210,8 +246,8 @@ as these always return mapped output.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 18   18   0.4516581</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 19   19   0.3345965</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20   20   0.2478752</span>
-<span class="r-in"><span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_degradinol <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>degradinol <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">20</span>,</span>
-<span class="r-in">      solution_type <span class="op">=</span> <span class="st">"deSolve"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_degradinol <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>degradinol <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">20</span>,</span></span>
+<span class="r-in"><span>      solution_type <span class="op">=</span> <span class="st">"deSolve"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    time  degradinol</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 0     0 100.0000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     1  74.0818221</span>
@@ -234,8 +270,8 @@ as these always return mapped output.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 18   18   0.4516581</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 19   19   0.3345965</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20   20   0.2478752</span>
-<span class="r-in"><span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_degradinol <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>degradinol <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">20</span>,</span>
-<span class="r-in">      solution_type <span class="op">=</span> <span class="st">"deSolve"</span>, use_compiled <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_degradinol <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>degradinol <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">20</span>,</span></span>
+<span class="r-in"><span>      solution_type <span class="op">=</span> <span class="st">"deSolve"</span>, use_compiled <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    time  degradinol</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 0     0 100.0000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     1  74.0818221</span>
@@ -258,8 +294,8 @@ as these always return mapped output.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 18   18   0.4516581</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 19   19   0.3345965</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20   20   0.2478752</span>
-<span class="r-in"><span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_degradinol <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>degradinol <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">20</span>,</span>
-<span class="r-in">      solution_type <span class="op">=</span> <span class="st">"eigen"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_degradinol <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>degradinol <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">20</span>,</span></span>
+<span class="r-in"><span>      solution_type <span class="op">=</span> <span class="st">"eigen"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    time  degradinol</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 0     0 100.0000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     1  74.0818221</span>
@@ -282,77 +318,82 @@ as these always return mapped output.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 18   18   0.4516581</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 19   19   0.3345965</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20   20   0.2478752</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Compare integration methods to analytical solution</span></span>
-<span class="r-in"><span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_degradinol <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>degradinol <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">20</span>,</span>
-<span class="r-in">      solution_type <span class="op">=</span> <span class="st">"analytical"</span><span class="op">)</span><span class="op">[</span><span class="fl">21</span>,<span class="op">]</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Compare integration methods to analytical solution</span></span></span>
+<span class="r-in"><span><span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_degradinol <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>degradinol <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">20</span>,</span></span>
+<span class="r-in"><span>      solution_type <span class="op">=</span> <span class="st">"analytical"</span><span class="op">)</span><span class="op">[</span><span class="fl">21</span>,<span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       time degradinol </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20.0000000  0.2478752 </span>
-<span class="r-in"><span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_degradinol <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>degradinol <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">20</span>,</span>
-<span class="r-in">      method <span class="op">=</span> <span class="st">"lsoda"</span><span class="op">)</span><span class="op">[</span><span class="fl">21</span>,<span class="op">]</span></span>
+<span class="r-in"><span><span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_degradinol <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>degradinol <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">20</span>,</span></span>
+<span class="r-in"><span>      method <span class="op">=</span> <span class="st">"lsoda"</span><span class="op">)</span><span class="op">[</span><span class="fl">21</span>,<span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       time degradinol </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20.0000000  0.2478752 </span>
-<span class="r-in"><span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_degradinol <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>degradinol <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">20</span>,</span>
-<span class="r-in">      method <span class="op">=</span> <span class="st">"ode45"</span><span class="op">)</span><span class="op">[</span><span class="fl">21</span>,<span class="op">]</span></span>
+<span class="r-in"><span><span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_degradinol <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>degradinol <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">20</span>,</span></span>
+<span class="r-in"><span>      method <span class="op">=</span> <span class="st">"ode45"</span><span class="op">)</span><span class="op">[</span><span class="fl">21</span>,<span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       time degradinol </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20.0000000  0.2478752 </span>
-<span class="r-in"><span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_degradinol <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>degradinol <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">20</span>,</span>
-<span class="r-in">      method <span class="op">=</span> <span class="st">"rk4"</span><span class="op">)</span><span class="op">[</span><span class="fl">21</span>,<span class="op">]</span></span>
+<span class="r-in"><span><span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_degradinol <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>degradinol <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">20</span>,</span></span>
+<span class="r-in"><span>      method <span class="op">=</span> <span class="st">"rk4"</span><span class="op">)</span><span class="op">[</span><span class="fl">21</span>,<span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       time degradinol </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20.0000000  0.2480043 </span>
-<span class="r-in"><span class="co"># rk4 is not as precise here</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># The number of output times used to make a lot of difference until the</span></span>
-<span class="r-in"><span class="co"># default for atol was adjusted</span></span>
-<span class="r-in"><span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_degradinol <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>degradinol <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>,</span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span>, by <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">201</span>,<span class="op">]</span></span>
+<span class="r-in"><span><span class="co"># rk4 is not as precise here</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># The number of output times used to make a lot of difference until the</span></span></span>
+<span class="r-in"><span><span class="co"># default for atol was adjusted</span></span></span>
+<span class="r-in"><span><span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_degradinol <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>degradinol <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span>, by <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">201</span>,<span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       time degradinol </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20.0000000  0.2478752 </span>
-<span class="r-in"><span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_degradinol <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>degradinol <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>,</span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span>, by <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">2001</span>,<span class="op">]</span></span>
+<span class="r-in"><span><span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_degradinol <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>degradinol <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span>, by <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">2001</span>,<span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       time degradinol </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20.0000000  0.2478752 </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Comparison of the performance of solution types</span></span>
-<span class="r-in"><span class="va">SFO_SFO</span> <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"SFO"</span>, to <span class="op">=</span> <span class="st">"m1"</span><span class="op">)</span>,</span>
-<span class="r-in">                  m1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"SFO"</span><span class="op">)</span>, use_of_ff <span class="op">=</span> <span class="st">"max"</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Comparison of the performance of solution types</span></span></span>
+<span class="r-in"><span><span class="va">SFO_SFO</span> <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"SFO"</span>, to <span class="op">=</span> <span class="st">"m1"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                  m1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"SFO"</span><span class="op">)</span>, use_of_ff <span class="op">=</span> <span class="st">"max"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Temporary DLL for differentials generated and loaded</span>
-<span class="r-in"><span class="kw">if</span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="http://rbenchmark.googlecode.com" class="external-link">rbenchmark</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in">  <span class="fu">benchmark</span><span class="op">(</span>replications <span class="op">=</span> <span class="fl">10</span>, order <span class="op">=</span> <span class="st">"relative"</span>, columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"test"</span>, <span class="st">"relative"</span>, <span class="st">"elapsed"</span><span class="op">)</span>,</span>
-<span class="r-in">    eigen <span class="op">=</span> <span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO_SFO</span>,</span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_parent <span class="op">=</span> <span class="fl">0.15</span>, f_parent_to_m1 <span class="op">=</span> <span class="fl">0.5</span>, k_m1 <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span>,</span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fl">100</span>, m1 <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span>, by <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>,</span>
-<span class="r-in">      solution_type <span class="op">=</span> <span class="st">"eigen"</span><span class="op">)</span><span class="op">[</span><span class="fl">201</span>,<span class="op">]</span>,</span>
-<span class="r-in">    deSolve_compiled <span class="op">=</span> <span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO_SFO</span>,</span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_parent <span class="op">=</span> <span class="fl">0.15</span>, f_parent_to_m1 <span class="op">=</span> <span class="fl">0.5</span>, k_m1 <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span>,</span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fl">100</span>, m1 <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span>, by <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>,</span>
-<span class="r-in">      solution_type <span class="op">=</span> <span class="st">"deSolve"</span><span class="op">)</span><span class="op">[</span><span class="fl">201</span>,<span class="op">]</span>,</span>
-<span class="r-in">    deSolve <span class="op">=</span> <span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO_SFO</span>,</span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_parent <span class="op">=</span> <span class="fl">0.15</span>, f_parent_to_m1 <span class="op">=</span> <span class="fl">0.5</span>, k_m1 <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span>,</span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fl">100</span>, m1 <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span>, by <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>,</span>
-<span class="r-in">      solution_type <span class="op">=</span> <span class="st">"deSolve"</span>, use_compiled <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">[</span><span class="fl">201</span>,<span class="op">]</span>,</span>
-<span class="r-in">    analytical <span class="op">=</span> <span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO_SFO</span>,</span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_parent <span class="op">=</span> <span class="fl">0.15</span>, f_parent_to_m1 <span class="op">=</span> <span class="fl">0.5</span>, k_m1 <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span>,</span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fl">100</span>, m1 <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span>, by <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>,</span>
-<span class="r-in">      solution_type <span class="op">=</span> <span class="st">"analytical"</span>, use_compiled <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">[</span><span class="fl">201</span>,<span class="op">]</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: rbenchmark</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>there is no package called ‘rbenchmark’</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># \dontrun{</span></span>
-<span class="r-in">  <span class="co"># Predict from a fitted model</span></span>
-<span class="r-in">  <span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">SFO_SFO</span>, <span class="va">FOCUS_2006_C</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in">  <span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">SFO_SFO</span>, <span class="va">FOCUS_2006_C</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span>, solution_type <span class="op">=</span> <span class="st">"deSolve"</span><span class="op">)</span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">mkinpredict</span><span class="op">(</span><span class="va">f</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     time   parent       m1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0    0.0 82.49216 0.000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.1  0.1 80.00562 1.236394</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.2  0.2 77.59404 2.423201</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.3  0.3 75.25514 3.562040</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.4  0.4 72.98675 4.654478</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.5  0.5 70.78673 5.702033</span>
-<span class="r-in"><span class="co"># }</span></span>
-<span class="r-in"></span>
+<span class="r-in"><span><span class="kw">if</span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="http://rbenchmark.googlecode.com" class="external-link">rbenchmark</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/rbenchmark/man/benchmark.html" class="external-link">benchmark</a></span><span class="op">(</span>replications <span class="op">=</span> <span class="fl">10</span>, order <span class="op">=</span> <span class="st">"relative"</span>, columns <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"test"</span>, <span class="st">"relative"</span>, <span class="st">"elapsed"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    eigen <span class="op">=</span> <span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO_SFO</span>,</span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_parent <span class="op">=</span> <span class="fl">0.15</span>, f_parent_to_m1 <span class="op">=</span> <span class="fl">0.5</span>, k_m1 <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fl">100</span>, m1 <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span>, by <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      solution_type <span class="op">=</span> <span class="st">"eigen"</span><span class="op">)</span><span class="op">[</span><span class="fl">201</span>,<span class="op">]</span>,</span></span>
+<span class="r-in"><span>    deSolve_compiled <span class="op">=</span> <span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO_SFO</span>,</span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_parent <span class="op">=</span> <span class="fl">0.15</span>, f_parent_to_m1 <span class="op">=</span> <span class="fl">0.5</span>, k_m1 <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fl">100</span>, m1 <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span>, by <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      solution_type <span class="op">=</span> <span class="st">"deSolve"</span><span class="op">)</span><span class="op">[</span><span class="fl">201</span>,<span class="op">]</span>,</span></span>
+<span class="r-in"><span>    deSolve <span class="op">=</span> <span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO_SFO</span>,</span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_parent <span class="op">=</span> <span class="fl">0.15</span>, f_parent_to_m1 <span class="op">=</span> <span class="fl">0.5</span>, k_m1 <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fl">100</span>, m1 <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span>, by <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      solution_type <span class="op">=</span> <span class="st">"deSolve"</span>, use_compiled <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">[</span><span class="fl">201</span>,<span class="op">]</span>,</span></span>
+<span class="r-in"><span>    analytical <span class="op">=</span> <span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO_SFO</span>,</span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_parent <span class="op">=</span> <span class="fl">0.15</span>, f_parent_to_m1 <span class="op">=</span> <span class="fl">0.5</span>, k_m1 <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fl">100</span>, m1 <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span>, by <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      solution_type <span class="op">=</span> <span class="st">"analytical"</span>, use_compiled <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">[</span><span class="fl">201</span>,<span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               test relative elapsed</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 deSolve_compiled      1.0   0.004</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4       analytical      1.0   0.004</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1            eigen      5.5   0.022</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3          deSolve     51.0   0.204</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span>  <span class="co"># Predict from a fitted model</span></span></span>
+<span class="r-in"><span>  <span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">SFO_SFO</span>, <span class="va">FOCUS_2006_C</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">SFO_SFO</span>, <span class="va">FOCUS_2006_C</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span>, solution_type <span class="op">=</span> <span class="st">"deSolve"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">mkinpredict</span><span class="op">(</span><span class="va">f</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DLSODA-  At current T (=R1), MXSTEP (=I1) steps   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       taken on this call before reaching TOUT     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> In above message, I1 = 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> In above message, R1 = 9.99904e-07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  </span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>an excessive amount of work (&gt; maxsteps ) was done, but integration was not successful - increase maxsteps</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Returning early. Results are accurate, as far as they go</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in out[available, var]:</span> (subscript) logical subscript too long</span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -367,7 +408,7 @@ as these always return mapped output.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

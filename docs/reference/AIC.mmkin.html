@@ -18,7 +18,7 @@ same dataset."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/li
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -45,10 +45,13 @@ same dataset."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/li
       <a href="../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
     </li>
     <li>
-      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
+      <a href="../articles/web_only/multistart.html">Short demo of the multistart method</a>
     </li>
     <li>
       <a href="../articles/web_only/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
     </li>
     <li>
       <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
@@ -57,7 +60,10 @@ same dataset."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/li
       <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
     <li>
-      <a href="../articles/web_only/benchmarks.html">Some benchmark timings</a>
+      <a href="../articles/web_only/benchmarks.html">Benchmark timings for mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/saem_benchmarks.html">Benchmark timings for saem.mmkin</a>
     </li>
   </ul></li>
 <li>
@@ -89,11 +95,11 @@ same dataset.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S3 method for mmkin</span>
-<span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span>, k <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
-
-<span class="co"># S3 method for mmkin</span>
-<span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">BIC</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for mmkin</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span>, k <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for mmkin</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">BIC</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -101,14 +107,21 @@ same dataset.</p>
     <dl><dt>object</dt>
 <dd><p>An object of class <code><a href="mmkin.html">mmkin</a></code>, containing only one
 column.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>For compatibility with the generic method</p></dd>
+
+
 <dt>k</dt>
 <dd><p>As in the generic method</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>As in the generic method (a numeric value for single fits, or a
+    
+
+<p>As in the generic method (a numeric value for single fits, or a
 dataframe if there are several fits in the column).</p>
     </div>
     <div id="author">
@@ -118,52 +131,50 @@ dataframe if there are several fits in the column).</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in">   <span class="co"># skip, as it takes &gt; 10 s on winbuilder</span></span>
-<span class="r-in">  <span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="mmkin.html">mmkin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"FOMC"</span>, <span class="st">"DFOP"</span><span class="op">)</span>,</span>
-<span class="r-in">    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"FOCUS A"</span> <span class="op">=</span> <span class="va">FOCUS_2006_A</span>,</span>
-<span class="r-in">         <span class="st">"FOCUS C"</span> <span class="op">=</span> <span class="va">FOCUS_2006_C</span><span class="op">)</span>, cores <span class="op">=</span> <span class="fl">1</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Optimisation did not converge:</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> false convergence (8)</span>
-<span class="r-in">  <span class="co"># We get a warning because the FOMC model does not converge for the</span></span>
-<span class="r-in">  <span class="co"># FOCUS A dataset, as it is well described by SFO</span></span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">f</span><span class="op">[</span><span class="st">"SFO"</span>, <span class="st">"FOCUS A"</span><span class="op">]</span><span class="op">)</span> <span class="co"># We get a single number for a single fit</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span>   <span class="co"># skip, as it takes &gt; 10 s on winbuilder</span></span></span>
+<span class="r-in"><span>  <span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="mmkin.html">mmkin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"FOMC"</span>, <span class="st">"DFOP"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"FOCUS A"</span> <span class="op">=</span> <span class="va">FOCUS_2006_A</span>,</span></span>
+<span class="r-in"><span>         <span class="st">"FOCUS C"</span> <span class="op">=</span> <span class="va">FOCUS_2006_C</span><span class="op">)</span>, cores <span class="op">=</span> <span class="fl">1</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="co"># We get a warning because the FOMC model does not converge for the</span></span></span>
+<span class="r-in"><span>  <span class="co"># FOCUS A dataset, as it is well described by SFO</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">f</span><span class="op">[</span><span class="st">"SFO"</span>, <span class="st">"FOCUS A"</span><span class="op">]</span><span class="op">)</span> <span class="co"># We get a single number for a single fit</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 55.28197</span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">f</span><span class="op">[[</span><span class="st">"SFO"</span>, <span class="st">"FOCUS A"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="co"># or when extracting an mkinfit object</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">f</span><span class="op">[[</span><span class="st">"SFO"</span>, <span class="st">"FOCUS A"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="co"># or when extracting an mkinfit object</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 55.28197</span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="co"># For FOCUS A, the models fit almost equally well, so the higher the number</span></span>
-<span class="r-in">  <span class="co"># of parameters, the higher (worse) the AIC</span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">f</span><span class="op">[</span>, <span class="st">"FOCUS A"</span><span class="op">]</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="co"># For FOCUS A, the models fit almost equally well, so the higher the number</span></span></span>
+<span class="r-in"><span>  <span class="co"># of parameters, the higher (worse) the AIC</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">f</span><span class="op">[</span>, <span class="st">"FOCUS A"</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      df      AIC</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SFO   3 55.28197</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> FOMC  4 57.28198</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> FOMC  4 57.28222</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> DFOP  5 59.28197</span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">f</span><span class="op">[</span>, <span class="st">"FOCUS A"</span><span class="op">]</span>, k <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="co"># If we do not penalize additional parameters, we get nearly the same</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">f</span><span class="op">[</span>, <span class="st">"FOCUS A"</span><span class="op">]</span>, k <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="co"># If we do not penalize additional parameters, we get nearly the same</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      df      AIC</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SFO   3 49.28197</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> FOMC  4 49.28198</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> FOMC  4 49.28222</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> DFOP  5 49.28197</span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">BIC</a></span><span class="op">(</span><span class="va">f</span><span class="op">[</span>, <span class="st">"FOCUS A"</span><span class="op">]</span><span class="op">)</span>        <span class="co"># Comparing the BIC gives a very similar picture</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">BIC</a></span><span class="op">(</span><span class="va">f</span><span class="op">[</span>, <span class="st">"FOCUS A"</span><span class="op">]</span><span class="op">)</span>        <span class="co"># Comparing the BIC gives a very similar picture</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      df      BIC</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SFO   3 55.52030</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> FOMC  4 57.59975</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> FOMC  4 57.59999</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> DFOP  5 59.67918</span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="co"># For FOCUS C, the more complex models fit better</span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">f</span><span class="op">[</span>, <span class="st">"FOCUS C"</span><span class="op">]</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="co"># For FOCUS C, the more complex models fit better</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">f</span><span class="op">[</span>, <span class="st">"FOCUS C"</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      df      AIC</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SFO   3 59.29336</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> FOMC  4 44.68652</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> DFOP  5 29.02372</span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">BIC</a></span><span class="op">(</span><span class="va">f</span><span class="op">[</span>, <span class="st">"FOCUS C"</span><span class="op">]</span><span class="op">)</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">BIC</a></span><span class="op">(</span><span class="va">f</span><span class="op">[</span>, <span class="st">"FOCUS C"</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      df      BIC</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SFO   3 59.88504</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> FOMC  4 45.47542</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> DFOP  5 30.00984</span>
-<span class="r-in">  </span>
-<span class="r-in"></span>
+<span class="r-in"><span>  </span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -178,7 +189,7 @@ dataframe if there are several fits in the column).</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

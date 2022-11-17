@@ -1,4 +1,4 @@
-# mkin 1.2.0 (unreleased)
+# mkin 1.2.0 (2022-11-17)
 
 - 'R/saem.R': 'logLik', 'update' and 'anova' methods for 'saem.mmkin' objects.
 

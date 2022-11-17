@@ -21,7 +21,7 @@ order of increasing model complexity, i.e. SFO, then IORE, and finally DFOP."><!
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -48,10 +48,13 @@ order of increasing model complexity, i.e. SFO, then IORE, and finally DFOP."><!
       <a href="../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
     </li>
     <li>
-      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
+      <a href="../articles/web_only/multistart.html">Short demo of the multistart method</a>
     </li>
     <li>
       <a href="../articles/web_only/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
     </li>
     <li>
       <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
@@ -60,7 +63,10 @@ order of increasing model complexity, i.e. SFO, then IORE, and finally DFOP."><!
       <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
     <li>
-      <a href="../articles/web_only/benchmarks.html">Some benchmark timings</a>
+      <a href="../articles/web_only/benchmarks.html">Benchmark timings for mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/saem_benchmarks.html">Benchmark timings for saem.mmkin</a>
     </li>
   </ul></li>
 <li>
@@ -95,10 +101,10 @@ order of increasing model complexity, i.e. SFO, then IORE, and finally DFOP.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">nafta</span><span class="op">(</span><span class="va">ds</span>, title <span class="op">=</span> <span class="cn">NA</span>, quiet <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for nafta</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span>, digits <span class="op">=</span> <span class="fl">3</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">nafta</span><span class="op">(</span><span class="va">ds</span>, title <span class="op">=</span> <span class="cn">NA</span>, quiet <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for nafta</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span>, digits <span class="op">=</span> <span class="fl">3</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="source">
@@ -120,22 +126,35 @@ Degradation
 time values specified by the <code>time</code> argument, one column called
 "name" with the grouping of the observed values, and finally one column of
 observed values called "value".</p></dd>
+
+
 <dt>title</dt>
 <dd><p>Optional title of the dataset</p></dd>
+
+
 <dt>quiet</dt>
 <dd><p>Should the evaluation text be shown?</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Further arguments passed to <code><a href="mmkin.html">mmkin</a></code> (not for the
 printing method).</p></dd>
+
+
 <dt>x</dt>
 <dd><p>An <code>nafta</code> object.</p></dd>
+
+
 <dt>digits</dt>
 <dd><p>Number of digits to be used for printing parameters and
 dissipation times.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An list of class <code>nafta</code>. The list element named "mmkin" is the
+    
+
+<p>An list of class <code>nafta</code>. The list element named "mmkin" is the
 <code><a href="mmkin.html">mmkin</a></code> object containing the fits of the three models. The
 list element named "title" contains the title of the dataset used. The
 list element "data" contains the dataset used in the fits.</p>
@@ -147,13 +166,13 @@ list element "data" contains the dataset used in the fits.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in">  <span class="va">nafta_evaluation</span> <span class="op">&lt;-</span> <span class="fu">nafta</span><span class="op">(</span><span class="va">NAFTA_SOP_Appendix_D</span>, cores <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="va">nafta_evaluation</span> <span class="op">&lt;-</span> <span class="fu">nafta</span><span class="op">(</span><span class="va">NAFTA_SOP_Appendix_D</span>, cores <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The representative half-life of the IORE model is longer than the one corresponding</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> to the terminal degradation rate found with the DFOP model.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The representative half-life obtained from the DFOP model may be used</span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">nafta_evaluation</span><span class="op">)</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">nafta_evaluation</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sums of squares:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       SFO      IORE      DFOP </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1378.6832  615.7730  517.8836 </span>
@@ -192,9 +211,9 @@ list element "data" contains the dataset used in the fits.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Representative half-life:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 841.41</span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">nafta_evaluation</span><span class="op">)</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">nafta_evaluation</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="nafta-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -209,7 +228,7 @@ list element "data" contains the dataset used in the fits.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>
