@@ -2,17 +2,23 @@ require(mkin)
 require(testthat)
 
 # Per default (on my box where I set NOT_CRAN in .Rprofile) use all cores minus one
+# Otherwise (CRAN check systems) use the allowed maximum of two cores
 if (identical(Sys.getenv("NOT_CRAN"), "true")) {
   n_cores <- parallel::detectCores() - 1
 } else {
-  n_cores <- 1
+  n_cores <- 2
 }
 
 # Use the two available cores on travis
 if (Sys.getenv("TRAVIS") != "") n_cores = 2
 
-# On Windows we would need to make a cluster first
-if (Sys.info()["sysname"] == "Windows") n_cores = 1
+# On Windows we need to make a cluster, or use one core
+if (Sys.info()["sysname"] == "Windows") {
+  cl <- parallel::makePSOCKcluster(n_cores)
+  n_cores = 1
+} else {
+  cl <- parallel::makeForkCluster(n_cores)
+}
 
 # Very simple example fits
 f_1_mkin_trans <- mkinfit("SFO", FOCUS_2006_A, quiet = TRUE)
@@ -24,7 +30,7 @@ models <- c("SFO", "FOMC", "DFOP", "HS")
 fits <- suppressWarnings( # FOCUS A FOMC was, it seems, in testthat output
   mmkin(models,
     list(FOCUS_A = FOCUS_2006_A, FOCUS_C = FOCUS_2006_C, FOCUS_D = FOCUS_2006_D),
-    quiet = TRUE, cores = n_cores))
+    quiet = TRUE, cluster = cl))
 
 # One metabolite
 SFO_SFO <- mkinmod(parent = mkinsub("SFO", to = "m1"),
@@ -82,13 +88,14 @@ fit_tc_1 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, error_model = "tc", quiet = TRUE
   error_model_algorithm = "threestep")
 
 # Mixed model fits
-mmkin_sfo_1 <- mmkin("SFO", ds_sfo, quiet = TRUE, error_model = "tc", cores = n_cores)
-mmkin_dfop_1 <- mmkin("DFOP", ds_dfop, quiet = TRUE, cores = n_cores,
+mmkin_sfo_1 <- mmkin("SFO", ds_sfo, quiet = TRUE, error_model = "tc", cluster = cl)
+mmkin_dfop_1 <- mmkin("DFOP", ds_dfop, quiet = TRUE, cluster = cl,
   error_model = "tc")
 
 DFOP_SFO <- mkinmod(parent = mkinsub("DFOP", "m1"),
   m1 = mkinsub("SFO"), quiet = TRUE)
-mmkin_dfop_sfo <- mmkin(list("DFOP-SFO" = DFOP_SFO), ds_dfop_sfo, quiet = TRUE, cores = n_cores,
+mmkin_dfop_sfo <- mmkin(list("DFOP-SFO" = DFOP_SFO), ds_dfop_sfo, quiet = TRUE,
+  cluster = cl,
   control = list(eval.max = 500, iter.max = 400),
   error_model = "tc")
 
@@ -105,3 +112,4 @@ dfop_saem_1 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "mkin",
 saem_dfop_sfo_m <- saem(mmkin_dfop_sfo, transformations = "mkin", quiet = TRUE)
 saem_dfop_sfo_s <- saem(mmkin_dfop_sfo, transformations = "saemix", quiet = TRUE)
 
+parallel::stopCluster(cl)

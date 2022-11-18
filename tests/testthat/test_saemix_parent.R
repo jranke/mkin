@@ -15,7 +15,7 @@ test_that("Parent fits using saemix are correctly implemented", {
   expect_silent(print(illparms(sfo_saem_1_reduced)))
 
   # We cannot currently do the fit with completely fixed initial values
-  mmkin_sfo_2 <- update(mmkin_sfo_1, fixed_initials = c(parent = 100))
+  mmkin_sfo_2 <- update(mmkin_sfo_1, fixed_initials = c(parent = 100), cluster = NULL, cores = n_cores)
   sfo_saem_3 <- expect_error(saem(mmkin_sfo_2, quiet = TRUE), "at least two parameters")
 
   # We get an error if we do not supply a suitable model specification

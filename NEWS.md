@@ -1,5 +1,7 @@
 # mkin 1.2.1 (unreleased)
 
+- '{data,R}/ds_mixed.rda': Include the test data in the package instead of generating it in 'tests/testthat/setup_script.R'. Refactor the generating code to make it consistent and update tests.
+
 - 'tests/testthat/setup_script.R': Excluded another ill-defined random effect for the DFOP fit with 'saem', in an attempt to avoid a platform dependence that surfaced on Fedora systems on the CRAN check farm
 
 - 'tests/testthat/test_mixed.R': Round parameters found by saemix to two significant digits before printing, to also help to avoid platform dependence of tests
