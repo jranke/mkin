@@ -16,7 +16,8 @@ test_that("Print methods work", {
   expect_known_output(print(sfo_saem_1_reduced, digits = 1), "print_sfo_saem_1_reduced.txt")
 
   skip_on_cran() # The following test is platform dependent and fails on
-  # win-builder with current (18 Nov 2022) R-devel and on the Fedora CRAN check systems
+  # win-builder with current (18 Nov 2022) R-devel, on the Linux R-devel CRAN check systems
+  # and also using R-devel locally
   expect_known_output(print(dfop_saem_1, digits = 1), "print_dfop_saem_1.txt")
 })
 
