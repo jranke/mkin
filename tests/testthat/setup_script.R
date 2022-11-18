@@ -185,7 +185,7 @@ nlme_biphasic <- suppressWarnings(nlme(mmkin_biphasic))
 sfo_saem_1 <- saem(mmkin_sfo_1, quiet = TRUE, transformations = "saemix")
 sfo_saem_1_reduced <- update(sfo_saem_1, no_random_effect = "parent_0")
 dfop_saemix_1 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "mkin",
-  no_random_effect = "parent_0")
+  no_random_effect = c("parent_0", "g_qlogis"))
 
 saem_biphasic_m <- saem(mmkin_biphasic, transformations = "mkin", quiet = TRUE)
 saem_biphasic_s <- saem(mmkin_biphasic, transformations = "saemix", quiet = TRUE)
