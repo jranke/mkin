@@ -11,7 +11,12 @@ test_that("Print methods work", {
   expect_known_output(print(mixed(mmkin_sfo_1), digits = 2), "print_mmkin_sfo_1_mixed.txt")
   expect_known_output(print(dfop_nlme_1, digits = 1), "print_dfop_nlme_1.txt")
 
-  expect_known_output(print(dfop_saemix_1, digits = 1), "print_dfop_saemix_1.txt")
+  # In order to address the platform dependence of the results, we round to two
+  # significant digits before printing
+  dfop_saemix_1_print <- dfop_saemix_1
+  dfop_saemix_1_print$so@results@conf.int[c("estimate", "lower", "upper")] <-
+    signif(dfop_saemix_1_print$so@results@conf.int[c("estimate", "lower", "upper")], 2)
+  expect_known_output(print(dfop_saemix_1_print, digits = 1), "print_dfop_saemix_1.txt")
 })
 
 test_that("nlme results are reproducible to some degree", {

@@ -1,6 +1,8 @@
 # mkin 1.2.1 (unreleased)
 
-- 'tests/testthat/setup_script.R': Excluded another ill-defined random effect for the DFOP fit with 'saem', in an attempt to avoid a platform dependence that surfaced on Fedora systems on the CRAN check farm.
+- 'tests/testthat/setup_script.R': Excluded another ill-defined random effect for the DFOP fit with 'saem', in an attempt to avoid a platform dependence that surfaced on Fedora systems on the CRAN check farm
+
+- 'tests/testthat/test_mixed.R': Round parameters found by saemix to two significant digits before printing, to also help to avoid platform dependence of tests
 
 - 'R/saem.R': Fix a bug that prevented that 'error.ini' is passed to 'saemix_model', and set default to c(1, 1) to avoid changing test results
 
