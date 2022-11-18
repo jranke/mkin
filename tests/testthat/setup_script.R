@@ -109,7 +109,4 @@ sfo_saem_1_reduced <- update(sfo_saem_1, no_random_effect = "parent_0")
 dfop_saem_1 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "mkin",
   no_random_effect = c("parent_0", "g_qlogis"))
 
-saem_dfop_sfo_m <- saem(mmkin_dfop_sfo, transformations = "mkin", quiet = TRUE)
-saem_dfop_sfo_s <- saem(mmkin_dfop_sfo, transformations = "saemix", quiet = TRUE)
-
 parallel::stopCluster(cl)

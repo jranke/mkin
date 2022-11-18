@@ -46,6 +46,9 @@ test_that("nlme results are reproducible to some degree", {
 
 test_that("saemix results are reproducible for biphasic fits", {
 
+  skip_on_cran()
+  saem_dfop_sfo_s <- saem(mmkin_dfop_sfo, transformations = "saemix", quiet = TRUE)
+
   test_summary <- summary(saem_dfop_sfo_s)
   test_summary$saemixversion <- "Dummy 0.0 for testing"
   test_summary$mkinversion <- "Dummy 0.0 for testing"
@@ -64,11 +67,6 @@ test_that("saemix results are reproducible for biphasic fits", {
   ci_dfop_sfo_s_s <- summary(saem_dfop_sfo_s)$confint_back
   expect_true(all(ci_dfop_sfo_s_s[, "lower"] < dfop_sfo_pop))
   expect_true(all(ci_dfop_sfo_s_s[, "upper"] > dfop_sfo_pop))
-
-  # k2 is not fitted well
-  ci_dfop_sfo_s_m <- summary(saem_dfop_sfo_m)$confint_back
-  expect_true(all(ci_dfop_sfo_s_m[no_k2, "lower"] < dfop_sfo_pop[no_k2]))
-  expect_true(all(ci_dfop_sfo_s_m[no_k1, "upper"] > dfop_sfo_pop[no_k1]))
 
   # I tried to only do few iterations in routine tests as this is so slow
   # but then deSolve fails at some point (presumably at the switch between
