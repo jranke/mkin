@@ -1,3 +1,13 @@
+# mkin 1.2.1 (unreleased)
+
+- 'tests/testthat/setup_script.R': Excluded another ill-defined random effect for the DFOP fit with 'saem', in an attempt to avoid a platform dependence that surfaced on Fedora systems on the CRAN check farm.
+
+- 'R/saem.R': Fix a bug that prevented that 'error.ini' is passed to 'saemix_model', and set default to c(1, 1) to avoid changing test results
+
+- 'R/parplot.R': Show initial values for error model parameters
+
+- 'R/loglik.mkinfit.R': Add 'nobs' attribute to the resulting 'logLik' object, in order to make test_AIC.R  succeed on current R-devel
+
 # mkin 1.2.0 (2022-11-17)
 
 - 'R/saem.R': 'logLik', 'update' and 'anova' methods for 'saem.mmkin' objects.
