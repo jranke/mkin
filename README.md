@@ -50,16 +50,17 @@ version is found in the ['dev' subdirectory](https://pkgdown.jrwb.de/mkin/dev/).
 
 * Highly flexible model specification using
   [`mkinmod`](https://pkgdown.jrwb.de/mkin/reference/mkinmod.html),
-  including equilibrium reactions and using the single first-order
-  reversible binding (SFORB) model, which will automatically create
-  two latent state variables for the observed variable.
+  including equilibrium reactions and using the single first-order reversible
+  binding (SFORB) model, which will automatically create two state variables
+  for the observed variable.
 * Model solution (forward modelling) in the function
   [`mkinpredict`](https://pkgdown.jrwb.de/mkin/reference/mkinpredict.html)
   is performed either using the analytical solution for the case of
-  parent only degradation, an eigenvalue based solution if only simple
-  first-order (SFO) or SFORB kinetics are used in the model, or
-  using a numeric solver from the `deSolve` package (default is `lsoda`).
-* The usual one-sided t-test for significant difference from zero is nevertheless
+  parent only degradation or some simple models involving a single transformation
+  product, , an eigenvalue based solution if only simple first-order (SFO) or
+  SFORB kinetics are used in the model, or using a numeric solver from the
+  `deSolve` package (default is `lsoda`).
+* The usual one-sided t-test for significant difference from zero is
   shown based on estimators for the untransformed parameters.
 * Summary and plotting functions. The `summary` of an `mkinfit` object is in
   fact a full report that should give enough information to be able to
@@ -77,8 +78,8 @@ version is found in the ['dev' subdirectory](https://pkgdown.jrwb.de/mkin/dev/).
   function. A two-component error model similar to the one proposed by
   [Rocke and Lorenzato](https://pkgdown.jrwb.de/mkin/reference/sigma_twocomp.html)
   can be selected using the argument `error_model = "tc"`.
-* Model comparisons using the Akaike Information Criterion (AIC) are supported which
-  can also be used for non-constant variance. In such cases the FOCUS
+* Model comparisons using the Akaike Information Criterion (AIC) are supported
+  which can also be used for non-constant variance. In such cases the FOCUS
   chi-squared error level is not meaningful.
 * By default, kinetic rate constants and kinetic formation fractions are
   transformed internally using
@@ -92,21 +93,21 @@ version is found in the ['dev' subdirectory](https://pkgdown.jrwb.de/mkin/dev/).
   occur in a single experiment with a single defined radiolabel position.
 * When a metabolite decline phase is not described well by SFO kinetics,
   SFORB kinetics can be used for the metabolite. Mathematically, the SFORB model
-  is equivalent to the DFOP model used by other tools for biphasic metabolite curves.
-  However, the SFORB model has the advantage that there is a mechanistic
-  interpretation of the model parameters.
-* Nonlinear mixed-effects models can be created from fits of the same degradation
-  model to different datasets for the same compound by using the
+  is equivalent to the DFOP model. However, the SFORB model has the advantage
+  that there is a mechanistic interpretation of the model parameters.
+* Nonlinear mixed-effects models (hierarchical models) can be created from fits
+  of the same degradation model to different datasets for the same compound by
+  using the
   [nlme.mmkin](https://pkgdown.jrwb.de/mkin/reference/nlme.mmkin.html) and
-  [saem.mmkin](https://pkgdown.jrwb.de/mkin/reference/saem.html) and
+  [saem.mmkin](https://pkgdown.jrwb.de/mkin/reference/saem.html)
   methods. Note that the convergence of the nlme fits depends on the quality of
   the data. Convergence is better for simple models and data for many groups
   (e.g. soils). The saem method uses the `saemix` package as a backend. Analytical
   solutions suitable for use with this package have been implemented for parent
   only models and the most important models including one metabolite (SFO-SFO
   and DFOP-SFO). Fitting other models with `saem.mmkin`, while it makes use
-  of the compiled ODE models that mkin provides, has longer run times (at least
-  six minutes on my system).
+  of the compiled ODE models that mkin provides, has longer run times (from a couple
+  of minutes to more than an hour).
 
 ### Performance
 
@@ -189,13 +190,12 @@ license.
 
 Finally, there is
 [KineticEval](https://github.com/zhenglei-gao/KineticEval), which contains
-a further development of the scripts used for KinGUII, so the different tools
-will hopefully be able to learn from each other in the future as well.
+some further development of the scripts used for KinGUII.
 
 Thanks to René Lehmann, formerly working at the Umweltbundesamt, for the nice
-cooperation cooperation on parameter transformations, especially the isometric
-log-ratio transformation that is now used for formation fractions in case
-there are more than two transformation targets.
+cooperation on parameter transformations, especially the isometric log-ratio
+transformation that is now used for formation fractions in case there are more
+than two transformation targets.
 
 Many inspirations for improvements of mkin resulted from doing kinetic evaluations
 of degradation data for my clients while working at Harlan Laboratories and
@@ -215,8 +215,10 @@ to ModelMaker 4.0, 2014-2015)
 - Project Number 146839 (Checking the feasibility of using mixed-effects models for
   the derivation of kinetic modelling parameters from degradation studies, 2020-2021)
 
+Thanks to everyone involved for collaboration and support!
+
 Thanks are due also to Emmanuelle Comets, maintainer of the saemix package, for
-the nice collaboration on using the SAEM algorithm and its implementation in
+her interest and support for using the SAEM algorithm and its implementation in
 saemix for the evaluation of chemical degradation data.
 
 ## References
