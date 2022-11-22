@@ -130,7 +130,9 @@ version is found in the ['dev' subdirectory](https://pkgdown.jrwb.de/mkin/dev/).
 
 There is a graphical user interface that may be useful. Please
 refer to its [documentation page](https://pkgdown.jrwb.de/gmkin/)
-for installation instructions and a manual.
+for installation instructions and a manual. It only supports
+evaluations using (generalised) nonlinear regression, but
+not simultaneous fits using nonlinear mixed-effects models.
 
 ## News
 

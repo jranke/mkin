@@ -1,4 +1,8 @@
-# mkin 1.2.1 (unreleased)
+# mkin 1.2.2
+
+- 
+
+# mkin 1.2.1 (2022-11-19)
 
 - '{data,R}/ds_mixed.rda': Include the test data in the package instead of generating it in 'tests/testthat/setup_script.R'. Refactor the generating code to make it consistent and update tests.
 
