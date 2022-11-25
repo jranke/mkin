@@ -1,6 +1,6 @@
 # mkin 1.2.2
 
-- 
+- 'R/mhmkin.R': Allow an 'illparms.mhmkin' object as value of the argument 'no_random_effects', making it possible to exclude random effects that were ill-defined in simpler variants of the set of degradation models.
 
 # mkin 1.2.1 (2022-11-19)
 

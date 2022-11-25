@@ -18,7 +18,6 @@ mhmkin(objects, ...)
   backend = "saemix",
   algorithm = "saem",
   no_random_effect = NULL,
-  auto_ranef_threshold = 3,
   ...,
   cores = if (Sys.info()["sysname"] == "Windows") 1 else parallel::detectCores(),
   cluster = NULL
@@ -42,14 +41,13 @@ supported}
 
 \item{algorithm}{The algorithm to be used for fitting (currently not used)}
 
-\item{no_random_effect}{Default is NULL and will be passed to \link{saem}. If
-you specify "auto", random effects are only included if the number
-of datasets in which the parameter passed the t-test is at least 'auto_ranef_threshold'.
-Beware that while this may make for convenient model reduction or even
-numerical stability of the algorithm, it will likely lead to
-underparameterised models.}
-
-\item{auto_ranef_threshold}{See 'no_random_effect.}
+\item{no_random_effect}{Default is NULL and will be passed to \link{saem}. If a
+character vector is supplied, it will be passed to all calls to \link{saem},
+regardless if the corresponding parameter is in the model. Alternatively,
+an object of class \link{illparms.mhmkin} can be specified. This has to have
+the same dimensions as the return object of the current call. In this way,
+ill-defined parameters found in corresponding simpler versions of the
+degradation model can be specified.}
 
 \item{cores}{The number of cores to be used for multicore processing. This
 is only used when the \code{cluster} argument is \code{NULL}. On Windows
