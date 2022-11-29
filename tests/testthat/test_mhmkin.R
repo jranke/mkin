@@ -46,14 +46,4 @@ test_that("Multiple hierarchical kinetic models can be fitted and diagnosed", {
     print(fits_synth_const),
     "print_fits_synth_const.txt")
 
-  hfits_no_ranef_auto <- update(hfits, no_random_effect = "auto", auto_ranef_threshold = 2)
-
-  expect_known_output(
-    print(hfits_no_ranef_auto),
-    "print_hfits_synth_no_ranef_auto.txt")
-
-  expect_known_output(
-    print(illparms(hfits_no_ranef_auto)),
-    "illparms_hfits_synth_no_ranef_auto.txt")
-
 })

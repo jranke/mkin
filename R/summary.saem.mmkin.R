@@ -225,12 +225,21 @@ print.summary.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3)
     obs = "Variance unique to each observed variable",
     tc = "Two-component variance function"), "\n")
 
-  cat("\nMean of starting values for individual parameters:\n")
+  cat("\nStarting values for degradation parameters:\n")
   print(x$mean_dp_start, digits = digits)
 
   cat("\nFixed degradation parameter values:\n")
   if(length(x$fixed$value) == 0) cat("None\n")
   else print(x$fixed, digits = digits)
+
+  cat("\nStarting values for random effects (square root of initial entries in omega):\n")
+  print(sqrt(x$so@model@omega.init), digits = digits)
+
+  cat("\nStarting values for error model parameters:\n")
+  errparms <- x$so@model@error.init
+  names(errparms) <- x$so@model@name.sigma
+  errparms <- errparms[x$so@model@indx.res]
+  print(errparms, digits = digits)
 
   cat("\nResults:\n\n")
   cat("Likelihood computed by importance sampling\n")
