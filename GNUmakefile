@@ -80,12 +80,16 @@ clean:
 	$(RM) -r vignettes/web_only/*.R
 	$(RM) Rplots.pdf
 
+# We set PROCESSX_NOTIFY_OLD_SIGCHILD in order to avoid the message
+# "Error while shutting down parallel: unable to terminate some child processes",
+# which is said to be harmless, see https://processx.r-lib.org/#mixing-processx-and-the-parallel-base-r-package
+# and https://github.com/r-lib/processx/issues/236
 test: install
-	"$(RBIN)/Rscript" -e 'options(cli.dynamic = TRUE); devtools::test()' 2>&1 | tee log/test.log
+	PROCESSX_NOTIFY_OLD_SIGCHLD=true "$(RBIN)/Rscript" -e 'options(cli.dynamic = TRUE); devtools::test()' 2>&1 | tee log/test.log
 	sed -i -e "s/.*\r.*\r//" log/test.log
 
 devtest: devinstall
-	"$(RDEVBIN)/Rscript" -e 'options(cli.dynamic = TRUE); devtools::test()' 2>&1 | tee log/test_dev.log
+	PROCESSX_NOTIFY_OLD_SIGCHLD=true "$(RDEVBIN)/Rscript" -e 'options(cli.dynamic = TRUE); devtools::test()' 2>&1 | tee log/test_dev.log
 	sed -i -e "s/\r.*\r//" log/test_dev.log
 
 slowtests: install
