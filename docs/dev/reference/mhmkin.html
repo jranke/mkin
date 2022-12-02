@@ -113,7 +113,6 @@ mhmkin(
   backend = "saemix",
   algorithm = "saem",
   no_random_effect = NULL,
-  auto_ranef_threshold = 3,
   ...,
   cores = if (Sys.info()["sysname"] == "Windows") 1 else parallel::detectCores(),
   cluster = NULL
@@ -150,16 +149,14 @@ supported</p></dd>
 
 
 <dt>no_random_effect</dt>
-<dd><p>Default is NULL and will be passed to <a href="saem.html">saem</a>. If
-you specify "auto", random effects are only included if the number
-of datasets in which the parameter passed the t-test is at least 'auto_ranef_threshold'.
-Beware that while this may make for convenient model reduction or even
-numerical stability of the algorithm, it will likely lead to
-underparameterised models.</p></dd>
-
-
-<dt>auto_ranef_threshold</dt>
-<dd><p>See 'no_random_effect.</p></dd>
+<dd><p>Default is NULL and will be passed to <a href="saem.html">saem</a>. If a
+character vector is supplied, it will be passed to all calls to <a href="saem.html">saem</a>,
+which will exclude random effects for all matching parameters. Alternatively,
+a list of character vectors or an object of class <a href="illparms.html">illparms.mhmkin</a> can be
+specified. They have to have the same dimensions that the return object of
+the current call will have, i.e. the number of rows must match the number
+of degradation models in the mmkin object(s), and the number of columns must
+match the number of error models used in the mmkin object(s).</p></dd>
 
 
 <dt>cores</dt>
@@ -203,7 +200,7 @@ and the error model names for the second index (column index), with class
 attribute 'mhmkin'.</p>
 
 
-<p>An object of class <code>mhmkin</code>.</p>
+<p>An object inheriting from <code>mhmkin</code>.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -214,6 +211,88 @@ attribute 'mhmkin'.</p>
     <p>Johannes Ranke</p>
     </div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="co"># We start with separate evaluations of all the first six datasets with two</span></span></span>
+<span class="r-in"><span><span class="co"># degradation models and two error models</span></span></span>
+<span class="r-in"><span><span class="va">f_sep_const</span> <span class="op">&lt;-</span> <span class="fu"><a href="mmkin.html">mmkin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"FOMC"</span><span class="op">)</span>, <span class="va">ds_fomc</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>, cores <span class="op">=</span> <span class="fl">2</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">f_sep_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">f_sep_const</span>, error_model <span class="op">=</span> <span class="st">"tc"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># The mhmkin function sets up hierarchical degradation models aka</span></span></span>
+<span class="r-in"><span><span class="co"># nonlinear mixed-effects models for all four combinations, specifying</span></span></span>
+<span class="r-in"><span><span class="co"># uncorrelated random effects for all degradation parameters</span></span></span>
+<span class="r-in"><span><span class="va">f_saem_1</span> <span class="op">&lt;-</span> <span class="fu">mhmkin</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">f_sep_const</span>, <span class="va">f_sep_tc</span><span class="op">)</span>, cores <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="status.html">status</a></span><span class="op">(</span><span class="va">f_saem_1</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> degradation const tc</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        SFO  OK    OK</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        FOMC OK    OK</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> OK: Fit terminated successfully</span>
+<span class="r-in"><span><span class="co"># The 'illparms' function shows that in all hierarchical fits, at least</span></span></span>
+<span class="r-in"><span><span class="co"># one random effect is ill-defined (the confidence interval for the</span></span></span>
+<span class="r-in"><span><span class="co"># random effect expressed as standard deviation includes zero)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="illparms.html">illparms</a></span><span class="op">(</span><span class="va">f_saem_1</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> degradation const        tc                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        SFO  sd(parent_0) sd(parent_0)              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        FOMC sd(log_beta) sd(parent_0), sd(log_beta)</span>
+<span class="r-in"><span><span class="co"># Therefore we repeat the fits, excluding the ill-defined random effects</span></span></span>
+<span class="r-in"><span><span class="va">f_saem_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">f_saem_1</span>, no_random_effect <span class="op">=</span> <span class="fu"><a href="illparms.html">illparms</a></span><span class="op">(</span><span class="va">f_saem_1</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="status.html">status</a></span><span class="op">(</span><span class="va">f_saem_2</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> degradation const tc</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        SFO  OK    OK</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        FOMC OK    OK</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> OK: Fit terminated successfully</span>
+<span class="r-in"><span><span class="fu"><a href="illparms.html">illparms</a></span><span class="op">(</span><span class="va">f_saem_2</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            error</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> degradation const tc</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        SFO          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        FOMC         </span>
+<span class="r-in"><span><span class="co"># Model comparisons show that FOMC with two-component error is preferable,</span></span></span>
+<span class="r-in"><span><span class="co"># and confirms our reduction of the default parameter model</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_saem_1</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Data: 95 observations of 1 variable(s) grouped in 6 datasets</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            npar    AIC    BIC     Lik</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SFO const     5 574.40 573.35 -282.20</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SFO tc        6 543.72 542.47 -265.86</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> FOMC const    7 489.67 488.22 -237.84</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> FOMC tc       8 406.11 404.44 -195.05</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_saem_2</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Data: 95 observations of 1 variable(s) grouped in 6 datasets</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            npar    AIC    BIC     Lik</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SFO const     4 572.22 571.39 -282.11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SFO tc        5 541.63 540.59 -265.81</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> FOMC const    6 487.38 486.13 -237.69</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> FOMC tc       6 402.12 400.88 -195.06</span>
+<span class="r-in"><span><span class="co"># The convergence plot for the selected model looks fine</span></span></span>
+<span class="r-in"><span><span class="fu">saemix</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_saem_2</span><span class="op">[[</span><span class="st">"FOMC"</span>, <span class="st">"tc"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">so</span>, plot.type <span class="op">=</span> <span class="st">"convergence"</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="mhmkin-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="co"># The plot of predictions versus data shows that we have a pretty data-rich</span></span></span>
+<span class="r-in"><span><span class="co"># situation with homogeneous distribution of residuals, because we used the</span></span></span>
+<span class="r-in"><span><span class="co"># same degradation model, error model and parameter distribution model that</span></span></span>
+<span class="r-in"><span><span class="co"># was used in the data generation.</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_saem_2</span><span class="op">[[</span><span class="st">"FOMC"</span>, <span class="st">"tc"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="mhmkin-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="co"># We can specify the same parameter model reductions manually</span></span></span>
+<span class="r-in"><span><span class="va">no_ranef</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"parent_0"</span>, <span class="st">"log_beta"</span>, <span class="st">"parent_0"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"parent_0"</span>, <span class="st">"log_beta"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">no_ranef</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">f_saem_2m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">f_saem_1</span>, no_random_effect <span class="op">=</span> <span class="va">no_ranef</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_saem_2m</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Data: 95 observations of 1 variable(s) grouped in 6 datasets</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            npar    AIC    BIC     Lik</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SFO const     4 572.22 571.39 -282.11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SFO tc        5 541.63 540.59 -265.81</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> FOMC const    6 487.38 486.13 -237.69</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> FOMC tc       6 402.12 400.88 -195.06</span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
