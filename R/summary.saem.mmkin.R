@@ -136,10 +136,11 @@ summary.saem.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes =
   }
 
   #  Correlation of fixed effects (inspired by summary.nlme)
-  varFix <- try(vcov(object$so)[1:n_fixed, 1:n_fixed])
-  if (inherits(varFix, "try-error")) {
+  cov_so <- try(solve(object$so@results@fim), silent = TRUE)
+  if (inherits(cov_so, "try-error")) {
     object$corFixed <- NA
   } else {
+    varFix <- cov_so[1:n_fixed, 1:n_fixed]
     stdFix <- sqrt(diag(varFix))
     object$corFixed <- array(
       t(varFix/stdFix)/stdFix,
