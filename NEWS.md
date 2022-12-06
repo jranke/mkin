@@ -4,6 +4,8 @@
 
 - 'R/summary.saem.mmkin.R': List all initial parameter values in the summary, including random effects and error model parameters. Avoid redundant warnings that occurred in the calculation of correlations of the fixed effects in the case that the Fisher information matrix could not be inverted.
 
+- 'R/parplot.R': Possibility to select the top 'llquant' fraction of the fits for the parameter plots, and improved legend text.
+
 # mkin 1.2.1 (2022-11-19)
 
 - '{data,R}/ds_mixed.rda': Include the test data in the package instead of generating it in 'tests/testthat/setup_script.R'. Refactor the generating code to make it consistent and update tests.

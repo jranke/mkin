@@ -10,6 +10,7 @@ parplot(object, ...)
 \method{parplot}{multistart.saem.mmkin}(
   object,
   llmin = -Inf,
+  llquant = NA,
   scale = c("best", "median"),
   lpos = "bottomleft",
   main = "",
@@ -23,7 +24,11 @@ parplot(object, ...)
 
 \item{llmin}{The minimum likelihood of objects to be shown}
 
-\item{scale}{By default, scale parameters using the best available fit.
+\item{llquant}{Fractional value for selecting only the fits with higher
+likelihoods. Overrides 'llmin'.}
+
+\item{scale}{By default, scale parameters using the best
+available fit.
 If 'median', parameters are scaled using the median parameters from all fits.}
 
 \item{lpos}{Positioning of the legend.}
