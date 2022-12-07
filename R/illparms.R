@@ -20,6 +20,9 @@
 #' @param random For hierarchical fits, should random effects be tested?
 #' @param errmod For hierarchical fits, should error model parameters be
 #' tested?
+#' @param slopes For hierarchical [saem] fits using saemix as backend,
+#' should slope parameters in the covariate model(starting with 'beta_') be
+#' tested?
 #' @return For [mkinfit] or [saem] objects, a character vector of parameter
 #' names. For [mmkin] or [mhmkin] objects, a matrix like object of class
 #' 'illparms.mmkin' or 'illparms.mhmkin'.
@@ -92,7 +95,7 @@ print.illparms.mmkin <- function(x, ...) {
 
 #' @rdname illparms
 #' @export
-illparms.saem.mmkin <- function(object, conf.level = 0.95, random = TRUE, errmod = TRUE, ...) {
+illparms.saem.mmkin <- function(object, conf.level = 0.95, random = TRUE, errmod = TRUE, slopes = TRUE, ...) {
   if (inherits(object$so, "try-error")) {
     ill_parms <- NA
   } else {
@@ -105,6 +108,15 @@ illparms.saem.mmkin <- function(object, conf.level = 0.95, random = TRUE, errmod
     if (errmod) {
       ill_parms_errmod <- ints$errmod[, "lower"] < 0 & ints$errmod[, "est."] > 0
       ill_parms <- c(ill_parms, names(which(ill_parms_errmod)))
+    }
+    if (slopes) {
+      if (is.null(object$so)) stop("Slope testing is only implemented for the saemix backend")
+      slope_names <- grep("^beta_", object$so@model@name.fixed, value = TRUE)
+      ci <- object$so@results@conf.int
+      rownames(ci) <- ci$name
+      slope_ci <- ci[slope_names, ]
+      ill_parms_slopes <- slope_ci[, "lower"] < 0 & slope_ci[, "estimate"] > 0
+      ill_parms <- c(ill_parms, slope_names[ill_parms_slopes])
     }
   }
   class(ill_parms) <- "illparms.saem.mmkin"

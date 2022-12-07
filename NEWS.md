@@ -6,6 +6,8 @@
 
 - 'R/parplot.R': Possibility to select the top 'llquant' fraction of the fits for the parameter plots, and improved legend text.
 
+- 'R/illparms.R': Also check if confidence intervals for slope parameters in covariate models include zero. Only implemented for fits obtained with the saemix backend.
+
 # mkin 1.2.1 (2022-11-19)
 
 - '{data,R}/ds_mixed.rda': Include the test data in the package instead of generating it in 'tests/testthat/setup_script.R'. Refactor the generating code to make it consistent and update tests.
