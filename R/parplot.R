@@ -41,7 +41,7 @@ parplot.multistart.saem.mmkin <- function(object, llmin = -Inf, llquant = NA,
   orig <- attr(object, "orig")
   orig_parms <- parms(orig)
   start_degparms <- orig$mean_dp_start
-  all_parms <- parms(object)
+  all_parms <- parms(object, exclude_failed = FALSE)
 
   if (inherits(object, "multistart.saem.mmkin")) {
     llfunc <- function(object) {

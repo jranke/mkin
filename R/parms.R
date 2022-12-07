@@ -77,6 +77,6 @@ parms.multistart <- function(object, exclude_failed = TRUE, ...) {
   successful <- which(!is.na(res[, 1]))
   first_success <- successful[1]
   colnames(res) <- names(parms(object[[first_success]]))
-  if (exclude_failed) res <- res[successful, ]
+  if (exclude_failed[1]) res <- res[successful, ]
   return(res)
 }
