@@ -2,13 +2,15 @@
 
 - 'R/mhmkin.R': Allow an 'illparms.mhmkin' object or a list with suitable dimensions as value of the argument 'no_random_effects', making it possible to exclude random effects that were ill-defined in simpler variants of the set of degradation models. Remove the possibility to exclude random effects based on separate fits, as it did not work well.
 
-- 'R/summary.saem.mmkin.R': List all initial parameter values in the summary, including random effects and error model parameters. Avoid redundant warnings that occurred in the calculation of correlations of the fixed effects in the case that the Fisher information matrix could not be inverted.
+- 'R/summary.saem.mmkin.R': List all initial parameter values in the summary, including random effects and error model parameters. Avoid redundant warnings that occurred in the calculation of correlations of the fixed effects in the case that the Fisher information matrix could not be inverted. List correlations of random effects if specified by the user in the covariance model.
 
 - 'R/parplot.R': Possibility to select the top 'llquant' fraction of the fits for the parameter plots, and improved legend text.
 
 - 'R/illparms.R': Also check if confidence intervals for slope parameters in covariate models include zero. Only implemented for fits obtained with the saemix backend.
 
 - 'R/parplot.R': Make the function work also in the case that some of the multistart runs failed.
+
+- 'R/intervals.R': Include correlations of random effects in the model in case there are any.
 
 # mkin 1.2.1 (2022-11-19)
 
