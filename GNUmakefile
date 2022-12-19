@@ -24,7 +24,9 @@ pkgfiles = \
 	DESCRIPTION \
 	inst/WORDLIST \
 	inst/dataset_generation/* \
-	inst/testdata/fit_old_FOCUS_D.rda \
+	inst/rmarkdown/templates/hier/template.yaml \
+	inst/rmarkdown/templates/hier/skeleton/skeleton.Rmd \
+	inst/testdata/* \
 	man/* \
 	NAMESPACE \
 	NEWS.md \

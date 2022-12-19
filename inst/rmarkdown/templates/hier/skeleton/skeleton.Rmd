@@ -1,0 +1,186 @@
+---
+title: "Hierarchical kinetic modelling of degradation data"
+author:
+date: Last change on DD MMM YYYY, last compiled on `r format(Sys.time(),
+  "%e %B %Y")`
+output:
+  pdf_document:
+    extra_dependencies: ["float", "listing"]
+toc: yes
+geometry: margin=2cm
+---
+
+
+```{r setup, echo = FALSE, cache = FALSE}
+errmods <- c(const = "constant variance", tc = "two-component error")
+
+knitr::opts_chunk$set(
+  comment = "", tidy = FALSE, cache = TRUE, fig.pos = "H", fig.align = "center"
+)
+options(knitr.kable.NA = "")
+
+# Version requirements
+if (getRversion() < "4.1.0")
+  stop("You need R with version > 4.1.0 to compile this document")
+if ((saemix_version <- packageVersion("saemix")) < "3.1") {
+  warning("Your saemix version is ", saemix_version,
+    ", you should preferably use 3.2 to compile this document")
+}
+if ((mkin_version <- packageVersion("mkin")) < "1.2.2") {
+  stop("Your mkin version is ", mkin_version,
+    ", you need at least 1.2.2 to compile this document")
+}
+```
+
+```{r packages, cache = FALSE, message = FALSE, warning = FALSE, echo = FALSE}
+library(mkin)
+library(saemix)
+library(parallel)
+library(knitr)
+```
+
+```{r n_cores, cache = FALSE, echo = FALSE}
+n_cores <- detectCores()
+
+if (Sys.info()["sysname"] == "Windows") {
+  cl <- makePSOCKcluster(n_cores)
+} else {
+  cl <- makeForkCluster(n_cores)
+}
+```
+
+\clearpage
+
+# Introduction
+
+This report shows hierarchical kinetic modelling for ...
+The data were obtained from ...
+
+```{r ds}
+data_path <- system.file("testdata", "lambda-cyhalothrin_soil_efsa_2014.xlsx", package = "mkin")
+ds <- read_spreadsheet(data_path, valid_datasets = c(1:4, 7:13))
+covariates <- attr(ds, "covariates")
+```
+
+The covariate data are shown below.
+
+```{r results = "asis", dependson = "ds", echo = FALSE}
+kable(covariates, caption = "Covariate data for all datasets")
+```
+
+\clearpage
+
+The datasets with the residue time series are shown in the tables below. Please
+refer to the spreadsheet for details like data sources, treatment of values
+below reporting limits and time step normalisation factors.
+
+```{r results = "asis", dependson = "ds", echo = FALSE}
+for (ds_name in names(ds)) {
+  print(
+    kable(mkin_long_to_wide(ds[[ds_name]]),
+      caption = paste("Dataset", ds_name),
+      booktabs = TRUE, row.names = FALSE))
+  cat("\n\\clearpage\n")
+}
+```
+
+# Parent only evaluations
+
+The following code performs separate fits of the candidate degradation models
+to all datasets using constant variance and the two-component error model.
+
+```{r parent-sep, dependson = "ds"}
+parent_deg_mods <- c("SFO", "FOMC", "DFOP", "SFORB")
+parent_sep_const <- mmkin(
+  parent_deg_mods, ds,
+  error_model = "const",
+  cluster = cl, quiet = TRUE)
+parent_sep_tc <- update(parent_sep_const, error_model = "tc")
+```
+
+To select the parent model, the corresponding hierarchical fits are performed below.
+
+```{r parent-mhmkin, dependson = "parent-sep"}
+parent_mhmkin <- mhmkin(list(parent_sep_const, parent_sep_tc), cluster = cl)
+status(parent_mhmkin) |> kable()
+```
+
+All fits terminate without errors (status OK). The check for ill-defined
+parameters shows that not all random effect parameters can be robustly
+quantified.
+
+```{r dependson = "parent_mhmkin"}
+illparms(parent_mhmkin) |> kable()
+```
+
+Therefore, the fits are updated, excluding random effects that were
+ill-defined according to the `illparms` function.
+
+```{r parent-mhmkin-refined}
+parent_mhmkin_refined <- update(parent_mhmkin,
+  no_random_effect = illparms(parent_mhmkin))
+status(parent_mhmkin_refined) |> kable()
+```
+
+The most suitable model is selected based on the AIC.
+
+```{r dependson = "parent-mhmkin"}
+aic_parent <- AIC(parent_mhmkin_refined)
+min_aic <- which(aic_parent == min(aic_parent), arr.ind = TRUE)
+best_degmod_parent <- rownames(aic_parent)[min_aic[1]]
+best_errmod_parent <- colnames(aic_parent)[min_aic[2]]
+anova(parent_mhmkin_refined) |> kable(digits = 1)
+```
+
+Based on the AIC, the combination of the `r best_degmod_parent` degradation
+model with the error model `r errmods[best_errmod_parent]` is identified to
+be most suitable for the degradation of the parent. The check below
+confirms that no ill-defined parameters remain for this combined model.
+
+```{r dependson = "parent-mhmkin"}
+illparms(parent_mhmkin_refined[[best_degmod_parent, best_errmod_parent]])
+```
+
+The corresponding fit is shown below.
+
+```{r parent-best-full, dependson = "parent-mhmkin"}
+plot(parent_mhmkin_refined[[best_degmod_parent, best_errmod_parent]])
+```
+
+Detailed listings of the parent fits are shown in the Appendix.
+
+\clearpage
+
+# Appendix
+
+## Summaries of saem fits
+
+### Parent fits
+
+```{r listings-parent, results = "asis", echo = FALSE}
+for (deg_mod in parent_deg_mods) {
+  for (err_mod in c("const", "tc")) {
+    caption <- paste("Hierarchical", deg_mod, "fit with", errmods[err_mod])
+    tex_listing(parent_mhmkin[[deg_mod, err_mod]], caption)
+  }
+}
+```
+
+### Refined parent fits
+
+```{r listings-pathway, results = "asis", echo = FALSE}
+for (deg_mod in parent_deg_mods) {
+  for (err_mod in c("const", "tc")) {
+    caption <- paste("Refined hierarchical", deg_mod, "fit with", errmods[err_mod])
+    tex_listing(parent_mhmkin_refined[[deg_mod, err_mod]], caption)
+  }
+}
+```
+
+## Session info
+
+```{r, echo = FALSE}
+parallel::stopCluster(cl)
+sessionInfo()
+```
+
