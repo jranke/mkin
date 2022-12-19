@@ -24,8 +24,8 @@ pkgfiles = \
 	DESCRIPTION \
 	inst/WORDLIST \
 	inst/dataset_generation/* \
-	inst/rmarkdown/templates/hier/template.yaml \
-	inst/rmarkdown/templates/hier/skeleton/skeleton.Rmd \
+	inst/rmarkdown/templates/hierarchical_kinetics/template.yaml \
+	inst/rmarkdown/templates/hierarchical_kinetics/skeleton/skeleton.Rmd \
 	inst/testdata/* \
 	man/* \
 	NAMESPACE \

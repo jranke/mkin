@@ -1,5 +1,9 @@
 # mkin 1.2.2
 
+- 'inst/rmarkdown/templates/hier': R markdown template to facilitate the application of hierarchical kinetic models.
+
+- 'inst/testdata/lambda-cyhalothrin_soil_efsa_2014.xlsx': Example spreadsheet for use with 'read_spreadsheet()'.
+
 - 'R/mhmkin.R': Allow an 'illparms.mhmkin' object or a list with suitable dimensions as value of the argument 'no_random_effects', making it possible to exclude random effects that were ill-defined in simpler variants of the set of degradation models. Remove the possibility to exclude random effects based on separate fits, as it did not work well.
 
 - 'R/summary.saem.mmkin.R': List all initial parameter values in the summary, including random effects and error model parameters. Avoid redundant warnings that occurred in the calculation of correlations of the fixed effects in the case that the Fisher information matrix could not be inverted. List correlations of random effects if specified by the user in the covariance model.

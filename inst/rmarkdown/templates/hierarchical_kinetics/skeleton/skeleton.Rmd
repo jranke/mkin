@@ -1,42 +1,17 @@
 ---
 title: "Hierarchical kinetic modelling of degradation data"
 author:
-date: Last change on DD MMM YYYY, last compiled on `r format(Sys.time(),
-  "%e %B %Y")`
-output:
-  pdf_document:
-    extra_dependencies: ["float", "listing"]
-toc: yes
+date:
+output: mkin::hierarchical_kinetics
 geometry: margin=2cm
 ---
 
-
-```{r setup, echo = FALSE, cache = FALSE}
-errmods <- c(const = "constant variance", tc = "two-component error")
-
-knitr::opts_chunk$set(
-  comment = "", tidy = FALSE, cache = TRUE, fig.pos = "H", fig.align = "center"
-)
-options(knitr.kable.NA = "")
-
-# Version requirements
-if (getRversion() < "4.1.0")
-  stop("You need R with version > 4.1.0 to compile this document")
-if ((saemix_version <- packageVersion("saemix")) < "3.1") {
-  warning("Your saemix version is ", saemix_version,
-    ", you should preferably use 3.2 to compile this document")
-}
-if ((mkin_version <- packageVersion("mkin")) < "1.2.2") {
-  stop("Your mkin version is ", mkin_version,
-    ", you need at least 1.2.2 to compile this document")
-}
-```
-
-```{r packages, cache = FALSE, message = FALSE, warning = FALSE, echo = FALSE}
+```{r packages, cache = FALSE, message = FALSE}
 library(mkin)
+library(knitr)
 library(saemix)
 library(parallel)
-library(knitr)
+library(readxl)
 ```
 
 ```{r n_cores, cache = FALSE, echo = FALSE}
@@ -91,6 +66,7 @@ to all datasets using constant variance and the two-component error model.
 
 ```{r parent-sep, dependson = "ds"}
 parent_deg_mods <- c("SFO", "FOMC", "DFOP", "SFORB")
+errmods <- c(const = "constant variance", tc = "two-component error")
 parent_sep_const <- mmkin(
   parent_deg_mods, ds,
   error_model = "const",
@@ -124,7 +100,7 @@ status(parent_mhmkin_refined) |> kable()
 
 The most suitable model is selected based on the AIC.
 
-```{r dependson = "parent-mhmkin"}
+```{r, dependson = "parent-mhmkin"}
 aic_parent <- AIC(parent_mhmkin_refined)
 min_aic <- which(aic_parent == min(aic_parent), arr.ind = TRUE)
 best_degmod_parent <- rownames(aic_parent)[min_aic[1]]
@@ -157,7 +133,7 @@ Detailed listings of the parent fits are shown in the Appendix.
 
 ### Parent fits
 
-```{r listings-parent, results = "asis", echo = FALSE}
+```{r listings-parent, results = "asis", echo = FALSE, dependson = "parent_mhmkin"}
 for (deg_mod in parent_deg_mods) {
   for (err_mod in c("const", "tc")) {
     caption <- paste("Hierarchical", deg_mod, "fit with", errmods[err_mod])
@@ -168,7 +144,7 @@ for (deg_mod in parent_deg_mods) {
 
 ### Refined parent fits
 
-```{r listings-pathway, results = "asis", echo = FALSE}
+```{r listings-parent-refined, results = "asis", echo = FALSE, dependson = "parent_mhmkin_refined"}
 for (deg_mod in parent_deg_mods) {
   for (err_mod in c("const", "tc")) {
     caption <- paste("Refined hierarchical", deg_mod, "fit with", errmods[err_mod])
@@ -179,7 +155,7 @@ for (deg_mod in parent_deg_mods) {
 
 ## Session info
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, cache = FALSE}
 parallel::stopCluster(cl)
 sessionInfo()
 ```

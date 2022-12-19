@@ -23,7 +23,7 @@
 #' of the in vitro erythropoiesis. BMC Bioinformatics. 2021 Oct 4;22(1):478.
 #' doi: 10.1186/s12859-021-04373-4.
 #' @seealso [multistart]
-#' @importFrom stats median
+#' @importFrom stats median quantile
 #' @export
 parplot <- function(object, ...) {
   UseMethod("parplot")
