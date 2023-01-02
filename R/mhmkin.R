@@ -134,7 +134,7 @@ mhmkin.list <- function(objects, backend = "saemix", algorithm = "saem",
   dimnames(fit_indices) <- list(degradation = names(deg_models),
                                 error = error_models)
 
-  if (is.null(no_random_effect) || length(dim(no_random_effect)) == 1) {
+  if (is.null(no_random_effect) || is.null(dim(no_random_effect))) {
     no_ranef <- rep(list(no_random_effect), n.fits)
     dim(no_ranef) <- dim(fit_indices)
   } else {
