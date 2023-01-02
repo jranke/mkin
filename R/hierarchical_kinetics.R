@@ -24,7 +24,7 @@ hierarchical_kinetics <- function(..., keep_tex = FALSE) {
 
   if (!requireNamespace("knitr")) stop("Please install the knitr package to use this template")
   if (!requireNamespace("rmarkdown")) stop("Please install the rmarkdown package to use this template")
-  knitr::opts_chunk$set(echo = FALSE, cache = TRUE, comment = "", tidy = FALSE)
+  knitr::opts_chunk$set(echo = FALSE, cache = TRUE, comment = "", tidy = FALSE, echo = TRUE)
   knitr::opts_chunk$set(fig.align = "center", fig.pos = "H")
   options(knitr.kable.NA = "")
 
