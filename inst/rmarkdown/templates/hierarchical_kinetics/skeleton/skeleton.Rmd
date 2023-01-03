@@ -144,10 +144,10 @@ intervals are listed below.
 parms(parent_best, ci = TRUE) |> kable(digits = 3)
 ```
 
-As an example of the investigation of covariate influence on degradation
-parameters, a covariate model is added to the hierarchical model for each of
-the degradation parameters with well-defined random effects. Also,
-a version with covariate models for both of them is fitted.
+To investigate a potential covariate influence on degradation parameters, a
+covariate model is added to the hierarchical model for each of the degradation
+parameters with well-defined random effects. Also, a version with covariate
+models for both of them is fitted.
 
 ```{r parent-best-pH}
 parent_best_pH_1 <- update(parent_best, covariates = covariates,
@@ -188,14 +188,14 @@ parallel formation of two metabolites is set up.
 
 
 ```{r m_sforb_sfo2}
-if (!dir.exists("lambda_dlls")) dir.create("lambda_dlls")
+if (!dir.exists("dlls")) dir.create("dlls")
 
 m_sforb_sfo2 = mkinmod(
   lambda = mkinsub("SFORB", to = c("c_V", "c_XV")),
   c_V = mkinsub("SFO"),
   c_XV = mkinsub("SFO"),
   name = "sforb_sfo2",
-  dll_dir = "lambda_dlls",
+  dll_dir = "dlls",
   overwrite = TRUE, quiet = TRUE
 )
 ```
