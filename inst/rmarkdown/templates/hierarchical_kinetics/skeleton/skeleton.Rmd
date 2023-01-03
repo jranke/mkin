@@ -186,8 +186,7 @@ parms(parent_best_pH_2, ci = TRUE) |> kable(digits = 3)
 As an example of a pathway fit, a model with SFORB for the parent compound and
 parallel formation of two metabolites is set up.
 
-
-```{r m_sforb_sfo2}
+```{r path-1-degmod}
 if (!dir.exists("dlls")) dir.create("dlls")
 
 m_sforb_sfo2 = mkinmod(
@@ -203,7 +202,7 @@ m_sforb_sfo2 = mkinmod(
 Separate evaluations of all datasets are performed with constant variance
 and using two-component error.
 
-```{r path-sep, dependson = c("m_sforb_all", "ds")}
+```{r path-1-sep, dependson = c("path-1-degmod", "ds")}
 sforb_sep_const <- mmkin(list(sforb_path = m_sforb_sfo2), ds,
   cluster = cl, quiet = TRUE)
 sforb_sep_tc <- update(sforb_sep_const, error_model = "tc")
@@ -211,7 +210,7 @@ sforb_sep_tc <- update(sforb_sep_const, error_model = "tc")
 
 The separate fits with constant variance are plotted.
 
-```{r dependson = "path-sep", fig.height = 9}
+```{r dependson = "path-1-sep", fig.height = 9}
 plot(mixed(sforb_sep_const))
 ```
 
@@ -219,7 +218,7 @@ The two corresponding hierarchical fits, with the random effects for the parent
 degradation parameters excluded as discussed above, and including the covariate
 model that was identified for the parent degradation, are attempted below.
 
-```{r path-1, dependson = "path-sep"}
+```{r path-1, dependson = "path-1-sep"}
 path_1 <- mhmkin(list(sforb_sep_const, sforb_sep_tc),
   no_random_effect = c("lambda_free_0", "log_k_lambda_free_bound"),
   covariates = covariates, covariate_models = list(log_k_lambda_bound_free ~ pH),
