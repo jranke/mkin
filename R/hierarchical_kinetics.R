@@ -31,6 +31,7 @@ hierarchical_kinetics <- function(..., keep_tex = FALSE) {
   fmt <- rmarkdown::pdf_document(...,
     keep_tex = keep_tex,
     toc = TRUE,
+    toc_depth = 3,
     includes = rmarkdown::includes(in_header = "header.tex"),
     extra_dependencies = c("float", "listing", "framed")
   )

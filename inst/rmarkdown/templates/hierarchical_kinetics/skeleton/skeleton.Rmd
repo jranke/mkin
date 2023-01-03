@@ -6,6 +6,10 @@ output: mkin::hierarchical_kinetics
 geometry: margin=2cm
 ---
 
+\clearpage
+
+# Setup
+
 ```{r packages, cache = FALSE, message = FALSE}
 library(mkin)
 library(knitr)
@@ -14,7 +18,7 @@ library(parallel)
 library(readxl)
 ```
 
-```{r n_cores, cache = FALSE, echo = FALSE}
+```{r n_cores, cache = FALSE}
 n_cores <- detectCores()
 
 if (Sys.info()["sysname"] == "Windows") {
@@ -92,7 +96,8 @@ illparms(parent_mhmkin) |> kable()
 ```
 
 Therefore, the fits are updated, excluding random effects that were
-ill-defined according to the `illparms` function.
+ill-defined according to the `illparms` function. The status of the fits
+is checked.
 
 ```{r parent-mhmkin-refined}
 parent_mhmkin_refined <- update(parent_mhmkin,
@@ -100,14 +105,22 @@ parent_mhmkin_refined <- update(parent_mhmkin,
 status(parent_mhmkin_refined) |> kable()
 ```
 
-The most suitable model is selected based on the AIC.
+Also, it is checked if the AIC values of the refined fits are actually smaller
+than the AIC values of the original fits.
 
-```{r, dependson = "parent-mhmkin"}
+```{r dependson = "parent-mhmkin-refined"}
+(AIC(parent_mhmkin_refined) < AIC(parent_mhmkin)) |> kable()
+```
+
+From the refined fits, the most suitable model is selected using the AIC.
+
+```{r parent-best, dependson = "parent-mhmkin"}
 aic_parent <- AIC(parent_mhmkin_refined)
 min_aic <- which(aic_parent == min(aic_parent), arr.ind = TRUE)
 best_degmod_parent <- rownames(aic_parent)[min_aic[1]]
 best_errmod_parent <- colnames(aic_parent)[min_aic[2]]
 anova(parent_mhmkin_refined) |> kable(digits = 1)
+parent_best <- parent_mhmkin_refined[[best_degmod_parent, best_errmod_parent]]
 ```
 
 Based on the AIC, the combination of the `r best_degmod_parent` degradation
@@ -115,25 +128,152 @@ model with the error model `r errmods[best_errmod_parent]` is identified to
 be most suitable for the degradation of the parent. The check below
 confirms that no ill-defined parameters remain for this combined model.
 
-```{r dependson = "parent-mhmkin"}
-illparms(parent_mhmkin_refined[[best_degmod_parent, best_errmod_parent]])
+```{r dependson = "parent-best"}
+illparms(parent_best)
 ```
 
-The corresponding fit is shown below.
+The corresponding fit is plotted below.
 
-```{r parent-best-full, dependson = "parent-mhmkin"}
-plot(parent_mhmkin_refined[[best_degmod_parent, best_errmod_parent]])
+```{r dependson = "parent-best"}
+plot(parent_best)
+```
+The fitted parameters, together with approximate confidence
+intervals are listed below.
+
+```{r dependson = "parent-best"}
+parms(parent_best, ci = TRUE) |> kable(digits = 3)
 ```
 
-Detailed listings of the parent fits are shown in the Appendix.
+As an example of the investigation of covariate influence on degradation
+parameters, a covariate model is added to the hierarchical model for each of
+the degradation parameters with well-defined random effects. Also,
+a version with covariate models for both of them is fitted.
+
+```{r parent-best-pH}
+parent_best_pH_1 <- update(parent_best, covariates = covariates,
+  covariate_models = list(log_k_lambda_free ~ pH))
+parent_best_pH_2 <- update(parent_best, covariates = covariates,
+  covariate_models = list(log_k_lambda_bound_free ~ pH))
+parent_best_pH_3 <- update(parent_best, covariates = covariates,
+  covariate_models = list(log_k_lambda_free ~ pH, log_k_lambda_bound_free ~ pH))
+```
+
+The resulting models are compared.
+
+```{r dependson = "parent-best-pH"}
+anova(parent_best, parent_best_pH_1, parent_best_pH_2, parent_best_pH_3) |>
+  kable(digits = 1)
+```
+
+The model fit with the lowest AIC is the one with a pH correlation of the
+desorption rate constant `k_lambda_bound_free`. Plot and parameter listing
+of this fit are shown below. Also, it is confirmed that no ill-defined
+variance parameters are found.
+
+```{r dependson = "parent-best-pH"}
+plot(parent_best_pH_2)
+```
+
+```{r dependson = "parent-best-pH"}
+illparms(parent_best_pH_2)
+parms(parent_best_pH_2, ci = TRUE) |> kable(digits = 3)
+```
+
+\clearpage
+
+# Pathway fits
+
+As an example of a pathway fit, a model with SFORB for the parent compound and
+parallel formation of two metabolites is set up.
+
+
+```{r m_sforb_sfo2}
+if (!dir.exists("lambda_dlls")) dir.create("lambda_dlls")
+
+m_sforb_sfo2 = mkinmod(
+  lambda = mkinsub("SFORB", to = c("c_V", "c_XV")),
+  c_V = mkinsub("SFO"),
+  c_XV = mkinsub("SFO"),
+  name = "sforb_sfo2",
+  dll_dir = "lambda_dlls",
+  overwrite = TRUE, quiet = TRUE
+)
+```
+
+Separate evaluations of all datasets are performed with constant variance
+and using two-component error.
+
+```{r path-sep, dependson = c("m_sforb_all", "ds")}
+sforb_sep_const <- mmkin(list(sforb_path = m_sforb_sfo2), ds,
+  cluster = cl, quiet = TRUE)
+sforb_sep_tc <- update(sforb_sep_const, error_model = "tc")
+```
+
+The separate fits with constant variance are plotted.
+
+```{r dependson = "path-sep", fig.height = 9}
+plot(mixed(sforb_sep_const))
+```
+
+The two corresponding hierarchical fits, with the random effects for the parent
+degradation parameters excluded as discussed above, and including the covariate
+model that was identified for the parent degradation, are attempted below.
+
+```{r path-1, dependson = "path-sep"}
+path_1 <- mhmkin(list(sforb_sep_const, sforb_sep_tc),
+  no_random_effect = c("lambda_free_0", "log_k_lambda_free_bound"),
+  covariates = covariates, covariate_models = list(log_k_lambda_bound_free ~ pH),
+  cluster = cl)
+```
+
+```{r dependson = "path-1"}
+status(path_1) |> kable()
+```
+
+The status information shows that both fits were successfully completed.
+
+```{r dependson = "path-1"}
+anova(path_1) |> kable(digits = 1)
+```
+Model comparison shows that the two-component error model provides a much
+better fit.
+
+```{r dependson = "path-1"}
+illparms(path_1[["sforb_path", "tc"]])
+```
+
+Two ill-defined variance components are found. Therefore, the fit is
+repeated with the corresponding random effects removed.
+
+```{r path-1-refined, dependson = "path-1"}
+path_1_refined <- update(path_1[["sforb_path", "tc"]],
+  no_random_effect = c("lambda_free_0", "log_k_lambda_free_bound",
+    "log_k_c_XV", "f_lambda_ilr_2"))
+```
+
+The empty output of the illparms function indicates that there are no
+ill-defined parameters remaining in the refined fit.
+
+```{r dependson = "path-1-refined"}
+illparms(path_1_refined)
+```
+
+Below, the refined fit is plotted and the fitted parameters are shown together
+with their 95% confidence intervals.
+
+```{r dependson = "path-1-refined", fig.height = 9}
+plot(path_1_refined)
+```
+
+```{r dependson = "path-1-refined", fig.height = 9}
+parms(path_1_refined, ci = TRUE) |> kable(digits = 3)
+```
 
 \clearpage
 
 # Appendix
 
-## Summaries of saem fits
-
-### Parent fits
+## Listings of initial parent fits
 
 ```{r listings-parent, results = "asis", echo = FALSE, dependson = "parent_mhmkin"}
 for (deg_mod in parent_deg_mods) {
@@ -144,7 +284,7 @@ for (deg_mod in parent_deg_mods) {
 }
 ```
 
-### Refined parent fits
+## Listings of refined parent fits
 
 ```{r listings-parent-refined, results = "asis", echo = FALSE, dependson = "parent_mhmkin_refined"}
 for (deg_mod in parent_deg_mods) {
@@ -155,9 +295,20 @@ for (deg_mod in parent_deg_mods) {
 }
 ```
 
+## Listings of pathway fits
+
+```{r listings-path-1, results = "asis", echo = FALSE, dependson = "path-1-refined"}
+tex_listing(path_1[["sforb_path", "const"]],
+  caption = "Hierarchical fit of SFORB-SFO2 with constant variance")
+tex_listing(path_1[["sforb_path", "tc"]],
+  caption = "Hierarchical fit of SFORB-SFO2 with two-component error")
+tex_listing(path_1_refined,
+  caption = "Refined hierarchical fit of SFORB-SFO2 with two-component error")
+```
+
 ## Session info
 
-```{r, echo = FALSE, cache = FALSE}
+```{r echo = FALSE, cache = FALSE}
 parallel::stopCluster(cl)
 sessionInfo()
 ```
