@@ -100,9 +100,12 @@ multistart.saem.mmkin <- function(object, n = 50, cores = 1,
   }
 
   if (is.null(cluster)) {
-    res <- parallel::mclapply(1:n, fit_function, mc.cores = cores)
+    res <- parallel::mclapply(1:n, fit_function,
+      mc.cores = cores, mc.preschedule = FALSE)
   } else {
-    res <- parallel::parLapply(cluster, 1:n, fit_function)
+    res <- parallel::parLapplyLB(cluster, 1:n, fit_function,
+      mc.preschedule = FALSE
+    )
   }
   attr(res, "orig") <- object
   attr(res, "start_parms") <- start_parms
