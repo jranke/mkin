@@ -37,10 +37,6 @@ pkgfiles = \
 all: build
 
 $(TGZ): $(pkgfiles) vignettes
-	$(RM) -r vignettes/*_cache
-	$(RM) -r vignettes/*_files
-	$(RM) -r vignettes/*.R
-	$(RM) -r vignettes/web_only/*.R
 	$(RM) Rplots.pdf
 	"$(RBIN)/R" CMD build . 2>&1 | tee log/build.log
 
@@ -111,7 +107,8 @@ vignettes: vignettes/mkin.html vignettes/FOCUS_D.html vignettes/FOCUS_L.html vig
 vignettes/web_only/%.html: vignettes/references.bib vignettes/web_only/%.rmd
 	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/web_only/$*.rmd', dir = 'vignettes/web_only', keep=c('mkin_benchmarks.rda', 'saem_benchmarks.rda'))"
 
-articles: vignettes/web_only/FOCUS_Z.html vignettes/web_only/compiled_models.html vignettes/web_only/benchmarks.html vignettes/web_only/dimethenamid_2018.html vignettes/web_only/multistart.html
+vignettes/prebuilt/%.pdf: vignettes/prebuilt/references.bib vignettes/prebuilt/%.rmd
+	"$(RBIN)/Rscript" -e "rmarkdown::render('vignettes/prebuilt/$*.rmd')"
 
 pd: roxygen
 	"$(RBIN)/Rscript" -e "pkgdown::build_site(run_dont_run = TRUE, lazy = TRUE)"

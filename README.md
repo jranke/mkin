@@ -214,6 +214,8 @@ to ModelMaker 4.0, 2014-2015)
   of the visual fit in the kinetic evaluation of degradation data, 2019-2020)
 - Project Number 146839 (Checking the feasibility of using mixed-effects models for
   the derivation of kinetic modelling parameters from degradation studies, 2020-2021)
+- Project Number 173340 (Application of nonlinear hierarchical models to the
+  kinetic evaluation of chemical degradation data)
 
 Thanks to everyone involved for collaboration and support!
 

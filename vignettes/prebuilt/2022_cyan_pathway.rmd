@@ -1,0 +1,536 @@
+---
+title: "Testing hierarchical pathway kinetics with residue data on cyantraniliprole"
+author: Johannes Ranke
+date: Last change on 6 January 2023, last compiled on `r format(Sys.time(), "%e
+  %B %Y")`
+output:
+  pdf_document:
+    extra_dependencies: ["float", "listing"]
+toc: yes
+geometry: margin=2cm
+---
+
+```{r setup, echo = FALSE, cache = FALSE}
+options(width = 80) # For summary listings
+knitr::opts_chunk$set(
+  comment = "", tidy = FALSE, cache = TRUE, fig.pos = "H", fig.align = "center"
+)
+```
+
+\clearpage
+
+# Introduction
+
+The purpose of this document is to test demonstrate how nonlinear hierarchical
+models (NLHM) based on the parent degradation models SFO, FOMC, DFOP and HS,
+with serial formation of two or more metabolites can be fitted with the mkin
+package.
+
+It was assembled in the course of work package 1.2 of Project Number 173340
+(Application of nonlinear hierarchical models to the kinetic evaluation of
+chemical degradation data) of the German Environment Agency carried out in 2022
+and 2023.
+
+The mkin package is used in version `r packageVersion("mkin")` which is
+currently under development. The newly introduced functionality that is
+used here is a simplification of excluding random effects for a set of fits
+based on a related set of fits with a reduced model, and the documentation of
+the starting parameters of the fit, so that all starting parameters of `saem`
+fits are now listed in the summary. The `saemix` package is used as a backend
+for fitting the NLHM, but is also loaded to make the convergence plot function
+available.
+
+This document is processed with the `knitr` package, which also provides the
+`kable` function that is used to improve the display of tabular data in R
+markdown documents. For parallel processing, the `parallel` package is used.
+
+```{r, packages, cache = FALSE, message = FALSE}
+library(mkin)
+library(knitr)
+library(saemix)
+library(parallel)
+n_cores <- detectCores()
+if (Sys.info()["sysname"] == "Windows") {
+  cl <- makePSOCKcluster(n_cores)
+} else {
+  cl <- makeForkCluster(n_cores)
+}
+```
+
+\clearpage
+
+## Test data
+
+The example data are taken from the final addendum to the DAR from 2014
+and are distributed with the mkin package. Residue data and time step
+normalisation factors are read in using the function `read_spreadsheet` from
+the mkin package. This function also performs the time step normalisation.
+
+```{r data}
+data_file <- system.file(
+  "testdata", "cyantraniliprole_soil_efsa_2014.xlsx",
+  package = "mkin")
+cyan_ds <- read_spreadsheet(data_file, parent_only = FALSE)
+```
+
+The following tables show the covariate data and the `r length(cyan_ds)`
+datasets that were read in from the spreadsheet file.
+
+```{r show-covar-data, dependson = "data", results = "asis"}
+pH <- attr(cyan_ds, "covariates")
+kable(pH, caption = "Covariate data")
+```
+
+\clearpage
+
+```{r show-data, dependson = "data", results = "asis"}
+for (ds_name in names(cyan_ds)) {
+  print(
+    kable(mkin_long_to_wide(cyan_ds[[ds_name]]),
+      caption = paste("Dataset", ds_name),
+      booktabs = TRUE, row.names = FALSE))
+    cat("\n\\clearpage\n")
+}
+```
+
+\clearpage
+
+# Parent only evaluations
+
+As the pathway fits have very long run times, evaluations of the parent data
+are performed first, in order to determine for each hierarchical parent
+degradation model which random effects on the degradation model parameters are
+ill-defined.
+
+```{r parent-only, dependson = "data"}
+cyan_sep_const <- mmkin(c("SFO", "FOMC", "DFOP", "SFORB", "HS"),
+  cyan_ds, quiet = TRUE, cores = n_cores)
+cyan_sep_tc <- update(cyan_sep_const, error_model = "tc")
+cyan_saem_full <- mhmkin(list(cyan_sep_const, cyan_sep_tc))
+status(cyan_saem_full) |> kable()
+```
+
+All fits converged successfully.
+
+```{r dependson = "parent-only"}
+illparms(cyan_saem_full) |> kable()
+```
+In almost all models, the random effect for the initial concentration of the
+parent compound is ill-defined. For the biexponential models DFOP and SFORB,
+the random effect of one additional parameter is ill-defined when the two-component
+error model is used.
+
+```{r dependson = "parent-only"}
+anova(cyan_saem_full) |> kable(digits = 1)
+```
+
+Model comparison based on AIC and BIC indicates that the two-component error model
+is preferable for all parent models with the exception of DFOP. The lowest AIC
+and BIC values are are obtained with the FOMC model, followed by SFORB and DFOP.
+
+```{r parent-only-reduced, dependson = "parent-only", include = FALSE}
+cyan_saem_reduced <- mhmkin(list(cyan_sep_const, cyan_sep_tc),
+  no_random_effect = illparms(cyan_saem_full))
+illparms(cyan_saem_reduced)
+anova(cyan_saem_reduced) |> kable(digits = 1)
+```
+
+# Pathway fits
+
+## Evaluations with pathway established previously
+
+To test the technical feasibility of coupling the relevant parent degradation
+models with different transformation pathway models, a list of `mkinmod` models
+is set up below. As in the EU evaluation, parallel formation of metabolites
+JCZ38 and J9Z38 and secondary formation of metabolite JSE76 from JCZ38 is used.
+
+```{r, cyan-path-1}
+if (!dir.exists("cyan_dlls")) dir.create("cyan_dlls")
+cyan_path_1 <- list(
+  sfo_path_1 = mkinmod(
+    cyan = mkinsub("SFO", c("JCZ38", "J9Z38")),
+    JCZ38 = mkinsub("SFO", "JSE76"),
+    J9Z38 = mkinsub("SFO"),
+    JSE76 = mkinsub("SFO"), quiet = TRUE,
+    name = "sfo_path_1", dll_dir = "cyan_dlls", overwrite = TRUE),
+  fomc_path_1 = mkinmod(
+    cyan = mkinsub("FOMC", c("JCZ38", "J9Z38")),
+    JCZ38 = mkinsub("SFO", "JSE76"),
+    J9Z38 = mkinsub("SFO"),
+    JSE76 = mkinsub("SFO"), quiet = TRUE,
+    name = "fomc_path_1", dll_dir = "cyan_dlls", overwrite = TRUE),
+  dfop_path_1 = mkinmod(
+    cyan = mkinsub("DFOP", c("JCZ38", "J9Z38")),
+    JCZ38 = mkinsub("SFO", "JSE76"),
+    J9Z38 = mkinsub("SFO"),
+    JSE76 = mkinsub("SFO"), quiet = TRUE,
+    name = "dfop_path_1", dll_dir = "cyan_dlls", overwrite = TRUE),
+  sforb_path_1 = mkinmod(
+    cyan = mkinsub("SFORB", c("JCZ38", "J9Z38")),
+    JCZ38 = mkinsub("SFO", "JSE76"),
+    J9Z38 = mkinsub("SFO"),
+    JSE76 = mkinsub("SFO"), quiet = TRUE,
+    name = "sforb_path_1", dll_dir = "cyan_dlls", overwrite = TRUE),
+  hs_path_1 = mkinmod(
+    cyan = mkinsub("HS", c("JCZ38", "J9Z38")),
+    JCZ38 = mkinsub("SFO", "JSE76"),
+    J9Z38 = mkinsub("SFO"),
+    JSE76 = mkinsub("SFO"), quiet = TRUE,
+    name = "hs_path_1", dll_dir = "cyan_dlls", overwrite = TRUE)
+)
+```
+To obtain suitable starting values for the NLHM fits, separate pathway fits are
+performed for all datasets.
+
+```{r, f-sep-1, dependson = c("data", "cyan_path_1")}
+f_sep_1_const <- mmkin(
+  cyan_path_1,
+  cyan_ds,
+  error_model = "const",
+  cluster = cl,
+  quiet = TRUE)
+status(f_sep_1_const) |> kable()
+
+f_sep_1_tc <- update(f_sep_1_const, error_model = "tc")
+status(f_sep_1_tc) |> kable()
+```
+
+Most separate fits converged successfully. The biggest convergence
+problems are seen when using the HS model with constant variance.
+
+For the hierarchical pathway fits, those random effects that could not be
+quantified in the corresponding parent data analyses are excluded.
+
+In the code below, the output of the `illparms` function for the parent only
+fits is used as an argument `no_random_effect` to the `mhmkin` function.
+The possibility to do so was introduced in mkin version `1.2.2` which is
+currently under development.
+
+```{r, f-saem-1, dependson = "f-sep-1"}
+f_saem_1 <- mhmkin(list(f_sep_1_const, f_sep_1_tc),
+  no_random_effect = illparms(cyan_saem_full),
+  cluster = cl)
+```
+
+```{r dependson = "f-saem-1"}
+status(f_saem_1) |> kable()
+```
+
+The status information from the individual fits shows that all fits completed
+successfully. The matrix entries Fth and FO indicate that the Fisher
+Information Matrix could not be inverted for the fixed effects (theta)
+and the random effects (Omega), respectively. For the affected fits,
+ill-defined parameters cannot be determined using the `illparms` function,
+because it relies on the Fisher Information Matrix.
+
+```{r dependson = "f-saem-1"}
+illparms(f_saem_1) |> kable()
+```
+
+The model comparison below suggests that the pathway fits using
+DFOP or SFORB for the parent compound provide the best fit.
+
+```{r, dependson = "f-saem-1"}
+anova(f_saem_1) |> kable(digits = 1)
+```
+
+For these two parent model, successful fits are shown below. Plots of the fits
+with the other parent models are shown in the Appendix.
+
+```{r fig.cap = "DFOP pathway fit with two-component error", dependson = "f-saem-1", fig.height = 8}
+plot(f_saem_1[["dfop_path_1", "tc"]])
+```
+
+\clearpage
+
+```{r fig.cap = "SFORB pathway fit with two-component error", dependson = "f-saem-1", fig.height = 8}
+plot(f_saem_1[["sforb_path_1", "tc"]])
+```
+
+A closer graphical analysis of these Figures shows that the residues of
+transformation product JCZ38 in the soils Tama and Nambsheim observed
+at later time points are strongly and systematically underestimated.
+
+\clearpage
+
+
+## Alternative pathway fits
+
+To improve the fit for JCZ38, a back-reaction from JSE76 to JCZ38 was
+introduced in an alternative version of the transformation pathway, in analogy
+to the back-reaction from K5A78 to K5A77. Both pairs of transformation products
+are pairs of an organic acid with its corresponding amide (Addendum 2014, p.
+109). As FOMC provided the best fit for the parent, and the biexponential
+models DFOP and SFORB provided the best initial pathway fits, these three
+parent models are used in the alternative pathway fits.
+
+```{r, f-sep-2-const, dependson = "data"}
+cyan_path_2 <- list(
+  fomc_path_2 = mkinmod(
+    cyan = mkinsub("FOMC", c("JCZ38", "J9Z38")),
+    JCZ38 = mkinsub("SFO", "JSE76"),
+    J9Z38 = mkinsub("SFO"),
+    JSE76 = mkinsub("SFO", "JCZ38"),
+    name = "fomc_path_2", quiet = TRUE,
+    dll_dir = "cyan_dlls",
+    overwrite = TRUE
+  ),
+  dfop_path_2 = mkinmod(
+    cyan = mkinsub("DFOP", c("JCZ38", "J9Z38")),
+    JCZ38 = mkinsub("SFO", "JSE76"),
+    J9Z38 = mkinsub("SFO"),
+    JSE76 = mkinsub("SFO", "JCZ38"),
+    name = "dfop_path_2", quiet = TRUE,
+    dll_dir = "cyan_dlls",
+    overwrite = TRUE
+  ),
+  sforb_path_2 = mkinmod(
+    cyan = mkinsub("SFORB", c("JCZ38", "J9Z38")),
+    JCZ38 = mkinsub("SFO", "JSE76"),
+    J9Z38 = mkinsub("SFO"),
+    JSE76 = mkinsub("SFO", "JCZ38"),
+    name = "sforb_path_2", quiet = TRUE,
+    dll_dir = "cyan_dlls",
+    overwrite = TRUE
+  )
+)
+f_sep_2_const <- mmkin(
+  cyan_path_2,
+  cyan_ds,
+  error_model = "const",
+  cluster = cl,
+  quiet = TRUE)
+
+status(f_sep_2_const) |> kable()
+```
+
+Using constant variance, separate fits converge with the exception
+of the fits to the Sassafras soil data.
+
+```{r f-sep-2-tc, dependson = "f-sep-2-const"}
+f_sep_2_tc <- update(f_sep_2_const, error_model = "tc")
+status(f_sep_2_tc) |> kable()
+```
+
+Using the two-component error model, all separate fits converge with the
+exception of the alternative pathway fit with DFOP used for the parent and the
+Sassafras dataset.
+
+```{r f-saem-2, dependson = c("f-sep-2-const", "f-sep-2-tc")}
+f_saem_2 <- mhmkin(list(f_sep_2_const, f_sep_2_tc),
+  no_random_effect = illparms(cyan_saem_full[2:4, ]),
+  cluster = cl)
+```
+
+```{r dependson = "f-saem-2"}
+status(f_saem_2) |> kable()
+```
+
+The hierarchical fits for the alternative pathway completed successfully.
+
+```{r dependson = "f-saem-2"}
+illparms(f_saem_2) |> kable()
+```
+
+In both fits, the random effects for the formation fractions for the
+pathways from JCZ38 to JSE76, and for the reverse pathway from JSE76
+to JCZ38 are ill-defined.
+
+```{r dependson = "f-saem-2"}
+anova(f_saem_2) |> kable(digits = 1)
+```
+
+The variants using the biexponential models DFOP and SFORB for the parent
+compound and the two-component error model give the lowest AIC and BIC values
+and are plotted below. Compared with the original pathway, the AIC and BIC
+values indicate a large improvement. This is confirmed by the plots, which show
+that the metabolite JCZ38 is fitted much better with this model.
+
+\clearpage
+
+```{r fig.cap = "FOMC pathway fit with two-component error, alternative pathway", dependson = "f-saem-2", fig.height = 8}
+plot(f_saem_2[["fomc_path_2", "tc"]])
+```
+\clearpage
+
+```{r fig.cap = "DFOP pathway fit with two-component error, alternative pathway", dependson = "f-saem-2", fig.height = 8}
+plot(f_saem_2[["dfop_path_2", "tc"]])
+```
+
+\clearpage
+
+```{r fig.cap = "SFORB pathway fit with two-component error, alternative pathway", dependson = "f-saem-2", fig.height = 8}
+plot(f_saem_2[["sforb_path_2", "tc"]])
+```
+
+\clearpage
+
+## Refinement of alternative pathway fits
+
+All ill-defined random effects that were identified in the parent only fits and
+in the above pathway fits, are excluded for the final evaluations below.
+For this purpose, a list of character vectors is created below that can be indexed
+by row and column indices, and which contains the degradation parameter names for which
+random effects should be excluded for each of the hierarchical fits contained
+in `f_saem_2`.
+
+```{r f-saem-3, dependson = "f-saem-2"}
+no_ranef <- matrix(list(), nrow = 3, ncol = 2, dimnames = dimnames(f_saem_2))
+no_ranef[["fomc_path_2", "const"]] <- c("log_beta", "f_JCZ38_qlogis", "f_JSE76_qlogis")
+no_ranef[["fomc_path_2", "tc"]] <- c("cyan_0", "f_JCZ38_qlogis", "f_JSE76_qlogis")
+no_ranef[["dfop_path_2", "const"]] <- c("cyan_0", "f_JCZ38_qlogis", "f_JSE76_qlogis")
+no_ranef[["dfop_path_2", "tc"]] <- c("cyan_0", "log_k1", "f_JCZ38_qlogis", "f_JSE76_qlogis")
+no_ranef[["sforb_path_2", "const"]] <- c("cyan_free_0",
+  "f_JCZ38_qlogis", "f_JSE76_qlogis")
+no_ranef[["sforb_path_2", "tc"]] <- c("cyan_free_0", "log_k_cyan_free_bound",
+  "f_JCZ38_qlogis", "f_JSE76_qlogis")
+clusterExport(cl, "no_ranef")
+
+f_saem_3 <- update(f_saem_2,
+  no_random_effect = no_ranef,
+  cluster = cl)
+```
+
+```{r dependson = "f-saem-3"}
+status(f_saem_3) |> kable()
+```
+
+With the exception of the FOMC pathway fit with constant variance, all updated
+fits completed successfully. However, the Fisher Information Matrix for the
+fixed effects (Fth) could not be inverted, so no confidence intervals for the
+optimised parameters are available.
+
+```{r dependson = "f-saem-3"}
+illparms(f_saem_3) |> kable()
+```
+
+```{r dependson = "f-saem-3"}
+anova(f_saem_3) |> kable(digits = 1)
+```
+
+While the AIC and BIC values of the best fit (DFOP pathway fit with
+two-component error) are lower than in the previous fits with the alternative
+pathway, the practical value of these refined evaluations is limited
+as no confidence intervals are obtained.
+
+\clearpage
+
+# Conclusion
+
+It was demonstrated that a relatively complex transformation pathway with
+parallel formation of two primary metabolites and one secondary metabolite
+can be fitted even if the data in the individual datasets are quite different
+and partly only cover the formation phase.
+
+The run times of the pathway fits were several hours, limiting the
+practical feasibility of iterative refinements based on ill-defined
+parameters and of alternative checks of parameter identifiability
+based on multistart runs.
+
+# Acknowledgements
+
+The helpful comments by Janina Wöltjen of the German Environment Agency
+are gratefully acknowledged.
+
+\clearpage
+
+# Appendix
+
+## Plots of fits that were not refined further
+
+```{r fig.cap = "SFO pathway fit with two-component error", dependson = "f-saem-1", fig.height = 8}
+plot(f_saem_1[["sfo_path_1", "tc"]])
+```
+
+\clearpage
+
+```{r fig.cap = "FOMC pathway fit with two-component error", dependson = "f-saem-1", fig.height = 8}
+plot(f_saem_1[["fomc_path_1", "tc"]])
+```
+
+\clearpage
+
+
+```{r fig.cap = "HS pathway fit with two-component error", dependson = "f-saem-1", fig.height = 8}
+plot(f_saem_1[["sforb_path_1", "tc"]])
+```
+
+\clearpage
+
+
+## Hierarchical fit listings
+
+### Pathway 1
+
+```{r listings-1, results = "asis", echo = FALSE, cache = FALSE}
+errmods <- c(const = "constant variance", tc = "two-component error")
+degmods <- c(
+  sfo_path_1 = "SFO path 1",
+  fomc_path_1 = "FOMC path 1",
+  dfop_path_1 = "DFOP path 1",
+  sforb_path_1 = "SFORB path 1",
+  hs_path_1 = "HS path 1")
+for (deg_mod in rownames(f_saem_1)) {
+  for (err_mod in c("const", "tc")) {
+    fit <- f_saem_1[[deg_mod, err_mod]]
+    if (!inherits(fit$so, "try-error")) {
+      caption <- paste("Hierarchical", degmods[deg_mod], "fit with", errmods[err_mod])
+      summary_listing(fit, caption)
+    }
+  }
+}
+```
+
+### Pathway 2
+
+```{r listings-2, results = "asis", echo = FALSE, cache = FALSE}
+degmods <- c(
+  fomc_path_2 = "FOMC path 2",
+  dfop_path_2 = "DFOP path 2",
+  sforb_path_2 = "SFORB path 2")
+for (deg_mod in rownames(f_saem_2)) {
+  for (err_mod in c("const", "tc")) {
+    fit <- f_saem_2[[deg_mod, err_mod]]
+    if (!inherits(fit$so, "try-error")) {
+      caption <- paste("Hierarchical", degmods[deg_mod], "fit with", errmods[err_mod])
+      summary_listing(fit, caption)
+    }
+  }
+}
+```
+
+### Pathway 2, refined fits
+
+```{r listings-3, results = "asis", echo = FALSE, cache = FALSE}
+degmods <- c(
+  fomc_path_2 = "FOMC path 2",
+  dfop_path_2 = "DFOP path 2",
+  sforb_path_2 = "SFORB path 2")
+for (deg_mod in rownames(f_saem_3)) {
+  for (err_mod in c("const", "tc")) {
+    fit <- f_saem_3[[deg_mod, err_mod]]
+    if (!inherits(fit$so, "try-error")) {
+      caption <- paste("Hierarchical", degmods[deg_mod], "fit with reduced random effects,", errmods[err_mod])
+      summary_listing(fit, caption)
+    }
+  }
+}
+```
+
+## Session info
+
+```{r, echo = FALSE, cache = FALSE}
+parallel::stopCluster(cl = cl)
+sessionInfo()
+```
+
+## Hardware info
+
+```{r, echo = FALSE}
+if(!inherits(try(cpuinfo <- readLines("/proc/cpuinfo")), "try-error")) {
+  cat(gsub("model name\t: ", "CPU model: ", cpuinfo[grep("model name", cpuinfo)[1]]))
+}
+if(!inherits(try(meminfo <- readLines("/proc/meminfo")), "try-error")) {
+  cat(gsub("model name\t: ", "System memory: ", meminfo[grep("MemTotal", meminfo)[1]]))
+}
+```

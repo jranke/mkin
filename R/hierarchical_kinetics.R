@@ -13,7 +13,7 @@
 #'
 #' \dontrun{
 #' library(rmarkdown)
-#' draft("New analysis.rmd", template = "hierarchical_kinetics", package = "mkin")
+#' draft("example_analysis.rmd", template = "hierarchical_kinetics", package = "mkin")
 #' }
 #'
 #' @export

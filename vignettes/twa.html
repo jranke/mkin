@@ -28,22 +28,6 @@ document.addEventListener('DOMContentLoaded', function(e) {
   }
 });
 </script>
-<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
-// v0.0.1
-// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
-
-document.addEventListener('DOMContentLoaded', function() {
-  const codeList = document.getElementsByClassName("sourceCode");
-  for (var i = 0; i < codeList.length; i++) {
-    var linkList = codeList[i].getElementsByTagName('a');
-    for (var j = 0; j < linkList.length; j++) {
-      if (linkList[j].innerHTML === "") {
-        linkList[j].setAttribute('aria-hidden', 'true');
-      }
-    }
-  }
-});
-</script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -58,6 +42,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
 
 <style type="text/css">body {
 background-color: #fff;
@@ -251,19 +258,32 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
-<h1 class="title toc-ignore">Calculation of time weighted average concentrations with mkin</h1>
+<h1 class="title toc-ignore">Calculation of time weighted average
+concentrations with mkin</h1>
 <h4 class="author">Johannes Ranke</h4>
-<h4 class="date">Last change 18 September 2019 (rebuilt 2022-03-02)</h4>
+<h4 class="date">Last change 18 September 2019 (rebuilt 2023-01-05)</h4>
 
 
 
-<p>Since version 0.9.45.1 of the ‘mkin’ package, a function for calculating time weighted average concentrations for decline kinetics (<em>i.e.</em> only for the compound applied in the experiment) is included. Strictly speaking, they are maximum moving window time weighted average concentrations, <em>i.e.</em> the maximum time weighted average concentration that can be found when moving a time window of a specified width over the decline curve.</p>
-<p>Time weighted average concentrations for the SFO, FOMC and the DFOP model are calculated using the formulas given in the FOCUS kinetics guidance <span class="citation">(FOCUS Work Group on Degradation Kinetics 2014, 251)</span>:</p>
+<p>Since version 0.9.45.1 of the ‘mkin’ package, a function for
+calculating time weighted average concentrations for decline kinetics
+(<em>i.e.</em> only for the compound applied in the experiment) is
+included. Strictly speaking, they are maximum moving window time
+weighted average concentrations, <em>i.e.</em> the maximum time weighted
+average concentration that can be found when moving a time window of a
+specified width over the decline curve.</p>
+<p>Time weighted average concentrations for the SFO, FOMC and the DFOP
+model are calculated using the formulas given in the FOCUS kinetics
+guidance <span class="citation">(FOCUS Work Group on Degradation
+Kinetics 2014, 251)</span>:</p>
 <p>SFO:</p>
-<p><span class="math display">\[c_\textrm{twa} = c_0 \frac{\left( 1 - e^{- k t} \right)}{ k t} \]</span></p>
+<p><span class="math display">\[c_\textrm{twa} = c_0 \frac{\left( 1 -
+e^{- k t} \right)}{ k t} \]</span></p>
 <p>FOMC:</p>
-<p><span class="math display">\[c_\textrm{twa} = c_0 \frac{\beta}{t (1 - \alpha)}
-                   \left( \left(\frac{t}{\beta} + 1 \right)^{1 - \alpha} - 1 \right) \]</span></p>
+<p><span class="math display">\[c_\textrm{twa} = c_0 \frac{\beta}{t (1 -
+\alpha)}
+                   \left( \left(\frac{t}{\beta} + 1 \right)^{1 - \alpha}
+- 1 \right) \]</span></p>
 <p>DFOP:</p>
 <p><span class="math display">\[c_\textrm{twa} = \frac{c_0}{t} \left(
   \frac{g}{k_1} \left( 1 - e^{- k_1 t} \right) +
@@ -271,15 +291,25 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>HS for <span class="math inline">\(t &gt; t_b\)</span>:</p>
 <p><span class="math display">\[c_\textrm{twa} = \frac{c_0}{t} \left(
   \frac{1}{k_1} \left( 1 - e^{- k_1 t_b} \right) +
-  \frac{e^{- k_1 t_b}}{k_2} \left( 1 - e^{- k_2 (t - t_b)} \right)  \right) \]</span></p>
-<p>Often, the ratio between the time weighted average concentration <span class="math inline">\(c_\textrm{twa}\)</span> and the initial concentration <span class="math inline">\(c_0\)</span></p>
-<p><span class="math display">\[f_\textrm{twa} = \frac{c_\textrm{twa}}{c_0}\]</span></p>
-<p>is needed. This can be calculated from the fitted initial concentration <span class="math inline">\(c_0\)</span> and the time weighted average concentration <span class="math inline">\(c_\textrm{twa}\)</span>, or directly from the model parameters using the following formulas:</p>
+  \frac{e^{- k_1 t_b}}{k_2} \left( 1 - e^{- k_2 (t - t_b)}
+\right)  \right) \]</span></p>
+<p>Often, the ratio between the time weighted average concentration
+<span class="math inline">\(c_\textrm{twa}\)</span> and the initial
+concentration <span class="math inline">\(c_0\)</span></p>
+<p><span class="math display">\[f_\textrm{twa} =
+\frac{c_\textrm{twa}}{c_0}\]</span></p>
+<p>is needed. This can be calculated from the fitted initial
+concentration <span class="math inline">\(c_0\)</span> and the time
+weighted average concentration <span class="math inline">\(c_\textrm{twa}\)</span>, or directly from the
+model parameters using the following formulas:</p>
 <p>SFO:</p>
-<p><span class="math display">\[f_\textrm{twa} = \frac{\left( 1 - e^{- k t} \right)}{k t} \]</span></p>
+<p><span class="math display">\[f_\textrm{twa} = \frac{\left( 1 - e^{- k
+t} \right)}{k t} \]</span></p>
 <p>FOMC:</p>
-<p><span class="math display">\[f_\textrm{twa} = \frac{\beta}{t (1 - \alpha)}
-                   \left( \left(\frac{t}{\beta} + 1 \right)^{1 - \alpha} - 1 \right) \]</span></p>
+<p><span class="math display">\[f_\textrm{twa} = \frac{\beta}{t (1 -
+\alpha)}
+                   \left( \left(\frac{t}{\beta} + 1 \right)^{1 - \alpha}
+- 1 \right) \]</span></p>
 <p>DFOP:</p>
 <p><span class="math display">\[f_\textrm{twa} = \frac{1}{t} \left(
   \frac{g}{k_1} \left( 1 - e^{- k_1 t} \right) +
@@ -287,11 +317,19 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>HS for <span class="math inline">\(t &gt; t_b\)</span>:</p>
 <p><span class="math display">\[f_\textrm{twa} = \frac{1}{t} \left(
   \frac{1}{k_1} \left( 1 - e^{- k_1 t_b} \right) +
-  \frac{e^{- k_1 t_b}}{k_2} \left( 1 - e^{- k_2 (t - t_b)} \right)  \right) \]</span></p>
-<p>Note that a method for calculating maximum moving window time weighted average concentrations for a model fitted by ‘mkinfit’ or from parent decline model parameters is included in the <code>max_twa_parent()</code> function. If the same is needed for metabolites, the function <code>pfm::max_twa()</code> from the ‘pfm’ package can be used.</p>
-<div id="refs" class="references hanging-indent">
-<div id="ref-FOCUSkinetics2014">
-<p>FOCUS Work Group on Degradation Kinetics. 2014. <em>Generic Guidance for Estimating Persistence and Degradation Kinetics from Environmental Fate Studies on Pesticides in Eu Registration</em>. 1.1 ed. <a href="http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics">http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics</a>.</p>
+  \frac{e^{- k_1 t_b}}{k_2} \left( 1 - e^{- k_2 (t - t_b)}
+\right)  \right) \]</span></p>
+<p>Note that a method for calculating maximum moving window time
+weighted average concentrations for a model fitted by ‘mkinfit’ or from
+parent decline model parameters is included in the
+<code>max_twa_parent()</code> function. If the same is needed for
+metabolites, the function <code>pfm::max_twa()</code> from the ‘pfm’
+package can be used.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-FOCUSkinetics2014" class="csl-entry">
+FOCUS Work Group on Degradation Kinetics. 2014. <em>Generic Guidance for
+Estimating Persistence and Degradation Kinetics from Environmental Fate
+Studies on Pesticides in EU Registration</em>. 1.1 ed. <a href="http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics">http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics</a>.
 </div>
 </div>
 
