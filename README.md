@@ -5,10 +5,13 @@
 [![Build Status](https://travis-ci.com/jranke/mkin.svg?branch=main)](https://app.travis-ci.com/github/jranke/mkin)
 [![codecov](https://codecov.io/github/jranke/mkin/branch/main/graphs/badge.svg)](https://codecov.io/github/jranke/mkin)
 
-The R package **mkin** provides calculation routines for the analysis of
+The [R](https://r-project.org) package **mkin** provides calculation routines for the analysis of
 chemical degradation data, including <b>m</b>ulticompartment <b>kin</b>etics as
 needed for modelling the formation and decline of transformation products, or
-if several degradation compartments are involved.
+if several degradation compartments are involved. It provides stable functionality
+for kinetic evaluations according to the FOCUS guidance (see below for details).
+In addition, it provides functionality to do hierarchical kinetics based on
+nonlinear mixed-effects models.
 
 ## Installation
 
@@ -24,8 +27,10 @@ install.packages("mkin")
 In the regulatory evaluation of chemical substances like plant protection
 products (pesticides), biocides and other chemicals, degradation data play an
 important role. For the evaluation of pesticide degradation experiments,
-detailed guidance and helpful tools have been developed as detailed in
-'Credits and historical remarks' below.
+detailed guidance and various helpful tools have been developed as detailed in
+'Credits and historical remarks' below. This package aims to provide a one
+stop solution for degradation kinetics, addressing modellers that are willing
+to, or even prefer to work with R.
 
 ## Usage
 
