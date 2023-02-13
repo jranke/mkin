@@ -33,7 +33,7 @@ the source compartment.
 Additionally, \code{\link[=mkinsub]{mkinsub()}} has an argument \code{to}, specifying names of
 variables to which a transfer is to be assumed in the model.
 If the argument \code{use_of_ff} is set to "min"
-(default) and the model for the compartment is "SFO" or "SFORB", an
+and the model for the compartment is "SFO" or "SFORB", an
 additional \code{\link[=mkinsub]{mkinsub()}} argument can be \code{sink = FALSE}, effectively
 fixing the flux to sink to zero.
 In print.mkinmod, this argument is currently not used.}

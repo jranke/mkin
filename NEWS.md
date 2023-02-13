@@ -1,4 +1,42 @@
-# mkin 1.2.0 (unreleased)
+# mkin 1.2.2
+
+- 'inst/rmarkdown/templates/hier': R markdown template to facilitate the application of hierarchical kinetic models.
+
+- 'inst/testdata/lambda-cyhalothrin_soil_efsa_2014.xlsx': Example spreadsheet for use with 'read_spreadsheet()'.
+
+- 'R/mhmkin.R': Allow an 'illparms.mhmkin' object or a list with suitable dimensions as value of the argument 'no_random_effects', making it possible to exclude random effects that were ill-defined in simpler variants of the set of degradation models. Remove the possibility to exclude random effects based on separate fits, as it did not work well.
+
+- 'R/summary.saem.mmkin.R': List all initial parameter values in the summary, including random effects and error model parameters. Avoid redundant warnings that occurred in the calculation of correlations of the fixed effects in the case that the Fisher information matrix could not be inverted. List correlations of random effects if specified by the user in the covariance model.
+
+- 'R/parplot.R': Possibility to select the top 'llquant' fraction of the fits for the parameter plots, and improved legend text.
+
+- 'R/illparms.R': Also check if confidence intervals for slope parameters in covariate models include zero. Only implemented for fits obtained with the saemix backend.
+
+- 'R/parplot.R': Make the function work also in the case that some of the multistart runs failed.
+
+- 'R/intervals.R': Include correlations of random effects in the model in case there are any.
+
+# mkin 1.2.1 (2022-11-19)
+
+- '{data,R}/ds_mixed.rda': Include the test data in the package instead of generating it in 'tests/testthat/setup_script.R'. Refactor the generating code to make it consistent and update tests.
+
+- 'tests/testthat/setup_script.R': Excluded another ill-defined random effect for the DFOP fit with 'saem', in an attempt to avoid a platform dependence that surfaced on Fedora systems on the CRAN check farm
+
+- 'tests/testthat/test_mixed.R': Round parameters found by saemix to two significant digits before printing, to also help to avoid platform dependence of tests
+
+- 'R/saem.R': Fix a bug that prevented that 'error.ini' is passed to 'saemix_model', and set default to c(1, 1) to avoid changing test results
+
+- 'R/parplot.R': Show initial values for error model parameters
+
+- 'R/loglik.mkinfit.R': Add 'nobs' attribute to the resulting 'logLik' object, in order to make test_AIC.R  succeed on current R-devel
+
+# mkin 1.2.0 (2022-11-17)
+
+- 'R/saem.R': 'logLik', 'update' and 'anova' methods for 'saem.mmkin' objects.
+
+- 'R/saem.R': Automatic estimation of start parameters for random effects for the case of mkin transformations, nicely improving convergence and reducing problems with iterative ODE solutions.
+
+- 'R/status.R': New generic to show status information for fit array objects with methods for 'mmkin', 'mhmkin' and 'multistart' objects.
 
 - 'R/mhmkin.R': New method for performing multiple hierarchical mkin fits in one function call, optionally in parallel.
 
@@ -7,12 +45,6 @@
 - 'R/illparms.R': New generic to show ill-defined parameters with methods for 'mkinfit', 'mmkin', 'saem.mmkin' and 'mhmkin' objects.
 
 - 'R/multistart.R': New method for testing multiple start parameters for hierarchical model fits, with function 'llhist' and new generic 'parplot' for diagnostics, and new generics 'which.best' and 'best' for extracting the fit with the highest likelihood
-
-- 'R/saem.R': 'logLik', 'update' and 'anova' methods for 'saem.mmkin' objects.
-
-- 'R/saem.R': Automatic estimation of start parameters for random effects for the case of mkin transformations, nicely improving convergence and reducing problems with iterative ODE solutions.
-
-- 'R/status.R': New generic to show status information for fit array objects with methods for 'mmkin', 'mhmkin' and 'multistart' objects.
 
 - 'R/summary.mmkin.R': Summary method for mmkin objects.
 

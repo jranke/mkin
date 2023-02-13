@@ -22,7 +22,7 @@ mixed-effects model fitting functions."><!-- mathjax --><script src="https://cdn
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -49,10 +49,13 @@ mixed-effects model fitting functions."><!-- mathjax --><script src="https://cdn
       <a href="../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
     </li>
     <li>
-      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
+      <a href="../articles/web_only/multistart.html">Short demo of the multistart method</a>
     </li>
     <li>
       <a href="../articles/web_only/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
     </li>
     <li>
       <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
@@ -61,7 +64,10 @@ mixed-effects model fitting functions."><!-- mathjax --><script src="https://cdn
       <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
     <li>
-      <a href="../articles/web_only/benchmarks.html">Some benchmark timings</a>
+      <a href="../articles/web_only/benchmarks.html">Benchmark timings for mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/saem_benchmarks.html">Benchmark timings for saem.mmkin</a>
     </li>
   </ul></li>
 <li>
@@ -96,12 +102,18 @@ mixed-effects model fitting functions.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre><code>mhmkin(objects, backend = "saemix", algorithm = "saem", ...)
+    <div class="sourceCode"><pre><code>mhmkin(objects, ...)
+
+# S3 method for mmkin
+mhmkin(objects, ...)
 
 # S3 method for list
 mhmkin(
   objects,
   backend = "saemix",
+  algorithm = "saem",
+  no_random_effect = NULL,
+  auto_ranef_threshold = 3,
   ...,
   cores = if (Sys.info()["sysname"] == "Windows") 1 else parallel::detectCores(),
   cluster = NULL
@@ -118,7 +130,14 @@ print(x, ...)</code></pre></div>
     <h2>Arguments</h2>
     <dl><dt>objects</dt>
 <dd><p>A list of <a href="mmkin.html">mmkin</a> objects containing fits of the same
-degradation models to the same data, but using different error models.</p></dd>
+degradation models to the same data, but using different error models.
+Alternatively, a single <a href="mmkin.html">mmkin</a> object containing fits of several
+degradation models to the same data</p></dd>
+
+
+<dt>...</dt>
+<dd><p>Further arguments that will be passed to the nonlinear mixed-effects
+model fitting function.</p></dd>
 
 
 <dt>backend</dt>
@@ -130,9 +149,17 @@ supported</p></dd>
 <dd><p>The algorithm to be used for fitting (currently not used)</p></dd>
 
 
-<dt>...</dt>
-<dd><p>Further arguments that will be passed to the nonlinear mixed-effects
-model fitting function.</p></dd>
+<dt>no_random_effect</dt>
+<dd><p>Default is NULL and will be passed to <a href="saem.html">saem</a>. If
+you specify "auto", random effects are only included if the number
+of datasets in which the parameter passed the t-test is at least 'auto_ranef_threshold'.
+Beware that while this may make for convenient model reduction or even
+numerical stability of the algorithm, it will likely lead to
+underparameterised models.</p></dd>
+
+
+<dt>auto_ranef_threshold</dt>
+<dd><p>See 'no_random_effect.</p></dd>
 
 
 <dt>cores</dt>

@@ -18,7 +18,7 @@ the chi-squared test as defined in the FOCUS kinetics report from 2006."><!-- ma
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -45,10 +45,13 @@ the chi-squared test as defined in the FOCUS kinetics report from 2006."><!-- ma
       <a href="../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
     </li>
     <li>
-      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
+      <a href="../articles/web_only/multistart.html">Short demo of the multistart method</a>
     </li>
     <li>
       <a href="../articles/web_only/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
     </li>
     <li>
       <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
@@ -57,7 +60,10 @@ the chi-squared test as defined in the FOCUS kinetics report from 2006."><!-- ma
       <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
     <li>
-      <a href="../articles/web_only/benchmarks.html">Some benchmark timings</a>
+      <a href="../articles/web_only/benchmarks.html">Benchmark timings for mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/saem_benchmarks.html">Benchmark timings for saem.mmkin</a>
     </li>
   </ul></li>
 <li>
@@ -89,26 +95,31 @@ the chi-squared test as defined in the FOCUS kinetics report from 2006.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">mkinerrmin</span><span class="op">(</span><span class="va">fit</span>, alpha <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mkinerrmin</span><span class="op">(</span><span class="va">fit</span>, alpha <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>fit</dt>
 <dd><p>an object of class <code><a href="mkinfit.html">mkinfit</a></code>.</p></dd>
+
+
 <dt>alpha</dt>
 <dd><p>The confidence level chosen for the chi-squared test.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A dataframe with the following components:</p>
+    
+
+<p>A dataframe with the following components:</p>
 <dl><dt>err.min</dt>
 <dd><p>The
 relative error, expressed as a fraction.</p></dd>
-<dt>n.optim</dt>
+ <dt>n.optim</dt>
 <dd><p>The number of
 optimised parameters attributed to the data series.</p></dd>
-<dt>df</dt>
+ <dt>df</dt>
 <dd><p>The number of
 remaining degrees of freedom for the chi2 error level calculations.  Note
 that mean values are used for the chi2 statistic and therefore every time
@@ -132,28 +143,28 @@ Document Reference Sanco/10058/2005 version 2.0, 434 pp,
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="va">SFO_SFO</span> <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, to <span class="op">=</span> <span class="st">"m1"</span><span class="op">)</span>,</span>
-<span class="r-in">                  m1 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,</span>
-<span class="r-in">                  use_of_ff <span class="op">=</span> <span class="st">"max"</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">SFO_SFO</span> <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, to <span class="op">=</span> <span class="st">"m1"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                  m1 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                  use_of_ff <span class="op">=</span> <span class="st">"max"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Temporary DLL for differentials generated and loaded</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">fit_FOCUS_D</span> <span class="op">=</span> <span class="fu"><a href="mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">SFO_SFO</span>, <span class="va">FOCUS_2006_D</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">fit_FOCUS_D</span> <span class="op">=</span> <span class="fu"><a href="mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">SFO_SFO</span>, <span class="va">FOCUS_2006_D</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Observations with value of zero were removed from the data</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu">mkinerrmin</span><span class="op">(</span><span class="va">fit_FOCUS_D</span><span class="op">)</span>, <span class="fl">4</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu">mkinerrmin</span><span class="op">(</span><span class="va">fit_FOCUS_D</span><span class="op">)</span>, <span class="fl">4</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          err.min n.optim df</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> All data  0.0640       4 15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> parent    0.0646       2  7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> m1        0.0469       2  8</span>
-<span class="r-in"><span class="co"># \dontrun{</span></span>
-<span class="r-in">  <span class="va">fit_FOCUS_E</span> <span class="op">=</span> <span class="fu"><a href="mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">SFO_SFO</span>, <span class="va">FOCUS_2006_E</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu">mkinerrmin</span><span class="op">(</span><span class="va">fit_FOCUS_E</span><span class="op">)</span>, <span class="fl">4</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span>  <span class="va">fit_FOCUS_E</span> <span class="op">=</span> <span class="fu"><a href="mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">SFO_SFO</span>, <span class="va">FOCUS_2006_E</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu">mkinerrmin</span><span class="op">(</span><span class="va">fit_FOCUS_E</span><span class="op">)</span>, <span class="fl">4</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          err.min n.optim df</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> All data  0.1544       4 13</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> parent    0.1659       2  7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> m1        0.1095       2  6</span>
-<span class="r-in"><span class="co"># }</span></span>
-<span class="r-in"></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -168,7 +179,7 @@ Document Reference Sanco/10058/2005 version 2.0, 434 pp,
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

@@ -78,8 +78,12 @@ intervals.saem.mmkin <- function(object, level = 0.95, backtransform = TRUE, ...
 
   # Random effects
   sdnames <- intersect(rownames(conf.int), paste("SD", pnames, sep = "."))
-  ranef_ret <- as.matrix(conf.int[sdnames, c("lower", "est.", "upper")])
-  rownames(ranef_ret) <- paste0(gsub("SD\\.", "sd(", sdnames), ")")
+  corrnames <- grep("^Corr.", rownames(conf.int), value = TRUE)
+  ranef_ret <- as.matrix(conf.int[c(sdnames, corrnames), c("lower", "est.", "upper")])
+  sdnames_ret <- paste0(gsub("SD\\.", "sd(", sdnames), ")")
+  corrnames_ret <- gsub("Corr\\.(.*)\\.(.*)", "corr(\\1,\\2)", corrnames)
+  rownames(ranef_ret) <- c(sdnames_ret, corrnames_ret)
+
   attr(ranef_ret, "label") <- "Random effects:"
 
 

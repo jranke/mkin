@@ -19,7 +19,7 @@ have been obtained by fitting the same model to a list of datasets."><!-- mathja
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -46,10 +46,13 @@ have been obtained by fitting the same model to a list of datasets."><!-- mathja
       <a href="../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
     </li>
     <li>
-      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
+      <a href="../articles/web_only/multistart.html">Short demo of the multistart method</a>
     </li>
     <li>
       <a href="../articles/web_only/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
     </li>
     <li>
       <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
@@ -58,7 +61,10 @@ have been obtained by fitting the same model to a list of datasets."><!-- mathja
       <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
     <li>
-      <a href="../articles/web_only/benchmarks.html">Some benchmark timings</a>
+      <a href="../articles/web_only/benchmarks.html">Benchmark timings for mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/saem_benchmarks.html">Benchmark timings for saem.mmkin</a>
     </li>
   </ul></li>
 <li>
@@ -91,78 +97,115 @@ have been obtained by fitting the same model to a list of datasets.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S3 method for mmkin</span>
-<span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="external-link">nlme</a></span><span class="op">(</span>
-  <span class="va">model</span>,
-  data <span class="op">=</span> <span class="st">"auto"</span>,
-  fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">as.list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="mean_degparms.html">mean_degparms</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">el</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/eval.html" class="external-link">eval</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/parse.html" class="external-link">parse</a></span><span class="op">(</span>text <span class="op">=</span>
-    <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">el</span>, <span class="fl">1</span>, sep <span class="op">=</span> <span class="st">"~"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
-  random <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/pdDiag.html" class="external-link">pdDiag</a></span><span class="op">(</span><span class="va">fixed</span><span class="op">)</span>,
-  <span class="va">groups</span>,
-  start <span class="op">=</span> <span class="fu"><a href="mean_degparms.html">mean_degparms</a></span><span class="op">(</span><span class="va">model</span>, random <span class="op">=</span> <span class="cn">TRUE</span>, test_log_parms <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
-  correlation <span class="op">=</span> <span class="cn">NULL</span>,
-  weights <span class="op">=</span> <span class="cn">NULL</span>,
-  <span class="va">subset</span>,
-  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ML"</span>, <span class="st">"REML"</span><span class="op">)</span>,
-  na.action <span class="op">=</span> <span class="va">na.fail</span>,
-  <span class="va">naPattern</span>,
-  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span>
-
-<span class="co"># S3 method for nlme.mmkin</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, digits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"digits"</span><span class="op">)</span> <span class="op">-</span> <span class="fl">3</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for nlme.mmkin</span>
-<span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for mmkin</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="external-link">nlme</a></span><span class="op">(</span></span>
+<span>  <span class="va">model</span>,</span>
+<span>  data <span class="op">=</span> <span class="st">"auto"</span>,</span>
+<span>  fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">as.list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="mean_degparms.html">mean_degparms</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">el</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/eval.html" class="external-link">eval</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/parse.html" class="external-link">parse</a></span><span class="op">(</span>text <span class="op">=</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">el</span>, <span class="fl">1</span>, sep <span class="op">=</span> <span class="st">"~"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  random <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/pdDiag.html" class="external-link">pdDiag</a></span><span class="op">(</span><span class="va">fixed</span><span class="op">)</span>,</span>
+<span>  <span class="va">groups</span>,</span>
+<span>  start <span class="op">=</span> <span class="fu"><a href="mean_degparms.html">mean_degparms</a></span><span class="op">(</span><span class="va">model</span>, random <span class="op">=</span> <span class="cn">TRUE</span>, test_log_parms <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>  correlation <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  weights <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">subset</span>,</span>
+<span>  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ML"</span>, <span class="st">"REML"</span><span class="op">)</span>,</span>
+<span>  na.action <span class="op">=</span> <span class="va">na.fail</span>,</span>
+<span>  <span class="va">naPattern</span>,</span>
+<span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for nlme.mmkin</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, digits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"digits"</span><span class="op">)</span> <span class="op">-</span> <span class="fl">3</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for nlme.mmkin</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>model</dt>
 <dd><p>An <a href="mmkin.html">mmkin</a> row object.</p></dd>
+
+
 <dt>data</dt>
 <dd><p>Ignored, data are taken from the mmkin model</p></dd>
+
+
 <dt>fixed</dt>
 <dd><p>Ignored, all degradation parameters fitted in the
 mmkin model are used as fixed parameters</p></dd>
+
+
 <dt>random</dt>
 <dd><p>If not specified, no correlations between random effects are
 set up for the optimised degradation model parameters. This is
 achieved by using the <a href="https://rdrr.io/pkg/nlme/man/pdDiag.html" class="external-link">nlme::pdDiag</a> method.</p></dd>
+
+
 <dt>groups</dt>
 <dd><p>See the documentation of nlme</p></dd>
+
+
 <dt>start</dt>
 <dd><p>If not specified, mean values of the fitted degradation
 parameters taken from the mmkin object are used</p></dd>
+
+
 <dt>correlation</dt>
 <dd><p>See the documentation of nlme</p></dd>
+
+
 <dt>weights</dt>
 <dd><p>passed to nlme</p></dd>
+
+
 <dt>subset</dt>
 <dd><p>passed to nlme</p></dd>
+
+
 <dt>method</dt>
 <dd><p>passed to nlme</p></dd>
+
+
 <dt>na.action</dt>
 <dd><p>passed to nlme</p></dd>
+
+
 <dt>naPattern</dt>
 <dd><p>passed to nlme</p></dd>
+
+
 <dt>control</dt>
 <dd><p>passed to nlme</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>passed to nlme</p></dd>
+
+
 <dt>x</dt>
 <dd><p>An nlme.mmkin object to print</p></dd>
+
+
 <dt>digits</dt>
 <dd><p>Number of digits to use for printing</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Update specifications passed to update.nlme</p></dd>
+
+
 <dt>object</dt>
 <dd><p>An nlme.mmkin object to update</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Upon success, a fitted 'nlme.mmkin' object, which is an nlme object
+    
+
+<p>Upon success, a fitted 'nlme.mmkin' object, which is an nlme object
 with additional elements. It also inherits from 'mixed.mmkin'.</p>
     </div>
     <div id="details">
@@ -185,19 +228,19 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">ds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">experimental_data_for_UBA_2019</span><span class="op">[</span><span class="fl">6</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span>,</span>
-<span class="r-in"> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">data</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"name"</span>, <span class="st">"time"</span>, <span class="st">"value"</span><span class="op">)</span><span class="op">]</span>, <span class="va">name</span> <span class="op">==</span> <span class="st">"parent"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># \dontrun{</span></span>
-<span class="r-in">  <span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="mmkin.html">mmkin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"DFOP"</span><span class="op">)</span>, <span class="va">ds</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span>, cores <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span class="r-in">  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://svn.r-project.org/R-packages/trunk/nlme/" class="external-link">nlme</a></span><span class="op">)</span></span>
-<span class="r-in">  <span class="va">f_nlme_sfo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="external-link">nlme</a></span><span class="op">(</span><span class="va">f</span><span class="op">[</span><span class="st">"SFO"</span>, <span class="op">]</span><span class="op">)</span></span>
-<span class="r-in">  <span class="va">f_nlme_dfop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="external-link">nlme</a></span><span class="op">(</span><span class="va">f</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span><span class="op">)</span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_nlme_sfo</span>, <span class="va">f_nlme_dfop</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">ds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">experimental_data_for_UBA_2019</span><span class="op">[</span><span class="fl">6</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">data</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"name"</span>, <span class="st">"time"</span>, <span class="st">"value"</span><span class="op">)</span><span class="op">]</span>, <span class="va">name</span> <span class="op">==</span> <span class="st">"parent"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span>  <span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="mmkin.html">mmkin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"DFOP"</span><span class="op">)</span>, <span class="va">ds</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span>, cores <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://svn.r-project.org/R-packages/trunk/nlme/" class="external-link">nlme</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">f_nlme_sfo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="external-link">nlme</a></span><span class="op">(</span><span class="va">f</span><span class="op">[</span><span class="st">"SFO"</span>, <span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">f_nlme_dfop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="external-link">nlme</a></span><span class="op">(</span><span class="va">f</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_nlme_sfo</span>, <span class="va">f_nlme_dfop</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             Model df      AIC      BIC    logLik   Test  L.Ratio p-value</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> f_nlme_sfo      1  5 625.0539 637.5529 -307.5269                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> f_nlme_dfop     2  9 495.1270 517.6253 -238.5635 1 vs 2 137.9268  &lt;.0001</span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">f_nlme_dfop</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_nlme_dfop     2  9 495.1270 517.6253 -238.5635 1 vs 2 137.9269  &lt;.0001</span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">f_nlme_dfop</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Kinetic nonlinear mixed-effects model fit by maximum likelihood</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Structural model:</span>
@@ -222,50 +265,50 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
 <span class="r-out co"><span class="r-pr">#&gt;</span>         parent_0 log_k1 log_k2 g_qlogis Residual</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> StdDev:    2.488 0.8447   1.33   0.4652    2.321</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_nlme_dfop</span><span class="op">)</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_nlme_dfop</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="nlme.mmkin-1.png" alt="" width="700" height="433"></span>
-<span class="r-in">  <span class="fu"><a href="endpoints.html">endpoints</a></span><span class="op">(</span><span class="va">f_nlme_dfop</span><span class="op">)</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="endpoints.html">endpoints</a></span><span class="op">(</span><span class="va">f_nlme_dfop</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $distimes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            DT50     DT90 DT50back  DT50_k1  DT50_k2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> parent 10.79857 100.7937 30.34192 4.193936 43.85441</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> parent 10.79857 100.7937 30.34193 4.193938 43.85443</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="va">ds_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">experimental_data_for_UBA_2019</span><span class="op">[</span><span class="fl">6</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span>,</span>
-<span class="r-in">   <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">$</span><span class="va">data</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"name"</span>, <span class="st">"time"</span>, <span class="st">"value"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
-<span class="r-in">  <span class="va">m_sfo_sfo</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"A1"</span><span class="op">)</span>,</span>
-<span class="r-in">    A1 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>, use_of_ff <span class="op">=</span> <span class="st">"min"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in">  <span class="va">m_sfo_sfo_ff</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"A1"</span><span class="op">)</span>,</span>
-<span class="r-in">    A1 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>, use_of_ff <span class="op">=</span> <span class="st">"max"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in">  <span class="va">m_dfop_sfo</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"DFOP"</span>, <span class="st">"A1"</span><span class="op">)</span>,</span>
-<span class="r-in">    A1 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="va">f_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="mmkin.html">mmkin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"SFO-SFO"</span> <span class="op">=</span> <span class="va">m_sfo_sfo</span>,</span>
-<span class="r-in">   <span class="st">"SFO-SFO-ff"</span> <span class="op">=</span> <span class="va">m_sfo_sfo_ff</span>,</span>
-<span class="r-in">   <span class="st">"DFOP-SFO"</span> <span class="op">=</span> <span class="va">m_dfop_sfo</span><span class="op">)</span>,</span>
-<span class="r-in">    <span class="va">ds_2</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="va">f_nlme_sfo_sfo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="external-link">nlme</a></span><span class="op">(</span><span class="va">f_2</span><span class="op">[</span><span class="st">"SFO-SFO"</span>, <span class="op">]</span><span class="op">)</span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_nlme_sfo_sfo</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="va">ds_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">experimental_data_for_UBA_2019</span><span class="op">[</span><span class="fl">6</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>   <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">$</span><span class="va">data</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"name"</span>, <span class="st">"time"</span>, <span class="st">"value"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">m_sfo_sfo</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"A1"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    A1 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>, use_of_ff <span class="op">=</span> <span class="st">"min"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">m_sfo_sfo_ff</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"A1"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    A1 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>, use_of_ff <span class="op">=</span> <span class="st">"max"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">m_dfop_sfo</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"DFOP"</span>, <span class="st">"A1"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    A1 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="va">f_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="mmkin.html">mmkin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"SFO-SFO"</span> <span class="op">=</span> <span class="va">m_sfo_sfo</span>,</span></span>
+<span class="r-in"><span>   <span class="st">"SFO-SFO-ff"</span> <span class="op">=</span> <span class="va">m_sfo_sfo_ff</span>,</span></span>
+<span class="r-in"><span>   <span class="st">"DFOP-SFO"</span> <span class="op">=</span> <span class="va">m_dfop_sfo</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="va">ds_2</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="va">f_nlme_sfo_sfo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="external-link">nlme</a></span><span class="op">(</span><span class="va">f_2</span><span class="op">[</span><span class="st">"SFO-SFO"</span>, <span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_nlme_sfo_sfo</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="nlme.mmkin-2.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="co"># With formation fractions this does not coverge with defaults</span></span>
-<span class="r-in">  <span class="co"># f_nlme_sfo_sfo_ff &lt;- nlme(f_2["SFO-SFO-ff", ])</span></span>
-<span class="r-in">  <span class="co">#plot(f_nlme_sfo_sfo_ff)</span></span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="co"># For the following, we need to increase pnlsMaxIter and the tolerance</span></span>
-<span class="r-in">  <span class="co"># to get convergence</span></span>
-<span class="r-in">  <span class="va">f_nlme_dfop_sfo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="external-link">nlme</a></span><span class="op">(</span><span class="va">f_2</span><span class="op">[</span><span class="st">"DFOP-SFO"</span>, <span class="op">]</span>,</span>
-<span class="r-in">    control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pnlsMaxIter <span class="op">=</span> <span class="fl">120</span>, tolerance <span class="op">=</span> <span class="fl">5e-4</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_nlme_dfop_sfo</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="co"># With formation fractions this does not coverge with defaults</span></span></span>
+<span class="r-in"><span>  <span class="co"># f_nlme_sfo_sfo_ff &lt;- nlme(f_2["SFO-SFO-ff", ])</span></span></span>
+<span class="r-in"><span>  <span class="co">#plot(f_nlme_sfo_sfo_ff)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="co"># For the following, we need to increase pnlsMaxIter and the tolerance</span></span></span>
+<span class="r-in"><span>  <span class="co"># to get convergence</span></span></span>
+<span class="r-in"><span>  <span class="va">f_nlme_dfop_sfo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="external-link">nlme</a></span><span class="op">(</span><span class="va">f_2</span><span class="op">[</span><span class="st">"DFOP-SFO"</span>, <span class="op">]</span>,</span></span>
+<span class="r-in"><span>    control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pnlsMaxIter <span class="op">=</span> <span class="fl">120</span>, tolerance <span class="op">=</span> <span class="fl">5e-4</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_nlme_dfop_sfo</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="nlme.mmkin-3.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_nlme_dfop_sfo</span>, <span class="va">f_nlme_sfo_sfo</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_nlme_dfop_sfo</span>, <span class="va">f_nlme_sfo_sfo</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 Model df       AIC       BIC    logLik   Test  L.Ratio p-value</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> f_nlme_dfop_sfo     1 13  843.8547  884.6201 -408.9274                        </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> f_nlme_sfo_sfo      2  9 1085.1821 1113.4043 -533.5910 1 vs 2 249.3274  &lt;.0001</span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="fu"><a href="endpoints.html">endpoints</a></span><span class="op">(</span><span class="va">f_nlme_sfo_sfo</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="endpoints.html">endpoints</a></span><span class="op">(</span><span class="va">f_nlme_sfo_sfo</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ff</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> parent_sink   parent_A1     A1_sink </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   0.5912432   0.4087568   1.0000000 </span>
@@ -275,27 +318,27 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
 <span class="r-out co"><span class="r-pr">#&gt;</span> parent 19.13518  63.5657</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> A1     66.02155 219.3189</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in">  <span class="fu"><a href="endpoints.html">endpoints</a></span><span class="op">(</span><span class="va">f_nlme_dfop_sfo</span><span class="op">)</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="endpoints.html">endpoints</a></span><span class="op">(</span><span class="va">f_nlme_dfop_sfo</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ff</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   parent_A1 parent_sink </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.2768575   0.7231425 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.2768574   0.7231426 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $distimes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             DT50     DT90 DT50back  DT50_k1  DT50_k2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> parent  11.07091 104.6320 31.49737 4.462383 46.20825</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> A1     162.30524 539.1663       NA       NA       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> A1     162.30519 539.1662       NA       NA       NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu">findFunction</span><span class="op">(</span><span class="st">"varConstProp"</span><span class="op">)</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span> <span class="co"># tc error model for nlme available</span></span>
-<span class="r-in">    <span class="co"># Attempts to fit metabolite kinetics with the tc error model are possible,</span></span>
-<span class="r-in">    <span class="co"># but need tweeking of control values and sometimes do not converge</span></span>
-<span class="r-in"></span>
-<span class="r-in">    <span class="va">f_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="mmkin.html">mmkin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"DFOP"</span><span class="op">)</span>, <span class="va">ds</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span>, error_model <span class="op">=</span> <span class="st">"tc"</span><span class="op">)</span></span>
-<span class="r-in">    <span class="va">f_nlme_sfo_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="external-link">nlme</a></span><span class="op">(</span><span class="va">f_tc</span><span class="op">[</span><span class="st">"SFO"</span>, <span class="op">]</span><span class="op">)</span></span>
-<span class="r-in">    <span class="va">f_nlme_dfop_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="external-link">nlme</a></span><span class="op">(</span><span class="va">f_tc</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span><span class="op">)</span></span>
-<span class="r-in">    <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">f_nlme_sfo</span>, <span class="va">f_nlme_sfo_tc</span>, <span class="va">f_nlme_dfop</span>, <span class="va">f_nlme_dfop_tc</span><span class="op">)</span></span>
-<span class="r-in">    <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">f_nlme_dfop_tc</span><span class="op">)</span></span>
-<span class="r-in">  <span class="op">}</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu">findFunction</span><span class="op">(</span><span class="st">"varConstProp"</span><span class="op">)</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span> <span class="co"># tc error model for nlme available</span></span></span>
+<span class="r-in"><span>    <span class="co"># Attempts to fit metabolite kinetics with the tc error model are possible,</span></span></span>
+<span class="r-in"><span>    <span class="co"># but need tweeking of control values and sometimes do not converge</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>    <span class="va">f_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="mmkin.html">mmkin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"DFOP"</span><span class="op">)</span>, <span class="va">ds</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span>, error_model <span class="op">=</span> <span class="st">"tc"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="va">f_nlme_sfo_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="external-link">nlme</a></span><span class="op">(</span><span class="va">f_tc</span><span class="op">[</span><span class="st">"SFO"</span>, <span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="va">f_nlme_dfop_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="external-link">nlme</a></span><span class="op">(</span><span class="va">f_tc</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">f_nlme_sfo</span>, <span class="va">f_nlme_sfo_tc</span>, <span class="va">f_nlme_dfop</span>, <span class="va">f_nlme_dfop_tc</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">f_nlme_dfop_tc</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">}</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Kinetic nonlinear mixed-effects model fit by maximum likelihood</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Structural model:</span>
@@ -311,7 +354,7 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fixed effects:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_qlogis ~ 1) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> parent_0   log_k1   log_k2 g_qlogis </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 94.04775 -1.82340 -4.16715  0.05685 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 94.04774 -1.82340 -4.16716  0.05686 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Random effects:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Formula: list(parent_0 ~ 1, log_k1 ~ 1, log_k2 ~ 1, g_qlogis ~ 1)</span>
@@ -325,11 +368,11 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Formula: ~fitted(.) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Parameter estimates:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      const       prop </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.23223513 0.01262371 </span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="va">f_2_obs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">f_2</span>, error_model <span class="op">=</span> <span class="st">"obs"</span><span class="op">)</span></span>
-<span class="r-in">  <span class="va">f_nlme_sfo_sfo_obs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="external-link">nlme</a></span><span class="op">(</span><span class="va">f_2_obs</span><span class="op">[</span><span class="st">"SFO-SFO"</span>, <span class="op">]</span><span class="op">)</span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">f_nlme_sfo_sfo_obs</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.23223147 0.01262395 </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="va">f_2_obs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">f_2</span>, error_model <span class="op">=</span> <span class="st">"obs"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">f_nlme_sfo_sfo_obs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="external-link">nlme</a></span><span class="op">(</span><span class="va">f_2_obs</span><span class="op">[</span><span class="st">"SFO-SFO"</span>, <span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">f_nlme_sfo_sfo_obs</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Kinetic nonlinear mixed-effects model fit by maximum likelihood</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Structural model:</span>
@@ -358,24 +401,24 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Formula: ~1 | name </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Parameter estimates:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    parent        A1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1.0000000 0.2049985 </span>
-<span class="r-in">  <span class="va">f_nlme_dfop_sfo_obs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="external-link">nlme</a></span><span class="op">(</span><span class="va">f_2_obs</span><span class="op">[</span><span class="st">"DFOP-SFO"</span>, <span class="op">]</span>,</span>
-<span class="r-in">    control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pnlsMaxIter <span class="op">=</span> <span class="fl">120</span>, tolerance <span class="op">=</span> <span class="fl">5e-4</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="va">f_2_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">f_2</span>, error_model <span class="op">=</span> <span class="st">"tc"</span><span class="op">)</span></span>
-<span class="r-in">  <span class="co"># f_nlme_sfo_sfo_tc &lt;- nlme(f_2_tc["SFO-SFO", ]) # No convergence with 50 iterations</span></span>
-<span class="r-in">  <span class="co"># f_nlme_dfop_sfo_tc &lt;- nlme(f_2_tc["DFOP-SFO", ],</span></span>
-<span class="r-in">  <span class="co">#  control = list(pnlsMaxIter = 120, tolerance = 5e-4)) # Error in X[, fmap[[nm]]] &lt;- gradnm</span></span>
-<span class="r-in"></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_nlme_dfop_sfo</span>, <span class="va">f_nlme_dfop_sfo_obs</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1.0000000 0.2049995 </span>
+<span class="r-in"><span>  <span class="va">f_nlme_dfop_sfo_obs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="external-link">nlme</a></span><span class="op">(</span><span class="va">f_2_obs</span><span class="op">[</span><span class="st">"DFOP-SFO"</span>, <span class="op">]</span>,</span></span>
+<span class="r-in"><span>    control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pnlsMaxIter <span class="op">=</span> <span class="fl">120</span>, tolerance <span class="op">=</span> <span class="fl">5e-4</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="va">f_2_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">f_2</span>, error_model <span class="op">=</span> <span class="st">"tc"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="co"># f_nlme_sfo_sfo_tc &lt;- nlme(f_2_tc["SFO-SFO", ]) # No convergence with 50 iterations</span></span></span>
+<span class="r-in"><span>  <span class="co"># f_nlme_dfop_sfo_tc &lt;- nlme(f_2_tc["DFOP-SFO", ],</span></span></span>
+<span class="r-in"><span>  <span class="co">#  control = list(pnlsMaxIter = 120, tolerance = 5e-4)) # Error in X[, fmap[[nm]]] &lt;- gradnm</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_nlme_dfop_sfo</span>, <span class="va">f_nlme_dfop_sfo_obs</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                     Model df      AIC      BIC    logLik   Test  L.Ratio</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> f_nlme_dfop_sfo         1 13 843.8547 884.6201 -408.9274                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> f_nlme_dfop_sfo_obs     2 14 817.5338 861.4350 -394.7669 1 vs 2 28.32092</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_nlme_dfop_sfo_obs     2 14 817.5338 861.4350 -394.7669 1 vs 2 28.32091</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                     p-value</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> f_nlme_dfop_sfo            </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> f_nlme_dfop_sfo_obs  &lt;.0001</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># }</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -390,7 +433,7 @@ methods that will automatically work on 'nlme.mmkin' objects, such as
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

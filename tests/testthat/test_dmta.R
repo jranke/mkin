@@ -11,13 +11,13 @@ names(dmta_ds) <- sapply(dimethenamid_2018$ds, function(ds) ds$title)
 dmta_ds[["Elliot"]] <- rbind(dmta_ds[["Elliot 1"]], dmta_ds[["Elliot 2"]])
 dmta_ds[["Elliot 1"]] <- dmta_ds[["Elliot 2"]] <- NULL
 
-# mkin
-dmta_dfop <- mmkin("DFOP", dmta_ds, quiet = TRUE, cores = n_cores)
-dmta_dfop_tc <- mmkin("DFOP", dmta_ds, error_model = "tc", quiet = TRUE, cores = n_cores)
-
 test_that("Different backends get consistent results for DFOP tc, dimethenamid data", {
 
   skip_on_cran() # Time constraints
+  # mkin
+  dmta_dfop <- mmkin("DFOP", dmta_ds, quiet = TRUE, cores = n_cores)
+  dmta_dfop_tc <- mmkin("DFOP", dmta_ds, error_model = "tc", quiet = TRUE, cores = n_cores)
+
   # nlme
   expect_warning(
     nlme_dfop_tc <- nlme(dmta_dfop_tc),

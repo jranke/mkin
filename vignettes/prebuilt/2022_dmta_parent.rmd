@@ -1,0 +1,406 @@
+---
+title: "Testing hierarchical parent degradation kinetics with residue data on dimethenamid and dimethenamid-P"
+author: Johannes Ranke
+date: Last change on 5 January 2023, last compiled on `r format(Sys.time(), "%e %B %Y")`
+geometry: margin=2cm
+toc: true
+bibliography: references.bib
+output:
+  pdf_document:
+    extra_dependencies: ["float", "listing"]
+---
+
+```{r setup, echo = FALSE, cache = FALSE}
+options(width = 80) # For summary listings
+knitr::opts_chunk$set(
+  comment = "", tidy = FALSE, cache = TRUE, fig.pos = "H", fig.align = "center"
+)
+```
+
+\clearpage
+
+# Introduction
+
+The purpose of this document is to demonstrate how nonlinear hierarchical
+models (NLHM) based on the parent degradation models SFO, FOMC, DFOP and HS
+can be fitted with the mkin package.
+
+It was assembled in the course of work package 1.1 of Project Number 173340
+(Application of nonlinear hierarchical models to the kinetic evaluation of
+chemical degradation data) of the German Environment Agency carried out in 2022
+and 2023.
+
+The mkin package is used in version `r packageVersion("mkin")`. It contains the
+test data and the functions used in the evaluations. The `saemix` package is
+used as a backend for fitting the NLHM, but is also loaded to make the
+convergence plot function available.
+
+This document is processed with the `knitr` package, which also provides the
+`kable` function that is used to improve the display of tabular data in R
+markdown documents. For parallel processing, the `parallel` package is used.
+
+```{r packages, cache = FALSE, message = FALSE}
+library(mkin)
+library(knitr)
+library(saemix)
+library(parallel)
+n_cores <- detectCores()
+if (Sys.info()["sysname"] == "Windows") {
+  cl <- makePSOCKcluster(n_cores)
+} else {
+  cl <- makeForkCluster(n_cores)
+}
+```
+
+\clearpage
+
+# Data
+
+The test data are available in the mkin package as an object of class
+`mkindsg` (mkin dataset group) under the identifier `dimethenamid_2018`. The
+following preprocessing steps are still necessary:
+
+- The data available for the enantiomer dimethenamid-P (DMTAP) are renamed
+  to have the same substance name as the data for the racemic mixture
+  dimethenamid (DMTA). The reason for this is that no difference between their
+  degradation behaviour was identified in the EU risk assessment.
+- The data for transformation products and unnecessary columns are discarded
+- The observation times of each dataset are multiplied with the
+  corresponding normalisation factor also available in the dataset, in order to
+  make it possible to describe all datasets with a single set of parameters
+  that are independent of temperature
+- Finally, datasets observed in the same soil (`Elliot 1` and `Elliot 2`) are
+  combined, resulting in dimethenamid (DMTA) data from six soils.
+
+The following commented R code performs this preprocessing.
+
+```{r data}
+# Apply a function to each of the seven datasets in the mkindsg object to create a list
+dmta_ds <- lapply(1:7, function(i) {
+  ds_i <- dimethenamid_2018$ds[[i]]$data                     # Get a dataset
+  ds_i[ds_i$name == "DMTAP", "name"] <-  "DMTA"              # Rename DMTAP to DMTA
+  ds_i <- subset(ds_i, name == "DMTA", c("name", "time", "value")) # Select data
+  ds_i$time <- ds_i$time * dimethenamid_2018$f_time_norm[i]  # Normalise time
+  ds_i                                                       # Return the dataset
+})
+
+# Use dataset titles as names for the list elements
+names(dmta_ds) <- sapply(dimethenamid_2018$ds, function(ds) ds$title)
+
+# Combine data for Elliot soil to obtain a named list with six elements
+dmta_ds[["Elliot"]] <- rbind(dmta_ds[["Elliot 1"]], dmta_ds[["Elliot 2"]]) #
+dmta_ds[["Elliot 1"]] <- NULL
+dmta_ds[["Elliot 2"]] <- NULL
+```
+
+\clearpage
+
+The following tables show the `r length(dmta_ds)` datasets.
+
+```{r results = "asis"}
+
+for (ds_name in names(dmta_ds)) {
+    print(kable(mkin_long_to_wide(dmta_ds[[ds_name]]),
+      caption = paste("Dataset", ds_name),
+      label = paste0("tab:", ds_name), booktabs = TRUE))
+    cat("\n\\clearpage\n")
+}
+```
+
+# Separate evaluations
+
+In order to obtain suitable starting parameters for the NLHM fits, separate
+fits of the four models to the data for each soil are generated using the `mmkin`
+function from the `mkin` package. In a first step, constant variance is assumed.
+Convergence is checked with the `status` function.
+
+```{r f-sep-const, dependson = "data"}
+deg_mods <- c("SFO", "FOMC", "DFOP", "HS")
+f_sep_const <- mmkin(
+  deg_mods,
+  dmta_ds,
+  error_model = "const",
+  quiet = TRUE)
+
+status(f_sep_const) |> kable()
+```
+In the table above, OK indicates convergence, and C indicates failure to
+converge. All separate fits with constant variance converged, with the sole
+exception of the HS fit to the BBA 2.2 data. To prepare for fitting NLHM using
+the two-component error model, the separate fits are updated assuming
+two-component error.
+
+```{r f-sep-tc, dependson = "f-sep-const"}
+f_sep_tc <- update(f_sep_const, error_model = "tc")
+status(f_sep_tc) |> kable()
+```
+
+Using the two-component error model, the one fit that did not converge with
+constant variance did converge, but other non-SFO fits failed to converge.
+
+\clearpage
+
+# Hierarchichal model fits
+
+The following code fits eight versions of hierarchical models to the data,
+using SFO, FOMC, DFOP and HS for the parent compound, and using either constant
+variance or two-component error for the error model. The default parameter
+distribution model in mkin allows for variation of all degradation parameters
+across the assumed population of soils. In other words, each degradation
+parameter is associated with a random effect as a first step. The `mhmkin`
+function makes it possible to fit all eight versions in parallel (given a
+sufficient number of computing cores being available) to save execution time.
+
+Convergence plots and summaries for these fits are shown in the appendix.
+
+```{r f-saem, dependson = c("f-sep-const", "f-sep-tc")}
+f_saem <- mhmkin(list(f_sep_const, f_sep_tc), transformations = "saemix")
+```
+The output of the `status` function shows that all fits terminated
+successfully.
+
+```{r dependson = "f-saem"}
+status(f_saem) |> kable()
+```
+The AIC and BIC values show that the biphasic models DFOP and HS give the best
+fits.
+
+```{r dependson = "f-saem"}
+anova(f_saem) |> kable(digits = 1)
+```
+
+The DFOP model is preferred here, as it has a better mechanistic basis for
+batch experiments with constant incubation conditions. Also, it shows the
+lowest AIC and BIC values in the first set of fits when combined with the
+two-component error model. Therefore, the DFOP model was selected for further
+refinements of the fits with the aim to make the model fully identifiable.
+
+## Parameter identifiability based on the Fisher Information Matrix
+
+Using the `illparms` function, ill-defined statistical model parameters such
+as standard deviations of the degradation parameters in the population and
+error model parameters can be found.
+
+```{r dependson = "f-saem"}
+illparms(f_saem) |> kable()
+```
+
+According to the `illparms` function, the fitted standard deviation of the
+second kinetic rate constant `k2` is ill-defined in both DFOP fits. This
+suggests that different values would be obtained for this standard deviation
+when using different starting values.
+
+The thus identified overparameterisation is addressed by removing the random
+effect for `k2` from the parameter model.
+
+```{r f-saem-dfop-tc-no-ranef-k2, dependson = "f-saem"}
+f_saem_dfop_tc_no_ranef_k2 <- update(f_saem[["DFOP", "tc"]],
+  no_random_effect = "k2")
+```
+
+For the resulting fit, it is checked whether there are still ill-defined
+parameters,
+
+```{r f-saem-dfop-tc-no-ranef-k2-illparms, dependson = "f-saem-dfop-tc-no-ranef-k2"}
+illparms(f_saem_dfop_tc_no_ranef_k2)
+```
+which is not the case. Below, the refined model is compared with the previous
+best model. The model without random effect for `k2` is a reduced version of
+the previous model. Therefore, the models are nested and can be compared using
+the likelihood ratio test. This is achieved with the argument `test = TRUE`
+to the `anova` function.
+
+```{r f-saem-dfop-tc-no-ranef-k2-comparison, dependson = "f-saem-dfop-tc-no-ranef-k2"}
+anova(f_saem[["DFOP", "tc"]], f_saem_dfop_tc_no_ranef_k2, test = TRUE) |>
+  kable(format.args = list(digits = 4))
+```
+
+The AIC and BIC criteria are lower after removal of the ill-defined random
+effect for `k2`. The p value of the likelihood ratio test is much greater
+than 0.05, indicating that the model with the higher likelihood (here
+the model with random effects for all degradation parameters
+`f_saem[["DFOP", "tc"]]`) does not fit significantly better than the model
+with the lower likelihood (the reduced model `f_saem_dfop_tc_no_ranef_k2`).
+
+Therefore, AIC, BIC and likelihood ratio test suggest the use of the reduced model.
+
+The convergence of the fit is checked visually.
+
+```{r convergence-saem-dfop-tc-no-ranef-k2, fig.cap = "Convergence plot for the NLHM DFOP fit with two-component error and without a random effect on 'k2'", dependson = "f-saem-dfop-tc-no-ranef-k2", echo = FALSE, fig.width = 9, fig.height = 8}
+plot(f_saem_dfop_tc_no_ranef_k2$so, plot.type = "convergence")
+```
+
+All parameters appear to have converged to a satisfactory degree. The final fit
+is plotted using the plot method from the mkin package.
+
+```{r plot-saem-dfop-tc-no-ranef-k2, fig.cap = "Plot of the final NLHM DFOP fit", dependson = "f-saem-dfop-tc-no-ranef-k2", fig.width = 9, fig.height = 5}
+plot(f_saem_dfop_tc_no_ranef_k2)
+```
+Finally, a summary report of the fit is produced.
+
+```{r summary-saem-dfop-tc-no-ranef-k2, dependson = "f-saem-dfop-tc-no-ranef-k2"}
+summary(f_saem_dfop_tc_no_ranef_k2)
+```
+
+\clearpage
+
+## Alternative check of parameter identifiability
+
+The parameter check used in the `illparms` function is based on a quadratic
+approximation of the likelihood surface near its optimum, which is calculated
+using the Fisher Information Matrix (FIM). An alternative way to check
+parameter identifiability [@duchesne_2021] based on a multistart approach
+has recently been implemented in mkin.
+
+The graph below shows boxplots of the parameters obtained in 50 runs of the
+saem algorithm with different parameter combinations, sampled from the range of
+the parameters obtained for the individual datasets fitted separately using
+nonlinear regression.
+
+```{r multistart-full, dependson = "f-saem"}
+f_saem_dfop_tc_multi <- multistart(f_saem[["DFOP", "tc"]], n = 50, cores = 15)
+```
+
+```{r multistart-full-par, dependson = "multistart_full", fig.cap = "Scaled parameters from the multistart runs, full model", fig.width = 10, fig.height = 6}
+par(mar = c(6.1, 4.1, 2.1, 2.1))
+parplot(f_saem_dfop_tc_multi, lpos = "bottomright", ylim = c(0.3, 10), las = 2)
+```
+
+The graph clearly confirms the lack of identifiability of the variance of `k2` in
+the full model. The overparameterisation of the model also indicates a lack of
+identifiability of the variance of parameter `g`.
+
+The parameter boxplots of the multistart runs with the reduced model shown
+below indicate that all runs give similar results, regardless of the starting
+parameters.
+
+```{r multistart-reduced, dependson = "f-saem-dfop-tc-no-ranef-k2"}
+f_saem_dfop_tc_no_ranef_k2_multi <- multistart(f_saem_dfop_tc_no_ranef_k2,
+  n = 50, cores = 15)
+```
+
+```{r multistart-reduced-par, dependson = "multistart_reduced", fig.cap = "Scaled parameters from the multistart runs, reduced model", fig.width = 10, fig.height = 5}
+par(mar = c(6.1, 4.1, 2.1, 2.1))
+parplot(f_saem_dfop_tc_no_ranef_k2_multi, ylim = c(0.5, 2), las = 2,
+  lpos = "bottomright")
+```
+
+When only the parameters of the top 25% of the fits are shown (based on a feature
+introduced in mkin 1.2.2 currently under development), the scatter is even less
+as shown below.
+
+```{r multistart-reduced-par-llquant, dependson = "multistart_reduced", fig.cap = "Scaled parameters from the multistart runs, reduced model, fits with the top 25\\% likelihood values", fig.width = 10, fig.height = 5}
+par(mar = c(6.1, 4.1, 2.1, 2.1))
+parplot(f_saem_dfop_tc_no_ranef_k2_multi, ylim = c(0.5, 2), las = 2, llquant = 0.25,
+  lpos = "bottomright")
+```
+
+
+\clearpage
+
+# Conclusions
+
+Fitting the four parent degradation models SFO, FOMC, DFOP and HS as part of
+hierarchical model fits with two different error models and normal
+distributions of the transformed degradation parameters works without technical
+problems. The biphasic models DFOP and HS gave the best fit to the data, but
+the default parameter distribution model was not fully identifiable. Removing
+the random effect for the second kinetic rate constant of the DFOP model
+resulted in a reduced model that was fully identifiable and showed the lowest
+values for the model selection criteria AIC and BIC. The reliability of the
+identification of all model parameters was confirmed using multiple starting
+values.
+
+# Acknowledgements
+
+The helpful comments by Janina Wöltjen of the German Environment Agency
+are gratefully acknowledged.
+
+# References
+
+\vspace{1em}
+
+::: {#refs}
+:::
+
+\clearpage
+
+# Appendix
+
+## Hierarchical model fit listings
+
+```{r listings, results = "asis", echo = FALSE}
+for (deg_mod in deg_mods) {
+  for (err_mod in c("const", "tc")) {
+    caption <- paste("Hierarchical mkin fit of the", deg_mod, "model with error model", err_mod)
+    summary_listing(f_saem[[deg_mod, err_mod]], caption)
+  }
+}
+```
+
+## Hierarchical model convergence plots
+
+```{r convergence-saem-sfo-const, fig.cap = "Convergence plot for the NLHM SFO fit with constant variance", dependson = "f-saem", echo = FALSE, fig.width = 9, fig.height = 5}
+plot(f_saem[["SFO", "const"]]$so, plot.type = "convergence")
+```
+
+\clearpage
+
+```{r convergence-saem-sfo-tc, fig.cap = "Convergence plot for the NLHM SFO fit with two-component error", dependson = "f-saem", echo = FALSE, fig.width = 9, fig.height = 5}
+plot(f_saem[["SFO", "tc"]]$so, plot.type = "convergence")
+```
+
+\clearpage
+
+```{r convergence-saem-fomc-const, fig.cap = "Convergence plot for the NLHM FOMC fit with constant variance", dependson = "f-saem", echo = FALSE, fig.width = 9, fig.height = 8}
+plot(f_saem[["FOMC", "const"]]$so, plot.type = "convergence")
+```
+
+\clearpage
+
+```{r convergence-saem-fomc-tc, fig.cap = "Convergence plot for the NLHM FOMC fit with two-component error", dependson = "f-saem", echo = FALSE, fig.width = 9, fig.height = 8}
+plot(f_saem[["FOMC", "tc"]]$so, plot.type = "convergence")
+```
+
+\clearpage
+
+```{r convergence-saem-dfop-const, fig.cap = "Convergence plot for the NLHM DFOP fit with constant variance", dependson = "f-saem", echo = FALSE, fig.width = 9, fig.height = 8}
+plot(f_saem[["DFOP", "const"]]$so, plot.type = "convergence")
+```
+
+\clearpage
+
+```{r convergence-saem-dfop-tc, fig.cap = "Convergence plot for the NLHM DFOP fit with two-component error", dependson = "f-saem", echo = FALSE, fig.width = 9, fig.height = 8}
+plot(f_saem[["DFOP", "tc"]]$so, plot.type = "convergence")
+```
+\clearpage
+
+```{r convergence-saem-hs-const, fig.cap = "Convergence plot for the NLHM HS fit with constant variance", dependson = "f-saem", echo = FALSE, fig.width = 9, fig.height = 8}
+plot(f_saem[["HS", "const"]]$so, plot.type = "convergence")
+```
+
+\clearpage
+
+```{r convergence-saem-hs-tc, fig.cap = "Convergence plot for the NLHM HS fit with two-component error", dependson = "f-saem", echo = FALSE, fig.width = 9, fig.height = 8}
+plot(f_saem[["HS", "tc"]]$so, plot.type = "convergence")
+```
+
+\clearpage
+
+## Session info
+
+```{r, echo = FALSE}
+parallel::stopCluster(cl)
+sessionInfo()
+```
+
+## Hardware info
+
+```{r, echo = FALSE}
+if(!inherits(try(cpuinfo <- readLines("/proc/cpuinfo")), "try-error")) {
+  cat(gsub("model name\t: ", "CPU model: ", cpuinfo[grep("model name", cpuinfo)[1]]))
+}
+if(!inherits(try(meminfo <- readLines("/proc/meminfo")), "try-error")) {
+  cat(gsub("model name\t: ", "System memory: ", meminfo[grep("MemTotal", meminfo)[1]]))
+}
+```

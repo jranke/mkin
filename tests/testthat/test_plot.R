@@ -41,27 +41,23 @@ test_that("Plotting mkinfit, mmkin and mixed model objects is reproducible", {
   f_uba_mmkin <- mmkin(list("DFOP-SFO" = dfop_sfo_uba),
     ds_uba, quiet = TRUE, cores = n_cores)
   f_uba_dfop_sfo_mixed <- mixed(f_uba_mmkin["DFOP-SFO", ])
-
   f_uba_dfop_sfo_saem <- saem(f_uba_mmkin["DFOP-SFO", ], quiet = TRUE, transformations = "saemix")
 
-  plot_biphasic_mmkin <- function() plot(f_uba_dfop_sfo_mixed, pop_curve = TRUE)
-  vdiffr::expect_doppelganger("mixed model fit for mmkin object", plot_biphasic_mmkin)
+  plot_dfop_sfo_mmkin <- function() plot(f_uba_dfop_sfo_mixed, pop_curve = TRUE)
+  vdiffr::expect_doppelganger("mixed model fit for mmkin object", plot_dfop_sfo_mmkin)
 
-  plot_biphasic_saem_s <- function() plot(f_uba_dfop_sfo_saem)
-  vdiffr::expect_doppelganger("mixed model fit for saem object with saemix transformations", plot_biphasic_saem_s)
+  plot_dfop_sfo_saem_s <- function() plot(f_uba_dfop_sfo_saem)
+  vdiffr::expect_doppelganger("mixed model fit for saem object with saemix transformations", plot_dfop_sfo_saem_s)
 
   skip_on_travis()
 
-  plot_biphasic_nlme <- function() plot(dfop_nlme_1)
-  vdiffr::expect_doppelganger("mixed model fit for nlme object", plot_biphasic_nlme)
+  plot_dfop_sfo_nlme <- function() plot(dfop_nlme_1)
+  vdiffr::expect_doppelganger("mixed model fit for nlme object", plot_dfop_sfo_nlme)
 
-  #plot_biphasic_mmkin <- function() plot(mixed(mmkin_biphasic))
+  #plot_dfop_sfo_mmkin <- function() plot(mixed(mmkin_dfop_sfo))
   # Biphasic fits with lots of data and fits have lots of potential for differences
-  plot_biphasic_nlme <- function() plot(nlme_biphasic)
-  #plot_biphasic_saem_s <- function() plot(saem_biphasic_s)
-  plot_biphasic_saem_m <- function() plot(saem_biphasic_m)
-
-  vdiffr::expect_doppelganger("mixed model fit for saem object with mkin transformations", plot_biphasic_saem_m)
+  plot_dfop_sfo_nlme <- function() plot(nlme_dfop_sfo)
+  #plot_dfop_sfo_saem_s <- function() plot(saem_dfop_sfo_s)
 
   # different results when working with eigenvalues
   plot_errmod_fit_D_obs_eigen <- function() plot_err(fit_D_obs_eigen, sep_obs = FALSE)

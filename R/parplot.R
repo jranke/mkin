@@ -4,9 +4,16 @@
 #' either by the parameters of the run with the highest likelihood,
 #' or by their medians as proposed in the paper by Duchesne et al. (2021).
 #'
+#' Starting values of degradation model parameters and error model parameters
+#' are shown as green circles. The results obtained in the original run
+#' are shown as red circles.
+#'
 #' @param object The [multistart] object
 #' @param llmin The minimum likelihood of objects to be shown
-#' @param scale By default, scale parameters using the best available fit.
+#' @param llquant Fractional value for selecting only the fits with higher
+#' likelihoods. Overrides 'llmin'.
+#' @param scale By default, scale parameters using the best
+#' available fit.
 #' If 'median', parameters are scaled using the median parameters from all fits.
 #' @param main Title of the plot
 #' @param lpos Positioning of the legend.
@@ -16,7 +23,7 @@
 #' of the in vitro erythropoiesis. BMC Bioinformatics. 2021 Oct 4;22(1):478.
 #' doi: 10.1186/s12859-021-04373-4.
 #' @seealso [multistart]
-#' @importFrom stats median
+#' @importFrom stats median quantile
 #' @export
 parplot <- function(object, ...) {
   UseMethod("parplot")
@@ -24,7 +31,8 @@ parplot <- function(object, ...) {
 
 #' @rdname parplot
 #' @export
-parplot.multistart.saem.mmkin <- function(object, llmin = -Inf, scale = c("best", "median"),
+parplot.multistart.saem.mmkin <- function(object, llmin = -Inf, llquant = NA,
+  scale = c("best", "median"),
   lpos = "bottomleft", main = "", ...)
 {
   oldpar <- par(no.readonly = TRUE)
@@ -32,8 +40,8 @@ parplot.multistart.saem.mmkin <- function(object, llmin = -Inf, scale = c("best"
 
   orig <- attr(object, "orig")
   orig_parms <- parms(orig)
-  start_parms <- orig$mean_dp_start
-  all_parms <- parms(object)
+  start_degparms <- orig$mean_dp_start
+  all_parms <- parms(object, exclude_failed = FALSE)
 
   if (inherits(object, "multistart.saem.mmkin")) {
     llfunc <- function(object) {
@@ -44,23 +52,27 @@ parplot.multistart.saem.mmkin <- function(object, llmin = -Inf, scale = c("best"
     stop("parplot is only implemented for multistart.saem.mmkin objects")
   }
   ll <- sapply(object, llfunc)
+  if (!is.na(llquant[1])) {
+    if (llmin != -Inf) warning("Overriding 'llmin' because 'llquant' was specified")
+    llmin <- quantile(ll, 1 - llquant)
+  }
   selected <- which(ll > llmin)
   selected_parms <- all_parms[selected, ]
 
   par(las = 1)
   if (orig$transformations == "mkin") {
-    degparm_names_transformed <- names(start_parms)
+    degparm_names_transformed <- names(start_degparms)
     degparm_index <- which(names(orig_parms) %in% degparm_names_transformed)
     orig_parms[degparm_names_transformed] <- backtransform_odeparms(
       orig_parms[degparm_names_transformed],
       orig$mmkin[[1]]$mkinmod,
       transform_rates = orig$mmkin[[1]]$transform_rates,
       transform_fractions = orig$mmkin[[1]]$transform_fractions)
-    start_parms <- backtransform_odeparms(start_parms,
+    start_degparms <- backtransform_odeparms(start_degparms,
       orig$mmkin[[1]]$mkinmod,
       transform_rates = orig$mmkin[[1]]$transform_rates,
       transform_fractions = orig$mmkin[[1]]$transform_fractions)
-    degparm_names <- names(start_parms)
+    degparm_names <- names(start_degparms)
 
     names(orig_parms) <- c(degparm_names, names(orig_parms[-degparm_index]))
 
@@ -71,6 +83,13 @@ parplot.multistart.saem.mmkin <- function(object, llmin = -Inf, scale = c("best"
       transform_fractions = orig$mmkin[[1]]$transform_fractions))
     colnames(selected_parms)[1:length(degparm_names)] <- degparm_names
   }
+
+  start_errparms <- orig$so@model@error.init
+  names(start_errparms) <- orig$so@model@name.sigma
+
+  start_omegaparms <- orig$so@model@omega.init
+
+  start_parms <- c(start_degparms, start_errparms)
 
   scale <- match.arg(scale)
   parm_scale <- switch(scale,
@@ -99,7 +118,7 @@ parplot.multistart.saem.mmkin <- function(object, llmin = -Inf, scale = c("best"
   legend(lpos, inset = c(0.05, 0.05), bty = "n",
     pch = 1, col = 3:1, lty = c(NA, NA, 1),
     legend = c(
-      "Starting parameters",
-      "Original run",
+      "Original start",
+      "Original results",
       "Multistart runs"))
 }

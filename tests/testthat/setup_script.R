@@ -2,17 +2,23 @@ require(mkin)
 require(testthat)
 
 # Per default (on my box where I set NOT_CRAN in .Rprofile) use all cores minus one
+# Otherwise (CRAN check systems) use the allowed maximum of two cores
 if (identical(Sys.getenv("NOT_CRAN"), "true")) {
   n_cores <- parallel::detectCores() - 1
 } else {
-  n_cores <- 1
+  n_cores <- 2
 }
 
 # Use the two available cores on travis
 if (Sys.getenv("TRAVIS") != "") n_cores = 2
 
-# On Windows we would need to make a cluster first
-if (Sys.info()["sysname"] == "Windows") n_cores = 1
+# On Windows we need to make a cluster, or use one core
+if (Sys.info()["sysname"] == "Windows") {
+  cl <- parallel::makePSOCKcluster(n_cores)
+  n_cores = 1
+} else {
+  cl <- parallel::makeForkCluster(n_cores)
+}
 
 # Very simple example fits
 f_1_mkin_trans <- mkinfit("SFO", FOCUS_2006_A, quiet = TRUE)
@@ -24,7 +30,7 @@ models <- c("SFO", "FOMC", "DFOP", "HS")
 fits <- suppressWarnings( # FOCUS A FOMC was, it seems, in testthat output
   mmkin(models,
     list(FOCUS_A = FOCUS_2006_A, FOCUS_C = FOCUS_2006_C, FOCUS_D = FOCUS_2006_D),
-    quiet = TRUE, cores = n_cores))
+    quiet = TRUE, cluster = cl))
 
 # One metabolite
 SFO_SFO <- mkinmod(parent = mkinsub("SFO", to = "m1"),
@@ -81,112 +87,26 @@ fit_obs_1 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, error_model = "obs", quiet = TR
 fit_tc_1 <- mkinfit(m_synth_SFO_lin, SFO_lin_a, error_model = "tc", quiet = TRUE,
   error_model_algorithm = "threestep")
 
-# Mixed models data and fits
-sampling_times = c(0, 1, 3, 7, 14, 28, 60, 90, 120)
-n <- n_biphasic <- 15
-log_sd <- 0.3
-err_1 = list(const = 1, prop = 0.05)
-tc <- function(value) sigma_twocomp(value, err_1$const, err_1$prop)
-const <- function(value) 2
-
-set.seed(123456)
-SFO <- mkinmod(parent = mkinsub("SFO"))
-k_parent = rlnorm(n, log(0.03), log_sd)
-set.seed(123456)
-ds_sfo <- lapply(1:n, function(i) {
-  ds_mean <- mkinpredict(SFO, c(k_parent = k_parent[i]),
-    c(parent = 100), sampling_times)
-  add_err(ds_mean, tc, n = 1)[[1]]
-})
-
-set.seed(123456)
-FOMC <- mkinmod(parent = mkinsub("FOMC"))
-fomc_pop <- list(parent_0 = 100, alpha = 2, beta = 8)
-fomc_parms <- as.matrix(data.frame(
-    alpha = rlnorm(n, log(fomc_pop$alpha), 0.4),
-    beta = rlnorm(n, log(fomc_pop$beta), 0.2)))
-set.seed(123456)
-ds_fomc <- lapply(1:3, function(i) {
-  ds_mean <- mkinpredict(FOMC, fomc_parms[i, ],
-    c(parent = 100), sampling_times)
-  add_err(ds_mean, tc, n = 1)[[1]]
-})
-
-set.seed(123456)
-DFOP <- mkinmod(parent = mkinsub("DFOP"))
-dfop_pop <- list(parent_0 = 100, k1 = 0.06, k2 = 0.015, g = 0.4)
-dfop_parms <- as.matrix(data.frame(
-  k1 = rlnorm(n, log(dfop_pop$k1), log_sd),
-  k2 = rlnorm(n, log(dfop_pop$k2), log_sd),
-  g = plogis(rnorm(n, qlogis(dfop_pop$g), log_sd))))
-set.seed(123456)
-ds_dfop <- lapply(1:n, function(i) {
-  ds_mean <- mkinpredict(DFOP, dfop_parms[i, ],
-    c(parent = dfop_pop$parent_0), sampling_times)
-  add_err(ds_mean, tc, n = 1)[[1]]
-})
-
-set.seed(123456)
-HS <- mkinmod(parent = mkinsub("HS"))
-hs_pop <- list(parent_0 = 100, k1 = 0.08, k2 = 0.01, tb = 15)
-hs_parms <- as.matrix(data.frame(
-  k1 = rlnorm(n, log(hs_pop$k1), log_sd),
-  k2 = rlnorm(n, log(hs_pop$k2), log_sd),
-  tb = rlnorm(n, log(hs_pop$tb), 0.1)))
-set.seed(123456)
-ds_hs <- lapply(1:10, function(i) {
-  ds_mean <- mkinpredict(HS, hs_parms[i, ],
-    c(parent = hs_pop$parent_0), sampling_times)
-  add_err(ds_mean, const, n = 1)[[1]]
-})
-
-set.seed(123456)
-DFOP_SFO <- mkinmod(
-  parent = mkinsub("DFOP", "m1"),
-  m1 = mkinsub("SFO"),
-  quiet = TRUE)
-dfop_sfo_pop <- list(parent_0 = 100,
-  k_m1 = 0.007, f_parent_to_m1 = 0.5,
-  k1 = 0.1, k2 = 0.02, g = 0.5)
-syn_biphasic_parms <- as.matrix(data.frame(
-  k1 = rlnorm(n_biphasic, log(dfop_sfo_pop$k1), log_sd),
-  k2 = rlnorm(n_biphasic, log(dfop_sfo_pop$k2), log_sd),
-  g = plogis(rnorm(n_biphasic, qlogis(dfop_sfo_pop$g), log_sd)),
-  f_parent_to_m1 = plogis(rnorm(n_biphasic,
-      qlogis(dfop_sfo_pop$f_parent_to_m1), log_sd)),
-  k_m1 = rlnorm(n_biphasic, log(dfop_sfo_pop$k_m1), log_sd)))
-ds_biphasic_mean <- lapply(1:n_biphasic,
-  function(i) {
-    mkinpredict(DFOP_SFO, syn_biphasic_parms[i, ],
-      c(parent = 100, m1 = 0), sampling_times)
-  }
-)
-set.seed(123456)
-ds_biphasic <- lapply(ds_biphasic_mean, function(ds) {
-  add_err(ds,
-    sdfunc = function(value) sqrt(err_1$const^2 + value^2 * err_1$prop^2),
-    n = 1, secondary = "m1")[[1]]
-})
-
 # Mixed model fits
-mmkin_sfo_1 <- mmkin("SFO", ds_sfo, quiet = TRUE, error_model = "tc", cores = n_cores)
-mmkin_dfop_1 <- mmkin("DFOP", ds_dfop, quiet = TRUE, cores = n_cores,
+mmkin_sfo_1 <- mmkin("SFO", ds_sfo, quiet = TRUE, error_model = "tc", cluster = cl)
+mmkin_dfop_1 <- mmkin("DFOP", ds_dfop, quiet = TRUE, cluster = cl,
   error_model = "tc")
 
-mmkin_biphasic <- mmkin(list("DFOP-SFO" = DFOP_SFO), ds_biphasic, quiet = TRUE, cores = n_cores,
+DFOP_SFO <- mkinmod(parent = mkinsub("DFOP", "m1"),
+  m1 = mkinsub("SFO"), quiet = TRUE)
+mmkin_dfop_sfo <- mmkin(list("DFOP-SFO" = DFOP_SFO), ds_dfop_sfo, quiet = TRUE,
+  cluster = cl,
   control = list(eval.max = 500, iter.max = 400),
   error_model = "tc")
 
 # nlme
 dfop_nlme_1 <- suppressWarnings(nlme(mmkin_dfop_1))
-nlme_biphasic <- suppressWarnings(nlme(mmkin_biphasic))
+nlme_dfop_sfo <- suppressWarnings(nlme(mmkin_dfop_sfo))
 
 # saemix
 sfo_saem_1 <- saem(mmkin_sfo_1, quiet = TRUE, transformations = "saemix")
 sfo_saem_1_reduced <- update(sfo_saem_1, no_random_effect = "parent_0")
-dfop_saemix_1 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "mkin",
-  no_random_effect = "parent_0")
+dfop_saem_1 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "mkin",
+  no_random_effect = c("parent_0", "g_qlogis"))
 
-saem_biphasic_m <- saem(mmkin_biphasic, transformations = "mkin", quiet = TRUE)
-saem_biphasic_s <- saem(mmkin_biphasic, transformations = "saemix", quiet = TRUE)
-
+parallel::stopCluster(cl)

@@ -1,0 +1,426 @@
+---
+title: "Testing hierarchical pathway kinetics with residue data on dimethenamid and dimethenamid-P"
+author: Johannes Ranke
+date: Last change on 8 January 2023, last compiled on `r format(Sys.time(), "%e %B %Y")`
+geometry: margin=2cm
+bibliography: references.bib
+toc: true
+output:
+  pdf_document:
+    extra_dependencies: ["float", "listing"]
+---
+
+```{r setup, echo = FALSE, cache = FALSE}
+options(width = 80) # For summary listings
+knitr::opts_chunk$set(
+  comment = "", tidy = FALSE, cache = TRUE, fig.pos = "H", fig.align = "center"
+)
+```
+
+\clearpage
+
+# Introduction
+
+The purpose of this document is to test demonstrate how nonlinear hierarchical
+models (NLHM) based on the parent degradation models SFO, FOMC, DFOP and HS,
+with parallel formation of two or more metabolites can be fitted with the mkin package.
+
+It was assembled in the course of work package 1.2 of Project Number 173340
+(Application of nonlinear hierarchical models to the kinetic evaluation of
+chemical degradation data) of the German Environment Agency carried out in 2022
+and 2023.
+
+The mkin package is used in version `r packageVersion("mkin")`, which is currently
+under development. It contains the test data, and the functions used in the
+evaluations. The `saemix` package is used as a backend for fitting the NLHM,
+but is also loaded to make the convergence plot function available.
+
+This document is processed with the `knitr` package, which also provides the
+`kable` function that is used to improve the display of tabular data in R
+markdown documents. For parallel processing, the `parallel` package is used.
+
+```{r, packages, cache = FALSE, message = FALSE}
+library(mkin)
+library(knitr)
+library(saemix)
+library(parallel)
+n_cores <- detectCores()
+if (Sys.info()["sysname"] == "Windows") {
+  cl <- makePSOCKcluster(n_cores)
+} else {
+  cl <- makeForkCluster(n_cores)
+}
+```
+
+\clearpage
+
+# Data
+
+The test data are available in the mkin package as an object of class `mkindsg`
+(mkin dataset group) under the identifier `dimethenamid_2018`. The following
+preprocessing steps are done in this document.
+
+- The data available for the enantiomer dimethenamid-P (DMTAP) are renamed
+  to have the same substance name as the data for the racemic mixture
+  dimethenamid (DMTA). The reason for this is that no difference between their
+  degradation behaviour was identified in the EU risk assessment.
+- Unnecessary columns are discarded
+- The observation times of each dataset are multiplied with the
+  corresponding normalisation factor also available in the dataset, in order to
+  make it possible to describe all datasets with a single set of parameters
+  that are independent of temperature
+- Finally, datasets observed in the same soil (`Elliot 1` and `Elliot 2`) are
+  combined, resulting in dimethenamid (DMTA) data from six soils.
+
+The following commented R code performs this preprocessing.
+
+```{r, data}
+# Apply a function to each of the seven datasets in the mkindsg object to create a list
+dmta_ds <- lapply(1:7, function(i) {
+  ds_i <- dimethenamid_2018$ds[[i]]$data                     # Get a dataset
+  ds_i[ds_i$name == "DMTAP", "name"] <-  "DMTA"              # Rename DMTAP to DMTA
+  ds_i <- subset(ds_i, select = c("name", "time", "value")) # Select data
+  ds_i$time <- ds_i$time * dimethenamid_2018$f_time_norm[i]  # Normalise time
+  ds_i                                                       # Return the dataset
+})
+
+# Use dataset titles as names for the list elements
+names(dmta_ds) <- sapply(dimethenamid_2018$ds, function(ds) ds$title)
+
+# Combine data for Elliot soil to obtain a named list with six elements
+dmta_ds[["Elliot"]] <- rbind(dmta_ds[["Elliot 1"]], dmta_ds[["Elliot 2"]]) #
+dmta_ds[["Elliot 1"]] <- NULL
+dmta_ds[["Elliot 2"]] <- NULL
+```
+
+\clearpage
+
+The following tables show the `r length(dmta_ds)` datasets.
+
+```{r show-data, dependson = "data", results = "asis"}
+for (ds_name in names(dmta_ds)) {
+  print(
+    kable(mkin_long_to_wide(dmta_ds[[ds_name]]),
+      caption = paste("Dataset", ds_name),
+      booktabs = TRUE, row.names = FALSE))
+    cat("\n\\clearpage\n")
+}
+```
+
+# Separate evaluations
+
+As a first step to obtain suitable starting parameters for the NLHM fits, we do
+separate fits of several variants of the pathway model used previously
+[@ranke2021], varying the kinetic model for the parent compound. Because the
+SFORB model often provides faster convergence than the DFOP model, and can
+sometimes be fitted where the DFOP model results in errors, it is included in
+the set of parent models tested here.
+
+```{r, sep-1-const, dependson = "data"}
+if (!dir.exists("dmta_dlls")) dir.create("dmta_dlls")
+m_sfo_path_1 <- mkinmod(
+  DMTA = mkinsub("SFO", c("M23", "M27", "M31")),
+  M23 = mkinsub("SFO"),
+  M27 = mkinsub("SFO"),
+  M31 = mkinsub("SFO", "M27", sink = FALSE),
+  name = "m_sfo_path", dll_dir = "dmta_dlls",
+  unload = TRUE, overwrite = TRUE,
+  quiet = TRUE
+)
+m_fomc_path_1 <- mkinmod(
+  DMTA = mkinsub("FOMC", c("M23", "M27", "M31")),
+  M23 = mkinsub("SFO"),
+  M27 = mkinsub("SFO"),
+  M31 = mkinsub("SFO", "M27", sink = FALSE),
+  name = "m_fomc_path", dll_dir = "dmta_dlls",
+  unload = TRUE, overwrite = TRUE,
+  quiet = TRUE
+)
+m_dfop_path_1 <- mkinmod(
+  DMTA = mkinsub("DFOP", c("M23", "M27", "M31")),
+  M23 = mkinsub("SFO"),
+  M27 = mkinsub("SFO"),
+  M31 = mkinsub("SFO", "M27", sink = FALSE),
+  name = "m_dfop_path", dll_dir = "dmta_dlls",
+  unload = TRUE, overwrite = TRUE,
+  quiet = TRUE
+)
+m_sforb_path_1 <- mkinmod(
+  DMTA = mkinsub("SFORB", c("M23", "M27", "M31")),
+  M23 = mkinsub("SFO"),
+  M27 = mkinsub("SFO"),
+  M31 = mkinsub("SFO", "M27", sink = FALSE),
+  name = "m_sforb_path", dll_dir = "dmta_dlls",
+  unload = TRUE, overwrite = TRUE,
+  quiet = TRUE
+)
+m_hs_path_1 <- mkinmod(
+  DMTA = mkinsub("HS", c("M23", "M27", "M31")),
+  M23 = mkinsub("SFO"),
+  M27 = mkinsub("SFO"),
+  M31 = mkinsub("SFO", "M27", sink = FALSE),
+  name = "m_hs_path", dll_dir = "dmta_dlls",
+  unload = TRUE, overwrite = TRUE,
+  quiet = TRUE
+)
+deg_mods_1 <- list(
+  sfo_path_1 = m_sfo_path_1,
+  fomc_path_1 = m_fomc_path_1,
+  dfop_path_1 = m_dfop_path_1,
+  sforb_path_1 = m_sforb_path_1,
+  hs_path_1 = m_hs_path_1)
+
+sep_1_const <- mmkin(
+  deg_mods_1,
+  dmta_ds,
+  error_model = "const",
+  quiet = TRUE)
+
+status(sep_1_const) |> kable()
+```
+
+All separate pathway fits with SFO or FOMC for the parent and constant variance
+converged (status OK). Most fits with DFOP or SFORB for the parent converged
+as well. The fits with HS for the parent did not converge with default settings.
+
+```{r, sep-1-tc, dependson = "sep-1-const"}
+sep_1_tc <- update(sep_1_const, error_model = "tc")
+status(sep_1_tc) |> kable()
+```
+
+With the two-component error model, the set of fits with convergence problems
+is slightly different, with convergence problems appearing for different data
+sets when applying the DFOP and SFORB model and some additional convergence
+problems when using the FOMC model for the parent.
+
+\clearpage
+
+# Hierarchichal model fits
+
+The following code fits two sets of the corresponding hierarchical models to
+the data, one assuming constant variance, and one assuming two-component error.
+
+```{r saem-1, dependson = c("sep-1-const", "sep-1-tc")}
+saem_1 <- mhmkin(list(sep_1_const, sep_1_tc))
+```
+The run time for these fits was around two hours on five year old hardware. After
+a recent hardware upgrade these fits complete in less than twenty minutes.
+
+```{r, saem-1-status, dependson = "saem-1"}
+status(saem_1) |> kable()
+```
+
+According to the `status` function, all fits terminated successfully.
+
+```{r saem-1-anova, dependson = "saem-1"}
+anova(saem_1) |> kable(digits = 1)
+```
+
+When the goodness-of-fit of the models is compared, a warning is obtained,
+indicating that the likelihood of the pathway fit with SFORB for the parent
+compound and constant variance could not be calculated with importance sampling
+(method 'is'). As this is the default method on which all AIC and BIC
+comparisons are based, this variant is not included in the model comparison
+table. Comparing the goodness-of-fit of the remaining models, HS model model
+with two-component error provides the best fit. However, for batch experiments
+performed with constant conditions such as the experiments evaluated here,
+there is no reason to assume a discontinuity, so the SFORB model is
+preferable from a mechanistic viewpoint. In addition, the information criteria
+AIC and BIC are very similar for HS and SFORB. Therefore, the SFORB model is
+selected here for further refinements.
+
+\clearpage
+
+## Parameter identifiability based on the Fisher Information Matrix
+
+Using the `illparms` function, ill-defined statistical model parameters such as
+standard deviations of the degradation parameters in the population and error
+model parameters can be found.
+
+```{r saem-1-illparms, dependson = "saem-1"}
+illparms(saem_1) |> kable()
+```
+
+When using constant variance, no ill-defined variance parameters are identified
+with the `illparms` function in any of the degradation models. When using
+the two-component error model, there is one ill-defined variance parameter
+in all variants except for the variant using DFOP for the parent compound.
+
+For the selected combination of the SFORB pathway model with two-component
+error, the random effect for the rate constant from reversibly bound DMTA to
+the free DMTA (`k_DMTA_bound_free`) is not well-defined. Therefore, the fit is
+updated without assuming a random effect for this parameter.
+
+```{r saem-sforb-path-1-tc-reduced, dependson = "saem-1"}
+saem_sforb_path_1_tc_reduced <- update(saem_1[["sforb_path_1", "tc"]],
+  no_random_effect = "log_k_DMTA_bound_free")
+illparms(saem_sforb_path_1_tc_reduced)
+```
+
+As expected, no ill-defined parameters remain. The model comparison below shows
+that the reduced model is preferable.
+
+```{r saem-sforb-path-1-tc-reduced-anova, dependson = "saem-sforb-path-1-tc-reduced"}
+anova(saem_1[["sforb_path_1", "tc"]], saem_sforb_path_1_tc_reduced) |> kable(digits = 1)
+```
+
+The convergence plot of the refined fit is shown below.
+
+```{r saem-sforb-path-1-tc-reduced-convergence, dependson = "saem-sforb-path-1-tc-reduced", fig.height = 12}
+plot(saem_sforb_path_1_tc_reduced$so, plot.type = "convergence")
+```
+
+For some parameters, for example for `f_DMTA_ilr_1` and `f_DMTA_ilr_2`, i.e.
+for two of the parameters determining the formation fractions of the parallel
+formation of the three metabolites, some movement of the parameters is still
+visible in the second phase of the algorithm. However, the amplitude of this
+movement is in the range of the amplitude towards the end of the first phase.
+Therefore, it is likely that an increase in iterations would not improve the
+parameter estimates very much, and it is proposed that the fit is acceptable.
+No numeric convergence criterion is implemented in saemix.
+
+\clearpage
+
+## Alternative check of parameter identifiability
+
+As an alternative check of parameter identifiability [@duchesne_2021],
+multistart runs were performed on the basis of the refined fit shown above.
+
+```{r saem-sforb-multistart, dependson = "saem-sforb-path-1-tc-reduced"}
+saem_sforb_path_1_tc_reduced_multi <- multistart(saem_sforb_path_1_tc_reduced,
+  n = 32, cores = 10)
+```
+
+```{r dependson = "saem-sforb-multistart"}
+print(saem_sforb_path_1_tc_reduced_multi)
+```
+
+Out of the 32 fits that were initiated, only 17 terminated without an error.
+The reason for this is that the wide variation of starting parameters in combination
+with the parameter variation that is used in the SAEM algorithm leads to
+parameter combinations for the degradation model that the numerical integration
+routine cannot cope with. Because of this variation of initial parameters,
+some of the model fits take up to two times more time than the original fit.
+
+```{r dependson = "saem-sforb-multistart", fig.cap = "Parameter boxplots for the multistart runs that succeeded", fig.height = 6, fig.width = 10}
+par(mar = c(12.1, 4.1, 2.1, 2.1))
+parplot(saem_sforb_path_1_tc_reduced_multi, ylim = c(0.5, 2), las = 2)
+```
+
+However, visual analysis of the boxplot of the parameters obtained in the
+successful fits confirms that the results are sufficiently independent of the
+starting parameters, and there are no remaining ill-defined parameters.
+
+\clearpage
+
+
+# Plots of selected fits
+
+The SFORB pathway fits with full and reduced parameter distribution model are
+shown below.
+
+```{r fig.cap = "SFORB pathway fit with two-component error", dependson = "saem-1", fig.height = 8}
+plot(saem_1[["sforb_path_1", "tc"]])
+```
+
+\clearpage
+
+```{r fig.cap = "SFORB pathway fit with two-component error, reduced parameter model", dependson = "saem-sforb-path-1-tc-reduced", fig.height = 8}
+plot(saem_sforb_path_1_tc_reduced)
+```
+
+Plots of the remaining fits and listings for all successful fits are shown in
+the Appendix.
+
+
+# Conclusions
+
+Pathway fits with SFO, FOMC, DFOP, SFORB and HS models for the parent compound
+could be successfully performed.
+
+\clearpage
+
+# Acknowledgements
+
+The helpful comments by Janina Wöltjen of the German Environment Agency
+on earlier versions of this document are gratefully acknowledged.
+
+# References
+
+\vspace{1em}
+
+::: {#refs}
+:::
+
+\clearpage
+
+# Appendix
+
+## Plots of hierarchical fits not selected for refinement
+
+```{r fig.cap = "SFO pathway fit with two-component error", dependson = "saem-1", fig.height = 8}
+plot(saem_1[["sfo_path_1", "tc"]])
+```
+
+\clearpage
+
+```{r fig.cap = "FOMC pathway fit with two-component error", dependson = "saem-1", fig.height = 8}
+plot(saem_1[["fomc_path_1", "tc"]])
+```
+
+\clearpage
+
+
+```{r fig.cap = "HS pathway fit with two-component error", dependson = "saem-1", fig.height = 8}
+plot(saem_1[["sforb_path_1", "tc"]])
+```
+
+\clearpage
+
+## Hierarchical model fit listings
+
+### Fits with random effects for all degradation parameters
+
+```{r listings-1, results = "asis", echo = FALSE}
+errmods <- c(const = "constant variance", tc = "two-component error")
+degmods <- c(
+  sfo_path_1 = "SFO path 1",
+  fomc_path_1 = "FOMC path 1",
+  dfop_path_1 = "DFOP path 1",
+  sforb_path_1 = "SFORB path 1",
+  hs_path_1 = "HS path 1")
+for (deg_mod in rownames(saem_1)) {
+  for (err_mod in c("const", "tc")) {
+    fit <- saem_1[[deg_mod, err_mod]]
+    if (!inherits(fit$so, "try-error")) {
+      caption <- paste("Hierarchical", degmods[deg_mod], "fit with", errmods[err_mod])
+      tex_listing(fit, caption)
+    }
+  }
+}
+```
+
+### Improved fit of the SFORB pathway model with two-component error
+
+```{r listings-2, results = "asis", echo = FALSE, dependson = "listings-1"}
+caption <- paste("Hierarchical SFORB pathway fit with two-component error")
+tex_listing(saem_sforb_path_1_tc_reduced, caption)
+```
+
+## Session info
+
+```{r, echo = FALSE}
+parallel::stopCluster(cl)
+sessionInfo()
+```
+
+## Hardware info
+
+```{r, echo = FALSE}
+if(!inherits(try(cpuinfo <- readLines("/proc/cpuinfo")), "try-error")) {
+  cat(gsub("model name\t: ", "CPU model: ", cpuinfo[grep("model name", cpuinfo)[1]]))
+}
+if(!inherits(try(meminfo <- readLines("/proc/meminfo")), "try-error")) {
+  cat(gsub("model name\t: ", "System memory: ", meminfo[grep("MemTotal", meminfo)[1]]))
+}
+```

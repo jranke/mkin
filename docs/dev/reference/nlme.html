@@ -20,7 +20,7 @@ datasets. They are used internally by the nlme.mmkin() method."><meta name="robo
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.1.0</span>
+        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.2.2</span>
       </span>
     </div>
 
@@ -29,7 +29,7 @@ datasets. They are used internally by the nlme.mmkin() method."><meta name="robo
   <a href="../reference/index.html">Functions and data</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -44,10 +44,16 @@ datasets. They are used internally by the nlme.mmkin() method."><meta name="robo
       <a href="../articles/FOCUS_L.html">Example evaluation of FOCUS Laboratory Data L1 to L3</a>
     </li>
     <li>
-      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
+      <a href="../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/multistart.html">Short demo of the multistart method</a>
     </li>
     <li>
       <a href="../articles/web_only/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
     </li>
     <li>
       <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
@@ -56,7 +62,10 @@ datasets. They are used internally by the nlme.mmkin() method."><meta name="robo
       <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
     <li>
-      <a href="../articles/web_only/benchmarks.html">Some benchmark timings</a>
+      <a href="../articles/web_only/benchmarks.html">Benchmark timings for mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/saem_benchmarks.html">Benchmark timings for saem.mmkin</a>
     </li>
   </ul></li>
 <li>
@@ -90,20 +99,25 @@ datasets. They are used internally by the <code><a href="nlme.mmkin.html">nlme.m
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">nlme_function</span><span class="op">(</span><span class="va">object</span><span class="op">)</span>
-
-<span class="fu">nlme_data</span><span class="op">(</span><span class="va">object</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">nlme_function</span><span class="op">(</span><span class="va">object</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">nlme_data</span><span class="op">(</span><span class="va">object</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>object</dt>
 <dd><p>An mmkin row object containing several fits of the same model to different datasets</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A function that can be used with nlme
-A <code><a href="https://rdrr.io/pkg/nlme/man/groupedData.html" class="external-link">groupedData</a></code> object</p>
+    
+
+<p>A function that can be used with nlme</p>
+
+
+<p>A <code><a href="https://rdrr.io/pkg/nlme/man/groupedData.html" class="external-link">groupedData</a></code> object</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -112,78 +126,78 @@ A <code><a href="https://rdrr.io/pkg/nlme/man/groupedData.html" class="external-
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">sampling_times</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">7</span>, <span class="fl">14</span>, <span class="fl">28</span>, <span class="fl">60</span>, <span class="fl">90</span>, <span class="fl">120</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">m_SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">d_SFO_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinpredict.html">mkinpredict</a></span><span class="op">(</span><span class="va">m_SFO</span>,</span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_parent <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>,</span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fl">98</span><span class="op">)</span>, <span class="va">sampling_times</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">d_SFO_1_long</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkin_wide_to_long.html">mkin_wide_to_long</a></span><span class="op">(</span><span class="va">d_SFO_1</span>, time <span class="op">=</span> <span class="st">"time"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">d_SFO_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinpredict.html">mkinpredict</a></span><span class="op">(</span><span class="va">m_SFO</span>,</span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_parent <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span>,</span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fl">102</span><span class="op">)</span>, <span class="va">sampling_times</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">d_SFO_2_long</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkin_wide_to_long.html">mkin_wide_to_long</a></span><span class="op">(</span><span class="va">d_SFO_2</span>, time <span class="op">=</span> <span class="st">"time"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">d_SFO_3</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinpredict.html">mkinpredict</a></span><span class="op">(</span><span class="va">m_SFO</span>,</span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_parent <span class="op">=</span> <span class="fl">0.02</span><span class="op">)</span>,</span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fl">103</span><span class="op">)</span>, <span class="va">sampling_times</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">d_SFO_3_long</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkin_wide_to_long.html">mkin_wide_to_long</a></span><span class="op">(</span><span class="va">d_SFO_3</span>, time <span class="op">=</span> <span class="st">"time"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">d1</span> <span class="op">&lt;-</span> <span class="fu"><a href="add_err.html">add_err</a></span><span class="op">(</span><span class="va">d_SFO_1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="fl">3</span>, n <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">d2</span> <span class="op">&lt;-</span> <span class="fu"><a href="add_err.html">add_err</a></span><span class="op">(</span><span class="va">d_SFO_2</span>, <span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="fl">2</span>, n <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">d3</span> <span class="op">&lt;-</span> <span class="fu"><a href="add_err.html">add_err</a></span><span class="op">(</span><span class="va">d_SFO_3</span>, <span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="fl">4</span>, n <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">ds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>d1 <span class="op">=</span> <span class="va">d1</span>, d2 <span class="op">=</span> <span class="va">d2</span>, d3 <span class="op">=</span> <span class="va">d3</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="mmkin.html">mmkin</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="va">ds</span>, cores <span class="op">=</span> <span class="fl">1</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">mean_dp</span> <span class="op">&lt;-</span> <span class="fu"><a href="mean_degparms.html">mean_degparms</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">grouped_data</span> <span class="op">&lt;-</span> <span class="fu">nlme_data</span><span class="op">(</span><span class="va">f</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">nlme_f</span> <span class="op">&lt;-</span> <span class="fu">nlme_function</span><span class="op">(</span><span class="va">f</span><span class="op">)</span></span>
-<span class="r-in"><span class="co"># These assignments are necessary for these objects to be</span></span>
-<span class="r-in"><span class="co"># visible to nlme and augPred when evaluation is done by</span></span>
-<span class="r-in"><span class="co"># pkgdown to generate the html docs.</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/assign.html" class="external-link">assign</a></span><span class="op">(</span><span class="st">"nlme_f"</span>, <span class="va">nlme_f</span>, <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">globalenv</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/assign.html" class="external-link">assign</a></span><span class="op">(</span><span class="st">"grouped_data"</span>, <span class="va">grouped_data</span>, <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">globalenv</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://svn.r-project.org/R-packages/trunk/nlme/" class="external-link">nlme</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">m_nlme</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="external-link">nlme</a></span><span class="op">(</span><span class="va">value</span> <span class="op">~</span> <span class="fu">nlme_f</span><span class="op">(</span><span class="va">name</span>, <span class="va">time</span>, <span class="va">parent_0</span>, <span class="va">log_k_parent_sink</span><span class="op">)</span>,</span>
-<span class="r-in">  data <span class="op">=</span> <span class="va">grouped_data</span>,</span>
-<span class="r-in">  fixed <span class="op">=</span> <span class="va">parent_0</span> <span class="op">+</span> <span class="va">log_k_parent_sink</span> <span class="op">~</span> <span class="fl">1</span>,</span>
-<span class="r-in">  random <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/pdDiag.html" class="external-link">pdDiag</a></span><span class="op">(</span><span class="va">parent_0</span> <span class="op">+</span> <span class="va">log_k_parent_sink</span> <span class="op">~</span> <span class="fl">1</span><span class="op">)</span>,</span>
-<span class="r-in">  start <span class="op">=</span> <span class="va">mean_dp</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">m_nlme</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">sampling_times</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">7</span>, <span class="fl">14</span>, <span class="fl">28</span>, <span class="fl">60</span>, <span class="fl">90</span>, <span class="fl">120</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">m_SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">d_SFO_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinpredict.html">mkinpredict</a></span><span class="op">(</span><span class="va">m_SFO</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_parent <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fl">98</span><span class="op">)</span>, <span class="va">sampling_times</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">d_SFO_1_long</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkin_wide_to_long.html">mkin_wide_to_long</a></span><span class="op">(</span><span class="va">d_SFO_1</span>, time <span class="op">=</span> <span class="st">"time"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">d_SFO_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinpredict.html">mkinpredict</a></span><span class="op">(</span><span class="va">m_SFO</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_parent <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fl">102</span><span class="op">)</span>, <span class="va">sampling_times</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">d_SFO_2_long</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkin_wide_to_long.html">mkin_wide_to_long</a></span><span class="op">(</span><span class="va">d_SFO_2</span>, time <span class="op">=</span> <span class="st">"time"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">d_SFO_3</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinpredict.html">mkinpredict</a></span><span class="op">(</span><span class="va">m_SFO</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_parent <span class="op">=</span> <span class="fl">0.02</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fl">103</span><span class="op">)</span>, <span class="va">sampling_times</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">d_SFO_3_long</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkin_wide_to_long.html">mkin_wide_to_long</a></span><span class="op">(</span><span class="va">d_SFO_3</span>, time <span class="op">=</span> <span class="st">"time"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">d1</span> <span class="op">&lt;-</span> <span class="fu"><a href="add_err.html">add_err</a></span><span class="op">(</span><span class="va">d_SFO_1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="fl">3</span>, n <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">d2</span> <span class="op">&lt;-</span> <span class="fu"><a href="add_err.html">add_err</a></span><span class="op">(</span><span class="va">d_SFO_2</span>, <span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="fl">2</span>, n <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">d3</span> <span class="op">&lt;-</span> <span class="fu"><a href="add_err.html">add_err</a></span><span class="op">(</span><span class="va">d_SFO_3</span>, <span class="kw">function</span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="fl">4</span>, n <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>d1 <span class="op">=</span> <span class="va">d1</span>, d2 <span class="op">=</span> <span class="va">d2</span>, d3 <span class="op">=</span> <span class="va">d3</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="mmkin.html">mmkin</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="va">ds</span>, cores <span class="op">=</span> <span class="fl">1</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mean_dp</span> <span class="op">&lt;-</span> <span class="fu"><a href="mean_degparms.html">mean_degparms</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">grouped_data</span> <span class="op">&lt;-</span> <span class="fu">nlme_data</span><span class="op">(</span><span class="va">f</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">nlme_f</span> <span class="op">&lt;-</span> <span class="fu">nlme_function</span><span class="op">(</span><span class="va">f</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># These assignments are necessary for these objects to be</span></span></span>
+<span class="r-in"><span><span class="co"># visible to nlme and augPred when evaluation is done by</span></span></span>
+<span class="r-in"><span><span class="co"># pkgdown to generate the html docs.</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/assign.html" class="external-link">assign</a></span><span class="op">(</span><span class="st">"nlme_f"</span>, <span class="va">nlme_f</span>, <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">globalenv</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/assign.html" class="external-link">assign</a></span><span class="op">(</span><span class="st">"grouped_data"</span>, <span class="va">grouped_data</span>, <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">globalenv</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://svn.r-project.org/R-packages/trunk/nlme/" class="external-link">nlme</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">m_nlme</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="external-link">nlme</a></span><span class="op">(</span><span class="va">value</span> <span class="op">~</span> <span class="fu">nlme_f</span><span class="op">(</span><span class="va">name</span>, <span class="va">time</span>, <span class="va">parent_0</span>, <span class="va">log_k_parent_sink</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  data <span class="op">=</span> <span class="va">grouped_data</span>,</span></span>
+<span class="r-in"><span>  fixed <span class="op">=</span> <span class="va">parent_0</span> <span class="op">+</span> <span class="va">log_k_parent_sink</span> <span class="op">~</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>  random <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/pdDiag.html" class="external-link">pdDiag</a></span><span class="op">(</span><span class="va">parent_0</span> <span class="op">+</span> <span class="va">log_k_parent_sink</span> <span class="op">~</span> <span class="fl">1</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  start <span class="op">=</span> <span class="va">mean_dp</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">m_nlme</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Nonlinear mixed-effects model fit by maximum likelihood</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Model: value ~ nlme_f(name, time, parent_0, log_k_parent_sink) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Data: grouped_data </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        AIC      BIC    logLik</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   300.6824 310.2426 -145.3412</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   266.6428 275.8935 -128.3214</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Random effects:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Formula: list(parent_0 ~ 1, log_k_parent_sink ~ 1)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Level: ds</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Structure: Diagonal</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         parent_0 log_k_parent_sink Residual</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> StdDev: 1.697361         0.6801209 3.666073</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            parent_0 log_k_parent_sink Residual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> StdDev: 0.000368491         0.7058039 3.065183</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fixed effects:  parent_0 + log_k_parent_sink ~ 1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       Value Std.Error DF  t-value p-value</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0          100.99378 1.3890416 46 72.70753       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_parent_sink  -3.07521 0.4018589 46 -7.65246       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                       Value Std.Error DF   t-value p-value</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0          101.18323 0.7900461 43 128.07257       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_parent_sink  -3.08708 0.4171755 43  -7.39995       0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Correlation: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                   prnt_0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_parent_sink 0.027 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_parent_sink 0.031 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Standardized Within-Group Residuals:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Min         Q1        Med         Q3        Max </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -1.9942823 -0.5622565  0.1791579  0.7165038  2.0704781 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Min          Q1         Med          Q3         Max </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -2.38427070 -0.52059848  0.03593021  0.39987268  2.73188969 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Observations: 50</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Observations: 47</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Number of Groups: 3 </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/nlme/man/augPred.html" class="external-link">augPred</a></span><span class="op">(</span><span class="va">m_nlme</span>, level <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span>, layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/nlme/man/augPred.html" class="external-link">augPred</a></span><span class="op">(</span><span class="va">m_nlme</span>, level <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span>, layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="nlme-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span class="co"># augPred does not work on fits with more than one state</span></span>
-<span class="r-in"><span class="co"># variable</span></span>
-<span class="r-in"><span class="co">#</span></span>
-<span class="r-in"><span class="co"># The procedure is greatly simplified by the nlme.mmkin function</span></span>
-<span class="r-in"><span class="va">f_nlme</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="external-link">nlme</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_nlme</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="co"># augPred does not work on fits with more than one state</span></span></span>
+<span class="r-in"><span><span class="co"># variable</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
+<span class="r-in"><span><span class="co"># The procedure is greatly simplified by the nlme.mmkin function</span></span></span>
+<span class="r-in"><span><span class="va">f_nlme</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="external-link">nlme</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_nlme</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="nlme-2.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
@@ -199,7 +213,7 @@ A <code><a href="https://rdrr.io/pkg/nlme/man/groupedData.html" class="external-
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

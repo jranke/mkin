@@ -149,7 +149,7 @@ saem.mmkin <- function(object,
   covariates = NULL,
   covariate_models = NULL,
   no_random_effect = NULL,
-  error.init = c(3, 0.1),
+  error.init = c(1, 1),
   nbiter.saemix = c(300, 100),
   control = list(displayProgress = FALSE, print = FALSE,
     nbiter.saemix = nbiter.saemix,
@@ -718,6 +718,7 @@ saemix_model <- function(object, solution_type = "auto",
     covariance.model = covariance.model,
     covariate.model = covariate.model,
     omega.init = omega.init,
+    error.init = error.init,
     ...
   )
   attr(res, "mean_dp_start") <- degparms_optim

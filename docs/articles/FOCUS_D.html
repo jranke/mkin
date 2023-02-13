@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -62,10 +62,13 @@
       <a href="../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
     </li>
     <li>
-      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
+      <a href="../articles/web_only/multistart.html">Short demo of the multistart method</a>
     </li>
     <li>
       <a href="../articles/web_only/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
     </li>
     <li>
       <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
@@ -74,7 +77,10 @@
       <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
     <li>
-      <a href="../articles/web_only/benchmarks.html">Some benchmark timings</a>
+      <a href="../articles/web_only/benchmarks.html">Benchmark timings for mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/saem_benchmarks.html">Benchmark timings for saem.mmkin</a>
     </li>
   </ul>
 </li>
@@ -105,7 +111,7 @@
       <h1 data-toc-skip>Example evaluation of FOCUS Example Dataset D</h1>
                         <h4 data-toc-skip class="author">Johannes Ranke</h4>
             
-            <h4 data-toc-skip class="date">Last change 31 January 2019 (rebuilt 2022-05-18)</h4>
+            <h4 data-toc-skip class="date">Last change 31 January 2019 (rebuilt 2022-11-17)</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jranke/mkin/blob/HEAD/vignettes/FOCUS_D.rmd" class="external-link"><code>vignettes/FOCUS_D.rmd</code></a></small>
       <div class="hidden name"><code>FOCUS_D.rmd</code></div>
@@ -116,207 +122,207 @@
     
 <p>This is just a very simple vignette showing how to fit a degradation model for a parent compound with one transformation product using <code>mkin</code>. After loading the library we look at the data. We have observed concentrations in the column named <code>value</code> at the times specified in column <code>time</code> for the two observed variables named <code>parent</code> and <code>m1</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pkgdown.jrwb.de/mkin/">mkin</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">FOCUS_2006_D</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##      name time  value</span>
-<span class="co">## 1  parent    0  99.46</span>
-<span class="co">## 2  parent    0 102.04</span>
-<span class="co">## 3  parent    1  93.50</span>
-<span class="co">## 4  parent    1  92.50</span>
-<span class="co">## 5  parent    3  63.23</span>
-<span class="co">## 6  parent    3  68.99</span>
-<span class="co">## 7  parent    7  52.32</span>
-<span class="co">## 8  parent    7  55.13</span>
-<span class="co">## 9  parent   14  27.27</span>
-<span class="co">## 10 parent   14  26.64</span>
-<span class="co">## 11 parent   21  11.50</span>
-<span class="co">## 12 parent   21  11.64</span>
-<span class="co">## 13 parent   35   2.85</span>
-<span class="co">## 14 parent   35   2.91</span>
-<span class="co">## 15 parent   50   0.69</span>
-<span class="co">## 16 parent   50   0.63</span>
-<span class="co">## 17 parent   75   0.05</span>
-<span class="co">## 18 parent   75   0.06</span>
-<span class="co">## 19 parent  100     NA</span>
-<span class="co">## 20 parent  100     NA</span>
-<span class="co">## 21 parent  120     NA</span>
-<span class="co">## 22 parent  120     NA</span>
-<span class="co">## 23     m1    0   0.00</span>
-<span class="co">## 24     m1    0   0.00</span>
-<span class="co">## 25     m1    1   4.84</span>
-<span class="co">## 26     m1    1   5.64</span>
-<span class="co">## 27     m1    3  12.91</span>
-<span class="co">## 28     m1    3  12.96</span>
-<span class="co">## 29     m1    7  22.97</span>
-<span class="co">## 30     m1    7  24.47</span>
-<span class="co">## 31     m1   14  41.69</span>
-<span class="co">## 32     m1   14  33.21</span>
-<span class="co">## 33     m1   21  44.37</span>
-<span class="co">## 34     m1   21  46.44</span>
-<span class="co">## 35     m1   35  41.22</span>
-<span class="co">## 36     m1   35  37.95</span>
-<span class="co">## 37     m1   50  41.19</span>
-<span class="co">## 38     m1   50  40.01</span>
-<span class="co">## 39     m1   75  40.09</span>
-<span class="co">## 40     m1   75  33.85</span>
-<span class="co">## 41     m1  100  31.04</span>
-<span class="co">## 42     m1  100  33.13</span>
-<span class="co">## 43     m1  120  25.15</span>
-<span class="co">## 44     m1  120  33.31</span></code></pre>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pkgdown.jrwb.de/mkin/">mkin</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">FOCUS_2006_D</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##      name time  value</span></span>
+<span><span class="co">## 1  parent    0  99.46</span></span>
+<span><span class="co">## 2  parent    0 102.04</span></span>
+<span><span class="co">## 3  parent    1  93.50</span></span>
+<span><span class="co">## 4  parent    1  92.50</span></span>
+<span><span class="co">## 5  parent    3  63.23</span></span>
+<span><span class="co">## 6  parent    3  68.99</span></span>
+<span><span class="co">## 7  parent    7  52.32</span></span>
+<span><span class="co">## 8  parent    7  55.13</span></span>
+<span><span class="co">## 9  parent   14  27.27</span></span>
+<span><span class="co">## 10 parent   14  26.64</span></span>
+<span><span class="co">## 11 parent   21  11.50</span></span>
+<span><span class="co">## 12 parent   21  11.64</span></span>
+<span><span class="co">## 13 parent   35   2.85</span></span>
+<span><span class="co">## 14 parent   35   2.91</span></span>
+<span><span class="co">## 15 parent   50   0.69</span></span>
+<span><span class="co">## 16 parent   50   0.63</span></span>
+<span><span class="co">## 17 parent   75   0.05</span></span>
+<span><span class="co">## 18 parent   75   0.06</span></span>
+<span><span class="co">## 19 parent  100     NA</span></span>
+<span><span class="co">## 20 parent  100     NA</span></span>
+<span><span class="co">## 21 parent  120     NA</span></span>
+<span><span class="co">## 22 parent  120     NA</span></span>
+<span><span class="co">## 23     m1    0   0.00</span></span>
+<span><span class="co">## 24     m1    0   0.00</span></span>
+<span><span class="co">## 25     m1    1   4.84</span></span>
+<span><span class="co">## 26     m1    1   5.64</span></span>
+<span><span class="co">## 27     m1    3  12.91</span></span>
+<span><span class="co">## 28     m1    3  12.96</span></span>
+<span><span class="co">## 29     m1    7  22.97</span></span>
+<span><span class="co">## 30     m1    7  24.47</span></span>
+<span><span class="co">## 31     m1   14  41.69</span></span>
+<span><span class="co">## 32     m1   14  33.21</span></span>
+<span><span class="co">## 33     m1   21  44.37</span></span>
+<span><span class="co">## 34     m1   21  46.44</span></span>
+<span><span class="co">## 35     m1   35  41.22</span></span>
+<span><span class="co">## 36     m1   35  37.95</span></span>
+<span><span class="co">## 37     m1   50  41.19</span></span>
+<span><span class="co">## 38     m1   50  40.01</span></span>
+<span><span class="co">## 39     m1   75  40.09</span></span>
+<span><span class="co">## 40     m1   75  33.85</span></span>
+<span><span class="co">## 41     m1  100  31.04</span></span>
+<span><span class="co">## 42     m1  100  33.13</span></span>
+<span><span class="co">## 43     m1  120  25.15</span></span>
+<span><span class="co">## 44     m1  120  33.31</span></span></code></pre>
 <p>Next we specify the degradation model: The parent compound degrades with simple first-order kinetics (SFO) to one metabolite named m1, which also degrades with SFO kinetics.</p>
 <p>The call to mkinmod returns a degradation model. The differential equations represented in R code can be found in the character vector <code>$diffs</code> of the <code>mkinmod</code> object. If a C compiler (gcc) is installed and functional, the differential equation model will be compiled from auto-generated C code.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">SFO_SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"m1"</span><span class="op">)</span>, m1 <span class="op">=</span> <span class="fu"><a href="../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Temporary DLL for differentials generated and loaded</span></code></pre>
+<code class="sourceCode R"><span><span class="va">SFO_SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"m1"</span><span class="op">)</span>, m1 <span class="op">=</span> <span class="fu"><a href="../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Temporary DLL for differentials generated and loaded</span></span></code></pre>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">SFO_SFO</span><span class="op">$</span><span class="va">diffs</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##                                                    parent </span>
-<span class="co">##                          "d_parent = - k_parent * parent" </span>
-<span class="co">##                                                        m1 </span>
-<span class="co">## "d_m1 = + f_parent_to_m1 * k_parent * parent - k_m1 * m1"</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">SFO_SFO</span><span class="op">$</span><span class="va">diffs</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##                                                    parent </span></span>
+<span><span class="co">##                          "d_parent = - k_parent * parent" </span></span>
+<span><span class="co">##                                                        m1 </span></span>
+<span><span class="co">## "d_m1 = + f_parent_to_m1 * k_parent * parent - k_m1 * m1"</span></span></code></pre>
 <p>We do the fitting without progress report (<code>quiet = TRUE</code>).</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">SFO_SFO</span>, <span class="va">FOCUS_2006_D</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Warning in mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE): Observations with value</span>
-<span class="co">## of zero were removed from the data</span></code></pre>
+<code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">SFO_SFO</span>, <span class="va">FOCUS_2006_D</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Warning in mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE): Observations with value</span></span>
+<span><span class="co">## of zero were removed from the data</span></span></code></pre>
 <p>A plot of the fit including a residual plot for both observed variables is obtained using the <code>plot_sep</code> method for <code>mkinfit</code> objects, which shows separate graphs for all compounds and their residuals.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/plot.mkinfit.html">plot_sep</a></span><span class="op">(</span><span class="va">fit</span>, lpos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"topright"</span>, <span class="st">"bottomright"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.mkinfit.html">plot_sep</a></span><span class="op">(</span><span class="va">fit</span>, lpos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"topright"</span>, <span class="st">"bottomright"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="FOCUS_D_files/figure-html/plot-1.png" width="768"></p>
 <p>Confidence intervals for the parameter estimates are obtained using the <code>mkinparplot</code> function.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/mkinparplot.html">mkinparplot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/mkinparplot.html">mkinparplot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
 <p><img src="FOCUS_D_files/figure-html/plot_2-1.png" width="768"></p>
 <p>A comprehensive report of the results is obtained using the <code>summary</code> method for <code>mkinfit</code> objects.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## mkin version used for fitting:    1.1.0 </span>
-<span class="co">## R version used for fitting:       4.2.0 </span>
-<span class="co">## Date of fit:     Wed May 18 20:42:29 2022 </span>
-<span class="co">## Date of summary: Wed May 18 20:42:30 2022 </span>
-<span class="co">## </span>
-<span class="co">## Equations:</span>
-<span class="co">## d_parent/dt = - k_parent * parent</span>
-<span class="co">## d_m1/dt = + f_parent_to_m1 * k_parent * parent - k_m1 * m1</span>
-<span class="co">## </span>
-<span class="co">## Model predictions using solution type analytical </span>
-<span class="co">## </span>
-<span class="co">## Fitted using 401 model solutions performed in 0.144 s</span>
-<span class="co">## </span>
-<span class="co">## Error model: Constant variance </span>
-<span class="co">## </span>
-<span class="co">## Error model algorithm: OLS </span>
-<span class="co">## </span>
-<span class="co">## Starting values for parameters to be optimised:</span>
-<span class="co">##                   value   type</span>
-<span class="co">## parent_0       100.7500  state</span>
-<span class="co">## k_parent         0.1000 deparm</span>
-<span class="co">## k_m1             0.1001 deparm</span>
-<span class="co">## f_parent_to_m1   0.5000 deparm</span>
-<span class="co">## </span>
-<span class="co">## Starting values for the transformed parameters actually optimised:</span>
-<span class="co">##                      value lower upper</span>
-<span class="co">## parent_0        100.750000  -Inf   Inf</span>
-<span class="co">## log_k_parent     -2.302585  -Inf   Inf</span>
-<span class="co">## log_k_m1         -2.301586  -Inf   Inf</span>
-<span class="co">## f_parent_qlogis   0.000000  -Inf   Inf</span>
-<span class="co">## </span>
-<span class="co">## Fixed parameter values:</span>
-<span class="co">##      value  type</span>
-<span class="co">## m1_0     0 state</span>
-<span class="co">## </span>
-<span class="co">## </span>
-<span class="co">## Warning(s): </span>
-<span class="co">## Observations with value of zero were removed from the data</span>
-<span class="co">## </span>
-<span class="co">## Results:</span>
-<span class="co">## </span>
-<span class="co">##        AIC      BIC    logLik</span>
-<span class="co">##   204.4486 212.6365 -97.22429</span>
-<span class="co">## </span>
-<span class="co">## Optimised, transformed parameters with symmetric confidence intervals:</span>
-<span class="co">##                 Estimate Std. Error   Lower    Upper</span>
-<span class="co">## parent_0        99.60000    1.57000 96.4000 102.8000</span>
-<span class="co">## log_k_parent    -2.31600    0.04087 -2.3990  -2.2330</span>
-<span class="co">## log_k_m1        -5.24700    0.13320 -5.5180  -4.9770</span>
-<span class="co">## f_parent_qlogis  0.05792    0.08926 -0.1237   0.2395</span>
-<span class="co">## sigma            3.12600    0.35850  2.3960   3.8550</span>
-<span class="co">## </span>
-<span class="co">## Parameter correlation:</span>
-<span class="co">##                   parent_0 log_k_parent   log_k_m1 f_parent_qlogis      sigma</span>
-<span class="co">## parent_0         1.000e+00    5.174e-01 -1.688e-01      -5.471e-01 -1.174e-06</span>
-<span class="co">## log_k_parent     5.174e-01    1.000e+00 -3.263e-01      -5.426e-01 -8.492e-07</span>
-<span class="co">## log_k_m1        -1.688e-01   -3.263e-01  1.000e+00       7.478e-01  8.220e-07</span>
-<span class="co">## f_parent_qlogis -5.471e-01   -5.426e-01  7.478e-01       1.000e+00  1.307e-06</span>
-<span class="co">## sigma           -1.174e-06   -8.492e-07  8.220e-07       1.307e-06  1.000e+00</span>
-<span class="co">## </span>
-<span class="co">## Backtransformed parameters:</span>
-<span class="co">## Confidence intervals for internally transformed parameters are asymmetric.</span>
-<span class="co">## t-test (unrealistically) based on the assumption of normal distribution</span>
-<span class="co">## for estimators of untransformed parameters.</span>
-<span class="co">##                 Estimate t value    Pr(&gt;t)     Lower     Upper</span>
-<span class="co">## parent_0       99.600000  63.430 2.298e-36 96.400000 1.028e+02</span>
-<span class="co">## k_parent        0.098700  24.470 4.955e-23  0.090820 1.073e-01</span>
-<span class="co">## k_m1            0.005261   7.510 6.165e-09  0.004012 6.898e-03</span>
-<span class="co">## f_parent_to_m1  0.514500  23.070 3.104e-22  0.469100 5.596e-01</span>
-<span class="co">## sigma           3.126000   8.718 2.235e-10  2.396000 3.855e+00</span>
-<span class="co">## </span>
-<span class="co">## FOCUS Chi2 error levels in percent:</span>
-<span class="co">##          err.min n.optim df</span>
-<span class="co">## All data   6.398       4 15</span>
-<span class="co">## parent     6.459       2  7</span>
-<span class="co">## m1         4.690       2  8</span>
-<span class="co">## </span>
-<span class="co">## Resulting formation fractions:</span>
-<span class="co">##                 ff</span>
-<span class="co">## parent_m1   0.5145</span>
-<span class="co">## parent_sink 0.4855</span>
-<span class="co">## </span>
-<span class="co">## Estimated disappearance times:</span>
-<span class="co">##           DT50   DT90</span>
-<span class="co">## parent   7.023  23.33</span>
-<span class="co">## m1     131.761 437.70</span>
-<span class="co">## </span>
-<span class="co">## Data:</span>
-<span class="co">##  time variable observed predicted   residual</span>
-<span class="co">##     0   parent    99.46  99.59848 -1.385e-01</span>
-<span class="co">##     0   parent   102.04  99.59848  2.442e+00</span>
-<span class="co">##     1   parent    93.50  90.23787  3.262e+00</span>
-<span class="co">##     1   parent    92.50  90.23787  2.262e+00</span>
-<span class="co">##     3   parent    63.23  74.07319 -1.084e+01</span>
-<span class="co">##     3   parent    68.99  74.07319 -5.083e+00</span>
-<span class="co">##     7   parent    52.32  49.91207  2.408e+00</span>
-<span class="co">##     7   parent    55.13  49.91207  5.218e+00</span>
-<span class="co">##    14   parent    27.27  25.01258  2.257e+00</span>
-<span class="co">##    14   parent    26.64  25.01258  1.627e+00</span>
-<span class="co">##    21   parent    11.50  12.53462 -1.035e+00</span>
-<span class="co">##    21   parent    11.64  12.53462 -8.946e-01</span>
-<span class="co">##    35   parent     2.85   3.14787 -2.979e-01</span>
-<span class="co">##    35   parent     2.91   3.14787 -2.379e-01</span>
-<span class="co">##    50   parent     0.69   0.71624 -2.624e-02</span>
-<span class="co">##    50   parent     0.63   0.71624 -8.624e-02</span>
-<span class="co">##    75   parent     0.05   0.06074 -1.074e-02</span>
-<span class="co">##    75   parent     0.06   0.06074 -7.382e-04</span>
-<span class="co">##     1       m1     4.84   4.80296  3.704e-02</span>
-<span class="co">##     1       m1     5.64   4.80296  8.370e-01</span>
-<span class="co">##     3       m1    12.91  13.02400 -1.140e-01</span>
-<span class="co">##     3       m1    12.96  13.02400 -6.400e-02</span>
-<span class="co">##     7       m1    22.97  25.04476 -2.075e+00</span>
-<span class="co">##     7       m1    24.47  25.04476 -5.748e-01</span>
-<span class="co">##    14       m1    41.69  36.69003  5.000e+00</span>
-<span class="co">##    14       m1    33.21  36.69003 -3.480e+00</span>
-<span class="co">##    21       m1    44.37  41.65310  2.717e+00</span>
-<span class="co">##    21       m1    46.44  41.65310  4.787e+00</span>
-<span class="co">##    35       m1    41.22  43.31313 -2.093e+00</span>
-<span class="co">##    35       m1    37.95  43.31313 -5.363e+00</span>
-<span class="co">##    50       m1    41.19  41.21832 -2.832e-02</span>
-<span class="co">##    50       m1    40.01  41.21832 -1.208e+00</span>
-<span class="co">##    75       m1    40.09  36.44704  3.643e+00</span>
-<span class="co">##    75       m1    33.85  36.44704 -2.597e+00</span>
-<span class="co">##   100       m1    31.04  31.98162 -9.416e-01</span>
-<span class="co">##   100       m1    33.13  31.98162  1.148e+00</span>
-<span class="co">##   120       m1    25.15  28.78984 -3.640e+00</span>
-<span class="co">##   120       m1    33.31  28.78984  4.520e+00</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## mkin version used for fitting:    1.2.0 </span></span>
+<span><span class="co">## R version used for fitting:       4.2.2 </span></span>
+<span><span class="co">## Date of fit:     Thu Nov 17 14:04:21 2022 </span></span>
+<span><span class="co">## Date of summary: Thu Nov 17 14:04:21 2022 </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Equations:</span></span>
+<span><span class="co">## d_parent/dt = - k_parent * parent</span></span>
+<span><span class="co">## d_m1/dt = + f_parent_to_m1 * k_parent * parent - k_m1 * m1</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Model predictions using solution type analytical </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Fitted using 401 model solutions performed in 0.154 s</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Error model: Constant variance </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Error model algorithm: OLS </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Starting values for parameters to be optimised:</span></span>
+<span><span class="co">##                   value   type</span></span>
+<span><span class="co">## parent_0       100.7500  state</span></span>
+<span><span class="co">## k_parent         0.1000 deparm</span></span>
+<span><span class="co">## k_m1             0.1001 deparm</span></span>
+<span><span class="co">## f_parent_to_m1   0.5000 deparm</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Starting values for the transformed parameters actually optimised:</span></span>
+<span><span class="co">##                      value lower upper</span></span>
+<span><span class="co">## parent_0        100.750000  -Inf   Inf</span></span>
+<span><span class="co">## log_k_parent     -2.302585  -Inf   Inf</span></span>
+<span><span class="co">## log_k_m1         -2.301586  -Inf   Inf</span></span>
+<span><span class="co">## f_parent_qlogis   0.000000  -Inf   Inf</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Fixed parameter values:</span></span>
+<span><span class="co">##      value  type</span></span>
+<span><span class="co">## m1_0     0 state</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Warning(s): </span></span>
+<span><span class="co">## Observations with value of zero were removed from the data</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Results:</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##        AIC      BIC    logLik</span></span>
+<span><span class="co">##   204.4486 212.6365 -97.22429</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Optimised, transformed parameters with symmetric confidence intervals:</span></span>
+<span><span class="co">##                 Estimate Std. Error   Lower    Upper</span></span>
+<span><span class="co">## parent_0        99.60000    1.57000 96.4000 102.8000</span></span>
+<span><span class="co">## log_k_parent    -2.31600    0.04087 -2.3990  -2.2330</span></span>
+<span><span class="co">## log_k_m1        -5.24700    0.13320 -5.5180  -4.9770</span></span>
+<span><span class="co">## f_parent_qlogis  0.05792    0.08926 -0.1237   0.2395</span></span>
+<span><span class="co">## sigma            3.12600    0.35850  2.3960   3.8550</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Parameter correlation:</span></span>
+<span><span class="co">##                   parent_0 log_k_parent   log_k_m1 f_parent_qlogis      sigma</span></span>
+<span><span class="co">## parent_0         1.000e+00    5.174e-01 -1.688e-01      -5.471e-01 -1.172e-06</span></span>
+<span><span class="co">## log_k_parent     5.174e-01    1.000e+00 -3.263e-01      -5.426e-01 -8.483e-07</span></span>
+<span><span class="co">## log_k_m1        -1.688e-01   -3.263e-01  1.000e+00       7.478e-01  8.205e-07</span></span>
+<span><span class="co">## f_parent_qlogis -5.471e-01   -5.426e-01  7.478e-01       1.000e+00  1.305e-06</span></span>
+<span><span class="co">## sigma           -1.172e-06   -8.483e-07  8.205e-07       1.305e-06  1.000e+00</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Backtransformed parameters:</span></span>
+<span><span class="co">## Confidence intervals for internally transformed parameters are asymmetric.</span></span>
+<span><span class="co">## t-test (unrealistically) based on the assumption of normal distribution</span></span>
+<span><span class="co">## for estimators of untransformed parameters.</span></span>
+<span><span class="co">##                 Estimate t value    Pr(&gt;t)     Lower     Upper</span></span>
+<span><span class="co">## parent_0       99.600000  63.430 2.298e-36 96.400000 1.028e+02</span></span>
+<span><span class="co">## k_parent        0.098700  24.470 4.955e-23  0.090820 1.073e-01</span></span>
+<span><span class="co">## k_m1            0.005261   7.510 6.165e-09  0.004012 6.898e-03</span></span>
+<span><span class="co">## f_parent_to_m1  0.514500  23.070 3.104e-22  0.469100 5.596e-01</span></span>
+<span><span class="co">## sigma           3.126000   8.718 2.235e-10  2.396000 3.855e+00</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## FOCUS Chi2 error levels in percent:</span></span>
+<span><span class="co">##          err.min n.optim df</span></span>
+<span><span class="co">## All data   6.398       4 15</span></span>
+<span><span class="co">## parent     6.459       2  7</span></span>
+<span><span class="co">## m1         4.690       2  8</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Resulting formation fractions:</span></span>
+<span><span class="co">##                 ff</span></span>
+<span><span class="co">## parent_m1   0.5145</span></span>
+<span><span class="co">## parent_sink 0.4855</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Estimated disappearance times:</span></span>
+<span><span class="co">##           DT50   DT90</span></span>
+<span><span class="co">## parent   7.023  23.33</span></span>
+<span><span class="co">## m1     131.761 437.70</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Data:</span></span>
+<span><span class="co">##  time variable observed predicted   residual</span></span>
+<span><span class="co">##     0   parent    99.46  99.59848 -1.385e-01</span></span>
+<span><span class="co">##     0   parent   102.04  99.59848  2.442e+00</span></span>
+<span><span class="co">##     1   parent    93.50  90.23787  3.262e+00</span></span>
+<span><span class="co">##     1   parent    92.50  90.23787  2.262e+00</span></span>
+<span><span class="co">##     3   parent    63.23  74.07319 -1.084e+01</span></span>
+<span><span class="co">##     3   parent    68.99  74.07319 -5.083e+00</span></span>
+<span><span class="co">##     7   parent    52.32  49.91207  2.408e+00</span></span>
+<span><span class="co">##     7   parent    55.13  49.91207  5.218e+00</span></span>
+<span><span class="co">##    14   parent    27.27  25.01258  2.257e+00</span></span>
+<span><span class="co">##    14   parent    26.64  25.01258  1.627e+00</span></span>
+<span><span class="co">##    21   parent    11.50  12.53462 -1.035e+00</span></span>
+<span><span class="co">##    21   parent    11.64  12.53462 -8.946e-01</span></span>
+<span><span class="co">##    35   parent     2.85   3.14787 -2.979e-01</span></span>
+<span><span class="co">##    35   parent     2.91   3.14787 -2.379e-01</span></span>
+<span><span class="co">##    50   parent     0.69   0.71624 -2.624e-02</span></span>
+<span><span class="co">##    50   parent     0.63   0.71624 -8.624e-02</span></span>
+<span><span class="co">##    75   parent     0.05   0.06074 -1.074e-02</span></span>
+<span><span class="co">##    75   parent     0.06   0.06074 -7.382e-04</span></span>
+<span><span class="co">##     1       m1     4.84   4.80296  3.704e-02</span></span>
+<span><span class="co">##     1       m1     5.64   4.80296  8.370e-01</span></span>
+<span><span class="co">##     3       m1    12.91  13.02400 -1.140e-01</span></span>
+<span><span class="co">##     3       m1    12.96  13.02400 -6.400e-02</span></span>
+<span><span class="co">##     7       m1    22.97  25.04476 -2.075e+00</span></span>
+<span><span class="co">##     7       m1    24.47  25.04476 -5.748e-01</span></span>
+<span><span class="co">##    14       m1    41.69  36.69003  5.000e+00</span></span>
+<span><span class="co">##    14       m1    33.21  36.69003 -3.480e+00</span></span>
+<span><span class="co">##    21       m1    44.37  41.65310  2.717e+00</span></span>
+<span><span class="co">##    21       m1    46.44  41.65310  4.787e+00</span></span>
+<span><span class="co">##    35       m1    41.22  43.31313 -2.093e+00</span></span>
+<span><span class="co">##    35       m1    37.95  43.31313 -5.363e+00</span></span>
+<span><span class="co">##    50       m1    41.19  41.21832 -2.832e-02</span></span>
+<span><span class="co">##    50       m1    40.01  41.21832 -1.208e+00</span></span>
+<span><span class="co">##    75       m1    40.09  36.44704  3.643e+00</span></span>
+<span><span class="co">##    75       m1    33.85  36.44704 -2.597e+00</span></span>
+<span><span class="co">##   100       m1    31.04  31.98162 -9.416e-01</span></span>
+<span><span class="co">##   100       m1    33.13  31.98162  1.148e+00</span></span>
+<span><span class="co">##   120       m1    25.15  28.78984 -3.640e+00</span></span>
+<span><span class="co">##   120       m1    33.31  28.78984  4.520e+00</span></span></code></pre>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -334,7 +340,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>

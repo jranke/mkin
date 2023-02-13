@@ -37,6 +37,7 @@ logLik.mkinfit <- function(object, ...) {
   val <- object$logLik
   # Number of estimated parameters
   attr(val, "df") <- length(object$bparms.optim) + length(object$errparms)
+  attr(val, "nobs") <- nobs(object)
   class(val) <- "logLik"
   return(val)
 }

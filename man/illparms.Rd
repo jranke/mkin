@@ -22,7 +22,14 @@ illparms(object, ...)
 
 \method{print}{illparms.mmkin}(x, ...)
 
-\method{illparms}{saem.mmkin}(object, conf.level = 0.95, random = TRUE, errmod = TRUE, ...)
+\method{illparms}{saem.mmkin}(
+  object,
+  conf.level = 0.95,
+  random = TRUE,
+  errmod = TRUE,
+  slopes = TRUE,
+  ...
+)
 
 \method{print}{illparms.saem.mmkin}(x, ...)
 
@@ -42,6 +49,10 @@ illparms(object, ...)
 \item{random}{For hierarchical fits, should random effects be tested?}
 
 \item{errmod}{For hierarchical fits, should error model parameters be
+tested?}
+
+\item{slopes}{For hierarchical \link{saem} fits using saemix as backend,
+should slope parameters in the covariate model(starting with 'beta_') be
 tested?}
 }
 \value{

@@ -7,7 +7,7 @@
 read_spreadsheet(
   path,
   valid_datasets = "all",
-  parent_only = TRUE,
+  parent_only = FALSE,
   normalize = TRUE
 )
 }

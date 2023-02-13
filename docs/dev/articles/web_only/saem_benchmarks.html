@@ -34,14 +34,14 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">mkin</a>
-        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.2.0</span>
+        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.2.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../../reference/index.html">Functions and data</a>
+  <a href="../../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -53,6 +53,9 @@
 <li>
       <a href="../../articles/mkin.html">Introduction to mkin</a>
     </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Example evaluations with (generalised) nonlinear least squares</li>
     <li>
       <a href="../../articles/FOCUS_D.html">Example evaluation of FOCUS Example Dataset D</a>
     </li>
@@ -60,28 +63,46 @@
       <a href="../../articles/FOCUS_L.html">Example evaluation of FOCUS Laboratory Data L1 to L3</a>
     </li>
     <li>
-      <a href="../../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
+      <a href="../../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
+    </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Example evaluations with hierarchical models (nonlinear mixed-effects models)</li>
+    <li>
+      <a href="../../articles/prebuilt/2022_dmta_parent.html">Testing hierarchical parent degradation kinetics with residue data on dimethenamid and dimethenamid-P</a>
+    </li>
+    <li>
+      <a href="../../articles/prebuilt/2022_dmta_pathway.html">Testing hierarchical pathway kinetics with residue data on dimethenamid and dimethenamid-P</a>
+    </li>
+    <li>
+      <a href="../../articles/prebuilt/2022_cyan_pathway.html">Testing hierarchical pathway kinetics with residue data on cyantraniliprole</a>
+    </li>
+    <li>
+      <a href="../../articles/web_only/dimethenamid_2018.html">Comparison of saemix and nlme evaluations of dimethenamid data from 2018</a>
     </li>
     <li>
       <a href="../../articles/web_only/multistart.html">Short demo of the multistart method</a>
     </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Performance</li>
     <li>
       <a href="../../articles/web_only/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
-    </li>
-    <li>
-      <a href="../../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
-    </li>
-    <li>
-      <a href="../../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
-    </li>
-    <li>
-      <a href="../../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
     <li>
       <a href="../../articles/web_only/benchmarks.html">Benchmark timings for mkin</a>
     </li>
     <li>
       <a href="../../articles/web_only/saem_benchmarks.html">Benchmark timings for saem.mmkin</a>
+    </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Miscellaneous</li>
+    <li>
+      <a href="../../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
+    </li>
+    <li>
+      <a href="../../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
   </ul>
 </li>
@@ -106,13 +127,15 @@
 
       
 
-      </header><script src="saem_benchmarks_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Benchmark timings for saem.mmkin</h1>
-                        <h4 data-toc-skip class="author">Johannes Ranke</h4>
+                        <h4 data-toc-skip class="author">Johannes
+Ranke</h4>
             
-            <h4 data-toc-skip class="date">Last change 14 November 2022 (rebuilt 2022-11-15)</h4>
+            <h4 data-toc-skip class="date">Last change 14 November 2022
+(rebuilt 2023-01-28)</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jranke/mkin/blob/HEAD/vignettes/web_only/saem_benchmarks.rmd" class="external-link"><code>vignettes/web_only/saem_benchmarks.rmd</code></a></small>
       <div class="hidden name"><code>saem_benchmarks.rmd</code></div>
@@ -121,15 +144,19 @@
 
     
     
-<p>Each system is characterized by operating system type, CPU type, mkin version, saemix version and R version. A compiler was available, so if no analytical solution was available, compiled ODE models are used.</p>
-<p>Every fit is only performed once, so the accuracy of the benchmarks is limited.</p>
+<p>Each system is characterized by operating system type, CPU type, mkin
+version, saemix version and R version. A compiler was available, so if
+no analytical solution was available, compiled ODE models are used.</p>
+<p>Every fit is only performed once, so the accuracy of the benchmarks
+is limited.</p>
 <p>For the initial mmkin fits, we use all available cores.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n_cores</span> <span class="op">&lt;-</span> <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">detectCores</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="test-data">Test data<a class="anchor" aria-label="anchor" href="#test-data"></a>
 </h2>
-<p>Please refer to the vignette <code>dimethenamid_2018</code> for an explanation of the following preprocessing.</p>
+<p>Please refer to the vignette <code>dimethenamid_2018</code> for an
+explanation of the following preprocessing.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dmta_ds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">7</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">ds_i</span> <span class="op">&lt;-</span> <span class="va">dimethenamid_2018</span><span class="op">$</span><span class="va">ds</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">data</span></span>
@@ -232,19 +259,24 @@
 </tr>
 </tbody>
 </table>
-<p>The above model comparison suggests to use the SFORB model with two-component error. For comparison, we keep the DFOP model with two-component error, as it competes with SFORB for biphasic curves.</p>
+<p>The above model comparison suggests to use the SFORB model with
+two-component error. For comparison, we keep the DFOP model with
+two-component error, as it competes with SFORB for biphasic curves.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/illparms.html">illparms</a></span><span class="op">(</span><span class="va">dfop_tc</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "sd(log_k2)"</span></span></code></pre>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/illparms.html">illparms</a></span><span class="op">(</span><span class="va">sforb_tc</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "sd(log_k_DMTA_bound_free)"</span></span></code></pre>
-<p>For these two models, random effects for the transformed parameters <code>k2</code> and <code>k_DMTA_bound_free</code> could not be quantified.</p>
+<p>For these two models, random effects for the transformed parameters
+<code>k2</code> and <code>k_DMTA_bound_free</code> could not be
+quantified.</p>
 </div>
 <div class="section level3">
 <h3 id="one-metabolite">One metabolite<a class="anchor" aria-label="anchor" href="#one-metabolite"></a>
 </h3>
-<p>We remove parameters that were found to be ill-defined in the parent only fits.</p>
+<p>We remove parameters that were found to be ill-defined in the parent
+only fits.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">one_met_mods</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  DFOP_SFO <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span></span>
@@ -267,7 +299,11 @@
 <div class="section level3">
 <h3 id="three-metabolites">Three metabolites<a class="anchor" aria-label="anchor" href="#three-metabolites"></a>
 </h3>
-<p>For the case of three metabolites, we only keep the SFORB model in order to limit the time for compiling this vignette, and as fitting in parallel may disturb the benchmark. Again, we do not include random effects that were ill-defined in previous fits of subsets of the degradation model.</p>
+<p>For the case of three metabolites, we only keep the SFORB model in
+order to limit the time for compiling this vignette, and as fitting in
+parallel may disturb the benchmark. Again, we do not include random
+effects that were ill-defined in previous fits of subsets of the
+degradation model.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/illparms.html">illparms</a></span><span class="op">(</span><span class="va">sforb_sfo_tc</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
@@ -288,12 +324,24 @@
 <div class="section level2">
 <h2 id="results">Results<a class="anchor" aria-label="anchor" href="#results"></a>
 </h2>
-<p>Benchmarks for all available error models are shown. They are intended for improving mkin, not for comparing CPUs or operating systems. All trademarks belong to their respective owners.</p>
+<p>Benchmarks for all available error models are shown. They are
+intended for improving mkin, not for comparing CPUs or operating
+systems. All trademarks belong to their respective owners.</p>
 <div class="section level3">
 <h3 id="parent-only-1">Parent only<a class="anchor" aria-label="anchor" href="#parent-only-1"></a>
 </h3>
 <p>Constant variance for SFO, DFOP, SFORB and HS.</p>
-<table class="table">
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="42%">
+<col width="8%">
+<col width="8%">
+<col width="9%">
+<col width="8%">
+<col width="8%">
+<col width="8%">
+<col width="8%">
+</colgroup>
 <thead><tr class="header">
 <th align="left">CPU</th>
 <th align="left">OS</th>
@@ -304,19 +352,51 @@
 <th align="right">t3</th>
 <th align="right">t4</th>
 </tr></thead>
-<tbody><tr class="odd">
+<tbody>
+<tr class="odd">
 <td align="left">Ryzen 7 1700</td>
 <td align="left">Linux</td>
 <td align="left">1.2.0</td>
 <td align="left">3.2</td>
-<td align="right">2.11</td>
-<td align="right">4.632</td>
-<td align="right">4.264</td>
-<td align="right">4.93</td>
-</tr></tbody>
+<td align="right">2.140</td>
+<td align="right">4.626</td>
+<td align="right">4.328</td>
+<td align="right">4.998</td>
+</tr>
+<tr class="even">
+<td align="left">Ryzen 7 1700</td>
+<td align="left">Linux</td>
+<td align="left">1.2.2</td>
+<td align="left">3.2</td>
+<td align="right">2.427</td>
+<td align="right">4.550</td>
+<td align="right">4.217</td>
+<td align="right">4.851</td>
+</tr>
+<tr class="odd">
+<td align="left">Ryzen 9 7950X 16-Core Processor</td>
+<td align="left">Linux</td>
+<td align="left">1.2.2</td>
+<td align="left">3.2</td>
+<td align="right">1.470</td>
+<td align="right">2.263</td>
+<td align="right">1.840</td>
+<td align="right">2.299</td>
+</tr>
+</tbody>
 </table>
 <p>Two-component error fits for SFO, DFOP, SFORB and HS.</p>
-<table class="table">
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="42%">
+<col width="8%">
+<col width="8%">
+<col width="9%">
+<col width="8%">
+<col width="8%">
+<col width="8%">
+<col width="8%">
+</colgroup>
 <thead><tr class="header">
 <th align="left">CPU</th>
 <th align="left">OS</th>
@@ -327,16 +407,38 @@
 <th align="right">t7</th>
 <th align="right">t8</th>
 </tr></thead>
-<tbody><tr class="odd">
+<tbody>
+<tr class="odd">
 <td align="left">Ryzen 7 1700</td>
 <td align="left">Linux</td>
 <td align="left">1.2.0</td>
 <td align="left">3.2</td>
-<td align="right">5.602</td>
-<td align="right">7.373</td>
-<td align="right">7.815</td>
-<td align="right">7.831</td>
-</tr></tbody>
+<td align="right">5.678</td>
+<td align="right">7.441</td>
+<td align="right">8.000</td>
+<td align="right">7.980</td>
+</tr>
+<tr class="even">
+<td align="left">Ryzen 7 1700</td>
+<td align="left">Linux</td>
+<td align="left">1.2.2</td>
+<td align="left">3.2</td>
+<td align="right">5.352</td>
+<td align="right">7.201</td>
+<td align="right">8.174</td>
+<td align="right">8.401</td>
+</tr>
+<tr class="odd">
+<td align="left">Ryzen 9 7950X 16-Core Processor</td>
+<td align="left">Linux</td>
+<td align="left">1.2.2</td>
+<td align="left">3.2</td>
+<td align="right">2.118</td>
+<td align="right">3.528</td>
+<td align="right">3.295</td>
+<td align="right">3.157</td>
+</tr>
+</tbody>
 </table>
 </div>
 <div class="section level3">
@@ -344,6 +446,14 @@
 </h3>
 <p>Two-component error for DFOP-SFO and SFORB-SFO.</p>
 <table class="table">
+<colgroup>
+<col width="48%">
+<col width="9%">
+<col width="9%">
+<col width="10%">
+<col width="10%">
+<col width="12%">
+</colgroup>
 <thead><tr class="header">
 <th align="left">CPU</th>
 <th align="left">OS</th>
@@ -352,14 +462,32 @@
 <th align="right">t9</th>
 <th align="right">t10</th>
 </tr></thead>
-<tbody><tr class="odd">
+<tbody>
+<tr class="odd">
 <td align="left">Ryzen 7 1700</td>
 <td align="left">Linux</td>
 <td align="left">1.2.0</td>
 <td align="left">3.2</td>
-<td align="right">24.014</td>
-<td align="right">749.699</td>
-</tr></tbody>
+<td align="right">24.465</td>
+<td align="right">800.266</td>
+</tr>
+<tr class="even">
+<td align="left">Ryzen 7 1700</td>
+<td align="left">Linux</td>
+<td align="left">1.2.2</td>
+<td align="left">3.2</td>
+<td align="right">25.193</td>
+<td align="right">798.580</td>
+</tr>
+<tr class="odd">
+<td align="left">Ryzen 9 7950X 16-Core Processor</td>
+<td align="left">Linux</td>
+<td align="left">1.2.2</td>
+<td align="left">3.2</td>
+<td align="right">12.336</td>
+<td align="right">277.666</td>
+</tr>
+</tbody>
 </table>
 </div>
 <div class="section level3">
@@ -374,13 +502,29 @@
 <th align="left">saemix</th>
 <th align="right">t11</th>
 </tr></thead>
-<tbody><tr class="odd">
+<tbody>
+<tr class="odd">
 <td align="left">Ryzen 7 1700</td>
 <td align="left">Linux</td>
 <td align="left">1.2.0</td>
 <td align="left">3.2</td>
-<td align="right">1249.834</td>
-</tr></tbody>
+<td align="right">1289.198</td>
+</tr>
+<tr class="even">
+<td align="left">Ryzen 7 1700</td>
+<td align="left">Linux</td>
+<td align="left">1.2.2</td>
+<td align="left">3.2</td>
+<td align="right">1312.445</td>
+</tr>
+<tr class="odd">
+<td align="left">Ryzen 9 7950X 16-Core Processor</td>
+<td align="left">Linux</td>
+<td align="left">1.2.2</td>
+<td align="left">3.2</td>
+<td align="right">459.051</td>
+</tr>
+</tbody>
 </table>
 </div>
 </div>
@@ -403,7 +547,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

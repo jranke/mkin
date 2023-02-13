@@ -75,10 +75,21 @@
 #' f_saem_dfop_sfo <- saem(f_mmkin_dfop_sfo)
 #' print(f_saem_dfop_sfo)
 #' illparms(f_saem_dfop_sfo)
-#' f_saem_dfop_sfo_2 <- update(f_saem_dfop_sfo, covariance.model = diag(c(0, 0, 1, 1, 1, 0)))
+#' f_saem_dfop_sfo_2 <- update(f_saem_dfop_sfo,
+#'   no_random_effect = c("parent_0", "log_k_m1"))
 #' illparms(f_saem_dfop_sfo_2)
 #' intervals(f_saem_dfop_sfo_2)
 #' summary(f_saem_dfop_sfo_2, data = TRUE)
+#' # Add a correlation between random effects of g and k2
+#' cov_model_3 <- f_saem_dfop_sfo_2$so@model@covariance.model
+#' cov_model_3["log_k2", "g_qlogis"] <- 1
+#' cov_model_3["g_qlogis", "log_k2"] <- 1
+#' f_saem_dfop_sfo_3 <- update(f_saem_dfop_sfo,
+#'   covariance.model = cov_model_3)
+#' intervals(f_saem_dfop_sfo_3)
+#' # The correlation does not improve the fit judged by AIC and BIC, although
+#' # the likelihood is higher with the additional parameter
+#' anova(f_saem_dfop_sfo, f_saem_dfop_sfo_2, f_saem_dfop_sfo_3)
 #' }
 #'
 #' @export
@@ -136,10 +147,11 @@ summary.saem.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes =
   }
 
   #  Correlation of fixed effects (inspired by summary.nlme)
-  varFix <- try(vcov(object$so)[1:n_fixed, 1:n_fixed])
-  if (inherits(varFix, "try-error")) {
+  cov_so <- try(solve(object$so@results@fim), silent = TRUE)
+  if (inherits(cov_so, "try-error")) {
     object$corFixed <- NA
   } else {
+    varFix <- cov_so[1:n_fixed, 1:n_fixed]
     stdFix <- sqrt(diag(varFix))
     object$corFixed <- array(
       t(varFix/stdFix)/stdFix,
@@ -149,7 +161,8 @@ summary.saem.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes =
 
   # Random effects
   sdnames <- intersect(rownames(conf.int), paste0("SD.", pnames))
-  confint_ranef <- as.matrix(conf.int[sdnames, c("estimate", "lower", "upper")])
+  corrnames <- grep("^Corr.", rownames(conf.int), value = TRUE)
+  confint_ranef <- as.matrix(conf.int[c(sdnames, corrnames), c("estimate", "lower", "upper")])
   colnames(confint_ranef)[1] <- "est."
 
   # Error model
@@ -225,12 +238,21 @@ print.summary.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3)
     obs = "Variance unique to each observed variable",
     tc = "Two-component variance function"), "\n")
 
-  cat("\nMean of starting values for individual parameters:\n")
+  cat("\nStarting values for degradation parameters:\n")
   print(x$mean_dp_start, digits = digits)
 
   cat("\nFixed degradation parameter values:\n")
   if(length(x$fixed$value) == 0) cat("None\n")
   else print(x$fixed, digits = digits)
+
+  cat("\nStarting values for random effects (square root of initial entries in omega):\n")
+  print(sqrt(x$so@model@omega.init), digits = digits)
+
+  cat("\nStarting values for error model parameters:\n")
+  errparms <- x$so@model@error.init
+  names(errparms) <- x$so@model@name.sigma
+  errparms <- errparms[x$so@model@indx.res]
+  print(errparms, digits = digits)
 
   cat("\nResults:\n\n")
   cat("Likelihood computed by importance sampling\n")

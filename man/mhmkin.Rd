@@ -18,7 +18,6 @@ mhmkin(objects, ...)
   backend = "saemix",
   algorithm = "saem",
   no_random_effect = NULL,
-  auto_ranef_threshold = 3,
   ...,
   cores = if (Sys.info()["sysname"] == "Windows") 1 else parallel::detectCores(),
   cluster = NULL
@@ -42,14 +41,14 @@ supported}
 
 \item{algorithm}{The algorithm to be used for fitting (currently not used)}
 
-\item{no_random_effect}{Default is NULL and will be passed to \link{saem}. If
-you specify "auto", random effects are only included if the number
-of datasets in which the parameter passed the t-test is at least 'auto_ranef_threshold'.
-Beware that while this may make for convenient model reduction or even
-numerical stability of the algorithm, it will likely lead to
-underparameterised models.}
-
-\item{auto_ranef_threshold}{See 'no_random_effect.}
+\item{no_random_effect}{Default is NULL and will be passed to \link{saem}. If a
+character vector is supplied, it will be passed to all calls to \link{saem},
+which will exclude random effects for all matching parameters. Alternatively,
+a list of character vectors or an object of class \link{illparms.mhmkin} can be
+specified. They have to have the same dimensions that the return object of
+the current call will have, i.e. the number of rows must match the number
+of degradation models in the mmkin object(s), and the number of columns must
+match the number of error models used in the mmkin object(s).}
 
 \item{cores}{The number of cores to be used for multicore processing. This
 is only used when the \code{cluster} argument is \code{NULL}. On Windows
@@ -76,13 +75,50 @@ be indexed using the degradation model names for the first index (row index)
 and the error model names for the second index (column index), with class
 attribute 'mhmkin'.
 
-An object of class \code{\link{mhmkin}}.
+An object inheriting from \code{\link{mhmkin}}.
 }
 \description{
 The name of the methods expresses that (\strong{m}ultiple) \strong{h}ierarchichal
 (also known as multilevel) \strong{m}ulticompartment \strong{kin}etic models are
 fitted. Our kinetic models are nonlinear, so we can use various nonlinear
 mixed-effects model fitting functions.
+}
+\examples{
+\dontrun{
+# We start with separate evaluations of all the first six datasets with two
+# degradation models and two error models
+f_sep_const <- mmkin(c("SFO", "FOMC"), ds_fomc[1:6], cores = 2, quiet = TRUE)
+f_sep_tc <- update(f_sep_const, error_model = "tc")
+# The mhmkin function sets up hierarchical degradation models aka
+# nonlinear mixed-effects models for all four combinations, specifying
+# uncorrelated random effects for all degradation parameters
+f_saem_1 <- mhmkin(list(f_sep_const, f_sep_tc), cores = 2)
+status(f_saem_1)
+# The 'illparms' function shows that in all hierarchical fits, at least
+# one random effect is ill-defined (the confidence interval for the
+# random effect expressed as standard deviation includes zero)
+illparms(f_saem_1)
+# Therefore we repeat the fits, excluding the ill-defined random effects
+f_saem_2 <- update(f_saem_1, no_random_effect = illparms(f_saem_1))
+status(f_saem_2)
+illparms(f_saem_2)
+# Model comparisons show that FOMC with two-component error is preferable,
+# and confirms our reduction of the default parameter model
+anova(f_saem_1)
+anova(f_saem_2)
+# The convergence plot for the selected model looks fine
+saemix::plot(f_saem_2[["FOMC", "tc"]]$so, plot.type = "convergence")
+# The plot of predictions versus data shows that we have a pretty data-rich
+# situation with homogeneous distribution of residuals, because we used the
+# same degradation model, error model and parameter distribution model that
+# was used in the data generation.
+plot(f_saem_2[["FOMC", "tc"]])
+# We can specify the same parameter model reductions manually
+no_ranef <- list("parent_0", "log_beta", "parent_0", c("parent_0", "log_beta"))
+dim(no_ranef) <- c(2, 2)
+f_saem_2m <- update(f_saem_1, no_random_effect = no_ranef)
+anova(f_saem_2m)
+}
 }
 \seealso{
 \code{\link{[.mhmkin}} for subsetting \link{mhmkin} objects

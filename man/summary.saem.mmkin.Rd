@@ -92,10 +92,21 @@ f_mmkin_dfop_sfo <- mmkin(list(dfop_sfo), ds_syn_dfop_sfo,
 f_saem_dfop_sfo <- saem(f_mmkin_dfop_sfo)
 print(f_saem_dfop_sfo)
 illparms(f_saem_dfop_sfo)
-f_saem_dfop_sfo_2 <- update(f_saem_dfop_sfo, covariance.model = diag(c(0, 0, 1, 1, 1, 0)))
+f_saem_dfop_sfo_2 <- update(f_saem_dfop_sfo,
+  no_random_effect = c("parent_0", "log_k_m1"))
 illparms(f_saem_dfop_sfo_2)
 intervals(f_saem_dfop_sfo_2)
 summary(f_saem_dfop_sfo_2, data = TRUE)
+# Add a correlation between random effects of g and k2
+cov_model_3 <- f_saem_dfop_sfo_2$so@model@covariance.model
+cov_model_3["log_k2", "g_qlogis"] <- 1
+cov_model_3["g_qlogis", "log_k2"] <- 1
+f_saem_dfop_sfo_3 <- update(f_saem_dfop_sfo,
+  covariance.model = cov_model_3)
+intervals(f_saem_dfop_sfo_3)
+# The correlation does not improve the fit judged by AIC and BIC, although
+# the likelihood is higher with the additional parameter
+anova(f_saem_dfop_sfo, f_saem_dfop_sfo_2, f_saem_dfop_sfo_3)
 }
 
 }

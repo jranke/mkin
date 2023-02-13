@@ -12,13 +12,14 @@
 #' degradation models to the same data
 #' @param backend The backend to be used for fitting. Currently, only saemix is
 #' supported
-#' @param no_random_effect Default is NULL and will be passed to [saem]. If
-#' you specify "auto", random effects are only included if the number
-#' of datasets in which the parameter passed the t-test is at least 'auto_ranef_threshold'.
-#' Beware that while this may make for convenient model reduction or even
-#' numerical stability of the algorithm, it will likely lead to
-#' underparameterised models.
-#' @param auto_ranef_threshold See 'no_random_effect.
+#' @param no_random_effect Default is NULL and will be passed to [saem]. If a
+#' character vector is supplied, it will be passed to all calls to [saem],
+#' which will exclude random effects for all matching parameters. Alternatively,
+#' a list of character vectors or an object of class [illparms.mhmkin] can be
+#' specified. They have to have the same dimensions that the return object of
+#' the current call will have, i.e. the number of rows must match the number
+#' of degradation models in the mmkin object(s), and the number of columns must
+#' match the number of error models used in the mmkin object(s).
 #' @param algorithm The algorithm to be used for fitting (currently not used)
 #' @param \dots Further arguments that will be passed to the nonlinear mixed-effects
 #' model fitting function.
@@ -50,8 +51,44 @@ mhmkin.mmkin <- function(objects, ...) {
 
 #' @export
 #' @rdname mhmkin
+#' @examples
+#' \dontrun{
+#' # We start with separate evaluations of all the first six datasets with two
+#' # degradation models and two error models
+#' f_sep_const <- mmkin(c("SFO", "FOMC"), ds_fomc[1:6], cores = 2, quiet = TRUE)
+#' f_sep_tc <- update(f_sep_const, error_model = "tc")
+#' # The mhmkin function sets up hierarchical degradation models aka
+#' # nonlinear mixed-effects models for all four combinations, specifying
+#' # uncorrelated random effects for all degradation parameters
+#' f_saem_1 <- mhmkin(list(f_sep_const, f_sep_tc), cores = 2)
+#' status(f_saem_1)
+#' # The 'illparms' function shows that in all hierarchical fits, at least
+#' # one random effect is ill-defined (the confidence interval for the
+#' # random effect expressed as standard deviation includes zero)
+#' illparms(f_saem_1)
+#' # Therefore we repeat the fits, excluding the ill-defined random effects
+#' f_saem_2 <- update(f_saem_1, no_random_effect = illparms(f_saem_1))
+#' status(f_saem_2)
+#' illparms(f_saem_2)
+#' # Model comparisons show that FOMC with two-component error is preferable,
+#' # and confirms our reduction of the default parameter model
+#' anova(f_saem_1)
+#' anova(f_saem_2)
+#' # The convergence plot for the selected model looks fine
+#' saemix::plot(f_saem_2[["FOMC", "tc"]]$so, plot.type = "convergence")
+#' # The plot of predictions versus data shows that we have a pretty data-rich
+#' # situation with homogeneous distribution of residuals, because we used the
+#' # same degradation model, error model and parameter distribution model that
+#' # was used in the data generation.
+#' plot(f_saem_2[["FOMC", "tc"]])
+#' # We can specify the same parameter model reductions manually
+#' no_ranef <- list("parent_0", "log_beta", "parent_0", c("parent_0", "log_beta"))
+#' dim(no_ranef) <- c(2, 2)
+#' f_saem_2m <- update(f_saem_1, no_random_effect = no_ranef)
+#' anova(f_saem_2m)
+#' }
 mhmkin.list <- function(objects, backend = "saemix", algorithm = "saem",
-  no_random_effect = NULL, auto_ranef_threshold = 3,
+  no_random_effect = NULL,
   ...,
   cores = if (Sys.info()["sysname"] == "Windows") 1 else parallel::detectCores(), cluster = NULL)
 {
@@ -97,26 +134,41 @@ mhmkin.list <- function(objects, backend = "saemix", algorithm = "saem",
   dimnames(fit_indices) <- list(degradation = names(deg_models),
                                 error = error_models)
 
+  if (is.null(no_random_effect) || is.null(dim(no_random_effect))) {
+    no_ranef <- rep(list(no_random_effect), n.fits)
+    dim(no_ranef) <- dim(fit_indices)
+  } else {
+    if (!identical(dim(no_random_effect), dim(fit_indices))) {
+      stop("Dimensions of argument 'no_random_effect' are not suitable")
+    }
+    if (is(no_random_effect, "illparms.mhmkin")) {
+      no_ranef_dim <- dim(no_random_effect)
+      no_ranef <- lapply(no_random_effect, function(x) {
+        no_ranef_split <- strsplit(x, ", ")
+        ret <- sapply(no_ranef_split, function(y) {
+          gsub("sd\\((.*)\\)", "\\1", y)
+        })
+        return(ret)
+      })
+      dim(no_ranef) <- no_ranef_dim
+    } else {
+      no_ranef <- no_random_effect
+    }
+  }
+
   fit_function <- function(fit_index) {
     w <- which(fit_indices == fit_index, arr.ind = TRUE)
     deg_index <- w[1]
     error_index <- w[2]
     mmkin_row <- objects[[error_index]][deg_index, ]
-    if (identical(no_random_effect, "auto")) {
-      ip <- illparms(mmkin_row)
-      ipt <- table(unlist(lapply(as.list(ip), strsplit, ", ")))
-      no_ranef <- names(ipt)[which((length(ds) - ipt) <= auto_ranef_threshold)]
-      transparms <- rownames(mmkin_row[[1]]$start_transformed)
-      bparms <- rownames(mmkin_row[[1]]$start)
-      names(transparms) <- bparms
-      no_ranef_trans <- transparms[no_ranef]
-    } else {
-      no_ranef_trans <- no_random_effect
-    }
     res <- try(do.call(backend_function,
-        args = c(list(mmkin_row), dot_args, list(no_random_effect = no_ranef_trans))))
+        args = c(
+          list(mmkin_row),
+          dot_args,
+          list(no_random_effect = no_ranef[[deg_index, error_index]]))))
     return(res)
   }
+
 
   fit_time <- system.time({
     if (is.null(cluster)) {
@@ -143,15 +195,16 @@ mhmkin.list <- function(objects, backend = "saemix", algorithm = "saem",
 #' @param j Column index selecting the fits to specific datasets
 #' @param drop If FALSE, the method always returns an mhmkin object, otherwise
 #'   either a list of fit objects or a single fit object.
-#' @return An object of class \code{\link{mhmkin}}.
+#' @return An object inheriting from \code{\link{mhmkin}}.
 #' @rdname mhmkin
 #' @export
 `[.mhmkin` <- function(x, i, j, ..., drop = FALSE) {
+  original_class <- class(x)
   class(x) <- NULL
   x_sub <- x[i, j, drop = drop]
 
   if (!drop) {
-    class(x_sub) <- "mhmkin"
+    class(x_sub) <- original_class
   }
   return(x_sub)
 }

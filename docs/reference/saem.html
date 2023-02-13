@@ -19,7 +19,7 @@ Expectation Maximisation algorithm (SAEM)."><!-- mathjax --><script src="https:/
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
       </span>
     </div>
 
@@ -46,10 +46,13 @@ Expectation Maximisation algorithm (SAEM)."><!-- mathjax --><script src="https:/
       <a href="../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
     </li>
     <li>
-      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
+      <a href="../articles/web_only/multistart.html">Short demo of the multistart method</a>
     </li>
     <li>
       <a href="../articles/web_only/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
     </li>
     <li>
       <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
@@ -58,7 +61,10 @@ Expectation Maximisation algorithm (SAEM)."><!-- mathjax --><script src="https:/
       <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
     <li>
-      <a href="../articles/web_only/benchmarks.html">Some benchmark timings</a>
+      <a href="../articles/web_only/benchmarks.html">Benchmark timings for mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/saem_benchmarks.html">Benchmark timings for saem.mmkin</a>
     </li>
   </ul></li>
 <li>
@@ -97,14 +103,20 @@ Expectation Maximisation algorithm (SAEM).</p>
 <span><span class="fu">saem</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
 <span>  transformations <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mkin"</span>, <span class="st">"saemix"</span><span class="op">)</span>,</span>
+<span>  error_model <span class="op">=</span> <span class="st">"auto"</span>,</span>
 <span>  degparms_start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  test_log_parms <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  conf.level <span class="op">=</span> <span class="fl">0.6</span>,</span>
 <span>  solution_type <span class="op">=</span> <span class="st">"auto"</span>,</span>
+<span>  covariance.model <span class="op">=</span> <span class="st">"auto"</span>,</span>
+<span>  omega.init <span class="op">=</span> <span class="st">"auto"</span>,</span>
+<span>  covariates <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  covariate_models <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  no_random_effect <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  error.init <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>  nbiter.saemix <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">300</span>, <span class="fl">100</span><span class="op">)</span>,</span>
 <span>  control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>displayProgress <span class="op">=</span> <span class="cn">FALSE</span>, print <span class="op">=</span> <span class="cn">FALSE</span>, nbiter.saemix <span class="op">=</span> <span class="va">nbiter.saemix</span>,</span>
 <span>    save <span class="op">=</span> <span class="cn">FALSE</span>, save.graphs <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
-<span>  fail_with_errors <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  quiet <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -117,14 +129,24 @@ Expectation Maximisation algorithm (SAEM).</p>
 <span>  <span class="va">object</span>,</span>
 <span>  solution_type <span class="op">=</span> <span class="st">"auto"</span>,</span>
 <span>  transformations <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mkin"</span>, <span class="st">"saemix"</span><span class="op">)</span>,</span>
+<span>  error_model <span class="op">=</span> <span class="st">"auto"</span>,</span>
 <span>  degparms_start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  covariance.model <span class="op">=</span> <span class="st">"auto"</span>,</span>
+<span>  no_random_effect <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  omega.init <span class="op">=</span> <span class="st">"auto"</span>,</span>
+<span>  covariates <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  covariate_models <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  error.init <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  test_log_parms <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  conf.level <span class="op">=</span> <span class="fl">0.6</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">saemix_data</span><span class="op">(</span><span class="va">object</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">saemix_data</span><span class="op">(</span><span class="va">object</span>, covariates <span class="op">=</span> <span class="cn">NULL</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for saem.mmkin</span></span>
+<span><span class="fu"><a href="parms.html">parms</a></span><span class="op">(</span><span class="va">object</span>, ci <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -144,6 +166,10 @@ in mkin. If this argument is set to 'saemix', parameter transformations
 are done in 'saemix' for the supported cases, i.e. (as of version 1.1.2)
 SFO, FOMC, DFOP and HS without fixing <code>parent_0</code>, and SFO or DFOP with
 one SFO metabolite.</p></dd>
+
+
+<dt>error_model</dt>
+<dd><p>Possibility to override the error model used in the mmkin object</p></dd>
 
 
 <dt>degparms_start</dt>
@@ -168,6 +194,43 @@ for parameter that are tested if requested by 'test_log_parms'.</p></dd>
 automatic choice is not desired</p></dd>
 
 
+<dt>covariance.model</dt>
+<dd><p>Will be passed to <code><a href="https://rdrr.io/pkg/saemix/man/saemixModel.html" class="external-link">saemix::saemixModel()</a></code>. Per
+default, uncorrelated random effects are specified for all degradation
+parameters.</p></dd>
+
+
+<dt>omega.init</dt>
+<dd><p>Will be passed to <code><a href="https://rdrr.io/pkg/saemix/man/saemixModel.html" class="external-link">saemix::saemixModel()</a></code>. If using
+mkin transformations and the default covariance model with optionally
+excluded random effects, the variances of the degradation parameters
+are estimated using <a href="mean_degparms.html">mean_degparms</a>, with testing of untransformed
+log parameters for significant difference from zero. If not using
+mkin transformations or a custom covariance model, the default
+initialisation of <a href="https://rdrr.io/pkg/saemix/man/saemixModel.html" class="external-link">saemix::saemixModel</a> is used for omega.init.</p></dd>
+
+
+<dt>covariates</dt>
+<dd><p>A data frame with covariate data for use in
+'covariate_models', with dataset names as row names.</p></dd>
+
+
+<dt>covariate_models</dt>
+<dd><p>A list containing linear model formulas with one explanatory
+variable, i.e. of the type 'parameter ~ covariate'. Covariates must be available
+in the 'covariates' data frame.</p></dd>
+
+
+<dt>no_random_effect</dt>
+<dd><p>Character vector of degradation parameters for
+which there should be no variability over the groups. Only used
+if the covariance model is not explicitly specified.</p></dd>
+
+
+<dt>error.init</dt>
+<dd><p>Will be passed to <code><a href="https://rdrr.io/pkg/saemix/man/saemixModel.html" class="external-link">saemix::saemixModel()</a></code>.</p></dd>
+
+
 <dt>nbiter.saemix</dt>
 <dd><p>Convenience option to increase the number of
 iterations</p></dd>
@@ -175,11 +238,6 @@ iterations</p></dd>
 
 <dt>control</dt>
 <dd><p>Passed to <a href="https://rdrr.io/pkg/saemix/man/saemix.html" class="external-link">saemix::saemix</a>.</p></dd>
-
-
-<dt>fail_with_errors</dt>
-<dd><p>Should a failure to compute standard errors
-from the inverse of the Fisher Information Matrix be a failure?</p></dd>
 
 
 <dt>verbose</dt>
@@ -198,6 +256,11 @@ and the end of the optimisation process?</p></dd>
 
 <dt>digits</dt>
 <dd><p>Number of digits to use for printing</p></dd>
+
+
+<dt>ci</dt>
+<dd><p>Should a matrix with estimates and confidence interval boundaries
+be returned? If FALSE (default), a vector of estimates is returned.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -241,40 +304,43 @@ using <a href="mmkin.html">mmkin</a>.</p>
 <span class="r-in"><span><span class="va">f_saem_sfo</span> <span class="op">&lt;-</span> <span class="fu">saem</span><span class="op">(</span><span class="va">f_mmkin_parent</span><span class="op">[</span><span class="st">"SFO"</span>, <span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">f_saem_fomc</span> <span class="op">&lt;-</span> <span class="fu">saem</span><span class="op">(</span><span class="va">f_mmkin_parent</span><span class="op">[</span><span class="st">"FOMC"</span>, <span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">f_saem_dfop</span> <span class="op">&lt;-</span> <span class="fu">saem</span><span class="op">(</span><span class="va">f_mmkin_parent</span><span class="op">[</span><span class="st">"DFOP"</span>, <span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_saem_sfo</span>, <span class="va">f_saem_fomc</span>, <span class="va">f_saem_dfop</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Data: 90 observations of 1 variable(s) grouped in 5 datasets</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             npar    AIC    BIC     Lik</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_saem_sfo     5 624.33 622.38 -307.17</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_saem_fomc    7 467.85 465.11 -226.92</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_saem_dfop    9 493.76 490.24 -237.88</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_saem_sfo</span>, <span class="va">f_saem_dfop</span>, test <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Data: 90 observations of 1 variable(s) grouped in 5 datasets</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             npar    AIC    BIC     Lik  Chisq Df Pr(&gt;Chisq)    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_saem_sfo     5 624.33 622.38 -307.17                         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_saem_dfop    9 493.76 490.24 -237.88 138.57  4  &lt; 2.2e-16 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ---</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</span>
 <span class="r-in"><span><span class="fu"><a href="illparms.html">illparms</a></span><span class="op">(</span><span class="va">f_saem_dfop</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "sd(g_qlogis)"</span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">f_saem_dfop</span>, covariance.model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Kinetic nonlinear mixed-effects model fit by SAEM</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Structural model:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> d_parent/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            time)) / (g * exp(-k1 * time) + (1 - g) * exp(-k2 * time)))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            * parent</span>
+<span class="r-in"><span><span class="va">f_saem_dfop_red</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">f_saem_dfop</span>, no_random_effect <span class="op">=</span> <span class="st">"g_qlogis"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_saem_dfop</span>, <span class="va">f_saem_dfop_red</span>, test <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Data: 90 observations of 1 variable(s) grouped in 5 datasets</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Data:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 90 observations of 1 variable(s) grouped in 5 datasets</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Likelihood computed by importance sampling</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     AIC   BIC logLik</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   490.6 487.5 -237.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fitted parameters:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             estimate   lower   upper</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0      93.902 91.3695 96.4339</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> log_k1        -2.936 -3.9950 -1.8762</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> log_k2        -3.091 -4.9290 -1.2523</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> g_qlogis      -0.366 -0.6484 -0.0836</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> a.1            2.385  2.0033  2.7664</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SD.parent_0    2.476  0.3890  4.5623</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k1      1.195  0.4381  1.9517</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k2      2.092  0.7906  3.3932</span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span><span class="va">f_saem_dfop</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 493.9811</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 npar    AIC    BIC     Lik Chisq Df Pr(&gt;Chisq)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_saem_dfop_red    8 488.68 485.55 -236.34                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_saem_dfop        9 493.76 490.24 -237.88     0  1          1</span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_saem_sfo</span>, <span class="va">f_saem_fomc</span>, <span class="va">f_saem_dfop</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Data: 90 observations of 1 variable(s) grouped in 5 datasets</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             npar    AIC    BIC     Lik</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_saem_sfo     5 624.33 622.38 -307.17</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_saem_fomc    7 467.85 465.11 -226.92</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_saem_dfop    9 493.76 490.24 -237.88</span>
 <span class="r-in"><span><span class="co"># The returned saem.mmkin object contains an SaemixObject, therefore we can use</span></span></span>
 <span class="r-in"><span><span class="co"># functions from saemix</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">saemix</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: npde</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Package saemix, version 3.1</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Package saemix, version 3.2</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   please direct bugs, questions and feedback to emmanuelle.comets@inserm.fr</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘saemix’</span>
@@ -284,9 +350,9 @@ using <a href="mmkin.html">mmkin</a>.</p>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/compare.saemix.html" class="external-link">compare.saemix</a></span><span class="op">(</span><span class="va">f_saem_sfo</span><span class="op">$</span><span class="va">so</span>, <span class="va">f_saem_fomc</span><span class="op">$</span><span class="va">so</span>, <span class="va">f_saem_dfop</span><span class="op">$</span><span class="va">so</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Likelihoods calculated by importance sampling</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        AIC      BIC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 624.2598 622.3070</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 467.8664 465.1324</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 493.9811 490.4660</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 624.3316 622.3788</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 467.8472 465.1132</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 493.7592 490.2441</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_saem_fomc</span><span class="op">$</span><span class="va">so</span>, plot.type <span class="op">=</span> <span class="st">"convergence"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="saem-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_saem_fomc</span><span class="op">$</span><span class="va">so</span>, plot.type <span class="op">=</span> <span class="st">"individual.fit"</span><span class="op">)</span></span></span>
@@ -300,11 +366,12 @@ using <a href="mmkin.html">mmkin</a>.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">f_mmkin_parent_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">f_mmkin_parent</span>, error_model <span class="op">=</span> <span class="st">"tc"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">f_saem_fomc_tc</span> <span class="op">&lt;-</span> <span class="fu">saem</span><span class="op">(</span><span class="va">f_mmkin_parent_tc</span><span class="op">[</span><span class="st">"FOMC"</span>, <span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/compare.saemix.html" class="external-link">compare.saemix</a></span><span class="op">(</span><span class="va">f_saem_fomc</span><span class="op">$</span><span class="va">so</span>, <span class="va">f_saem_fomc_tc</span><span class="op">$</span><span class="va">so</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Likelihoods calculated by importance sampling</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        AIC      BIC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 467.8664 465.1324</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 469.9096 466.7851</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_saem_fomc</span>, <span class="va">f_saem_fomc_tc</span>, test <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Data: 90 observations of 1 variable(s) grouped in 5 datasets</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                npar    AIC    BIC     Lik Chisq Df Pr(&gt;Chisq)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_saem_fomc       7 467.85 465.11 -226.92                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_saem_fomc_tc    8 469.83 466.71 -226.92 0.015  1     0.9027</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">sfo_sfo</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"A1"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  A1 <span class="op">=</span> <span class="fu"><a href="mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -341,32 +408,32 @@ using <a href="mmkin.html">mmkin</a>.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 170 observations of 2 variable(s) grouped in 5 datasets</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Likelihood computed by importance sampling</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   AIC   BIC logLik</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   842 836.9   -408</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     AIC   BIC logLik</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   839.2 834.1 -406.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fitted parameters:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    estimate   lower   upper</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0            93.7701 91.1458 96.3945</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_A1            -5.8116 -7.5998 -4.0234</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_qlogis     -0.9608 -1.3654 -0.5562</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> log_k1              -2.5841 -3.6876 -1.4805</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> log_k2              -3.5228 -5.3254 -1.7203</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> g_qlogis            -0.1027 -0.8719  0.6665</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> a.1                  1.8856  1.6676  2.1037</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SD.parent_0          2.7682  0.7668  4.7695</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k_A1          1.7447  0.4047  3.0848</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SD.f_parent_qlogis   0.4525  0.1620  0.7431</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k1            1.2423  0.4560  2.0285</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k2            2.0390  0.7601  3.3180</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SD.g_qlogis          0.4439 -0.3069  1.1947</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                    estimate    lower   upper</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0           93.70402 91.04104 96.3670</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_A1           -5.83760 -7.66452 -4.0107</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_qlogis    -0.95718 -1.35955 -0.5548</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k1             -2.35514 -3.39402 -1.3163</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k2             -3.79634 -5.64009 -1.9526</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> g_qlogis           -0.02108 -0.66463  0.6225</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> a.1                 1.88191  1.66491  2.0989</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.parent_0         2.81628  0.78922  4.8433</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k_A1         1.78751  0.42105  3.1540</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.f_parent_qlogis  0.45016  0.16116  0.7391</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k1           1.06923  0.31676  1.8217</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k2           2.03768  0.70938  3.3660</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.g_qlogis         0.44024 -0.09262  0.9731</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_saem_dfop_sfo</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="saem-4.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">f_saem_dfop_sfo</span>, data <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> saemix version used for fitting:      3.1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mkin version used for pre-fitting:  1.1.2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> R version used for fitting:         4.2.1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Date of fit:     Wed Aug 10 13:15:20 2022 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Date of summary: Wed Aug 10 13:15:20 2022 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> saemix version used for fitting:      3.2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mkin version used for pre-fitting:  1.2.1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> R version used for fitting:         4.2.2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Date of fit:     Fri Nov 18 19:19:25 2022 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Date of summary: Fri Nov 18 19:19:25 2022 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Equations:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> d_parent/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *</span>
@@ -381,7 +448,7 @@ using <a href="mmkin.html">mmkin</a>.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model predictions using solution type analytical </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fitted in 9.258 s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fitted in 9.068 s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Using 300, 100 iterations and 10 chains</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Variance model: Constant variance </span>
@@ -398,230 +465,237 @@ using <a href="mmkin.html">mmkin</a>.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Results:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Likelihood computed by importance sampling</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   AIC   BIC logLik</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   842 836.9   -408</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     AIC   BIC logLik</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   839.2 834.1 -406.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Optimised parameters:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    est.   lower   upper</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0        93.7701 91.1458 96.3945</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_A1        -5.8116 -7.5998 -4.0234</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_qlogis -0.9608 -1.3654 -0.5562</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> log_k1          -2.5841 -3.6876 -1.4805</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> log_k2          -3.5228 -5.3254 -1.7203</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> g_qlogis        -0.1027 -0.8719  0.6665</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        est.    lower   upper</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0           93.70402 91.04104 96.3670</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_A1           -5.83760 -7.66452 -4.0107</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_qlogis    -0.95718 -1.35955 -0.5548</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k1             -2.35514 -3.39402 -1.3163</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k2             -3.79634 -5.64009 -1.9526</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> g_qlogis           -0.02108 -0.66463  0.6225</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> a.1                 1.88191  1.66491  2.0989</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.parent_0         2.81628  0.78922  4.8433</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k_A1         1.78751  0.42105  3.1540</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.f_parent_qlogis  0.45016  0.16116  0.7391</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k1           1.06923  0.31676  1.8217</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k2           2.03768  0.70938  3.3660</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.g_qlogis         0.44024 -0.09262  0.9731</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Correlation: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 parnt_0 lg_k_A1 f_prnt_ log_k1  log_k2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_A1        -0.0160                                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_qlogis -0.0263  0.0612                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> log_k1           0.0100 -0.0014 -0.0033                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> log_k2           0.0131  0.0050 -0.0011  0.0071        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> g_qlogis        -0.0419 -0.0199  0.0026 -0.0765 -0.0707</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_A1        -0.0147                                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_qlogis -0.0269  0.0573                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k1           0.0263 -0.0011 -0.0040                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k2           0.0020  0.0065 -0.0002 -0.0776        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> g_qlogis        -0.0248 -0.0180 -0.0004 -0.0903 -0.0603</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Random effects:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                      est.   lower  upper</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SD.parent_0        2.7682  0.7668 4.7695</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k_A1        1.7447  0.4047 3.0848</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SD.f_parent_qlogis 0.4525  0.1620 0.7431</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k1          1.2423  0.4560 2.0285</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k2          2.0390  0.7601 3.3180</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SD.g_qlogis        0.4439 -0.3069 1.1947</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                      est.    lower  upper</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.parent_0        2.8163  0.78922 4.8433</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k_A1        1.7875  0.42105 3.1540</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.f_parent_qlogis 0.4502  0.16116 0.7391</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k1          1.0692  0.31676 1.8217</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k2          2.0377  0.70938 3.3660</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.g_qlogis        0.4402 -0.09262 0.9731</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Variance model:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      est. lower upper</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> a.1 1.886 1.668 2.104</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> a.1 1.882 1.665 2.099</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Backtransformed parameters:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                     est.     lower    upper</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0       93.770115 9.115e+01 96.39447</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> k_A1            0.002993 5.005e-04  0.01789</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_to_A1  0.276720 2.034e-01  0.36443</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> k1              0.075467 2.503e-02  0.22753</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> k2              0.029516 4.867e-03  0.17902</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> g               0.474353 2.949e-01  0.66073</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0       93.704015 9.104e+01 96.36699</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> k_A1            0.002916 4.692e-04  0.01812</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_to_A1  0.277443 2.043e-01  0.36475</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> k1              0.094880 3.357e-02  0.26813</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> k2              0.022453 3.553e-03  0.14191</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> g               0.494731 3.397e-01  0.65078</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Resulting formation fractions:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 ff</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> parent_A1   0.2767</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> parent_sink 0.7233</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> parent_A1   0.2774</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> parent_sink 0.7226</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Estimated disappearance times:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          DT50   DT90 DT50back DT50_k1 DT50_k2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> parent  14.56  58.26    17.54   9.185   23.48</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> A1     231.62 769.41       NA      NA      NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         DT50   DT90 DT50back DT50_k1 DT50_k2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> parent  14.0  72.38    21.79   7.306   30.87</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> A1     237.7 789.68       NA      NA      NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Data:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          ds   name time observed predicted residual   std standardized</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent    0     97.2  95.78623  1.41377 1.886     0.749758</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent    0     96.4  95.78623  0.61377 1.886     0.325498</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent    3     71.1  71.34666 -0.24666 1.886    -0.130812</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent    3     69.2  71.34666 -2.14666 1.886    -1.138429</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent    6     58.1  56.49768  1.60232 1.886     0.849749</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent    6     56.6  56.49768  0.10232 1.886     0.054262</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent   10     44.4  44.53511 -0.13511 1.886    -0.071650</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent   10     43.4  44.53511 -1.13511 1.886    -0.601974</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent   20     33.3  29.77451  3.52549 1.886     1.869656</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent   20     29.2  29.77451 -0.57451 1.886    -0.304675</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent   34     17.6  19.32540 -1.72540 1.886    -0.915023</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent   34     18.0  19.32540 -1.32540 1.886    -0.702894</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent   55     10.5  10.42781  0.07219 1.886     0.038282</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent   55      9.3  10.42781 -1.12781 1.886    -0.598107</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent   90      4.5   3.74190  0.75810 1.886     0.402037</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent   90      4.7   3.74190  0.95810 1.886     0.508102</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent  112      3.0   1.96485  1.03515 1.886     0.548966</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent  112      3.4   1.96485  1.43515 1.886     0.761096</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent  132      2.3   1.09395  1.20605 1.886     0.639596</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent  132      2.7   1.09395  1.60605 1.886     0.851726</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1    3      4.3   4.72702 -0.42702 1.886    -0.226458</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1    3      4.6   4.72702 -0.12702 1.886    -0.067361</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1    6      7.0   7.51314 -0.51314 1.886    -0.272128</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1    6      7.2   7.51314 -0.31314 1.886    -0.166063</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1   10      8.2   9.63719 -1.43719 1.886    -0.762179</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1   10      8.0   9.63719 -1.63719 1.886    -0.868244</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1   20     11.0  11.84931 -0.84931 1.886    -0.450409</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1   20     13.7  11.84931  1.85069 1.886     0.981468</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1   34     11.5  12.82336 -1.32336 1.886    -0.701808</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1   34     12.7  12.82336 -0.12336 1.886    -0.065418</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1   55     14.9  12.89456  2.00544 1.886     1.063533</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1   55     14.5  12.89456  1.60544 1.886     0.851403</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1   90     12.1  11.55919  0.54081 1.886     0.286806</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1   90     12.3  11.55919  0.74081 1.886     0.392871</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1  112      9.9  10.42334 -0.52334 1.886    -0.277539</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1  112     10.2  10.42334 -0.22334 1.886    -0.118442</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1  132      8.8   9.37987 -0.57987 1.886    -0.307519</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1  132      7.8   9.37987 -1.57987 1.886    -0.837844</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent    0     93.6  90.95702  2.64298 1.886     1.401639</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent    0     92.3  90.95702  1.34298 1.886     0.712217</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent    3     87.0  84.77506  2.22494 1.886     1.179942</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent    3     82.2  84.77506 -2.57506 1.886    -1.365616</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent    7     74.0  77.60962 -3.60962 1.886    -1.914268</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent    7     73.9  77.60962 -3.70962 1.886    -1.967301</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent   14     64.2  67.50646 -3.30646 1.886    -1.753499</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent   14     69.5  67.50646  1.99354 1.886     1.057221</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent   30     54.0  52.48909  1.51091 1.886     0.801271</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent   30     54.6  52.48909  2.11091 1.886     1.119465</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent   60     41.1  39.54372  1.55628 1.886     0.825335</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent   60     38.4  39.54372 -1.14372 1.886    -0.606542</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent   90     32.5  33.87968 -1.37968 1.886    -0.731676</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent   90     35.5  33.87968  1.62032 1.886     0.859298</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent  120     28.1  30.41071 -2.31071 1.886    -1.225427</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent  120     29.0  30.41071 -1.41071 1.886    -0.748135</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent  180     26.5  25.36386  1.13614 1.886     0.602524</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent  180     27.6  25.36386  2.23614 1.886     1.185881</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1    3      3.9   2.74863  1.15137 1.886     0.610600</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1    3      3.1   2.74863  0.35137 1.886     0.186341</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1    7      6.9   5.92686  0.97314 1.886     0.516081</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1    7      6.6   5.92686  0.67314 1.886     0.356983</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1   14     10.4  10.38800  0.01200 1.886     0.006362</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1   14      8.3  10.38800 -2.08800 1.886    -1.107320</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1   30     14.4  16.93529 -2.53529 1.886    -1.344524</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1   30     13.7  16.93529 -3.23529 1.886    -1.715751</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1   60     22.1  22.33044 -0.23044 1.886    -0.122209</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1   60     22.3  22.33044 -0.03044 1.886    -0.016144</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1   90     27.5  24.42300  3.07700 1.886     1.631809</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1   90     25.4  24.42300  0.97700 1.886     0.518127</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1  120     28.0  25.51140  2.48860 1.886     1.319768</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1  120     26.6  25.51140  1.08860 1.886     0.577313</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1  180     25.8  26.80282 -1.00282 1.886    -0.531818</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1  180     25.3  26.80282 -1.50282 1.886    -0.796981</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent    0     91.9  91.08733  0.81267 1.886     0.430980</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent    0     90.8  91.08733 -0.28733 1.886    -0.152377</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent    1     64.9  67.55332 -2.65332 1.886    -1.407123</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent    1     66.2  67.55332 -1.35332 1.886    -0.717701</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent    3     43.5  41.65811  1.84189 1.886     0.976800</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent    3     44.1  41.65811  2.44189 1.886     1.294994</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent    8     18.3  19.65773 -1.35773 1.886    -0.720038</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent    8     18.1  19.65773 -1.55773 1.886    -0.826103</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent   14     10.2  10.65118 -0.45118 1.886    -0.239269</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent   14     10.8  10.65118  0.14882 1.886     0.078925</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent   27      4.9   3.11694  1.78306 1.886     0.945601</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent   27      3.3   3.11694  0.18306 1.886     0.097082</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent   48      1.6   0.43165  1.16835 1.886     0.619603</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent   48      1.5   0.43165  1.06835 1.886     0.566570</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent   70      1.1   0.05441  1.04559 1.886     0.554503</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent   70      0.9   0.05441  0.84559 1.886     0.448438</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8     A1    1      9.6   7.66431  1.93569 1.886     1.026546</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8     A1    1      7.7   7.66431  0.03569 1.886     0.018930</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8     A1    3     15.0  15.57948 -0.57948 1.886    -0.307311</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8     A1    3     15.1  15.57948 -0.47948 1.886    -0.254279</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8     A1    8     21.2  20.38988  0.81012 1.886     0.429625</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8     A1    8     21.1  20.38988  0.71012 1.886     0.376593</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8     A1   14     19.7  20.16439 -0.46439 1.886    -0.246276</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8     A1   14     18.9  20.16439 -1.26439 1.886    -0.670535</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8     A1   27     17.5  16.40918  1.09082 1.886     0.578489</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8     A1   27     15.9  16.40918 -0.50918 1.886    -0.270030</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8     A1   48      9.5  10.12011 -0.62011 1.886    -0.328861</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8     A1   48      9.8  10.12011 -0.32011 1.886    -0.169764</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8     A1   70      6.2   5.79080  0.40920 1.886     0.217011</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8     A1   70      6.1   5.79080  0.30920 1.886     0.163979</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent    0     99.8  97.38786  2.41214 1.886     1.279218</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent    0     98.3  97.38786  0.91214 1.886     0.483731</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent    1     77.1  79.25431 -2.15431 1.886    -1.142481</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent    1     77.2  79.25431 -2.05431 1.886    -1.089449</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent    3     59.0  55.69866  3.30134 1.886     1.750781</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent    3     58.1  55.69866  2.40134 1.886     1.273489</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent    8     27.4  31.64893 -4.24893 1.886    -2.253314</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent    8     29.2  31.64893 -2.44893 1.886    -1.298729</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent   14     19.1  22.57316 -3.47316 1.886    -1.841901</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent   14     29.6  22.57316  7.02684 1.886     3.726507</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent   27     10.1  14.11345 -4.01345 1.886    -2.128430</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent   27     18.2  14.11345  4.08655 1.886     2.167199</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent   48      4.5   6.95586 -2.45586 1.886    -1.302400</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent   48      9.1   6.95586  2.14414 1.886     1.137093</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent   70      2.3   3.31753 -1.01753 1.886    -0.539619</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent   70      2.9   3.31753 -0.41753 1.886    -0.221424</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent   91      2.0   1.63642  0.36358 1.886     0.192816</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent   91      1.8   1.63642  0.16358 1.886     0.086751</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent  120      2.0   0.61667  1.38333 1.886     0.733614</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent  120      2.2   0.61667  1.58333 1.886     0.839679</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1    1      4.2   3.67247  0.52753 1.886     0.279763</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1    1      3.9   3.67247  0.22753 1.886     0.120666</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1    3      7.4   8.36240 -0.96240 1.886    -0.510385</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1    3      7.9   8.36240 -0.46240 1.886    -0.245223</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1    8     14.5  12.80590  1.69410 1.886     0.898422</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1    8     13.7  12.80590  0.89410 1.886     0.474162</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1   14     14.2  13.99625  0.20375 1.886     0.108053</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1   14     12.2  13.99625 -1.79625 1.886    -0.952596</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1   27     13.7  14.22730 -0.52730 1.886    -0.279641</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1   27     13.2  14.22730 -1.02730 1.886    -0.544803</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1   48     13.6  13.33713  0.26287 1.886     0.139406</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1   48     15.4  13.33713  2.06287 1.886     1.093991</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1   70     10.4  11.84008 -1.44008 1.886    -0.763708</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1   70     11.6  11.84008 -0.24008 1.886    -0.127318</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1   91     10.0  10.30732 -0.30732 1.886    -0.162980</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1   91      9.5  10.30732 -0.80732 1.886    -0.428142</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1  120      9.1   8.33981  0.76019 1.886     0.403149</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1  120      9.0   8.33981  0.66019 1.886     0.350117</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent    0     96.1  93.70349  2.39651 1.886     1.270926</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent    0     94.3  93.70349  0.59651 1.886     0.316342</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent    8     73.9  77.86253 -3.96253 1.886    -2.101429</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent    8     73.9  77.86253 -3.96253 1.886    -2.101429</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent   14     69.4  70.18665 -0.78665 1.886    -0.417182</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent   14     73.1  70.18665  2.91335 1.886     1.545019</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent   21     65.6  64.03245  1.56755 1.886     0.831308</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent   21     65.3  64.03245  1.26755 1.886     0.672210</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent   41     55.9  54.71491  1.18509 1.886     0.628480</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent   41     54.4  54.71491 -0.31491 1.886    -0.167007</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent   63     47.0  49.63436 -2.63436 1.886    -1.397065</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent   63     49.3  49.63436 -0.33436 1.886    -0.177319</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent   91     44.7  45.08853 -0.38853 1.886    -0.206049</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent   91     46.7  45.08853  1.61147 1.886     0.854600</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent  120     42.1  41.07653  1.02347 1.886     0.542772</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent  120     41.3  41.07653  0.22347 1.886     0.118513</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10     A1    8      3.3   4.08295 -0.78295 1.886    -0.415218</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10     A1    8      3.4   4.08295 -0.68295 1.886    -0.362186</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10     A1   14      3.9   6.04367 -2.14367 1.886    -1.136841</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10     A1   14      2.9   6.04367 -3.14367 1.886    -1.667165</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10     A1   21      6.4   7.59693 -1.19693 1.886    -0.634761</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10     A1   21      7.2   7.59693 -0.39693 1.886    -0.210502</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10     A1   41      9.1   9.86436 -0.76436 1.886    -0.405361</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10     A1   41      8.5   9.86436 -1.36436 1.886    -0.723555</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10     A1   63     11.7  10.99397  0.70603 1.886     0.374425</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10     A1   63     12.0  10.99397  1.00603 1.886     0.533522</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10     A1   91     13.3  11.91274  1.38726 1.886     0.735696</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10     A1   91     13.2  11.91274  1.28726 1.886     0.682663</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10     A1  120     14.3  12.66519  1.63481 1.886     0.866981</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10     A1  120     12.1  12.66519 -0.56519 1.886    -0.299733</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent    0     97.2  95.70025  1.49975 1.882      0.79693</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent    0     96.4  95.70025  0.69975 1.882      0.37183</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent    3     71.1  71.44670 -0.34670 1.882     -0.18423</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent    3     69.2  71.44670 -2.24670 1.882     -1.19384</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent    6     58.1  56.59283  1.50717 1.882      0.80087</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent    6     56.6  56.59283  0.00717 1.882      0.00381</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent   10     44.4  44.56648 -0.16648 1.882     -0.08847</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent   10     43.4  44.56648 -1.16648 1.882     -0.61984</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent   20     33.3  29.76020  3.53980 1.882      1.88096</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent   20     29.2  29.76020 -0.56020 1.882     -0.29767</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent   34     17.6  19.39208 -1.79208 1.882     -0.95226</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent   34     18.0  19.39208 -1.39208 1.882     -0.73971</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent   55     10.5  10.55761 -0.05761 1.882     -0.03061</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent   55      9.3  10.55761 -1.25761 1.882     -0.66826</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent   90      4.5   3.84742  0.65258 1.882      0.34676</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent   90      4.7   3.84742  0.85258 1.882      0.45304</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent  112      3.0   2.03997  0.96003 1.882      0.51013</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent  112      3.4   2.03997  1.36003 1.882      0.72268</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent  132      2.3   1.14585  1.15415 1.882      0.61328</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6 parent  132      2.7   1.14585  1.55415 1.882      0.82583</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1    3      4.3   4.86054 -0.56054 1.882     -0.29786</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1    3      4.6   4.86054 -0.26054 1.882     -0.13844</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1    6      7.0   7.74179 -0.74179 1.882     -0.39417</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1    6      7.2   7.74179 -0.54179 1.882     -0.28789</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1   10      8.2   9.94048 -1.74048 1.882     -0.92485</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1   10      8.0   9.94048 -1.94048 1.882     -1.03112</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1   20     11.0  12.19109 -1.19109 1.882     -0.63291</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1   20     13.7  12.19109  1.50891 1.882      0.80180</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1   34     11.5  13.10706 -1.60706 1.882     -0.85395</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1   34     12.7  13.10706 -0.40706 1.882     -0.21630</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1   55     14.9  13.06131  1.83869 1.882      0.97703</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1   55     14.5  13.06131  1.43869 1.882      0.76448</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1   90     12.1  11.54495  0.55505 1.882      0.29494</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1   90     12.3  11.54495  0.75505 1.882      0.40122</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1  112      9.9  10.31533 -0.41533 1.882     -0.22070</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1  112     10.2  10.31533 -0.11533 1.882     -0.06128</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1  132      8.8   9.20222 -0.40222 1.882     -0.21373</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 6     A1  132      7.8   9.20222 -1.40222 1.882     -0.74510</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent    0     93.6  90.82357  2.77643 1.882      1.47532</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent    0     92.3  90.82357  1.47643 1.882      0.78453</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent    3     87.0  84.73448  2.26552 1.882      1.20384</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent    3     82.2  84.73448 -2.53448 1.882     -1.34675</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent    7     74.0  77.65013 -3.65013 1.882     -1.93958</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent    7     73.9  77.65013 -3.75013 1.882     -1.99272</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent   14     64.2  67.60639 -3.40639 1.882     -1.81007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent   14     69.5  67.60639  1.89361 1.882      1.00621</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent   30     54.0  52.53663  1.46337 1.882      0.77760</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent   30     54.6  52.53663  2.06337 1.882      1.09642</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent   60     41.1  39.42728  1.67272 1.882      0.88884</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent   60     38.4  39.42728 -1.02728 1.882     -0.54587</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent   90     32.5  33.76360 -1.26360 1.882     -0.67144</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent   90     35.5  33.76360  1.73640 1.882      0.92268</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent  120     28.1  30.39975 -2.29975 1.882     -1.22203</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent  120     29.0  30.39975 -1.39975 1.882     -0.74379</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent  180     26.5  25.62379  0.87621 1.882      0.46559</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7 parent  180     27.6  25.62379  1.97621 1.882      1.05010</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1    3      3.9   2.70005  1.19995 1.882      0.63762</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1    3      3.1   2.70005  0.39995 1.882      0.21252</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1    7      6.9   5.83475  1.06525 1.882      0.56605</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1    7      6.6   5.83475  0.76525 1.882      0.40663</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1   14     10.4  10.26142  0.13858 1.882      0.07364</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1   14      8.3  10.26142 -1.96142 1.882     -1.04225</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1   30     14.4  16.82999 -2.42999 1.882     -1.29123</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1   30     13.7  16.82999 -3.12999 1.882     -1.66319</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1   60     22.1  22.32486 -0.22486 1.882     -0.11949</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1   60     22.3  22.32486 -0.02486 1.882     -0.01321</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1   90     27.5  24.45927  3.04073 1.882      1.61576</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1   90     25.4  24.45927  0.94073 1.882      0.49988</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1  120     28.0  25.54862  2.45138 1.882      1.30260</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1  120     26.6  25.54862  1.05138 1.882      0.55868</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1  180     25.8  26.82277 -1.02277 1.882     -0.54347</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 7     A1  180     25.3  26.82277 -1.52277 1.882     -0.80916</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent    0     91.9  91.16791  0.73209 1.882      0.38901</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent    0     90.8  91.16791 -0.36791 1.882     -0.19550</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent    1     64.9  67.58358 -2.68358 1.882     -1.42598</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent    1     66.2  67.58358 -1.38358 1.882     -0.73520</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent    3     43.5  41.62086  1.87914 1.882      0.99853</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent    3     44.1  41.62086  2.47914 1.882      1.31735</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent    8     18.3  19.60116 -1.30116 1.882     -0.69140</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent    8     18.1  19.60116 -1.50116 1.882     -0.79768</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent   14     10.2  10.63101 -0.43101 1.882     -0.22903</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent   14     10.8  10.63101  0.16899 1.882      0.08980</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent   27      4.9   3.12435  1.77565 1.882      0.94354</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent   27      3.3   3.12435  0.17565 1.882      0.09334</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent   48      1.6   0.43578  1.16422 1.882      0.61864</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent   48      1.5   0.43578  1.06422 1.882      0.56550</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent   70      1.1   0.05534  1.04466 1.882      0.55510</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8 parent   70      0.9   0.05534  0.84466 1.882      0.44883</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8     A1    1      9.6   7.63450  1.96550 1.882      1.04442</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8     A1    1      7.7   7.63450  0.06550 1.882      0.03481</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8     A1    3     15.0  15.52593 -0.52593 1.882     -0.27947</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8     A1    3     15.1  15.52593 -0.42593 1.882     -0.22633</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8     A1    8     21.2  20.32192  0.87808 1.882      0.46659</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8     A1    8     21.1  20.32192  0.77808 1.882      0.41345</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8     A1   14     19.7  20.09721 -0.39721 1.882     -0.21107</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8     A1   14     18.9  20.09721 -1.19721 1.882     -0.63617</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8     A1   27     17.5  16.37477  1.12523 1.882      0.59792</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8     A1   27     15.9  16.37477 -0.47477 1.882     -0.25228</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8     A1   48      9.5  10.13141 -0.63141 1.882     -0.33551</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8     A1   48      9.8  10.13141 -0.33141 1.882     -0.17610</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8     A1   70      6.2   5.81827  0.38173 1.882      0.20284</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 8     A1   70      6.1   5.81827  0.28173 1.882      0.14970</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent    0     99.8  97.48728  2.31272 1.882      1.22892</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent    0     98.3  97.48728  0.81272 1.882      0.43186</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent    1     77.1  79.29476 -2.19476 1.882     -1.16624</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent    1     77.2  79.29476 -2.09476 1.882     -1.11310</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent    3     59.0  55.67060  3.32940 1.882      1.76915</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent    3     58.1  55.67060  2.42940 1.882      1.29092</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent    8     27.4  31.57871 -4.17871 1.882     -2.22046</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent    8     29.2  31.57871 -2.37871 1.882     -1.26398</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent   14     19.1  22.51546 -3.41546 1.882     -1.81489</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent   14     29.6  22.51546  7.08454 1.882      3.76454</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent   27     10.1  14.09074 -3.99074 1.882     -2.12057</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent   27     18.2  14.09074  4.10926 1.882      2.18355</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent   48      4.5   6.95747 -2.45747 1.882     -1.30584</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent   48      9.1   6.95747  2.14253 1.882      1.13848</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent   70      2.3   3.32472 -1.02472 1.882     -0.54451</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent   70      2.9   3.32472 -0.42472 1.882     -0.22569</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent   91      2.0   1.64300  0.35700 1.882      0.18970</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent   91      1.8   1.64300  0.15700 1.882      0.08343</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent  120      2.0   0.62073  1.37927 1.882      0.73291</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9 parent  120      2.2   0.62073  1.57927 1.882      0.83918</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1    1      4.2   3.64568  0.55432 1.882      0.29455</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1    1      3.9   3.64568  0.25432 1.882      0.13514</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1    3      7.4   8.30173 -0.90173 1.882     -0.47916</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1    3      7.9   8.30173 -0.40173 1.882     -0.21347</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1    8     14.5  12.71589  1.78411 1.882      0.94803</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1    8     13.7  12.71589  0.98411 1.882      0.52293</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1   14     14.2  13.90452  0.29548 1.882      0.15701</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1   14     12.2  13.90452 -1.70452 1.882     -0.90574</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1   27     13.7  14.15523 -0.45523 1.882     -0.24190</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1   27     13.2  14.15523 -0.95523 1.882     -0.50759</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1   48     13.6  13.31038  0.28962 1.882      0.15389</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1   48     15.4  13.31038  2.08962 1.882      1.11037</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1   70     10.4  11.85965 -1.45965 1.882     -0.77562</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1   70     11.6  11.85965 -0.25965 1.882     -0.13797</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1   91     10.0  10.36294 -0.36294 1.882     -0.19286</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1   91      9.5  10.36294 -0.86294 1.882     -0.45855</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1  120      9.1   8.43003  0.66997 1.882      0.35601</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Dataset 9     A1  120      9.0   8.43003  0.56997 1.882      0.30287</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent    0     96.1  93.95603  2.14397 1.882      1.13925</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent    0     94.3  93.95603  0.34397 1.882      0.18278</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent    8     73.9  77.70592 -3.80592 1.882     -2.02237</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent    8     73.9  77.70592 -3.80592 1.882     -2.02237</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent   14     69.4  70.04570 -0.64570 1.882     -0.34311</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent   14     73.1  70.04570  3.05430 1.882      1.62298</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent   21     65.6  64.01710  1.58290 1.882      0.84111</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent   21     65.3  64.01710  1.28290 1.882      0.68170</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent   41     55.9  54.98434  0.91566 1.882      0.48656</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent   41     54.4  54.98434 -0.58434 1.882     -0.31050</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent   63     47.0  49.87137 -2.87137 1.882     -1.52577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent   63     49.3  49.87137 -0.57137 1.882     -0.30361</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent   91     44.7  45.06727 -0.36727 1.882     -0.19516</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent   91     46.7  45.06727  1.63273 1.882      0.86759</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent  120     42.1  40.76402  1.33598 1.882      0.70991</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10 parent  120     41.3  40.76402  0.53598 1.882      0.28481</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10     A1    8      3.3   4.14599 -0.84599 1.882     -0.44954</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10     A1    8      3.4   4.14599 -0.74599 1.882     -0.39640</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10     A1   14      3.9   6.08478 -2.18478 1.882     -1.16093</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10     A1   14      2.9   6.08478 -3.18478 1.882     -1.69231</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10     A1   21      6.4   7.59411 -1.19411 1.882     -0.63452</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10     A1   21      7.2   7.59411 -0.39411 1.882     -0.20942</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10     A1   41      9.1   9.78292 -0.68292 1.882     -0.36289</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10     A1   41      8.5   9.78292 -1.28292 1.882     -0.68171</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10     A1   63     11.7  10.93274  0.76726 1.882      0.40770</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10     A1   63     12.0  10.93274  1.06726 1.882      0.56711</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10     A1   91     13.3  11.93986  1.36014 1.882      0.72274</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10     A1   91     13.2  11.93986  1.26014 1.882      0.66961</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10     A1  120     14.3  12.79238  1.50762 1.882      0.80111</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Dataset 10     A1  120     12.1  12.79238 -0.69238 1.882     -0.36791</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># The following takes about 6 minutes</span></span></span>
 <span class="r-in"><span><span class="co">#f_saem_dfop_sfo_deSolve &lt;- saem(f_mmkin["DFOP-SFO", ], solution_type = "deSolve",</span></span></span>

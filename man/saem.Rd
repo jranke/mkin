@@ -24,7 +24,7 @@ saem(object, ...)
   covariates = NULL,
   covariate_models = NULL,
   no_random_effect = NULL,
-  error.init = c(3, 0.1),
+  error.init = c(1, 1),
   nbiter.saemix = c(300, 100),
   control = list(displayProgress = FALSE, print = FALSE, nbiter.saemix = nbiter.saemix,
     save = FALSE, save.graphs = FALSE),
