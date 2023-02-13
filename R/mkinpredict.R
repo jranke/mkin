@@ -24,6 +24,7 @@
 #' parent compound.
 #' @param method.ode The solution method passed via [mkinpredict] to [ode]] in
 #' case the solution type is "deSolve" and we are not using compiled code.
+#' When using compiled code, only lsoda is supported.
 #' @param use_compiled If set to \code{FALSE}, no compiled version of the
 #' [mkinmod] model is used, even if is present.
 #' @param atol Absolute error tolerance, passed to the ode solver.
@@ -34,7 +35,6 @@
 #'   FALSE). Setting this to FALSE has no effect for analytical solutions,
 #'   as these always return mapped output.
 #' @param na_stop Should it be an error if [ode] returns NaN values
-#' @param call_lsoda The address of the compiled function "call_lsoda"
 #' @param \dots Further arguments passed to the ode solver in case such a
 #'   solver is used.
 #' @return A matrix with the numeric solution in wide format
@@ -56,11 +56,11 @@
 #' mkinpredict(SFO, c(k_degradinol = 0.3), c(degradinol = 100), 0:20,
 #'       solution_type = "analytical")[21,]
 #' mkinpredict(SFO, c(k_degradinol = 0.3), c(degradinol = 100), 0:20,
-#'       method = "lsoda")[21,]
+#'       method = "lsoda", use_compiled = FALSE)[21,]
 #' mkinpredict(SFO, c(k_degradinol = 0.3), c(degradinol = 100), 0:20,
-#'       method = "ode45")[21,]
+#'       method = "ode45", use_compiled = FALSE)[21,]
 #' mkinpredict(SFO, c(k_degradinol = 0.3), c(degradinol = 100), 0:20,
-#'       method = "rk4")[21,]
+#'       method = "rk4", use_compiled = FALSE)[21,]
 #' # rk4 is not as precise here
 #'
 #' # The number of output times used to make a lot of difference until the
@@ -172,79 +172,19 @@ mkinpredict.mkinmod <- function(x,
   if (solution_type == "deSolve") {
     if (!is.null(x$cf) & use_compiled[1] != FALSE) {
 
-#       out <- deSolve::ode(
-#         y = odeini,
-#         times = outtimes,
-#         func = "diffs",
-#         initfunc = "initpar",
-#         dllname = x$dll_info[["name"]],
-#         parms = odeparms[x$parms], # Order matters when using compiled models
-#         method = method.ode,
-#         atol = atol,
-#         rtol = rtol,
-#         maxsteps = maxsteps,
-#         ...
-#       )
-#
-      # Prepare call to "call_lsoda"
-      # Simplified code from deSolve::lsoda() adapted to our use case
-      if (is.null(call_lsoda)) {
-        call_lsoda <- getNativeSymbolInfo("call_lsoda", PACKAGE = "deSolve")
-      }
-      if (is.null(x$diffs_address)) {
-        x$diffs_address <- getNativeSymbolInfo("diffs",
-          PACKAGE = x$dll_info[["name"]])$address
-        x$initpar_address <- getNativeSymbolInfo("initpar",
-          PACKAGE = x$dll_info[["name"]])$address
-      }
-      rwork <- vector("double", 20)
-      rwork[] <- 0.
-      rwork[6] <- max(abs(diff(outtimes)))
-
-      iwork <- vector("integer", 20)
-      iwork[] <- 0
-      iwork[6] <- maxsteps
-
-      n <- length(odeini)
-      lmat <- n^2 + 2     # from deSolve::lsoda(), for Jacobian type full, internal (2)
-      # hard-coded default values of lsoda():
-      maxordn <- 12L
-      maxords <- 5L
-      lrn <- 20 + n * (maxordn + 1) + 3 * n  # length in case non-stiff method
-      lrs <- 20 + n * (maxords + 1) + 3 * n + lmat        # length in case stiff method
-      lrw <- max(lrn, lrs)                       # actual length: max of both
-      liw <- 20 + n
-
-      on.exit(.C("unlock_solver", PACKAGE = "deSolve"))
-
-      out_raw <- .Call(call_lsoda,
-        as.double(odeini),   # y
-        as.double(outtimes), # times
-        x$diffs_address,     # derivfunc
-        as.double(odeparms[x$parms]), # parms
-        rtol, atol,
-        NULL, NULL, # rho, tcrit
-        NULL, # jacfunc
-        x$initpar_address, # initfunc
-        NULL, # eventfunc
-        0L,   # verbose
-        1L,   # iTask
-        as.double(rwork), # rWork
-        as.integer(iwork), # iWork
-        2L,     # jT full Jacobian calculated internally
-        0L,    # nOut
-        as.integer(lrw), # lRw
-        as.integer(liw), # lIw
-        1L, # Solver
-        NULL, # rootfunc
-        0L, as.double(0), 0L, # nRoot, Rpar, Ipar
-        0L, # Type
-        list(fmat = 0L, tmat = 0L, imat = 0L, ModelForc = NULL), # flist
-        list(), # elist
-        list(islag = 0L) # elag
+      out <- deSolve::lsoda(
+        y = odeini,
+        times = outtimes,
+        func = mkinmod[["symbols"]],
+        initfunc = "initpar",
+        dllname = x$dll_info[["name"]],
+        parms = odeparms[x$parms], # Order matters when using compiled models
+        atol = atol,
+        rtol = rtol,
+        maxsteps = maxsteps,
+        ...
       )
 
-      out <- t(out_raw)
       colnames(out) <- c("time", mod_vars)
     } else {
       mkindiff <- function(t, state, parms) {

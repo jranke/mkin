@@ -501,12 +501,10 @@ mkinfit <- function(mkinmod, observed,
   }
 
   # Get native symbol before iterations info for speed
-  call_lsoda <- getNativeSymbolInfo("call_lsoda", PACKAGE = "deSolve")
   if (solution_type == "deSolve" & use_compiled[1] != FALSE) {
-    mkinmod$diffs_address <- getNativeSymbolInfo("diffs",
-      PACKAGE = mkinmod$dll_info[["name"]])$address
-    mkinmod$initpar_address <- getNativeSymbolInfo("initpar",
-      PACKAGE = mkinmod$dll_info[["name"]])$address
+    mkinmod[["symbols"]] <- deSolve::checkDLL(dllname = mkinmod$dll_info[["name"]],
+      func = "diffs", initfunc = "initpar",
+      jacfunc = NULL, nout = 0, outnames = NULL)
   }
 
   # Get the error model and the algorithm for fitting
@@ -903,9 +901,8 @@ mkinfit <- function(mkinmod, observed,
   fit$time <- fit_time
 
   # We also need the model and a model name for summary and plotting,
-  # but without address info that will become invalid
-  mkinmod$diffs_address <- NULL
-  mkinmod$initpar_address <- NULL
+  # but without symbols because they could become invalid
+  fit$symbols <- NULL
   fit$mkinmod <- mkinmod
   fit$mkinmod$name <- mkinmod_name
   fit$obs_vars <- obs_vars
