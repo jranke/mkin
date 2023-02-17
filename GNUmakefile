@@ -99,6 +99,9 @@ testcheck: roxygen test check
 README.html: README.md
 	"$(RBIN)/Rscript" -e "rmarkdown::render('README.md', output_format = 'html_document', output_options = list(mathjax = NULL))"
 
+vignettes/%.pdf: vignettes/references.bib vignettes/%.rnw
+	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/$*.rnw', dir = 'vignettes')"
+
 vignettes/%.html: vignettes/mkin_vignettes.css vignettes/references.bib vignettes/%.rmd
 	"$(RBIN)/Rscript" -e "tools::buildVignette(file = 'vignettes/$*.rmd', dir = 'vignettes')"
 
