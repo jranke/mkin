@@ -1,8 +1,12 @@
-# mkin 1.2.2
+# mkin 1.3.2
+
+- Depend on upcoming deSolve version with the possibility to avoid resolving symbols in a shared library (compiled models) over and over.
+
+# mkin 1.2.2 (unreleased)
 
 - 'inst/rmarkdown/templates/hier': R markdown template to facilitate the application of hierarchical kinetic models.
 
-- 'inst/testdata/lambda-cyhalothrin_soil_efsa_2014.xlsx': Example spreadsheet for use with 'read_spreadsheet()'.
+- 'inst/testdata/{cyantraniliprole_soil_efsa_2014,lambda-cyhalothrin_soil_efsa_2014}.xlsx': Example spreadsheets for use with 'read_spreadsheet()'.
 
 - 'R/mhmkin.R': Allow an 'illparms.mhmkin' object or a list with suitable dimensions as value of the argument 'no_random_effects', making it possible to exclude random effects that were ill-defined in simpler variants of the set of degradation models. Remove the possibility to exclude random effects based on separate fits, as it did not work well.
 
