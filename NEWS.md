@@ -1,4 +1,4 @@
-# mkin 1.3.2
+# mkin 1.2.3
 
 - Depend on upcoming deSolve version with the possibility to avoid resolving symbols in a shared library (compiled models) over and over.
 
