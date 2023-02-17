@@ -21,7 +21,6 @@ mkinpredict(x, odeparms, odeini, outtimes, ...)
   maxsteps = 20000L,
   map_output = TRUE,
   na_stop = TRUE,
-  call_lsoda = NULL,
   ...
 )
 
@@ -69,7 +68,8 @@ parent compound.}
 \link{mkinmod} model is used, even if is present.}
 
 \item{method.ode}{The solution method passed via \link{mkinpredict} to \link{ode}] in
-case the solution type is "deSolve" and we are not using compiled code.}
+case the solution type is "deSolve" and we are not using compiled code.
+When using compiled code, only lsoda is supported.}
 
 \item{atol}{Absolute error tolerance, passed to the ode solver.}
 
@@ -83,8 +83,6 @@ FALSE). Setting this to FALSE has no effect for analytical solutions,
 as these always return mapped output.}
 
 \item{na_stop}{Should it be an error if \link{ode} returns NaN values}
-
-\item{call_lsoda}{The address of the compiled function "call_lsoda"}
 }
 \value{
 A matrix with the numeric solution in wide format
@@ -111,11 +109,11 @@ mkinpredict(SFO, c(k_degradinol = 0.3), c(degradinol = 100), 0:20,
 mkinpredict(SFO, c(k_degradinol = 0.3), c(degradinol = 100), 0:20,
       solution_type = "analytical")[21,]
 mkinpredict(SFO, c(k_degradinol = 0.3), c(degradinol = 100), 0:20,
-      method = "lsoda")[21,]
+      method = "lsoda", use_compiled = FALSE)[21,]
 mkinpredict(SFO, c(k_degradinol = 0.3), c(degradinol = 100), 0:20,
-      method = "ode45")[21,]
+      method = "ode45", use_compiled = FALSE)[21,]
 mkinpredict(SFO, c(k_degradinol = 0.3), c(degradinol = 100), 0:20,
-      method = "rk4")[21,]
+      method = "rk4", use_compiled = FALSE)[21,]
 # rk4 is not as precise here
 
 # The number of output times used to make a lot of difference until the

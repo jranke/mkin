@@ -117,7 +117,6 @@ mkinpredict.mkinmod <- function(x,
   method.ode = "lsoda", atol = 1e-8, rtol = 1e-10, maxsteps = 20000L,
   map_output = TRUE,
   na_stop = TRUE,
-  call_lsoda = NULL,
   ...)
 {
 
@@ -170,12 +169,12 @@ mkinpredict.mkinmod <- function(x,
   }
 
   if (solution_type == "deSolve") {
-    if (!is.null(x$cf) & use_compiled[1] != FALSE) {
+    if (!is.null(x$cf) & !is.null(x$symbols) & use_compiled[1] != FALSE) {
 
       out <- deSolve::lsoda(
         y = odeini,
         times = outtimes,
-        func = mkinmod[["symbols"]],
+        func = x$symbols,
         initfunc = "initpar",
         dllname = x$dll_info[["name"]],
         parms = odeparms[x$parms], # Order matters when using compiled models

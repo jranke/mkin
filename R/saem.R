@@ -581,12 +581,11 @@ saemix_model <- function(object, solution_type = "auto",
     transform_fractions <- object[[1]]$transform_fractions
 
     # Get native symbol info for speed
-    call_lsoda <- getNativeSymbolInfo("call_lsoda", PACKAGE = "deSolve")
     if (solution_type == "deSolve" & !is.null(mkin_model$cf)) {
-      mkin_model$diffs_address <- getNativeSymbolInfo("diffs",
-        PACKAGE = mkin_model$dll_info[["name"]])$address
-      mkin_model$initpar_address <- getNativeSymbolInfo("initpar",
-        PACKAGE = mkin_model$dll_info[["name"]])$address
+      mkin_model$symbols <- deSolve::checkDLL(
+        dllname = mkin_model$dll_info[["name"]],
+        func = "diffs", initfunc = "initpar",
+        jacfunc = NULL, nout = 0, outnames = NULL)
     }
 
     # Define the model function
@@ -622,8 +621,7 @@ saemix_model <- function(object, solution_type = "auto",
             odeparms = odeparms, odeini = odeini,
             solution_type = solution_type,
             outtimes = sort(unique(i_time)),
-            na_stop = FALSE,
-            call_lsoda = call_lsoda
+            na_stop = FALSE
           )
 
           out_index <- cbind(as.character(i_time), as.character(i_name))

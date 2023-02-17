@@ -617,8 +617,8 @@ mkinfit <- function(mkinmod, observed,
                          solution_type = solution_type,
                          use_compiled = use_compiled,
                          method.ode = method.ode,
-                         atol = atol, rtol = rtol,
-                         call_lsoda = call_lsoda, ...)
+                         atol = atol, rtol = rtol, 
+                         ...)
 
       observed_index <- cbind(as.character(observed$time), as.character(observed$name))
       observed$predicted <- out[observed_index]
