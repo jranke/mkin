@@ -20,6 +20,7 @@ cpu_model <- benchmarkme::get_cpu()$model_name
 cpu_model <- gsub("AMD ", "", cpu_model)
 cpu_model <- gsub("Intel\\(R\\) Core\\(TM\\) ", "", cpu_model)
 cpu_model <- gsub(" Eight-Core Processor", "", cpu_model)
+cpu_model <- gsub(" 16-Core Processor", "", cpu_model)
 cpu_model <- gsub(" CPU @ 2.50GHz", "", cpu_model)
 
 operating_system <- Sys.info()[["sysname"]]
