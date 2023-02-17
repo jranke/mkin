@@ -19,13 +19,13 @@ kinetic parameters and initial values for the state variables."><meta name="robo
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.2.2</span>
+        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.2.3</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav"><li>
-  <a href="../reference/index.html">Functions and data</a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -36,6 +36,8 @@ kinetic parameters and initial values for the state variables."><meta name="robo
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/mkin.html">Introduction to mkin</a>
     </li>
+    <li class="divider">
+    <li class="dropdown-header">Example evaluations with (generalised) nonlinear least squares</li>
     <li>
       <a href="../articles/FOCUS_D.html">Example evaluation of FOCUS Example Dataset D</a>
     </li>
@@ -43,28 +45,43 @@ kinetic parameters and initial values for the state variables."><meta name="robo
       <a href="../articles/FOCUS_L.html">Example evaluation of FOCUS Laboratory Data L1 to L3</a>
     </li>
     <li>
-      <a href="../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
+      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
+    </li>
+    <li class="divider">
+    <li class="dropdown-header">Example evaluations with hierarchical models (nonlinear mixed-effects models)</li>
+    <li>
+      <a href="../articles/prebuilt/2022_dmta_parent.html">Testing hierarchical parent degradation kinetics with residue data on dimethenamid and dimethenamid-P</a>
+    </li>
+    <li>
+      <a href="../articles/prebuilt/2022_dmta_pathway.html">Testing hierarchical pathway kinetics with residue data on dimethenamid and dimethenamid-P</a>
+    </li>
+    <li>
+      <a href="../articles/prebuilt/2022_cyan_pathway.html">Testing hierarchical pathway kinetics with residue data on cyantraniliprole</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/dimethenamid_2018.html">Comparison of saemix and nlme evaluations of dimethenamid data from 2018</a>
     </li>
     <li>
       <a href="../articles/web_only/multistart.html">Short demo of the multistart method</a>
     </li>
+    <li class="divider">
+    <li class="dropdown-header">Performance</li>
     <li>
       <a href="../articles/web_only/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
-    </li>
-    <li>
-      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
-    </li>
-    <li>
-      <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
-    </li>
-    <li>
-      <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
     <li>
       <a href="../articles/web_only/benchmarks.html">Benchmark timings for mkin</a>
     </li>
     <li>
       <a href="../articles/web_only/saem_benchmarks.html">Benchmark timings for saem.mmkin</a>
+    </li>
+    <li class="divider">
+    <li class="dropdown-header">Miscellaneous</li>
+    <li>
+      <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
   </ul></li>
 <li>
@@ -110,7 +127,7 @@ kinetic parameters and initial values for the state variables.</p>
 <span>  method.ode <span class="op">=</span> <span class="st">"lsoda"</span>,</span>
 <span>  atol <span class="op">=</span> <span class="fl">1e-08</span>,</span>
 <span>  rtol <span class="op">=</span> <span class="fl">1e-10</span>,</span>
-<span>  maxsteps <span class="op">=</span> <span class="fl">20000</span>,</span>
+<span>  maxsteps <span class="op">=</span> <span class="fl">20000L</span>,</span>
 <span>  map_output <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  na_stop <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -166,8 +183,9 @@ solver is used.</p></dd>
 <dd><p>The method that should be used for producing the
 predictions. This should generally be "analytical" if there is only one
 observed variable, and usually "deSolve" in the case of several observed
-variables. The third possibility "eigen" is faster but not applicable to
-some models e.g.  using FOMC for the parent compound.</p></dd>
+variables. The third possibility "eigen" is fast in comparison to uncompiled
+ODE models, but not applicable to some models, e.g. using FOMC for the
+parent compound.</p></dd>
 
 
 <dt>use_compiled</dt>
@@ -177,22 +195,20 @@ some models e.g.  using FOMC for the parent compound.</p></dd>
 
 <dt>method.ode</dt>
 <dd><p>The solution method passed via mkinpredict to ode] in
-case the solution type is "deSolve". The default "lsoda" is performant, but
-sometimes fails to converge.</p></dd>
+case the solution type is "deSolve" and we are not using compiled code.
+When using compiled code, only lsoda is supported.</p></dd>
 
 
 <dt>atol</dt>
-<dd><p>Absolute error tolerance, passed to ode. Default is 1e-8,
-lower than in lsoda.</p></dd>
+<dd><p>Absolute error tolerance, passed to the ode solver.</p></dd>
 
 
 <dt>rtol</dt>
-<dd><p>Absolute error tolerance, passed to ode. Default is 1e-10,
-much lower than in lsoda.</p></dd>
+<dd><p>Absolute error tolerance, passed to the ode solver.</p></dd>
 
 
 <dt>maxsteps</dt>
-<dd><p>Maximum number of steps, passed to ode.</p></dd>
+<dd><p>Maximum number of steps, passed to the ode solver.</p></dd>
 
 
 <dt>map_output</dt>
@@ -325,15 +341,15 @@ as these always return mapped output.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       time degradinol </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20.0000000  0.2478752 </span>
 <span class="r-in"><span><span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_degradinol <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>degradinol <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">20</span>,</span></span>
-<span class="r-in"><span>      method <span class="op">=</span> <span class="st">"lsoda"</span><span class="op">)</span><span class="op">[</span><span class="fl">21</span>,<span class="op">]</span></span></span>
+<span class="r-in"><span>      method <span class="op">=</span> <span class="st">"lsoda"</span>, use_compiled <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">[</span><span class="fl">21</span>,<span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       time degradinol </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20.0000000  0.2478752 </span>
 <span class="r-in"><span><span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_degradinol <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>degradinol <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">20</span>,</span></span>
-<span class="r-in"><span>      method <span class="op">=</span> <span class="st">"ode45"</span><span class="op">)</span><span class="op">[</span><span class="fl">21</span>,<span class="op">]</span></span></span>
+<span class="r-in"><span>      method <span class="op">=</span> <span class="st">"ode45"</span>, use_compiled <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">[</span><span class="fl">21</span>,<span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       time degradinol </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20.0000000  0.2478752 </span>
 <span class="r-in"><span><span class="fu">mkinpredict</span><span class="op">(</span><span class="va">SFO</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k_degradinol <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>degradinol <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">20</span>,</span></span>
-<span class="r-in"><span>      method <span class="op">=</span> <span class="st">"rk4"</span><span class="op">)</span><span class="op">[</span><span class="fl">21</span>,<span class="op">]</span></span></span>
+<span class="r-in"><span>      method <span class="op">=</span> <span class="st">"rk4"</span>, use_compiled <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">[</span><span class="fl">21</span>,<span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       time degradinol </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20.0000000  0.2480043 </span>
 <span class="r-in"><span><span class="co"># rk4 is not as precise here</span></span></span>
@@ -372,11 +388,12 @@ as these always return mapped output.</p></dd>
 <span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fl">100</span>, m1 <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">20</span>, by <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>      solution_type <span class="op">=</span> <span class="st">"analytical"</span>, use_compiled <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">[</span><span class="fl">201</span>,<span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: rbenchmark</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               test relative elapsed</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 deSolve_compiled      1.0   0.005</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4       analytical      1.0   0.005</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1            eigen      4.4   0.022</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3          deSolve     41.0   0.205</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4       analytical    1.000   0.007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1            eigen    1.143   0.008</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 deSolve_compiled    8.857   0.062</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3          deSolve    8.857   0.062</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span>  <span class="co"># Predict from a fitted model</span></span></span>
@@ -408,7 +425,7 @@ as these always return mapped output.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

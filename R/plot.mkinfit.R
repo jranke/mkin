@@ -140,15 +140,16 @@ plot.mkinfit <- function(x, fit = x,
     rownames(subset(fit$fixed, type == "deparm")))
   odeparms <- parms.all[odenames]
 
+
+  if (solution_type == "deSolve" & !is.null(fit$mkinmod$cf)) {
+    fit$mkinmod[["symbols"]] <- deSolve::checkDLL(dllname = fit$mkinmod$dll_info[["name"]],
+      func = "diffs", initfunc = "initpar",
+      jacfunc = NULL, nout = 0, outnames = NULL)
+  }
   out <- try(mkinpredict(fit$mkinmod, odeparms, odeini, outtimes,
              solution_type = solution_type, atol = fit$atol, rtol = fit$rtol),
              silent = TRUE)
 
-  if (inherits(out, "try-error")) {
-    out <- mkinpredict(fit$mkinmod, odeparms, odeini, outtimes,
-             solution_type = solution_type, atol = fit$atol, rtol = fit$rtol,
-             use_compiled = FALSE)
-  }
   out <- as.data.frame(out)
 
   names(col_obs) <- names(pch_obs) <- names(lty_obs) <- obs_vars
