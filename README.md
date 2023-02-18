@@ -32,7 +32,7 @@ detailed guidance and various helpful tools have been developed as detailed in
 stop solution for degradation kinetics, addressing modellers that are willing
 to, or even prefer to work with R.
 
-## Usage
+## Basic usage
 
 For a start, have a look at the code examples provided for
 [`plot.mkinfit`](https://pkgdown.jrwb.de/mkin/reference/plot.mkinfit.html)
@@ -46,8 +46,14 @@ at the package vignettes
 
 The HTML documentation of the latest version released to CRAN is available at
 [jrwb.de](https://pkgdown.jrwb.de/mkin/) and
-[github](https://jranke.github.io/mkin/). Documentation of the development
+[github](https://jranke.github.io/mkin/). 
+
+Documentation of the development
 version is found in the ['dev' subdirectory](https://pkgdown.jrwb.de/mkin/dev/).
+In the articles section of this documentation, you can also find demonstrations
+of the application of nonlinear hierarchical models, also known as nonlinear
+mixed-effects models, to more complex data, including transformation products
+and covariates.
 
 ## Features
 
