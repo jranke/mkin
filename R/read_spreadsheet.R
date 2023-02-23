@@ -101,13 +101,20 @@ read_spreadsheet <- function(path, valid_datasets = "all",
   # Get covariates
   covariates_raw <- readxl::read_excel(path, sheet = "Covariates")
   covariates <- as.data.frame(covariates_raw[4:ncol(covariates_raw)])
-  rownames(covariates) <- covariates_raw[[1]]
-  covariates <- covariates[which(colnames(covariates) != "Remarks")]
+  nocov <- setdiff(groups, covariates_raw[[1]])
+  if (length(nocov) > 0) {
+    message("Did not find covariate data for ", paste(nocov, collapse = ", "))
+    message("Not returning covariate data")
+    attr(ds, "covariates") <- NULL
+  } else {
+    rownames(covariates) <- covariates_raw[[1]]
+    covariates <- covariates[which(colnames(covariates) != "Remarks")]
+    # Attach covariate data if available
+    attr(ds, "covariates") <- covariates[groups, , drop = FALSE]
+  }
 
   # Attach the compound list to support automatic model building
   attr(ds, "compounds") <- as.data.frame(compounds)
 
-  # Attach covariate data
-  attr(ds, "covariates") <- covariates[groups, , drop = FALSE]
   return(ds)
 }
