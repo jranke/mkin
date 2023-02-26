@@ -17,7 +17,25 @@ R Markdown output format to pass to
 }
 \description{
 R markdown format for setting up hierarchical kinetics based on a template
-provided with the mkin package.
+provided with the mkin package. This format is based on \link[rmarkdown:pdf_document]{rmarkdown::pdf_document}.
+Chunk options are adapted. Echoing R code from code chunks and caching are
+turned on per default. character for prepending output from code chunks is
+set to the empty string, code tidying is off, figure alignment defaults to
+centering, and positioning of figures is set to "H", which means that
+figures will not move around in the document, but stay where the user
+includes them.
+}
+\details{
+The latter feature (positioning the figures with "H") depends on the LaTeX
+package 'float'. In addition, the LaTeX package 'listing' is used in the
+template for showing model fit summaries in the Appendix. This means that
+the LaTeX packages 'float' and 'listing' need to be installed in the TeX
+distribution used.
+
+On Windows, the easiest way to achieve this (if no TeX distribution
+is present before) is to install the 'tinytex' R package, to run
+'tinytex::install_tinytex()' to get the basic tiny Tex distribution,
+and then to run 'tinytex::tlmgr_install(c("float", "listing"))'.
 }
 \examples{
 
