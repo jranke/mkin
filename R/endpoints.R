@@ -14,6 +14,10 @@
 #' another object that has list components mkinmod containing an [mkinmod]
 #' degradation model, and two numeric vectors, bparms.optim and bparms.fixed,
 #' that contain parameter values for that model.
+#' @param \dots Possibility to specify values for the covariates in the model.
+#' In case more than one vector is given, they either have to be of the same
+#' length, or of length one, in which case the respective covariate values are
+#' recycled.
 #' @importFrom stats optimize
 #' @return A list with a matrix of dissipation times named distimes, and, if
 #' applicable, a vector of formation fractions named ff and, if the SFORB model
@@ -34,17 +38,21 @@
 #'   }
 #'
 #' @export
-endpoints <- function(fit) {
-  ep <- list()
+endpoints <- function(fit, ...) {
   mkinmod <- fit$mkinmod
-  degparms <- c(fit$bparms.optim, fit$bparms.fixed)
   obs_vars <- names(mkinmod$spec)
+
+  degparms <- c(fit$bparms.optim, fit$bparms.fixed)
+
+  # Set up object to return
+  ep <- list()
   ep$ff <- vector()
   ep$SFORB <- vector()
   ep$distimes <- data.frame(
     DT50 = rep(NA, length(obs_vars)),
     DT90 = rep(NA, length(obs_vars)),
     row.names = obs_vars)
+
   for (obs_var in obs_vars) {
     type = names(mkinmod$map[[obs_var]])[1]
 
