@@ -38,7 +38,7 @@
 #'   }
 #'
 #' @export
-endpoints <- function(fit, ...) {
+endpoints <- function(fit, ..., covariates = mean) {
   mkinmod <- fit$mkinmod
   obs_vars <- names(mkinmod$spec)
 

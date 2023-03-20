@@ -804,8 +804,12 @@ update.saem.mmkin <- function(object, ..., evaluate = TRUE) {
 #' @export
 #' @rdname saem
 #' @param ci Should a matrix with estimates and confidence interval boundaries
-#' be returned? If FALSE (default), a vector of estimates is returned.
-parms.saem.mmkin <- function(object, ci = FALSE, ...) {
+#' be returned? If FALSE (default), a vector of estimates is returned if no
+#' covariates are given, otherwise a matrix of estimates is returned, with
+#' each column corresponding to a row of the data frame holding the covariates
+#' @param covariates A data frame holding covariate values for which to
+#' return parameter values. Only has an effect if 'ci' is FALSE.
+parms.saem.mmkin <- function(object, ci = FALSE, covariates = NULL, covariate_quantiles = ...) {
   cov.mod <- object$sm@covariance.model
   n_cov_mod_parms <- sum(cov.mod[upper.tri(cov.mod, diag = TRUE)])
   n_parms <- length(object$sm@name.modpar) +
@@ -827,6 +831,29 @@ parms.saem.mmkin <- function(object, ci = FALSE, ...) {
 
   names(estimate) <- rownames(conf.int)
 
-  if (ci) return(conf.int)
-  else return(estimate)
+  if (ci) {
+    return(conf.int)
+  } else {
+    if (is.null(covariates)) {
+      return(estimate)
+    } else {
+      est_for_cov <- matrix(NA,
+        nrow = length(object$sm@name.modpar), ncol = nrow(covariates),
+        dimnames = (list(object$sm@name.modpar, rownames(covariates))))
+      covmods <- object$covariate_models
+      names(covmods) <- sapply(covmods, function(x) as.character(x[[2]]))
+      for (deg_parm_name in rownames(est_for_cov)) {
+        if (deg_parm_name %in% names(covmods)) {
+          covariate <- covmods[[deg_parm_name]][[3]]
+          beta_degparm_name <- paste0("beta_", covariate,
+            "(", deg_parm_name, ")")
+          est_for_cov[deg_parm_name, ] <- estimate[deg_parm_name] +
+            covariates[[covariate]] * estimate[beta_degparm_name]
+        } else {
+          est_for_cov[deg_parm_name, ] <- estimate[deg_parm_name]
+        }
+      }
+      return(est_for_cov)
+    }
+  }
 }
