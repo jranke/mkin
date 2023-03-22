@@ -2,6 +2,8 @@
 
 - Depend on upcoming deSolve version with the possibility to avoid resolving symbols in a shared library (compiled models) over and over.
 
+- 'R/mkinerrmin.R': Fix typo in subset (use of = instead of ==), thanks to Sebastian Meyer for spotting this during his work on R 4.3.0
+
 # mkin 1.2.2 (unreleased)
 
 - 'inst/rmarkdown/templates/hier': R markdown template to facilitate the application of hierarchical kinetic models.

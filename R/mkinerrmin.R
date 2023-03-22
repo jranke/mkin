@@ -58,7 +58,7 @@ mkinerrmin <- function(fit, alpha = 0.05)
   # Remove values at time zero for variables whose value for state.ini is fixed,
   # as these will not have any effect in the optimization and should therefore not
   # be counted as degrees of freedom.
-  fixed_initials = gsub("_0$", "", rownames(subset(fit$fixed, type = "state")))
+  fixed_initials = gsub("_0$", "", rownames(subset(fit$fixed, type == "state")))
   errdata <- subset(errdata, !(time == 0 & variable %in% fixed_initials))
 
   n.optim.overall <- length(parms.optim) - length(fit$errparms)
