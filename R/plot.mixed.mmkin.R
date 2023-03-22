@@ -13,7 +13,9 @@ utils::globalVariables("ds")
 #' In case there is a covariate model, the behaviour depends on the value
 #' of 'covariates'
 #' @param covariates Data frame with covariate values for all variables in
-#' any covariate models in the object. If given, it overrides 'covariate_quantiles'
+#' any covariate models in the object. If given, it overrides 'covariate_quantiles'.
+#' Each line in the data frame will result in a line drawn for the population.
+#' Rownames are used in the legend to label the lines.
 #' @param covariate_quantiles This argument only has an effect if the fitted
 #' object has covariate models. If so, the default is to show three population
 #' curves, for the 5th percentile, the 50th percentile and the 95th percentile
@@ -77,7 +79,7 @@ plot.mixed.mmkin <- function(x,
   obs_vars = names(x$mkinmod$map),
   standardized = TRUE,
   covariates = NULL,
-  covariate_quantiles = c(0.05, 0.5, 0.95),
+  covariate_quantiles = c(0.5, 0.05, 0.95),
   xlab = "Time",
   xlim = range(x$data$time),
   resplot = c("predicted", "time"),
@@ -151,6 +153,10 @@ plot.mixed.mmkin <- function(x,
           covariates = as.data.frame(
             apply(x$covariates, 2, quantile,
              covariate_quantiles, simplify = FALSE))
+          rownames(covariates) <- paste(
+            ifelse(length(x$covariate_models) == 1,
+              "Covariate", "Covariates"),
+              rownames(covariates))
         }
         degparms_pop <- parms(x, covariates = covariates)
         pop_curves <- TRUE
@@ -160,9 +166,10 @@ plot.mixed.mmkin <- function(x,
     }
   }
 
-  # Make sure degparms_pop is a matrix, population curve variants in columns, if any
+  # Make sure degparms_pop is a matrix, columns corresponding to population curve(s)
   if (is.null(dim(degparms_pop))) {
-    degparms_pop <- matrix(degparms_pop)
+    degparms_pop <- matrix(degparms_pop, ncol = 1,
+      dimnames = list(names(degparms_pop), "Population"))
   }
 
   degparms_fixed <- fit_1$fixed$value
