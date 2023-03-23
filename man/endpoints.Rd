@@ -5,13 +5,20 @@
 \title{Function to calculate endpoints for further use from kinetic models fitted
 with mkinfit}
 \usage{
-endpoints(fit)
+endpoints(fit, covariates = NULL, covariate_quantile = 0.5)
 }
 \arguments{
 \item{fit}{An object of class \link{mkinfit}, \link{nlme.mmkin} or \link{saem.mmkin}, or
 another object that has list components mkinmod containing an \link{mkinmod}
 degradation model, and two numeric vectors, bparms.optim and bparms.fixed,
 that contain parameter values for that model.}
+
+\item{covariates}{Numeric vector with covariate values for all variables in
+any covariate models in the object. If given, it overrides 'covariate_quantile'.}
+
+\item{covariate_quantile}{This argument only has an effect if the fitted
+object has covariate models. If so, the default is to show endpoints
+for the median of the covariate values (50th percentile).}
 }
 \value{
 A list with a matrix of dissipation times named distimes, and, if

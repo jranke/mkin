@@ -802,14 +802,14 @@ update.saem.mmkin <- function(object, ..., evaluate = TRUE) {
 }
 
 #' @export
-#' @rdname saem
+#' @rdname parms
 #' @param ci Should a matrix with estimates and confidence interval boundaries
 #' be returned? If FALSE (default), a vector of estimates is returned if no
 #' covariates are given, otherwise a matrix of estimates is returned, with
 #' each column corresponding to a row of the data frame holding the covariates
 #' @param covariates A data frame holding covariate values for which to
 #' return parameter values. Only has an effect if 'ci' is FALSE.
-parms.saem.mmkin <- function(object, ci = FALSE, covariates = NULL, covariate_quantiles = ...) {
+parms.saem.mmkin <- function(object, ci = FALSE, covariates = NULL, ...) {
   cov.mod <- object$sm@covariance.model
   n_cov_mod_parms <- sum(cov.mod[upper.tri(cov.mod, diag = TRUE)])
   n_parms <- length(object$sm@name.modpar) +

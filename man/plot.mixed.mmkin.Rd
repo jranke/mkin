@@ -9,10 +9,12 @@
   i = 1:ncol(x$mmkin),
   obs_vars = names(x$mkinmod$map),
   standardized = TRUE,
+  covariates = NULL,
+  covariate_quantiles = c(0.5, 0.05, 0.95),
   xlab = "Time",
   xlim = range(x$data$time),
   resplot = c("predicted", "time"),
-  pop_curve = "auto",
+  pop_curves = "auto",
   pred_over = NULL,
   test_log_parms = FALSE,
   conf.level = 0.6,
@@ -43,6 +45,16 @@ variables in the model.}
 \item{standardized}{Should the residuals be standardized? Only takes effect if
 \code{resplot = "time"}.}
 
+\item{covariates}{Data frame with covariate values for all variables in
+any covariate models in the object. If given, it overrides 'covariate_quantiles'.
+Each line in the data frame will result in a line drawn for the population.
+Rownames are used in the legend to label the lines.}
+
+\item{covariate_quantiles}{This argument only has an effect if the fitted
+object has covariate models. If so, the default is to show three population
+curves, for the 5th percentile, the 50th percentile and the 95th percentile
+of the covariate values used for fitting the model.}
+
 \item{xlab}{Label for the x axis.}
 
 \item{xlim}{Plot range in x direction.}
@@ -50,9 +62,10 @@ variables in the model.}
 \item{resplot}{Should the residuals plotted against time or against
 predicted values?}
 
-\item{pop_curve}{Per default, a population curve is drawn in case
+\item{pop_curves}{Per default, one population curve is drawn in case
 population parameters are fitted by the model, e.g. for saem objects.
-In case there is a covariate model, no population curve is currently shown.}
+In case there is a covariate model, the behaviour depends on the value
+of 'covariates'}
 
 \item{pred_over}{Named list of alternative predictions as obtained
 from \link{mkinpredict} with a compatible \link{mkinmod}.}
@@ -95,6 +108,9 @@ The function is called for its side effect.
 }
 \description{
 Plot predictions from a fitted nonlinear mixed model obtained via an mmkin row object
+}
+\note{
+Covariate models are currently only supported for saem.mmkin objects.
 }
 \examples{
 ds <- lapply(experimental_data_for_UBA_2019[6:10],

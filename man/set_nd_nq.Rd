@@ -54,9 +54,9 @@ it automates the proposal of Boesten et al (2015).
 }
 \section{Functions}{
 \itemize{
-\item \code{set_nd_nq_focus}: Set non-detects in residue time series according to FOCUS rules
-}}
+\item \code{set_nd_nq_focus()}: Set non-detects in residue time series according to FOCUS rules
 
+}}
 \examples{
 # FOCUS (2014) p. 75/76 and 131/132
 parent_1 <- c(.12, .09, .05, .03, "nd", "nd", "nd", "nd", "nd", "nd")

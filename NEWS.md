@@ -2,7 +2,9 @@
 
 - Depend on upcoming deSolve version with the possibility to avoid resolving symbols in a shared library (compiled models) over and over.
 
-- 'R/mkinerrmin.R': Fix typo in subset (use of = instead of ==), thanks to Sebastian Meyer for spotting this during his work on R 4.3.0
+- 'R/mkinerrmin.R': Fix typo in subset (use of = instead of ==), thanks to Sebastian Meyer for spotting this during his work on R 4.3.0.
+
+- 'R/{endpoints,parms,plot.mixed.mmkin}.R': Calculate parameters and endpoints and plot population curves for specific covariate values, or specific percentiles of covariate values used in saem fits.
 
 # mkin 1.2.2 (unreleased)
 
