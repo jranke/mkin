@@ -8,7 +8,7 @@
 
 # mkin 1.2.2 (unreleased)
 
-- 'inst/rmarkdown/templates/hier': R markdown template to facilitate the application of hierarchical kinetic models.
+- 'inst/rmarkdown/templates/hierarchical_kinetics': R markdown template to facilitate the application of hierarchical kinetic models.
 
 - 'inst/testdata/{cyantraniliprole_soil_efsa_2014,lambda-cyhalothrin_soil_efsa_2014}.xlsx': Example spreadsheets for use with 'read_spreadsheet()'.
 
