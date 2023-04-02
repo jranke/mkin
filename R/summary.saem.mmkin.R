@@ -15,6 +15,7 @@
 #'   included.
 #' @param digits Number of digits to use for printing
 #' @param \dots optional arguments passed to methods like \code{print}.
+#' @inheritParams endpoints
 #' @return The summary function returns a list based on the [saemix::SaemixObject]
 #'   obtained in the fit, with at least the following additional components
 #'   \item{saemixversion, mkinversion, Rversion}{The saemix, mkin and R versions used}
@@ -93,7 +94,9 @@
 #' }
 #'
 #' @export
-summary.saem.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes = TRUE, ...) {
+summary.saem.mmkin <- function(object, data = FALSE, verbose = FALSE,
+  covariates = NULL, covariate_quantile = 0.5,
+  distimes = TRUE, ...) {
 
   mod_vars <- names(object$mkinmod$diffs)
 
@@ -199,6 +202,7 @@ summary.saem.mmkin <- function(object, data = FALSE, verbose = FALSE, distimes =
   }
 
   ep <- endpoints(object)
+  object$covariates <- ep$covariates
   if (length(ep$ff) != 0)
     object$ff <- ep$ff
   if (distimes) object$distimes <- ep$distimes
@@ -279,6 +283,11 @@ print.summary.saem.mmkin <- function(x, digits = max(3, getOption("digits") - 3)
   if (x$transformations == "mkin") {
     cat("\nBacktransformed parameters:\n")
     print(x$confint_back, digits = digits)
+  }
+
+  if (!is.null(x$covariates)) {
+    cat("\nCovariates used for endpoints below:\n")
+    print(x$covariates)
   }
 
   printSFORB <- !is.null(x$SFORB)

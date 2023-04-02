@@ -5,7 +5,15 @@
 \alias{print.summary.saem.mmkin}
 \title{Summary method for class "saem.mmkin"}
 \usage{
-\method{summary}{saem.mmkin}(object, data = FALSE, verbose = FALSE, distimes = TRUE, ...)
+\method{summary}{saem.mmkin}(
+  object,
+  data = FALSE,
+  verbose = FALSE,
+  covariates = NULL,
+  covariate_quantile = 0.5,
+  distimes = TRUE,
+  ...
+)
 
 \method{print}{summary.saem.mmkin}(x, digits = max(3, getOption("digits") - 3), verbose = x$verbose, ...)
 }
@@ -16,6 +24,13 @@
 the summary.}
 
 \item{verbose}{Should the summary be verbose?}
+
+\item{covariates}{Numeric vector with covariate values for all variables in
+any covariate models in the object. If given, it overrides 'covariate_quantile'.}
+
+\item{covariate_quantile}{This argument only has an effect if the fitted
+object has covariate models. If so, the default is to show endpoints
+for the median of the covariate values (50th percentile).}
 
 \item{distimes}{logical, indicating whether DT50 and DT90 values should be
 included.}
