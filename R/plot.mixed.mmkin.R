@@ -166,10 +166,12 @@ plot.mixed.mmkin <- function(x,
     }
   }
 
-  # Make sure degparms_pop is a matrix, columns corresponding to population curve(s)
-  if (is.null(dim(degparms_pop))) {
-    degparms_pop <- matrix(degparms_pop, ncol = 1,
-      dimnames = list(names(degparms_pop), "Population"))
+  if (pop_curves) {
+    # Make sure degparms_pop is a matrix, columns corresponding to population curve(s)
+    if (is.null(dim(degparms_pop))) {
+      degparms_pop <- matrix(degparms_pop, ncol = 1,
+        dimnames = list(names(degparms_pop), "Population"))
+    }
   }
 
   degparms_fixed <- fit_1$fixed$value
