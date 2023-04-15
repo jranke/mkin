@@ -110,3 +110,15 @@ dfop_saem_1 <- saem(mmkin_dfop_1, quiet = TRUE, transformations = "mkin",
   no_random_effect = c("parent_0", "g_qlogis"))
 
 parallel::stopCluster(cl)
+
+# Preprocess dimethenamid data
+dmta_ds <- lapply(1:7, function(i) {
+  ds_i <- dimethenamid_2018$ds[[i]]$data
+  ds_i[ds_i$name == "DMTAP", "name"] <-  "DMTA"
+  ds_i$time <- ds_i$time * dimethenamid_2018$f_time_norm[i]
+  ds_i
+})
+names(dmta_ds) <- sapply(dimethenamid_2018$ds, function(ds) ds$title)
+dmta_ds[["Elliot"]] <- rbind(dmta_ds[["Elliot 1"]], dmta_ds[["Elliot 2"]])
+dmta_ds[["Elliot 1"]] <- dmta_ds[["Elliot 2"]] <- NULL
+
