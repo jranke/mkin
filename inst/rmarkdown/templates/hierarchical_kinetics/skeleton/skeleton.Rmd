@@ -15,7 +15,6 @@ library(mkin)
 library(knitr)
 library(saemix)
 library(parallel)
-library(readxl)
 ```
 
 ```{r n_cores, cache = FALSE}
@@ -186,6 +185,13 @@ illparms(parent_best_pH_2)
 parms(parent_best_pH_2, ci = TRUE) |> kable(digits = 3)
 ```
 
+The endpoints corresponding to the median pH in the tested soils
+are shown below.
+
+```{r dependson = "parent-best-pH"}
+endpoints(parent_best_pH_2)
+```
+
 ```{r}
 stopCluster(cl)
 ```
@@ -280,6 +286,13 @@ plot(path_1_refined)
 parms(path_1_refined, ci = TRUE) |> kable(digits = 3)
 ```
 
+The pathway endpoints corresponding to the median pH in the tested soils
+are shown below.
+
+```{r dependson = "parent-best-pH"}
+endpoints(parent_best_pH_2)
+```
+
 ```{r}
 stopCluster(cl)
 ```
@@ -324,7 +337,6 @@ tex_listing(path_1_refined,
 ## Session info
 
 ```{r echo = FALSE, cache = FALSE}
-parallel::stopCluster(cl)
 sessionInfo()
 ```
 

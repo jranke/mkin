@@ -53,6 +53,6 @@ test_that("We can safely use compiled code", {
   } else {
     expect_true(file.remove("test_dlls/sfo_sfo.so"))
   }
-  expect_true(file.remove("test_dlls"))
+  suppressWarnings(file.remove("test_dlls"))
 })
 

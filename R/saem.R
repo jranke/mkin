@@ -307,6 +307,10 @@ saemix_model <- function(object, solution_type = "auto",
 
   mkin_model <- object[[1]]$mkinmod
 
+  if (length(mkin_model$spec) > 1 & solution_type[1] == "analytical") {
+    stop("mkin analytical solutions not supported for more thane one observed variable")
+  }
+
   degparms_optim <-  mean_degparms(object, test_log_parms = test_log_parms)
   na_degparms <- names(which(is.na(degparms_optim)))
   if (length(na_degparms) > 0) {

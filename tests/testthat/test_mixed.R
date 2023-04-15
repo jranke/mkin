@@ -83,3 +83,54 @@ test_that("saemix results are reproducible for biphasic fits", {
   expect_true(all(ci_dfop_sfo_s_d[no_k2, "lower"] < dfop_sfo_pop[no_k2]))
   expect_true(all(ci_dfop_sfo_s_d[no_k1, "upper"] > dfop_sfo_pop[no_k1]))
 })
+
+test_that("Reading spreadsheets, finding ill-defined parameters and covariate modelling", {
+
+  skip_on_cran()
+
+  data_path <- system.file(
+    "testdata", "lambda-cyhalothrin_soil_efsa_2014.xlsx",
+    package = "mkin")
+  ds_lambda <- read_spreadsheet(data_path, valid_datasets = c(1:4, 7:13))
+  covariates <- attr(ds_lambda, "covariates")
+
+  lambda_sforb <- mmkin("SFORB", ds_lambda, quiet = TRUE,
+    cores = n_cores,
+    error_model = "const")
+  lambda_sforb_saem_pH <- saem(lambda_sforb, covariates = covariates,
+    covariate_models = list(log_k_lambda_bound_free ~ pH))
+  expect_equal(
+    as.character(illparms(lambda_sforb_saem_pH)),
+    c("sd(lambda_free_0)", "sd(log_k_lambda_free_bound)"))
+
+  lambda_endpoints <- endpoints(lambda_sforb_saem_pH)
+  expect_equal(lambda_endpoints$covariates$pH, 6.45)
+  expect_equal(
+    round(as.numeric(lambda_endpoints$distimes), 0),
+    c(47, 422, 127, 7, 162))
+})
+
+test_that("SFO-SFO saemix specific analytical solution work", {
+
+  skip_on_cran()
+
+  SFO_SFO <- mkinmod(DMTA = mkinsub("SFO", "M23"),
+    M23 = mkinsub("SFO"), quiet = TRUE)
+  mmkin_sfo_sfo <- mmkin(list("SFO-SFO" = SFO_SFO), dmta_ds, quiet = TRUE,
+    cores = n_cores,
+    error_model = "const")
+  saem_sfo_sfo_saemix_analytical <- saem(mmkin_sfo_sfo)
+
+  expect_error(saem(mmkin_sfo_sfo, solution_type = "analytical"), "not supported")
+
+  saem_sfo_sfo_mkin_eigen<- saem(mmkin_sfo_sfo, solution_type = "eigen")
+  expect_equal(
+    endpoints(saem_sfo_sfo_saemix_analytical),
+    endpoints(saem_sfo_sfo_mkin_eigen))
+
+  saem_sfo_sfo_mkin_desolve <- saem(mmkin_sfo_sfo, solution_type = "deSolve")
+  expect_equal(
+    endpoints(saem_sfo_sfo_saemix_analytical),
+    endpoints(saem_sfo_sfo_mkin_desolve))
+
+})
