@@ -48,7 +48,7 @@ test_that("We can safely use compiled code", {
   parallel::stopCluster(cl_psock)
 
   # Clean up
-  if (Sys.info()["sysname"] != "Windows") {
+  if (Sys.info()["sysname"] == "Windows") {
     expect_true(file.remove("test_dlls/sfo_sfo.dll"))
   } else {
     expect_true(file.remove("test_dlls/sfo_sfo.so"))
