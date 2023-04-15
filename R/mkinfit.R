@@ -501,10 +501,15 @@ mkinfit <- function(mkinmod, observed,
   }
 
   # Get native symbol before iterations info for speed
+  use_symbols = FALSE
   if (solution_type == "deSolve" & use_compiled[1] != FALSE) {
-    mkinmod[["symbols"]] <- deSolve::checkDLL(dllname = mkinmod$dll_info[["name"]],
-      func = "diffs", initfunc = "initpar",
-      jacfunc = NULL, nout = 0, outnames = NULL)
+    mkinmod[["symbols"]] <- try(
+      deSolve::checkDLL(dllname = mkinmod$dll_info[["name"]],
+        func = "diffs", initfunc = "initpar",
+        jacfunc = NULL, nout = 0, outnames = NULL))
+    if (!inherits(mkinmod[["symbols"]], "try-error")) {
+      use_symbols = TRUE
+    }
   }
 
   # Get the error model and the algorithm for fitting
@@ -616,8 +621,9 @@ mkinfit <- function(mkinmod, observed,
                          odeini, outtimes,
                          solution_type = solution_type,
                          use_compiled = use_compiled,
+                         use_symbols = use_symbols,
                          method.ode = method.ode,
-                         atol = atol, rtol = rtol, 
+                         atol = atol, rtol = rtol,
                          ...)
 
       observed_index <- cbind(as.character(observed$time), as.character(observed$name))

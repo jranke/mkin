@@ -15,6 +15,7 @@ mkinpredict(x, odeparms, odeini, outtimes, ...)
   outtimes = seq(0, 120, by = 0.1),
   solution_type = "deSolve",
   use_compiled = "auto",
+  use_symbols = FALSE,
   method.ode = "lsoda",
   atol = 1e-08,
   rtol = 1e-10,
@@ -66,6 +67,9 @@ parent compound.}
 
 \item{use_compiled}{If set to \code{FALSE}, no compiled version of the
 \link{mkinmod} model is used, even if is present.}
+
+\item{use_symbols}{If set to \code{TRUE} (default), symbol info present in
+the \link{mkinmod} object is used if available for accessing compiled code}
 
 \item{method.ode}{The solution method passed via \link{mkinpredict} to \link{ode}] in
 case the solution type is "deSolve" and we are not using compiled code.

@@ -583,11 +583,15 @@ saemix_model <- function(object, solution_type = "auto",
     transform_fractions <- object[[1]]$transform_fractions
 
     # Get native symbol info for speed
+    use_symbols = FALSE
     if (solution_type == "deSolve" & !is.null(mkin_model$cf)) {
-      mkin_model$symbols <- deSolve::checkDLL(
+      mkin_model$symbols <- try(deSolve::checkDLL(
         dllname = mkin_model$dll_info[["name"]],
         func = "diffs", initfunc = "initpar",
-        jacfunc = NULL, nout = 0, outnames = NULL)
+        jacfunc = NULL, nout = 0, outnames = NULL))
+      if (!inherits(mkin_model$symbols, "try-error")) {
+        use_symbols = TRUE
+      }
     }
 
     # Define the model function

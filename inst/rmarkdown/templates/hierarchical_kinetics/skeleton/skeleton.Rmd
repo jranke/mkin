@@ -21,11 +21,18 @@ library(readxl)
 ```{r n_cores, cache = FALSE}
 n_cores <- detectCores()
 
-if (Sys.info()["sysname"] == "Windows") {
-  cl <- makePSOCKcluster(n_cores)
-} else {
-  cl <- makeForkCluster(n_cores)
+# We need to start a new cluster after defining a compiled model that is
+# saved as a DLL to the user directory, therefore we define a function
+# This is used again after defining the pathway model
+start_cluster <- function(n_cores) {
+  if (Sys.info()["sysname"] == "Windows") {
+    ret <- makePSOCKcluster(n_cores)
+  } else {
+    ret <- makeForkCluster(n_cores)
+  }
+  return(ret)
 }
+cl <- start_cluster(n_cores)
 ```
 
 \clearpage
@@ -179,6 +186,10 @@ illparms(parent_best_pH_2)
 parms(parent_best_pH_2, ci = TRUE) |> kable(digits = 3)
 ```
 
+```{r}
+stopCluster(cl)
+```
+
 \clearpage
 
 # Pathway fits
@@ -203,6 +214,7 @@ Separate evaluations of all datasets are performed with constant variance
 and using two-component error.
 
 ```{r path-1-sep, dependson = c("path-1-degmod", "ds")}
+cl <- start_cluster(n_cores)
 sforb_sep_const <- mmkin(list(sforb_path = m_sforb_sfo2), ds,
   cluster = cl, quiet = TRUE)
 sforb_sep_tc <- update(sforb_sep_const, error_model = "tc")
@@ -266,6 +278,10 @@ plot(path_1_refined)
 
 ```{r dependson = "path-1-refined", fig.height = 9}
 parms(path_1_refined, ci = TRUE) |> kable(digits = 3)
+```
+
+```{r}
+stopCluster(cl)
 ```
 
 \clearpage

@@ -27,8 +27,8 @@
 #' When using compiled code, only lsoda is supported.
 #' @param use_compiled If set to \code{FALSE}, no compiled version of the
 #' [mkinmod] model is used, even if is present.
-#' @param use_symbols If set to \code{TRUE}, symbol info present in the 
-#' [mkinmod] object is used if available for accessing compiled code
+#' @param use_symbols If set to \code{TRUE} (default), symbol info present in
+#' the [mkinmod] object is used if available for accessing compiled code
 #' @param atol Absolute error tolerance, passed to the ode solver.
 #' @param rtol Absolute error tolerance, passed to the ode solver.
 #' @param maxsteps Maximum number of steps, passed to the ode solver.
@@ -174,7 +174,7 @@ mkinpredict.mkinmod <- function(x,
   if (solution_type == "deSolve") {
     if (!is.null(x$cf) & use_compiled[1] != FALSE) {
 
-      if (!is.null(x$symbols) & use_symbols[1] == TRUE) {
+      if (!is.null(x$symbols) & use_symbols) {
         lsoda_func <- x$symbols
       } else {
         lsoda_func <- "diffs"
