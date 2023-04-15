@@ -1,10 +1,14 @@
 # mkin 1.2.3
 
+- 'R/{endpoints,parms,plot.mixed.mmkin,summary.saem.mmkin}.R': Calculate parameters and endpoints and plot population curves for specific covariate values, or specific percentiles of covariate values used in saem fits.
+
 - Depend on current deSolve version with the possibility to avoid resolving symbols in a shared library (compiled models) over and over, thanks to Thomas Petzoldt.
 
-- 'R/mkinerrmin.R': Fix typo in subset (use of = instead of ==), thanks to Sebastian Meyer for spotting this during his work on R 4.3.0.
+- 'inst/rmarkdown/templates/hierarchical_kinetics/skeleton/skeleton.Rmd': Start a new cluster after creating a model stored in the user specified location, because otherwise symbols are not found by the worker processes.
 
-- 'R/{endpoints,parms,plot.mixed.mmkin,summary.saem.mmkin}.R': Calculate parameters and endpoints and plot population curves for specific covariate values, or specific percentiles of covariate values used in saem fits.
+- 'tests/testthat/test_compiled_symbols.R': Some new tests to control problems that may have been introduced by the possibility to use pre-resolved symbols.
+
+- 'R/mkinerrmin.R': Fix typo in subset (use of = instead of ==), thanks to Sebastian Meyer for spotting this during his work on R 4.3.0.
 
 # mkin 1.2.2 (unreleased)
 
