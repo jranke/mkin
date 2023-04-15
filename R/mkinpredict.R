@@ -27,6 +27,8 @@
 #' When using compiled code, only lsoda is supported.
 #' @param use_compiled If set to \code{FALSE}, no compiled version of the
 #' [mkinmod] model is used, even if is present.
+#' @param use_symbols If set to \code{TRUE}, symbol info present in the 
+#' [mkinmod] object is used if available for accessing compiled code
 #' @param atol Absolute error tolerance, passed to the ode solver.
 #' @param rtol Absolute error tolerance, passed to the ode solver.
 #' @param maxsteps Maximum number of steps, passed to the ode solver.
@@ -114,6 +116,7 @@ mkinpredict.mkinmod <- function(x,
   outtimes = seq(0, 120, by = 0.1),
   solution_type = "deSolve",
   use_compiled = "auto",
+  use_symbols = FALSE,
   method.ode = "lsoda", atol = 1e-8, rtol = 1e-10, maxsteps = 20000L,
   map_output = TRUE,
   na_stop = TRUE,
@@ -169,12 +172,18 @@ mkinpredict.mkinmod <- function(x,
   }
 
   if (solution_type == "deSolve") {
-    if (!is.null(x$cf) & !is.null(x$symbols) & use_compiled[1] != FALSE) {
+    if (!is.null(x$cf) & use_compiled[1] != FALSE) {
+
+      if (!is.null(x$symbols) & use_symbols[1] == TRUE) {
+        lsoda_func <- x$symbols
+      } else {
+        lsoda_func <- "diffs"
+      }
 
       out <- deSolve::lsoda(
         y = odeini,
         times = outtimes,
-        func = x$symbols,
+        func = lsoda_func,
         initfunc = "initpar",
         dllname = x$dll_info[["name"]],
         parms = odeparms[x$parms], # Order matters when using compiled models
