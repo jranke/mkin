@@ -146,9 +146,8 @@ plot.mkinfit <- function(x, fit = x,
       func = "diffs", initfunc = "initpar",
       jacfunc = NULL, nout = 0, outnames = NULL)
   }
-  out <- try(mkinpredict(fit$mkinmod, odeparms, odeini, outtimes,
-             solution_type = solution_type, atol = fit$atol, rtol = fit$rtol),
-             silent = TRUE)
+  out <- mkinpredict(fit$mkinmod, odeparms, odeini, outtimes,
+           solution_type = solution_type, atol = fit$atol, rtol = fit$rtol)
 
   out <- as.data.frame(out)
 
