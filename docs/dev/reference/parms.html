@@ -19,13 +19,13 @@ without considering the error structure that was assumed for the fit."><meta nam
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.2.2</span>
+        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.2.3</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav"><li>
-  <a href="../reference/index.html">Functions and data</a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -36,6 +36,8 @@ without considering the error structure that was assumed for the fit."><meta nam
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/mkin.html">Introduction to mkin</a>
     </li>
+    <li class="divider">
+    <li class="dropdown-header">Example evaluations with (generalised) nonlinear least squares</li>
     <li>
       <a href="../articles/FOCUS_D.html">Example evaluation of FOCUS Example Dataset D</a>
     </li>
@@ -43,28 +45,43 @@ without considering the error structure that was assumed for the fit."><meta nam
       <a href="../articles/FOCUS_L.html">Example evaluation of FOCUS Laboratory Data L1 to L3</a>
     </li>
     <li>
-      <a href="../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
+      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
+    </li>
+    <li class="divider">
+    <li class="dropdown-header">Example evaluations with hierarchical models (nonlinear mixed-effects models)</li>
+    <li>
+      <a href="../articles/prebuilt/2022_dmta_parent.html">Testing hierarchical parent degradation kinetics with residue data on dimethenamid and dimethenamid-P</a>
+    </li>
+    <li>
+      <a href="../articles/prebuilt/2022_dmta_pathway.html">Testing hierarchical pathway kinetics with residue data on dimethenamid and dimethenamid-P</a>
+    </li>
+    <li>
+      <a href="../articles/prebuilt/2022_cyan_pathway.html">Testing hierarchical pathway kinetics with residue data on cyantraniliprole</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/dimethenamid_2018.html">Comparison of saemix and nlme evaluations of dimethenamid data from 2018</a>
     </li>
     <li>
       <a href="../articles/web_only/multistart.html">Short demo of the multistart method</a>
     </li>
+    <li class="divider">
+    <li class="dropdown-header">Performance</li>
     <li>
       <a href="../articles/web_only/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
-    </li>
-    <li>
-      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
-    </li>
-    <li>
-      <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
-    </li>
-    <li>
-      <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
     <li>
       <a href="../articles/web_only/benchmarks.html">Benchmark timings for mkin</a>
     </li>
     <li>
       <a href="../articles/web_only/saem_benchmarks.html">Benchmark timings for saem.mmkin</a>
+    </li>
+    <li class="divider">
+    <li class="dropdown-header">Miscellaneous</li>
+    <li>
+      <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
   </ul></li>
 <li>
@@ -86,7 +103,7 @@ without considering the error structure that was assumed for the fit."><meta nam
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Extract model parameters</h1>
-    <small class="dont-index">Source: <a href="https://github.com/jranke/mkin/blob/HEAD/R/parms.R" class="external-link"><code>R/parms.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/jranke/mkin/blob/HEAD/R/parms.R" class="external-link"><code>R/parms.R</code></a>, <a href="https://github.com/jranke/mkin/blob/HEAD/R/saem.R" class="external-link"><code>R/saem.R</code></a></small>
     <div class="hidden name"><code>parms.Rd</code></div>
     </div>
 
@@ -106,7 +123,10 @@ without considering the error structure that was assumed for the fit.</p>
 <span><span class="fu">parms</span><span class="op">(</span><span class="va">object</span>, transformed <span class="op">=</span> <span class="cn">FALSE</span>, errparms <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for multistart</span></span>
-<span><span class="fu">parms</span><span class="op">(</span><span class="va">object</span>, exclude_failed <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">parms</span><span class="op">(</span><span class="va">object</span>, exclude_failed <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for saem.mmkin</span></span>
+<span><span class="fu">parms</span><span class="op">(</span><span class="va">object</span>, ci <span class="op">=</span> <span class="cn">FALSE</span>, covariates <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -132,6 +152,18 @@ in addition to the degradation parameters?</p></dd>
 <dt>exclude_failed</dt>
 <dd><p>For <a href="multistart.html">multistart</a> objects, should rows for failed fits
 be removed from the returned parameter matrix?</p></dd>
+
+
+<dt>ci</dt>
+<dd><p>Should a matrix with estimates and confidence interval boundaries
+be returned? If FALSE (default), a vector of estimates is returned if no
+covariates are given, otherwise a matrix of estimates is returned, with
+each column corresponding to a row of the data frame holding the covariates</p></dd>
+
+
+<dt>covariates</dt>
+<dd><p>A data frame holding covariate values for which to
+return parameter values. Only has an effect if 'ci' is FALSE.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -250,7 +282,7 @@ mmkin objects with more than one row).</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -81,6 +81,11 @@
     <li>
       <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
+    <li class="divider">
+    <li class="dropdown-header">Code coverage report</li>
+    <li>
+      <a href="../coverage/coverage.html"></a>
+    </li>
   </ul></li>
 <li>
   <a href="../news/index.html">News</a>
@@ -106,11 +111,15 @@
 
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.2.3" id="mkin-123">mkin 1.2.3<a class="anchor" aria-label="anchor" href="#mkin-123"></a></h2>
-<ul><li>Depend on upcoming deSolve version with the possibility to avoid resolving symbols in a shared library (compiled models) over and over.</li>
+<ul><li><p>‘R/{endpoints,parms,plot.mixed.mmkin,summary.saem.mmkin}.R’: Calculate parameters and endpoints and plot population curves for specific covariate values, or specific percentiles of covariate values used in saem fits.</p></li>
+<li><p>Depend on current deSolve version with the possibility to avoid resolving symbols in a shared library (compiled models) over and over, thanks to Thomas Petzoldt.</p></li>
+<li><p>‘inst/rmarkdown/templates/hierarchical_kinetics/skeleton/skeleton.Rmd’: Start a new cluster after creating a model stored in the user specified location, because otherwise symbols are not found by the worker processes.</p></li>
+<li><p>‘tests/testthat/test_compiled_symbols.R’: Some new tests to control problems that may have been introduced by the possibility to use pre-resolved symbols.</p></li>
+<li><p>‘R/mkinerrmin.R’: Fix typo in subset (use of = instead of ==), thanks to Sebastian Meyer for spotting this during his work on R 4.3.0.</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.2.2" id="mkin-122-unreleased">mkin 1.2.2 (unreleased)<a class="anchor" aria-label="anchor" href="#mkin-122-unreleased"></a></h2>
-<ul><li><p>‘inst/rmarkdown/templates/hier’: R markdown template to facilitate the application of hierarchical kinetic models.</p></li>
+<ul><li><p>‘inst/rmarkdown/templates/hierarchical_kinetics’: R markdown template to facilitate the application of hierarchical kinetic models.</p></li>
 <li><p>‘inst/testdata/{cyantraniliprole_soil_efsa_2014,lambda-cyhalothrin_soil_efsa_2014}.xlsx’: Example spreadsheets for use with ‘read_spreadsheet()’.</p></li>
 <li><p>‘R/mhmkin.R’: Allow an ‘illparms.mhmkin’ object or a list with suitable dimensions as value of the argument ‘no_random_effects’, making it possible to exclude random effects that were ill-defined in simpler variants of the set of degradation models. Remove the possibility to exclude random effects based on separate fits, as it did not work well.</p></li>
 <li><p>‘R/summary.saem.mmkin.R’: List all initial parameter values in the summary, including random effects and error model parameters. Avoid redundant warnings that occurred in the calculation of correlations of the fixed effects in the case that the Fisher information matrix could not be inverted. List correlations of random effects if specified by the user in the covariance model.</p></li>

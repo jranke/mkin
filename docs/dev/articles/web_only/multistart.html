@@ -34,14 +34,14 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">mkin</a>
-        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.2.2</span>
+        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.2.3</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../../reference/index.html">Functions and data</a>
+  <a href="../../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -53,6 +53,9 @@
 <li>
       <a href="../../articles/mkin.html">Introduction to mkin</a>
     </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Example evaluations with (generalised) nonlinear least squares</li>
     <li>
       <a href="../../articles/FOCUS_D.html">Example evaluation of FOCUS Example Dataset D</a>
     </li>
@@ -60,28 +63,46 @@
       <a href="../../articles/FOCUS_L.html">Example evaluation of FOCUS Laboratory Data L1 to L3</a>
     </li>
     <li>
-      <a href="../../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
+      <a href="../../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
+    </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Example evaluations with hierarchical models (nonlinear mixed-effects models)</li>
+    <li>
+      <a href="../../articles/prebuilt/2022_dmta_parent.html">Testing hierarchical parent degradation kinetics with residue data on dimethenamid and dimethenamid-P</a>
+    </li>
+    <li>
+      <a href="../../articles/prebuilt/2022_dmta_pathway.html">Testing hierarchical pathway kinetics with residue data on dimethenamid and dimethenamid-P</a>
+    </li>
+    <li>
+      <a href="../../articles/prebuilt/2022_cyan_pathway.html">Testing hierarchical pathway kinetics with residue data on cyantraniliprole</a>
+    </li>
+    <li>
+      <a href="../../articles/web_only/dimethenamid_2018.html">Comparison of saemix and nlme evaluations of dimethenamid data from 2018</a>
     </li>
     <li>
       <a href="../../articles/web_only/multistart.html">Short demo of the multistart method</a>
     </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Performance</li>
     <li>
       <a href="../../articles/web_only/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
-    </li>
-    <li>
-      <a href="../../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
-    </li>
-    <li>
-      <a href="../../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
-    </li>
-    <li>
-      <a href="../../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
     <li>
       <a href="../../articles/web_only/benchmarks.html">Benchmark timings for mkin</a>
     </li>
     <li>
       <a href="../../articles/web_only/saem_benchmarks.html">Benchmark timings for saem.mmkin</a>
+    </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Miscellaneous</li>
+    <li>
+      <a href="../../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
+    </li>
+    <li>
+      <a href="../../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
   </ul>
 </li>
@@ -106,13 +127,15 @@
 
       
 
-      </header><script src="multistart_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Short demo of the multistart method</h1>
-                        <h4 data-toc-skip class="author">Johannes Ranke</h4>
+                        <h4 data-toc-skip class="author">Johannes
+Ranke</h4>
             
-            <h4 data-toc-skip class="date">Last change 26 September 2022 (rebuilt 2022-11-24)</h4>
+            <h4 data-toc-skip class="date">Last change 26 September 2022
+(rebuilt 2023-04-16)</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jranke/mkin/blob/HEAD/vignettes/web_only/multistart.rmd" class="external-link"><code>vignettes/web_only/multistart.rmd</code></a></small>
       <div class="hidden name"><code>multistart.rmd</code></div>
@@ -121,7 +144,8 @@
 
     
     
-<p>The dimethenamid data from 2018 from seven soils is used as example data in this vignette.</p>
+<p>The dimethenamid data from 2018 from seven soils is used as example
+data in this vignette.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pkgdown.jrwb.de/mkin/">mkin</a></span><span class="op">)</span></span>
 <span><span class="va">dmta_ds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">7</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
@@ -133,34 +157,44 @@
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">dmta_ds</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">dimethenamid_2018</span><span class="op">$</span><span class="va">ds</span>, <span class="kw">function</span><span class="op">(</span><span class="va">ds</span><span class="op">)</span> <span class="va">ds</span><span class="op">$</span><span class="va">title</span><span class="op">)</span></span>
 <span><span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot 1"</span><span class="op">]</span><span class="op">]</span>, <span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot 2"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot 1"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">dmta_ds</span><span class="op">[[</span><span class="st">"Elliot 2"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span></code></pre></div>
-<p>First, we check the DFOP model with the two-component error model and random effects for all degradation parameters.</p>
+<p>First, we check the DFOP model with the two-component error model and
+random effects for all degradation parameters.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">f_mmkin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mmkin.html">mmkin</a></span><span class="op">(</span><span class="st">"DFOP"</span>, <span class="va">dmta_ds</span>, error_model <span class="op">=</span> <span class="st">"tc"</span>, cores <span class="op">=</span> <span class="fl">7</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">f_saem_full</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/saem.html">saem</a></span><span class="op">(</span><span class="va">f_mmkin</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../../reference/illparms.html">illparms</a></span><span class="op">(</span><span class="va">f_saem_full</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "sd(log_k2)"</span></span></code></pre>
-<p>We see that not all variability parameters are identifiable. The <code>illparms</code> function tells us that the confidence interval for the standard deviation of ‘log_k2’ includes zero. We check this assessment using multiple runs with different starting values.</p>
+<p>We see that not all variability parameters are identifiable. The
+<code>illparms</code> function tells us that the confidence interval for
+the standard deviation of ‘log_k2’ includes zero. We check this
+assessment using multiple runs with different starting values.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">f_saem_full_multi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/multistart.html">multistart</a></span><span class="op">(</span><span class="va">f_saem_full</span>, n <span class="op">=</span> <span class="fl">16</span>, cores <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../../reference/parplot.html">parplot</a></span><span class="op">(</span><span class="va">f_saem_full_multi</span><span class="op">)</span></span></code></pre></div>
 <p><img src="multistart_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
-<p>This confirms that the variance of k2 is the most problematic parameter, so we reduce the parameter distribution model by removing the intersoil variability for k2.</p>
+<p>This confirms that the variance of k2 is the most problematic
+parameter, so we reduce the parameter distribution model by removing the
+intersoil variability for k2.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">f_saem_reduced</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">f_saem_full</span>, no_random_effect <span class="op">=</span> <span class="st">"log_k2"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../../reference/illparms.html">illparms</a></span><span class="op">(</span><span class="va">f_saem_reduced</span><span class="op">)</span></span>
 <span><span class="va">f_saem_reduced_multi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/multistart.html">multistart</a></span><span class="op">(</span><span class="va">f_saem_reduced</span>, n <span class="op">=</span> <span class="fl">16</span>, cores <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../../reference/parplot.html">parplot</a></span><span class="op">(</span><span class="va">f_saem_reduced_multi</span>, lpos <span class="op">=</span> <span class="st">"topright"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="multistart_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
-<p>The results confirm that all remaining parameters can be determined with sufficient certainty.</p>
-<p>We can also analyse the log-likelihoods obtained in the multiple runs:</p>
+<p>The results confirm that all remaining parameters can be determined
+with sufficient certainty.</p>
+<p>We can also analyse the log-likelihoods obtained in the multiple
+runs:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/llhist.html">llhist</a></span><span class="op">(</span><span class="va">f_saem_reduced_multi</span><span class="op">)</span></span></code></pre></div>
 <p><img src="multistart_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
-<p>The parameter histograms can be further improved by excluding the result with the low likelihood.</p>
+<p>The parameter histograms can be further improved by excluding the
+result with the low likelihood.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/parplot.html">parplot</a></span><span class="op">(</span><span class="va">f_saem_reduced_multi</span>, lpos <span class="op">=</span> <span class="st">"topright"</span>, llmin <span class="op">=</span> <span class="op">-</span><span class="fl">326</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="multistart_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
-<p>We can use the <code>anova</code> method to compare the models, including a likelihood ratio test if the models are nested.</p>
+<p>We can use the <code>anova</code> method to compare the models,
+including a likelihood ratio test if the models are nested.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_saem_full</span>, <span class="fu"><a href="../../reference/multistart.html">best</a></span><span class="op">(</span><span class="va">f_saem_reduced_multi</span><span class="op">)</span>, test <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Data: 155 observations of 1 variable(s) grouped in 6 datasets</span></span>
@@ -168,7 +202,9 @@
 <span><span class="co">##                            npar    AIC    BIC     Lik Chisq Df Pr(&gt;Chisq)</span></span>
 <span><span class="co">## best(f_saem_reduced_multi)    9 663.69 661.82 -322.85                    </span></span>
 <span><span class="co">## f_saem_full                  10 669.77 667.69 -324.89     0  1          1</span></span></code></pre>
-<p>While AIC and BIC are lower for the reduced model, the likelihood ratio test does not indicate a significant difference between the fits.</p>
+<p>While AIC and BIC are lower for the reduced model, the likelihood
+ratio test does not indicate a significant difference between the
+fits.</p>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -186,7 +222,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
