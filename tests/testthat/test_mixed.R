@@ -23,6 +23,8 @@ test_that("Print methods work", {
 
 test_that("nlme results are reproducible to some degree", {
 
+  skip_on_cran()
+
   test_summary <- summary(dfop_nlme_1)
   test_summary$nlmeversion <- "Dummy 0.0 for testing"
   test_summary$mkinversion <- "Dummy 0.0 for testing"
