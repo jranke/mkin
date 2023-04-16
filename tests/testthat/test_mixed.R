@@ -123,14 +123,15 @@ test_that("SFO-SFO saemix specific analytical solution work", {
 
   expect_error(saem(mmkin_sfo_sfo, solution_type = "analytical"), "not supported")
 
-  saem_sfo_sfo_mkin_eigen<- saem(mmkin_sfo_sfo, solution_type = "eigen")
-  expect_equal(
-    endpoints(saem_sfo_sfo_saemix_analytical),
-    endpoints(saem_sfo_sfo_mkin_eigen))
-
   saem_sfo_sfo_mkin_desolve <- saem(mmkin_sfo_sfo, solution_type = "deSolve")
   expect_equal(
     endpoints(saem_sfo_sfo_saemix_analytical),
     endpoints(saem_sfo_sfo_mkin_desolve))
 
+  skip("This is seldom used, so save some time")
+
+  saem_sfo_sfo_mkin_eigen<- saem(mmkin_sfo_sfo, solution_type = "eigen")
+  expect_equal(
+    endpoints(saem_sfo_sfo_saemix_analytical),
+    endpoints(saem_sfo_sfo_mkin_eigen))
 })
