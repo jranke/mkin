@@ -220,9 +220,13 @@ Separate evaluations of all datasets are performed with constant variance
 and using two-component error.
 
 ```{r path-1-sep, dependson = c("path-1-degmod", "ds")}
-cl <- start_cluster(n_cores)
+cl_path <- NULL
+# Uncomment the next line for parallel processing. This does not work on Windows,
+# as stored dlls (that we need for caching to work) do not seem to work on
+# PSOCK clusters generated on Windows.
+# cl_path <- start_cluster(n_cores)
 sforb_sep_const <- mmkin(list(sforb_path = m_sforb_sfo2), ds,
-  cluster = cl, quiet = TRUE)
+  cluster = cl_path, quiet = TRUE)
 sforb_sep_tc <- update(sforb_sep_const, error_model = "tc")
 ```
 
@@ -240,7 +244,7 @@ model that was identified for the parent degradation, are attempted below.
 path_1 <- mhmkin(list(sforb_sep_const, sforb_sep_tc),
   no_random_effect = c("lambda_free_0", "log_k_lambda_free_bound"),
   covariates = covariates, covariate_models = list(log_k_lambda_bound_free ~ pH),
-  cluster = cl)
+  cluster = cl_path)
 ```
 
 ```{r dependson = "path-1"}
@@ -294,7 +298,7 @@ endpoints(parent_best_pH_2)
 ```
 
 ```{r}
-stopCluster(cl)
+if (!is.null(cl_path)) stopCluster(cl_path)
 ```
 
 \clearpage
