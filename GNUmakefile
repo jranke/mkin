@@ -121,6 +121,10 @@ pd_all: roxygen
 	"$(RBIN)/Rscript" -e "pkgdown::build_site(run_dont_run = TRUE)"
 	git add -A
 
+coverage:
+	mkdir -p docs/dev/coverage
+	"$(RBIN)/Rscript" -e "covr::report(file = 'coverage/coverage.html')"
+
 r-forge:
 	git archive main > $(HOME)/git/mkin/mkin.tar;\
 	cd $(RFDIR) && rm -r `ls` && tar -xf $(HOME)/git/mkin/mkin.tar;\
