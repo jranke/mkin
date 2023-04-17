@@ -1,4 +1,4 @@
-# mkin 1.2.3
+# mkin 1.2.3 (2023-04-17)
 
 - 'R/{endpoints,parms,plot.mixed.mmkin,summary.saem.mmkin}.R': Calculate parameters and endpoints and plot population curves for specific covariate values, or specific percentiles of covariate values used in saem fits.
 
