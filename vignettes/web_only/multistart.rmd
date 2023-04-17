@@ -1,7 +1,7 @@
 ---
 title: Short demo of the multistart method
 author: Johannes Ranke
-date: Last change 26 September 2022 (rebuilt `r Sys.Date()`)
+date: Last change 17 April 2023 (rebuilt `r Sys.Date()`)
 output:
   html_document
 vignette: >
@@ -39,8 +39,8 @@ of 'log_k2' includes zero. We check this assessment using multiple runs
 with different starting values.
 
 ```{r}
-f_saem_full_multi <- multistart(f_saem_full, n = 16, cores = 16)
-parplot(f_saem_full_multi)
+f_saem_full_multi <- multistart(f_saem_full, n = 16, cores = 8)
+parplot(f_saem_full_multi, lpos = "topleft")
 ```
 
 This confirms that the variance of k2 is the most problematic parameter, so we
@@ -50,8 +50,8 @@ for k2.
 ```{r}
 f_saem_reduced <- update(f_saem_full, no_random_effect = "log_k2")
 illparms(f_saem_reduced)
-f_saem_reduced_multi <- multistart(f_saem_reduced, n = 16, cores = 16)
-parplot(f_saem_reduced_multi, lpos = "topright")
+f_saem_reduced_multi <- multistart(f_saem_reduced, n = 16, cores = 8)
+parplot(f_saem_reduced_multi, lpos = "topright", ylim = c(0.5, 2))
 ```
 
 The results confirm that all remaining parameters can be determined with sufficient
@@ -63,20 +63,17 @@ We can also analyse the log-likelihoods obtained in the multiple runs:
 llhist(f_saem_reduced_multi)
 ```
 
-The parameter histograms can be further improved by excluding the result with
-the low likelihood.
+We can use the `anova` method to compare the models.
 
 ```{r}
-parplot(f_saem_reduced_multi, lpos = "topright", llmin = -326, ylim = c(0.5, 2))
+anova(f_saem_full, best(f_saem_full_multi),
+  f_saem_reduced, best(f_saem_reduced_multi), test = TRUE)
 ```
 
-We can use the `anova` method to compare the models, including a likelihood ratio
-test if the models are nested.
-
-```{r}
-anova(f_saem_full, best(f_saem_reduced_multi), test = TRUE)
-```
-
-While AIC and BIC are lower for the reduced model, the likelihood ratio test
-does not indicate a significant difference between the fits.
+The reduced model results in lower AIC and BIC values, so it
+is clearly preferable. Using multiple starting values gives
+a large improvement in case of the full model, because it is
+less well-defined, which impedes convergence. For the reduced
+model, using multiple starting values only results in a small
+improvement of the model fit.
 

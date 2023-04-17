@@ -45,13 +45,12 @@
 #'
 #' f_saem_reduced <- update(f_saem_full, no_random_effect = "log_k2")
 #' illparms(f_saem_reduced)
-#' # On Windows, we need to create a cluster first. When working with
-#' # such a cluster, we need to export the mmkin object to the cluster
-#' # nodes, as it is referred to when updating the saem object on the nodes.
+#' # On Windows, we need to create a PSOCK cluster first and refer to it
+#' # in the call to multistart()
 #' library(parallel)
 #' cl <- makePSOCKcluster(12)
 #' f_saem_reduced_multi <- multistart(f_saem_reduced, n = 16, cluster = cl)
-#' parplot(f_saem_reduced_multi, lpos = "topright")
+#' parplot(f_saem_reduced_multi, lpos = "topright", ylim = c(0.5, 2))
 #' stopCluster(cl)
 #' }
 multistart <- function(object, n = 50,
@@ -103,9 +102,7 @@ multistart.saem.mmkin <- function(object, n = 50, cores = 1,
     res <- parallel::mclapply(1:n, fit_function,
       mc.cores = cores, mc.preschedule = FALSE)
   } else {
-    res <- parallel::parLapplyLB(cluster, 1:n, fit_function,
-      mc.preschedule = FALSE
-    )
+    res <- parallel::parLapplyLB(cluster, 1:n, fit_function)
   }
   attr(res, "orig") <- object
   attr(res, "start_parms") <- start_parms
