@@ -50,11 +50,19 @@ library(knitr)
 library(saemix)
 library(parallel)
 n_cores <- detectCores()
-if (Sys.info()["sysname"] == "Windows") {
-  cl <- makePSOCKcluster(n_cores)
-} else {
-  cl <- makeForkCluster(n_cores)
+
+# We need to start a new cluster after defining a compiled model that is
+# saved as a DLL to the user directory, therefore we define a function
+# This is used again after defining the pathway model
+start_cluster <- function(n_cores) {
+  if (Sys.info()["sysname"] == "Windows") {
+    ret <- makePSOCKcluster(n_cores)
+  } else {
+    ret <- makeForkCluster(n_cores)
+  }
+  return(ret)
 }
+cl <- start_cluster(n_cores)
 ```
 
 \clearpage
@@ -135,6 +143,10 @@ illparms(cyan_saem_reduced)
 anova(cyan_saem_reduced) |> kable(digits = 1)
 ```
 
+```{r}
+stopCluster(cl)
+```
+
 # Pathway fits
 
 ## Evaluations with pathway established previously
@@ -178,6 +190,7 @@ cyan_path_1 <- list(
     JSE76 = mkinsub("SFO"), quiet = TRUE,
     name = "hs_path_1", dll_dir = "cyan_dlls", overwrite = TRUE)
 )
+cl_path_1 <- start_cluster(n_cores)
 ```
 To obtain suitable starting values for the NLHM fits, separate pathway fits are
 performed for all datasets.
@@ -187,7 +200,7 @@ f_sep_1_const <- mmkin(
   cyan_path_1,
   cyan_ds,
   error_model = "const",
-  cluster = cl,
+  cluster = cl_path_1,
   quiet = TRUE)
 status(f_sep_1_const) |> kable()
 
@@ -209,7 +222,7 @@ currently under development.
 ```{r, f-saem-1, dependson = "f-sep-1"}
 f_saem_1 <- mhmkin(list(f_sep_1_const, f_sep_1_tc),
   no_random_effect = illparms(cyan_saem_full),
-  cluster = cl)
+  cluster = cl_path_1)
 ```
 
 ```{r dependson = "f-saem-1"}
@@ -253,6 +266,9 @@ at later time points are strongly and systematically underestimated.
 
 \clearpage
 
+```{r}
+stopCluster(cl_path_1)
+```
 
 ## Alternative pathway fits
 
@@ -294,11 +310,13 @@ cyan_path_2 <- list(
     overwrite = TRUE
   )
 )
+
+cl_path_2 <- start_cluster(n_cores)
 f_sep_2_const <- mmkin(
   cyan_path_2,
   cyan_ds,
   error_model = "const",
-  cluster = cl,
+  cluster = cl_path_2,
   quiet = TRUE)
 
 status(f_sep_2_const) |> kable()
@@ -319,7 +337,7 @@ Sassafras dataset.
 ```{r f-saem-2, dependson = c("f-sep-2-const", "f-sep-2-tc")}
 f_saem_2 <- mhmkin(list(f_sep_2_const, f_sep_2_tc),
   no_random_effect = illparms(cyan_saem_full[2:4, ]),
-  cluster = cl)
+  cluster = cl_path_2)
 ```
 
 ```{r dependson = "f-saem-2"}
@@ -384,11 +402,11 @@ no_ranef[["sforb_path_2", "const"]] <- c("cyan_free_0",
   "f_JCZ38_qlogis", "f_JSE76_qlogis")
 no_ranef[["sforb_path_2", "tc"]] <- c("cyan_free_0", "log_k_cyan_free_bound",
   "f_JCZ38_qlogis", "f_JSE76_qlogis")
-clusterExport(cl, "no_ranef")
+clusterExport(cl_path_2, "no_ranef")
 
 f_saem_3 <- update(f_saem_2,
   no_random_effect = no_ranef,
-  cluster = cl)
+  cluster = cl_path_2)
 ```
 
 ```{r dependson = "f-saem-3"}
@@ -412,6 +430,10 @@ While the AIC and BIC values of the best fit (DFOP pathway fit with
 two-component error) are lower than in the previous fits with the alternative
 pathway, the practical value of these refined evaluations is limited
 as no confidence intervals are obtained.
+
+```{r}
+stopCluster(cl_path_2)
+```
 
 \clearpage
 

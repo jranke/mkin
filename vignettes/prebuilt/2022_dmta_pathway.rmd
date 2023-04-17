@@ -45,10 +45,17 @@ library(knitr)
 library(saemix)
 library(parallel)
 n_cores <- detectCores()
-if (Sys.info()["sysname"] == "Windows") {
-  cl <- makePSOCKcluster(n_cores)
-} else {
-  cl <- makeForkCluster(n_cores)
+
+# We need to start a new cluster after defining a compiled model that is
+# saved as a DLL to the user directory, therefore we define a function
+# This is used again after defining the pathway model
+start_cluster <- function(n_cores) {
+  if (Sys.info()["sysname"] == "Windows") {
+    ret <- makePSOCKcluster(n_cores)
+  } else {
+    ret <- makeForkCluster(n_cores)
+  }
+  return(ret)
 }
 ```
 
@@ -163,6 +170,8 @@ m_hs_path_1 <- mkinmod(
   unload = TRUE, overwrite = TRUE,
   quiet = TRUE
 )
+cl <- start_cluster(n_cores)
+
 deg_mods_1 <- list(
   sfo_path_1 = m_sfo_path_1,
   fomc_path_1 = m_fomc_path_1,
@@ -331,6 +340,10 @@ plot(saem_sforb_path_1_tc_reduced)
 
 Plots of the remaining fits and listings for all successful fits are shown in
 the Appendix.
+
+```{r}
+stopCluster(cl)
+```
 
 
 # Conclusions
