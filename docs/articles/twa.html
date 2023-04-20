@@ -33,14 +33,14 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.3</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../reference/index.html">Functions and data</a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -52,6 +52,9 @@
 <li>
       <a href="../articles/mkin.html">Introduction to mkin</a>
     </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Example evaluations with (generalised) nonlinear least squares</li>
     <li>
       <a href="../articles/FOCUS_D.html">Example evaluation of FOCUS Example Dataset D</a>
     </li>
@@ -59,28 +62,46 @@
       <a href="../articles/FOCUS_L.html">Example evaluation of FOCUS Laboratory Data L1 to L3</a>
     </li>
     <li>
-      <a href="../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
+      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
+    </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Example evaluations with hierarchical models (nonlinear mixed-effects models)</li>
+    <li>
+      <a href="../articles/prebuilt/2022_dmta_parent.html">Testing hierarchical parent degradation kinetics with residue data on dimethenamid and dimethenamid-P</a>
+    </li>
+    <li>
+      <a href="../articles/prebuilt/2022_dmta_pathway.html">Testing hierarchical pathway kinetics with residue data on dimethenamid and dimethenamid-P</a>
+    </li>
+    <li>
+      <a href="../articles/prebuilt/2022_cyan_pathway.html">Testing hierarchical pathway kinetics with residue data on cyantraniliprole</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/dimethenamid_2018.html">Comparison of saemix and nlme evaluations of dimethenamid data from 2018</a>
     </li>
     <li>
       <a href="../articles/web_only/multistart.html">Short demo of the multistart method</a>
     </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Performance</li>
     <li>
       <a href="../articles/web_only/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
-    </li>
-    <li>
-      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
-    </li>
-    <li>
-      <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
-    </li>
-    <li>
-      <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
     <li>
       <a href="../articles/web_only/benchmarks.html">Benchmark timings for mkin</a>
     </li>
     <li>
       <a href="../articles/web_only/saem_benchmarks.html">Benchmark timings for saem.mmkin</a>
+    </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Miscellaneous</li>
+    <li>
+      <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
   </ul>
 </li>
@@ -105,13 +126,16 @@
 
       
 
-      </header><script src="twa_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Calculation of time weighted average concentrations with mkin</h1>
-                        <h4 data-toc-skip class="author">Johannes Ranke</h4>
+      <h1 data-toc-skip>Calculation of time weighted average
+concentrations with mkin</h1>
+                        <h4 data-toc-skip class="author">Johannes
+Ranke</h4>
             
-            <h4 data-toc-skip class="date">Last change 18 September 2019 (rebuilt 2022-11-17)</h4>
+            <h4 data-toc-skip class="date">Last change 18 September 2019
+(rebuilt 2023-04-20)</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jranke/mkin/blob/HEAD/vignettes/twa.rmd" class="external-link"><code>vignettes/twa.rmd</code></a></small>
       <div class="hidden name"><code>twa.rmd</code></div>
@@ -120,13 +144,25 @@
 
     
     
-<p>Since version 0.9.45.1 of the ‘mkin’ package, a function for calculating time weighted average concentrations for decline kinetics (<em>i.e.</em> only for the compound applied in the experiment) is included. Strictly speaking, they are maximum moving window time weighted average concentrations, <em>i.e.</em> the maximum time weighted average concentration that can be found when moving a time window of a specified width over the decline curve.</p>
-<p>Time weighted average concentrations for the SFO, FOMC and the DFOP model are calculated using the formulas given in the FOCUS kinetics guidance <span class="citation">(FOCUS Work Group on Degradation Kinetics 2014, 251)</span>:</p>
+<p>Since version 0.9.45.1 of the ‘mkin’ package, a function for
+calculating time weighted average concentrations for decline kinetics
+(<em>i.e.</em> only for the compound applied in the experiment) is
+included. Strictly speaking, they are maximum moving window time
+weighted average concentrations, <em>i.e.</em> the maximum time weighted
+average concentration that can be found when moving a time window of a
+specified width over the decline curve.</p>
+<p>Time weighted average concentrations for the SFO, FOMC and the DFOP
+model are calculated using the formulas given in the FOCUS kinetics
+guidance <span class="citation">(FOCUS Work Group on Degradation
+Kinetics 2014, 251)</span>:</p>
 <p>SFO:</p>
-<p><span class="math display">\[c_\textrm{twa} = c_0 \frac{\left( 1 - e^{- k t} \right)}{ k t} \]</span></p>
+<p><span class="math display">\[c_\textrm{twa} = c_0 \frac{\left( 1 -
+e^{- k t} \right)}{ k t} \]</span></p>
 <p>FOMC:</p>
-<p><span class="math display">\[c_\textrm{twa} = c_0 \frac{\beta}{t (1 - \alpha)}
-                   \left( \left(\frac{t}{\beta} + 1 \right)^{1 - \alpha} - 1 \right) \]</span></p>
+<p><span class="math display">\[c_\textrm{twa} = c_0 \frac{\beta}{t (1 -
+\alpha)}
+                   \left( \left(\frac{t}{\beta} + 1 \right)^{1 - \alpha}
+- 1 \right) \]</span></p>
 <p>DFOP:</p>
 <p><span class="math display">\[c_\textrm{twa} = \frac{c_0}{t} \left(
   \frac{g}{k_1} \left( 1 - e^{- k_1 t} \right) +
@@ -134,15 +170,25 @@
 <p>HS for <span class="math inline">\(t &gt; t_b\)</span>:</p>
 <p><span class="math display">\[c_\textrm{twa} = \frac{c_0}{t} \left(
   \frac{1}{k_1} \left( 1 - e^{- k_1 t_b} \right) +
-  \frac{e^{- k_1 t_b}}{k_2} \left( 1 - e^{- k_2 (t - t_b)} \right)  \right) \]</span></p>
-<p>Often, the ratio between the time weighted average concentration <span class="math inline">\(c_\textrm{twa}\)</span> and the initial concentration <span class="math inline">\(c_0\)</span></p>
-<p><span class="math display">\[f_\textrm{twa} = \frac{c_\textrm{twa}}{c_0}\]</span></p>
-<p>is needed. This can be calculated from the fitted initial concentration <span class="math inline">\(c_0\)</span> and the time weighted average concentration <span class="math inline">\(c_\textrm{twa}\)</span>, or directly from the model parameters using the following formulas:</p>
+  \frac{e^{- k_1 t_b}}{k_2} \left( 1 - e^{- k_2 (t - t_b)}
+\right)  \right) \]</span></p>
+<p>Often, the ratio between the time weighted average concentration
+<span class="math inline">\(c_\textrm{twa}\)</span> and the initial
+concentration <span class="math inline">\(c_0\)</span></p>
+<p><span class="math display">\[f_\textrm{twa} =
+\frac{c_\textrm{twa}}{c_0}\]</span></p>
+<p>is needed. This can be calculated from the fitted initial
+concentration <span class="math inline">\(c_0\)</span> and the time
+weighted average concentration <span class="math inline">\(c_\textrm{twa}\)</span>, or directly from the
+model parameters using the following formulas:</p>
 <p>SFO:</p>
-<p><span class="math display">\[f_\textrm{twa} = \frac{\left( 1 - e^{- k t} \right)}{k t} \]</span></p>
+<p><span class="math display">\[f_\textrm{twa} = \frac{\left( 1 - e^{- k
+t} \right)}{k t} \]</span></p>
 <p>FOMC:</p>
-<p><span class="math display">\[f_\textrm{twa} = \frac{\beta}{t (1 - \alpha)}
-                   \left( \left(\frac{t}{\beta} + 1 \right)^{1 - \alpha} - 1 \right) \]</span></p>
+<p><span class="math display">\[f_\textrm{twa} = \frac{\beta}{t (1 -
+\alpha)}
+                   \left( \left(\frac{t}{\beta} + 1 \right)^{1 - \alpha}
+- 1 \right) \]</span></p>
 <p>DFOP:</p>
 <p><span class="math display">\[f_\textrm{twa} = \frac{1}{t} \left(
   \frac{g}{k_1} \left( 1 - e^{- k_1 t} \right) +
@@ -150,11 +196,19 @@
 <p>HS for <span class="math inline">\(t &gt; t_b\)</span>:</p>
 <p><span class="math display">\[f_\textrm{twa} = \frac{1}{t} \left(
   \frac{1}{k_1} \left( 1 - e^{- k_1 t_b} \right) +
-  \frac{e^{- k_1 t_b}}{k_2} \left( 1 - e^{- k_2 (t - t_b)} \right)  \right) \]</span></p>
-<p>Note that a method for calculating maximum moving window time weighted average concentrations for a model fitted by ‘mkinfit’ or from parent decline model parameters is included in the <code><a href="../reference/max_twa_parent.html">max_twa_parent()</a></code> function. If the same is needed for metabolites, the function <code><a href="https://pkgdown.jrwb.de/pfm/reference/max_twa.html" class="external-link">pfm::max_twa()</a></code> from the ‘pfm’ package can be used.</p>
-<div id="refs" class="references hanging-indent">
-<div id="ref-FOCUSkinetics2014">
-<p>FOCUS Work Group on Degradation Kinetics. 2014. <em>Generic Guidance for Estimating Persistence and Degradation Kinetics from Environmental Fate Studies on Pesticides in Eu Registration</em>. 1.1 ed. <a href="http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics" class="external-link">http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics</a>.</p>
+  \frac{e^{- k_1 t_b}}{k_2} \left( 1 - e^{- k_2 (t - t_b)}
+\right)  \right) \]</span></p>
+<p>Note that a method for calculating maximum moving window time
+weighted average concentrations for a model fitted by ‘mkinfit’ or from
+parent decline model parameters is included in the
+<code><a href="../reference/max_twa_parent.html">max_twa_parent()</a></code> function. If the same is needed for
+metabolites, the function <code><a href="https://pkgdown.jrwb.de/pfm/reference/max_twa.html" class="external-link">pfm::max_twa()</a></code> from the ‘pfm’
+package can be used.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-FOCUSkinetics2014" class="csl-entry">
+FOCUS Work Group on Degradation Kinetics. 2014. <em>Generic Guidance for
+Estimating Persistence and Degradation Kinetics from Environmental Fate
+Studies on Pesticides in EU Registration</em>. 1.1 ed. <a href="http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics" class="external-link">http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics</a>.
 </div>
 </div>
   </div>
@@ -174,7 +228,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

@@ -33,14 +33,14 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.3</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../reference/index.html">Functions and data</a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -52,6 +52,9 @@
 <li>
       <a href="../articles/mkin.html">Introduction to mkin</a>
     </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Example evaluations with (generalised) nonlinear least squares</li>
     <li>
       <a href="../articles/FOCUS_D.html">Example evaluation of FOCUS Example Dataset D</a>
     </li>
@@ -59,28 +62,46 @@
       <a href="../articles/FOCUS_L.html">Example evaluation of FOCUS Laboratory Data L1 to L3</a>
     </li>
     <li>
-      <a href="../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
+      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
+    </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Example evaluations with hierarchical models (nonlinear mixed-effects models)</li>
+    <li>
+      <a href="../articles/prebuilt/2022_dmta_parent.html">Testing hierarchical parent degradation kinetics with residue data on dimethenamid and dimethenamid-P</a>
+    </li>
+    <li>
+      <a href="../articles/prebuilt/2022_dmta_pathway.html">Testing hierarchical pathway kinetics with residue data on dimethenamid and dimethenamid-P</a>
+    </li>
+    <li>
+      <a href="../articles/prebuilt/2022_cyan_pathway.html">Testing hierarchical pathway kinetics with residue data on cyantraniliprole</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/dimethenamid_2018.html">Comparison of saemix and nlme evaluations of dimethenamid data from 2018</a>
     </li>
     <li>
       <a href="../articles/web_only/multistart.html">Short demo of the multistart method</a>
     </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Performance</li>
     <li>
       <a href="../articles/web_only/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
-    </li>
-    <li>
-      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
-    </li>
-    <li>
-      <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
-    </li>
-    <li>
-      <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
     <li>
       <a href="../articles/web_only/benchmarks.html">Benchmark timings for mkin</a>
     </li>
     <li>
       <a href="../articles/web_only/saem_benchmarks.html">Benchmark timings for saem.mmkin</a>
+    </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Miscellaneous</li>
+    <li>
+      <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
   </ul>
 </li>
@@ -105,13 +126,16 @@
 
       
 
-      </header><script src="FOCUS_D_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Example evaluation of FOCUS Example Dataset D</h1>
-                        <h4 data-toc-skip class="author">Johannes Ranke</h4>
+      <h1 data-toc-skip>Example evaluation of FOCUS Example Dataset
+D</h1>
+                        <h4 data-toc-skip class="author">Johannes
+Ranke</h4>
             
-            <h4 data-toc-skip class="date">Last change 31 January 2019 (rebuilt 2022-11-17)</h4>
+            <h4 data-toc-skip class="date">Last change 31 January 2019
+(rebuilt 2023-04-20)</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jranke/mkin/blob/HEAD/vignettes/FOCUS_D.rmd" class="external-link"><code>vignettes/FOCUS_D.rmd</code></a></small>
       <div class="hidden name"><code>FOCUS_D.rmd</code></div>
@@ -120,7 +144,12 @@
 
     
     
-<p>This is just a very simple vignette showing how to fit a degradation model for a parent compound with one transformation product using <code>mkin</code>. After loading the library we look at the data. We have observed concentrations in the column named <code>value</code> at the times specified in column <code>time</code> for the two observed variables named <code>parent</code> and <code>m1</code>.</p>
+<p>This is just a very simple vignette showing how to fit a degradation
+model for a parent compound with one transformation product using
+<code>mkin</code>. After loading the library we look at the data. We
+have observed concentrations in the column named <code>value</code> at
+the times specified in column <code>time</code> for the two observed
+variables named <code>parent</code> and <code>m1</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://pkgdown.jrwb.de/mkin/">mkin</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">FOCUS_2006_D</span><span class="op">)</span></span></code></pre></div>
@@ -169,8 +198,14 @@
 <span><span class="co">## 42     m1  100  33.13</span></span>
 <span><span class="co">## 43     m1  120  25.15</span></span>
 <span><span class="co">## 44     m1  120  33.31</span></span></code></pre>
-<p>Next we specify the degradation model: The parent compound degrades with simple first-order kinetics (SFO) to one metabolite named m1, which also degrades with SFO kinetics.</p>
-<p>The call to mkinmod returns a degradation model. The differential equations represented in R code can be found in the character vector <code>$diffs</code> of the <code>mkinmod</code> object. If a C compiler (gcc) is installed and functional, the differential equation model will be compiled from auto-generated C code.</p>
+<p>Next we specify the degradation model: The parent compound degrades
+with simple first-order kinetics (SFO) to one metabolite named m1, which
+also degrades with SFO kinetics.</p>
+<p>The call to mkinmod returns a degradation model. The differential
+equations represented in R code can be found in the character vector
+<code>$diffs</code> of the <code>mkinmod</code> object. If a C compiler
+(gcc) is installed and functional, the differential equation model will
+be compiled from auto-generated C code.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">SFO_SFO</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span>parent <span class="op">=</span> <span class="fu"><a href="../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"m1"</span><span class="op">)</span>, m1 <span class="op">=</span> <span class="fu"><a href="../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Temporary DLL for differentials generated and loaded</span></span></code></pre>
@@ -180,26 +215,32 @@
 <span><span class="co">##                          "d_parent = - k_parent * parent" </span></span>
 <span><span class="co">##                                                        m1 </span></span>
 <span><span class="co">## "d_m1 = + f_parent_to_m1 * k_parent * parent - k_m1 * m1"</span></span></code></pre>
-<p>We do the fitting without progress report (<code>quiet = TRUE</code>).</p>
+<p>We do the fitting without progress report
+(<code>quiet = TRUE</code>).</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">SFO_SFO</span>, <span class="va">FOCUS_2006_D</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning in mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE): Observations with value</span></span>
-<span><span class="co">## of zero were removed from the data</span></span></code></pre>
-<p>A plot of the fit including a residual plot for both observed variables is obtained using the <code>plot_sep</code> method for <code>mkinfit</code> objects, which shows separate graphs for all compounds and their residuals.</p>
+<pre><code><span><span class="co">## Warning in mkinfit(SFO_SFO, FOCUS_2006_D, quiet = TRUE): Observations with</span></span>
+<span><span class="co">## value of zero were removed from the data</span></span></code></pre>
+<p>A plot of the fit including a residual plot for both observed
+variables is obtained using the <code>plot_sep</code> method for
+<code>mkinfit</code> objects, which shows separate graphs for all
+compounds and their residuals.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot.mkinfit.html">plot_sep</a></span><span class="op">(</span><span class="va">fit</span>, lpos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"topright"</span>, <span class="st">"bottomright"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="FOCUS_D_files/figure-html/plot-1.png" width="768"></p>
-<p>Confidence intervals for the parameter estimates are obtained using the <code>mkinparplot</code> function.</p>
+<p>Confidence intervals for the parameter estimates are obtained using
+the <code>mkinparplot</code> function.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/mkinparplot.html">mkinparplot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
 <p><img src="FOCUS_D_files/figure-html/plot_2-1.png" width="768"></p>
-<p>A comprehensive report of the results is obtained using the <code>summary</code> method for <code>mkinfit</code> objects.</p>
+<p>A comprehensive report of the results is obtained using the
+<code>summary</code> method for <code>mkinfit</code> objects.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## mkin version used for fitting:    1.2.0 </span></span>
-<span><span class="co">## R version used for fitting:       4.2.2 </span></span>
-<span><span class="co">## Date of fit:     Thu Nov 17 14:04:21 2022 </span></span>
-<span><span class="co">## Date of summary: Thu Nov 17 14:04:21 2022 </span></span>
+<pre><code><span><span class="co">## mkin version used for fitting:    1.2.3 </span></span>
+<span><span class="co">## R version used for fitting:       4.2.3 </span></span>
+<span><span class="co">## Date of fit:     Thu Apr 20 07:37:14 2023 </span></span>
+<span><span class="co">## Date of summary: Thu Apr 20 07:37:14 2023 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Equations:</span></span>
 <span><span class="co">## d_parent/dt = - k_parent * parent</span></span>
@@ -207,7 +248,7 @@
 <span><span class="co">## </span></span>
 <span><span class="co">## Model predictions using solution type analytical </span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## Fitted using 401 model solutions performed in 0.154 s</span></span>
+<span><span class="co">## Fitted using 401 model solutions performed in 0.047 s</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Error model: Constant variance </span></span>
 <span><span class="co">## </span></span>
@@ -340,7 +381,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

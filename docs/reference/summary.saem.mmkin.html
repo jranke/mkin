@@ -21,13 +21,13 @@ endpoints such as formation fractions and DT50 values. Optionally
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.3</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav"><li>
-  <a href="../reference/index.html">Functions and data</a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -38,6 +38,8 @@ endpoints such as formation fractions and DT50 values. Optionally
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/mkin.html">Introduction to mkin</a>
     </li>
+    <li class="divider">
+    <li class="dropdown-header">Example evaluations with (generalised) nonlinear least squares</li>
     <li>
       <a href="../articles/FOCUS_D.html">Example evaluation of FOCUS Example Dataset D</a>
     </li>
@@ -45,28 +47,43 @@ endpoints such as formation fractions and DT50 values. Optionally
       <a href="../articles/FOCUS_L.html">Example evaluation of FOCUS Laboratory Data L1 to L3</a>
     </li>
     <li>
-      <a href="../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
+      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
+    </li>
+    <li class="divider">
+    <li class="dropdown-header">Example evaluations with hierarchical models (nonlinear mixed-effects models)</li>
+    <li>
+      <a href="../articles/prebuilt/2022_dmta_parent.html">Testing hierarchical parent degradation kinetics with residue data on dimethenamid and dimethenamid-P</a>
+    </li>
+    <li>
+      <a href="../articles/prebuilt/2022_dmta_pathway.html">Testing hierarchical pathway kinetics with residue data on dimethenamid and dimethenamid-P</a>
+    </li>
+    <li>
+      <a href="../articles/prebuilt/2022_cyan_pathway.html">Testing hierarchical pathway kinetics with residue data on cyantraniliprole</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/dimethenamid_2018.html">Comparison of saemix and nlme evaluations of dimethenamid data from 2018</a>
     </li>
     <li>
       <a href="../articles/web_only/multistart.html">Short demo of the multistart method</a>
     </li>
+    <li class="divider">
+    <li class="dropdown-header">Performance</li>
     <li>
       <a href="../articles/web_only/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
-    </li>
-    <li>
-      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
-    </li>
-    <li>
-      <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
-    </li>
-    <li>
-      <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
     <li>
       <a href="../articles/web_only/benchmarks.html">Benchmark timings for mkin</a>
     </li>
     <li>
       <a href="../articles/web_only/saem_benchmarks.html">Benchmark timings for saem.mmkin</a>
+    </li>
+    <li class="divider">
+    <li class="dropdown-header">Miscellaneous</li>
+    <li>
+      <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
   </ul></li>
 <li>
@@ -102,7 +119,15 @@ endpoints such as formation fractions and DT50 values. Optionally
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for saem.mmkin</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">object</span>, data <span class="op">=</span> <span class="cn">FALSE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, distimes <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span></span>
+<span>  <span class="va">object</span>,</span>
+<span>  data <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  covariates <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  covariate_quantile <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  distimes <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for summary.saem.mmkin</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, digits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"digits"</span><span class="op">)</span> <span class="op">-</span> <span class="fl">3</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="va">x</span><span class="op">$</span><span class="va">verbose</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
@@ -121,6 +146,17 @@ the summary.</p></dd>
 
 <dt>verbose</dt>
 <dd><p>Should the summary be verbose?</p></dd>
+
+
+<dt>covariates</dt>
+<dd><p>Numeric vector with covariate values for all variables in
+any covariate models in the object. If given, it overrides 'covariate_quantile'.</p></dd>
+
+
+<dt>covariate_quantile</dt>
+<dd><p>This argument only has an effect if the fitted
+object has covariate models. If so, the default is to show endpoints
+for the median of the covariate values (50th percentile).</p></dd>
 
 
 <dt>distimes</dt>
@@ -266,36 +302,38 @@ saemix authors for the parts inherited from saemix.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SD.g_qlogis          0.37478   0.04490   0.70467</span>
 <span class="r-in"><span><span class="fu"><a href="illparms.html">illparms</a></span><span class="op">(</span><span class="va">f_saem_dfop_sfo</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "sd(parent_0)" "sd(log_k_m1)"</span>
-<span class="r-in"><span><span class="va">f_saem_dfop_sfo_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">f_saem_dfop_sfo</span>, covariance.model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">f_saem_dfop_sfo_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">f_saem_dfop_sfo</span>,</span></span>
+<span class="r-in"><span>  no_random_effect <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"parent_0"</span>, <span class="st">"log_k_m1"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="illparms.html">illparms</a></span><span class="op">(</span><span class="va">f_saem_dfop_sfo_2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/nlme/man/intervals.html" class="external-link">intervals</a></span><span class="op">(</span><span class="va">f_saem_dfop_sfo_2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Approximate 95% confidence intervals</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Fixed effects:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                      lower         est.        upper</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0       97.57609542 100.73343868 103.89078195</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> k_m1            0.01549292   0.01714893   0.01898194</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_to_m1  0.20720315   0.28358738   0.37481744</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> k1              0.06149334   0.08733164   0.12402670</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> k2              0.01448390   0.01699942   0.01995184</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> g               0.45084762   0.51075839   0.57036168</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0       98.36731429 101.42508066 104.48284703</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> k_m1            0.01513234   0.01670094   0.01843214</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_to_m1  0.20221431   0.27608850   0.36461630</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> k1              0.06915073   0.09759718   0.13774560</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> k2              0.01487068   0.01740389   0.02036863</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> g               0.37365671   0.48384821   0.59563299</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Random effects:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                          lower      est.     upper</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sd(f_parent_qlogis) 0.16606767 0.4479731 0.7298784</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sd(log_k1)          0.12284609 0.3588446 0.5948430</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sd(log_k2)          0.05379723 0.1548780 0.2559588</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sd(f_parent_qlogis) 0.16439770 0.4427585 0.7211193</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sd(log_k1)          0.08304243 0.3345213 0.5860002</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sd(log_k2)          0.03146410 0.1490210 0.2665779</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sd(g_qlogis)        0.06216385 0.4023430 0.7425221</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         lower       est.      upper</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> a.1 0.6811490 0.88503409 1.08891921</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> b.1 0.0676515 0.08336272 0.09907394</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          lower       est.      upper</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> a.1 0.67696663 0.87777355 1.07858048</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> b.1 0.06363957 0.07878001 0.09392044</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/saemix/man/summary-methods.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">f_saem_dfop_sfo_2</span>, data <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> saemix version used for fitting:      3.2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mkin version used for pre-fitting:  1.2.0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> R version used for fitting:         4.2.2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Date of fit:     Thu Nov 17 14:04:08 2022 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Date of summary: Thu Nov 17 14:04:08 2022 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mkin version used for pre-fitting:  1.2.3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> R version used for fitting:         4.2.3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Date of fit:     Thu Apr 20 07:36:59 2023 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Date of summary: Thu Apr 20 07:36:59 2023 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Equations:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> d_parent/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *</span>
@@ -310,12 +348,12 @@ saemix authors for the parts inherited from saemix.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model predictions using solution type analytical </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fitted in 26.014 s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fitted in 9.185 s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Using 300, 100 iterations and 10 chains</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Variance model: Two-component variance function </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mean of starting values for individual parameters:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Starting values for degradation parameters:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        parent_0        log_k_m1 f_parent_qlogis          log_k1          log_k2 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       101.65645        -4.05368        -0.94311        -2.35943        -4.07006 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        g_qlogis </span>
@@ -324,237 +362,291 @@ saemix authors for the parts inherited from saemix.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fixed degradation parameter values:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> None</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Starting values for random effects (square root of initial entries in omega):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 parent_0 log_k_m1 f_parent_qlogis log_k1 log_k2 g_qlogis</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0           6.742   0.0000          0.0000 0.0000 0.0000    0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_m1           0.000   0.2236          0.0000 0.0000 0.0000    0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_qlogis    0.000   0.0000          0.5572 0.0000 0.0000    0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k1             0.000   0.0000          0.0000 0.8031 0.0000    0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k2             0.000   0.0000          0.0000 0.0000 0.2931    0.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> g_qlogis           0.000   0.0000          0.0000 0.0000 0.0000    0.807</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Starting values for error model parameters:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> a.1 b.1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1   1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Results:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Likelihood computed by importance sampling</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     AIC   BIC logLik</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   809.5 805.2 -393.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   AIC   BIC logLik</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   807 802.3 -391.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Optimised parameters:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                         est.    lower     upper</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0           100.73344 97.57610 103.89078</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_m1            -4.06582 -4.16737  -3.96427</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_qlogis     -0.92674 -1.34187  -0.51160</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> log_k1              -2.43804 -2.78883  -2.08726</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> log_k2              -4.07458 -4.23472  -3.91443</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> g_qlogis             0.04304 -0.19725   0.28333</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> a.1                  0.88503  0.68115   1.08892</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> b.1                  0.08336  0.06765   0.09907</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SD.f_parent_qlogis   0.44797  0.16607   0.72988</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k1            0.35884  0.12285   0.59484</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k2            0.15488  0.05380   0.25596</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0           101.42508 98.36731 104.48285</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_m1            -4.09229 -4.19092  -3.99366</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_qlogis     -0.96395 -1.37251  -0.55538</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k1              -2.32691 -2.67147  -1.98235</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k2              -4.05106 -4.20836  -3.89376</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> g_qlogis            -0.06463 -0.51656   0.38730</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> a.1                  0.87777  0.67697   1.07858</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> b.1                  0.07878  0.06364   0.09392</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.f_parent_qlogis   0.44276  0.16440   0.72112</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k1            0.33452  0.08304   0.58600</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k2            0.14902  0.03146   0.26658</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.g_qlogis          0.40234  0.06216   0.74252</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Correlation: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 parnt_0 lg_k_m1 f_prnt_ log_k1  log_k2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_m1        -0.4698                                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_qlogis -0.2461  0.2709                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> log_k1           0.1572 -0.1517 -0.0648                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> log_k2          -0.0023  0.0835  0.0125  0.1420        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> g_qlogis         0.2314 -0.2337 -0.0755 -0.2762 -0.4797</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k_m1        -0.4693                                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_qlogis -0.2378  0.2595                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k1           0.1720 -0.1593 -0.0669                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> log_k2           0.0179  0.0594  0.0035  0.1995        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> g_qlogis         0.1073 -0.1060 -0.0322 -0.2299 -0.3168</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Random effects:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                      est.  lower  upper</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SD.f_parent_qlogis 0.4480 0.1661 0.7299</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k1          0.3588 0.1228 0.5948</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k2          0.1549 0.0538 0.2560</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                      est.   lower  upper</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.f_parent_qlogis 0.4428 0.16440 0.7211</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k1          0.3345 0.08304 0.5860</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.log_k2          0.1490 0.03146 0.2666</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SD.g_qlogis        0.4023 0.06216 0.7425</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Variance model:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        est.   lower   upper</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> a.1 0.88503 0.68115 1.08892</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> b.1 0.08336 0.06765 0.09907</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> a.1 0.87777 0.67697 1.07858</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> b.1 0.07878 0.06364 0.09392</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Backtransformed parameters:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     est.    lower     upper</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0       100.73344 97.57610 103.89078</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> k_m1             0.01715  0.01549   0.01898</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_to_m1   0.28359  0.20720   0.37482</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> k1               0.08733  0.06149   0.12403</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> k2               0.01700  0.01448   0.01995</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> g                0.51076  0.45085   0.57036</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                    est.    lower     upper</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0       101.4251 98.36731 104.48285</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> k_m1             0.0167  0.01513   0.01843</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_to_m1   0.2761  0.20221   0.36462</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> k1               0.0976  0.06915   0.13775</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> k2               0.0174  0.01487   0.02037</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> g                0.4838  0.37366   0.59563</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Resulting formation fractions:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 ff</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> parent_m1   0.2836</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> parent_sink 0.7164</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> parent_m1   0.2761</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> parent_sink 0.7239</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Estimated disappearance times:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         DT50   DT90 DT50back DT50_k1 DT50_k2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> parent 15.94  93.48    28.14   7.937   40.77</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> m1     40.42 134.27       NA      NA      NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> parent 15.54  94.33     28.4   7.102   39.83</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> m1     41.50 137.87       NA      NA      NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Data:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    ds   name time observed  predicted  residual    std standardized</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent    0     89.8  1.007e+02 -10.93344 8.4439     -1.29483</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent    0    104.1  1.007e+02   3.36656 8.4439      0.39870</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent    1     88.7  9.591e+01  -7.20789 8.0440     -0.89606</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent    1     95.5  9.591e+01  -0.40789 8.0440     -0.05071</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent    3     81.8  8.712e+01  -5.31561 7.3159     -0.72658</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent    3     94.5  8.712e+01   7.38439 7.3159      1.00936</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent    7     71.5  7.246e+01  -0.95675 6.1047     -0.15672</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent    7     70.3  7.246e+01  -2.15675 6.1047     -0.35329</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent   14     54.2  5.382e+01   0.38143 4.5729      0.08341</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent   14     49.6  5.382e+01  -4.21857 4.5729     -0.92251</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent   28     31.5  3.230e+01  -0.80120 2.8344     -0.28267</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent   28     28.8  3.230e+01  -3.50120 2.8344     -1.23524</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent   60     12.1  1.307e+01  -0.97165 1.4038     -0.69215</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent   60     13.6  1.307e+01   0.52835 1.4038      0.37637</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent   90      6.2  6.353e+00  -0.15285 1.0314     -0.14820</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent   90      8.3  6.353e+00   1.94715 1.0314      1.88790</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent  120      2.2  3.175e+00  -0.97462 0.9238     -1.05506</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent  120      2.4  3.175e+00  -0.77462 0.9238     -0.83855</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1    1      0.3  1.183e+00  -0.88350 0.8905     -0.99212</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1    1      0.2  1.183e+00  -0.98350 0.8905     -1.10441</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1    3      2.2  3.281e+00  -1.08106 0.9263     -1.16703</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1    3      3.0  3.281e+00  -0.28106 0.9263     -0.30341</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1    7      6.5  6.564e+00  -0.06353 1.0405     -0.06106</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1    7      5.0  6.564e+00  -1.56353 1.0405     -1.50266</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1   14     10.2  1.015e+01   0.05147 1.2243      0.04204</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1   14      9.5  1.015e+01  -0.64853 1.2243     -0.52970</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1   28     12.2  1.265e+01  -0.44824 1.3766     -0.32561</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1   28     13.4  1.265e+01   0.75176 1.3766      0.54610</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1   60     11.8  1.078e+01   1.02355 1.2611      0.81165</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1   60     13.2  1.078e+01   2.42355 1.2611      1.92181</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1   90      6.6  7.698e+00  -1.09840 1.0932     -1.00474</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1   90      9.3  7.698e+00   1.60160 1.0932      1.46502</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1  120      3.5  5.199e+00  -1.69853 0.9854     -1.72363</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1  120      5.4  5.199e+00   0.20147 0.9854      0.20445</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent    0    118.0  1.007e+02  17.26656 8.4439      2.04485</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent    0     99.8  1.007e+02  -0.93344 8.4439     -0.11055</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent    1     90.2  9.584e+01  -5.63852 8.0382     -0.70146</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent    1     94.6  9.584e+01  -1.23852 8.0382     -0.15408</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent    3     96.1  8.706e+01   9.04068 7.3113      1.23654</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent    3     78.4  8.706e+01  -8.65932 7.3113     -1.18438</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent    7     77.9  7.286e+01   5.04438 6.1376      0.82188</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent    7     77.7  7.286e+01   4.84438 6.1376      0.78930</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent   14     56.0  5.567e+01   0.33336 4.7242      0.07057</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent   14     54.7  5.567e+01  -0.96664 4.7242     -0.20462</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent   28     36.6  3.705e+01  -0.44800 3.2127     -0.13944</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent   28     36.8  3.705e+01  -0.24800 3.2127     -0.07719</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent   60     22.1  2.008e+01   2.01984 1.8935      1.06672</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent   60     24.7  2.008e+01   4.61984 1.8935      2.43984</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent   90     12.4  1.253e+01  -0.12814 1.3689     -0.09360</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent   90     10.8  1.253e+01  -1.72814 1.3689     -1.26238</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent  120      6.8  7.916e+00  -1.11595 1.1040     -1.01085</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent  120      7.9  7.916e+00  -0.01595 1.1040     -0.01445</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1    1      1.3  1.317e+00  -0.01669 0.8918     -0.01871</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1    3      3.7  3.613e+00   0.08699 0.9349      0.09305</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1    3      4.7  3.613e+00   1.08699 0.9349      1.16270</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1    7      8.1  7.092e+00   1.00781 1.0643      0.94688</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1    7      7.9  7.092e+00   0.80781 1.0643      0.75897</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1   14     10.1  1.066e+01  -0.56458 1.2545     -0.45006</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1   14     10.3  1.066e+01  -0.36458 1.2545     -0.29063</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1   28     10.7  1.281e+01  -2.11106 1.3870     -1.52201</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1   28     12.2  1.281e+01  -0.61106 1.3870     -0.44055</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1   60     10.7  1.078e+01  -0.08464 1.2616     -0.06709</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1   60     12.5  1.078e+01   1.71536 1.2616      1.35970</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1   90      9.1  8.013e+00   1.08684 1.1088      0.98016</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1   90      7.4  8.013e+00  -0.61316 1.1088     -0.55298</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1  120      6.1  5.749e+00   0.35063 1.0065      0.34838</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1  120      4.5  5.749e+00  -1.24937 1.0065     -1.24133</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent    0    106.2  1.007e+02   5.46656 8.4439      0.64740</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent    0    106.9  1.007e+02   6.16656 8.4439      0.73030</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent    1    107.4  9.369e+01  13.70530 7.8606      1.74354</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent    1     96.1  9.369e+01   2.40530 7.8606      0.30599</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent    3     79.4  8.185e+01  -2.45363 6.8807     -0.35660</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent    3     82.6  8.185e+01   0.74637 6.8807      0.10847</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent    7     63.9  6.487e+01  -0.97153 5.4798     -0.17729</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent    7     62.4  6.487e+01  -2.47153 5.4798     -0.45103</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent   14     51.0  4.791e+01   3.09024 4.0908      0.75542</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent   14     47.1  4.791e+01  -0.80976 4.0908     -0.19795</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent   28     36.1  3.313e+01   2.97112 2.9001      1.02450</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent   28     36.6  3.313e+01   3.47112 2.9001      1.19691</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent   60     20.1  1.927e+01   0.83265 1.8339      0.45404</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent   60     19.8  1.927e+01   0.53265 1.8339      0.29045</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent   90     11.3  1.203e+01  -0.72783 1.3374     -0.54421</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent   90     10.7  1.203e+01  -1.32783 1.3374     -0.99284</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent  120      8.2  7.516e+00   0.68382 1.0844      0.63061</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent  120      7.3  7.516e+00  -0.21618 1.0844     -0.19936</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1    0      0.8 -9.948e-14   0.80000 0.8850      0.90392</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1    1      1.8  1.682e+00   0.11759 0.8961      0.13123</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1    1      2.3  1.682e+00   0.61759 0.8961      0.68921</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1    3      4.2  4.431e+00  -0.23052 0.9590     -0.24037</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1    3      4.1  4.431e+00  -0.33052 0.9590     -0.34465</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1    7      6.8  8.084e+00  -1.28422 1.1124     -1.15445</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1    7     10.1  8.084e+00   2.01578 1.1124      1.81208</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1   14     11.4  1.100e+01   0.40274 1.2743      0.31606</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1   14     12.8  1.100e+01   1.80274 1.2743      1.41474</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1   28     11.5  1.176e+01  -0.25977 1.3207     -0.19669</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1   28     10.6  1.176e+01  -1.15977 1.3207     -0.87813</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1   60      7.5  9.277e+00  -1.77696 1.1753     -1.51190</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1   60      8.6  9.277e+00  -0.67696 1.1753     -0.57598</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1   90      7.3  6.883e+00   0.41708 1.0548      0.39542</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1   90      8.1  6.883e+00   1.21708 1.0548      1.15389</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1  120      5.3  4.948e+00   0.35179 0.9764      0.36028</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1  120      3.8  4.948e+00  -1.14821 0.9764     -1.17591</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent    0    104.7  1.007e+02   3.96656 8.4439      0.46975</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent    0     88.3  1.007e+02 -12.43344 8.4439     -1.47247</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent    1     94.2  9.738e+01  -3.18358 8.1663     -0.38985</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent    1     94.6  9.738e+01  -2.78358 8.1663     -0.34086</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent    3     78.1  9.110e+01 -12.99595 7.6454     -1.69984</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent    3     96.5  9.110e+01   5.40405 7.6454      0.70684</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent    7     76.2  8.000e+01  -3.79797 6.7273     -0.56456</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent    7     77.8  8.000e+01  -2.19797 6.7273     -0.32672</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent   14     70.8  6.446e+01   6.34396 5.4456      1.16496</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent   14     67.3  6.446e+01   2.84396 5.4456      0.52225</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent   28     43.1  4.359e+01  -0.48960 3.7400     -0.13091</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent   28     45.1  4.359e+01   1.51040 3.7400      0.40385</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent   60     21.3  2.095e+01   0.35282 1.9577      0.18022</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent   60     23.5  2.095e+01   2.55282 1.9577      1.30400</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent   90     11.8  1.188e+01  -0.07874 1.3281     -0.05929</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent   90     12.1  1.188e+01   0.22126 1.3281      0.16660</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent  120      7.0  7.072e+00  -0.07245 1.0634     -0.06813</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent  120      6.2  7.072e+00  -0.87245 1.0634     -0.82041</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1    0      1.6  5.684e-14   1.60000 0.8850      1.80784</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1    1      0.9  6.960e-01   0.20399 0.8869      0.23000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1    3      3.7  1.968e+00   1.73240 0.9001      1.92466</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1    3      2.0  1.968e+00   0.03240 0.9001      0.03599</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1    7      3.6  4.083e+00  -0.48287 0.9482     -0.50924</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1    7      3.8  4.083e+00  -0.28287 0.9482     -0.29832</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1   14      7.1  6.682e+00   0.41836 1.0457      0.40007</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1   14      6.6  6.682e+00  -0.08164 1.0457     -0.07807</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1   28      9.5  9.103e+00   0.39733 1.1658      0.34082</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1   28      9.3  9.103e+00   0.19733 1.1658      0.16926</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1   60      8.3  8.750e+00  -0.44979 1.1469     -0.39218</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1   60      9.0  8.750e+00   0.25021 1.1469      0.21817</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1   90      6.6  6.673e+00  -0.07285 1.0453     -0.06969</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1   90      7.7  6.673e+00   1.02715 1.0453      0.98261</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1  120      3.7  4.757e+00  -1.05747 0.9698     -1.09036</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1  120      3.5  4.757e+00  -1.25747 0.9698     -1.29658</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent    0    110.4  1.007e+02   9.66656 8.4439      1.14480</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent    0    112.1  1.007e+02  11.36656 8.4439      1.34612</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent    1     93.5  9.395e+01  -0.45394 7.8821     -0.05759</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent    1     91.0  9.395e+01  -2.95394 7.8821     -0.37477</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent    3     71.0  8.245e+01 -11.44783 6.9298     -1.65197</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent    3     89.7  8.245e+01   7.25217 6.9298      1.04652</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent    7     60.4  6.567e+01  -5.27002 5.5455     -0.95032</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent    7     59.1  6.567e+01  -6.57002 5.5455     -1.18475</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent   14     56.5  4.847e+01   8.03029 4.1364      1.94139</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent   14     47.0  4.847e+01  -1.46971 4.1364     -0.35532</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent   28     30.2  3.309e+01  -2.89206 2.8971     -0.99825</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent   28     23.9  3.309e+01  -9.19206 2.8971     -3.17281</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent   60     17.0  1.891e+01  -1.90623 1.8076     -1.05458</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent   60     18.7  1.891e+01  -0.20623 1.8076     -0.11409</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent   90     11.3  1.168e+01  -0.38263 1.3160     -0.29076</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent   90     11.9  1.168e+01   0.21737 1.3160      0.16518</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent  120      9.0  7.230e+00   1.77031 1.0708      1.65333</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent  120      8.1  7.230e+00   0.87031 1.0708      0.81280</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1    0      0.7 -5.116e-13   0.70000 0.8850      0.79093</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1    1      3.0  3.244e+00  -0.24430 0.9254     -0.26398</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1    1      2.6  3.244e+00  -0.64430 0.9254     -0.69621</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1    3      5.1  8.592e+00  -3.49175 1.1385     -3.06686</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1    3      7.5  8.592e+00  -1.09175 1.1385     -0.95890</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1    7     16.5  1.583e+01   0.66887 1.5890      0.42093</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1    7     19.0  1.583e+01   3.16887 1.5890      1.99424</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1   14     22.9  2.181e+01   1.08658 2.0224      0.53728</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1   14     23.2  2.181e+01   1.38658 2.0224      0.68562</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1   28     22.2  2.364e+01  -1.43659 2.1600     -0.66508</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1   28     24.4  2.364e+01   0.76341 2.1600      0.35342</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1   60     15.5  1.873e+01  -3.23377 1.7950     -1.80150</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1   60     19.8  1.873e+01   1.06623 1.7950      0.59398</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1   90     14.9  1.387e+01   1.03117 1.4560      0.70822</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1   90     14.2  1.387e+01   0.33117 1.4560      0.22745</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1  120     10.9  9.937e+00   0.96270 1.2122      0.79415</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1  120     10.4  9.937e+00   0.46270 1.2122      0.38169</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    ds   name time observed predicted  residual    std standardized</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent    0     89.8 1.014e+02 -11.62508 8.0383     -1.44620</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent    0    104.1 1.014e+02   2.67492 8.0383      0.33277</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent    1     88.7 9.650e+01  -7.80311 7.6530     -1.01961</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent    1     95.5 9.650e+01  -1.00311 7.6530     -0.13107</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent    3     81.8 8.753e+01  -5.72638 6.9510     -0.82382</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent    3     94.5 8.753e+01   6.97362 6.9510      1.00326</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent    7     71.5 7.254e+01  -1.04133 5.7818     -0.18010</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent    7     70.3 7.254e+01  -2.24133 5.7818     -0.38765</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent   14     54.2 5.349e+01   0.71029 4.3044      0.16502</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent   14     49.6 5.349e+01  -3.88971 4.3044     -0.90366</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent   28     31.5 3.167e+01  -0.16616 2.6446     -0.06283</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent   28     28.8 3.167e+01  -2.86616 2.6446     -1.08379</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent   60     12.1 1.279e+01  -0.69287 1.3365     -0.51843</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent   60     13.6 1.279e+01   0.80713 1.3365      0.60392</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent   90      6.2 6.397e+00  -0.19718 1.0122     -0.19481</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent   90      8.3 6.397e+00   1.90282 1.0122      1.87996</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent  120      2.2 3.323e+00  -1.12320 0.9160     -1.22623</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1 parent  120      2.4 3.323e+00  -0.92320 0.9160     -1.00788</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1    1      0.3 1.179e+00  -0.87919 0.8827     -0.99605</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1    1      0.2 1.179e+00  -0.97919 0.8827     -1.10935</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1    3      2.2 3.273e+00  -1.07272 0.9149     -1.17256</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1    3      3.0 3.273e+00  -0.27272 0.9149     -0.29811</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1    7      6.5 6.559e+00  -0.05872 1.0186     -0.05765</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1    7      5.0 6.559e+00  -1.55872 1.0186     -1.53032</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1   14     10.2 1.016e+01   0.03787 1.1880      0.03188</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1   14      9.5 1.016e+01  -0.66213 1.1880     -0.55734</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1   28     12.2 1.268e+01  -0.47913 1.3297     -0.36032</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1   28     13.4 1.268e+01   0.72087 1.3297      0.54211</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1   60     11.8 1.078e+01   1.02493 1.2211      0.83936</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1   60     13.2 1.078e+01   2.42493 1.2211      1.98588</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1   90      6.6 7.705e+00  -1.10464 1.0672     -1.03509</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1   90      9.3 7.705e+00   1.59536 1.0672      1.49491</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1  120      3.5 5.236e+00  -1.73617 0.9699     -1.79010</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 1     m1  120      5.4 5.236e+00   0.16383 0.9699      0.16892</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent    0    118.0 1.014e+02  16.57492 8.0383      2.06198</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent    0     99.8 1.014e+02  -1.62508 8.0383     -0.20217</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent    1     90.2 9.599e+01  -5.79045 7.6129     -0.76061</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent    1     94.6 9.599e+01  -1.39045 7.6129     -0.18264</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent    3     96.1 8.652e+01   9.57931 6.8724      1.39388</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent    3     78.4 8.652e+01  -8.12069 6.8724     -1.18164</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent    7     77.9 7.197e+01   5.93429 5.7370      1.03439</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent    7     77.7 7.197e+01   5.73429 5.7370      0.99953</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent   14     56.0 5.555e+01   0.44657 4.4637      0.10005</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent   14     54.7 5.555e+01  -0.85343 4.4637     -0.19120</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent   28     36.6 3.853e+01  -1.93170 3.1599     -0.61132</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent   28     36.8 3.853e+01  -1.73170 3.1599     -0.54803</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent   60     22.1 2.110e+01   1.00360 1.8795      0.53396</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent   60     24.7 2.110e+01   3.60360 1.8795      1.91728</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent   90     12.4 1.250e+01  -0.09712 1.3190     -0.07363</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent   90     10.8 1.250e+01  -1.69712 1.3190     -1.28667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent  120      6.8 7.419e+00  -0.61913 1.0546     -0.58709</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2 parent  120      7.9 7.419e+00   0.48087 1.0546      0.45599</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1    1      1.3 1.422e+00  -0.12194 0.8849     -0.13781</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1    3      3.7 3.831e+00  -0.13149 0.9282     -0.14166</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1    3      4.7 3.831e+00   0.86851 0.9282      0.93567</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1    7      8.1 7.292e+00   0.80812 1.0490      0.77034</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1    7      7.9 7.292e+00   0.60812 1.0490      0.57969</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1   14     10.1 1.055e+01  -0.45332 1.2090     -0.37495</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1   14     10.3 1.055e+01  -0.25332 1.2090     -0.20953</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1   28     10.7 1.230e+01  -1.59960 1.3074     -1.22347</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1   28     12.2 1.230e+01  -0.09960 1.3074     -0.07618</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1   60     10.7 1.065e+01   0.05342 1.2141      0.04400</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1   60     12.5 1.065e+01   1.85342 1.2141      1.52661</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1   90      9.1 8.196e+00   0.90368 1.0897      0.82930</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1   90      7.4 8.196e+00  -0.79632 1.0897     -0.73078</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1  120      6.1 5.997e+00   0.10252 0.9969      0.10284</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 2     m1  120      4.5 5.997e+00  -1.49748 0.9969     -1.50220</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent    0    106.2 1.014e+02   4.77492 8.0383      0.59402</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent    0    106.9 1.014e+02   5.47492 8.0383      0.68110</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent    1    107.4 9.390e+01  13.49935 7.4494      1.81214</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent    1     96.1 9.390e+01   2.19935 7.4494      0.29524</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent    3     79.4 8.152e+01  -2.12307 6.4821     -0.32753</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent    3     82.6 8.152e+01   1.07693 6.4821      0.16614</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent    7     63.9 6.446e+01  -0.55834 5.1533     -0.10834</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent    7     62.4 6.446e+01  -2.05834 5.1533     -0.39942</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent   14     51.0 4.826e+01   2.74073 3.9019      0.70241</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent   14     47.1 4.826e+01  -1.15927 3.9019     -0.29711</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent   28     36.1 3.424e+01   1.86399 2.8364      0.65718</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent   28     36.6 3.424e+01   2.36399 2.8364      0.83346</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent   60     20.1 1.968e+01   0.42172 1.7815      0.23672</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent   60     19.8 1.968e+01   0.12172 1.7815      0.06833</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent   90     11.3 1.195e+01  -0.64633 1.2869     -0.50222</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent   90     10.7 1.195e+01  -1.24633 1.2869     -0.96844</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent  120      8.2 7.255e+00   0.94532 1.0474      0.90251</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3 parent  120      7.3 7.255e+00   0.04532 1.0474      0.04327</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1    0      0.8 2.956e-11   0.80000 0.8778      0.91140</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1    1      1.8 1.758e+00   0.04187 0.8886      0.04712</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1    1      2.3 1.758e+00   0.54187 0.8886      0.60978</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1    3      4.2 4.567e+00  -0.36697 0.9486     -0.38683</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1    3      4.1 4.567e+00  -0.46697 0.9486     -0.49224</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1    7      6.8 8.151e+00  -1.35124 1.0876     -1.24242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1    7     10.1 8.151e+00   1.94876 1.0876      1.79182</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1   14     11.4 1.083e+01   0.57098 1.2240      0.46647</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1   14     12.8 1.083e+01   1.97098 1.2240      1.61022</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1   28     11.5 1.147e+01   0.03175 1.2597      0.02520</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1   28     10.6 1.147e+01  -0.86825 1.2597     -0.68928</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1   60      7.5 9.298e+00  -1.79834 1.1433     -1.57298</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1   60      8.6 9.298e+00  -0.69834 1.1433     -0.61083</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1   90      7.3 7.038e+00   0.26249 1.0382      0.25283</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1   90      8.1 7.038e+00   1.06249 1.0382      1.02340</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1  120      5.3 5.116e+00   0.18417 0.9659      0.19068</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 3     m1  120      3.8 5.116e+00  -1.31583 0.9659     -1.36232</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent    0    104.7 1.014e+02   3.27492 8.0383      0.40741</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent    0     88.3 1.014e+02 -13.12508 8.0383     -1.63281</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent    1     94.2 9.781e+01  -3.61183 7.7555     -0.46572</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent    1     94.6 9.781e+01  -3.21183 7.7555     -0.41414</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent    3     78.1 9.110e+01 -13.00467 7.2307     -1.79853</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent    3     96.5 9.110e+01   5.39533 7.2307      0.74617</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent    7     76.2 7.951e+01  -3.30511 6.3246     -0.52258</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent    7     77.8 7.951e+01  -1.70511 6.3246     -0.26960</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent   14     70.8 6.376e+01   7.03783 5.0993      1.38016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent   14     67.3 6.376e+01   3.53783 5.0993      0.69379</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent   28     43.1 4.340e+01  -0.30456 3.5303     -0.08627</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent   28     45.1 4.340e+01   1.69544 3.5303      0.48026</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent   60     21.3 2.142e+01  -0.12077 1.9022     -0.06349</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent   60     23.5 2.142e+01   2.07923 1.9022      1.09308</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent   90     11.8 1.207e+01  -0.26813 1.2940     -0.20721</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent   90     12.1 1.207e+01   0.03187 1.2940      0.02463</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent  120      7.0 6.954e+00   0.04554 1.0347      0.04402</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4 parent  120      6.2 6.954e+00  -0.75446 1.0347     -0.72914</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1    0      1.6 1.990e-13   1.60000 0.8778      1.82279</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1    1      0.9 7.305e-01   0.16949 0.8797      0.19267</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1    3      3.7 2.051e+00   1.64896 0.8925      1.84753</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1    3      2.0 2.051e+00  -0.05104 0.8925     -0.05719</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1    7      3.6 4.204e+00  -0.60375 0.9382     -0.64354</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1    7      3.8 4.204e+00  -0.40375 0.9382     -0.43036</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1   14      7.1 6.760e+00   0.34021 1.0267      0.33137</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1   14      6.6 6.760e+00  -0.15979 1.0267     -0.15563</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1   28      9.5 9.011e+00   0.48856 1.1289      0.43277</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1   28      9.3 9.011e+00   0.28856 1.1289      0.25561</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1   60      8.3 8.611e+00  -0.31077 1.1093     -0.28014</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1   60      9.0 8.611e+00   0.38923 1.1093      0.35086</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1   90      6.6 6.678e+00  -0.07753 1.0233     -0.07576</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1   90      7.7 6.678e+00   1.02247 1.0233      0.99915</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1  120      3.7 4.847e+00  -1.14679 0.9572     -1.19804</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 4     m1  120      3.5 4.847e+00  -1.34679 0.9572     -1.40698</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent    0    110.4 1.014e+02   8.97492 8.0383      1.11651</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent    0    112.1 1.014e+02  10.67492 8.0383      1.32800</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent    1     93.5 9.466e+01  -1.16118 7.5089     -0.15464</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent    1     91.0 9.466e+01  -3.66118 7.5089     -0.48758</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent    3     71.0 8.302e+01 -12.01844 6.5988     -1.82130</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent    3     89.7 8.302e+01   6.68156 6.5988      1.01254</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent    7     60.4 6.563e+01  -5.22574 5.2440     -0.99652</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent    7     59.1 6.563e+01  -6.52574 5.2440     -1.24442</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent   14     56.5 4.727e+01   9.22621 3.8263      2.41128</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent   14     47.0 4.727e+01  -0.27379 3.8263     -0.07156</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent   28     30.2 3.103e+01  -0.83405 2.5977     -0.32108</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent   28     23.9 3.103e+01  -7.13405 2.5977     -2.74634</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent   60     17.0 1.800e+01  -0.99696 1.6675     -0.59787</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent   60     18.7 1.800e+01   0.70304 1.6675      0.42161</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent   90     11.3 1.167e+01  -0.36809 1.2710     -0.28961</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent   90     11.9 1.167e+01   0.23191 1.2710      0.18246</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent  120      9.0 7.595e+00   1.40496 1.0623      1.32256</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5 parent  120      8.1 7.595e+00   0.50496 1.0623      0.47535</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1    0      0.7 0.000e+00   0.70000 0.8778      0.79747</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1    1      3.0 3.158e+00  -0.15799 0.9123     -0.17317</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1    1      2.6 3.158e+00  -0.55799 0.9123     -0.61160</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1    3      5.1 8.443e+00  -3.34286 1.1013     -3.03535</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1    3      7.5 8.443e+00  -0.94286 1.1013     -0.85613</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1    7     16.5 1.580e+01   0.69781 1.5232      0.45811</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1    7     19.0 1.580e+01   3.19781 1.5232      2.09935</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1   14     22.9 2.216e+01   0.73604 1.9543      0.37663</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1   14     23.2 2.216e+01   1.03604 1.9543      0.53014</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1   28     22.2 2.423e+01  -2.03128 2.1011     -0.96678</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1   28     24.4 2.423e+01   0.16872 2.1011      0.08030</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1   60     15.5 1.876e+01  -3.25610 1.7187     -1.89455</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1   60     19.8 1.876e+01   1.04390 1.7187      0.60739</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1   90     14.9 1.366e+01   1.23585 1.3890      0.88976</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1   90     14.2 1.366e+01   0.53585 1.3890      0.38579</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1  120     10.9 9.761e+00   1.13911 1.1670      0.97613</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ds 5     m1  120     10.4 9.761e+00   0.63911 1.1670      0.54767</span>
+<span class="r-in"><span><span class="co"># Add a correlation between random effects of g and k2</span></span></span>
+<span class="r-in"><span><span class="va">cov_model_3</span> <span class="op">&lt;-</span> <span class="va">f_saem_dfop_sfo_2</span><span class="op">$</span><span class="va">so</span><span class="op">@</span><span class="va">model</span><span class="op">@</span><span class="va">covariance.model</span></span></span>
+<span class="r-in"><span><span class="va">cov_model_3</span><span class="op">[</span><span class="st">"log_k2"</span>, <span class="st">"g_qlogis"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">1</span></span></span>
+<span class="r-in"><span><span class="va">cov_model_3</span><span class="op">[</span><span class="st">"g_qlogis"</span>, <span class="st">"log_k2"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">1</span></span></span>
+<span class="r-in"><span><span class="va">f_saem_dfop_sfo_3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">f_saem_dfop_sfo</span>,</span></span>
+<span class="r-in"><span>  covariance.model <span class="op">=</span> <span class="va">cov_model_3</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/nlme/man/intervals.html" class="external-link">intervals</a></span><span class="op">(</span><span class="va">f_saem_dfop_sfo_3</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Approximate 95% confidence intervals</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Fixed effects:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                      lower         est.        upper</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0       98.39888363 101.48951337 104.58014311</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> k_m1            0.01508704   0.01665986   0.01839665</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_to_m1  0.20141557   0.27540583   0.36418131</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> k1              0.07708759   0.10430866   0.14114200</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> k2              0.01476621   0.01786384   0.02161129</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> g               0.33679867   0.45083525   0.57028162</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Random effects:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                             lower       est.      upper</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sd(f_parent_qlogis)    0.38085375  0.4441841  0.5075145</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sd(log_k1)             0.04774819  0.2660384  0.4843286</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sd(log_k2)            -0.63842736  0.1977024  1.0338321</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sd(g_qlogis)           0.22711289  0.4502227  0.6733326</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> corr(log_k2,g_qlogis) -0.83271473 -0.6176939 -0.4026730</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          lower       est.      upper</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> a.1 0.67347568 0.87437392 1.07527216</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> b.1 0.06393032 0.07912417 0.09431802</span>
+<span class="r-in"><span><span class="co"># The correlation does not improve the fit judged by AIC and BIC, although</span></span></span>
+<span class="r-in"><span><span class="co"># the likelihood is higher with the additional parameter</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_saem_dfop_sfo</span>, <span class="va">f_saem_dfop_sfo_2</span>, <span class="va">f_saem_dfop_sfo_3</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Data: 171 observations of 2 variable(s) grouped in 5 datasets</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   npar    AIC    BIC     Lik</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_saem_dfop_sfo_2   12 806.96 802.27 -391.48</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_saem_dfop_sfo_3   13 807.99 802.91 -391.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_saem_dfop_sfo     14 810.83 805.36 -391.42</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
@@ -571,7 +663,7 @@ saemix authors for the parts inherited from saemix.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -33,14 +33,14 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.3</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../../reference/index.html">Functions and data</a>
+  <a href="../../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -52,6 +52,9 @@
 <li>
       <a href="../../articles/mkin.html">Introduction to mkin</a>
     </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Example evaluations with (generalised) nonlinear least squares</li>
     <li>
       <a href="../../articles/FOCUS_D.html">Example evaluation of FOCUS Example Dataset D</a>
     </li>
@@ -59,28 +62,46 @@
       <a href="../../articles/FOCUS_L.html">Example evaluation of FOCUS Laboratory Data L1 to L3</a>
     </li>
     <li>
-      <a href="../../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
+      <a href="../../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
+    </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Example evaluations with hierarchical models (nonlinear mixed-effects models)</li>
+    <li>
+      <a href="../../articles/prebuilt/2022_dmta_parent.html">Testing hierarchical parent degradation kinetics with residue data on dimethenamid and dimethenamid-P</a>
+    </li>
+    <li>
+      <a href="../../articles/prebuilt/2022_dmta_pathway.html">Testing hierarchical pathway kinetics with residue data on dimethenamid and dimethenamid-P</a>
+    </li>
+    <li>
+      <a href="../../articles/prebuilt/2022_cyan_pathway.html">Testing hierarchical pathway kinetics with residue data on cyantraniliprole</a>
+    </li>
+    <li>
+      <a href="../../articles/web_only/dimethenamid_2018.html">Comparison of saemix and nlme evaluations of dimethenamid data from 2018</a>
     </li>
     <li>
       <a href="../../articles/web_only/multistart.html">Short demo of the multistart method</a>
     </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Performance</li>
     <li>
       <a href="../../articles/web_only/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
-    </li>
-    <li>
-      <a href="../../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
-    </li>
-    <li>
-      <a href="../../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
-    </li>
-    <li>
-      <a href="../../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
     <li>
       <a href="../../articles/web_only/benchmarks.html">Benchmark timings for mkin</a>
     </li>
     <li>
       <a href="../../articles/web_only/saem_benchmarks.html">Benchmark timings for saem.mmkin</a>
+    </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Miscellaneous</li>
+    <li>
+      <a href="../../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
+    </li>
+    <li>
+      <a href="../../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
   </ul>
 </li>
@@ -105,13 +126,15 @@
 
       
 
-      </header><script src="benchmarks_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Benchmark timings for mkin</h1>
-                        <h4 data-toc-skip class="author">Johannes Ranke</h4>
+                        <h4 data-toc-skip class="author">Johannes
+Ranke</h4>
             
-            <h4 data-toc-skip class="date">Last change 14 July 2022 (rebuilt 2022-11-17)</h4>
+            <h4 data-toc-skip class="date">Last change 17 February 2023
+(rebuilt 2023-04-20)</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jranke/mkin/blob/HEAD/vignettes/web_only/benchmarks.rmd" class="external-link"><code>vignettes/web_only/benchmarks.rmd</code></a></small>
       <div class="hidden name"><code>benchmarks.rmd</code></div>
@@ -120,9 +143,15 @@
 
     
     
-<p>Each system is characterized by the operating system type, the CPU type, the mkin version, and, as in June 2022 the current R version lead to worse performance, the R version. A compiler was available, so if no analytical solution was available, compiled ODE models are used.</p>
-<p>Every fit is only performed once, so the accuracy of the benchmarks is limited.</p>
-<p>The following wrapper function for <code>mmkin</code> is used because the way the error model is specified was changed in mkin version 0.9.49.1.</p>
+<p>Each system is characterized by the operating system type, the CPU
+type, the mkin version, and, as in June 2022 the current R version lead
+to worse performance, the R version. A compiler was available, so if no
+analytical solution was available, compiled ODE models are used.</p>
+<p>Every fit is only performed once, so the accuracy of the benchmarks
+is limited.</p>
+<p>The following wrapper function for <code>mmkin</code> is used because
+the way the error model is specified was changed in mkin version
+0.9.49.1.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/packageDescription.html" class="external-link">packageVersion</a></span><span class="op">(</span><span class="st">"mkin"</span><span class="op">)</span> <span class="op">&gt;</span> <span class="st">"0.9.48.1"</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">mmkin_bench</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">models</span>, <span class="va">datasets</span>, <span class="va">error_model</span> <span class="op">=</span> <span class="st">"const"</span><span class="op">)</span> <span class="op">{</span></span>
@@ -194,11 +223,14 @@
 <div class="section level2">
 <h2 id="results">Results<a class="anchor" aria-label="anchor" href="#results"></a>
 </h2>
-<p>Benchmarks for all available error models are shown. They are intended for improving mkin, not for comparing CPUs or operating systems. All trademarks belong to their respective owners.</p>
+<p>Benchmarks for all available error models are shown. They are
+intended for improving mkin, not for comparing CPUs or operating
+systems. All trademarks belong to their respective owners.</p>
 <div class="section level3">
 <h3 id="parent-only">Parent only<a class="anchor" aria-label="anchor" href="#parent-only"></a>
 </h3>
-<p>Constant variance (t1) and two-component error model (t2) for four models fitted to two datasets, i.e. eight fits for each test.</p>
+<p>Constant variance (t1) and two-component error model (t2) for four
+models fitted to two datasets, i.e. eight fits for each test.</p>
 <table class="table">
 <thead><tr class="header">
 <th align="left">OS</th>
@@ -353,13 +385,55 @@
 <td align="right">2.140</td>
 <td align="right">3.774</td>
 </tr>
+<tr class="odd">
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">4.2.2</td>
+<td align="left">1.2.2</td>
+<td align="right">2.187</td>
+<td align="right">3.851</td>
+</tr>
+<tr class="even">
+<td align="left">Linux</td>
+<td align="left">Ryzen 9 7950X</td>
+<td align="left">4.2.2</td>
+<td align="left">1.2.0</td>
+<td align="right">1.288</td>
+<td align="right">1.794</td>
+</tr>
+<tr class="odd">
+<td align="left">Linux</td>
+<td align="left">Ryzen 9 7950X</td>
+<td align="left">4.2.2</td>
+<td align="left">1.2.2</td>
+<td align="right">1.276</td>
+<td align="right">1.804</td>
+</tr>
+<tr class="even">
+<td align="left">Linux</td>
+<td align="left">Ryzen 9 7950X</td>
+<td align="left">4.2.2</td>
+<td align="left">1.2.3</td>
+<td align="right">1.370</td>
+<td align="right">1.883</td>
+</tr>
+<tr class="odd">
+<td align="left">Linux</td>
+<td align="left">Ryzen 9 7950X</td>
+<td align="left">4.2.3</td>
+<td align="left">1.2.3</td>
+<td align="right">1.406</td>
+<td align="right">1.948</td>
+</tr>
 </tbody>
 </table>
 </div>
 <div class="section level3">
 <h3 id="one-metabolite">One metabolite<a class="anchor" aria-label="anchor" href="#one-metabolite"></a>
 </h3>
-<p>Constant variance (t3), two-component error model (t4), and variance by variable (t5) for three models fitted to one dataset, i.e. three fits for each test.</p>
+<p>Constant variance (t3), two-component error model (t4), and variance
+by variable (t5) for three models fitted to one dataset, i.e. three fits
+for each test.</p>
 <table class="table">
 <thead><tr class="header">
 <th align="left">OS</th>
@@ -533,14 +607,73 @@
 <td align="right">6.193</td>
 <td align="right">2.843</td>
 </tr>
+<tr class="odd">
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">4.2.2</td>
+<td align="left">1.2.2</td>
+<td align="right">1.585</td>
+<td align="right">6.335</td>
+<td align="right">3.003</td>
+</tr>
+<tr class="even">
+<td align="left">Linux</td>
+<td align="left">Ryzen 9 7950X</td>
+<td align="left">4.2.2</td>
+<td align="left">1.2.0</td>
+<td align="right">0.792</td>
+<td align="right">2.378</td>
+<td align="right">1.245</td>
+</tr>
+<tr class="odd">
+<td align="left">Linux</td>
+<td align="left">Ryzen 9 7950X</td>
+<td align="left">4.2.2</td>
+<td align="left">1.2.2</td>
+<td align="right">0.784</td>
+<td align="right">2.355</td>
+<td align="right">1.233</td>
+</tr>
+<tr class="even">
+<td align="left">Linux</td>
+<td align="left">Ryzen 9 7950X</td>
+<td align="left">4.2.2</td>
+<td align="left">1.2.3</td>
+<td align="right">0.770</td>
+<td align="right">2.011</td>
+<td align="right">1.123</td>
+</tr>
+<tr class="odd">
+<td align="left">Linux</td>
+<td align="left">Ryzen 9 7950X</td>
+<td align="left">4.2.3</td>
+<td align="left">1.2.3</td>
+<td align="right">0.793</td>
+<td align="right">2.109</td>
+<td align="right">1.178</td>
+</tr>
 </tbody>
 </table>
 </div>
 <div class="section level3">
 <h3 id="two-metabolites">Two metabolites<a class="anchor" aria-label="anchor" href="#two-metabolites"></a>
 </h3>
-<p>Constant variance (t6 and t7), two-component error model (t8 and t9), and variance by variable (t10 and t11) for one model fitted to one dataset, i.e. one fit for each test.</p>
+<p>Constant variance (t6 and t7), two-component error model (t8 and t9),
+and variance by variable (t10 and t11) for one model fitted to one
+dataset, i.e. one fit for each test.</p>
 <table class="table">
+<colgroup>
+<col width="8%">
+<col width="19%">
+<col width="8%">
+<col width="12%">
+<col width="8%">
+<col width="8%">
+<col width="8%">
+<col width="9%">
+<col width="8%">
+<col width="9%">
+</colgroup>
 <thead><tr class="header">
 <th align="left">OS</th>
 <th align="left">CPU</th>
@@ -770,6 +903,66 @@
 <td align="right">1.987</td>
 <td align="right">2.802</td>
 </tr>
+<tr class="odd">
+<td align="left">Linux</td>
+<td align="left">Ryzen 7 1700</td>
+<td align="left">4.2.2</td>
+<td align="left">1.2.2</td>
+<td align="right">0.935</td>
+<td align="right">1.381</td>
+<td align="right">1.551</td>
+<td align="right">3.209</td>
+<td align="right">1.976</td>
+<td align="right">3.013</td>
+</tr>
+<tr class="even">
+<td align="left">Linux</td>
+<td align="left">Ryzen 9 7950X</td>
+<td align="left">4.2.2</td>
+<td align="left">1.2.0</td>
+<td align="right">0.445</td>
+<td align="right">0.591</td>
+<td align="right">0.660</td>
+<td align="right">1.190</td>
+<td align="right">0.814</td>
+<td align="right">1.100</td>
+</tr>
+<tr class="odd">
+<td align="left">Linux</td>
+<td align="left">Ryzen 9 7950X</td>
+<td align="left">4.2.2</td>
+<td align="left">1.2.2</td>
+<td align="right">0.443</td>
+<td align="right">0.586</td>
+<td align="right">0.661</td>
+<td align="right">1.176</td>
+<td align="right">0.803</td>
+<td align="right">1.097</td>
+</tr>
+<tr class="even">
+<td align="left">Linux</td>
+<td align="left">Ryzen 9 7950X</td>
+<td align="left">4.2.2</td>
+<td align="left">1.2.3</td>
+<td align="right">0.418</td>
+<td align="right">0.530</td>
+<td align="right">0.591</td>
+<td align="right">1.006</td>
+<td align="right">0.716</td>
+<td align="right">0.949</td>
+</tr>
+<tr class="odd">
+<td align="left">Linux</td>
+<td align="left">Ryzen 9 7950X</td>
+<td align="left">4.2.3</td>
+<td align="left">1.2.3</td>
+<td align="right">0.432</td>
+<td align="right">0.549</td>
+<td align="right">0.609</td>
+<td align="right">1.052</td>
+<td align="right">0.743</td>
+<td align="right">0.989</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -793,7 +986,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

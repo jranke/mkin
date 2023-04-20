@@ -1,3 +1,7 @@
+# mkin 1.2.3.1
+
+- Small fixes to get the online docs right (example code in R/hierarchical_kinetics, cluster setup in cyantraniliprole and dmta pathway vignettes, graphics and model comparison in multistart vignette), rebuild online docs
+
 # mkin 1.2.3
 
 - 'R/{endpoints,parms,plot.mixed.mmkin,summary.saem.mmkin}.R': Calculate parameters and endpoints and plot population curves for specific covariate values, or specific percentiles of covariate values used in saem fits.
