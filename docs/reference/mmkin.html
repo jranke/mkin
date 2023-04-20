@@ -20,13 +20,13 @@ datasets specified in its first two arguments."><!-- mathjax --><script src="htt
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.3</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav"><li>
-  <a href="../reference/index.html">Functions and data</a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -37,6 +37,8 @@ datasets specified in its first two arguments."><!-- mathjax --><script src="htt
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/mkin.html">Introduction to mkin</a>
     </li>
+    <li class="divider">
+    <li class="dropdown-header">Example evaluations with (generalised) nonlinear least squares</li>
     <li>
       <a href="../articles/FOCUS_D.html">Example evaluation of FOCUS Example Dataset D</a>
     </li>
@@ -44,28 +46,43 @@ datasets specified in its first two arguments."><!-- mathjax --><script src="htt
       <a href="../articles/FOCUS_L.html">Example evaluation of FOCUS Laboratory Data L1 to L3</a>
     </li>
     <li>
-      <a href="../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
+      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
+    </li>
+    <li class="divider">
+    <li class="dropdown-header">Example evaluations with hierarchical models (nonlinear mixed-effects models)</li>
+    <li>
+      <a href="../articles/prebuilt/2022_dmta_parent.html">Testing hierarchical parent degradation kinetics with residue data on dimethenamid and dimethenamid-P</a>
+    </li>
+    <li>
+      <a href="../articles/prebuilt/2022_dmta_pathway.html">Testing hierarchical pathway kinetics with residue data on dimethenamid and dimethenamid-P</a>
+    </li>
+    <li>
+      <a href="../articles/prebuilt/2022_cyan_pathway.html">Testing hierarchical pathway kinetics with residue data on cyantraniliprole</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/dimethenamid_2018.html">Comparison of saemix and nlme evaluations of dimethenamid data from 2018</a>
     </li>
     <li>
       <a href="../articles/web_only/multistart.html">Short demo of the multistart method</a>
     </li>
+    <li class="divider">
+    <li class="dropdown-header">Performance</li>
     <li>
       <a href="../articles/web_only/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
-    </li>
-    <li>
-      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
-    </li>
-    <li>
-      <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
-    </li>
-    <li>
-      <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
     <li>
       <a href="../articles/web_only/benchmarks.html">Benchmark timings for mkin</a>
     </li>
     <li>
       <a href="../articles/web_only/saem_benchmarks.html">Benchmark timings for saem.mmkin</a>
+    </li>
+    <li class="divider">
+    <li class="dropdown-header">Miscellaneous</li>
+    <li>
+      <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
   </ul></li>
 <li>
@@ -189,10 +206,10 @@ plotting.</p></div>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">time_default</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    user  system elapsed </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   5.526   0.809   2.006 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1.596   0.611   0.715 </span>
 <span class="r-in"><span><span class="va">time_1</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    user  system elapsed </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   5.403   0.008   5.412 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   2.060   0.016   2.076 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="endpoints.html">endpoints</a></span><span class="op">(</span><span class="va">fits.0</span><span class="op">[[</span><span class="st">"SFO_lin"</span>, <span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ff</span>
@@ -223,21 +240,25 @@ plotting.</p></div>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fits.0</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="mmkin-5.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># On Windows, we can use multiple cores by making a cluster using the parallel</span></span></span>
-<span class="r-in"><span><span class="co"># package, which gets loaded with mkin, and passing it to mmkin, e.g.</span></span></span>
-<span class="r-in"><span><span class="va">cl</span> <span class="op">&lt;-</span> <span class="fu">makePSOCKcluster</span><span class="op">(</span><span class="fl">12</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in makePSOCKcluster(12):</span> could not find function "makePSOCKcluster"</span>
+<span class="r-in"><span><span class="co"># On Windows, we can use multiple cores by making a cluster first</span></span></span>
+<span class="r-in"><span><span class="va">cl</span> <span class="op">&lt;-</span> <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/makeCluster.html" class="external-link">makePSOCKcluster</a></span><span class="op">(</span><span class="fl">12</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu">mmkin</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SFO"</span>, <span class="st">"FOMC"</span>, <span class="st">"DFOP"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>A <span class="op">=</span> <span class="va">FOCUS_2006_A</span>, B <span class="op">=</span> <span class="va">FOCUS_2006_B</span>, C <span class="op">=</span> <span class="va">FOCUS_2006_C</span>, D <span class="op">=</span> <span class="va">FOCUS_2006_D</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  cluster <span class="op">=</span> <span class="va">cl</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in system.time({    if (is.null(cluster)) {        results &lt;- parallel::mclapply(as.list(1:n.fits), fit_function,             mc.cores = cores, mc.preschedule = FALSE)    }    else {        results &lt;- parallel::parLapply(cluster, as.list(1:n.fits),             fit_function)    }}):</span> object 'cl' not found</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Timing stopped at: 0 0 0</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in print(f):</span> object 'f' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;mmkin&gt; object</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Status of individual fits:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       dataset</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> model  A  B  C  D </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   SFO  OK OK OK OK</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   FOMC OK OK OK OK</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   DFOP OK OK OK OK</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> OK: No warnings</span>
 <span class="r-in"><span><span class="co"># We get false convergence for the FOMC fit to FOCUS_2006_A because this</span></span></span>
 <span class="r-in"><span><span class="co"># dataset is really SFO, and the FOMC fit is overparameterised</span></span></span>
-<span class="r-in"><span><span class="fu">stopCluster</span><span class="op">(</span><span class="va">cl</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in stopCluster(cl):</span> could not find function "stopCluster"</span>
+<span class="r-in"><span><span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/makeCluster.html" class="external-link">stopCluster</a></span><span class="op">(</span><span class="va">cl</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
@@ -254,7 +275,7 @@ plotting.</p></div>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

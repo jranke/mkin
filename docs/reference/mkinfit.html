@@ -25,13 +25,13 @@ likelihood function."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.3</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav"><li>
-  <a href="../reference/index.html">Functions and data</a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -42,6 +42,8 @@ likelihood function."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/mkin.html">Introduction to mkin</a>
     </li>
+    <li class="divider">
+    <li class="dropdown-header">Example evaluations with (generalised) nonlinear least squares</li>
     <li>
       <a href="../articles/FOCUS_D.html">Example evaluation of FOCUS Example Dataset D</a>
     </li>
@@ -49,28 +51,43 @@ likelihood function."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/
       <a href="../articles/FOCUS_L.html">Example evaluation of FOCUS Laboratory Data L1 to L3</a>
     </li>
     <li>
-      <a href="../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
+      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
+    </li>
+    <li class="divider">
+    <li class="dropdown-header">Example evaluations with hierarchical models (nonlinear mixed-effects models)</li>
+    <li>
+      <a href="../articles/prebuilt/2022_dmta_parent.html">Testing hierarchical parent degradation kinetics with residue data on dimethenamid and dimethenamid-P</a>
+    </li>
+    <li>
+      <a href="../articles/prebuilt/2022_dmta_pathway.html">Testing hierarchical pathway kinetics with residue data on dimethenamid and dimethenamid-P</a>
+    </li>
+    <li>
+      <a href="../articles/prebuilt/2022_cyan_pathway.html">Testing hierarchical pathway kinetics with residue data on cyantraniliprole</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/dimethenamid_2018.html">Comparison of saemix and nlme evaluations of dimethenamid data from 2018</a>
     </li>
     <li>
       <a href="../articles/web_only/multistart.html">Short demo of the multistart method</a>
     </li>
+    <li class="divider">
+    <li class="dropdown-header">Performance</li>
     <li>
       <a href="../articles/web_only/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
-    </li>
-    <li>
-      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
-    </li>
-    <li>
-      <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
-    </li>
-    <li>
-      <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
     <li>
       <a href="../articles/web_only/benchmarks.html">Benchmark timings for mkin</a>
     </li>
     <li>
       <a href="../articles/web_only/saem_benchmarks.html">Benchmark timings for saem.mmkin</a>
+    </li>
+    <li class="divider">
+    <li class="dropdown-header">Miscellaneous</li>
+    <li>
+      <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
   </ul></li>
 <li>
@@ -384,17 +401,17 @@ Degradation Data. <em>Environments</em> 6(12) 124
 <span class="r-in"><span><span class="co"># Use shorthand notation for parent only degradation</span></span></span>
 <span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">mkinfit</span><span class="op">(</span><span class="st">"FOMC"</span>, <span class="va">FOCUS_2006_C</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mkin version used for fitting:    1.2.0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> R version used for fitting:       4.2.2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Date of fit:     Thu Nov 17 13:58:19 2022 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Date of summary: Thu Nov 17 13:58:19 2022 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mkin version used for fitting:    1.2.3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> R version used for fitting:       4.2.3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Date of fit:     Thu Apr 20 07:32:45 2023 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Date of summary: Thu Apr 20 07:32:45 2023 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Equations:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model predictions using solution type analytical </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fitted using 222 model solutions performed in 0.044 s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fitted using 222 model solutions performed in 0.013 s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Error model: Constant variance </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -535,9 +552,9 @@ Degradation Data. <em>Environments</em> 6(12) 124
 <span class="r-in"><span>      solution_type <span class="op">=</span> <span class="st">"analytical"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               test relative elapsed</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3       analytical    1.000   0.570</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 deSolve_compiled    1.682   0.959</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2            eigen    2.609   1.487</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3       analytical    1.000   0.264</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 deSolve_compiled    1.197   0.316</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2            eigen    2.227   0.588</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Use stepwise fitting, using optimised parameters from parent only fit, FOMC-SFO</span></span></span>
@@ -564,10 +581,10 @@ Degradation Data. <em>Environments</em> 6(12) 124
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NaNs produced</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NaNs produced</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>diag(.) had 0 or NA entries; non-finite result is doubtful</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mkin version used for fitting:    1.2.0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> R version used for fitting:       4.2.2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Date of fit:     Thu Nov 17 13:58:30 2022 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Date of summary: Thu Nov 17 13:58:30 2022 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mkin version used for fitting:    1.2.3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> R version used for fitting:       4.2.3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Date of fit:     Thu Apr 20 07:32:49 2023 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Date of summary: Thu Apr 20 07:32:49 2023 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Equations:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent</span>
@@ -576,7 +593,7 @@ Degradation Data. <em>Environments</em> 6(12) 124
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model predictions using solution type deSolve </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fitted using 3729 model solutions performed in 2.464 s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fitted using 3729 model solutions performed in 0.694 s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Error model: Two-component variance function </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -688,7 +705,7 @@ Degradation Data. <em>Environments</em> 6(12) 124
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

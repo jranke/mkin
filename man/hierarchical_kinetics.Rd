@@ -41,7 +41,9 @@ and then to run 'tinytex::tlmgr_install(c("float", "listing"))'.
 
 \dontrun{
 library(rmarkdown)
-draft("example_analysis.rmd", template = "hierarchical_kinetics", package = "mkin")
+# The following is now commented out after the relase of v1.2.3 for the generation
+# of online docs, as the command creates a directory and opens an editor
+#draft("example_analysis.rmd", template = "hierarchical_kinetics", package = "mkin")
 }
 
 }

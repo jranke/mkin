@@ -33,14 +33,14 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.3</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../reference/index.html">Functions and data</a>
+  <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -52,6 +52,9 @@
 <li>
       <a href="../articles/mkin.html">Introduction to mkin</a>
     </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Example evaluations with (generalised) nonlinear least squares</li>
     <li>
       <a href="../articles/FOCUS_D.html">Example evaluation of FOCUS Example Dataset D</a>
     </li>
@@ -59,28 +62,46 @@
       <a href="../articles/FOCUS_L.html">Example evaluation of FOCUS Laboratory Data L1 to L3</a>
     </li>
     <li>
-      <a href="../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
+      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
+    </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Example evaluations with hierarchical models (nonlinear mixed-effects models)</li>
+    <li>
+      <a href="../articles/prebuilt/2022_dmta_parent.html">Testing hierarchical parent degradation kinetics with residue data on dimethenamid and dimethenamid-P</a>
+    </li>
+    <li>
+      <a href="../articles/prebuilt/2022_dmta_pathway.html">Testing hierarchical pathway kinetics with residue data on dimethenamid and dimethenamid-P</a>
+    </li>
+    <li>
+      <a href="../articles/prebuilt/2022_cyan_pathway.html">Testing hierarchical pathway kinetics with residue data on cyantraniliprole</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/dimethenamid_2018.html">Comparison of saemix and nlme evaluations of dimethenamid data from 2018</a>
     </li>
     <li>
       <a href="../articles/web_only/multistart.html">Short demo of the multistart method</a>
     </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Performance</li>
     <li>
       <a href="../articles/web_only/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
-    </li>
-    <li>
-      <a href="../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
-    </li>
-    <li>
-      <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
-    </li>
-    <li>
-      <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
     <li>
       <a href="../articles/web_only/benchmarks.html">Benchmark timings for mkin</a>
     </li>
     <li>
       <a href="../articles/web_only/saem_benchmarks.html">Benchmark timings for saem.mmkin</a>
+    </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Miscellaneous</li>
+    <li>
+      <a href="../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
+    </li>
+    <li>
+      <a href="../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
   </ul>
 </li>
@@ -105,13 +126,15 @@
 
       
 
-      </header><script src="mkin_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Introduction to mkin</h1>
-                        <h4 data-toc-skip class="author">Johannes Ranke</h4>
+                        <h4 data-toc-skip class="author">Johannes
+Ranke</h4>
             
-            <h4 data-toc-skip class="date">Last change 15 February 2021 (rebuilt 2022-11-17)</h4>
+            <h4 data-toc-skip class="date">Last change 15 February 2021
+(rebuilt 2023-04-20)</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jranke/mkin/blob/HEAD/vignettes/mkin.rmd" class="external-link"><code>vignettes/mkin.rmd</code></a></small>
       <div class="hidden name"><code>mkin.rmd</code></div>
@@ -120,11 +143,21 @@
 
     
     
-<p><a href="https://www.jrwb.de" class="external-link">Wissenschaftlicher Berater, Kronacher Str. 12, 79639 Grenzach-Wyhlen, Germany</a><br> Privatdozent at the University of Freiburg</p>
+<p><a href="https://www.jrwb.de" class="external-link">Wissenschaftlicher Berater, Kronacher
+Str. 12, 79639 Grenzach-Wyhlen, Germany</a><br> Privatdozent at the
+University of Freiburg</p>
 <div class="section level2">
 <h2 id="abstract">Abstract<a class="anchor" aria-label="anchor" href="#abstract"></a>
 </h2>
-<p>In the regulatory evaluation of chemical substances like plant protection products (pesticides), biocides and other chemicals, degradation data play an important role. For the evaluation of pesticide degradation experiments, detailed guidance has been developed, based on nonlinear optimisation. The <code>R</code> add-on package <code>mkin</code> implements fitting some of the models recommended in this guidance from within R and calculates some statistical measures for data series within one or more compartments, for parent and metabolites.</p>
+<p>In the regulatory evaluation of chemical substances like plant
+protection products (pesticides), biocides and other chemicals,
+degradation data play an important role. For the evaluation of pesticide
+degradation experiments, detailed guidance has been developed, based on
+nonlinear optimisation. The <code>R</code> add-on package
+<code>mkin</code> implements fitting some of the models recommended in
+this guidance from within R and calculates some statistical measures for
+data series within one or more compartments, for parent and
+metabolites.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://pkgdown.jrwb.de/mkin/">"mkin"</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co"># Define the kinetic model</span></span>
@@ -159,95 +192,248 @@
 <div class="section level2">
 <h2 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
 </h2>
-<p>The <code>mkin</code> package <span class="citation">(Ranke 2021)</span> implements the approach to degradation kinetics recommended in the kinetics report provided by the FOrum for Co-ordination of pesticide fate models and their USe <span class="citation">(FOCUS Work Group on Degradation Kinetics 2006, 2014)</span>. It covers data series describing the decline of one compound, data series with transformation products (commonly termed metabolites) and data series for more than one compartment. It is possible to include back reactions. Therefore, equilibrium reactions and equilibrium partitioning can be specified, although this often leads to an overparameterisation of the model.</p>
-<p>When the first <code>mkin</code> code was published in 2010, the most commonly used tools for fitting more complex kinetic degradation models to experimental data were KinGUI <span class="citation">(Schäfer et al. 2007)</span>, a MATLAB based tool with a graphical user interface that was specifically tailored to the task and included some output as proposed by the FOCUS Kinetics Workgroup, and ModelMaker, a general purpose compartment based tool providing infrastructure for fitting dynamic simulation models based on differential equations to data.</p>
-<p>The ‘mkin’ code was first uploaded to the BerliOS development platform. When this was taken down, the version control history was imported into the R-Forge site (see <em>e.g.</em> <a href="https://cgit.jrwb.de/mkin/commit/?id=30cbb4092f6d2d3beff5800603374a0d009ad770" class="external-link">the initial commit on 11 May 2010</a>), where the code is still being updated.</p>
-<p>At that time, the R package <code>FME</code> (Flexible Modelling Environment) <span class="citation">(Soetaert and Petzoldt 2010)</span> was already available, and provided a good basis for developing a package specifically tailored to the task. The remaining challenge was to make it as easy as possible for the users (including the author of this vignette) to specify the system of differential equations and to include the output requested by the FOCUS guidance, such as the <span class="math inline">\(\chi^2\)</span> error level as defined in this guidance.</p>
-<p>Also, <code>mkin</code> introduced using analytical solutions for parent only kinetics for improved optimization speed. Later, Eigenvalue based solutions were introduced to <code>mkin</code> for the case of linear differential equations (<em>i.e.</em> where the FOMC or DFOP models were not used for the parent compound), greatly improving the optimization speed for these cases. This, has become somehow obsolete, as the use of compiled code described below gives even faster execution times.</p>
-<p>The possibility to specify back-reactions and a biphasic model (SFORB) for metabolites were present in <code>mkin</code> from the very beginning.</p>
+<p>The <code>mkin</code> package <span class="citation">(J. Ranke
+2021)</span> implements the approach to degradation kinetics recommended
+in the kinetics report provided by the FOrum for Co-ordination of
+pesticide fate models and their USe <span class="citation">(FOCUS Work
+Group on Degradation Kinetics 2006, 2014)</span>. It covers data series
+describing the decline of one compound, data series with transformation
+products (commonly termed metabolites) and data series for more than one
+compartment. It is possible to include back reactions. Therefore,
+equilibrium reactions and equilibrium partitioning can be specified,
+although this often leads to an overparameterisation of the model.</p>
+<p>When the first <code>mkin</code> code was published in 2010, the most
+commonly used tools for fitting more complex kinetic degradation models
+to experimental data were KinGUI <span class="citation">(Schäfer et al.
+2007)</span>, a MATLAB based tool with a graphical user interface that
+was specifically tailored to the task and included some output as
+proposed by the FOCUS Kinetics Workgroup, and ModelMaker, a general
+purpose compartment based tool providing infrastructure for fitting
+dynamic simulation models based on differential equations to data.</p>
+<p>The ‘mkin’ code was first uploaded to the BerliOS development
+platform. When this was taken down, the version control history was
+imported into the R-Forge site (see <em>e.g.</em> <a href="https://cgit.jrwb.de/mkin/commit/?id=30cbb4092f6d2d3beff5800603374a0d009ad770" class="external-link">the
+initial commit on 11 May 2010</a>), where the code is still being
+updated.</p>
+<p>At that time, the R package <code>FME</code> (Flexible Modelling
+Environment) <span class="citation">(Soetaert and Petzoldt 2010)</span>
+was already available, and provided a good basis for developing a
+package specifically tailored to the task. The remaining challenge was
+to make it as easy as possible for the users (including the author of
+this vignette) to specify the system of differential equations and to
+include the output requested by the FOCUS guidance, such as the <span class="math inline">\(\chi^2\)</span> error level as defined in this
+guidance.</p>
+<p>Also, <code>mkin</code> introduced using analytical solutions for
+parent only kinetics for improved optimization speed. Later, Eigenvalue
+based solutions were introduced to <code>mkin</code> for the case of
+linear differential equations (<em>i.e.</em> where the FOMC or DFOP
+models were not used for the parent compound), greatly improving the
+optimization speed for these cases. This, has become somehow obsolete,
+as the use of compiled code described below gives even faster execution
+times.</p>
+<p>The possibility to specify back-reactions and a biphasic model
+(SFORB) for metabolites were present in <code>mkin</code> from the very
+beginning.</p>
 <div class="section level3">
 <h3 id="derived-software-tools">Derived software tools<a class="anchor" aria-label="anchor" href="#derived-software-tools"></a>
 </h3>
-<p>Soon after the publication of <code>mkin</code>, two derived tools were published, namely KinGUII (developed at Bayer Crop Science) and CAKE (commissioned to Tessella by Syngenta), which added a graphical user interface (GUI), and added fitting by iteratively reweighted least squares (IRLS) and characterisation of likely parameter distributions by Markov Chain Monte Carlo (MCMC) sampling.</p>
-<p>CAKE focuses on a smooth use experience, sacrificing some flexibility in the model definition, originally allowing only two primary metabolites in parallel. The current version 3.4 of CAKE released in May 2020 uses a scheme for up to six metabolites in a flexible arrangement and supports biphasic modelling of metabolites, but does not support back-reactions (non-instantaneous equilibria).</p>
-<p>KinGUI offers an even more flexible widget for specifying complex kinetic models. Back-reactions (non-instantaneous equilibria) were supported early on, but until 2014, only simple first-order models could be specified for transformation products. Starting with KinGUII version 2.1, biphasic modelling of metabolites was also available in KinGUII.</p>
-<p>A further graphical user interface (GUI) that has recently been brought to a decent degree of maturity is the browser based GUI named <code>gmkin</code>. Please see its <a href="https://pkgdown.jrwb.de/gmkin/" class="external-link">documentation page</a> and <a href="https://pkgdown.jrwb.de/gmkin/articles/gmkin_manual.html" class="external-link">manual</a> for further information.</p>
-<p>A comparison of scope, usability and numerical results obtained with these tools has been recently been published by <span class="citation">Ranke, Wöltjen, and Meinecke (2018)</span>.</p>
+<p>Soon after the publication of <code>mkin</code>, two derived tools
+were published, namely KinGUII (developed at Bayer Crop Science) and
+CAKE (commissioned to Tessella by Syngenta), which added a graphical
+user interface (GUI), and added fitting by iteratively reweighted least
+squares (IRLS) and characterisation of likely parameter distributions by
+Markov Chain Monte Carlo (MCMC) sampling.</p>
+<p>CAKE focuses on a smooth use experience, sacrificing some flexibility
+in the model definition, originally allowing only two primary
+metabolites in parallel. The current version 3.4 of CAKE released in May
+2020 uses a scheme for up to six metabolites in a flexible arrangement
+and supports biphasic modelling of metabolites, but does not support
+back-reactions (non-instantaneous equilibria).</p>
+<p>KinGUI offers an even more flexible widget for specifying complex
+kinetic models. Back-reactions (non-instantaneous equilibria) were
+supported early on, but until 2014, only simple first-order models could
+be specified for transformation products. Starting with KinGUII version
+2.1, biphasic modelling of metabolites was also available in
+KinGUII.</p>
+<p>A further graphical user interface (GUI) that has recently been
+brought to a decent degree of maturity is the browser based GUI named
+<code>gmkin</code>. Please see its <a href="https://pkgdown.jrwb.de/gmkin/" class="external-link">documentation page</a> and <a href="https://pkgdown.jrwb.de/gmkin/articles/gmkin_manual.html" class="external-link">manual</a>
+for further information.</p>
+<p>A comparison of scope, usability and numerical results obtained with
+these tools has been recently been published by <span class="citation">Johannes Ranke, Wöltjen, and Meinecke
+(2018)</span>.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="unique-features">Unique features<a class="anchor" aria-label="anchor" href="#unique-features"></a>
 </h2>
-<p>Currently, the main unique features available in <code>mkin</code> are</p>
+<p>Currently, the main unique features available in <code>mkin</code>
+are</p>
 <ul>
-<li>the <a href="https://pkgdown.jrwb.de/mkin/articles/web_only/compiled_models.html">speed increase</a> by using compiled code when a compiler is present,</li>
-<li>parallel model fitting on multicore machines using the <a href="https://pkgdown.jrwb.de/mkin/reference/mmkin.html"><code>mmkin</code> function</a>,</li>
-<li>the estimation of parameter confidence intervals based on transformed parameters (see below) and</li>
-<li>the possibility to use the <a href="https://pkgdown.jrwb.de/mkin/reference/sigma_twocomp.html">two-component error model</a>
+<li>the <a href="https://pkgdown.jrwb.de/mkin/articles/web_only/compiled_models.html">speed
+increase</a> by using compiled code when a compiler is present,</li>
+<li>parallel model fitting on multicore machines using the <a href="https://pkgdown.jrwb.de/mkin/reference/mmkin.html"><code>mmkin</code>
+function</a>,</li>
+<li>the estimation of parameter confidence intervals based on
+transformed parameters (see below) and</li>
+<li>the possibility to use the <a href="https://pkgdown.jrwb.de/mkin/reference/sigma_twocomp.html">two-component
+error model</a>
 </li>
 </ul>
-<p>The iteratively reweighted least squares fitting of different variances for each variable as introduced by <span class="citation">Gao et al. (2011)</span> has been available in mkin since <a href="https://pkgdown.jrwb.de/mkin/news/index.html#mkin-0-9-22-2013-10-26">version 0.9-22</a>. With <a href="https://pkgdown.jrwb.de/mkin/news/index.html#mkin-0-9-49-5-2019-07-04">release 0.9.49.5</a>, the IRLS algorithm has been complemented by direct or step-wise maximisation of the likelihood function, which makes it possible not only to fit the variance by variable error model but also a <a href="https://pkgdown.jrwb.de/mkin/reference/sigma_twocomp.html">two-component error model</a> inspired by error models developed in analytical chemistry <span class="citation">(Ranke and Meinecke 2019)</span>.</p>
+<p>The iteratively reweighted least squares fitting of different
+variances for each variable as introduced by <span class="citation">Gao
+et al. (2011)</span> has been available in mkin since <a href="https://pkgdown.jrwb.de/mkin/news/index.html#mkin-0-9-22-2013-10-26">version
+0.9-22</a>. With <a href="https://pkgdown.jrwb.de/mkin/news/index.html#mkin-0-9-49-5-2019-07-04">release
+0.9.49.5</a>, the IRLS algorithm has been complemented by direct or
+step-wise maximisation of the likelihood function, which makes it
+possible not only to fit the variance by variable error model but also a
+<a href="https://pkgdown.jrwb.de/mkin/reference/sigma_twocomp.html">two-component
+error model</a> inspired by error models developed in analytical
+chemistry <span class="citation">(Johannes Ranke and Meinecke
+2019)</span>.</p>
 </div>
 <div class="section level2">
 <h2 id="internal-parameter-transformations">Internal parameter transformations<a class="anchor" aria-label="anchor" href="#internal-parameter-transformations"></a>
 </h2>
-<p>For rate constants, the log transformation is used, as proposed by Bates and Watts <span class="citation">(1988, 77, 149)</span>. Approximate intervals are constructed for the transformed rate constants <span class="citation">(compare Bates and Watts 1988, 135)</span>, <em>i.e.</em> for their logarithms. Confidence intervals for the rate constants are then obtained using the appropriate backtransformation using the exponential function.</p>
-<p>In the first version of <code>mkin</code> allowing for specifying models using formation fractions, a home-made reparameterisation was used in order to ensure that the sum of formation fractions would not exceed unity.</p>
-<p>This method is still used in the current version of KinGUII (v2.1 from April 2014), with a modification that allows for fixing the pathway to sink to zero. CAKE uses penalties in the objective function in order to enforce this constraint.</p>
-<p>In 2012, an alternative reparameterisation of the formation fractions was proposed together with René Lehmann <span class="citation">(Ranke and Lehmann 2012)</span>, based on isometric logratio transformation (ILR). The aim was to improve the validity of the linear approximation of the objective function during the parameter estimation procedure as well as in the subsequent calculation of parameter confidence intervals. In the current version of mkin, a logit transformation is used for parameters that are bound between 0 and 1, such as the g parameter of the DFOP model.</p>
+<p>For rate constants, the log transformation is used, as proposed by
+Bates and Watts <span class="citation">(1988, 77, 149)</span>.
+Approximate intervals are constructed for the transformed rate constants
+<span class="citation">(compare Bates and Watts 1988, 135)</span>,
+<em>i.e.</em> for their logarithms. Confidence intervals for the rate
+constants are then obtained using the appropriate backtransformation
+using the exponential function.</p>
+<p>In the first version of <code>mkin</code> allowing for specifying
+models using formation fractions, a home-made reparameterisation was
+used in order to ensure that the sum of formation fractions would not
+exceed unity.</p>
+<p>This method is still used in the current version of KinGUII (v2.1
+from April 2014), with a modification that allows for fixing the pathway
+to sink to zero. CAKE uses penalties in the objective function in order
+to enforce this constraint.</p>
+<p>In 2012, an alternative reparameterisation of the formation fractions
+was proposed together with René Lehmann <span class="citation">(J. Ranke
+and Lehmann 2012)</span>, based on isometric logratio transformation
+(ILR). The aim was to improve the validity of the linear approximation
+of the objective function during the parameter estimation procedure as
+well as in the subsequent calculation of parameter confidence intervals.
+In the current version of mkin, a logit transformation is used for
+parameters that are bound between 0 and 1, such as the g parameter of
+the DFOP model.</p>
 <div class="section level3">
 <h3 id="confidence-intervals-based-on-transformed-parameters">Confidence intervals based on transformed parameters<a class="anchor" aria-label="anchor" href="#confidence-intervals-based-on-transformed-parameters"></a>
 </h3>
-<p>In the first attempt at providing improved parameter confidence intervals introduced to <code>mkin</code> in 2013, confidence intervals obtained from FME on the transformed parameters were simply all backtransformed one by one to yield asymmetric confidence intervals for the backtransformed parameters.</p>
-<p>However, while there is a 1:1 relation between the rate constants in the model and the transformed parameters fitted in the model, the parameters obtained by the isometric logratio transformation are calculated from the set of formation fractions that quantify the paths to each of the compounds formed from a specific parent compound, and no such 1:1 relation exists.</p>
-<p>Therefore, parameter confidence intervals for formation fractions obtained with this method only appear valid for the case of a single transformation product, where currently the logit transformation is used for the formation fraction.</p>
-<p>The confidence intervals obtained by backtransformation for the cases where a 1:1 relation between transformed and original parameter exist are considered by the author of this vignette to be more accurate than those obtained using a re-estimation of the Hessian matrix after backtransformation, as implemented in the FME package.</p>
+<p>In the first attempt at providing improved parameter confidence
+intervals introduced to <code>mkin</code> in 2013, confidence intervals
+obtained from FME on the transformed parameters were simply all
+backtransformed one by one to yield asymmetric confidence intervals for
+the backtransformed parameters.</p>
+<p>However, while there is a 1:1 relation between the rate constants in
+the model and the transformed parameters fitted in the model, the
+parameters obtained by the isometric logratio transformation are
+calculated from the set of formation fractions that quantify the paths
+to each of the compounds formed from a specific parent compound, and no
+such 1:1 relation exists.</p>
+<p>Therefore, parameter confidence intervals for formation fractions
+obtained with this method only appear valid for the case of a single
+transformation product, where currently the logit transformation is used
+for the formation fraction.</p>
+<p>The confidence intervals obtained by backtransformation for the cases
+where a 1:1 relation between transformed and original parameter exist
+are considered by the author of this vignette to be more accurate than
+those obtained using a re-estimation of the Hessian matrix after
+backtransformation, as implemented in the FME package.</p>
 </div>
 <div class="section level3">
 <h3 id="parameter-t-test-based-on-untransformed-parameters">Parameter t-test based on untransformed parameters<a class="anchor" aria-label="anchor" href="#parameter-t-test-based-on-untransformed-parameters"></a>
 </h3>
-<p>The standard output of many nonlinear regression software packages includes the results from a test for significant difference from zero for all parameters. Such a test is also recommended to check the validity of rate constants in the FOCUS guidance <span class="citation">(FOCUS Work Group on Degradation Kinetics 2014, 96ff)</span>.</p>
-<p>It has been argued that the precondition for this test, <em>i.e.</em> normal distribution of the estimator for the parameters, is not fulfilled in the case of nonlinear regression <span class="citation">(Ranke and Lehmann 2015)</span>. However, this test is commonly used by industry, consultants and national authorities in order to decide on the reliability of parameter estimates, based on the FOCUS guidance mentioned above. Therefore, the results of this one-sided t-test are included in the summary output from <code>mkin</code>.</p>
-<p>As it is not reasonable to test for significant difference of the transformed parameters (<em>e.g.</em> <span class="math inline">\(log(k)\)</span>) from zero, the t-test is calculated based on the model definition before parameter transformation, <em>i.e.</em> in a similar way as in packages that do not apply such an internal parameter transformation. A note is included in the <code>mkin</code> output, pointing to the fact that the t-test is based on the unjustified assumption of normal distribution of the parameter estimators.</p>
+<p>The standard output of many nonlinear regression software packages
+includes the results from a test for significant difference from zero
+for all parameters. Such a test is also recommended to check the
+validity of rate constants in the FOCUS guidance <span class="citation">(FOCUS Work Group on Degradation Kinetics 2014,
+96ff)</span>.</p>
+<p>It has been argued that the precondition for this test, <em>i.e.</em>
+normal distribution of the estimator for the parameters, is not
+fulfilled in the case of nonlinear regression <span class="citation">(J.
+Ranke and Lehmann 2015)</span>. However, this test is commonly used by
+industry, consultants and national authorities in order to decide on the
+reliability of parameter estimates, based on the FOCUS guidance
+mentioned above. Therefore, the results of this one-sided t-test are
+included in the summary output from <code>mkin</code>.</p>
+<p>As it is not reasonable to test for significant difference of the
+transformed parameters (<em>e.g.</em> <span class="math inline">\(log(k)\)</span>) from zero, the t-test is
+calculated based on the model definition before parameter
+transformation, <em>i.e.</em> in a similar way as in packages that do
+not apply such an internal parameter transformation. A note is included
+in the <code>mkin</code> output, pointing to the fact that the t-test is
+based on the unjustified assumption of normal distribution of the
+parameter estimators.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <!-- vim: set foldmethod=syntax: -->
-<div id="refs" class="references hanging-indent">
-<div id="ref-bates1988">
-<p>Bates, D., and D. Watts. 1988. <em>Nonlinear Regression and Its Applications</em>. Wiley-Interscience.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-bates1988" class="csl-entry">
+Bates, D., and D. Watts. 1988. <em>Nonlinear Regression and Its
+Applications</em>. Wiley-Interscience.
 </div>
-<div id="ref-FOCUS2006">
-<p>FOCUS Work Group on Degradation Kinetics. 2006. <em>Guidance Document on Estimating Persistence and Degradation Kinetics from Environmental Fate Studies on Pesticides in Eu Registration. Report of the Focus Work Group on Degradation Kinetics</em>. <a href="http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics" class="external-link">http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics</a>.</p>
+<div id="ref-FOCUS2006" class="csl-entry">
+FOCUS Work Group on Degradation Kinetics. 2006. <em>Guidance Document on
+Estimating Persistence and Degradation Kinetics from Environmental Fate
+Studies on Pesticides in EU Registration. Report of the FOCUS Work Group
+on Degradation Kinetics</em>. <a href="http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics" class="external-link">http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics</a>.
 </div>
-<div id="ref-FOCUSkinetics2014">
-<p>———. 2014. <em>Generic Guidance for Estimating Persistence and Degradation Kinetics from Environmental Fate Studies on Pesticides in Eu Registration</em>. 1.1 ed. <a href="http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics" class="external-link">http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics</a>.</p>
+<div id="ref-FOCUSkinetics2014" class="csl-entry">
+———. 2014. <em>Generic Guidance for Estimating Persistence and
+Degradation Kinetics from Environmental Fate Studies on Pesticides in EU
+Registration</em>. 1.1 ed. <a href="http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics" class="external-link">http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics</a>.
 </div>
-<div id="ref-gao11">
-<p>Gao, Z., J. W. Green, J. Vanderborght, and W. Schmitt. 2011. “Improving Uncertainty Analysis in Kinetic Evaluations Using Iteratively Reweighted Least Squares.” Journal. <em>Environmental Science and Technology</em> 45: 4429–37.</p>
+<div id="ref-gao11" class="csl-entry">
+Gao, Z., J. W. Green, J. Vanderborght, and W. Schmitt. 2011.
+<span>“Improving Uncertainty Analysis in Kinetic Evaluations Using
+Iteratively Reweighted Least Squares.”</span> Journal. <em>Environmental
+Science and Technology</em> 45: 4429–37.
 </div>
-<div id="ref-pkg:mkin">
-<p>Ranke, J. 2021. <em>‘mkin‘: Kinetic Evaluation of Chemical Degradation Data</em>. <a href="https://CRAN.R-project.org/package=mkin" class="external-link">https://CRAN.R-project.org/package=mkin</a>.</p>
+<div id="ref-pkg:mkin" class="csl-entry">
+Ranke, J. 2021. <em>‘<span class="nocase">mkin</span>‘:
+<span>K</span>inetic Evaluation of Chemical Degradation Data</em>. <a href="https://CRAN.R-project.org/package=mkin" class="external-link">https://CRAN.R-project.org/package=mkin</a>.
 </div>
-<div id="ref-ranke2012">
-<p>Ranke, J., and R. Lehmann. 2012. “Parameter Reliability in Kinetic Evaluation of Environmental Metabolism Data - Assessment and the Influence of Model Specification.” In <em>SETAC World 20-24 May</em>. Berlin. <a href="https://jrwb.de/posters/Poster_SETAC_2012_Kinetic_parameter_uncertainty_model_parameterization_Lehmann_Ranke.pdf" class="external-link">https://jrwb.de/posters/Poster_SETAC_2012_Kinetic_parameter_uncertainty_model_parameterization_Lehmann_Ranke.pdf</a>.</p>
+<div id="ref-ranke2012" class="csl-entry">
+Ranke, J., and R. Lehmann. 2012. <span>“Parameter Reliability in Kinetic
+Evaluation of Environmental Metabolism Data - Assessment and the
+Influence of Model Specification.”</span> In <em>SETAC World 20-24
+May</em>. Berlin. <a href="https://jrwb.de/posters/Poster_SETAC_2012_Kinetic_parameter_uncertainty_model_parameterization_Lehmann_Ranke.pdf" class="external-link">https://jrwb.de/posters/Poster_SETAC_2012_Kinetic_parameter_uncertainty_model_parameterization_Lehmann_Ranke.pdf</a>.
 </div>
-<div id="ref-ranke2015">
-<p>———. 2015. “To T-Test or Not to T-Test, That Is the Question.” In <em>XV Symposium on Pesticide Chemistry 2-4 September 2015</em>. Piacenza. <a href="https://jrwb.de/posters/piacenza_2015.pdf" class="external-link">https://jrwb.de/posters/piacenza_2015.pdf</a>.</p>
+<div id="ref-ranke2015" class="csl-entry">
+———. 2015. <span>“To t-Test or Not to t-Test, That Is the
+Question.”</span> In <em>XV Symposium on Pesticide Chemistry 2-4
+September 2015</em>. Piacenza. <a href="https://jrwb.de/posters/piacenza_2015.pdf" class="external-link">https://jrwb.de/posters/piacenza_2015.pdf</a>.
 </div>
-<div id="ref-ranke2019">
-<p>Ranke, Johannes, and Stefan Meinecke. 2019. “Error Models for the Kinetic Evaluation of Chemical Degradation Data.” <em>Environments</em> 6 (12). <a href="https://doi.org/10.3390/environments6120124" class="external-link">https://doi.org/10.3390/environments6120124</a>.</p>
+<div id="ref-ranke2019" class="csl-entry">
+Ranke, Johannes, and Stefan Meinecke. 2019. <span>“Error Models for the
+Kinetic Evaluation of Chemical Degradation Data.”</span>
+<em>Environments</em> 6 (12). <a href="https://doi.org/10.3390/environments6120124" class="external-link">https://doi.org/10.3390/environments6120124</a>.
 </div>
-<div id="ref-ranke2018">
-<p>Ranke, Johannes, Janina Wöltjen, and Stefan Meinecke. 2018. “Comparison of Software Tools for Kinetic Evaluation of Chemical Degradation Data.” <em>Environmental Sciences Europe</em> 30 (1): 17. <a href="https://doi.org/10.1186/s12302-018-0145-1" class="external-link">https://doi.org/10.1186/s12302-018-0145-1</a>.</p>
+<div id="ref-ranke2018" class="csl-entry">
+Ranke, Johannes, Janina Wöltjen, and Stefan Meinecke. 2018.
+<span>“Comparison of Software Tools for Kinetic Evaluation of Chemical
+Degradation Data.”</span> <em>Environmental Sciences Europe</em> 30 (1):
+17. <a href="https://doi.org/10.1186/s12302-018-0145-1" class="external-link">https://doi.org/10.1186/s12302-018-0145-1</a>.
 </div>
-<div id="ref-schaefer2007">
-<p>Schäfer, D., B. Mikolasch, P. Rainbird, and B. Harvey. 2007. “KinGUI: A New Kinetic Software Tool for Evaluations According to FOCUS Degradation Kinetics.” In <em>Proceedings of the Xiii Symposium Pesticide Chemistry</em>, edited by Del Re A. A. M., Capri E., Fragoulis G., and Trevisan M., 916–23. Piacenza.</p>
+<div id="ref-schaefer2007" class="csl-entry">
+Schäfer, D., B. Mikolasch, P. Rainbird, and B. Harvey. 2007.
+<span>“<span>KinGUI</span>: A New Kinetic Software Tool for Evaluations
+According to <span>FOCUS</span> Degradation Kinetics.”</span> In
+<em>Proceedings of the XIII Symposium Pesticide Chemistry</em>, edited
+by Del Re A. A. M., Capri E., Fragoulis G., and Trevisan M., 916–23.
+Piacenza.
 </div>
-<div id="ref-soetaert2010">
-<p>Soetaert, Karline, and Thomas Petzoldt. 2010. “Inverse Modelling, Sensitivity and Monte Carlo Analysis in R Using Package FME.” <em>Journal of Statistical Software</em> 33 (3): 1–28. <a href="https://doi.org/10.18637/jss.v033.i03" class="external-link">https://doi.org/10.18637/jss.v033.i03</a>.</p>
+<div id="ref-soetaert2010" class="csl-entry">
+Soetaert, Karline, and Thomas Petzoldt. 2010. <span>“Inverse Modelling,
+Sensitivity and Monte Carlo Analysis in <span>R</span> Using Package
+<span>FME</span>.”</span> <em>Journal of Statistical Software</em> 33
+(3): 1–28. <a href="https://doi.org/10.18637/jss.v033.i03" class="external-link">https://doi.org/10.18637/jss.v033.i03</a>.
 </div>
 </div>
 </div>
@@ -270,7 +456,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

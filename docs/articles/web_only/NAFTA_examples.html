@@ -33,14 +33,14 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.3</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../../reference/index.html">Functions and data</a>
+  <a href="../../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -52,6 +52,9 @@
 <li>
       <a href="../../articles/mkin.html">Introduction to mkin</a>
     </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Example evaluations with (generalised) nonlinear least squares</li>
     <li>
       <a href="../../articles/FOCUS_D.html">Example evaluation of FOCUS Example Dataset D</a>
     </li>
@@ -59,28 +62,46 @@
       <a href="../../articles/FOCUS_L.html">Example evaluation of FOCUS Laboratory Data L1 to L3</a>
     </li>
     <li>
-      <a href="../../articles/web_only/dimethenamid_2018.html">Example evaluations of dimethenamid data from 2018 with nonlinear mixed-effects models</a>
+      <a href="../../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
+    </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Example evaluations with hierarchical models (nonlinear mixed-effects models)</li>
+    <li>
+      <a href="../../articles/prebuilt/2022_dmta_parent.html">Testing hierarchical parent degradation kinetics with residue data on dimethenamid and dimethenamid-P</a>
+    </li>
+    <li>
+      <a href="../../articles/prebuilt/2022_dmta_pathway.html">Testing hierarchical pathway kinetics with residue data on dimethenamid and dimethenamid-P</a>
+    </li>
+    <li>
+      <a href="../../articles/prebuilt/2022_cyan_pathway.html">Testing hierarchical pathway kinetics with residue data on cyantraniliprole</a>
+    </li>
+    <li>
+      <a href="../../articles/web_only/dimethenamid_2018.html">Comparison of saemix and nlme evaluations of dimethenamid data from 2018</a>
     </li>
     <li>
       <a href="../../articles/web_only/multistart.html">Short demo of the multistart method</a>
     </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Performance</li>
     <li>
       <a href="../../articles/web_only/compiled_models.html">Performance benefit by using compiled model definitions in mkin</a>
-    </li>
-    <li>
-      <a href="../../articles/web_only/FOCUS_Z.html">Example evaluation of FOCUS Example Dataset Z</a>
-    </li>
-    <li>
-      <a href="../../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
-    </li>
-    <li>
-      <a href="../../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
     <li>
       <a href="../../articles/web_only/benchmarks.html">Benchmark timings for mkin</a>
     </li>
     <li>
       <a href="../../articles/web_only/saem_benchmarks.html">Benchmark timings for saem.mmkin</a>
+    </li>
+    <li class="divider">
+    </li>
+<li class="dropdown-header">Miscellaneous</li>
+    <li>
+      <a href="../../articles/twa.html">Calculation of time weighted average concentrations with mkin</a>
+    </li>
+    <li>
+      <a href="../../articles/web_only/NAFTA_examples.html">Example evaluation of NAFTA SOP Attachment examples</a>
     </li>
   </ul>
 </li>
@@ -105,13 +126,16 @@
 
       
 
-      </header><script src="NAFTA_examples_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Evaluation of example datasets from Attachment 1 to the US EPA SOP for the NAFTA guidance</h1>
-                        <h4 data-toc-skip class="author">Johannes Ranke</h4>
+      <h1 data-toc-skip>Evaluation of example datasets from Attachment 1
+to the US EPA SOP for the NAFTA guidance</h1>
+                        <h4 data-toc-skip class="author">Johannes
+Ranke</h4>
             
-            <h4 data-toc-skip class="date">26 February 2019 (rebuilt 2022-11-17)</h4>
+            <h4 data-toc-skip class="date">26 February 2019 (rebuilt
+2023-04-20)</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jranke/mkin/blob/HEAD/vignettes/web_only/NAFTA_examples.rmd" class="external-link"><code>vignettes/web_only/NAFTA_examples.rmd</code></a></small>
       <div class="hidden name"><code>NAFTA_examples.rmd</code></div>
@@ -123,13 +147,22 @@
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>In this document, the example evaluations provided in Attachment 1 to the SOP of US EPA for using the NAFTA guidance <span class="citation">(US EPA 2015)</span> are repeated using mkin. The original evaluations reported in the attachment were performed using PestDF in version 0.8.4. Note that PestDF 0.8.13 is the version distributed at the US EPA website today (2019-02-26).</p>
+<p>In this document, the example evaluations provided in Attachment 1 to
+the SOP of US EPA for using the NAFTA guidance <span class="citation">(US EPA 2015)</span> are repeated using mkin. The
+original evaluations reported in the attachment were performed using
+PestDF in version 0.8.4. Note that PestDF 0.8.13 is the version
+distributed at the US EPA website today (2019-02-26).</p>
 <p>The datasets are now distributed with the mkin package.</p>
 </div>
 <div class="section level2">
 <h2 id="examples-where-dfop-did-not-converge-with-pestdf-0-8-4">Examples where DFOP did not converge with PestDF 0.8.4<a class="anchor" aria-label="anchor" href="#examples-where-dfop-did-not-converge-with-pestdf-0-8-4"></a>
 </h2>
-<p>In attachment 1, it is reported that the DFOP model does not converge for these datasets when PestDF 0.8.4 was used. For all four datasets, the DFOP model can be fitted with mkin (see below). The negative half-life given by PestDF 0.8.4 for these fits appears to be the result of a bug. The results for the other two models (SFO and IORE) are the same.</p>
+<p>In attachment 1, it is reported that the DFOP model does not converge
+for these datasets when PestDF 0.8.4 was used. For all four datasets,
+the DFOP model can be fitted with mkin (see below). The negative
+half-life given by PestDF 0.8.4 for these fits appears to be the result
+of a bug. The results for the other two models (SFO and IORE) are the
+same.</p>
 <div class="section level3">
 <h3 id="example-on-page-5-upper-panel">Example on page 5, upper panel<a class="anchor" aria-label="anchor" href="#example-on-page-5-upper-panel"></a>
 </h3>
@@ -138,7 +171,7 @@
 <pre><code><span><span class="co">## The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</span></span></code></pre>
 <pre><code><span><span class="co">## The half-life obtained from the IORE model may be used</span></span></code></pre>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p5a</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p5a</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NAFTA_examples_files/figure-html/p5a-1.png" width="700"></p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p5a</span><span class="op">)</span></span></code></pre></div>
@@ -189,7 +222,7 @@
 <pre><code><span><span class="co">## The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</span></span></code></pre>
 <pre><code><span><span class="co">## The half-life obtained from the IORE model may be used</span></span></code></pre>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p5b</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p5b</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NAFTA_examples_files/figure-html/p5b-1.png" width="700"></p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p5b</span><span class="op">)</span></span></code></pre></div>
@@ -240,7 +273,7 @@
 <pre><code><span><span class="co">## The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</span></span></code></pre>
 <pre><code><span><span class="co">## The half-life obtained from the IORE model may be used</span></span></code></pre>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p6</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p6</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NAFTA_examples_files/figure-html/p6-1.png" width="700"></p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p6</span><span class="op">)</span></span></code></pre></div>
@@ -291,7 +324,7 @@
 <pre><code><span><span class="co">## The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</span></span></code></pre>
 <pre><code><span><span class="co">## The half-life obtained from the IORE model may be used</span></span></code></pre>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p7</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p7</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NAFTA_examples_files/figure-html/p7-1.png" width="700"></p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p7</span><span class="op">)</span></span></code></pre></div>
@@ -336,18 +369,21 @@
 </div>
 </div>
 <div class="section level2">
-<h2 id="examples-where-the-representative-half-life-deviates-from-the-observed-dt50">Examples where the representative half-life deviates from the observed DT50<a class="anchor" aria-label="anchor" href="#examples-where-the-representative-half-life-deviates-from-the-observed-dt50"></a>
+<h2 id="examples-where-the-representative-half-life-deviates-from-the-observed-dt50">Examples where the representative half-life deviates from the
+observed DT50<a class="anchor" aria-label="anchor" href="#examples-where-the-representative-half-life-deviates-from-the-observed-dt50"></a>
 </h2>
 <div class="section level3">
 <h3 id="example-on-page-8">Example on page 8<a class="anchor" aria-label="anchor" href="#example-on-page-8"></a>
 </h3>
-<p>For this dataset, the IORE fit does not converge when the default starting values used by mkin for the IORE model are used. Therefore, a lower value for the rate constant is used here.</p>
+<p>For this dataset, the IORE fit does not converge when the default
+starting values used by mkin for the IORE model are used. Therefore, a
+lower value for the rate constant is used here.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p8</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/nafta.html">nafta</a></span><span class="op">(</span><span class="va">NAFTA_SOP_Attachment</span><span class="op">[[</span><span class="st">"p8"</span><span class="op">]</span><span class="op">]</span>, parms.ini <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>k__iore_parent <span class="op">=</span> <span class="fl">1e-3</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</span></span></code></pre>
 <pre><code><span><span class="co">## The half-life obtained from the IORE model may be used</span></span></code></pre>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p8</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p8</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NAFTA_examples_files/figure-html/p8-1.png" width="700"></p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p8</span><span class="op">)</span></span></code></pre></div>
@@ -402,7 +438,7 @@
 <pre><code><span><span class="co">## The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</span></span></code></pre>
 <pre><code><span><span class="co">## The half-life obtained from the IORE model may be used</span></span></code></pre>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p9a</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p9a</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NAFTA_examples_files/figure-html/p9a-1.png" width="700"></p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p9a</span><span class="op">)</span></span></code></pre></div>
@@ -444,7 +480,9 @@
 <span><span class="co">## </span></span>
 <span><span class="co">## Representative half-life:</span></span>
 <span><span class="co">## [1] 101.43</span></span></code></pre>
-<p>In this example, the residuals of the SFO indicate a lack of fit of this model, so even if it was an abiotic experiment, the data do not suggest a simple exponential decline.</p>
+<p>In this example, the residuals of the SFO indicate a lack of fit of
+this model, so even if it was an abiotic experiment, the data do not
+suggest a simple exponential decline.</p>
 </div>
 <div class="section level3">
 <h3 id="example-on-page-9-lower-panel">Example on page 9, lower panel<a class="anchor" aria-label="anchor" href="#example-on-page-9-lower-panel"></a>
@@ -454,12 +492,12 @@
 <pre><code><span><span class="co">## Warning in sqrt(diag(covar)): NaNs produced</span></span></code></pre>
 <pre><code><span><span class="co">## Warning in sqrt(diag(covar_notrans)): NaNs produced</span></span></code></pre>
 <pre><code><span><span class="co">## Warning in sqrt(1/diag(V)): NaNs produced</span></span></code></pre>
-<pre><code><span><span class="co">## Warning in cov2cor(ans$covar): diag(.) had 0 or NA entries; non-finite result is</span></span>
-<span><span class="co">## doubtful</span></span></code></pre>
+<pre><code><span><span class="co">## Warning in cov2cor(ans$covar): diag(.) had 0 or NA entries; non-finite result</span></span>
+<span><span class="co">## is doubtful</span></span></code></pre>
 <pre><code><span><span class="co">## The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</span></span></code></pre>
 <pre><code><span><span class="co">## The half-life obtained from the IORE model may be used</span></span></code></pre>
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p9b</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p9b</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NAFTA_examples_files/figure-html/p9b-1.png" width="700"></p>
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p9b</span><span class="op">)</span></span></code></pre></div>
@@ -501,7 +539,12 @@
 <span><span class="co">## </span></span>
 <span><span class="co">## Representative half-life:</span></span>
 <span><span class="co">## [1] 14.8</span></span></code></pre>
-<p>Here, mkin gives a longer slow DT50 for the DFOP model (17.8 days) than PestDF (13.5 days). Presumably, this is related to the fact that PestDF gives a negative value for the proportion of the fast degradation which should be between 0 and 1, inclusive. This parameter is called f in PestDF and g in mkin. In mkin, it is restricted to the interval from 0 to 1.</p>
+<p>Here, mkin gives a longer slow DT50 for the DFOP model (17.8 days)
+than PestDF (13.5 days). Presumably, this is related to the fact that
+PestDF gives a negative value for the proportion of the fast degradation
+which should be between 0 and 1, inclusive. This parameter is called f
+in PestDF and g in mkin. In mkin, it is restricted to the interval from
+0 to 1.</p>
 </div>
 <div class="section level3">
 <h3 id="example-on-page-10">Example on page 10<a class="anchor" aria-label="anchor" href="#example-on-page-10"></a>
@@ -510,12 +553,12 @@
 <code class="sourceCode R"><span><span class="va">p10</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/nafta.html">nafta</a></span><span class="op">(</span><span class="va">NAFTA_SOP_Attachment</span><span class="op">[[</span><span class="st">"p10"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in sqrt(diag(covar)): NaNs produced</span></span></code></pre>
 <pre><code><span><span class="co">## Warning in sqrt(1/diag(V)): NaNs produced</span></span></code></pre>
-<pre><code><span><span class="co">## Warning in cov2cor(ans$covar): diag(.) had 0 or NA entries; non-finite result is</span></span>
-<span><span class="co">## doubtful</span></span></code></pre>
+<pre><code><span><span class="co">## Warning in cov2cor(ans$covar): diag(.) had 0 or NA entries; non-finite result</span></span>
+<span><span class="co">## is doubtful</span></span></code></pre>
 <pre><code><span><span class="co">## The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</span></span></code></pre>
 <pre><code><span><span class="co">## The half-life obtained from the IORE model may be used</span></span></code></pre>
 <div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p10</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p10</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NAFTA_examples_files/figure-html/p10-1.png" width="700"></p>
 <div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p10</span><span class="op">)</span></span></code></pre></div>
@@ -557,7 +600,11 @@
 <span><span class="co">## </span></span>
 <span><span class="co">## Representative half-life:</span></span>
 <span><span class="co">## [1] 8.86</span></span></code></pre>
-<p>Here, a value below N is given for the IORE model, because the data suggests a faster decline towards the end of the experiment, which appears physically rather unlikely in the case of a photolysis study. It seems PestDF does not constrain N to values above zero, thus the slight difference in IORE model parameters between PestDF and mkin.</p>
+<p>Here, a value below N is given for the IORE model, because the data
+suggests a faster decline towards the end of the experiment, which
+appears physically rather unlikely in the case of a photolysis study. It
+seems PestDF does not constrain N to values above zero, thus the slight
+difference in IORE model parameters between PestDF and mkin.</p>
 </div>
 </div>
 <div class="section level2">
@@ -571,7 +618,7 @@
 <pre><code><span><span class="co">## The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</span></span></code></pre>
 <pre><code><span><span class="co">## The half-life obtained from the IORE model may be used</span></span></code></pre>
 <div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p11</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p11</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NAFTA_examples_files/figure-html/p11-1.png" width="700"></p>
 <div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p11</span><span class="op">)</span></span></code></pre></div>
@@ -613,13 +660,19 @@
 <span><span class="co">## </span></span>
 <span><span class="co">## Representative half-life:</span></span>
 <span><span class="co">## [1] 41148170</span></span></code></pre>
-<p>In this case, the DFOP fit reported for PestDF resulted in a negative value for the slower rate constant, which is not possible in mkin. The other results are in agreement.</p>
+<p>In this case, the DFOP fit reported for PestDF resulted in a negative
+value for the slower rate constant, which is not possible in mkin. The
+other results are in agreement.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="n-is-less-than-1-and-the-dfop-rate-constants-are-like-the-sfo-rate-constant">N is less than 1 and the DFOP rate constants are like the SFO rate constant<a class="anchor" aria-label="anchor" href="#n-is-less-than-1-and-the-dfop-rate-constants-are-like-the-sfo-rate-constant"></a>
+<h2 id="n-is-less-than-1-and-the-dfop-rate-constants-are-like-the-sfo-rate-constant">N is less than 1 and the DFOP rate constants are like the SFO rate
+constant<a class="anchor" aria-label="anchor" href="#n-is-less-than-1-and-the-dfop-rate-constants-are-like-the-sfo-rate-constant"></a>
 </h2>
-<p>In the following three examples, the same results are obtained with mkin as reported for PestDF. As in the case on page 10, the N values below 1 are deemed unrealistic and appear to be the result of an overparameterisation.</p>
+<p>In the following three examples, the same results are obtained with
+mkin as reported for PestDF. As in the case on page 10, the N values
+below 1 are deemed unrealistic and appear to be the result of an
+overparameterisation.</p>
 <div class="section level3">
 <h3 id="example-on-page-12-upper-panel">Example on page 12, upper panel<a class="anchor" aria-label="anchor" href="#example-on-page-12-upper-panel"></a>
 </h3>
@@ -630,12 +683,12 @@
 <pre><code><span><span class="co">## Warning in sqrt(diag(covar)): NaNs produced</span></span></code></pre>
 <pre><code><span><span class="co">## Warning in sqrt(diag(covar_notrans)): NaNs produced</span></span></code></pre>
 <pre><code><span><span class="co">## Warning in sqrt(1/diag(V)): NaNs produced</span></span></code></pre>
-<pre><code><span><span class="co">## Warning in cov2cor(ans$covar): diag(.) had 0 or NA entries; non-finite result is</span></span>
-<span><span class="co">## doubtful</span></span></code></pre>
+<pre><code><span><span class="co">## Warning in cov2cor(ans$covar): diag(.) had 0 or NA entries; non-finite result</span></span>
+<span><span class="co">## is doubtful</span></span></code></pre>
 <pre><code><span><span class="co">## The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</span></span></code></pre>
 <pre><code><span><span class="co">## The half-life obtained from the IORE model may be used</span></span></code></pre>
 <div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p12a</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p12a</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NAFTA_examples_files/figure-html/p12a-1.png" width="700"></p>
 <div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p12a</span><span class="op">)</span></span></code></pre></div>
@@ -690,7 +743,7 @@
 <pre><code><span><span class="co">## The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</span></span></code></pre>
 <pre><code><span><span class="co">## The half-life obtained from the IORE model may be used</span></span></code></pre>
 <div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p12b</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p12b</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NAFTA_examples_files/figure-html/p12b-1.png" width="700"></p>
 <div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p12b</span><span class="op">)</span></span></code></pre></div>
@@ -741,7 +794,7 @@
 <pre><code><span><span class="co">## The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</span></span></code></pre>
 <pre><code><span><span class="co">## The half-life obtained from the IORE model may be used</span></span></code></pre>
 <div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p13</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p13</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NAFTA_examples_files/figure-html/p13-1.png" width="700"></p>
 <div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p13</span><span class="op">)</span></span></code></pre></div>
@@ -792,12 +845,12 @@
 <code class="sourceCode R"><span><span class="va">p14</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/nafta.html">nafta</a></span><span class="op">(</span><span class="va">NAFTA_SOP_Attachment</span><span class="op">[[</span><span class="st">"p14"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in sqrt(diag(covar)): NaNs produced</span></span></code></pre>
 <pre><code><span><span class="co">## Warning in sqrt(1/diag(V)): NaNs produced</span></span></code></pre>
-<pre><code><span><span class="co">## Warning in cov2cor(ans$covar): diag(.) had 0 or NA entries; non-finite result is</span></span>
-<span><span class="co">## doubtful</span></span></code></pre>
+<pre><code><span><span class="co">## Warning in cov2cor(ans$covar): diag(.) had 0 or NA entries; non-finite result</span></span>
+<span><span class="co">## is doubtful</span></span></code></pre>
 <pre><code><span><span class="co">## The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</span></span></code></pre>
 <pre><code><span><span class="co">## The half-life obtained from the IORE model may be used</span></span></code></pre>
 <div class="sourceCode" id="cb95"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p14</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p14</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NAFTA_examples_files/figure-html/p14-1.png" width="700"></p>
 <div class="sourceCode" id="cb96"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p14</span><span class="op">)</span></span></code></pre></div>
@@ -839,7 +892,9 @@
 <span><span class="co">## </span></span>
 <span><span class="co">## Representative half-life:</span></span>
 <span><span class="co">## [1] 6697.44</span></span></code></pre>
-<p>The slower rate constant reported by PestDF is negative, which is not physically realistic, and not possible in mkin. The other fits give the same results in mkin and PestDF.</p>
+<p>The slower rate constant reported by PestDF is negative, which is not
+physically realistic, and not possible in mkin. The other fits give the
+same results in mkin and PestDF.</p>
 </div>
 <div class="section level2">
 <h2 id="n-is-less-than-1-and-dfop-fraction-parameter-is-below-zero">N is less than 1 and DFOP fraction parameter is below zero<a class="anchor" aria-label="anchor" href="#n-is-less-than-1-and-dfop-fraction-parameter-is-below-zero"></a>
@@ -849,7 +904,7 @@
 <pre><code><span><span class="co">## The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</span></span></code></pre>
 <pre><code><span><span class="co">## The half-life obtained from the IORE model may be used</span></span></code></pre>
 <div class="sourceCode" id="cb101"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p15a</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p15a</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NAFTA_examples_files/figure-html/p15a-1.png" width="700"></p>
 <div class="sourceCode" id="cb102"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p15a</span><span class="op">)</span></span></code></pre></div>
@@ -895,12 +950,12 @@
 <code class="sourceCode R"><span><span class="va">p15b</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/nafta.html">nafta</a></span><span class="op">(</span><span class="va">NAFTA_SOP_Attachment</span><span class="op">[[</span><span class="st">"p15b"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning in sqrt(diag(covar)): NaNs produced</span></span></code></pre>
 <pre><code><span><span class="co">## Warning in sqrt(1/diag(V)): NaNs produced</span></span></code></pre>
-<pre><code><span><span class="co">## Warning in cov2cor(ans$covar): diag(.) had 0 or NA entries; non-finite result is</span></span>
-<span><span class="co">## doubtful</span></span></code></pre>
+<pre><code><span><span class="co">## Warning in cov2cor(ans$covar): diag(.) had 0 or NA entries; non-finite result</span></span>
+<span><span class="co">## is doubtful</span></span></code></pre>
 <pre><code><span><span class="co">## The SFO model is rejected as S_SFO is equal or higher than the critical value S_c</span></span></code></pre>
 <pre><code><span><span class="co">## The half-life obtained from the IORE model may be used</span></span></code></pre>
 <div class="sourceCode" id="cb110"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p15b</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p15b</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NAFTA_examples_files/figure-html/p15b-1.png" width="700"></p>
 <div class="sourceCode" id="cb111"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p15b</span><span class="op">)</span></span></code></pre></div>
@@ -942,7 +997,10 @@
 <span><span class="co">## </span></span>
 <span><span class="co">## Representative half-life:</span></span>
 <span><span class="co">## [1] 71.18</span></span></code></pre>
-<p>In mkin, only the IORE fit is affected (deemed unrealistic), as the fraction parameter of the DFOP model is restricted to the interval between 0 and 1 in mkin. The SFO fits give the same results for both mkin and PestDF.</p>
+<p>In mkin, only the IORE fit is affected (deemed unrealistic), as the
+fraction parameter of the DFOP model is restricted to the interval
+between 0 and 1 in mkin. The SFO fits give the same results for both
+mkin and PestDF.</p>
 </div>
 <div class="section level2">
 <h2 id="the-dfop-fraction-parameter-is-greater-than-1">The DFOP fraction parameter is greater than 1<a class="anchor" aria-label="anchor" href="#the-dfop-fraction-parameter-is-greater-than-1"></a>
@@ -954,7 +1012,7 @@
 <pre><code><span><span class="co">## to the terminal degradation rate found with the DFOP model.</span></span></code></pre>
 <pre><code><span><span class="co">## The representative half-life obtained from the DFOP model may be used</span></span></code></pre>
 <div class="sourceCode" id="cb118"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p16</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">p16</span><span class="op">)</span></span></code></pre></div>
 <p><img src="NAFTA_examples_files/figure-html/p16-1.png" width="700"></p>
 <div class="sourceCode" id="cb119"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p16</span><span class="op">)</span></span></code></pre></div>
@@ -996,20 +1054,32 @@
 <span><span class="co">## </span></span>
 <span><span class="co">## Representative half-life:</span></span>
 <span><span class="co">## [1] 8.93</span></span></code></pre>
-<p>In PestDF, the DFOP fit seems to have stuck in a local minimum, as mkin finds a solution with a much lower <span class="math inline">\(\chi^2\)</span> error level. As the half-life from the slower rate constant of the DFOP model is larger than the IORE derived half-life, the NAFTA recommendation obtained with mkin is to use the DFOP representative half-life of 8.9 days.</p>
+<p>In PestDF, the DFOP fit seems to have stuck in a local minimum, as
+mkin finds a solution with a much lower <span class="math inline">\(\chi^2\)</span> error level. As the half-life from
+the slower rate constant of the DFOP model is larger than the IORE
+derived half-life, the NAFTA recommendation obtained with mkin is to use
+the DFOP representative half-life of 8.9 days.</p>
 </div>
 <div class="section level2">
 <h2 id="conclusions">Conclusions<a class="anchor" aria-label="anchor" href="#conclusions"></a>
 </h2>
-<p>The results obtained with mkin deviate from the results obtained with PestDF either in cases where one of the interpretive rules would apply, i.e. the IORE parameter N is less than one or the DFOP k values obtained with PestDF are equal to the SFO k values, or in cases where the DFOP model did not converge, which often lead to negative rate constants returned by PestDF.</p>
-<p>Therefore, mkin appears to suitable for kinetic evaluations according to the NAFTA guidance.</p>
+<p>The results obtained with mkin deviate from the results obtained with
+PestDF either in cases where one of the interpretive rules would apply,
+i.e. the IORE parameter N is less than one or the DFOP k values obtained
+with PestDF are equal to the SFO k values, or in cases where the DFOP
+model did not converge, which often lead to negative rate constants
+returned by PestDF.</p>
+<p>Therefore, mkin appears to suitable for kinetic evaluations according
+to the NAFTA guidance.</p>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references hanging-indent">
-<div id="ref-usepa2015">
-<p>US EPA. 2015. “Standard Operating Procedure for Using the NAFTA Guidance to Calculate Representative Half-Life Values and Characterizing Pesticide Degradation.”</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-usepa2015" class="csl-entry">
+US EPA. 2015. <span>“Standard Operating Procedure for Using the NAFTA
+Guidance to Calculate Representative Half-Life Values and Characterizing
+Pesticide Degradation.”</span> <a href="https://www.epa.gov/pesticide-science-and-assessing-pesticide-risks/standard-operating-procedure-using-nafta-guidance" class="external-link">https://www.epa.gov/pesticide-science-and-assessing-pesticide-risks/standard-operating-procedure-using-nafta-guidance</a>.
 </div>
 </div>
 </div>
@@ -1032,7 +1102,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
