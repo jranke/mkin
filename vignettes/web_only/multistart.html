@@ -390,7 +390,7 @@ parplot(f_saem_full_multi, lpos = &quot;topleft&quot;)</code></pre>
 <p>This confirms that the variance of k2 is the most problematic
 parameter, so we reduce the parameter distribution model by removing the
 intersoil variability for k2.</p>
-<pre class="r"><code>f_saem_reduced &lt;- update(f_saem_full, no_random_effect = &quot;log_k2&quot;)
+<pre class="r"><code>f_saem_reduced &lt;- stats::update(f_saem_full, no_random_effect = &quot;log_k2&quot;)
 illparms(f_saem_reduced)
 f_saem_reduced_multi &lt;- multistart(f_saem_reduced, n = 16, cores = 16)
 parplot(f_saem_reduced_multi, lpos = &quot;topright&quot;, ylim = c(0.5, 2))</code></pre>

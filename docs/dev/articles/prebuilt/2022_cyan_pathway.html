@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">mkin</a>
-        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.2.3</span>
+        <span class="version label label-info" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.2.4</span>
       </span>
     </div>
 
@@ -135,8 +135,8 @@ residue data on cyantraniliprole</h1>
                         <h4 data-toc-skip class="author">Johannes
 Ranke</h4>
             
-            <h4 data-toc-skip class="date">Last change on 6 January
-2023, last compiled on 16 April 2023</h4>
+            <h4 data-toc-skip class="date">Last change on 20 April 2023,
+last compiled on 20 April 2023</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jranke/mkin/blob/HEAD/vignettes/prebuilt/2022_cyan_pathway.rmd" class="external-link"><code>vignettes/prebuilt/2022_cyan_pathway.rmd</code></a></small>
       <div class="hidden name"><code>2022_cyan_pathway.rmd</code></div>
@@ -156,7 +156,7 @@ be fitted with the mkin package.</p>
 173340 (Application of nonlinear hierarchical models to the kinetic
 evaluation of chemical degradation data) of the German Environment
 Agency carried out in 2022 and 2023.</p>
-<p>The mkin package is used in version 1.2.3 which is currently under
+<p>The mkin package is used in version 1.2.4 which is currently under
 development. The newly introduced functionality that is used here is a
 simplification of excluding random effects for a set of fits based on a
 related set of fits with a reduced model, and the documentation of the
@@ -174,11 +174,19 @@ processing, the <code>parallel</code> package is used.</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">saemix</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">parallel</span><span class="op">)</span></span>
 <span><span class="va">n_cores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">detectCores</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.info.html" class="external-link">Sys.info</a></span><span class="op">(</span><span class="op">)</span><span class="op">[</span><span class="st">"sysname"</span><span class="op">]</span> <span class="op">==</span> <span class="st">"Windows"</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">cl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/parallel/makeCluster.html" class="external-link">makePSOCKcluster</a></span><span class="op">(</span><span class="va">n_cores</span><span class="op">)</span></span>
-<span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
-<span>  <span class="va">cl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/parallel/makeCluster.html" class="external-link">makeForkCluster</a></span><span class="op">(</span><span class="va">n_cores</span><span class="op">)</span></span>
-<span><span class="op">}</span></span></code></pre></div>
+<span></span>
+<span><span class="co"># We need to start a new cluster after defining a compiled model that is</span></span>
+<span><span class="co"># saved as a DLL to the user directory, therefore we define a function</span></span>
+<span><span class="co"># This is used again after defining the pathway model</span></span>
+<span><span class="va">start_cluster</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">n_cores</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.info.html" class="external-link">Sys.info</a></span><span class="op">(</span><span class="op">)</span><span class="op">[</span><span class="st">"sysname"</span><span class="op">]</span> <span class="op">==</span> <span class="st">"Windows"</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">ret</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/parallel/makeCluster.html" class="external-link">makePSOCKcluster</a></span><span class="op">(</span><span class="va">n_cores</span><span class="op">)</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>    <span class="va">ret</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/parallel/makeCluster.html" class="external-link">makeForkCluster</a></span><span class="op">(</span><span class="va">n_cores</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">ret</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="va">cl</span> <span class="op">&lt;-</span> <span class="fu">start_cluster</span><span class="op">(</span><span class="va">n_cores</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="test-data">Test data<a class="anchor" aria-label="anchor" href="#test-data"></a>
 </h3>
@@ -1366,6 +1374,8 @@ when the two-component error model is used.</p>
 two-component error model is preferable for all parent models with the
 exception of DFOP. The lowest AIC and BIC values are are obtained with
 the FOMC model, followed by SFORB and DFOP.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/parallel/makeCluster.html" class="external-link">stopCluster</a></span><span class="op">(</span><span class="va">cl</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="pathway-fits">Pathway fits<a class="anchor" aria-label="anchor" href="#pathway-fits"></a>
@@ -1378,7 +1388,7 @@ degradation models with different transformation pathway models, a list
 of <code>mkinmod</code> models is set up below. As in the EU evaluation,
 parallel formation of metabolites JCZ38 and J9Z38 and secondary
 formation of metabolite JSE76 from JCZ38 is used.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.exists</a></span><span class="op">(</span><span class="st">"cyan_dlls"</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="st">"cyan_dlls"</span><span class="op">)</span></span>
 <span><span class="va">cyan_path_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  sfo_path_1 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span></span>
@@ -1411,15 +1421,16 @@ formation of metabolite JSE76 from JCZ38 is used.</p>
 <span>    J9Z38 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>,</span>
 <span>    JSE76 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"SFO"</span><span class="op">)</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>    name <span class="op">=</span> <span class="st">"hs_path_1"</span>, dll_dir <span class="op">=</span> <span class="st">"cyan_dlls"</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span>
+<span><span class="va">cl_path_1</span> <span class="op">&lt;-</span> <span class="fu">start_cluster</span><span class="op">(</span><span class="va">n_cores</span><span class="op">)</span></span></code></pre></div>
 <p>To obtain suitable starting values for the NLHM fits, separate
 pathway fits are performed for all datasets.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">f_sep_1_const</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mmkin.html">mmkin</a></span><span class="op">(</span></span>
 <span>  <span class="va">cyan_path_1</span>,</span>
 <span>  <span class="va">cyan_ds</span>,</span>
 <span>  error_model <span class="op">=</span> <span class="st">"const"</span>,</span>
-<span>  cluster <span class="op">=</span> <span class="va">cl</span>,</span>
+<span>  cluster <span class="op">=</span> <span class="va">cl_path_1</span>,</span>
 <span>  quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../../reference/status.html">status</a></span><span class="op">(</span><span class="va">f_sep_1_const</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
@@ -1474,7 +1485,7 @@ pathway fits are performed for all datasets.</p>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">f_sep_1_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">f_sep_1_const</span>, error_model <span class="op">=</span> <span class="st">"tc"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../../reference/status.html">status</a></span><span class="op">(</span><span class="va">f_sep_1_tc</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
@@ -1539,11 +1550,11 @@ for the parent only fits is used as an argument
 <code>no_random_effect</code> to the <code>mhmkin</code> function. The
 possibility to do so was introduced in mkin version <code>1.2.2</code>
 which is currently under development.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">f_saem_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mhmkin.html">mhmkin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">f_sep_1_const</span>, <span class="va">f_sep_1_tc</span><span class="op">)</span>,</span>
 <span>  no_random_effect <span class="op">=</span> <span class="fu"><a href="../../reference/illparms.html">illparms</a></span><span class="op">(</span><span class="va">cyan_saem_full</span><span class="op">)</span>,</span>
-<span>  cluster <span class="op">=</span> <span class="va">cl</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<span>  cluster <span class="op">=</span> <span class="va">cl_path_1</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/status.html">status</a></span><span class="op">(</span><span class="va">f_saem_1</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
@@ -1586,7 +1597,7 @@ Fisher Information Matrix could not be inverted for the fixed effects
 fits, ill-defined parameters cannot be determined using the
 <code>illparms</code> function, because it relies on the Fisher
 Information Matrix.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/illparms.html">illparms</a></span><span class="op">(</span><span class="va">f_saem_1</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <colgroup>
@@ -1630,7 +1641,7 @@ sd(f_JCZ38_qlogis)</td>
 </table>
 <p>The model comparison below suggests that the pathway fits using DFOP
 or SFORB for the parent compound provide the best fit.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_saem_1</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>digits <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
@@ -1715,23 +1726,25 @@ or SFORB for the parent compound provide the best fit.</p>
 </table>
 <p>For these two parent model, successful fits are shown below. Plots of
 the fits with the other parent models are shown in the Appendix.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_saem_1</span><span class="op">[[</span><span class="st">"dfop_path_1"</span>, <span class="st">"tc"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="2022_cyan_pathway_files/figure-html/unnamed-chunk-6-1.png" alt="DFOP pathway fit with two-component error" width="700"><p class="caption">
+<img src="2022_cyan_pathway_files/figure-html/unnamed-chunk-7-1.png" alt="DFOP pathway fit with two-component error" width="700"><p class="caption">
 DFOP pathway fit with two-component error
 </p>
 </div>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_saem_1</span><span class="op">[[</span><span class="st">"sforb_path_1"</span>, <span class="st">"tc"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="2022_cyan_pathway_files/figure-html/unnamed-chunk-7-1.png" alt="SFORB pathway fit with two-component error" width="700"><p class="caption">
+<img src="2022_cyan_pathway_files/figure-html/unnamed-chunk-8-1.png" alt="SFORB pathway fit with two-component error" width="700"><p class="caption">
 SFORB pathway fit with two-component error
 </p>
 </div>
 <p>A closer graphical analysis of these Figures shows that the residues
 of transformation product JCZ38 in the soils Tama and Nambsheim observed
 at later time points are strongly and systematically underestimated.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/parallel/makeCluster.html" class="external-link">stopCluster</a></span><span class="op">(</span><span class="va">cl_path_1</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="alternative-pathway-fits">Alternative pathway fits<a class="anchor" aria-label="anchor" href="#alternative-pathway-fits"></a>
@@ -1744,7 +1757,7 @@ corresponding amide (Addendum 2014, p. 109). As FOMC provided the best
 fit for the parent, and the biexponential models DFOP and SFORB provided
 the best initial pathway fits, these three parent models are used in the
 alternative pathway fits.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cyan_path_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  fomc_path_2 <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinmod</a></span><span class="op">(</span></span>
 <span>    cyan <span class="op">=</span> <span class="fu"><a href="../../reference/mkinmod.html">mkinsub</a></span><span class="op">(</span><span class="st">"FOMC"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"JCZ38"</span>, <span class="st">"J9Z38"</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -1774,11 +1787,13 @@ alternative pathway fits.</p>
 <span>    overwrite <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">cl_path_2</span> <span class="op">&lt;-</span> <span class="fu">start_cluster</span><span class="op">(</span><span class="va">n_cores</span><span class="op">)</span></span>
 <span><span class="va">f_sep_2_const</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mmkin.html">mmkin</a></span><span class="op">(</span></span>
 <span>  <span class="va">cyan_path_2</span>,</span>
 <span>  <span class="va">cyan_ds</span>,</span>
 <span>  error_model <span class="op">=</span> <span class="st">"const"</span>,</span>
-<span>  cluster <span class="op">=</span> <span class="va">cl</span>,</span>
+<span>  cluster <span class="op">=</span> <span class="va">cl_path_2</span>,</span>
 <span>  quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../../reference/status.html">status</a></span><span class="op">(</span><span class="va">f_sep_2_const</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -1820,7 +1835,7 @@ alternative pathway fits.</p>
 </table>
 <p>Using constant variance, separate fits converge with the exception of
 the fits to the Sassafras soil data.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">f_sep_2_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">f_sep_2_const</span>, error_model <span class="op">=</span> <span class="st">"tc"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../../reference/status.html">status</a></span><span class="op">(</span><span class="va">f_sep_2_tc</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
@@ -1862,11 +1877,11 @@ the fits to the Sassafras soil data.</p>
 <p>Using the two-component error model, all separate fits converge with
 the exception of the alternative pathway fit with DFOP used for the
 parent and the Sassafras dataset.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">f_saem_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/mhmkin.html">mhmkin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">f_sep_2_const</span>, <span class="va">f_sep_2_tc</span><span class="op">)</span>,</span>
 <span>  no_random_effect <span class="op">=</span> <span class="fu"><a href="../../reference/illparms.html">illparms</a></span><span class="op">(</span><span class="va">cyan_saem_full</span><span class="op">[</span><span class="fl">2</span><span class="op">:</span><span class="fl">4</span>, <span class="op">]</span><span class="op">)</span>,</span>
-<span>  cluster <span class="op">=</span> <span class="va">cl</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<span>  cluster <span class="op">=</span> <span class="va">cl_path_2</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/status.html">status</a></span><span class="op">(</span><span class="va">f_saem_2</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
@@ -1894,7 +1909,7 @@ parent and the Sassafras dataset.</p>
 </table>
 <p>The hierarchical fits for the alternative pathway completed
 successfully.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/illparms.html">illparms</a></span><span class="op">(</span><span class="va">f_saem_2</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <colgroup>
@@ -1928,7 +1943,7 @@ successfully.</p>
 <p>In both fits, the random effects for the formation fractions for the
 pathways from JCZ38 to JSE76, and for the reverse pathway from JSE76 to
 JCZ38 are ill-defined.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_saem_2</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>digits <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
@@ -1989,24 +2004,24 @@ and BIC values and are plotted below. Compared with the original
 pathway, the AIC and BIC values indicate a large improvement. This is
 confirmed by the plots, which show that the metabolite JCZ38 is fitted
 much better with this model.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_saem_2</span><span class="op">[[</span><span class="st">"fomc_path_2"</span>, <span class="st">"tc"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="2022_cyan_pathway_files/figure-html/unnamed-chunk-11-1.png" alt="FOMC pathway fit with two-component error, alternative pathway" width="700"><p class="caption">
+<img src="2022_cyan_pathway_files/figure-html/unnamed-chunk-13-1.png" alt="FOMC pathway fit with two-component error, alternative pathway" width="700"><p class="caption">
 FOMC pathway fit with two-component error, alternative pathway
 </p>
 </div>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_saem_2</span><span class="op">[[</span><span class="st">"dfop_path_2"</span>, <span class="st">"tc"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="2022_cyan_pathway_files/figure-html/unnamed-chunk-12-1.png" alt="DFOP pathway fit with two-component error, alternative pathway" width="700"><p class="caption">
+<img src="2022_cyan_pathway_files/figure-html/unnamed-chunk-14-1.png" alt="DFOP pathway fit with two-component error, alternative pathway" width="700"><p class="caption">
 DFOP pathway fit with two-component error, alternative pathway
 </p>
 </div>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_saem_2</span><span class="op">[[</span><span class="st">"sforb_path_2"</span>, <span class="st">"tc"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="2022_cyan_pathway_files/figure-html/unnamed-chunk-13-1.png" alt="SFORB pathway fit with two-component error, alternative pathway" width="700"><p class="caption">
+<img src="2022_cyan_pathway_files/figure-html/unnamed-chunk-15-1.png" alt="SFORB pathway fit with two-component error, alternative pathway" width="700"><p class="caption">
 SFORB pathway fit with two-component error, alternative pathway
 </p>
 </div>
@@ -2021,7 +2036,7 @@ created below that can be indexed by row and column indices, and which
 contains the degradation parameter names for which random effects should
 be excluded for each of the hierarchical fits contained in
 <code>f_saem_2</code>.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">no_ranef</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">3</span>, ncol <span class="op">=</span> <span class="fl">2</span>, dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dimnames.html" class="external-link">dimnames</a></span><span class="op">(</span><span class="va">f_saem_2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">no_ranef</span><span class="op">[[</span><span class="st">"fomc_path_2"</span>, <span class="st">"const"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"log_beta"</span>, <span class="st">"f_JCZ38_qlogis"</span>, <span class="st">"f_JSE76_qlogis"</span><span class="op">)</span></span>
 <span><span class="va">no_ranef</span><span class="op">[[</span><span class="st">"fomc_path_2"</span>, <span class="st">"tc"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cyan_0"</span>, <span class="st">"f_JCZ38_qlogis"</span>, <span class="st">"f_JSE76_qlogis"</span><span class="op">)</span></span>
@@ -2031,12 +2046,12 @@ be excluded for each of the hierarchical fits contained in
 <span>  <span class="st">"f_JCZ38_qlogis"</span>, <span class="st">"f_JSE76_qlogis"</span><span class="op">)</span></span>
 <span><span class="va">no_ranef</span><span class="op">[[</span><span class="st">"sforb_path_2"</span>, <span class="st">"tc"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cyan_free_0"</span>, <span class="st">"log_k_cyan_free_bound"</span>,</span>
 <span>  <span class="st">"f_JCZ38_qlogis"</span>, <span class="st">"f_JSE76_qlogis"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/parallel/clusterApply.html" class="external-link">clusterExport</a></span><span class="op">(</span><span class="va">cl</span>, <span class="st">"no_ranef"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/parallel/clusterApply.html" class="external-link">clusterExport</a></span><span class="op">(</span><span class="va">cl_path_2</span>, <span class="st">"no_ranef"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">f_saem_3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">f_saem_2</span>,</span>
 <span>  no_random_effect <span class="op">=</span> <span class="va">no_ranef</span>,</span>
-<span>  cluster <span class="op">=</span> <span class="va">cl</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<span>  cluster <span class="op">=</span> <span class="va">cl_path_2</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/status.html">status</a></span><span class="op">(</span><span class="va">f_saem_3</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
@@ -2066,7 +2081,7 @@ be excluded for each of the hierarchical fits contained in
 all updated fits completed successfully. However, the Fisher Information
 Matrix for the fixed effects (Fth) could not be inverted, so no
 confidence intervals for the optimised parameters are available.</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/illparms.html">illparms</a></span><span class="op">(</span><span class="va">f_saem_3</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
@@ -2092,7 +2107,7 @@ confidence intervals for the optimised parameters are available.</p>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_saem_3</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>digits <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
@@ -2144,6 +2159,8 @@ confidence intervals for the optimised parameters are available.</p>
 two-component error) are lower than in the previous fits with the
 alternative pathway, the practical value of these refined evaluations is
 limited as no confidence intervals are obtained.</p>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/parallel/makeCluster.html" class="external-link">stopCluster</a></span><span class="op">(</span><span class="va">cl_path_2</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -2170,24 +2187,24 @@ Agency are gratefully acknowledged.</p>
 <div class="section level3">
 <h3 id="plots-of-fits-that-were-not-refined-further">Plots of fits that were not refined further<a class="anchor" aria-label="anchor" href="#plots-of-fits-that-were-not-refined-further"></a>
 </h3>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_saem_1</span><span class="op">[[</span><span class="st">"sfo_path_1"</span>, <span class="st">"tc"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="2022_cyan_pathway_files/figure-html/unnamed-chunk-17-1.png" alt="SFO pathway fit with two-component error" width="700"><p class="caption">
+<img src="2022_cyan_pathway_files/figure-html/unnamed-chunk-20-1.png" alt="SFO pathway fit with two-component error" width="700"><p class="caption">
 SFO pathway fit with two-component error
 </p>
 </div>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_saem_1</span><span class="op">[[</span><span class="st">"fomc_path_1"</span>, <span class="st">"tc"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="2022_cyan_pathway_files/figure-html/unnamed-chunk-18-1.png" alt="FOMC pathway fit with two-component error" width="700"><p class="caption">
+<img src="2022_cyan_pathway_files/figure-html/unnamed-chunk-21-1.png" alt="FOMC pathway fit with two-component error" width="700"><p class="caption">
 FOMC pathway fit with two-component error
 </p>
 </div>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_saem_1</span><span class="op">[[</span><span class="st">"sforb_path_1"</span>, <span class="st">"tc"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="2022_cyan_pathway_files/figure-html/unnamed-chunk-19-1.png" alt="HS pathway fit with two-component error" width="700"><p class="caption">
+<img src="2022_cyan_pathway_files/figure-html/unnamed-chunk-22-1.png" alt="HS pathway fit with two-component error" width="700"><p class="caption">
 HS pathway fit with two-component error
 </p>
 </div>
@@ -2203,10 +2220,10 @@ Hierarchical SFO path 1 fit with constant variance
 </caption>
 <pre><code>
 saemix version used for fitting:      3.2 
-mkin version used for pre-fitting:  1.2.2 
-R version used for fitting:         4.2.2 
-Date of fit:     Sat Jan 28 10:07:38 2023 
-Date of summary: Sun Apr 16 08:35:20 2023 
+mkin version used for pre-fitting:  1.2.4 
+R version used for fitting:         4.2.3 
+Date of fit:     Thu Apr 20 20:33:05 2023 
+Date of summary: Thu Apr 20 21:04:34 2023 
 
 Equations:
 d_cyan/dt = - k_cyan * cyan
@@ -2219,7 +2236,7 @@ Data:
 
 Model predictions using solution type deSolve 
 
-Fitted in 1088.473 s
+Fitted in 438.011 s
 Using 300, 100 iterations and 10 chains
 
 Variance model: Constant variance 
@@ -2331,10 +2348,10 @@ Hierarchical SFO path 1 fit with two-component error
 </caption>
 <pre><code>
 saemix version used for fitting:      3.2 
-mkin version used for pre-fitting:  1.2.2 
-R version used for fitting:         4.2.2 
-Date of fit:     Sat Jan 28 10:08:17 2023 
-Date of summary: Sun Apr 16 08:35:20 2023 
+mkin version used for pre-fitting:  1.2.4 
+R version used for fitting:         4.2.3 
+Date of fit:     Thu Apr 20 20:32:55 2023 
+Date of summary: Thu Apr 20 21:04:34 2023 
 
 Equations:
 d_cyan/dt = - k_cyan * cyan
@@ -2347,7 +2364,7 @@ Data:
 
 Model predictions using solution type deSolve 
 
-Fitted in 1127.552 s
+Fitted in 427.249 s
 Using 300, 100 iterations and 10 chains
 
 Variance model: Two-component variance function 
@@ -2461,10 +2478,10 @@ Hierarchical FOMC path 1 fit with constant variance
 </caption>
 <pre><code>
 saemix version used for fitting:      3.2 
-mkin version used for pre-fitting:  1.2.2 
-R version used for fitting:         4.2.2 
-Date of fit:     Sat Jan 28 10:09:12 2023 
-Date of summary: Sun Apr 16 08:35:20 2023 
+mkin version used for pre-fitting:  1.2.4 
+R version used for fitting:         4.2.3 
+Date of fit:     Thu Apr 20 20:33:49 2023 
+Date of summary: Thu Apr 20 21:04:34 2023 
 
 Equations:
 d_cyan/dt = - (alpha/beta) * 1/((time/beta) + 1) * cyan
@@ -2479,7 +2496,7 @@ Data:
 
 Model predictions using solution type deSolve 
 
-Fitted in 1182.258 s
+Fitted in 481.497 s
 Using 300, 100 iterations and 10 chains
 
 Variance model: Constant variance 
@@ -2606,10 +2623,10 @@ Hierarchical FOMC path 1 fit with two-component error
 </caption>
 <pre><code>
 saemix version used for fitting:      3.2 
-mkin version used for pre-fitting:  1.2.2 
-R version used for fitting:         4.2.2 
-Date of fit:     Sat Jan 28 10:09:18 2023 
-Date of summary: Sun Apr 16 08:35:20 2023 
+mkin version used for pre-fitting:  1.2.4 
+R version used for fitting:         4.2.3 
+Date of fit:     Thu Apr 20 20:33:59 2023 
+Date of summary: Thu Apr 20 21:04:34 2023 
 
 Equations:
 d_cyan/dt = - (alpha/beta) * 1/((time/beta) + 1) * cyan
@@ -2624,7 +2641,7 @@ Data:
 
 Model predictions using solution type deSolve 
 
-Fitted in 1188.041 s
+Fitted in 491.071 s
 Using 300, 100 iterations and 10 chains
 
 Variance model: Two-component variance function 
@@ -2744,10 +2761,10 @@ Hierarchical DFOP path 1 fit with constant variance
 </caption>
 <pre><code>
 saemix version used for fitting:      3.2 
-mkin version used for pre-fitting:  1.2.2 
-R version used for fitting:         4.2.2 
-Date of fit:     Sat Jan 28 10:10:30 2023 
-Date of summary: Sun Apr 16 08:35:20 2023 
+mkin version used for pre-fitting:  1.2.4 
+R version used for fitting:         4.2.3 
+Date of fit:     Thu Apr 20 20:34:33 2023 
+Date of summary: Thu Apr 20 21:04:34 2023 
 
 Equations:
 d_cyan/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *
@@ -2766,7 +2783,7 @@ Data:
 
 Model predictions using solution type deSolve 
 
-Fitted in 1260.905 s
+Fitted in 525.551 s
 Using 300, 100 iterations and 10 chains
 
 Variance model: Constant variance 
@@ -2890,10 +2907,10 @@ Hierarchical DFOP path 1 fit with two-component error
 </caption>
 <pre><code>
 saemix version used for fitting:      3.2 
-mkin version used for pre-fitting:  1.2.2 
-R version used for fitting:         4.2.2 
-Date of fit:     Sat Jan 28 10:16:28 2023 
-Date of summary: Sun Apr 16 08:35:20 2023 
+mkin version used for pre-fitting:  1.2.4 
+R version used for fitting:         4.2.3 
+Date of fit:     Thu Apr 20 20:37:03 2023 
+Date of summary: Thu Apr 20 21:04:34 2023 
 
 Equations:
 d_cyan/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *
@@ -2912,7 +2929,7 @@ Data:
 
 Model predictions using solution type deSolve 
 
-Fitted in 1617.774 s
+Fitted in 675.804 s
 Using 300, 100 iterations and 10 chains
 
 Variance model: Two-component variance function 
@@ -3036,10 +3053,10 @@ Hierarchical SFORB path 1 fit with constant variance
 </caption>
 <pre><code>
 saemix version used for fitting:      3.2 
-mkin version used for pre-fitting:  1.2.2 
-R version used for fitting:         4.2.2 
-Date of fit:     Sat Jan 28 10:10:49 2023 
-Date of summary: Sun Apr 16 08:35:20 2023 
+mkin version used for pre-fitting:  1.2.4 
+R version used for fitting:         4.2.3 
+Date of fit:     Thu Apr 20 20:34:43 2023 
+Date of summary: Thu Apr 20 21:04:34 2023 
 
 Equations:
 d_cyan_free/dt = - k_cyan_free * cyan_free - k_cyan_free_bound *
@@ -3057,7 +3074,7 @@ Data:
 
 Model predictions using solution type deSolve 
 
-Fitted in 1279.472 s
+Fitted in 535.818 s
 Using 300, 100 iterations and 10 chains
 
 Variance model: Constant variance 
@@ -3201,10 +3218,10 @@ Hierarchical SFORB path 1 fit with two-component error
 </caption>
 <pre><code>
 saemix version used for fitting:      3.2 
-mkin version used for pre-fitting:  1.2.2 
-R version used for fitting:         4.2.2 
-Date of fit:     Sat Jan 28 10:17:00 2023 
-Date of summary: Sun Apr 16 08:35:20 2023 
+mkin version used for pre-fitting:  1.2.4 
+R version used for fitting:         4.2.3 
+Date of fit:     Thu Apr 20 20:37:02 2023 
+Date of summary: Thu Apr 20 21:04:34 2023 
 
 Equations:
 d_cyan_free/dt = - k_cyan_free * cyan_free - k_cyan_free_bound *
@@ -3222,7 +3239,7 @@ Data:
 
 Model predictions using solution type deSolve 
 
-Fitted in 1649.941 s
+Fitted in 674.859 s
 Using 300, 100 iterations and 10 chains
 
 Variance model: Two-component variance function 
@@ -3366,10 +3383,10 @@ Hierarchical HS path 1 fit with constant variance
 </caption>
 <pre><code>
 saemix version used for fitting:      3.2 
-mkin version used for pre-fitting:  1.2.2 
-R version used for fitting:         4.2.2 
-Date of fit:     Sat Jan 28 10:11:04 2023 
-Date of summary: Sun Apr 16 08:35:20 2023 
+mkin version used for pre-fitting:  1.2.4 
+R version used for fitting:         4.2.3 
+Date of fit:     Thu Apr 20 20:34:41 2023 
+Date of summary: Thu Apr 20 21:04:34 2023 
 
 Equations:
 d_cyan/dt = - ifelse(time &lt;= tb, k1, k2) * cyan
@@ -3384,7 +3401,7 @@ Data:
 
 Model predictions using solution type deSolve 
 
-Fitted in 1294.259 s
+Fitted in 533.787 s
 Using 300, 100 iterations and 10 chains
 
 Variance model: Constant variance 
@@ -3508,10 +3525,10 @@ Hierarchical HS path 1 fit with two-component error
 </caption>
 <pre><code>
 saemix version used for fitting:      3.2 
-mkin version used for pre-fitting:  1.2.2 
-R version used for fitting:         4.2.2 
-Date of fit:     Sat Jan 28 10:11:24 2023 
-Date of summary: Sun Apr 16 08:35:20 2023 
+mkin version used for pre-fitting:  1.2.4 
+R version used for fitting:         4.2.3 
+Date of fit:     Thu Apr 20 20:34:39 2023 
+Date of summary: Thu Apr 20 21:04:34 2023 
 
 Equations:
 d_cyan/dt = - ifelse(time &lt;= tb, k1, k2) * cyan
@@ -3526,7 +3543,7 @@ Data:
 
 Model predictions using solution type deSolve 
 
-Fitted in 1313.805 s
+Fitted in 531.084 s
 Using 300, 100 iterations and 10 chains
 
 Variance model: Two-component variance function 
@@ -3656,10 +3673,10 @@ Hierarchical FOMC path 2 fit with constant variance
 </caption>
 <pre><code>
 saemix version used for fitting:      3.2 
-mkin version used for pre-fitting:  1.2.2 
-R version used for fitting:         4.2.2 
-Date of fit:     Sat Jan 28 10:34:28 2023 
-Date of summary: Sun Apr 16 08:35:20 2023 
+mkin version used for pre-fitting:  1.2.4 
+R version used for fitting:         4.2.3 
+Date of fit:     Thu Apr 20 20:45:51 2023 
+Date of summary: Thu Apr 20 21:04:34 2023 
 
 Equations:
 d_cyan/dt = - (alpha/beta) * 1/((time/beta) + 1) * cyan
@@ -3674,7 +3691,7 @@ Data:
 
 Model predictions using solution type deSolve 
 
-Fitted in 1030.246 s
+Fitted in 517.002 s
 Using 300, 100 iterations and 10 chains
 
 Variance model: Constant variance 
@@ -3820,10 +3837,10 @@ Hierarchical FOMC path 2 fit with two-component error
 </caption>
 <pre><code>
 saemix version used for fitting:      3.2 
-mkin version used for pre-fitting:  1.2.2 
-R version used for fitting:         4.2.2 
-Date of fit:     Sat Jan 28 10:37:36 2023 
-Date of summary: Sun Apr 16 08:35:20 2023 
+mkin version used for pre-fitting:  1.2.4 
+R version used for fitting:         4.2.3 
+Date of fit:     Thu Apr 20 20:45:39 2023 
+Date of summary: Thu Apr 20 21:04:34 2023 
 
 Equations:
 d_cyan/dt = - (alpha/beta) * 1/((time/beta) + 1) * cyan
@@ -3838,7 +3855,7 @@ Data:
 
 Model predictions using solution type deSolve 
 
-Fitted in 1217.619 s
+Fitted in 505.619 s
 Using 300, 100 iterations and 10 chains
 
 Variance model: Two-component variance function 
@@ -3966,10 +3983,10 @@ Hierarchical DFOP path 2 fit with constant variance
 </caption>
 <pre><code>
 saemix version used for fitting:      3.2 
-mkin version used for pre-fitting:  1.2.2 
-R version used for fitting:         4.2.2 
-Date of fit:     Sat Jan 28 10:38:34 2023 
-Date of summary: Sun Apr 16 08:35:20 2023 
+mkin version used for pre-fitting:  1.2.4 
+R version used for fitting:         4.2.3 
+Date of fit:     Thu Apr 20 20:46:46 2023 
+Date of summary: Thu Apr 20 21:04:34 2023 
 
 Equations:
 d_cyan/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *
@@ -3989,7 +4006,7 @@ Data:
 
 Model predictions using solution type deSolve 
 
-Fitted in 1276.128 s
+Fitted in 572.382 s
 Using 300, 100 iterations and 10 chains
 
 Variance model: Constant variance 
@@ -4157,10 +4174,10 @@ Hierarchical DFOP path 2 fit with two-component error
 </caption>
 <pre><code>
 saemix version used for fitting:      3.2 
-mkin version used for pre-fitting:  1.2.2 
-R version used for fitting:         4.2.2 
-Date of fit:     Sat Jan 28 10:45:32 2023 
-Date of summary: Sun Apr 16 08:35:20 2023 
+mkin version used for pre-fitting:  1.2.4 
+R version used for fitting:         4.2.3 
+Date of fit:     Thu Apr 20 20:49:18 2023 
+Date of summary: Thu Apr 20 21:04:34 2023 
 
 Equations:
 d_cyan/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *
@@ -4180,7 +4197,7 @@ Data:
 
 Model predictions using solution type deSolve 
 
-Fitted in 1693.767 s
+Fitted in 724.515 s
 Using 300, 100 iterations and 10 chains
 
 Variance model: Two-component variance function 
@@ -4348,10 +4365,10 @@ Hierarchical SFORB path 2 fit with constant variance
 </caption>
 <pre><code>
 saemix version used for fitting:      3.2 
-mkin version used for pre-fitting:  1.2.2 
-R version used for fitting:         4.2.2 
-Date of fit:     Sat Jan 28 10:38:37 2023 
-Date of summary: Sun Apr 16 08:35:20 2023 
+mkin version used for pre-fitting:  1.2.4 
+R version used for fitting:         4.2.3 
+Date of fit:     Thu Apr 20 20:46:33 2023 
+Date of summary: Thu Apr 20 21:04:34 2023 
 
 Equations:
 d_cyan_free/dt = - k_cyan_free * cyan_free - k_cyan_free_bound *
@@ -4369,7 +4386,7 @@ Data:
 
 Model predictions using solution type deSolve 
 
-Fitted in 1279.102 s
+Fitted in 559.097 s
 Using 300, 100 iterations and 10 chains
 
 Variance model: Constant variance 
@@ -4544,10 +4561,10 @@ Hierarchical SFORB path 2 fit with two-component error
 </caption>
 <pre><code>
 saemix version used for fitting:      3.2 
-mkin version used for pre-fitting:  1.2.2 
-R version used for fitting:         4.2.2 
-Date of fit:     Sat Jan 28 10:46:02 2023 
-Date of summary: Sun Apr 16 08:35:20 2023 
+mkin version used for pre-fitting:  1.2.4 
+R version used for fitting:         4.2.3 
+Date of fit:     Thu Apr 20 20:49:20 2023 
+Date of summary: Thu Apr 20 21:04:34 2023 
 
 Equations:
 d_cyan_free/dt = - k_cyan_free * cyan_free - k_cyan_free_bound *
@@ -4565,7 +4582,7 @@ Data:
 
 Model predictions using solution type deSolve 
 
-Fitted in 1723.343 s
+Fitted in 726.293 s
 Using 300, 100 iterations and 10 chains
 
 Variance model: Two-component variance function 
@@ -4745,10 +4762,10 @@ error
 </caption>
 <pre><code>
 saemix version used for fitting:      3.2 
-mkin version used for pre-fitting:  1.2.2 
-R version used for fitting:         4.2.2 
-Date of fit:     Sat Jan 28 11:18:41 2023 
-Date of summary: Sun Apr 16 08:35:21 2023 
+mkin version used for pre-fitting:  1.2.4 
+R version used for fitting:         4.2.3 
+Date of fit:     Thu Apr 20 21:02:39 2023 
+Date of summary: Thu Apr 20 21:04:34 2023 
 
 Equations:
 d_cyan/dt = - (alpha/beta) * 1/((time/beta) + 1) * cyan
@@ -4763,7 +4780,7 @@ Data:
 
 Model predictions using solution type deSolve 
 
-Fitted in 1957.271 s
+Fitted in 796.615 s
 Using 300, 100 iterations and 10 chains
 
 Variance model: Two-component variance function 
@@ -4888,10 +4905,10 @@ variance
 </caption>
 <pre><code>
 saemix version used for fitting:      3.2 
-mkin version used for pre-fitting:  1.2.2 
-R version used for fitting:         4.2.2 
-Date of fit:     Sat Jan 28 11:16:32 2023 
-Date of summary: Sun Apr 16 08:35:21 2023 
+mkin version used for pre-fitting:  1.2.4 
+R version used for fitting:         4.2.3 
+Date of fit:     Thu Apr 20 21:04:15 2023 
+Date of summary: Thu Apr 20 21:04:34 2023 
 
 Equations:
 d_cyan/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *
@@ -4911,7 +4928,7 @@ Data:
 
 Model predictions using solution type deSolve 
 
-Fitted in 1828.403 s
+Fitted in 893.328 s
 Using 300, 100 iterations and 10 chains
 
 Variance model: Constant variance 
@@ -5054,10 +5071,10 @@ error
 </caption>
 <pre><code>
 saemix version used for fitting:      3.2 
-mkin version used for pre-fitting:  1.2.2 
-R version used for fitting:         4.2.2 
-Date of fit:     Sat Jan 28 11:22:28 2023 
-Date of summary: Sun Apr 16 08:35:21 2023 
+mkin version used for pre-fitting:  1.2.4 
+R version used for fitting:         4.2.3 
+Date of fit:     Thu Apr 20 21:04:33 2023 
+Date of summary: Thu Apr 20 21:04:34 2023 
 
 Equations:
 d_cyan/dt = - ((k1 * g * exp(-k1 * time) + k2 * (1 - g) * exp(-k2 *
@@ -5077,7 +5094,7 @@ Data:
 
 Model predictions using solution type deSolve 
 
-Fitted in 2183.989 s
+Fitted in 910.788 s
 Using 300, 100 iterations and 10 chains
 
 Variance model: Two-component variance function 
@@ -5220,10 +5237,10 @@ variance
 </caption>
 <pre><code>
 saemix version used for fitting:      3.2 
-mkin version used for pre-fitting:  1.2.2 
-R version used for fitting:         4.2.2 
-Date of fit:     Sat Jan 28 11:17:37 2023 
-Date of summary: Sun Apr 16 08:35:21 2023 
+mkin version used for pre-fitting:  1.2.4 
+R version used for fitting:         4.2.3 
+Date of fit:     Thu Apr 20 21:04:09 2023 
+Date of summary: Thu Apr 20 21:04:34 2023 
 
 Equations:
 d_cyan_free/dt = - k_cyan_free * cyan_free - k_cyan_free_bound *
@@ -5241,7 +5258,7 @@ Data:
 
 Model predictions using solution type deSolve 
 
-Fitted in 1893.29 s
+Fitted in 887.369 s
 Using 300, 100 iterations and 10 chains
 
 Variance model: Constant variance 
@@ -5391,10 +5408,10 @@ error
 </caption>
 <pre><code>
 saemix version used for fitting:      3.2 
-mkin version used for pre-fitting:  1.2.2 
-R version used for fitting:         4.2.2 
-Date of fit:     Sat Jan 28 11:21:01 2023 
-Date of summary: Sun Apr 16 08:35:21 2023 
+mkin version used for pre-fitting:  1.2.4 
+R version used for fitting:         4.2.3 
+Date of fit:     Thu Apr 20 21:04:32 2023 
+Date of summary: Thu Apr 20 21:04:34 2023 
 
 Equations:
 d_cyan_free/dt = - k_cyan_free * cyan_free - k_cyan_free_bound *
@@ -5412,7 +5429,7 @@ Data:
 
 Model predictions using solution type deSolve 
 
-Fitted in 2097.842 s
+Fitted in 910.017 s
 Using 300, 100 iterations and 10 chains
 
 Variance model: Two-component variance function 
@@ -5582,29 +5599,32 @@ attached base packages:
 [8] base     
 
 other attached packages:
-[1] saemix_3.2 npde_3.3   knitr_1.42 mkin_1.2.3
+[1] saemix_3.2 npde_3.3   knitr_1.42 mkin_1.2.4
 
 loaded via a namespace (and not attached):
- [1] pillar_1.9.0      bslib_0.4.2       compiler_4.2.3    jquerylib_0.1.4  
- [5] tools_4.2.3       mclust_6.0.0      digest_0.6.31     tibble_3.2.1     
- [9] jsonlite_1.8.4    evaluate_0.20     memoise_2.0.1     lifecycle_1.0.3  
-[13] nlme_3.1-162      gtable_0.3.3      lattice_0.21-8    pkgconfig_2.0.3  
-[17] rlang_1.1.0       DBI_1.1.3         cli_3.6.1         yaml_2.3.7       
-[21] pkgdown_2.0.7     xfun_0.38         fastmap_1.1.1     gridExtra_2.3    
-[25] dplyr_1.1.1       stringr_1.5.0     generics_0.1.3    desc_1.4.2       
-[29] fs_1.6.1          vctrs_0.6.1       sass_0.4.5        systemfonts_1.0.4
-[33] tidyselect_1.2.0  rprojroot_2.0.3   lmtest_0.9-40     grid_4.2.3       
-[37] inline_0.3.19     glue_1.6.2        R6_2.5.1          textshaping_0.3.6
-[41] fansi_1.0.4       rmarkdown_2.21    purrr_1.0.1       ggplot2_3.4.2    
-[45] magrittr_2.0.3    scales_1.2.1      htmltools_0.5.5   colorspace_2.1-0 
-[49] ragg_1.2.5        utf8_1.2.3        stringi_1.7.12    munsell_0.5.0    
-[53] cachem_1.0.7      zoo_1.8-12       </code></pre>
+ [1] deSolve_1.35      zoo_1.8-12        tidyselect_1.2.0  xfun_0.38        
+ [5] bslib_0.4.2       purrr_1.0.1       lattice_0.21-8    colorspace_2.1-0 
+ [9] vctrs_0.6.1       generics_0.1.3    htmltools_0.5.5   yaml_2.3.7       
+[13] utf8_1.2.3        rlang_1.1.0       pkgbuild_1.4.0    pkgdown_2.0.7    
+[17] jquerylib_0.1.4   pillar_1.9.0      glue_1.6.2        DBI_1.1.3        
+[21] readxl_1.4.2      lifecycle_1.0.3   stringr_1.5.0     munsell_0.5.0    
+[25] gtable_0.3.3      cellranger_1.1.0  ragg_1.2.5        codetools_0.2-19 
+[29] memoise_2.0.1     evaluate_0.20     inline_0.3.19     callr_3.7.3      
+[33] fastmap_1.1.1     ps_1.7.4          lmtest_0.9-40     fansi_1.0.4      
+[37] highr_0.10        scales_1.2.1      cachem_1.0.7      desc_1.4.2       
+[41] jsonlite_1.8.4    systemfonts_1.0.4 fs_1.6.1          textshaping_0.3.6
+[45] gridExtra_2.3     ggplot2_3.4.2     digest_0.6.31     stringi_1.7.12   
+[49] processx_3.8.0    dplyr_1.1.1       grid_4.2.3        rprojroot_2.0.3  
+[53] cli_3.6.1         tools_4.2.3       magrittr_2.0.3    sass_0.4.5       
+[57] tibble_3.2.1      crayon_1.5.2      pkgconfig_2.0.3   prettyunits_1.1.1
+[61] rmarkdown_2.21    R6_2.5.1          mclust_6.0.0      nlme_3.1-162     
+[65] compiler_4.2.3   </code></pre>
 </div>
 <div class="section level3">
 <h3 id="hardware-info">Hardware info<a class="anchor" aria-label="anchor" href="#hardware-info"></a>
 </h3>
 <pre><code>CPU model: AMD Ryzen 9 7950X 16-Core Processor</code></pre>
-<pre><code>MemTotal:       64940452 kB</code></pre>
+<pre><code>MemTotal:       64936316 kB</code></pre>
 </div>
 </div>
   </div>
