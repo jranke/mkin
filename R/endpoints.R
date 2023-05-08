@@ -49,7 +49,10 @@ endpoints <- function(fit, covariates = NULL, covariate_quantile = 0.5) {
         apply(fit$covariates, 2, quantile,
           covariate_quantile, simplify = FALSE))
     } else {
-      covariates <- data.frame("User" = covariates)
+      covariate_m <- matrix(covariates, byrow = TRUE)
+      colnames(covariate_m) <- names(covariates)
+      rownames(covariate_m) <- "User"
+      covariates <- as.data.frame(covariate_m)
     }
     degparms_trans <- parms(fit, covariates = covariates)[, 1]
     if (inherits(fit, "saem.mmkin") & (fit$transformations == "saemix")) {
