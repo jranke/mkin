@@ -9,6 +9,9 @@ WINBIN  := $(PKGSRC)_$(PKGVERS).zip
 # pre-prelease version) use `make RBIN=/path/to/other/R/` or `export RBIN=...`
 # If no alternate bin folder is specified, the default is to use the folder
 # containing the first instance of R on the PATH.
+# If using a patched version of R, you may want to use the same libraries
+# as for the Debian packaged version, by using
+# `export R_LIBS_SITE=${R_LIBS_SITE-'/usr/local/lib/R/site-library:/usr/lib/R/site-library:/usr/lib/R/library'}`
 RBIN ?= $(shell dirname "`which R`")
 RDEVBIN=/home/jranke/svn/R/r-devel/build/bin
 

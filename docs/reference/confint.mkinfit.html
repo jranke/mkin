@@ -24,7 +24,7 @@ method of Venzon and Moolgavkar (1988)."><!-- mathjax --><script src="https://cd
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.4</span>
       </span>
     </div>
 
@@ -254,7 +254,7 @@ Profile-Likelihood Based Confidence Intervals, Applied Statistics, 37,
 <span class="r-in"><span><span class="va">f_d_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="mkinfit.html">mkinfit</a></span><span class="op">(</span><span class="va">SFO_SFO</span>, <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">FOCUS_2006_D</span>, <span class="va">value</span> <span class="op">!=</span> <span class="fl">0</span><span class="op">)</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="va">ci_profile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">f_d_1</span>, method <span class="op">=</span> <span class="st">"profile"</span>, cores <span class="op">=</span> <span class="fl">1</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    user  system elapsed </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1.26    0.00    1.26 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1.086   0.000   1.086 </span>
 <span class="r-in"><span><span class="co"># Using more cores does not save much time here, as parent_0 takes up most of the time</span></span></span>
 <span class="r-in"><span><span class="co"># If we additionally exclude parent_0 (the confidence of which is often of</span></span></span>
 <span class="r-in"><span><span class="co"># minor interest), we get a nice performance improvement if we use at least 4 cores</span></span></span>
@@ -262,7 +262,7 @@ Profile-Likelihood Based Confidence Intervals, Applied Statistics, 37,
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"k_parent_sink"</span>, <span class="st">"k_parent_m1"</span>, <span class="st">"k_m1_sink"</span>, <span class="st">"sigma"</span><span class="op">)</span>, cores <span class="op">=</span> <span class="va">n_cores</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Profiling the likelihood</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    user  system elapsed </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.417   0.103   0.291 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.396   0.065   0.263 </span>
 <span class="r-in"><span><span class="va">ci_profile</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                       2.5%        97.5%</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> parent_0      96.456003640 1.027703e+02</span>
@@ -329,7 +329,7 @@ Profile-Likelihood Based Confidence Intervals, Applied Statistics, 37,
 <span class="r-in"><span><span class="va">ci_quadratic_transformed_ff</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">f_d_2</span>, method <span class="op">=</span> <span class="st">"quadratic"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">ci_quadratic_transformed_ff</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                        2.5%        97.5%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0       96.403833578 102.79311649</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0       96.403833581 102.79311649</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> k_parent        0.090823771   0.10725430</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> k_m1            0.004012219   0.00689755</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_to_m1  0.469118824   0.55959615</span>
@@ -337,7 +337,7 @@ Profile-Likelihood Based Confidence Intervals, Applied Statistics, 37,
 <span class="r-in"><span><span class="va">ci_quadratic_untransformed_ff</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">f_d_2</span>, method <span class="op">=</span> <span class="st">"quadratic"</span>, transformed <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">ci_quadratic_untransformed_ff</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                        2.5%        97.5%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0       96.403833583 1.027931e+02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0       96.403833586 1.027931e+02</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> k_parent        0.090491913 1.069035e-01</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> k_m1            0.003835485 6.685823e-03</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_to_m1  0.469113477 5.598387e-01</span>
@@ -359,15 +359,15 @@ Profile-Likelihood Based Confidence Intervals, Applied Statistics, 37,
 <span class="r-out co"><span class="r-pr">#&gt;</span>                        2.5%        97.5%</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> parent_0       0.0005408690 0.0002217233</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> k_parent       0.0009598532 0.0009001864</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> k_m1           0.0307283041 0.0290588361</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_to_m1 0.0046881769 0.0027780063</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> k_m1           0.0307283045 0.0290588367</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_to_m1 0.0046881768 0.0027780062</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> sigma          0.0550252516 0.0327066836</span>
 <span class="r-in"><span><span class="va">rel_diffs_untransformed_ff</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                        2.5%        97.5%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0       0.0005408689 0.0002217232</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> k_parent       0.0046102156 0.0023732281</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> k_m1           0.0146740690 0.0025291820</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_to_m1 0.0046995211 0.0023457712</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0       0.0005408689 0.0002217233</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> k_parent       0.0046102155 0.0023732280</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> k_m1           0.0146740687 0.0025291815</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_to_m1 0.0046995210 0.0023457712</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> sigma          0.0550252516 0.0327066836</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># The profiling for the following fit does not finish in a reasonable time,</span></span></span>
@@ -381,19 +381,19 @@ Profile-Likelihood Based Confidence Intervals, Applied Statistics, 37,
 <span class="r-in"><span>  error_model_algorithm <span class="op">=</span> <span class="st">"direct"</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">f_tc_2</span>, method <span class="op">=</span> <span class="st">"quadratic"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                        2.5%        97.5%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0       94.596039609 106.19954892</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> k_M1            0.037605368   0.04490762</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> k_M2            0.008568731   0.01087676</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_to_M1  0.021462489   0.62023882</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_to_M2  0.015165617   0.37975348</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> k1              0.273897348   0.33388101</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> k2              0.018614554   0.02250378</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> g               0.671943411   0.73583305</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sigma_low       0.251283495   0.83992077</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> rsd_high        0.040411024   0.07662008</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0       94.596181875 106.19936592</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> k_M1            0.037605432   0.04490757</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> k_M2            0.008568745   0.01087675</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_to_M1  0.021464676   0.62023880</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_parent_to_M2  0.015167158   0.37975350</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> k1              0.273897535   0.33388072</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> k2              0.018614555   0.02250379</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> g               0.671943738   0.73583261</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sigma_low       0.251283679   0.83992102</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rsd_high        0.040411022   0.07662008</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">f_tc_2</span>, <span class="st">"parent_0"</span>, method <span class="op">=</span> <span class="st">"quadratic"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              2.5%    97.5%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0 94.59604 106.1995</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> parent_0 94.59618 106.1994</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

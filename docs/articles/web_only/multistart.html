@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.4</span>
       </span>
     </div>
 
@@ -134,7 +134,7 @@
 Ranke</h4>
             
             <h4 data-toc-skip class="date">Last change 20 April 2023
-(rebuilt 2023-04-20)</h4>
+(rebuilt 2023-05-19)</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jranke/mkin/blob/HEAD/vignettes/web_only/multistart.rmd" class="external-link"><code>vignettes/web_only/multistart.rmd</code></a></small>
       <div class="hidden name"><code>multistart.rmd</code></div>
@@ -175,7 +175,7 @@ assessment using multiple runs with different starting values.</p>
 parameter, so we reduce the parameter distribution model by removing the
 intersoil variability for k2.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">f_saem_reduced</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">f_saem_full</span>, no_random_effect <span class="op">=</span> <span class="st">"log_k2"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">f_saem_reduced</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">f_saem_full</span>, no_random_effect <span class="op">=</span> <span class="st">"log_k2"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../../reference/illparms.html">illparms</a></span><span class="op">(</span><span class="va">f_saem_reduced</span><span class="op">)</span></span>
 <span><span class="va">f_saem_reduced_multi</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/multistart.html">multistart</a></span><span class="op">(</span><span class="va">f_saem_reduced</span>, n <span class="op">=</span> <span class="fl">16</span>, cores <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../../reference/parplot.html">parplot</a></span><span class="op">(</span><span class="va">f_saem_reduced_multi</span>, lpos <span class="op">=</span> <span class="st">"topright"</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -190,18 +190,20 @@ runs:</p>
 <p>We can use the <code>anova</code> method to compare the models.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">f_saem_full</span>, <span class="fu"><a href="../../reference/multistart.html">best</a></span><span class="op">(</span><span class="va">f_saem_full_multi</span><span class="op">)</span>,</span>
-<span>  <span class="va">f_saem_reduced</span>, <span class="fu"><a href="../../reference/multistart.html">best</a></span><span class="op">(</span><span class="va">f_saem_reduced_multi</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="va">f_saem_reduced</span>, <span class="fu"><a href="../../reference/multistart.html">best</a></span><span class="op">(</span><span class="va">f_saem_reduced_multi</span><span class="op">)</span>, test <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Data: 155 observations of 1 variable(s) grouped in 6 datasets</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">##                            npar    AIC    BIC     Lik</span></span>
-<span><span class="co">## f_saem_reduced                9 663.73 661.86 -322.86</span></span>
-<span><span class="co">## best(f_saem_reduced_multi)    9 663.69 661.82 -322.85</span></span>
-<span><span class="co">## f_saem_full                  10 669.77 667.69 -324.89</span></span>
-<span><span class="co">## best(f_saem_full_multi)      10 665.56 663.48 -322.78</span></span></code></pre>
-<p>The reduced model gives the lowest information criteria and similar
-likelihoods as the best variant of the full model. The multistart method
-leads to a much lower improvement of the likelihood for the reduced
-model, indicating that it converges faster.</p>
+<span><span class="co">##                            npar    AIC    BIC     Lik  Chisq Df Pr(&gt;Chisq)</span></span>
+<span><span class="co">## f_saem_reduced                9 663.67 661.80 -322.84                     </span></span>
+<span><span class="co">## best(f_saem_reduced_multi)    9 663.65 661.78 -322.82 0.0219  0           </span></span>
+<span><span class="co">## f_saem_full                  10 670.09 668.01 -325.05 0.0000  1          1</span></span>
+<span><span class="co">## best(f_saem_full_multi)      10 665.61 663.52 -322.80 4.4870  0</span></span></code></pre>
+<p>The reduced model results in lower AIC and BIC values, so it is
+clearly preferable. Using multiple starting values gives a large
+improvement in case of the full model, because it is less well-defined,
+which impedes convergence. For the reduced model, using multiple
+starting values only results in a small improvement of the model
+fit.</p>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
