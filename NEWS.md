@@ -1,3 +1,7 @@
+# mkin 1.2.5
+
+- 
+
 # mkin 1.2.4
 
 - R/endpoints.R: Fix the calculation of endpoints for user specified covariate values
