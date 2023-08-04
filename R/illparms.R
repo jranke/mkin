@@ -106,7 +106,7 @@ illparms.saem.mmkin <- function(object, conf.level = 0.95, random = TRUE, errmod
       ill_parms <- c(ill_parms, names(which(ill_parms_random)))
     }
     if (errmod) {
-      ill_parms_errmod <- ints$errmod[, "lower"] < 0 & ints$errmod[, "est."] > 0
+      ill_parms_errmod <- ints$errmod[, "lower"] < 0 & ints$errmod[, "upper"] > 0
       ill_parms <- c(ill_parms, names(which(ill_parms_errmod)))
     }
     if (slopes) {
@@ -115,7 +115,7 @@ illparms.saem.mmkin <- function(object, conf.level = 0.95, random = TRUE, errmod
       ci <- object$so@results@conf.int
       rownames(ci) <- ci$name
       slope_ci <- ci[slope_names, ]
-      ill_parms_slopes <- slope_ci[, "lower"] < 0 & slope_ci[, "estimate"] > 0
+      ill_parms_slopes <- slope_ci[, "lower"] < 0 & slope_ci[, "upper"] > 0
       ill_parms <- c(ill_parms, slope_names[ill_parms_slopes])
     }
   }

@@ -1,3 +1,11 @@
+# mkin 1.2.5
+
+- 'vignettes/mesotrione_parent_2023.rnw': Prebuilt vignette showing how covariate modelling can be done for all relevant parent degradation models.
+
+- 'inst/testdata/mesotrione_soil_efsa_2016}.xlsx': Another example spreadsheets for use with 'read_spreadsheet()', featuring pH dependent degradation
+
+- R/illparms.R: Fix the detection of ill-defined slope or error model parameters for the case that the estimate is negative
+
 # mkin 1.2.4
 
 - R/endpoints.R: Fix the calculation of endpoints for user specified covariate values

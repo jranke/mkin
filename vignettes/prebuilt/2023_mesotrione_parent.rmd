@@ -1,0 +1,596 @@
+---
+title: "Testing covariate modelling in hierarchical parent degradation kinetics with residue data on mesotrione"
+author: Johannes Ranke
+date: Last change on 4 August 2023, last compiled on `r format(Sys.time(), "%e
+  %B %Y")`
+output:
+  pdf_document:
+    extra_dependencies: ["float", "listing"]
+toc: yes
+geometry: margin=2cm
+---
+
+```{r setup, echo = FALSE, cache = FALSE}
+options(width = 80) # For summary listings
+knitr::opts_chunk$set(
+  cache = TRUE,
+  comment = "", tidy = FALSE,
+  fig.pos = "H", fig.align = "center"
+)
+```
+
+\clearpage
+
+# Introduction
+
+The purpose of this document is to test demonstrate how nonlinear hierarchical
+models (NLHM) based on the parent degradation models SFO, FOMC, DFOP and HS
+can be fitted with the mkin package, also considering the influence of
+covariates like soil pH on different degradation parameters. Because in some
+other case studies, the SFORB parameterisation of biexponential decline has
+shown some advantages over the DFOP parameterisation, SFORB was included
+in the list of tested models as well.
+
+The mkin package is used in version `r packageVersion("mkin")`, which is
+contains the functions that were used for the evaluations. The `saemix` package
+is used as a backend for fitting the NLHM, but is also loaded to make the
+convergence plot function available.
+
+This document is processed with the `knitr` package, which also provides the
+`kable` function that is used to improve the display of tabular data in R
+markdown documents. For parallel processing, the `parallel` package is used.
+
+```{r packages, cache = FALSE, message = FALSE}
+library(mkin)
+library(knitr)
+library(saemix)
+library(parallel)
+n_cores <- detectCores()
+if (Sys.info()["sysname"] == "Windows") {
+  cl <- makePSOCKcluster(n_cores)
+} else {
+  cl <- makeForkCluster(n_cores)
+}
+```
+
+\clearpage
+
+## Test data
+
+```{r data}
+data_file <- system.file(
+  "testdata", "mesotrione_soil_efsa_2016.xlsx", package = "mkin")
+meso_ds <- read_spreadsheet(data_file, parent_only = TRUE)
+```
+
+The following tables show the covariate data and the `r length(meso_ds)`
+datasets that were read in from the spreadsheet file.
+
+```{r show-covar-data, dependson = "data", results = "asis"}
+pH <- attr(meso_ds, "covariates")
+kable(pH, caption = "Covariate data")
+```
+
+\clearpage
+
+```{r show-data, dependson = "data", results = "asis"}
+for (ds_name in names(meso_ds)) {
+  print(
+    kable(mkin_long_to_wide(meso_ds[[ds_name]]),
+      caption = paste("Dataset", ds_name),
+      booktabs = TRUE, row.names = FALSE))
+}
+```
+
+\clearpage
+
+# Separate evaluations
+
+In order to obtain suitable starting parameters for the NLHM fits,
+separate fits of the five models to the data for each
+soil are generated using the `mmkin` function from the mkin package.
+In a first step, constant variance is assumed. Convergence
+is checked with the `status` function.
+
+```{r f-sep-const, dependson = "data"}
+deg_mods <- c("SFO", "FOMC", "DFOP", "SFORB", "HS")
+f_sep_const <- mmkin(
+  deg_mods,
+  meso_ds,
+  error_model = "const",
+  cluster = cl,
+  quiet = TRUE)
+```
+
+```{r dependson = "f-sep-const"}
+status(f_sep_const[, 1:5]) |> kable()
+status(f_sep_const[, 6:18]) |> kable()
+```
+
+In the tables above, OK indicates convergence and C indicates failure to
+converge. Most separate fits with constant variance converged, with the
+exception of two FOMC fits, one SFORB fit and one HS fit.
+
+```{r f-sep-tc, dependson = "f-sep-const"}
+f_sep_tc <- update(f_sep_const, error_model = "tc")
+```
+
+```{r dependson = "f-sep-tc"}
+status(f_sep_tc[, 1:5]) |> kable()
+status(f_sep_tc[, 6:18]) |> kable()
+```
+
+With the two-component error model, the set of fits that did not converge
+is larger, with convergence problems appearing for a number of non-SFO fits.
+
+\clearpage
+
+# Hierarchical model fits without covariate effect
+
+The following code fits hierarchical kinetic models for the ten combinations of
+the five different degradation models with the two different error models in
+parallel.
+
+```{r f-saem-1, dependson = c("f-sep-const", "f-sep-tc")}
+f_saem_1 <- mhmkin(list(f_sep_const, f_sep_tc), cluster = cl)
+status(f_saem_1) |> kable()
+```
+
+All fits terminate without errors (status OK).
+
+```{r dependson = "f-saem-1"}
+anova(f_saem_1) |> kable(digits = 1)
+```
+The model comparisons show that the fits with constant variance are consistently
+preferable to the corresponding fits with two-component error for these data.
+This is confirmed by the fact that the parameter `b.1` (the relative standard
+deviation in the fits obtained with the saemix package), is ill-defined in all
+fits.
+
+```{r dependson = "f-saem-1"}
+illparms(f_saem_1) |> kable()
+```
+
+For obtaining fits with only well-defined random effects, we update
+the set of fits, excluding random effects that were ill-defined
+according to the `illparms` function.
+
+```{r f-saem-2, dependson = "f-saem-1"}
+f_saem_2 <- update(f_saem_1, no_random_effect = illparms(f_saem_1))
+status(f_saem_2) |> kable()
+```
+
+The updated fits terminate without errors.
+
+```{r dependson = "f-saem-2"}
+illparms(f_saem_2) |> kable()
+```
+
+No ill-defined errors remain in the fits with constant variance.
+
+\clearpage
+
+# Hierarchical model fits with covariate effect
+
+In the following sections, hierarchical fits including a model for the
+influence of pH on selected degradation parameters are shown for all parent
+models. Constant variance is selected as the error model based on the fits
+without covariate effects. Random effects that were ill-defined in the fits
+without pH influence are excluded. A potential influence of the soil pH is only
+included for parameters with a well-defined random effect, because experience
+has shown that for such parameters no significant pH effect could be found.
+
+## SFO
+
+```{r sfo-pH, dependson = "f-sep-const"}
+sfo_pH <- saem(f_sep_const["SFO", ], no_random_effect = "meso_0", covariates = pH,
+  covariate_models = list(log_k_meso ~ pH))
+```
+
+```{r dependson = "sfo-pH"}
+summary(sfo_pH)$confint_trans |> kable(digits = 2)
+```
+
+The parameter showing the pH influence in the above table is
+`beta_pH(log_k_meso)`. Its confidence interval does not include zero,
+indicating that the influence of soil pH on the log of the degradation rate
+constant is significantly greater than zero.
+
+
+```{r dependson = "sfo-pH"}
+anova(f_saem_2[["SFO", "const"]], sfo_pH, test = TRUE)
+```
+
+The comparison with the SFO fit without covariate effect confirms that
+considering the soil pH improves the model, both by comparison of AIC and BIC
+and by the likelihood ratio test.
+
+\clearpage
+
+```{r dependson = "sfo-pH", plot.height = 5}
+plot(sfo_pH)
+```
+
+Endpoints for a model with covariates are by default calculated for
+the median of the covariate values. This quantile can be adapted,
+or a specific covariate value can be given as shown below.
+
+```{r dependson = "sfo-pH", plot.height = 5}
+endpoints(sfo_pH)
+endpoints(sfo_pH, covariate_quantile = 0.9)
+endpoints(sfo_pH, covariates = c(pH = 7.0))
+```
+
+\clearpage
+
+## FOMC
+
+```{r fomc-pH, dependson = "f-sep-const"}
+fomc_pH <- saem(f_sep_const["FOMC", ], no_random_effect = "meso_0", covariates = pH,
+  covariate_models = list(log_alpha ~ pH))
+```
+
+```{r dependson = "fomc-pH"}
+summary(fomc_pH)$confint_trans |> kable(digits = 2)
+```
+
+As in the case of SFO, the confidence interval of the slope parameter
+(here `beta_pH(log_alpha)`) quantifying the influence of soil pH
+does not include zero, and the model comparison clearly indicates
+that the model with covariate influence is preferable.
+However, the random effect for `alpha` is not well-defined any
+more after inclusion of the covariate effect (the confidence
+interval of `SD.log_alpha` includes zero).
+
+```{r dependson = "fomc-pH"}
+illparms(fomc_pH)
+```
+
+Therefore, the model is updated without this random effect, and
+no ill-defined parameters remain.
+
+```{r fomc-pH-2, dependson = "fomc_pH"}
+fomc_pH_2 <- update(fomc_pH, no_random_effect = c("meso_0", "log_alpha"))
+illparms(fomc_pH_2)
+```
+
+```{r dependson = "fomc-pH-2"}
+anova(f_saem_2[["FOMC", "const"]], fomc_pH, fomc_pH_2, test = TRUE)
+```
+
+Model comparison indicates that including pH dependence significantly improves
+the fit, and that the reduced model with covariate influence results in
+the most preferable FOMC fit.
+
+```{r dependson = "fomc-pH"}
+summary(fomc_pH_2)$confint_trans |> kable(digits = 2)
+```
+
+\clearpage
+
+```{r dependson = "fomc-pH", plot.height = 5}
+plot(fomc_pH_2)
+```
+
+```{r dependson = "fomc-pH", plot.height = 5}
+endpoints(fomc_pH_2)
+endpoints(fomc_pH_2, covariates = c(pH = 7))
+```
+
+\clearpage
+
+## DFOP
+
+In the DFOP fits without covariate effects, random effects for two degradation
+parameters (`k2` and `g`) were identifiable.
+
+```{r dependson = "f-saem-2"}
+summary(f_saem_2[["DFOP", "const"]])$confint_trans |> kable(digits = 2)
+```
+
+A fit with pH dependent degradation parameters was obtained by excluding
+the same random effects as in the refined DFOP fit without covariate influence,
+and including covariate models for the two identifiable parameters `k2` and `g`.
+
+```{r dfop-pH, dependson = "f-sep-const"}
+dfop_pH <- saem(f_sep_const["DFOP", ], no_random_effect = c("meso_0", "log_k1"),
+  covariates = pH,
+  covariate_models = list(log_k2 ~ pH, g_qlogis ~ pH))
+```
+
+The corresponding parameters for
+the influence of soil pH are `beta_pH(log_k2)` for the influence of soil pH on
+`k2`, and `beta_pH(g_qlogis)` for its influence on `g`.
+
+```{r dependson = "dfop-pH"}
+summary(dfop_pH)$confint_trans |> kable(digits = 2)
+illparms(dfop_pH)
+```
+
+Confidence intervals for neither of them include zero, indicating a significant
+difference from zero. However, the random effect for `g` is now ill-defined.
+The fit is updated without this ill-defined random effect.
+
+```{r dfop-pH-2, dependson = "dfop-pH"}
+dfop_pH_2 <- update(dfop_pH,
+  no_random_effect = c("meso_0", "log_k1", "g_qlogis"))
+illparms(dfop_pH_2)
+```
+
+Now, the slope parameter for the pH effect on `g` is ill-defined.
+Therefore, another attempt is made without the corresponding covariate model.
+
+```{r dfop-pH-3, dependson = "f-sep-const"}
+dfop_pH_3 <- saem(f_sep_const["DFOP", ], no_random_effect = c("meso_0", "log_k1"),
+  covariates = pH,
+  covariate_models = list(log_k2 ~ pH))
+illparms(dfop_pH_3)
+```
+As the random effect for `g` is again ill-defined, the fit is repeated without it.
+
+```{r dfop-pH-4, dependson = "dfop-pH-3"}
+dfop_pH_4 <- update(dfop_pH_3, no_random_effect = c("meso_0", "log_k1", "g_qlogis"))
+illparms(dfop_pH_4)
+```
+
+While no ill-defined parameters remain, model comparison suggests that the previous
+model `dfop_pH_2` with two pH dependent parameters is preferable, based on
+information criteria as well as based on the likelihood ratio test.
+
+```{r dependson = "dfop-pH-4"}
+anova(f_saem_2[["DFOP", "const"]], dfop_pH, dfop_pH_2, dfop_pH_3, dfop_pH_4)
+anova(dfop_pH_2, dfop_pH_4, test = TRUE)
+```
+
+When focussing on parameter identifiability using the test if the confidence
+interval includes zero, `dfop_pH_4` would still be the preferred model.
+However, it should be kept in mind that parameter confidence intervals are
+constructed using a simple linearisation of the likelihood. As the confidence
+interval of the random effect for `g` only marginally includes zero,
+it is suggested that this is acceptable, and that `dfop_pH_2` can be considered
+the most preferable model.
+
+\clearpage
+
+```{r dependson = "dfop-pH-2", plot.height = 5}
+plot(dfop_pH_2)
+```
+
+```{r dependson = "dfop-pH-2", plot.height = 5}
+endpoints(dfop_pH_2)
+endpoints(dfop_pH_2, covariates = c(pH = 7))
+```
+
+\clearpage
+
+## SFORB
+
+```{r sforb-pH, dependson = "f-sep-const"}
+sforb_pH <- saem(f_sep_const["SFORB", ], no_random_effect = c("meso_free_0", "log_k_meso_free_bound"),
+  covariates = pH,
+  covariate_models = list(log_k_meso_free ~ pH, log_k_meso_bound_free ~ pH))
+```
+
+```{r dependson = "sforb-pH"}
+summary(sforb_pH)$confint_trans |> kable(digits = 2)
+```
+
+The confidence interval of `beta_pH(log_k_meso_bound_free)` includes zero,
+indicating that the influence of soil pH on `k_meso_bound_free` cannot reliably
+be quantified. Also, the confidence interval for the random effect on this
+parameter (`SD.log_k_meso_bound_free`) includes zero.
+
+Using the `illparms` function, these ill-defined parameters can be found
+more conveniently.
+
+```{r dependson = "sforb-pH"}
+illparms(sforb_pH)
+```
+
+To remove the ill-defined parameters, a second variant of the SFORB model
+with pH influence is fitted. No ill-defined parameters remain.
+
+```{r sforb-pH-2, dependson = "f-sforb-pH"}
+sforb_pH_2 <- update(sforb_pH,
+  no_random_effect = c("meso_free_0", "log_k_meso_free_bound", "log_k_meso_bound_free"),
+  covariate_models = list(log_k_meso_free ~ pH))
+illparms(sforb_pH_2)
+```
+
+The model comparison of the SFORB fits includes the refined model without
+covariate effect, and both versions of the SFORB fit with covariate effect.
+
+```{r dependson = "sforb-pH-2"}
+anova(f_saem_2[["SFORB", "const"]], sforb_pH, sforb_pH_2, test = TRUE)
+```
+The first model including pH influence is preferable based on information criteria
+and the likelihood ratio test. However, as it is not fully identifiable,
+the second model is selected.
+
+```{r dependson = "sforb-pH-2"}
+summary(sforb_pH_2)$confint_trans |> kable(digits = 2)
+```
+\clearpage
+
+```{r dependson = "sforb-pH-2", plot.height = 5}
+plot(sforb_pH_2)
+```
+
+```{r dependson = "sforb-pH-2", plot.height = 5}
+endpoints(sforb_pH_2)
+endpoints(sforb_pH_2, covariates = c(pH = 7))
+```
+
+\clearpage
+
+## HS
+
+```{r hs-pH, dependson = "f-sep-const"}
+hs_pH <- saem(f_sep_const["HS", ], no_random_effect = c("meso_0"),
+  covariates = pH,
+  covariate_models = list(log_k1 ~ pH, log_k2 ~ pH, log_tb ~ pH))
+```
+
+```{r dependson = "hs-pH"}
+summary(hs_pH)$confint_trans |> kable(digits = 2)
+illparms(hs_pH)
+```
+
+According to the output of the `illparms` function, the random effect on
+the break time `tb` cannot reliably be quantified, neither can the influence of
+soil pH on `tb`. The fit is repeated without the corresponding covariate
+model, and no ill-defined parameters remain.
+
+```{r hs-pH-2, dependson = "hs-pH"}
+hs_pH_2 <- update(hs_pH, covariate_models = list(log_k1 ~ pH, log_k2 ~ pH))
+illparms(hs_pH_2)
+```
+
+Model comparison confirms that this model is preferable to the fit without
+covariate influence, and also to the first version with covariate influence.
+
+```{r dependson = c("hs-pH-2", "hs-pH-3")}
+anova(f_saem_2[["HS", "const"]], hs_pH, hs_pH_2, test = TRUE)
+```
+
+```{r dependson = "hs-pH-2"}
+summary(hs_pH_2)$confint_trans |> kable(digits = 2)
+```
+
+\clearpage
+
+```{r dependson = "hs-pH-2", plot.height = 5}
+plot(hs_pH_2)
+```
+
+```{r dependson = "hs-pH-2", plot.height = 5}
+endpoints(hs_pH_2)
+endpoints(hs_pH_2, covariates = c(pH = 7))
+```
+
+\clearpage
+
+## Comparison across parent models
+
+After model reduction for all models with pH influence, they are compared with
+each other.
+
+```{r, dependson = c("sfo-pH-2", "fomc-pH-2", "dfop-pH-4", "sforb-pH-1", "hs-pH-3")}
+anova(sfo_pH, fomc_pH_2, dfop_pH_2, dfop_pH_4, sforb_pH_2, hs_pH_2)
+```
+
+The DFOP model with pH influence on `k2` and `g` and a random effect only on
+`k2` is finally selected as the best fit.
+
+The endpoints resulting from this model are listed below. Please refer to the
+Appendix for a detailed listing.
+
+```{r, dependson = "dfop-pH-2"}
+endpoints(dfop_pH_2)
+endpoints(dfop_pH_2, covariates = c(pH = 7))
+```
+
+# Conclusions
+
+These evaluations demonstrate that covariate effects can be included
+for all types of parent degradation models. These models can then
+be further refined to make them fully identifiable.
+
+\clearpage
+
+# Appendix
+
+## Hierarchical fit listings
+
+### Fits without covariate effects
+
+```{r, cache = FALSE, results = "asis", echo = FALSE}
+errmods <- c(const = "constant variance", tc = "two-component error")
+for (deg_mod in deg_mods) {
+  for (err_mod in c("const")) {
+    fit <- f_saem_1[[deg_mod, err_mod]]
+    if (!inherits(fit$so, "try-error")) {
+      caption <- paste("Hierarchical", deg_mod, "fit with", errmods[err_mod])
+      tex_listing(fit, caption)
+    }
+  }
+}
+```
+
+### Fits with covariate effects
+
+```{r listing-sfo, cache = FALSE, results = "asis", echo = FALSE}
+tex_listing(sfo_pH, "Hierarchichal SFO fit with pH influence")
+```
+
+\clearpage
+
+```{r, cache = FALSE, results = "asis", echo = FALSE}
+tex_listing(fomc_pH, "Hierarchichal FOMC fit with pH influence")
+```
+
+\clearpage
+
+```{r, cache = FALSE, results = "asis", echo = FALSE}
+tex_listing(fomc_pH_2, "Refined hierarchichal FOMC fit with pH influence")
+```
+
+\clearpage
+
+```{r, cache = FALSE, results = "asis", echo = FALSE}
+tex_listing(dfop_pH, "Hierarchichal DFOP fit with pH influence")
+```
+
+\clearpage
+
+```{r, cache = FALSE, results = "asis", echo = FALSE}
+tex_listing(dfop_pH_2, "Refined hierarchical DFOP fit with pH influence")
+```
+
+\clearpage
+
+```{r, cache = FALSE, results = "asis", echo = FALSE}
+tex_listing(dfop_pH_4, "Further refined hierarchical DFOP fit with pH influence")
+```
+
+\clearpage
+
+```{r, cache = FALSE, results = "asis", echo = FALSE}
+tex_listing(sforb_pH, "Hierarchichal SFORB fit with pH influence")
+```
+\clearpage
+
+```{r, cache = FALSE, results = "asis", echo = FALSE}
+tex_listing(sforb_pH_2, "Refined hierarchichal SFORB fit with pH influence")
+```
+\clearpage
+
+```{r, cache = FALSE, results = "asis", echo = FALSE}
+tex_listing(hs_pH, "Hierarchichal HS fit with pH influence")
+```
+\clearpage
+
+```{r, cache = FALSE, results = "asis", echo = FALSE}
+tex_listing(hs_pH_2, "Refined hierarchichal HS fit with pH influence")
+```
+
+\clearpage
+
+## Session info
+
+```{r, echo = FALSE, cache = FALSE}
+parallel::stopCluster(cl = cl)
+sessionInfo()
+```
+
+
+## Hardware info
+
+```{r, echo = FALSE}
+if(!inherits(try(cpuinfo <- readLines("/proc/cpuinfo")), "try-error")) {
+  cat(gsub("model name\t: ", "CPU model: ", cpuinfo[grep("model name", cpuinfo)[1]]))
+}
+if(!inherits(try(meminfo <- readLines("/proc/meminfo")), "try-error")) {
+  cat(gsub("model name\t: ", "System memory: ", meminfo[grep("MemTotal", meminfo)[1]]))
+}
+```
