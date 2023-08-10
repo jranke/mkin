@@ -1,6 +1,6 @@
 language: c
 sudo: required
-dist: focal
+dist: jammy
 
 jobs:
   include:
@@ -8,7 +8,6 @@ jobs:
       os: linux
 
 env:
-  DRAT_REPOS: "jranke"
   global:
     - USE_BSPM="true"
     - NOT_CRAN="true"
@@ -19,7 +18,6 @@ before_install:
 
 install:
   - ./run.sh install_all
-  - ./run.sh install_github jranke/saemixextension@installable_dev_version
 
 script:
   - travis_wait 30 ./run.sh run_tests

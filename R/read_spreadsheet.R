@@ -12,7 +12,7 @@
 #' to contain name and acronym of the parent compound.
 #'
 #' The dataset sheets should be named using the dataset numbers read in from
-#' the 'Datasets' sheet, i.e. '1', '2', ... . In each dataset sheet, name
+#' the 'Datasets' sheet, i.e. '1', '2', ... . In each dataset sheet, the name
 #' of the observed variable (e.g. the acronym of the parent compound or
 #' one of its transformation products) should be in the first column,
 #' the time values should be in the second colum, and the observed value
@@ -26,7 +26,7 @@
 #' Their names should preferably not contain special characters like spaces,
 #' so they can be easily used for specifying covariate models.
 #'
-#' An similar data structure is defined as the R6 class [mkindsg], but
+#' A similar data structure is defined as the R6 class [mkindsg], but
 #' is probably more complicated to use.
 #'
 #' @param path Absolute or relative path to the spreadsheet file
