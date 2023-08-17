@@ -85,9 +85,12 @@ test_that("Different backends get consistent results for SFO-SFO3+, dimethenamid
     "Iteration 5, LME step.*not converge")
   ints_nlme_mets <- intervals(nlme_sfo_sfo3p_tc, which = "fixed")
 
-  skip("Fitting this ODE model with saemix takes about 15 minutes on my system")
+  skip("Fitting this ODE model with saemix takes about 5 minutes on my new system")
+  # August 2023: Please refer to the mkin vignette for the currently
+  # recommended way to fit the DMTA pathway data with saemix
+
   # As DFOP is overparameterised and leads to instabilities and errors, we
-  # need to use SFO.
+  # need to use SFO with nlme
   # saem_saemix_sfo_sfo3p_tc <- saem(dmta_sfo_sfo3p_tc)
   # The fit above, using SFO for the parent leads to low values of DMTA_0
   # (confidence interval from 84.4 to 92.8) which is not consistent with what
