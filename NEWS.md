@@ -1,4 +1,8 @@
-# mkin 1.2.5
+# mkin 1.2.6
+
+- 'inst/rmarkdown/templates/hierarchical_kinetics/skeleton/skeleton.Rmd': Fix an erroneous call to the 'endpoints()' function
+
+# mkin 1.2.5 (2023-08-09)
 
 - 'vignettes/mesotrione_parent_2023.rnw': Prebuilt vignette showing how covariate modelling can be done for all relevant parent degradation models.
 
@@ -6,7 +10,7 @@
 
 - R/illparms.R: Fix the detection of ill-defined slope or error model parameters for the case that the estimate is negative
 
-# mkin 1.2.4
+# mkin 1.2.4 (2023-05-19)
 
 - R/endpoints.R: Fix the calculation of endpoints for user specified covariate values
 
