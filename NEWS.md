@@ -1,3 +1,7 @@
+# mkin 1.2.7
+
+- 
+
 # mkin 1.2.6
 
 - 'inst/rmarkdown/templates/hierarchical_kinetics/skeleton/skeleton.Rmd': Fix an erroneous call to the 'endpoints()' function
