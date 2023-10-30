@@ -25,7 +25,7 @@ likelihood function."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mkin</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.6</span>
       </span>
     </div>
 
@@ -60,6 +60,9 @@ likelihood function."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/
     </li>
     <li>
       <a href="../articles/prebuilt/2022_dmta_pathway.html">Testing hierarchical pathway kinetics with residue data on dimethenamid and dimethenamid-P</a>
+    </li>
+    <li>
+      <a href="../articles/prebuilt/2023_mesotrione_parent.html">Testing covariate modelling in hierarchical parent degradation kinetics with residue data on mesotrione</a>
     </li>
     <li>
       <a href="../articles/prebuilt/2022_cyan_pathway.html">Testing hierarchical pathway kinetics with residue data on cyantraniliprole</a>
@@ -401,17 +404,17 @@ Degradation Data. <em>Environments</em> 6(12) 124
 <span class="r-in"><span><span class="co"># Use shorthand notation for parent only degradation</span></span></span>
 <span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">mkinfit</span><span class="op">(</span><span class="st">"FOMC"</span>, <span class="va">FOCUS_2006_C</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mkin version used for fitting:    1.2.4 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> R version used for fitting:       4.3.0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Date of fit:     Fri May 19 09:15:57 2023 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Date of summary: Fri May 19 09:15:57 2023 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mkin version used for fitting:    1.2.6 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> R version used for fitting:       4.3.1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Date of fit:     Mon Oct 30 09:30:09 2023 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Date of summary: Mon Oct 30 09:30:09 2023 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Equations:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model predictions using solution type analytical </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fitted using 222 model solutions performed in 0.013 s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fitted using 222 model solutions performed in 0.031 s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Error model: Constant variance </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -552,9 +555,9 @@ Degradation Data. <em>Environments</em> 6(12) 124
 <span class="r-in"><span>      solution_type <span class="op">=</span> <span class="st">"analytical"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               test relative elapsed</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3       analytical    1.000   0.226</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2            eigen    1.845   0.417</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 deSolve_compiled    2.354   0.532</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3       analytical    1.000   0.465</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2            eigen    2.260   1.051</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 deSolve_compiled    2.282   1.061</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Use stepwise fitting, using optimised parameters from parent only fit, FOMC-SFO</span></span></span>
@@ -581,10 +584,10 @@ Degradation Data. <em>Environments</em> 6(12) 124
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NaNs produced</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NaNs produced</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>diag(.) had 0 or NA entries; non-finite result is doubtful</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mkin version used for fitting:    1.2.4 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> R version used for fitting:       4.3.0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Date of fit:     Fri May 19 09:16:01 2023 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Date of summary: Fri May 19 09:16:01 2023 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mkin version used for fitting:    1.2.6 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> R version used for fitting:       4.3.1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Date of fit:     Mon Oct 30 09:30:19 2023 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Date of summary: Mon Oct 30 09:30:19 2023 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Equations:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> d_parent/dt = - (alpha/beta) * 1/((time/beta) + 1) * parent</span>
@@ -593,7 +596,7 @@ Degradation Data. <em>Environments</em> 6(12) 124
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model predictions using solution type deSolve </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fitted using 4062 model solutions performed in 0.718 s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fitted using 4062 model solutions performed in 1.981 s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Error model: Two-component variance function </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>

@@ -55,7 +55,12 @@ mkin_version <- as.character(packageVersion("mkin"))
 R_version <- paste0(R.version$major, ".", R.version$minor)
 system_string <- paste0(operating_system, ", ", cpu_model, ", mkin ", mkin_version, ", R ", R_version)
 
-benchmark_path = normalizePath("~/git/mkin/vignettes/web_only/mkin_benchmarks.rda")
+if (dir.exists("~/git/mkin")) {
+  benchmark_path = normalizePath("~/git/mkin/vignettes/web_only/mkin_benchmarks.rda")
+} else {
+  benchmark_path = normalizePath("~/projects/mkin/vignettes/web_only/mkin_benchmarks.rda")
+}
+
 load(benchmark_path)
 
 # Used for reformatting the data on 2022-06-30
