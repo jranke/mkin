@@ -40,7 +40,13 @@ saemix_version <- as.character(packageVersion("saemix"))
 R_version <- paste0(R.version$major, ".", R.version$minor)
 system_string <- paste0(operating_system, ", ", cpu_model, ", mkin ", mkin_version, ", saemix ", saemix_version, ", R ", R_version)
 
-benchmark_path = normalizePath("~/git/mkin/vignettes/web_only/saem_benchmarks.rda")
+
+
+if (dir.exists("~/git/mkin")) {
+  benchmark_path = normalizePath("~/git/mkin/vignettes/web_only/saem_benchmarks.rda")
+} else {
+  benchmark_path = normalizePath("~/projects/mkin/vignettes/web_only/saem_benchmarks.rda")
+}
 load(benchmark_path)
 
 # Initialization 14 November 2022
