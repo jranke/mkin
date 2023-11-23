@@ -102,12 +102,14 @@ illparms.saem.mmkin <- function(object, conf.level = 0.95, random = TRUE, errmod
     ints <- intervals(object, conf.level = conf.level)
     ill_parms <- character(0)
     if (random) {
-      ill_parms_random <- ints$random[, "lower"] < 0
-      ill_parms <- c(ill_parms, names(which(ill_parms_random)))
+      ill_parms_random_i <- which(ints$random[, "lower"] < 0)
+      ill_parms_random <- rownames(ints$random)[ill_parms_random_i]
+      ill_parms <- c(ill_parms, ill_parms_random)
     }
     if (errmod) {
-      ill_parms_errmod <- ints$errmod[, "lower"] < 0 & ints$errmod[, "upper"] > 0
-      ill_parms <- c(ill_parms, names(which(ill_parms_errmod)))
+      ill_parms_errmod_i <- which(ints$errmod[, "lower"] < 0 & ints$errmod[, "upper"] > 0)
+      ill_parms_errmod <- rownames(ints$errmod)[ill_parms_errmod_i]
+      ill_parms <- c(ill_parms, ill_parms_errmod)
     }
     if (slopes) {
       if (is.null(object$so)) stop("Slope testing is only implemented for the saemix backend")

@@ -148,3 +148,30 @@ test_that("We can also use mkin solution methods for saem", {
   rel_diff <- abs(distimes_dfop_analytical - distimes_dfop) / distimes_dfop
   expect_true(all(rel_diff < 0.01))
 })
+
+test_that("illparms finds a single random effect that is ill-defined", {
+  set.seed(123456)
+  n <- 4
+  SFO <- mkinmod(parent = mkinsub("SFO"))
+  sfo_pop <- list(parent_0 = 100, k_parent = 0.03)
+  sfo_parms <- as.matrix(data.frame(
+      k_parent = rlnorm(n, log(sfo_pop$k_parent), 0.001)))
+  sampling_times = c(0, 1, 3, 7, 14, 28, 60, 90, 120)
+  err_1 = list(const = 1, prop = 0.05)
+  tc <- function(value) sigma_twocomp(value, err_1$const, err_1$prop)
+  set.seed(123456)
+  ds_sfo <- lapply(1:n, function(i) {
+    ds_mean <- mkinpredict(SFO, sfo_parms[i, ],
+      c(parent = sfo_pop$parent_0), sampling_times)
+    add_err(ds_mean, tc, n = 1)[[1]]
+  })
+  m_mmkin <- mmkin("SFO", ds_sfo, error_model = "tc", quiet = TRUE)
+  m_saem_1 <- saem(m_mmkin)
+  expect_equal(
+    as.character(illparms(m_saem_1)),
+    c("sd(parent_0)", "sd(log_k_parent)"))
+  m_saem_2 <- saem(m_mmkin, no_random_effect = "parent_0")
+  expect_equal(
+    as.character(illparms(m_saem_2)),
+    "sd(log_k_parent)")
+}

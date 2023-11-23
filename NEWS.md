@@ -1,4 +1,8 @@
-# mkin 1.2.6
+# mkin 1.2.7
+
+- 'R/illparms.R': Fix a bug that prevented an ill-defined random effect to be found if there was only one random effect in the model. Also add a test for this.
+
+# mkin 1.2.6 (2023-10-14)
 
 - 'inst/rmarkdown/templates/hierarchical_kinetics/skeleton/skeleton.Rmd': Fix an erroneous call to the 'endpoints()' function
 
