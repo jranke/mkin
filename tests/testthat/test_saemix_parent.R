@@ -174,4 +174,4 @@ test_that("illparms finds a single random effect that is ill-defined", {
   expect_equal(
     as.character(illparms(m_saem_2)),
     "sd(log_k_parent)")
-}
+})
