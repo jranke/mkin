@@ -1,3 +1,7 @@
+# mkin 1.2.8
+
+- 'R/{mhmkin,status}.R': Deal with 'saem' fits that fail when updating an 'mhmkin' object
+
 # mkin 1.2.7
 
 - 'R/illparms.R': Fix a bug that prevented an ill-defined random effect to be found if there was only one random effect in the model. Also add a test for this.

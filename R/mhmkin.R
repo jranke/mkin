@@ -219,11 +219,22 @@ print.mhmkin <- function(x, ...) {
   print(status(x))
 }
 
+#' Check if fit within an mhmkin object failed
+#' @param x The object to be checked
+check_failed <- function(x) {
+  if (inherits(x, "try-error")) {
+    return(TRUE)
+  } else {
+    if (inherits(x$so, "try-error")) {
+      return(TRUE)
+    } else {
+      return(FALSE)
+    }
+  }
+}
+
 #' @export
 AIC.mhmkin <- function(object, ..., k = 2) {
-  if (inherits(object[[1]], "saem.mmkin")) {
-    check_failed <- function(x) if (inherits(x$so, "try-error")) TRUE else FALSE
-  }
   res <- sapply(object, function(x) {
     if (check_failed(x)) return(NA)
     else return(AIC(x$so, k = k))
@@ -235,9 +246,6 @@ AIC.mhmkin <- function(object, ..., k = 2) {
 
 #' @export
 BIC.mhmkin <- function(object, ...) {
-  if (inherits(object[[1]], "saem.mmkin")) {
-    check_failed <- function(x) if (inherits(x$so, "try-error")) TRUE else FALSE
-  }
   res <- sapply(object, function(x) {
     if (check_failed(x)) return(NA)
     else return(BIC(x$so))
@@ -280,7 +288,13 @@ anova.mhmkin <- function(object, ...,
   if (identical(model.names, "auto")) {
     model.names <- outer(rownames(object), colnames(object), paste)
   }
-  rlang::inject(anova(!!!(object), method = method, test = test,
+  failed_index <- which(sapply(object, check_failed), arr.ind = TRUE)
+  if (length(failed_index > 0)) {
+    rlang::inject(anova(!!!(object[-failed_index]), method = method, test = test,
+      model.names = model.names[-failed_index]))
+  } else {
+    rlang::inject(anova(!!!(object), method = method, test = test,
       model.names = model.names))
+  }
 }
 
