@@ -61,16 +61,21 @@ create_deg_func <- function(spec, use_of_ff = c("min", "max")) {
     ),
   ")")
 
-  if (length(obs_vars) >= 2) {
-    supported <- FALSE # except for the following cases
+  if (length(obs_vars) >= 2) supported <- FALSE
+  # Except for the following cases:
+
+  if (length(obs_vars) == 2) {
     n1 <- obs_vars[1]
     n2 <- obs_vars[2]
     n10 <- paste0("odeini['", parent, "']")
     n20 <- paste0("odeini['", n2, "']")
 
     # sfo_sfo
-    if (all(spec[[1]]$sink == FALSE, length(obs_vars) == 2,
-        spec[[1]]$type == "SFO", spec[[2]]$type == "SFO")) {
+    if (all(
+        spec[[1]]$sink == FALSE,
+        spec[[1]]$type == "SFO",
+        spec[[2]]$type == "SFO",
+        is.null(spec[[2]]$to))) {
       supported <- TRUE
       k1 <- k_parent
       k2 <- paste0("k_", n2, if(min_ff) "_sink" else "")
@@ -80,8 +85,12 @@ create_deg_func <- function(spec, use_of_ff = c("min", "max")) {
     }
 
     # sfo_f12_sfo
-    if (all(use_of_ff == "max", spec[[1]]$sink == TRUE, length(obs_vars) == 2,
-        spec[[1]]$type == "SFO", spec[[2]]$type == "SFO")) {
+    if (all(
+        use_of_ff == "max",
+        spec[[1]]$sink == TRUE,
+        spec[[1]]$type == "SFO",
+        spec[[2]]$type == "SFO",
+        is.null(spec[[2]]$to))) {
       supported <- TRUE
       k1 <- k_parent
       k2 <- paste0("k_", n2)
@@ -92,8 +101,12 @@ create_deg_func <- function(spec, use_of_ff = c("min", "max")) {
     }
 
     # sfo_k120_sfo
-    if (all(use_of_ff == "min", spec[[1]]$sink == TRUE, length(obs_vars) == 2,
-        spec[[1]]$type == "SFO", spec[[2]]$type == "SFO")) {
+    if (all(
+        use_of_ff == "min",
+        spec[[1]]$sink == TRUE,
+        spec[[1]]$type == "SFO",
+        spec[[2]]$type == "SFO",
+        is.null(spec[[2]]$to))) {
       supported <- TRUE
       k12 <- paste0("k_", n1, "_", n2)
       k10 <- paste0("k_", n1, "_sink")
@@ -104,8 +117,12 @@ create_deg_func <- function(spec, use_of_ff = c("min", "max")) {
     }
 
     # dfop_f12_sfo
-    if (all(use_of_ff == "max", spec[[1]]$sink == TRUE, length(obs_vars) == 2,
-        spec[[1]]$type == "DFOP", spec[[2]]$type == "SFO")) {
+    if (all(
+        use_of_ff == "max",
+        spec[[1]]$sink == TRUE,
+        spec[[1]]$type == "DFOP",
+        spec[[2]]$type == "SFO",
+        is.null(spec[[2]]$to))) {
       supported <- TRUE
       f12 <- paste0("f_", n1, "_to_", n2)
       k2 <- paste0("k_", n2)
@@ -118,7 +135,6 @@ create_deg_func <- function(spec, use_of_ff = c("min", "max")) {
     }
 
   }
-
 
   if (supported) {
     deg_func <- function(observed, odeini, odeparms) {}
