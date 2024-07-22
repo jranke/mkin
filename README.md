@@ -2,7 +2,7 @@
 
 [![](https://www.r-pkg.org/badges/version/mkin)](https://cran.r-project.org/package=mkin)
 [![mkin status badge](https://jranke.r-universe.dev/badges/mkin)](https://jranke.r-universe.dev/ui/#package:mkin)
-[![Build Status](https://travis-ci.com/jranke/mkin.svg?branch=main)](https://app.travis-ci.com/github/jranke/mkin)
+[![Build Status](https://app.travis-ci.com/jranke/mkin.svg?token=Sq9VuYWyRz2FbBLxu6DK&branch=main)](https://app.travis-ci.com/jranke/mkin)
 [![codecov](https://codecov.io/github/jranke/mkin/branch/main/graphs/badge.svg)](https://app.codecov.io/gh/jranke/mkin)
 
 The [R](https://www.r-project.org) package **mkin** provides calculation routines for the analysis of
