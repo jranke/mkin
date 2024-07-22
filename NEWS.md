@@ -1,3 +1,7 @@
+# mkin 1.2.9
+
+- 'R/create_deg_func.R: Make sure that no reversible reactions are specified in the case of two observed variables, as this is not supported
+
 # mkin 1.2.8
 
 - 'R/{mhmkin,status}.R': Deal with 'saem' fits that fail when updating an 'mhmkin' object
