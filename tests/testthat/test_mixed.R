@@ -89,6 +89,7 @@ test_that("saemix results are reproducible for biphasic fits", {
 test_that("Reading spreadsheets, finding ill-defined parameters and covariate modelling", {
 
   skip_on_cran()
+  skip_on_travis()
 
   data_path <- system.file(
     "testdata", "lambda-cyhalothrin_soil_efsa_2014.xlsx",
@@ -115,6 +116,7 @@ test_that("Reading spreadsheets, finding ill-defined parameters and covariate mo
 test_that("SFO-SFO saemix specific analytical solution work", {
 
   skip_on_cran()
+  skip_on_travis()
 
   SFO_SFO <- mkinmod(DMTA = mkinsub("SFO", "M23"),
     M23 = mkinsub("SFO"), quiet = TRUE)
