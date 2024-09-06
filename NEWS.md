@@ -1,5 +1,7 @@
 # mkin 1.2.9
 
+- 'R/parplot.R': Support multistart objects with covariate models and filter negative values of scaled parameters (with a warning) for plotting.
+
 - 'R/create_deg_func.R: Make sure that no reversible reactions are specified in the case of two observed variables, as this is not supported
 
 # mkin 1.2.8
