@@ -4,11 +4,11 @@
 
 - 'R/create_deg_func.R: Make sure that no reversible reactions are specified in the case of two observed variables, as this is not supported
 
-# mkin 1.2.8
+# mkin 1.2.8 (unreleased)
 
 - 'R/{mhmkin,status}.R': Deal with 'saem' fits that fail when updating an 'mhmkin' object
 
-# mkin 1.2.7
+# mkin 1.2.7 (unreleased)
 
 - 'R/illparms.R': Fix a bug that prevented an ill-defined random effect to be found if there was only one random effect in the model. Also add a test for this.
 
