@@ -39,7 +39,8 @@ model to be fitted to the data, or one of the shorthand names ("SFO",
 parent only degradation model is generated for the variable with the
 highest value in \code{observed}.}
 
-\item{observed}{A dataframe with the observed data.  The first column called
+\item{observed}{A dataframe or an object coercible to a dataframe
+(e.g. a \code{tibble}) with the observed data.  The first column called
 "name" must contain the name of the observed variable for each data point.
 The second column must contain the times of observation, named "time".
 The third column must be named "value" and contain the observed values.
