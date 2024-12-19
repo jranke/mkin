@@ -1,5 +1,7 @@
 # mkin 1.2.9
 
+- 'R/plot.mixed.R': Support more than 25 datasets
+
 - 'R/mkinfit.R': Support passing the observed data as a 'tibble'
 
 - 'R/parplot.R': Support multistart objects with covariate models and filter negative values of scaled parameters (with a warning) for plotting.
