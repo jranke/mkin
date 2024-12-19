@@ -93,7 +93,7 @@ plot.mixed.mmkin <- function(x,
   nrow.legend = ceiling((length(i) + 1) / ncol.legend),
   rel.height.legend = 0.02 + 0.07 * nrow.legend,
   rel.height.bottom = 1.1,
-  pch_ds = c(1:25, 32:127)[1:length(i)],
+  pch_ds = c(1:25, 33, 35:38, 40:41, 47:57, 60:90)[1:length(i)],
   col_ds = pch_ds + 1,
   lty_ds = col_ds,
   frame = TRUE, ...
