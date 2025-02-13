@@ -2,7 +2,7 @@
 
 <!-- badges: start -->
 [![](https://www.r-pkg.org/badges/version/mkin)](https://cran.r-project.org/package=mkin)
-[![mkin status badge](https://jranke.r-universe.dev/badges/mkin)](https://jranke.r-universe.dev/ui/#package:mkin)
+[![mkin status badge](https://jranke.r-universe.dev/badges/mkin)](https://jranke.r-universe.dev/#package:mkin)
 [![Build Status](https://app.travis-ci.com/jranke/mkin.svg?token=Sq9VuYWyRz2FbBLxu6DK&branch=main)](https://app.travis-ci.com/jranke/mkin)
 <!-- badges: end -->
 

@@ -15,7 +15,7 @@ nlme_data(object)
 \value{
 A function that can be used with nlme
 
-A \code{\link{groupedData}} object
+A \code{nlme::groupedData} object
 }
 \description{
 These functions facilitate setting up a nonlinear mixed effects model for
