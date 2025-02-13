@@ -71,7 +71,7 @@ parent compound.}
 \item{use_symbols}{If set to \code{TRUE} (default), symbol info present in
 the \link{mkinmod} object is used if available for accessing compiled code}
 
-\item{method.ode}{The solution method passed via \link{mkinpredict} to \link[deSolve:ode]{deSolve::ode}] in
+\item{method.ode}{The solution method passed via \link{mkinpredict} to \code{deSolve::ode()} in
 case the solution type is "deSolve" and we are not using compiled code.
 When using compiled code, only lsoda is supported.}
 
@@ -86,11 +86,7 @@ the observed variables (default) or for all state variables (if set to
 FALSE). Setting this to FALSE has no effect for analytical solutions,
 as these always return mapped output.}
 
-<<<<<<< HEAD
-\item{na_stop}{Should it be an error if \link[deSolve:ode]{deSolve::ode} returns NaN values}
-=======
 \item{na_stop}{Should it be an error if \code{deSolve::ode()} returns NaN values}
->>>>>>> devel
 }
 \value{
 A matrix with the numeric solution in wide format
