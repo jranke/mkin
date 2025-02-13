@@ -126,7 +126,7 @@ nlme_function <- function(object) {
 
 #' @rdname nlme
 #' @importFrom rlang !!!
-#' @return A \code{\link{groupedData}} object
+#' @return A `nlme::groupedData` object
 #' @export
 nlme_data <- function(object) {
   if (nrow(object) > 1) stop("Only row objects allowed")
