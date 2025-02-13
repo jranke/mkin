@@ -1,7 +1,7 @@
 ---
 title: "Testing hierarchical pathway kinetics with residue data on cyantraniliprole"
 author: Johannes Ranke
-date: Last change on 20 April 2023, last compiled on `r format(Sys.time(), "%e
+date: Last change on 13 February 2023, last compiled on `r format(Sys.time(), "%e
   %B %Y")`
 output:
   pdf_document:
@@ -240,11 +240,12 @@ because it relies on the Fisher Information Matrix.
 illparms(f_saem_1) |> kable()
 ```
 
-The model comparison below suggests that the pathway fits using
+The model comparisons below suggest that the pathway fits using
 DFOP or SFORB for the parent compound provide the best fit.
 
 ```{r, dependson = "f-saem-1"}
-anova(f_saem_1) |> kable(digits = 1)
+anova(f_saem_1[, "const"]) |> kable(digits = 1)
+anova(f_saem_1[1:4, ]) |> kable(digits = 1)
 ```
 
 For these two parent model, successful fits are shown below. Plots of the fits
@@ -344,18 +345,21 @@ f_saem_2 <- mhmkin(list(f_sep_2_const, f_sep_2_tc),
 status(f_saem_2) |> kable()
 ```
 
-The hierarchical fits for the alternative pathway completed successfully.
+The hierarchical fits for the alternative pathway completed successfully, with
+the exception of the model using FOMC for the parent compound and constant
+variance as the error model.
 
 ```{r dependson = "f-saem-2"}
 illparms(f_saem_2) |> kable()
 ```
 
-In both fits, the random effects for the formation fractions for the
-pathways from JCZ38 to JSE76, and for the reverse pathway from JSE76
-to JCZ38 are ill-defined.
+In all biphasic fits (DFOP or SFORB for the parent compound), the random
+effects for the formation fractions for the pathways from JCZ38 to JSE76, and
+for the reverse pathway from JSE76 to JCZ38 are ill-defined.
 
 ```{r dependson = "f-saem-2"}
-anova(f_saem_2) |> kable(digits = 1)
+anova(f_saem_2[, "tc"]) |> kable(digits = 1)
+anova(f_saem_2[2:3,]) |> kable(digits = 1)
 ```
 
 The variants using the biexponential models DFOP and SFORB for the parent
@@ -423,7 +427,8 @@ illparms(f_saem_3) |> kable()
 ```
 
 ```{r dependson = "f-saem-3"}
-anova(f_saem_3) |> kable(digits = 1)
+anova(f_saem_3[, "tc"]) |> kable(digits = 1)
+anova(f_saem_3[2:3,]) |> kable(digits = 1)
 ```
 
 While the AIC and BIC values of the best fit (DFOP pathway fit with
