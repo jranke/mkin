@@ -165,7 +165,7 @@ test_that("illparms finds a single random effect that is ill-defined", {
       c(parent = sfo_pop$parent_0), sampling_times)
     add_err(ds_mean, tc, n = 1)[[1]]
   })
-  m_mmkin <- mmkin("SFO", ds_sfo, error_model = "tc", quiet = TRUE)
+  m_mmkin <- mmkin("SFO", ds_sfo, error_model = "tc", quiet = TRUE, cores = n_cores)
   m_saem_1 <- saem(m_mmkin)
   expect_equal(
     as.character(illparms(m_saem_1)),
