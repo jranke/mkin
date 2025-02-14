@@ -35,9 +35,6 @@ parplot.multistart.saem.mmkin <- function(object, llmin = -Inf, llquant = NA,
   scale = c("best", "median"),
   lpos = "bottomleft", main = "", ...)
 {
-  oldpar <- par(no.readonly = TRUE)
-  on.exit(par(oldpar, no.readonly = TRUE))
-
   orig <- attr(object, "orig")
   orig_parms <- parms(orig)
   start_degparms <- orig$mean_dp_start
@@ -59,11 +56,10 @@ parplot.multistart.saem.mmkin <- function(object, llmin = -Inf, llquant = NA,
   selected <- which(ll > llmin)
   selected_parms <- all_parms[selected, ]
 
-  par(las = 1)
   if (orig$transformations == "mkin") {
     degparm_names_transformed <- names(start_degparms)
     degparm_index <- which(names(orig_parms) %in% degparm_names_transformed)
-    orig_parms[degparm_names_transformed] <- backtransform_odeparms(
+    orig_degparms <- backtransform_odeparms(
       orig_parms[degparm_names_transformed],
       orig$mmkin[[1]]$mkinmod,
       transform_rates = orig$mmkin[[1]]$transform_rates,
@@ -74,14 +70,17 @@ parplot.multistart.saem.mmkin <- function(object, llmin = -Inf, llquant = NA,
       transform_fractions = orig$mmkin[[1]]$transform_fractions)
     degparm_names <- names(start_degparms)
 
-    names(orig_parms) <- c(degparm_names, names(orig_parms[-degparm_index]))
+    orig_parms_back <- orig_parms
+    orig_parms_back[degparm_index] <- orig_degparms
+    names(orig_parms_back)[degparm_index] <- degparm_names
+    orig_parms <- orig_parms_back
 
     selected_parms[, degparm_names_transformed] <-
       t(apply(selected_parms[, degparm_names_transformed], 1, backtransform_odeparms,
       orig$mmkin[[1]]$mkinmod,
       transform_rates = orig$mmkin[[1]]$transform_rates,
       transform_fractions = orig$mmkin[[1]]$transform_fractions))
-    colnames(selected_parms)[1:length(degparm_names)] <- degparm_names
+    colnames(selected_parms)[degparm_index] <- degparm_names
   }
 
   start_errparms <- orig$so@model@error.init
@@ -99,6 +98,12 @@ parplot.multistart.saem.mmkin <- function(object, llmin = -Inf, llquant = NA,
 
   # Boxplots of all scaled parameters
   selected_scaled_parms <- t(apply(selected_parms, 1, function(x) x / parm_scale))
+  i_negative <- selected_scaled_parms <= 0
+  parms_with_negative_scaled_values <- paste(names(which(apply(i_negative, 2, any))), collapse = ", ")
+  if (any(i_negative)) {
+    warning("There are negative values for ", parms_with_negative_scaled_values, " which are set to NA for plotting")
+  }
+  selected_scaled_parms[i_negative] <- NA
   boxplot(selected_scaled_parms, log = "y", main = main, ,
     ylab = "Normalised parameters", ...)
 

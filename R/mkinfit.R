@@ -21,7 +21,8 @@ utils::globalVariables(c("name", "time", "value"))
 #'   "FOMC", "DFOP", "HS", "SFORB", "IORE"). If a shorthand name is given, a
 #'   parent only degradation model is generated for the variable with the
 #'   highest value in \code{observed}.
-#' @param observed A dataframe with the observed data.  The first column called
+#' @param observed A dataframe or an object coercible to a dataframe
+#'   (e.g. a \code{tibble}) with the observed data.  The first column called
 #'   "name" must contain the name of the observed variable for each data point.
 #'   The second column must contain the times of observation, named "time".
 #'   The third column must be named "value" and contain the observed values.
@@ -291,6 +292,9 @@ mkinfit <- function(mkinmod, observed,
 
   # Get the names of observed variables
   obs_vars <- names(mkinmod$spec)
+
+  # Coerce observed data to a dataframe
+  observed <- as.data.frame(observed)
 
   # Subset observed data with names of observed data in the model and remove NA values
   observed <- subset(observed, name %in% obs_vars)

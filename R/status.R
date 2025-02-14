@@ -74,15 +74,19 @@ print.status.mmkin <- function(x, ...) {
 status.mhmkin <- function(object, ...) {
   if (inherits(object[[1]], "saem.mmkin")) {
     test_func <- function(fit) {
-      if (inherits(fit$so, "try-error")) {
-        return("E")
+      if (inherits(fit, "try-error")) {
+          return("E")
       } else {
-        if (!is.null(fit$FIM_failed)) {
-          return_values <- c("fixed effects" = "Fth",
-            "random effects and error model parameters" = "FO")
-          return(paste(return_values[fit$FIM_failed], collapse = ", "))
+        if (inherits(fit$so, "try-error")) {
+          return("E")
         } else {
-          return("OK")
+          if (!is.null(fit$FIM_failed)) {
+            return_values <- c("fixed effects" = "Fth",
+              "random effects and error model parameters" = "FO")
+            return(paste(return_values[fit$FIM_failed], collapse = ", "))
+          } else {
+            return("OK")
+          }
         }
       }
     }

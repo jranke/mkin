@@ -125,8 +125,7 @@ pd_all: roxygen
 	git add -A
 
 coverage:
-	mkdir -p docs/dev/coverage
-	"$(RBIN)/Rscript" -e "covr::report(file = 'coverage/coverage.html')"
+	"$(RBIN)/Rscript" -e "covr::report(file = 'docs/coverage/coverage.html')"
 
 r-forge:
 	git archive main > $(HOME)/git/mkin/mkin.tar;\

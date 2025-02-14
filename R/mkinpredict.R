@@ -22,7 +22,7 @@
 #' variables. The third possibility "eigen" is fast in comparison to uncompiled
 #' ODE models, but not applicable to some models, e.g. using FOMC for the
 #' parent compound.
-#' @param method.ode The solution method passed via [mkinpredict] to [ode]] in
+#' @param method.ode The solution method passed via [mkinpredict] to `deSolve::ode()` in
 #' case the solution type is "deSolve" and we are not using compiled code.
 #' When using compiled code, only lsoda is supported.
 #' @param use_compiled If set to \code{FALSE}, no compiled version of the
@@ -36,7 +36,7 @@
 #'   the observed variables (default) or for all state variables (if set to
 #'   FALSE). Setting this to FALSE has no effect for analytical solutions,
 #'   as these always return mapped output.
-#' @param na_stop Should it be an error if [ode] returns NaN values
+#' @param na_stop Should it be an error if `deSolve::ode()` returns NaN values
 #' @param \dots Further arguments passed to the ode solver in case such a
 #'   solver is used.
 #' @return A matrix with the numeric solution in wide format

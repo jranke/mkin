@@ -1,117 +1,51 @@
 ℹ Testing mkin
-✔ | F W S  OK | Context
-✔ |         5 | AIC calculation
-✔ |         5 | Analytical solutions for coupled models [1.5s]
-✔ |         5 | Calculation of Akaike weights
-✔ |         3 | Export dataset for reading into CAKE
-✔ |         6 | Use of precompiled symbols in mkinpredict [3.1s]
-✔ |        12 | Confidence intervals and p-values [0.4s]
-✔ |     1  12 | Dimethenamid data from 2018 [13.2s]
-────────────────────────────────────────────────────────────────────────────────
-Skip ('test_dmta.R:88:3'): Different backends get consistent results for SFO-SFO3+, dimethenamid data
-Reason: Fitting this ODE model with saemix takes about 5 minutes on my new system
-────────────────────────────────────────────────────────────────────────────────
-✔ |        14 | Error model fitting [2.5s]
-✔ |         5 | Time step normalisation
-✔ |         4 | Calculation of FOCUS chi2 error levels [0.3s]
-✔ |        14 | Results for FOCUS D established in expertise for UBA (Ranke 2014) [0.4s]
-✔ |         4 | Test fitting the decline of metabolites from their maximum [0.2s]
-✔ |         1 | Fitting the logistic model [0.1s]
-✔ |        10 | Batch fitting and diagnosing hierarchical kinetic models [19.0s]
-✖ | 1   2  15 | Nonlinear mixed-effects models [149.2s]
-────────────────────────────────────────────────────────────────────────────────
-Failure ('test_mixed.R:21:3'): Print methods work
-Results have changed from known value recorded in 'print_dfop_saem_1.txt'.
-
-old[13:23] vs new[13:23]
-  ""
-  "Fitted parameters:"
-  "          estimate lower  upper"
-- "parent_0     99.92 98.77 101.06"
-+ "parent_0     99.96 98.82 101.11"
-- "log_k1       -2.72 -2.95  -2.50"
-+ "log_k1       -2.71 -2.94  -2.49"
-- "log_k2       -4.14 -4.27  -4.01"
-+ "log_k2       -4.14 -4.26  -4.01"
-- "g_qlogis     -0.35 -0.53  -0.16"
-+ "g_qlogis     -0.36 -0.54  -0.17"
-- "a.1           0.92  0.68   1.16"
-+ "a.1           0.93  0.69   1.17"
-  "b.1           0.05  0.04   0.06"
-  "SD.log_k1     0.37  0.23   0.51"
-and 1 more ...
-
-Skip ('test_mixed.R:80:3'): saemix results are reproducible for biphasic fits
-Reason: Fitting with saemix takes around 10 minutes when using deSolve
-
-Skip ('test_mixed.R:133:3'): SFO-SFO saemix specific analytical solution work
-Reason: This is seldom used, so save some time
-────────────────────────────────────────────────────────────────────────────────
-✔ |         3 | Test dataset classes mkinds and mkindsg
-✔ |        10 | Special cases of mkinfit calls [0.3s]
-✔ |         3 | mkinfit features [0.5s]
-✔ |         8 | mkinmod model generation and printing
-✔ |         3 | Model predictions with mkinpredict [0.1s]
-✖ | 3       9 | Multistart method for saem.mmkin models [23.2s]
-────────────────────────────────────────────────────────────────────────────────
-Failure ('test_multistart.R:44:3'): multistart works for saem.mmkin models
-Snapshot of `testcase` to 'multistart/mixed-model-fit-for-saem-object-with-mkin-transformations.svg' has changed
-Run `testthat::snapshot_review('multistart/')` to review changes
-Backtrace:
- 1. vdiffr::expect_doppelganger(...)
-      at test_multistart.R:44:2
- 3. testthat::expect_snapshot_file(...)
-
-Failure ('test_multistart.R:55:3'): multistart works for saem.mmkin models
-Snapshot of `testcase` to 'multistart/llhist-for-dfop-sfo-fit.svg' has changed
-Run `testthat::snapshot_review('multistart/')` to review changes
-Backtrace:
- 1. vdiffr::expect_doppelganger("llhist for dfop sfo fit", llhist_dfop_sfo)
-      at test_multistart.R:55:2
- 3. testthat::expect_snapshot_file(...)
-
-Failure ('test_multistart.R:56:3'): multistart works for saem.mmkin models
-Snapshot of `testcase` to 'multistart/parplot-for-dfop-sfo-fit.svg' has changed
-Run `testthat::snapshot_review('multistart/')` to review changes
-Backtrace:
- 1. vdiffr::expect_doppelganger("parplot for dfop sfo fit", parplot_dfop_sfo)
-      at test_multistart.R:56:2
- 3. testthat::expect_snapshot_file(...)
-────────────────────────────────────────────────────────────────────────────────
-✔ |        16 | Evaluations according to 2015 NAFTA guidance [1.6s]
-✔ |         9 | Nonlinear mixed-effects models with nlme [3.8s]
-✖ | 1      14 | Plotting [4.7s]
-────────────────────────────────────────────────────────────────────────────────
-Failure ('test_plot.R:55:3'): Plotting mkinfit, mmkin and mixed model objects is reproducible
-Snapshot of `testcase` to 'plot/mixed-model-fit-for-nlme-object.svg' has changed
-Run `testthat::snapshot_review('plot/')` to review changes
-Backtrace:
- 1. vdiffr::expect_doppelganger(...)
-      at test_plot.R:55:2
- 3. testthat::expect_snapshot_file(...)
-────────────────────────────────────────────────────────────────────────────────
-✔ |         4 | Residuals extracted from mkinfit models
-✔ |     1  36 | saemix parent models [31.4s]
-────────────────────────────────────────────────────────────────────────────────
-Skip ('test_saemix_parent.R:143:3'): We can also use mkin solution methods for saem
-Reason: This still takes almost 2.5 minutes although we do not solve ODEs
-────────────────────────────────────────────────────────────────────────────────
-✔ |         2 | Complex test case from Schaefer et al. (2007) Piacenza paper [0.5s]
-✔ |        11 | Processing of residue series
-✔ |        10 | Fitting the SFORB model [1.7s]
-✔ |         1 | Summaries of old mkinfit objects
-✔ |         5 | Summary
-✔ |         4 | Results for synthetic data established in expertise for UBA (Ranke 2014) [0.8s]
-✔ |         9 | Hypothesis tests [2.9s]
-✔ |         4 | Calculation of maximum time weighted average concentrations (TWAs) [0.7s]
+✔ | F W  S  OK | Context
+✔ |          5 | AIC calculation
+✔ |          5 | Analytical solutions for coupled models [1.6s]
+✔ |          5 | Calculation of Akaike weights
+✔ |          3 | Export dataset for reading into CAKE
+✔ |          6 | Use of precompiled symbols in mkinpredict [3.3s]
+✔ |         12 | Confidence intervals and p-values
+✔ |      1  12 | Dimethenamid data from 2018 [13.3s]
+✔ |         14 | Error model fitting [2.7s]
+✔ |          5 | Time step normalisation
+✔ |          4 | Calculation of FOCUS chi2 error levels
+✔ |         14 | Results for FOCUS D established in expertise for UBA (Ranke 2014)
+✔ |          4 | Test fitting the decline of metabolites from their maximum
+✔ |          1 | Fitting the logistic model
+✔ |         10 | Batch fitting and diagnosing hierarchical kinetic models [19.7s]
+✔ |      2  16 | Nonlinear mixed-effects models [148.2s]
+✔ |          3 | Test dataset classes mkinds and mkindsg
+✔ |         10 | Special cases of mkinfit calls
+✔ |          3 | mkinfit features
+✔ |          8 | mkinmod model generation and printing
+✔ |          3 | Model predictions with mkinpredict
+✔ |         12 | Multistart method for saem.mmkin models [23.7s]
+✔ |         16 | Evaluations according to 2015 NAFTA guidance [1.6s]
+✔ |          9 | Nonlinear mixed-effects models with nlme [4.2s]
+✔ |         15 | Plotting [4.6s]
+✔ |          4 | Residuals extracted from mkinfit models
+✔ |      1  38 | saemix parent models [35.9s]
+✔ |          2 | Complex test case from Schaefer et al. (2007) Piacenza paper
+✔ |         11 | Processing of residue series
+✔ |         10 | Fitting the SFORB model [1.7s]
+✔ |          1 | Summaries of old mkinfit objects
+✔ |          5 | Summary
+✔ |          4 | Results for synthetic data established in expertise for UBA (Ranke 2014)
+✔ |          9 | Hypothesis tests [2.9s]
+✔ |          4 | Calculation of maximum time weighted average concentrations (TWAs)
+✔ |          2 | water-sediment
 
 ══ Results ═════════════════════════════════════════════════════════════════════
-Duration: 262.6 s
+Duration: 268.8 s
 
-── Skipped tests  ──────────────────────────────────────────────────────────────
-• Fitting this ODE model with saemix takes about 5 minutes on my new system (1)
-• Fitting with saemix takes around 10 minutes when using deSolve (1)
-• This is seldom used, so save some time (1)
-• This still takes almost 2.5 minutes although we do not solve ODEs (1)
+── Skipped tests (4) ───────────────────────────────────────────────────────────
+• Fitting this ODE model with saemix takes about 5 minutes on my new system
+  (1): 'test_dmta.R:88:3'
+• Fitting with saemix takes around 10 minutes when using deSolve (1):
+  'test_mixed.R:80:3'
+• This is seldom used, so save some time (1): 'test_mixed.R:135:3'
+• This still takes almost 2.5 minutes although we do not solve ODEs (1):
+  'test_saemix_parent.R:143:3'
 
-[ FAIL 5 | WARN 0 | SKIP 4 | PASS 276 ]
+[ FAIL 0 | WARN 0 | SKIP 4 | PASS 285 ]

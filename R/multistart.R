@@ -40,7 +40,7 @@
 #' f_mmkin <- mmkin("DFOP", dmta_ds, error_model = "tc", cores = 7, quiet = TRUE)
 #' f_saem_full <- saem(f_mmkin)
 #' f_saem_full_multi <- multistart(f_saem_full, n = 16, cores = 16)
-#' parplot(f_saem_full_multi, lpos = "topleft")
+#' parplot(f_saem_full_multi, lpos = "topleft", las = 2)
 #' illparms(f_saem_full)
 #'
 #' f_saem_reduced <- update(f_saem_full, no_random_effect = "log_k2")
@@ -50,7 +50,7 @@
 #' library(parallel)
 #' cl <- makePSOCKcluster(12)
 #' f_saem_reduced_multi <- multistart(f_saem_reduced, n = 16, cluster = cl)
-#' parplot(f_saem_reduced_multi, lpos = "topright", ylim = c(0.5, 2))
+#' parplot(f_saem_reduced_multi, lpos = "topright", ylim = c(0.5, 2), las = 2)
 #' stopCluster(cl)
 #' }
 multistart <- function(object, n = 50,

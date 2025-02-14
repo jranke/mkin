@@ -44,13 +44,16 @@ test_that("multistart works for saem.mmkin models", {
   vdiffr::expect_doppelganger("mixed model fit for saem object with mkin transformations", plot_dfop_sfo_saem_m)
 
   llhist_sfo <- function() llhist(saem_sfo_s_multi)
-  parplot_sfo <- function() parplot(saem_sfo_s_multi, ylim = c(0.5, 2))
+  parplot_sfo <- function() parplot(saem_sfo_s_multi, ylim = c(0.5, 2), las = 1)
   vdiffr::expect_doppelganger("llhist for sfo fit", llhist_sfo)
   vdiffr::expect_doppelganger("parplot for sfo fit", parplot_sfo)
 
   llhist_dfop_sfo <- function() llhist(saem_dfop_sfo_m_multi)
-  parplot_dfop_sfo <- function() parplot(saem_dfop_sfo_m_multi,
-    ylim = c(0.5, 2), llquant = 0.5)
+  parplot_dfop_sfo <- function() {
+    par(mar = c(10.1, 4.1, 2.1, 2.1))
+    parplot(saem_dfop_sfo_m_multi,
+      ylim = c(0.5, 2), llquant = 0.5, las = 2)
+  }
 
   vdiffr::expect_doppelganger("llhist for dfop sfo fit", llhist_dfop_sfo)
   vdiffr::expect_doppelganger("parplot for dfop sfo fit", parplot_dfop_sfo)

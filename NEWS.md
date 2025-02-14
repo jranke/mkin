@@ -1,8 +1,22 @@
-# mkin 1.2.7
+# mkin 1.2.9
 
-- 
+- 'R/plot.mixed.R': Support more than 25 datasets
 
-# mkin 1.2.6
+- 'R/mkinfit.R': Support passing the observed data as a 'tibble'
+
+- 'R/parplot.R': Support multistart objects with covariate models and filter negative values of scaled parameters (with a warning) for plotting.
+
+- 'R/create_deg_func.R: Make sure that no reversible reactions are specified in the case of two observed variables, as this is not supported
+
+# mkin 1.2.8 (unreleased)
+
+- 'R/{mhmkin,status}.R': Deal with 'saem' fits that fail when updating an 'mhmkin' object
+
+# mkin 1.2.7 (unreleased)
+
+- 'R/illparms.R': Fix a bug that prevented an ill-defined random effect to be found if there was only one random effect in the model. Also add a test for this.
+
+# mkin 1.2.6 (2023-10-14)
 
 - 'inst/rmarkdown/templates/hierarchical_kinetics/skeleton/skeleton.Rmd': Fix an erroneous call to the 'endpoints()' function
 
