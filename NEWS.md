@@ -1,4 +1,8 @@
-# mkin 1.2.9
+# mkin 1.2.9.9000 (unreleased)
+
+
+
+# mkin 1.2.9 (2024-02-13)
 
 - 'R/plot.mixed.R': Support more than 25 datasets
 
