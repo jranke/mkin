@@ -40,7 +40,7 @@ test_that("Fits without internal transformations are correct for FOCUS D", {
     fit.ff.notrans <- mkinfit(SFO_SFO.ff, FOCUS_2006_D,
       transform_fractions = FALSE, transform_rates = FALSE,
       quiet = TRUE, solution_type = "deSolve"),
-    "sum of formation fractions")
+    "The sum of formation fractions may exceed one")
 
   expect_equivalent(round(fit.ff.notrans$bparms.optim, c(2, 4, 4, 4)),
                     c(99.60, 0.0987, 0.0053, 0.5145))
