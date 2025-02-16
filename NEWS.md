@@ -1,8 +1,12 @@
-# mkin 1.2.9.9000 (unreleased)
+# mkin 1.2.10 (unreleased)
 
+## Bug fixes
 
+- 'R/mkinpredict.R': Predictions and fits using solution type "deSolve" were previously incorrect in case there are no observed data for time zero (GitHub issue #16).
 
 # mkin 1.2.9 (2024-02-13)
+
+## New features 
 
 - 'R/plot.mixed.R': Support more than 25 datasets
 

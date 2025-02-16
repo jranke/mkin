@@ -172,6 +172,15 @@ mkinpredict.mkinmod <- function(x,
   }
 
   if (solution_type == "deSolve") {
+
+    # We need to make sure that 0 is included in outtimes,
+    # even if we do not have observed data for time zero,
+    # because otherwise the initial values are not applied
+    # to time zero but to the time of the first observation
+    # in the data
+    if (min(outtimes) > 0) outtimes_deSolve <- c(0, outtimes)
+    else outtimes_deSolve <- outtimes
+
     if (!is.null(x$cf) & use_compiled[1] != FALSE) {
 
       if (!is.null(x$symbols) & use_symbols) {
@@ -182,7 +191,7 @@ mkinpredict.mkinmod <- function(x,
 
       out <- deSolve::lsoda(
         y = odeini,
-        times = outtimes,
+        times = outtimes_deSolve,
         func = lsoda_func,
         initfunc = "initpar",
         dllname = x$dll_info[["name"]],
@@ -209,7 +218,7 @@ mkinpredict.mkinmod <- function(x,
       }
       out <- deSolve::ode(
         y = odeini,
-        times = outtimes,
+        times = outtimes_deSolve,
         func = mkindiff,
         parms = odeparms,
         method = method.ode,
@@ -219,6 +228,13 @@ mkinpredict.mkinmod <- function(x,
         ...
       )
     }
+
+    # Now we need to remove time zero, in case we did not 
+    # have observations for it
+    if (min(outtimes) > 0) {
+      out <- out[-1, ]
+    }
+
     n_out_na <- sum(is.na(out))
     if (n_out_na > 0 & na_stop) {
       cat("odeini:\n")
