@@ -122,7 +122,7 @@ From the refined fits, the most suitable model is selected using the AIC.
 
 ```{r parent-best, dependson = "parent-mhmkin"}
 aic_parent <- AIC(parent_mhmkin_refined)
-min_aic <- which(aic_parent == min(aic_parent), arr.ind = TRUE)
+min_aic <- which(aic_parent == min(aic_parent, na.rm = TRUE), arr.ind = TRUE)
 best_degmod_parent <- rownames(aic_parent)[min_aic[1]]
 best_errmod_parent <- colnames(aic_parent)[min_aic[2]]
 anova(parent_mhmkin_refined) |> kable(digits = 1)
