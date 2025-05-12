@@ -2,6 +2,8 @@
 
 ## Bug fixes
 
+- 'inst/rmarkdown/templates/hierarchical_kinetics/skeleton/skeleton.Rmd': Make parent model selection more robust
+
 - 'R/mkinpredict.R': Predictions and fits using solution type "deSolve" were previously incorrect in case there are no observed data for time zero (GitHub issue #16).
 
 # mkin 1.2.9 (2024-02-13)
