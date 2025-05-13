@@ -1,13 +1,16 @@
 ---
 title: "Testing covariate modelling in hierarchical parent degradation kinetics with residue data on mesotrione"
-author: Johannes Ranke
-date: Last change on 4 August 2023, last compiled on `r format(Sys.time(), "%e
-  %B %Y")`
+author: "Johannes Ranke"
+date: Last change 13 May 2025 (rebuilt `r Sys.Date()`)
 output:
-  pdf_document:
-    extra_dependencies: ["float", "listing"]
-toc: yes
-geometry: margin=2cm
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: show
+    fig_retina: null
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, echo = FALSE, cache = FALSE}
@@ -125,7 +128,7 @@ is larger, with convergence problems appearing for a number of non-SFO fits.
 
 \clearpage
 
-# Hierarchical model fits without covariate effect
+# Hierarchical models without covariate
 
 The following code fits hierarchical kinetic models for the ten combinations of
 the five different degradation models with the two different error models in
@@ -170,7 +173,7 @@ No ill-defined errors remain in the fits with constant variance.
 
 \clearpage
 
-# Hierarchical model fits with covariate effect
+# Hierarchical models with covariate
 
 In the following sections, hierarchical fits including a model for the
 influence of pH on selected degradation parameters are shown for all parent
@@ -511,7 +514,7 @@ for (deg_mod in deg_mods) {
     fit <- f_saem_1[[deg_mod, err_mod]]
     if (!inherits(fit$so, "try-error")) {
       caption <- paste("Hierarchical", deg_mod, "fit with", errmods[err_mod])
-      tex_listing(fit, caption)
+      summary_listing(fit, caption)
     }
   }
 }
@@ -520,58 +523,58 @@ for (deg_mod in deg_mods) {
 ### Fits with covariate effects
 
 ```{r listing-sfo, cache = FALSE, results = "asis", echo = FALSE}
-tex_listing(sfo_pH, "Hierarchichal SFO fit with pH influence")
+summary_listing(sfo_pH, "Hierarchichal SFO fit with pH influence")
 ```
 
 \clearpage
 
 ```{r, cache = FALSE, results = "asis", echo = FALSE}
-tex_listing(fomc_pH, "Hierarchichal FOMC fit with pH influence")
+summary_listing(fomc_pH, "Hierarchichal FOMC fit with pH influence")
 ```
 
 \clearpage
 
 ```{r, cache = FALSE, results = "asis", echo = FALSE}
-tex_listing(fomc_pH_2, "Refined hierarchichal FOMC fit with pH influence")
+summary_listing(fomc_pH_2, "Refined hierarchichal FOMC fit with pH influence")
 ```
 
 \clearpage
 
 ```{r, cache = FALSE, results = "asis", echo = FALSE}
-tex_listing(dfop_pH, "Hierarchichal DFOP fit with pH influence")
+summary_listing(dfop_pH, "Hierarchichal DFOP fit with pH influence")
 ```
 
 \clearpage
 
 ```{r, cache = FALSE, results = "asis", echo = FALSE}
-tex_listing(dfop_pH_2, "Refined hierarchical DFOP fit with pH influence")
+summary_listing(dfop_pH_2, "Refined hierarchical DFOP fit with pH influence")
 ```
 
 \clearpage
 
 ```{r, cache = FALSE, results = "asis", echo = FALSE}
-tex_listing(dfop_pH_4, "Further refined hierarchical DFOP fit with pH influence")
+summary_listing(dfop_pH_4, "Further refined hierarchical DFOP fit with pH influence")
 ```
 
 \clearpage
 
 ```{r, cache = FALSE, results = "asis", echo = FALSE}
-tex_listing(sforb_pH, "Hierarchichal SFORB fit with pH influence")
+summary_listing(sforb_pH, "Hierarchichal SFORB fit with pH influence")
 ```
 \clearpage
 
 ```{r, cache = FALSE, results = "asis", echo = FALSE}
-tex_listing(sforb_pH_2, "Refined hierarchichal SFORB fit with pH influence")
+summary_listing(sforb_pH_2, "Refined hierarchichal SFORB fit with pH influence")
 ```
 \clearpage
 
 ```{r, cache = FALSE, results = "asis", echo = FALSE}
-tex_listing(hs_pH, "Hierarchichal HS fit with pH influence")
+summary_listing(hs_pH, "Hierarchichal HS fit with pH influence")
 ```
 \clearpage
 
 ```{r, cache = FALSE, results = "asis", echo = FALSE}
-tex_listing(hs_pH_2, "Refined hierarchichal HS fit with pH influence")
+summary_listing(hs_pH_2, "Refined hierarchichal HS fit with pH influence")
 ```
 
 \clearpage
@@ -594,3 +597,4 @@ if(!inherits(try(meminfo <- readLines("/proc/meminfo")), "try-error")) {
   cat(gsub("model name\t: ", "System memory: ", meminfo[grep("MemTotal", meminfo)[1]]))
 }
 ```
+
