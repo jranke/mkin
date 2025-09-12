@@ -157,7 +157,7 @@ plot.mixed.mmkin <- function(x,
             ifelse(length(x$covariate_models) == 1,
               "Covariate", "Covariates"),
               rownames(covariates))
-        }
+        } 
         degparms_pop <- parms(x, covariates = covariates)
         pop_curves <- TRUE
       }

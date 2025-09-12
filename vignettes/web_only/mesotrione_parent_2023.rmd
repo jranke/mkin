@@ -1,7 +1,7 @@
 ---
 title: "Testing covariate modelling in hierarchical parent degradation kinetics with residue data on mesotrione"
 author: "Johannes Ranke"
-date: Last change 13 May 2025 (rebuilt `r Sys.Date()`)
+date: Last change 12 September 2025 (rebuilt `r Sys.Date()`)
 output:
   html_document:
     toc: true
@@ -155,15 +155,15 @@ illparms(f_saem_1) |> kable()
 ```
 
 For obtaining fits with only well-defined random effects, we update
-the set of fits, excluding random effects that were ill-defined
-according to the `illparms` function.
+the set of fits, excluding random effects for degradation parameters that were
+ill-defined according to the `illparms` function.
 
 ```{r f-saem-2, dependson = "f-saem-1"}
 f_saem_2 <- update(f_saem_1, no_random_effect = illparms(f_saem_1))
 status(f_saem_2) |> kable()
 ```
 
-The updated fits terminate without errors.
+The updated fits terminate without errors, and the only ill-defined
 
 ```{r dependson = "f-saem-2"}
 illparms(f_saem_2) |> kable()
@@ -187,7 +187,7 @@ has shown that only for such parameters a significant pH effect could be found.
 
 ```{r sfo-pH, dependson = "f-sep-const"}
 sfo_pH <- saem(f_sep_const["SFO", ], no_random_effect = "meso_0", covariates = pH,
-  covariate_models = list(log_k_meso ~ pH))
+  covariate_models = list(log_k_meso ~ pH), center_covariates = "median")
 ```
 
 ```{r dependson = "sfo-pH"}
@@ -230,7 +230,7 @@ endpoints(sfo_pH, covariates = c(pH = 7.0))
 
 ```{r fomc-pH, dependson = "f-sep-const"}
 fomc_pH <- saem(f_sep_const["FOMC", ], no_random_effect = "meso_0", covariates = pH,
-  covariate_models = list(log_alpha ~ pH))
+  covariate_models = list(log_alpha ~ pH), center_covariates = "median")
 ```
 
 ```{r dependson = "fomc-pH"}
@@ -298,7 +298,9 @@ and including covariate models for the two identifiable parameters `k2` and `g`.
 ```{r dfop-pH, dependson = "f-sep-const"}
 dfop_pH <- saem(f_sep_const["DFOP", ], no_random_effect = c("meso_0", "log_k1"),
   covariates = pH,
-  covariate_models = list(log_k2 ~ pH, g_qlogis ~ pH))
+  covariate_models = list(log_k2 ~ pH, g_qlogis ~ pH),
+  center_covariates = "median"
+)
 ```
 
 The corresponding parameters for
@@ -326,7 +328,8 @@ Therefore, another attempt is made without the corresponding covariate model.
 ```{r dfop-pH-3, dependson = "f-sep-const"}
 dfop_pH_3 <- saem(f_sep_const["DFOP", ], no_random_effect = c("meso_0", "log_k1"),
   covariates = pH,
-  covariate_models = list(log_k2 ~ pH))
+  covariate_models = list(log_k2 ~ pH),
+  center_covariates = "median")
 illparms(dfop_pH_3)
 ```
 As the random effect for `g` is again ill-defined, the fit is repeated without it.
@@ -371,7 +374,8 @@ endpoints(dfop_pH_2, covariates = c(pH = 7))
 ```{r sforb-pH, dependson = "f-sep-const"}
 sforb_pH <- saem(f_sep_const["SFORB", ], no_random_effect = c("meso_free_0", "log_k_meso_free_bound"),
   covariates = pH,
-  covariate_models = list(log_k_meso_free ~ pH, log_k_meso_bound_free ~ pH))
+  covariate_models = list(log_k_meso_free ~ pH, log_k_meso_bound_free ~ pH),
+  center_covariates = "median")
 ```
 
 ```{r dependson = "sforb-pH"}
@@ -431,7 +435,8 @@ endpoints(sforb_pH_2, covariates = c(pH = 7))
 ```{r hs-pH, dependson = "f-sep-const"}
 hs_pH <- saem(f_sep_const["HS", ], no_random_effect = c("meso_0"),
   covariates = pH,
-  covariate_models = list(log_k1 ~ pH, log_k2 ~ pH, log_tb ~ pH))
+  covariate_models = list(log_k1 ~ pH, log_k2 ~ pH, log_tb ~ pH),
+  center_covariates = "median")
 ```
 
 ```{r dependson = "hs-pH"}

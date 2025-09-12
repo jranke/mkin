@@ -102,15 +102,35 @@ test_that("Reading spreadsheets, finding ill-defined parameters and covariate mo
     error_model = "const")
   lambda_sforb_saem_pH <- saem(lambda_sforb, covariates = covariates,
     covariate_models = list(log_k_lambda_bound_free ~ pH))
+
   expect_equal(
     as.character(illparms(lambda_sforb_saem_pH)),
     c("sd(lambda_free_0)", "sd(log_k_lambda_free_bound)"))
 
   lambda_endpoints <- endpoints(lambda_sforb_saem_pH)
+
   expect_equal(lambda_endpoints$covariates$pH, 6.45)
   expect_equal(
     round(as.numeric(lambda_endpoints$distimes), 0),
     c(47, 422, 127, 7, 162))
+
+  # We should get the same endpoints when the covariates are centered
+  lambda_sforb_saem_pH_centered <- saem(lambda_sforb, covariates = covariates,
+    covariate_models = list(log_k_lambda_bound_free ~ pH), center_covariates = "median")
+  lambda_endpoints_centered <- endpoints(lambda_sforb_saem_pH_centered)
+
+  expect_equal(lambda_endpoints_centered$covariates$pH, 6.45)
+  expect_equal(
+    round(as.numeric(lambda_endpoints_centered$distimes), 0),
+    c(47, 422, 127, 7, 162))
+
+  # Also check endpoints obtained for a different pH
+  lambda_endpoints_centered_7 <- endpoints(lambda_sforb_saem_pH_centered, covariates = c(pH = 7))
+  expect_equal(lambda_endpoints_centered_7$covariates$pH, 7)
+  expect_equal(
+    round(as.numeric(lambda_endpoints_centered_7$distimes), 0),
+    c(39, 283, 85, 7, 106))
+
 })
 
 test_that("SFO-SFO saemix specific analytical solution work", {

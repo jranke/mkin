@@ -1,5 +1,9 @@
 # mkin 1.2.10 (unreleased)
 
+## New features
+
+- 'R/{saem,endpoints,plot.mixed.mmkin}.R': The function 'saem()' gains an argument 'center_covariates'. The functions 'parms', 'endpoints' and 'plot.mixed.mmkin' were adapted, so the user can still specify covariate values on the original, uncentered scale even if a covariate is centered.
+
 ## Bug fixes
 
 - 'inst/rmarkdown/templates/hierarchical_kinetics/skeleton/skeleton.Rmd': Make parent model selection more robust
@@ -8,7 +12,7 @@
 
 # mkin 1.2.9 (2024-02-13)
 
-## New features 
+## New features
 
 - 'R/plot.mixed.R': Support more than 25 datasets
 

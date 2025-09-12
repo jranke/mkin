@@ -22,6 +22,7 @@ saem(object, ...)
   omega.init = "auto",
   covariates = NULL,
   covariate_models = NULL,
+  center_covariates = c(NA, "median", "mean"),
   no_random_effect = NULL,
   error.init = c(1, 1),
   nbiter.saemix = c(300, 100),
@@ -100,6 +101,10 @@ initialisation of \link[saemix:saemixModel]{saemix::saemixModel} is used for ome
 \item{covariate_models}{A list containing linear model formulas with one explanatory
 variable, i.e. of the type 'parameter ~ covariate'. Covariates must be available
 in the 'covariates' data frame.}
+
+\item{center_covariates}{Either NA, for no centering, or your
+preferred function for calculating the center, currently either
+median or mean.}
 
 \item{no_random_effect}{Character vector of degradation parameters for
 which there should be no variability over the groups. Only used

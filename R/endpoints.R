@@ -45,6 +45,7 @@ endpoints <- function(fit, covariates = NULL, covariate_quantile = 0.5) {
 
   if (!is.null(fit$covariate_models)) {
     if (is.null(covariates)) {
+      # Use covariate quantiles if no explicit covariates are given
       covariates = as.data.frame(
         apply(fit$covariates, 2, quantile,
           covariate_quantile, simplify = FALSE))

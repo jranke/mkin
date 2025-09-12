@@ -50,6 +50,9 @@ utils::globalVariables(c("predicted", "std"))
 #' initialisation of [saemix::saemixModel] is used for omega.init.
 #' @param covariates A data frame with covariate data for use in
 #' 'covariate_models', with dataset names as row names.
+#' @param center_covariates Either NA, for no centering, or your
+#' preferred function for calculating the center, currently either
+#' median or mean.
 #' @param covariate_models A list containing linear model formulas with one explanatory
 #' variable, i.e. of the type 'parameter ~ covariate'. Covariates must be available
 #' in the 'covariates' data frame.
@@ -148,6 +151,7 @@ saem.mmkin <- function(object,
   omega.init = "auto",
   covariates = NULL,
   covariate_models = NULL,
+  center_covariates = c(NA, "median", "mean"),
   no_random_effect = NULL,
   error.init = c(1, 1),
   nbiter.saemix = c(300, 100),
@@ -158,6 +162,18 @@ saem.mmkin <- function(object,
 {
   call <- match.call()
   transformations <- match.arg(transformations)
+  center_covariates <- match.arg(center_covariates)
+  if (is.na(center_covariates)) {
+    covariate_centers <- NA
+    centered_covariates <- NA
+  } else {
+    center_covariate_func <- get(center_covariates)
+    centered_covariates <- data.frame(lapply(covariates,
+      function(x) x - center_covariate_func(x)))
+    rownames(centered_covariates) <- rownames(covariates)
+    covariate_centers <- sapply(covariates, center_covariate_func)
+  }
+
   m_saemix <- saemix_model(object, verbose = verbose,
     error_model = error_model,
     degparms_start = degparms_start,
@@ -166,12 +182,14 @@ saem.mmkin <- function(object,
     transformations = transformations,
     covariance.model = covariance.model,
     omega.init = omega.init,
-    covariates = covariates,
+    covariates = if (is.na(center_covariates)) covariates else centered_covariates,
     covariate_models = covariate_models,
     error.init = error.init,
     no_random_effect = no_random_effect,
     ...)
-  d_saemix <- saemix_data(object, covariates = covariates, verbose = verbose)
+  d_saemix <- saemix_data(object,
+    covariates = if (is.na(center_covariates)) covariates else centered_covariates,
+    verbose = verbose)
 
   fit_failed <- FALSE
   FIM_failed <- NULL
@@ -227,6 +245,8 @@ saem.mmkin <- function(object,
     transform_rates = object[[1]]$transform_rates,
     transform_fractions = object[[1]]$transform_fractions,
     covariates = covariates,
+    centered_covariates = centered_covariates,
+    covariate_centers = covariate_centers,
     covariate_models = covariate_models,
     sm = m_saemix,
     so = f_saemix,
@@ -817,7 +837,8 @@ update.saem.mmkin <- function(object, ..., evaluate = TRUE) {
 #' each column corresponding to a row of the data frame holding the covariates
 #' @param covariates A data frame holding covariate values for which to
 #' return parameter values. Only has an effect if 'ci' is FALSE.
-parms.saem.mmkin <- function(object, ci = FALSE, covariates = NULL, ...) {
+parms.saem.mmkin <- function(object, ci = FALSE, covariates = NULL, ...)
+{
   cov.mod <- object$sm@covariance.model
   n_cov_mod_parms <- sum(cov.mod[upper.tri(cov.mod, diag = TRUE)])
   n_parms <- length(object$sm@name.modpar) +
@@ -839,12 +860,25 @@ parms.saem.mmkin <- function(object, ci = FALSE, covariates = NULL, ...) {
 
   names(estimate) <- rownames(conf.int)
 
+  # If confidence intervals are requested, we do not care about covariates
   if (ci) {
     return(conf.int)
   } else {
     if (is.null(covariates)) {
       return(estimate)
     } else {
+      # If there are covariates in the model, calculate parameter
+      # estimates for the corresponding covariate values passed
+      # in 'covariates'.
+      covariate_centers <- object$covariate_centers
+      centered_covariates <- covariates
+      if (!is.na(covariate_centers[1])) {
+        # If covariates were centered by the saem function, we need to center
+        # user specified covariates as well
+        for (i in names(covariates)) {
+          centered_covariates[i] <- covariates[i] - object$covariate_centers[i]
+        }
+      }
       est_for_cov <- matrix(NA,
         nrow = length(object$sm@name.modpar), ncol = nrow(covariates),
         dimnames = (list(object$sm@name.modpar, rownames(covariates))))
@@ -856,7 +890,7 @@ parms.saem.mmkin <- function(object, ci = FALSE, covariates = NULL, ...) {
           beta_degparm_name <- paste0("beta_", covariate,
             "(", deg_parm_name, ")")
           est_for_cov[deg_parm_name, ] <- estimate[deg_parm_name] +
-            covariates[[covariate]] * estimate[beta_degparm_name]
+            centered_covariates[[covariate]] * estimate[beta_degparm_name]
         } else {
           est_for_cov[deg_parm_name, ] <- estimate[deg_parm_name]
         }

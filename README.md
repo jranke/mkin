@@ -47,7 +47,7 @@ at the package vignettes
 
 The HTML documentation of the latest version released to CRAN is available at
 [jrwb.de](https://pkgdown.jrwb.de/mkin/) and
-[github](https://jranke.github.io/mkin/). 
+[github](https://jranke.github.io/mkin/).
 
 Documentation of the development
 version is found in the ['dev' subdirectory](https://pkgdown.jrwb.de/mkin/dev/).
@@ -238,13 +238,13 @@ saemix for the evaluation of chemical degradation data.
 Regarding the application of nonlinear mixed-effects models to degradation data,
 von Götz et al (1999) have already proposed to use this technique in the context
 of environmental risk assessments of pesticides. However, this work was
-apparently not followed up, which is why we had to independently arrive at the 
+apparently not followed up, which is why we had to independently arrive at the
 idea and missed to cite this previous work on the topic in our first publications.
 
 ## References
 
 <table>
-  <tr><td>Ranke J (2023) Application of nonlinear hierarchical models to the 
+  <tr><td>Ranke J (2023) Application of nonlinear hierarchical models to the
   kinetic evaluation of chemical degradation data - Guidance for the use
   of an R markdown template file.
   <a href='https://www.umweltbundesamt.de/publikationen/application-of-nonlinear-hierarchical-models-to-the'>Umweltbundesamt TEXTE 151/2023</a>
@@ -270,7 +270,7 @@ idea and missed to cite this previous work on the topic in our first publication
   <b>30</b> 17
   <a href='https://doi.org/10.1186/s12302-018-0145-1'>doi:10.1186/s12302-018-0145-1</a>
   </td></tr>
-  
+
   <tr><td>Von Götz N, Nörtersheuser P, Richter O (1999)
   Population based analysis of pesticide kinetics
   <i>Chemosphere</i>

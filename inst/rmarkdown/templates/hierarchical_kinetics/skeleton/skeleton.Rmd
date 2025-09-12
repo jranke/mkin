@@ -157,11 +157,12 @@ models for both of them is fitted.
 
 ```{r parent-best-pH}
 parent_best_pH_1 <- update(parent_best, covariates = covariates,
-  covariate_models = list(log_k_lambda_free ~ pH))
+  covariate_models = list(log_k_lambda_free ~ pH), center_covariates = "median")
 parent_best_pH_2 <- update(parent_best, covariates = covariates,
-  covariate_models = list(log_k_lambda_bound_free ~ pH))
+  covariate_models = list(log_k_lambda_bound_free ~ pH), center_covariates = "median")
 parent_best_pH_3 <- update(parent_best, covariates = covariates,
-  covariate_models = list(log_k_lambda_free ~ pH, log_k_lambda_bound_free ~ pH))
+  covariate_models = list(log_k_lambda_free ~ pH, log_k_lambda_bound_free ~ pH),
+  center_covariates = "median")
 ```
 
 The resulting models are compared.
@@ -244,6 +245,7 @@ model that was identified for the parent degradation, are attempted below.
 path_1 <- mhmkin(list(sforb_sep_const, sforb_sep_tc),
   no_random_effect = c("lambda_free_0", "log_k_lambda_free_bound"),
   covariates = covariates, covariate_models = list(log_k_lambda_bound_free ~ pH),
+  center_covariates = "median",
   cluster = cl_path)
 ```
 
@@ -295,6 +297,12 @@ are shown below.
 
 ```{r dependson = "parent-best-pH"}
 endpoints(path_1_refined)
+```
+
+We can also show endpoints corresponding to a user defined pH value.
+
+```{r dependson = "parent-best-pH"}
+endpoints(path_1_refined, covariates = c(pH = 7))
 ```
 
 ```{r}
