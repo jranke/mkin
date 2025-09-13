@@ -871,12 +871,12 @@ parms.saem.mmkin <- function(object, ci = FALSE, covariates = NULL, ...)
       # estimates for the corresponding covariate values passed
       # in 'covariates'.
       covariate_centers <- object$covariate_centers
-      centered_covariates <- covariates
+      parm_covariates <- covariates
       if (!is.na(covariate_centers[1])) {
         # If covariates were centered by the saem function, we need to center
         # user specified covariates as well
         for (i in names(covariates)) {
-          centered_covariates[i] <- covariates[i] - object$covariate_centers[i]
+          parm_covariates[i] <- covariates[i] - object$covariate_centers[i]
         }
       }
       est_for_cov <- matrix(NA,
@@ -890,7 +890,7 @@ parms.saem.mmkin <- function(object, ci = FALSE, covariates = NULL, ...)
           beta_degparm_name <- paste0("beta_", covariate,
             "(", deg_parm_name, ")")
           est_for_cov[deg_parm_name, ] <- estimate[deg_parm_name] +
-            centered_covariates[[covariate]] * estimate[beta_degparm_name]
+            parm_covariates[[covariate]] * estimate[beta_degparm_name]
         } else {
           est_for_cov[deg_parm_name, ] <- estimate[deg_parm_name]
         }
