@@ -33,5 +33,15 @@
 #'   DCP = mkinsub("SFO", to = "DCA"),
 #'   DCA = mkinsub("SFO"))
 #' print(m_D24_2)
+#' D24_2014_data <- lapply(D24_2014$ds, function(x) x$data)
+#' names(D24_2014_data) <- sapply(D24_2014$ds, function(x) x$title)
+#' f_D24_2014 <- mmkin(
+#'   models = list(
+#'     "SFO-SFO-SFO" = m_D24, 
+#'     "DFOP-SFO-SFO" = m_D24_2),
+#'   data = D24_2014_data,
+#'   quiet = TRUE)
+#' print(f_D24_2014)
+#' plot(f_D24_2014[, 3])
 #' }
 "D24_2014"
