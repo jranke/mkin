@@ -97,7 +97,9 @@ https://open.efsa.europa.eu/study-inventory/EFSA-Q-2013-00811</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Data for the first dataset are from p. 685. Data for the other four
+    <p>The acronyms used for the 2,4-D transformation products are DCP for
+2,4-dichlorophenol and DCA for 2,4-dichloroanisole.</p>
+<p>Data for the first dataset are from p. 685. Data for the other four
 datasets were used in the preprocessed versions given in the kinetics
 section (p. 761ff.), with the exception of residues smaller than 1 for DCP
 in the soil from Site I2, where the values given on p. 694 were used.</p>
@@ -195,13 +197,13 @@ specific pieces of information in the comments.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> d_DCA/dt = + f_DCP_to_DCA * k_DCP * DCP - k_DCA * DCA</span>
 <span class="r-in"><span><span class="va">D24_2014_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">D24_2014</span><span class="op">$</span><span class="va">ds</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">D24_2014_data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">D24_2014</span><span class="op">$</span><span class="va">ds</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">$</span><span class="va">title</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">f_D24_2014</span> <span class="op">&lt;-</span> <span class="fu"><a href="mmkin.html">mmkin</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="va">f_D24_2014_const</span> <span class="op">&lt;-</span> <span class="fu"><a href="mmkin.html">mmkin</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="st">"SFO-SFO-SFO"</span> <span class="op">=</span> <span class="va">m_D24</span>, </span></span>
 <span class="r-in"><span>    <span class="st">"DFOP-SFO-SFO"</span> <span class="op">=</span> <span class="va">m_D24_2</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  data <span class="op">=</span> <span class="va">D24_2014_data</span>,</span></span>
 <span class="r-in"><span>  quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">f_D24_2014</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">f_D24_2014_const</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;mmkin&gt; object</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Status of individual fits:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -212,8 +214,34 @@ specific pieces of information in the comments.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Z: Observations with value of zero were removed from the data</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> OK: No warnings</span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_D24_2014</span><span class="op">[</span>, <span class="fl">3</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_D24_2014_const</span><span class="op">[</span>, <span class="fl">3</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="D24_2014-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="va">f_D24_2014_tc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/update.html" class="external-link">update</a></span><span class="op">(</span><span class="va">f_D24_2014_const</span>, error_model <span class="op">=</span> <span class="st">"tc"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">f_D24_2014_tc</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;mmkin&gt; object</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Status of individual fits:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               dataset</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> model          Mississippi Fayette RefSol 03-G Site E1 Site I2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   SFO-SFO-SFO  OK          Z       Z           Z       Z      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   DFOP-SFO-SFO OK          Z       Z           Z       Z      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Z: Observations with value of zero were removed from the data</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> OK: No warnings</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">f_D24_2014_tc</span><span class="op">[</span>, <span class="fl">3</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="D24_2014-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="co"># For dataset 3, the best fit is obtained using constant </span></span></span>
+<span class="r-in"><span><span class="co"># variance and the DFOP-SFO-SFO model</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/AIC.html" class="external-link">AIC</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">f_D24_2014_const</span><span class="op">[[</span><span class="st">"SFO-SFO-SFO"</span>, <span class="fl">3</span><span class="op">]</span><span class="op">]</span>, </span></span>
+<span class="r-in"><span>  <span class="va">f_D24_2014_const</span><span class="op">[[</span><span class="st">"DFOP-SFO-SFO"</span>, <span class="fl">3</span><span class="op">]</span><span class="op">]</span>, </span></span>
+<span class="r-in"><span>  <span class="va">f_D24_2014_tc</span><span class="op">[[</span><span class="st">"SFO-SFO-SFO"</span>, <span class="fl">3</span><span class="op">]</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>  <span class="va">f_D24_2014_tc</span><span class="op">[[</span><span class="st">"DFOP-SFO-SFO"</span>, <span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                       df      AIC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_D24_2014_const[["SFO-SFO-SFO", 3]]   7 220.4991</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_D24_2014_const[["DFOP-SFO-SFO", 3]]  9 179.8933</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_D24_2014_tc[["SFO-SFO-SFO", 3]]      8 200.7663</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> f_D24_2014_tc[["DFOP-SFO-SFO", 3]]    10 181.8933</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

@@ -7,6 +7,9 @@
 #' context of pesticide  registrations, as the use of the data may be
 #' constrained by data protection regulations.
 #'
+#' The acronyms used for the 2,4-D transformation products are DCP for
+#' 2,4-dichlorophenol and DCA for 2,4-dichloroanisole.
+#'
 #' Data for the first dataset are from p. 685. Data for the other four
 #' datasets were used in the preprocessed versions given in the kinetics
 #' section (p. 761ff.), with the exception of residues smaller than 1 for DCP
@@ -35,13 +38,23 @@
 #' print(m_D24_2)
 #' D24_2014_data <- lapply(D24_2014$ds, function(x) x$data)
 #' names(D24_2014_data) <- sapply(D24_2014$ds, function(x) x$title)
-#' f_D24_2014 <- mmkin(
+#' f_D24_2014_const <- mmkin(
 #'   models = list(
 #'     "SFO-SFO-SFO" = m_D24, 
 #'     "DFOP-SFO-SFO" = m_D24_2),
 #'   data = D24_2014_data,
 #'   quiet = TRUE)
-#' print(f_D24_2014)
-#' plot(f_D24_2014[, 3])
+#' print(f_D24_2014_const)
+#' plot(f_D24_2014_const[, 3])
+#' f_D24_2014_tc <- update(f_D24_2014_const, error_model = "tc")
+#' print(f_D24_2014_tc)
+#' plot(f_D24_2014_tc[, 3])
+#' # For dataset 3, the best fit is obtained using constant 
+#' # variance and the DFOP-SFO-SFO model
+#' AIC(
+#'   f_D24_2014_const[["SFO-SFO-SFO", 3]], 
+#'   f_D24_2014_const[["DFOP-SFO-SFO", 3]], 
+#'   f_D24_2014_tc[["SFO-SFO-SFO", 3]],
+#'   f_D24_2014_tc[["DFOP-SFO-SFO", 3]])
 #' }
 "D24_2014"
