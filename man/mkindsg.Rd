@@ -23,6 +23,11 @@ so that combined evaluations are desirable.
 Time normalisation factors are initialised with a value of 1 for each
 dataset if no data are supplied.
 }
+\note{
+Currently, no functions making use of the defined class structure
+are available in this package. Refer to \link{D24_2014} for an example
+dataset in this structure, with some example evaluations.
+}
 \examples{
 
 mdsg <- mkindsg$new("Experimental X", experimental_data_for_UBA_2019[6:10])

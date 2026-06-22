@@ -3,7 +3,7 @@
 #' @description
 #' At the moment this dataset class is hardly used in mkin. For example,
 #' mkinfit does not take mkinds datasets as argument, but works with dataframes
-#' such as the on contained in the data field of mkinds objects. Some datasets
+#' such as the one contained in the data field of mkinds objects. Some datasets
 #' provided by this package come as mkinds objects nevertheless.
 #'
 #' @importFrom R6 R6Class
@@ -86,6 +86,11 @@ print.mkinds <- function(x, data = FALSE, ...) {
 #'
 #' Time normalisation factors are initialised with a value of 1 for each
 #' dataset if no data are supplied.
+#'
+#' @note
+#' Currently, no functions making use of the defined class structure
+#' are available in this package. Refer to [D24_2014] for an example
+#' dataset in this structure, with some example evaluations.
 #'
 #' @examples
 #'

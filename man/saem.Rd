@@ -204,9 +204,11 @@ print(f_saem_dfop_sfo)
 plot(f_saem_dfop_sfo)
 summary(f_saem_dfop_sfo, data = TRUE)
 
-# The following takes about 6 minutes
-f_saem_dfop_sfo_deSolve <- saem(f_mmkin["DFOP-SFO", ], solution_type = "deSolve",
-  nbiter.saemix = c(200, 80))
+# The following took about 6 minutes and currently fails with
+# "Error in deSolve::lsoda(y = odeini, times = outtimes_deSolve, func = lsoda_func,  : 
+# illegal input detected before taking any integration steps - see written message"
+#f_saem_dfop_sfo_deSolve <- saem(f_mmkin["DFOP-SFO", ], solution_type = "deSolve",
+#  nbiter.saemix = c(200, 80))
 
 #anova(
 #  f_saem_dfop_sfo,

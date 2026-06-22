@@ -17,7 +17,7 @@
 \description{
 At the moment this dataset class is hardly used in mkin. For example,
 mkinfit does not take mkinds datasets as argument, but works with dataframes
-such as the on contained in the data field of mkinds objects. Some datasets
+such as the one contained in the data field of mkinds objects. Some datasets
 provided by this package come as mkinds objects nevertheless.
 }
 \examples{
