@@ -510,7 +510,8 @@ mkinfit <- function(mkinmod, observed,
     mkinmod[["symbols"]] <- try(
       deSolve::checkDLL(dllname = mkinmod$dll_info[["name"]],
         func = "diffs", initfunc = "initpar",
-        jacfunc = NULL, nout = 0, outnames = NULL))
+        jacfunc = NULL, nout = 0, outnames = NULL),
+      silent = TRUE)
     if (!inherits(mkinmod[["symbols"]], "try-error")) {
       use_symbols = TRUE
     }
