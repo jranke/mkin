@@ -19,7 +19,7 @@
 
 \item{method}{Method for likelihood calculation: "is" (importance sampling),
 "lin" (linear approximation), or "gq" (Gaussian quadrature). Passed
-to \link[saemix:logLik]{saemix::logLik.SaemixObject}}
+to \link[saemix:logLik.SaemixObject]{saemix::logLik.SaemixObject}}
 
 \item{test}{Should a likelihood ratio test be performed? If TRUE,
 the alternative models are tested against the first model. Should

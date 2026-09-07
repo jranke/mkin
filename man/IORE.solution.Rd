@@ -49,12 +49,12 @@ NAFTA Technical Working Group on Pesticides (not dated) Guidance
 for Evaluating and Calculating Degradation Kinetics in Environmental Media
 }
 \seealso{
-Other parent solutions: 
-\code{\link{DFOP.solution}()},
-\code{\link{FOMC.solution}()},
-\code{\link{HS.solution}()},
-\code{\link{SFO.solution}()},
-\code{\link{SFORB.solution}()},
-\code{\link{logistic.solution}()}
+Other parent solutions:
+\code{\link[=DFOP.solution]{DFOP.solution()}},
+\code{\link[=FOMC.solution]{FOMC.solution()}},
+\code{\link[=HS.solution]{HS.solution()}},
+\code{\link[=SFO.solution]{SFO.solution()}},
+\code{\link[=SFORB.solution]{SFORB.solution()}},
+\code{\link[=logistic.solution]{logistic.solution()}}
 }
 \concept{parent solutions}

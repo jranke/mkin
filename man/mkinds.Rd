@@ -27,70 +27,71 @@ print(mds)
 
 }
 \section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
-\describe{
-\item{\code{title}}{A full title for the dataset}
+  \if{html}{\out{<div class="r6-fields">}}
+  \describe{
+    \item{\code{title}}{A full title for the dataset}
 
-\item{\code{sampling_times}}{The sampling times}
+    \item{\code{sampling_times}}{The sampling times}
 
-\item{\code{time_unit}}{The time unit}
+    \item{\code{time_unit}}{The time unit}
 
-\item{\code{observed}}{Names of the observed variables}
+    \item{\code{observed}}{Names of the observed variables}
 
-\item{\code{unit}}{The unit of the observations}
+    \item{\code{unit}}{The unit of the observations}
 
-\item{\code{replicates}}{The maximum number of replicates per sampling time}
+    \item{\code{replicates}}{The maximum number of replicates per sampling time}
 
-\item{\code{data}}{A data frame with at least the columns name, time
+    \item{\code{data}}{A data frame with at least the columns name, time
 and value in order to be compatible with mkinfit}
-}
-\if{html}{\out{</div>}}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-mkinds-new}{\code{mkinds$new()}}
-\item \href{#method-mkinds-clone}{\code{mkinds$clone()}}
-}
+  \itemize{
+    \item \href{#method-mkinds-initialize}{\code{mkinds$new()}}
+    \item \href{#method-mkinds-clone}{\code{mkinds$clone()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-mkinds-new"></a>}}
-\if{latex}{\out{\hypertarget{method-mkinds-new}{}}}
-\subsection{Method \code{new()}}{
-Create a new mkinds object
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{mkinds$new(title = "", data, time_unit = NA, unit = NA)}\if{html}{\out{</div>}}
+\if{html}{\out{<a id="method-mkinds-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-mkinds-initialize}{}}}
+\subsection{\code{mkinds$new()}}{
+  Create a new mkinds object
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{mkinds$new(title = "", data, time_unit = NA, unit = NA)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{title}}{The dataset title}
+      \item{\code{data}}{The data}
+      \item{\code{time_unit}}{The time unit}
+      \item{\code{unit}}{The unit of the observations}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{title}}{The dataset title}
-
-\item{\code{data}}{The data}
-
-\item{\code{time_unit}}{The time unit}
-
-\item{\code{unit}}{The unit of the observations}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-mkinds-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-mkinds-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{mkinds$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{mkinds$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{mkinds$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

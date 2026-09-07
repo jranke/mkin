@@ -43,12 +43,12 @@ Version 1.1, 18 December 2014
 \url{http://esdac.jrc.ec.europa.eu/projects/degradation-kinetics}
 }
 \seealso{
-Other parent solutions: 
-\code{\link{FOMC.solution}()},
-\code{\link{HS.solution}()},
-\code{\link{IORE.solution}()},
-\code{\link{SFO.solution}()},
-\code{\link{SFORB.solution}()},
-\code{\link{logistic.solution}()}
+Other parent solutions:
+\code{\link[=FOMC.solution]{FOMC.solution()}},
+\code{\link[=HS.solution]{HS.solution()}},
+\code{\link[=IORE.solution]{IORE.solution()}},
+\code{\link[=SFO.solution]{SFO.solution()}},
+\code{\link[=SFORB.solution]{SFORB.solution()}},
+\code{\link[=logistic.solution]{logistic.solution()}}
 }
 \concept{parent solutions}

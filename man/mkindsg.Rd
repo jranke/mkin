@@ -37,69 +37,70 @@ print(mdsg, verbose = TRUE, data = TRUE)
 
 }
 \section{Public fields}{
-\if{html}{\out{<div class="r6-fields">}}
-\describe{
-\item{\code{title}}{A title for the dataset group}
+  \if{html}{\out{<div class="r6-fields">}}
+  \describe{
+    \item{\code{title}}{A title for the dataset group}
 
-\item{\code{ds}}{A list of mkinds objects}
+    \item{\code{ds}}{A list of mkinds objects}
 
-\item{\code{observed_n}}{Occurrence counts of compounds in datasets}
+    \item{\code{observed_n}}{Occurrence counts of compounds in datasets}
 
-\item{\code{f_time_norm}}{Time normalisation factors}
+    \item{\code{f_time_norm}}{Time normalisation factors}
 
-\item{\code{meta}}{A data frame with a row for each dataset,
+    \item{\code{meta}}{A data frame with a row for each dataset,
 containing additional information in the form
 of categorical data (factors) or numerical data
 (e.g. temperature, moisture,
 or covariates like soil pH).}
-}
-\if{html}{\out{</div>}}
+  }
+  \if{html}{\out{</div>}}
 }
 \section{Methods}{
 \subsection{Public methods}{
-\itemize{
-\item \href{#method-mkindsg-new}{\code{mkindsg$new()}}
-\item \href{#method-mkindsg-clone}{\code{mkindsg$clone()}}
-}
+  \itemize{
+    \item \href{#method-mkindsg-initialize}{\code{mkindsg$new()}}
+    \item \href{#method-mkindsg-clone}{\code{mkindsg$clone()}}
+  }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-mkindsg-new"></a>}}
-\if{latex}{\out{\hypertarget{method-mkindsg-new}{}}}
-\subsection{Method \code{new()}}{
-Create a new mkindsg object
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{mkindsg$new(title = "", ds, f_time_norm = rep(1, length(ds)), meta)}\if{html}{\out{</div>}}
+\if{html}{\out{<a id="method-mkindsg-initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-mkindsg-initialize}{}}}
+\subsection{\code{mkindsg$new()}}{
+  Create a new mkindsg object
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{mkindsg$new(title = "", ds, f_time_norm = rep(1, length(ds)), meta)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{title}}{The title}
+      \item{\code{ds}}{A list of mkinds objects}
+      \item{\code{f_time_norm}}{Time normalisation factors}
+      \item{\code{meta}}{The meta data}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{title}}{The title}
-
-\item{\code{ds}}{A list of mkinds objects}
-
-\item{\code{f_time_norm}}{Time normalisation factors}
-
-\item{\code{meta}}{The meta data}
-}
-\if{html}{\out{</div>}}
-}
-}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-mkindsg-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-mkindsg-clone}{}}}
-\subsection{Method \code{clone()}}{
-The objects of this class are cloneable with this method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{mkindsg$clone(deep = FALSE)}\if{html}{\out{</div>}}
+\subsection{\code{mkindsg$clone()}}{
+  The objects of this class are cloneable with this method.
+  \subsection{Usage}{
+    \if{html}{\out{<div class="r">}}
+    \preformatted{mkindsg$clone(deep = FALSE)}
+    \if{html}{\out{</div>}}
+  }
+  \subsection{Arguments}{
+    \if{html}{\out{<div class="arguments">}}
+    \describe{
+      \item{\code{deep}}{Whether to make a deep clone.}
+    }
+    \if{html}{\out{</div>}}
+  }
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deep}}{Whether to make a deep clone.}
-}
-\if{html}{\out{</div>}}
-}
-}
 }

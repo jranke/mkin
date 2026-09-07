@@ -4,7 +4,12 @@ require(testthat)
 # Per default (on my box where I set NOT_CRAN in .Rprofile) use all cores minus one
 # Otherwise (CRAN check systems) use the allowed maximum of two cores
 if (identical(Sys.getenv("NOT_CRAN"), "true")) {
-  n_cores <- parallel::detectCores() - 1
+  # We cannot use all course if on the Agroscope cluster, if not we use all but one
+  if (grepl("agsad.admin.ch", Sys.getenv("http_proxy"))) {
+    n_cores = 16
+  } else {
+    n_cores <- parallel::detectCores() - 1
+  }
 } else {
   n_cores <- 2
 }

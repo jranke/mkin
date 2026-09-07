@@ -42,7 +42,7 @@ of the estimator. The default (TRUE) is to do transformations.
 The g parameter of the DFOP model is also seen as a fraction.
 If a single fraction is transformed (g parameter of DFOP or only a single
 target variable e.g. a single metabolite plus a pathway to sink), a
-logistic transformation is used \code{\link[stats:Logistic]{stats::qlogis()}}. In other cases, i.e. if
+logistic transformation is used \code{\link[stats:qlogis]{stats::qlogis()}}. In other cases, i.e. if
 two or more formation fractions need to be transformed whose sum cannot
 exceed one, the \link{ilr} transformation is used.}
 

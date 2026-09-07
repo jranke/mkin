@@ -56,12 +56,12 @@ A new model based on spatial variability. \emph{Environmental Science and
 Technology} \bold{24}, 1032-1038
 }
 \seealso{
-Other parent solutions: 
-\code{\link{DFOP.solution}()},
-\code{\link{HS.solution}()},
-\code{\link{IORE.solution}()},
-\code{\link{SFO.solution}()},
-\code{\link{SFORB.solution}()},
-\code{\link{logistic.solution}()}
+Other parent solutions:
+\code{\link[=DFOP.solution]{DFOP.solution()}},
+\code{\link[=HS.solution]{HS.solution()}},
+\code{\link[=IORE.solution]{IORE.solution()}},
+\code{\link[=SFO.solution]{SFO.solution()}},
+\code{\link[=SFORB.solution]{SFORB.solution()}},
+\code{\link[=logistic.solution]{logistic.solution()}}
 }
 \concept{parent solutions}

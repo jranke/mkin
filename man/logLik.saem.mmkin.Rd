@@ -9,9 +9,9 @@
 \arguments{
 \item{object}{The fitted \link{saem.mmkin} object}
 
-\item{\dots}{Passed to \link[saemix:logLik]{saemix::logLik.SaemixObject}}
+\item{\dots}{Passed to \link[saemix:logLik.SaemixObject]{saemix::logLik.SaemixObject}}
 
-\item{method}{Passed to \link[saemix:logLik]{saemix::logLik.SaemixObject}}
+\item{method}{Passed to \link[saemix:logLik.SaemixObject]{saemix::logLik.SaemixObject}}
 }
 \description{
 logLik method for saem.mmkin objects

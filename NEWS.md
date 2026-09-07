@@ -1,4 +1,10 @@
-# mkin 1.2.10 (unreleased)
+# mkin 1.2.11 (unreleased)
+
+## New features
+
+- 'R/endpoints.R': Introduce the function `DTx` that makes it easy to calculate various types of DTx values such as DT50, DT90 and pseudo-half-lives calculated from DT90 or from the slow phase of biphasic models.
+
+# mkin 1.2.10 (2025-05-13)
 
 ## New features
 

@@ -158,7 +158,7 @@ endpoints <- function(fit, covariates = NULL, covariate_quantile = 0.5) {
                   silent = TRUE)
       if (inherits(DT50, "try-error")) DT50 = NA
       if (inherits(DT90, "try-error")) DT90 = NA
-      DT50_back = DT90 / (log(10)/log(2)) # Backcalculated DT50 as recommended in FOCUS 2011
+      DT50_back = DT90 / (log(10)/log(2))
 
       ep$distimes[obs_var, c("DT50back")] = DT50_back
       ep$distimes[obs_var, c("DT50_k1")] = DT50_k1
@@ -177,7 +177,7 @@ endpoints <- function(fit, covariates = NULL, covariate_quantile = 0.5) {
       }
       DT50 <- DTx(50)
       DT90 <- DTx(90)
-      DT50_back = DT90 / (log(10)/log(2)) # Backcalculated DT50 as recommended in FOCUS 2011
+      DT50_back = DT90 / (log(10)/log(2))
       DT50_k1 = log(2)/k1
       DT50_k2 = log(2)/k2
       ep$distimes[obs_var, c("DT50back")] = DT50_back
@@ -253,4 +253,79 @@ endpoints <- function(fit, covariates = NULL, covariate_quantile = 0.5) {
   if (length(ep$ff) == 0) ep$ff <- NULL
   if (length(ep$SFORB) == 0) ep$SFORB <- NULL
   return(ep)
+}
+
+#' Calculate DTx from parameters of parent degradation models
+#'
+#' @param type Character string specifying the degradation model
+#' @param parms Named numeric vector giving the kinetic parameters
+#' @param exact Should we used log(10)/log(2) instead of the widely used value
+#' of 3.32 for backcalculation of DT50 values from DT90 values?
+#' @export
+#' @examples
+#' # Check what type of DT50 is given in the bixafen EFSA conclusion from 2012 on p. 42
+#' DTx("HS", parms = c(k1 = 0.0081, k2 = 0.00023, tb = 53))
+#' # We get 1200 days for the time the concentration reaches 50%, the value of 1235
+#' # was likely based on more digits for the parameters. The half-life corresponding
+#' # to the slow phase is around 3000 days
+DTx <- function(type = c("SFO", "FOMC", "DFOP", "HS", "SFORB"), parms, exact = FALSE) {
+  type <- match.arg(type)
+  backcalculation_factor <- if (exact) log(10)/log(2) else 3.32
+
+  if (type == "SFO") {
+    DT50 <- log(2)/parms[["k"]]
+    DT90 <- log(10)/parms[["k"]]
+    return(c(DT50 = DT50, DT90 = DT90))
+  }
+  if (type == "FOMC") {
+    alpha = parms[["alpha"]]
+    beta = parms[["beta"]]
+    DT50 = beta * (2^(1/alpha) - 1)
+    DT90 = beta * (10^(1/alpha) - 1)
+    DT50_back = DT90 / backcalculation_factor
+    return(c(DT50 = DT50, DT90 = DT90, DT50back = DT50_back))
+  }
+  if (type == "DFOP") {
+    k1 = parms[["k1"]]
+    k2 = parms[["k2"]]
+    g = parms[["g"]]
+
+    f <- function(log_t, x) {
+      t <- exp(log_t)
+      fraction <- g * exp( - k1 * t) + (1 - g) * exp( - k2 * t)
+      (fraction - (1 - x/100))^2
+    }
+
+    DT50_k1 = log(2)/k1
+    DT50_k2 = log(2)/k2
+    DT90_k1 = log(10)/k1
+    DT90_k2 = log(10)/k2
+
+    DT50 <- try(exp(optimize(f, c(log(DT50_k1), log(DT50_k2)), x=50)$minimum),
+                silent = TRUE)
+    DT90 <- try(exp(optimize(f, c(log(DT90_k1), log(DT90_k2)), x=90)$minimum),
+                silent = TRUE)
+    if (inherits(DT50, "try-error")) DT50 = NA
+    if (inherits(DT90, "try-error")) DT90 = NA
+    DT50_back = DT90 / backcalculation_factor
+    return(c(DT50 = DT50, DT90 = DT90, DT50back = DT50_back, DT50_k1 = DT50_k1, DT50_k2 = DT50_k2))
+  }
+  if (type == "HS") {
+    k1 = parms[["k1"]]
+    k2 = parms[["k2"]]
+    tb = parms[["tb"]]
+    DTx <- function(x) {
+      DTx.a <- (log(100/(100 - x)))/k1
+      DTx.b <- tb + (log(100/(100 - x)) - k1 * tb)/k2
+      if (DTx.a < tb) DTx <- DTx.a
+      else DTx <- DTx.b
+      return(DTx)
+    }
+    DT50 <- DTx(50)
+    DT90 <- DTx(90)
+    DT50_back = DT90 / backcalculation_factor
+    DT50_k1 = log(2)/k1
+    DT50_k2 = log(2)/k2
+    return(c(DT50 = DT50, DT90 = DT90, DT50back = DT50_back, DT50_k1 = DT50_k1, DT50_k2 = DT50_k2))
+  }
 }

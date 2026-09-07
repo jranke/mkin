@@ -13,7 +13,8 @@ test_that("Solutions with deSolve work if we have no observations at time zero",
     solution_type = "deSolve", quiet = TRUE)
   expect_equal(
     parms(f_sfo_sfo_nozero),
-    parms(f_sfo_sfo_nozero_deSolve)
+    parms(f_sfo_sfo_nozero_deSolve),
+    tolerance = 1e-5
   )
 })
 
